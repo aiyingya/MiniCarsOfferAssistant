@@ -1,0 +1,45 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- 搜索车型.-->
+  <view class="search-wrap">
+  	<view class="search-inner">
+  		<view class="search-icon">
+  			<image class="search-img" src="../../images/icons/icon_find_line_black@3x.png"></image>
+  		</view>
+			<input 
+				bindtap="searchCarType" 
+				class="search-input" 
+				placeholder-class="search-placeholder"
+				disabled 
+				placeholder="输入指导价/车款名" 
+				/>
+  	</view>
+  </view>
+  
+  <!-- 热门品牌.-->
+  <view class="hot-carsbrand-wrap">
+  	<view class="hot-carsbrand-title">
+  		<view class="hot-carsbrand-text">热门品牌</view>
+  	</view>
+  	
+  	<view class="hot-carsbrand-stand">
+  		<view class="stand-item">
+  			<image class="hot-carslogo" src="../../images/carlogo/car-1.png"></image>
+  		</view>
+  		<view class="stand-item">
+  			<image class="hot-carslogo" src="../../images/carlogo/car-1.png"></image>
+  		</view>
+  		<view class="stand-item">
+  			<image class="hot-carslogo" src="../../images/carlogo/car-1.png"></image>
+  		</view>
+  		<view class="stand-item">
+  			<image class="hot-carslogo" src="../../images/carlogo/car-1.png"></image>
+  		</view>
+  		<view class="stand-item">
+  			<image class="hot-carslogo" src="../../images/carlogo/car-1.png"></image>
+  		</view>
+  	</view>
+  	
+  </view>
+  
+</view>
