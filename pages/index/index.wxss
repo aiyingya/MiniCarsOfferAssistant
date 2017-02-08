@@ -30,6 +30,7 @@
 	text-align: center;
 	font-size: 24rpx;
 	font-weight: 100;
+	font-family: "PingFangSC-Regular";
 }
 .hot-carsbrand-wrap {
 	width: 100%;
@@ -84,16 +85,134 @@
 	color: #999;
 	padding: 0 3.2%;
 	background: #EFEFEF;
+	font-family: "SFUIDisplay-Regular";
+	font-size: 24rpx;
 }
 .weui-cell__bd {
 	font-size: 32rpx;
+	font-family: "PingFangSC-Regular";
+	color: #333333;
 }
 .weui-cell:before {
 	left: 24rpx;
 }
+.weui-cells:after {
+	border-bottom: none;
+}
 .viewCarsList_icon-index {
 	display: block;
 	width: 90rpx;
-	height: 60rpx;
-	
+	height: 60rpx;	
 }
+.alphanet-selector {
+  position: absolute;
+  top: 80px;
+  right: 0;
+  height: 432px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-sizing: border-box;
+}
+.alphanet-selector .selector-one {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "SFUIDisplay-Regular";
+	font-size: 26rpx;
+	color: #007AFF;
+  height: 28rpx;
+	padding: 2px 3px;
+}
+.viewCars-describe {
+	font-family: "PingFangSC-Light";
+	font-size: 26rpx;
+	color: #888;
+}
+.alphanet-toast {
+	width: 72rpx;
+	height: 72rpx;
+	background-color: rgba(0,0,0,.4);
+	border-radius: 100%;
+	position: absolute;
+	top: 50%;
+	right: 75rpx;
+	margin-top: -38rpx;
+	color: #fff;
+	text-align: center;
+	line-height: 72rpx;
+	font-family: "SFUIDisplay-Regular";
+	font-size: 40rpx;
+	-webkit-transition: all 0.3s ease-in;
+	transition: all 0.3s ease-in;
+	opacity: 1;
+}
+
+/* 车系.*/
+.carSeries-wrap {
+	width: 100%;
+	height: auto;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 11;
+}
+.carSeries-mask {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,.5);
+	z-index: 1;
+	opacity: 0;
+}
+.carSeries-inner {
+	position: fixed;
+	top: 0;
+	left: 170rpx;
+	right: 0;
+	bottom: 0;
+	background-color: #fff;
+	z-index: 2;
+	-webkit-transform: translate3d(1000px, 0, 0);
+  transform: translate3d(1000px, 0, 0)
+}
+.weui-media-box__hd_in-appmsg,
+.weui-media-box__thumb {
+	width: 150rpx;
+	height: 100rpx;
+}
+.weui-media-box__title {
+	font-size: 32rpx;
+	color: #333333;
+}
+.weui-media-box__desc {
+	font-size: 26rpx;
+	color: #888888;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
