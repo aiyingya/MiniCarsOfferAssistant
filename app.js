@@ -17,7 +17,7 @@ App({
         success: function (auth) {
           wx.getUserInfo({
             success: function (res) {
-							let HTTPS_URL = config.serverHTTPSUrl('dev')
+							let HTTPS_URL = config.ucServerHTTPSUrl
 							console.log(res)
               that.globalData.userInfo = res.userInfo
               typeof cb == "function" && cb(that.globalData.userInfo)

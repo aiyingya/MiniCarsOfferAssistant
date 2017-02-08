@@ -21,7 +21,8 @@ Page({
 	},
   onLoad: function () {
     let that = this;
-		let HTTPS_URL = config.serverHTTPSUrl('ymcapi');
+		let HTTPS_URL = config.ymcServerHTTPSUrl;
+		console.log(HTTPS_URL)
 		try {
       var res = wx.getSystemInfoSync();
 			console.log(res)

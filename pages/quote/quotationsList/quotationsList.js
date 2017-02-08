@@ -1,4 +1,4 @@
-let config = require('./lib/config.js')
+let config = require('../../../lib/config.js')
 
 Page({
     onLoad() {
@@ -56,7 +56,7 @@ Page({
         } else {
             // 参数验证失败
         }
-    }，
+    },
 
     requestPublishQuotationSnapshot(draftId, customerMobile) {
         if (!draftId && draftId !== '' && !customerMobile && customerMobile !== '') {
