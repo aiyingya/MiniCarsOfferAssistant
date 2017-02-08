@@ -9,10 +9,9 @@
   ],
   "window":{
     "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#333",
+    "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "报价助手",
-    "navigationBarTextStyle":"#000",
-		"navigationBarBottomBorder": "1"
+    "navigationBarTextStyle":"black"
   },
 	"tabBar": {
     "list": [{
