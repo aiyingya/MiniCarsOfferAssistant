@@ -1,6 +1,11 @@
 {
   "pages":[
-    "pages/index/index"
+    "pages/index/index",
+    "pages/car/carModels/carModels",
+    "pages/car/carSources/carSources",
+    "pages/quote/quotationCreate/quotationCreate",
+    "pages/quote/quotationDetail/quotationDetail",
+    "pages/quote/quotationsList/quotationsList"
   ],
   "window":{
     "backgroundTextStyle":"light",
