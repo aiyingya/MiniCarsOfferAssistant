@@ -17,11 +17,13 @@
 	"tabBar": {
     "list": [{
       "pagePath": "pages/index/index",
-			"iconPath": "images/tabbar/tab_icon_home_select.png",
+      "iconPath": "images/icons/tab_icon_home_off.png",
+      "selectedIconPath": "images/icons/tab_icon_home_on.png",
       "text": "首页"
     },{
-      "pagePath": "pages/quote/quotationsList/quotationsList",
-			"iconPath": "images/tabbar/tab_icon_price_off.png",
+      "pagePath": "pages/quote/quotationCreate/quotationCreate",
+      "iconPath": "images/icons/tab_icon_price_off.png",
+      "selectedIconPath": "images/icons/tab_icon_price_on.png",
       "text": "报价记录"
     }]
   }

@@ -5,7 +5,7 @@
 		<view class="search-wrap">
 			<view class="search-inner">
 				<view class="search-icon">
-					<image class="search-img" src="../../images/icons/icon_find_line_black@3x.png"></image>
+					<image class="search-img" src="../../images/icons/icon_find.png"></image>
 				</view>
 				<input 
 					bindtap="searchCarType" 

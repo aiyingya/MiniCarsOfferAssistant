@@ -1,0 +1,74 @@
+<view class="page">
+    <view class="page__bd">
+        <view class="weui-tab">
+            <!--导航栏分区-->
+            <view class="weui-navbar">
+                <view id="0" class="weui-navbar__item {{activeIndex == 0 ? 'weui-bar__item_on' : ''}}" bindtap="handlerTabClick">
+                    <view class="weui-navbar__title">按揭</view>
+                </view>
+                <view id="1" class="weui-navbar__item {{activeIndex == 1 ? 'weui-bar__item_on' : ''}}" bindtap="handlerTabClick">
+                    <view class="weui-navbar__title">贷款</view>
+                </view>
+                <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+            </view>
+            <!--导航栏分区-->
+            <view class="weui-tab__panel">
+                <!--按揭内容-->
+                <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+                    <!--费用计算色块-->
+                    <view></view>
+                    <view></view>
+                    <view></view>
+                    <!--费用计算列表-->
+                    <view class="weui-cells weui-cells_after-title">
+                        <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                            <view class="weui-cell__bd">首付比例</view>
+                            <view class="weui-cell__ft weui-cell__ft_in-access">说明文字</view>
+                        </navigator>
+                        <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                            <view class="weui-cell__bd">付款年限</view>
+                            <view class="weui-cell__ft weui-cell__ft_in-access">说明文字</view>
+                        </navigator>
+                        <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                            <view class="weui-cell__bd">年利率</view>
+                            <view class="weui-cell__ft weui-cell__ft_in-access">说明文字</view>
+                        </navigator>
+                    </view>
+                    <!--基础信息-->
+                    <view>基础信息</view>
+
+                    <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                        <view class="weui-cell__bd">首付比例</view>
+                        <view class="weui-cell__ft weui-cell__ft_in-access">说明文字</view>
+                    </navigator>
+                    <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                        <view class="weui-cell__bd">配色</view>
+                        <view class="weui-cell__ft weui-cell__ft_in-access">北极白/黑</view>
+                    </navigator>
+                    <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                        <view class="weui-cell__bd">裸车价</view>
+                        <view class="weui-cell__ft weui-cell__ft_in-access">(下1.9万/6点)￥161600</view>
+                    </navigator>
+                    <!--必要花费-->
+                    <view>必要花费</view>
+                    <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                        <view class="weui-cell__bd">购置税、上牌费、车船税、保险等</view>
+                        <view class="weui-cell__ft weui-cell__ft_in-access">￥0</view>
+                    </navigator>
+                    <!--其他花费-->
+                    <view>其他花费</view>
+                    <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                        <view class="weui-cell__bd">精品费、安装费等</view>
+                        <view class="weui-cell__ft weui-cell__ft_in-access">￥0</view>
+                    </navigator>
+                    <!--备   注-->
+                    <view>备注</view>
+                    <textarea placeholder="请输入内容"/>
+                </view>
+                <!--贷款内容-->
+                <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+                </view>
+            </view>
+        </view>
+    </view>
+</view>
