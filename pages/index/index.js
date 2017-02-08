@@ -1,58 +1,27 @@
 //index.js
 var app = getApp()
-
+var config = require('../../lib/config.js')
 Page({
   data: {
-		hotCarLists: [
-			{image:''},
-			{image:''},
-			{image:''},
-			{image:''},
-			{image:''},
-			{image:''},
-			{image:''},
-			{image:''},
-			{image:''},
-			{image:''}
-		],
-    list: [
-      {alphabet: 'A', datas: ['asome']},
-      {alphabet: 'B', datas: ['bbsome','bebntries','bare here']},
-      {alphabet: 'C', datas:  ['csome','centries','care here']},
-      {alphabet: 'D', datas:  ['dsome','dentries','dare here']},
-      {alphabet: 'E', datas:  ['esome','eentries','eare here']},
-      {alphabet: 'F', datas:  ['fsome','fentries','are here']},
-      {alphabet: 'G', datas:  ['gsome','gentries','gare here']},
-      {alphabet: 'H', datas:  ['hsome','hentries','hare here']},
-      {alphabet: 'I', datas:  ['isome','ientries','iare here']},
-      {alphabet: 'J', datas:  ['jsome','jentries','jare here']},
-      {alphabet: 'K', datas:  ['ksome','kentries','kare here']},
-      {alphabet: 'L', datas:  ['lsome','lentries','lare here']},
-      {alphabet: 'M', datas:  ['msome','mentries','mare here']},
-      {alphabet: 'N', datas:  ['nsome','nentries','nare here']},
-      {alphabet: 'O', datas:  ['osome','oentries','oare here']},
-      {alphabet: 'P', datas:  ['psome','pentries','pare here']},
-      {alphabet: 'Q', datas:  ['qsome','qentries','qare here']},
-      {alphabet: 'R', datas:  ['rsome','rentries','rare here']},
-      {alphabet: 'S', datas:  ['some','sentries','sare here']},
-      {alphabet: 'T', datas:  ['tsome','tentries','tare here']},
-      {alphabet: 'U', datas:  ['usome','uentries','uare here']},
-      {alphabet: 'V', datas:  ['vsome','ventries','vare here']},
-      {alphabet: 'W', datas:  ['wsome','wentries','ware here']},
-      {alphabet: 'X', datas:  ['xsome','xentries','xare here']},
-      {alphabet: 'Y', datas:  ['ysome','yentries','yare here']},
-      {alphabet: 'Z', datas:  ['zsome','zentries','zare here']},
-    ],
+		hotCarLists: [],
+    brandGroupList: [],
     alpha: '',
     windowHeight: '',
-		showCarSeries: ''
+		showCarSeries: '',
+		showMask: '',
+		showCarSeriesInner: '',
+		imageDomain: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
+		HTTPS_YMCAPI: '',
+		showCarSeriesImageUrl: '',
+		carManufacturerSeriesList:[]
   },
   //事件处理函数
   searchCarType: function() {
 		console.log(2)
 	},
   onLoad: function () {
-    var that = this;
+    let that = this;
+		let HTTPS_URL = config.serverHTTPSUrl('ymcapi');
 		try {
       var res = wx.getSystemInfoSync();
 			console.log(res)
@@ -63,6 +32,34 @@ Page({
     } catch (e) {
       
     }
+		that.setData({
+			HTTPS_YMCAPI: HTTPS_URL
+		})
+		// 获取页面数据.
+		
+		wx.request({
+			url: HTTPS_URL + '/carBrand/brandGroupsRecommend', //仅为示例，并非真实的接口地址
+			method: 'GET',
+			data: {
+				cityId: '7d04e3a1-ee87-431c-9aa7-ac245014c51a',
+				recommendPositionCode: 'sy004',
+				num: '10'
+			},
+			header: {
+					'content-type': 'application/json'
+			},
+			success: function(res) {
+				let data = res.data.data;
+				let recommendCarBrandList = data.recommendCarBrandList;
+				let brandGroupList = data.brandGroupList;
+				console.log(recommendCarBrandList)
+				that.setData({
+					hotCarLists: recommendCarBrandList,
+					brandGroupList: brandGroupList
+				})
+			}
+		})
+		
     //调用应用实例的方法获取全局数据
     app.getUserInfo(function(userInfo){
       //更新数据
@@ -78,21 +75,53 @@ Page({
     that.setData({alphanetToast: ap});
   },
   handlerMove(e) {
-    let {list} = this.data;
+    let {brandGroupList} = this.data;
     let moveY = e.touches[0].clientY;
     let rY = moveY - this.offsetTop;
 		let that = this;
     if(rY >= 0) {
       let index = Math.ceil((rY - that.apHeight)/ that.apHeight);
-      if(0 <= index < list.length) {
-        let nonwAp = list[index];
-        nonwAp && that.setData({alpha: nonwAp.alphabet});
-				that.setData({alphanetToast: nonwAp.alphabet});
+      if(0 <= index < brandGroupList.length) {
+        let nonwAp = brandGroupList[index];
+				if(nonwAp) {
+					that.setData({alpha: nonwAp.firstLetter});
+					that.setData({alphanetToast: nonwAp.firstLetter});
+				}
       } 
     }
   },
 	selectCarSeries(e) {
 		let carSeries = e.currentTarget.dataset.carseries;
-		console.log(carSeries)
+		let that = this;
+		let {HTTPS_YMCAPI} = this.data;
+		console.log(carSeries);
+		
+		wx.request({
+			url: HTTPS_YMCAPI + '/carSeries/seriesPromotion', //仅为示例，并非真实的接口地址
+			method: 'GET',
+			data: {
+				carBrandId: carSeries.id,
+				cityId: '7d04e3a1-ee87-431c-9aa7-ac245014c51a'
+			},
+			header: {
+					'content-type': 'application/json'
+			},
+			success: function(res) {
+				let data = res.data.data;
+				that.setData({
+					showCarSeriesImageUrl: data.logoUrl,
+					carManufacturerSeriesList: data.carManufacturerSeriesList
+				})
+				console.log(data)
+			}
+		})
+		that.setData({showCarSeries: carSeries});
+		that.setData({showMask: 'showMask'});
+		that.setData({showCarSeriesInner: 'rightToLeft'});
+	},
+	removeCarSeriesInner(e) {
+		console.log(1)
+		let that = this;
+		that.setData({showCarSeries: ''});
 	}
 })

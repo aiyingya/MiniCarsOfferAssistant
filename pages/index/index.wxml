@@ -29,7 +29,13 @@
 					wx:for="{{hotCarLists}}"
 					wx:key="unique" 
 					>
-					<image mode="aspectFit" class="hot-carslogo" src="../../images/carlogo/car-1.png"></image>
+					<image 
+						mode="aspectFit" 
+						class="hot-carslogo" 
+						src="{{imageDomain}}{{item.carBrandLogoUrl}}"
+						bindtap="selectCarSeries"
+						data-carSeries="{{item}}"
+						></image>
 				</view>
 			</view>	
 		</view>
@@ -37,17 +43,18 @@
 		<!-- cars list.-->
 		<view class="viewCarsList-wrap">
 			<view 
-				wx:for="{{list}}" 
+				wx:for="{{brandGroupList}}" 
 				wx:key="unique" 
-				id="{{item.alphabet}}" 
+				id="{{item.firstLetter}}" 
 				class="viewCarsList-calls"
 				>
-				<view class="viewCarsList-index">{{item.alphabet}}</view>
+				<view class="viewCarsList-index">{{item.firstLetter}}</view>
 				<view class="weui-cells weui-cells_in-small-appmsg">
 					<view
 						class="weui-cell weui-cell_access" 
+						hover="true"
 						hover-class="weui-cell_active"
-						wx:for="{{item.datas}}" 
+						wx:for="{{item.carBrandList}}" 
 						wx:key="unique" 
 						wx:for-item="cell" 
 						wx:for-index="cellIndex" 
@@ -55,12 +62,12 @@
 						data-carSeries="{{cell}}"
 						>
 						<view class="weui-cell__hd">
-							<image src="../../images/carlogo/car-1.png" class="viewCarsList_icon-index" />
+							<image src="{{imageDomain}}{{cell.logoUrl}}" class="viewCarsList_icon-index" />
 						</view>
 						<view class="weui-cell__bd weui-cell_primary">
-								<view>文字标题</view>
+								<view>{{cell.brandName}}</view>
 						</view>
-						<view class="viewCars-describe">在售85款</view>
+						<view class="viewCars-describe">在售{{cell.onSaleCount}}款</view>
 					</view>
 				</view>
 			</view>
@@ -69,31 +76,49 @@
 </scroll-view>
 <view wx:if="{{alphanetToast === alpha}}" class="alphanet-toast showToast">{{alpha}}</view>
 <view data-id="selector" catchtouchstart="handlerAlphaTap" catchtouchmove="handlerMove" class="alphanet-selector">
-	<view data-ap="{{item.alphabet}}" wx:for="{{list}}" wx:key="unique" class="selector-one">
-		{{item.alphabet}}
+	<view wx:for="{{brandGroupList}}" wx:key="unique" data-ap="{{item.firstLetter}}" class="selector-one">
+		{{item.firstLetter}}
 	</view>
 </view>
 
 <!-- 车系.-->
 <view wx:if="{{showCarSeries !== ''}}" class="carSeries-wrap">
-	<view class="carSeries-mask"></view>
-	<view class="carSeries-inner">
+	<view 
+		class="carSeries-mask {{showMask}}"
+		bindtap="removeCarSeriesInner"
+		>
+	</view>
+	<view class="carSeries-inner {{showCarSeriesInner}}">
 		<scroll-view scroll-y style="height: {{windowHeight}}">
+			<view class="carSeries-logo weui-flex">
+				<image class="" src="{{imageDomain}}{{showCarSeriesImageUrl}}"></image>
+			</view>
 			<view 
-				wx:for="{{list}}" 
+				wx:for="{{carManufacturerSeriesList}}" 
 				wx:key="unique" 
-				id="{{item.alphabet}}" 
+				id="{{item.id}}" 
 				class="viewCarsList-calls"
 				>
-				<navigator url="" class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
-						<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-							<image class="weui-media-box__thumb" src="../../images/car.jpg"></image>
-						</view>
-						<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-								<view class="weui-media-box__title">标题一</view>
-								<view class="weui-media-box__desc">由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。</view>
-						</view>
-				</navigator>
+				<view class="viewCarsList-index carSeries-title">{{item.carManufacturerName}}</view>
+				<view class="weui-cells weui-cells_in-small-appmsg">
+					<navigator 
+						url="../search/carModels/carModels"
+						class="weui-media-box weui-media-box_appmsg" 
+						hover-class="weui-cell_active"
+						wx:for="{{item.carSeriesList}}" 
+						wx:key="unique" 
+						wx:for-item="cell" 
+						wx:for-index="cellIndex" 
+						>
+							<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+								<image class="weui-media-box__thumb" src="{{imageDomain}}{{cell.picUrl}}"></image>
+							</view>
+							<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+									<view class="weui-media-box__title">{{cell.seriesName}}</view>
+									<view class="weui-media-box__desc">在售{{cell.onSaleCount}}款 {{cell.colorCount}}</view>
+							</view>
+					</navigator>
+				</view>
 			</view>
 		</scroll-view>
 	</view>

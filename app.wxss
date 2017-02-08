@@ -12,9 +12,9 @@ page{
 } 
 
 .showToast {
-    -webkit-animation: Toast 3500ms ease 1 forwards ;
-            animation: Toast 3500ms ease 1 forwards ;
-    -webkit-animation-play-state: running;
+	-webkit-animation: Toast 3500ms ease 1 forwards ;
+	animation: Toast 3500ms ease 1 forwards ;
+	-webkit-animation-play-state: running;
 }
 @-webkit-keyframes Toast {
     0%,50%,80% { opacity: 1}
@@ -23,6 +23,32 @@ page{
 @keyframes Toast {
     0% , 50%,80% { opacity: 1}
     100% { opacity: 0}
+}
+.showMask {
+	-webkit-animation: fadein 500ms ease 1 forwards ;
+	animation: fadein 500ms ease 1 forwards ;
+	-webkit-animation-play-state: running;
+}
+.hideMask {
+	-webkit-animation: fadeout 500ms ease 1 forwards ;
+	animation: fadeout 500ms ease 1 forwards ;
+	-webkit-animation-play-state: running;
+}
+@-webkit-keyframes fadein {
+	0% {opacity: 0}
+  100% { opacity: 1}
+}
+@keyframes fadein {
+  0% {opacity: 0}
+  100% { opacity: 1}
+}
+@-webkit-keyframes fadeout {
+	0% {opacity: 1}
+  100% { opacity: 0}
+}
+@keyframes fadeout {
+  0% {opacity: 1}
+  100% { opacity: 0}
 }
 .rightToLeft {
     -webkit-animation: rightToLeft 600ms ease 100ms 1 forwards ;
