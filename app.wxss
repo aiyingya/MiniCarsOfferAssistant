@@ -1,4 +1,11 @@
 /**app.wxss**/
+@import 'css/weui.wxss';
+
+page{
+    background-color: #fff;
+    font-size: 28rpx;
+    font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
+}
 .container {
   width: 100%;
 	height: auto;

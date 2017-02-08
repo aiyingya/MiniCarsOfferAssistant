@@ -10,8 +10,19 @@
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#333",
-    "navigationBarTitleText": "汽车报价助手",
-    "navigationBarTextStyle":"#fff",
+    "navigationBarTitleText": "报价助手",
+    "navigationBarTextStyle":"#000",
 		"navigationBarBottomBorder": "1"
+  },
+	"tabBar": {
+    "list": [{
+      "pagePath": "pages/index/index",
+			"iconPath": "images/tabbar/tab_icon_home_select.png",
+      "text": "首页"
+    },{
+      "pagePath": "pages/quote/quotationsList/quotationsList",
+			"iconPath": "images/tabbar/tab_icon_price_off.png",
+      "text": "报价记录"
+    }]
   }
 }
