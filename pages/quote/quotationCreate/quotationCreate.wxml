@@ -68,6 +68,11 @@
                 <!--贷款内容-->
                 <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
                 </view>
+
+                <!--底部按钮， 目前直接暴露"分享"按钮以便调试-->
+                <button bindtap='handlerSaveQuotationDraft'>完成</button>
+                <button bindtap='handlerPublishQuotationSnapshot'>分享</button>
+
             </view>
         </view>
     </view>

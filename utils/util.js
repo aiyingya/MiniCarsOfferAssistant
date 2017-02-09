@@ -16,6 +16,14 @@ function formatNumber(n) {
   return n[1] ? n : '0' + n
 }
 
+/**
+ * 贷款实际偿还金额
+ */
+let totalPaymentByLoan = function(annualRate, stages) {
+  return 150109;
+}
+
 module.exports = {
-  formatTime: formatTime
+  formatTime: formatTime,
+  totalPaymentByLoan: totalPaymentByLoan
 }

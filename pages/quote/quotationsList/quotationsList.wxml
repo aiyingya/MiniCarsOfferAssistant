@@ -1,0 +1,32 @@
+<!--index.wxml-->
+<scroll-view scroll-y style="height: {{windowHeight}}" scroll-into-view="{{alpha}}">
+    <view class="container">
+        <!-- quotations list.-->
+        <view class="viewCarsList-wrap">
+            <view
+                    wx:for="{{quotationsList}}"
+                    wx:key="unique"
+                    id="{{item.timeString}}"
+                    class="viewCarsList-calls"
+            >
+                <view class="viewCarsList-index">{{item.timeString}}</view>
+                <view class="weui-cells weui-cells_in-small-appmsg">
+                    <navigator
+                            url="../quotationDetail/quotationDetail"
+                            class="weui-media-box weui-media-box_appmsg"
+                            hover-class="weui-cell_active"
+                            wx:for="{{item.quotations}}"
+                            wx:key="unique"
+                            wx:for-item="cell"
+                            wx:for-index="cellIndex"
+                    >
+                        <view class="weui-cell__bd weui-cell_primary">
+                            <view>{{cell.carName}}</view>
+                        </view>
+                    </navigator>
+                </view>
+            </view>
+        </view>
+    </view>
+</scroll-view>
+
