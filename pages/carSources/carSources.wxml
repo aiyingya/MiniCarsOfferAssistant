@@ -1,4 +1,5 @@
 <!-- 车源详情.-->
+<scroll-view scroll-y style="height: {{windowHeight}}">
 <view class="car-sources container">
 	<view class="carSources-topbar weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
 			<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
@@ -11,6 +12,67 @@
 	</view>
 	
 	<view class="carSources-body">
-		
+		<view class="carSources-navbar">
+			<view 
+				class="navbar cars-facade"
+				bindtap="handlerAmendCarFacade"
+				>全部外观
+				<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
+			</view>
+			<view class="navbar cars-facade">全部内饰
+				<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
+			</view>
+			<view class="navbar">
+				<botton
+					hover-class="navbar-btn-active" 
+					class="navbar-btn" 
+					type="primary"
+					>有货</botton>
+			</view>
+		</view>
+		<!-- 条件筛选.-->
+		<view wx:if="{{showRmendCarFacade}}" class="rmendCarFacade-popup-wrap">
+			<view class="rmendCarFacade-popup-mask showMask"></view>
+			<view class="rmendCarFacade-inner topToBottom">
+
+			</view>
+		</view>
+		<view class="carSources-cells">
+			<view 
+				wx:for="{{carModelsInfo.externalColorList}}"
+				wx:key="unique" 
+				class="carSources-cell">
+				<view class="carSources-cell-list">
+					<view class="carSources-cell-label">
+						<view class="label">配色：</view>
+						<view class="message">{{item.name}}</view>
+					</view>
+					<view class="carSources-cell-price">
+						<view class="price">{{item.price}}</view>万
+					</view>
+				</view>
+				<view class="carSources-cell-list">
+					<view class="carSources-cell-label">
+						<view class="label">状态：</view>
+						<view class="message">有货</view>
+					</view>
+					<view class="carSources-cell-price">
+						<image 
+							
+							class="depreciate-icon" 
+							src="../../../images/icons/icon_ price_down.png"
+							></image>
+						<view class="depreciate">{{item.officePrice}}</view>
+					</view>
+				</view>
+				<view class="carSources-cell-list">
+					<view class="carSources-cell-label">
+						<view class="label">备注：</view>
+						<view class="message remark">打卡的那款的那段那是的那是的那段看大陇南市案例是娜娜说的那是单身</view>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </view>
+</scroll-view>

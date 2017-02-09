@@ -61,6 +61,11 @@ page{
             animation: leftToRight 600ms ease 100ms 1 forwards ;
     -webkit-animation-play-state: running;
 }
+.topToBottom {
+    -webkit-animation: topToBottom 600ms ease 100ms 1 forwards ;
+            animation: topToBottom 600ms ease 100ms 1 forwards ;
+    -webkit-animation-play-state: running;
+}
 @-webkit-keyframes rightToLeft {
     from {
         -webkit-transform: translate3d(1000px, 0, 0);
@@ -102,4 +107,24 @@ page{
         -webkit-transform: translate3d(1000px, 0, 0);
         transform: translate3d(1000px, 0, 0)
     }
+}
+@-webkit-keyframes topToBottom {
+	from {
+		-webkit-transform: translate3d(0, -1000px, 0);
+  	transform: translate3d(0, -1000px, 0) ;
+	}
+	to {
+		-webkit-transform: translate3d(0, 0, 0);
+  	transform: translate3d(0, 0, 0) ;
+	}
+}
+@keyframes topToBottom {
+  from {
+		-webkit-transform: translate3d(0, -1000px, 0);
+  	transform: translate3d(0, -1000px, 0) ;
+	}
+	to {
+		-webkit-transform: translate3d(0, 0, 0);
+  	transform: translate3d(0, 0, 0) ;
+	}
 }
