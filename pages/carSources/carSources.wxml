@@ -1,0 +1,16 @@
+<!-- 车源详情.-->
+<view class="car-sources container">
+	<view class="carSources-topbar weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+			<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+					<image class="weui-media-box__thumb" src="{{imgAliyuncsUrl}}{{carModelsInfo.carSeriesPicUrl}}" />
+			</view>
+			<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+					<view class="weui-media-box__title">{{carModelsInfo.modelName}}</view>
+					<view class="weui-media-box__desc">指导价{{carModelsInfo.officePrice}}万</view>
+			</view>
+	</view>
+	
+	<view class="carSources-body">
+		
+	</view>
+</view>

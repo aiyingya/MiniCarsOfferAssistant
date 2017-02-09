@@ -33,7 +33,7 @@
 						mode="aspectFit" 
 						class="hot-carslogo" 
 						src="{{imageDomain}}{{item.carBrandLogoUrl}}"
-						bindtap="selectCarSeries"
+						bindtap="handlerSelectCarSeries"
 						data-carSeries="{{item}}"
 						></image>
 				</view>
@@ -58,7 +58,7 @@
 						wx:key="unique" 
 						wx:for-item="cell" 
 						wx:for-index="cellIndex" 
-						bindtap="selectCarSeries"
+						bindtap="handlerSelectCarSeries"
 						data-carSeries="{{cell}}"
 						>
 						<view class="weui-cell__hd">
@@ -101,14 +101,17 @@
 				>
 				<view class="viewCarsList-index carSeries-title">{{item.carManufacturerName}}</view>
 				<view class="weui-cells weui-cells_in-small-appmsg">
-					<navigator 
-						url="../search/carModels/carModels"
+					<view 
 						class="weui-media-box weui-media-box_appmsg" 
+						hover="true"
 						hover-class="weui-cell_active"
 						wx:for="{{item.carSeriesList}}" 
 						wx:key="unique" 
 						wx:for-item="cell" 
 						wx:for-index="cellIndex" 
+						bindtap="handlerToCarsModels"
+						data-carsInfo="{{cell}}"
+						url="../search/carModels/carModels?carsInfo={{cell}}"
 						>
 							<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
 								<image class="weui-media-box__thumb" src="{{imageDomain}}{{cell.picUrl}}"></image>
@@ -117,7 +120,7 @@
 									<view class="weui-media-box__title">{{cell.seriesName}}</view>
 									<view class="weui-media-box__desc">在售{{cell.onSaleCount}}款 {{cell.colorCount}}</view>
 							</view>
-					</navigator>
+					</view>
 				</view>
 			</view>
 		</scroll-view>

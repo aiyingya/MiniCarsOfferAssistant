@@ -1,0 +1,41 @@
+/* 车源详情.*/
+
+.carSources-topbar {
+	width: 100%;
+	height: 160rpx;
+	background-color: #fff;
+}
+.carSources-topbar .weui-media-box {
+	padding: 0 24rpx;
+}
+.carSources-topbar .weui-media-box__hd,
+.carSources-topbar .weui-media-box__thumb {
+	width: 150rpx;
+	height: 100rpx;
+}
+.carSources-topbar .weui-media-box__title {
+	width: 440rpx;
+	height: 40rpx;
+	line-height: 40rpx;
+	font-family: "PingFangSC-Medium";
+	font-size: 30rpx;
+	color: #333333;
+	margin-top: 10rpx;
+}
+.carSources-topbar .weui-media-box__desc {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #999999;
+	line-height: 40rpx;
+}
+.carSources-body {
+	width: 100%;
+	margin-top: 20rpx;
+}
+.carSources-navbar {
+	width: 100%;
+	height: 88rpx;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-between;
+}

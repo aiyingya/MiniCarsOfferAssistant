@@ -16,16 +16,14 @@ Page({
 		carManufacturerSeriesList:[]
   },
   //事件处理函数
-  searchCarType: function() {
+  searchCarType() {
 		console.log(2)
 	},
-  onLoad: function () {
+  onLoad() {
     let that = this;
 		let HTTPS_URL = config.ymcServerHTTPSUrl;
-		console.log(HTTPS_URL)
 		try {
       var res = wx.getSystemInfoSync();
-			console.log(res)
       this.pixelRatio = res.pixelRatio;
       this.apHeight = 16;
       this.offsetTop = 80;
@@ -53,7 +51,6 @@ Page({
 				let data = res.data.data;
 				let recommendCarBrandList = data.recommendCarBrandList;
 				let brandGroupList = data.brandGroupList;
-				console.log(recommendCarBrandList)
 				that.setData({
 					hotCarLists: recommendCarBrandList,
 					brandGroupList: brandGroupList
@@ -91,11 +88,10 @@ Page({
       } 
     }
   },
-	selectCarSeries(e) {
+	handlerSelectCarSeries(e) {
 		let carSeries = e.currentTarget.dataset.carseries;
 		let that = this;
 		let {HTTPS_YMCAPI} = this.data;
-		console.log(carSeries);
 		
 		wx.request({
 			url: HTTPS_YMCAPI + '/carSeries/seriesPromotion', //仅为示例，并非真实的接口地址
@@ -113,7 +109,6 @@ Page({
 					showCarSeriesImageUrl: data.logoUrl,
 					carManufacturerSeriesList: data.carManufacturerSeriesList
 				})
-				console.log(data)
 			}
 		})
 		that.setData({showCarSeries: carSeries});
@@ -121,8 +116,13 @@ Page({
 		that.setData({showCarSeriesInner: 'rightToLeft'});
 	},
 	removeCarSeriesInner(e) {
-		console.log(1)
 		let that = this;
 		that.setData({showCarSeries: ''});
+	},
+	handlerToCarsModels(e) {
+		let carsInfo = JSON.stringify(e.currentTarget.dataset.carsinfo);
+		wx.navigateTo({  
+      url: '../carModels/carModels?carsInfo='+ carsInfo
+    }) 
 	}
 })

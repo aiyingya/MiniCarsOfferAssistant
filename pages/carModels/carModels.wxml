@@ -1,0 +1,51 @@
+<!-- 车款.-->
+<scroll-view scroll-y style="height: {{windowHeight}}">
+	<view class="car-models container">
+		<view class="carModels-cells">
+			<view 
+				class="carModels-cell"
+				hover="true"
+				hover-class="carModels-cell_active"
+				wx:for="{{carModelsList}}"
+				wx:key="unique" 
+				>
+				<view 
+					class="carModels-message"
+					bindtap="handlerToCarSources" 
+					data-carmodelsinfo="{{item}}"
+					>
+					<view class="carModels-message-title">
+						{{item.modelName}} {{item.gearboxType}}
+					</view>
+					<view class="carModels-message-price">
+						<view class="price"><view class="price-num">{{item.price}}</view>万</view>
+						<view class="officePrice">指导价{{item.officePrice}}万</view>
+						<image 
+							wx:if="{{item.officePrice > item.price}}" 
+							class="depreciate-icon" 
+							src="../../../images/icons/icon_ price_down.png"
+							></image>
+						<image 
+							wx:else
+							class="depreciate-icon" 
+							src="../../../images/icons/icon_ price_up.png"
+							></image>
+						<view class="depreciate">{{item.count}}万</view>
+					</view>
+					<view class="icon-arrows">
+						<image src="../../../images/icons/icon_arrow.png"></image>
+					</view>
+				</view>
+				<view class="carModels-quote-btn">
+					<button 
+						hover-class="quotebtn-active" 
+						class="quotebtn" 
+						type="primary"
+						bindtap="handlerPromptly"
+						data-carmodelsinfo="{{item}}"
+						>立即报价</button>
+				</view>
+			</view>
+		</view>
+	</view>
+</scroll-view>
