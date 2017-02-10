@@ -17,6 +17,18 @@ page{
 	animation: Toast 3500ms ease 1 forwards ;
 	-webkit-animation-play-state: running;
 }
+.active {
+	background-color: rgba(0,0,0,.1) !important;
+}
+.popup-mask {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 99;
+}
 @-webkit-keyframes Toast {
     0%,50%,80% { opacity: 1}
     100% { opacity: 0}
@@ -62,8 +74,8 @@ page{
     -webkit-animation-play-state: running;
 }
 .topToBottom {
-    -webkit-animation: topToBottom 600ms ease 100ms 1 forwards ;
-            animation: topToBottom 600ms ease 100ms 1 forwards ;
+    -webkit-animation: topToBottom 500ms ease 1 forwards ;
+            animation: topToBottom 500ms ease 1 forwards ;
     -webkit-animation-play-state: running;
 }
 @-webkit-keyframes rightToLeft {

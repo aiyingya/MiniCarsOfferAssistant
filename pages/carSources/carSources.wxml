@@ -32,16 +32,37 @@
 		</view>
 		<!-- 条件筛选.-->
 		<view wx:if="{{showRmendCarFacade}}" class="rmendCarFacade-popup-wrap">
-			<view class="rmendCarFacade-popup-mask showMask"></view>
+			<view 
+				class="rmendCarFacade-popup-mask showMask"
+				bindtap="headlerRemoveRmendCarFacade"
+				></view>
 			<view class="rmendCarFacade-inner topToBottom">
-
+				
+				<view class="weui-cell weui-cell_access" hover="true" hover-class="weui-cell_active">
+						<view class="weui-cell__bd weui-cell_primary">
+								<view>全部外观</view>
+						</view>
+				</view>
+				<view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+						<view class="weui-cell__bd weui-cell_primary">
+								<view>北极白</view>
+						</view>
+						<view class="weui-cell__ft">
+							<image src="../../images/icons/icon_select_red.png"></image>
+						</view>
+				</view>
+				
 			</view>
 		</view>
 		<view class="carSources-cells">
 			<view 
 				wx:for="{{carModelsInfo.externalColorList}}"
-				wx:key="unique" 
-				class="carSources-cell">
+				wx:key="unique"
+				hover="true" 
+				class="carSources-cell"
+				hover-class="active"
+				bindtap="handlerShowQuoteView"
+				>
 				<view class="carSources-cell-list">
 					<view class="carSources-cell-label">
 						<view class="label">配色：</view>
@@ -73,6 +94,32 @@
 				</view>
 			</view>
 		</view>
+	</view>
+</view>
+
+<!-- 报价.-->
+<view wx:if="{{showQuoteView}}" class="navbar-quote-popup">
+	<view 
+		class="navbar-quote-mask popup-mask showMask"
+		bindtap="headlerRemoveQuoteView"
+		></view>
+	<view class="navbar-quote-main">
+		<view 
+			class="navbar-quote-cell" 
+			hover="true" 
+			hover-class="navbar-quote-active"
+			bindtap="handlerMakePhoneCall"
+			>电话联系</view>
+		<view 
+			class="navbar-quote-cell" 
+			hover="true" 
+			hover-class="navbar-quote-active"
+			>立即订车</view>
+		<view 
+			class="navbar-quote-cell" 
+			hover="true" 
+			hover-class="navbar-quote-active"
+			>生成报价</view>
 	</view>
 </view>
 </scroll-view>

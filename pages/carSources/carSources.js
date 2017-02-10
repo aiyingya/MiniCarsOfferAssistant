@@ -5,7 +5,8 @@ Page({
 		imgAliyuncsUrl: config.imgAliyuncsUrl,
 		carModelsInfo: '',
 		windowHeight: '',
-		showRmendCarFacade:''
+		showRmendCarFacade:'',
+		showQuoteView: ''
 	},
 	onLoad (options) {
 		let that = this;
@@ -26,10 +27,24 @@ Page({
 		})
 	},
 	handlerAmendCarFacade(e) {
-		console.log(1);
 		let that = this;
 		that.setData({
 			showRmendCarFacade: true
 		})
-	}
+	},
+	headlerRemoveRmendCarFacade() {
+		this.setData({
+			showRmendCarFacade: false
+		})
+	},
+	handlerShowQuoteView() {
+		this.setData({
+			showQuoteView: true
+		})
+	},
+	headlerRemoveQuoteView() {
+		this.setData({
+			showQuoteView: false
+		})
+	},
 })
