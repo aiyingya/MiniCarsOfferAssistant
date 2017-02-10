@@ -3,30 +3,29 @@
     <view class="container">
         <!-- quotations list.-->
         <view class="viewCarsList-wrap">
-            <view
-                    wx:for="{{quotationsList}}"
-                    wx:key="unique"
-                    id="{{item.timeString}}"
-                    class="viewCarsList-calls"
-            >
-                <view class="viewCarsList-index">{{item.timeString}}</view>
-                <view class="weui-cells weui-cells_in-small-appmsg">
-                    <navigator
-                            url="../quotationDetail/quotationDetail"
-                            class="weui-media-box weui-media-box_appmsg"
-                            hover-class="weui-cell_active"
-                            wx:for="{{item.quotations}}"
-                            wx:key="unique"
-                            wx:for-item="cell"
-                            wx:for-index="cellIndex"
-                    >
-                        <view class="weui-cell__bd weui-cell_primary">
-                            <view>{{cell.carName}}</view>
-                        </view>
-                    </navigator>
+            <view class="weui-cells weui-cells_in-small-appmsg">
+                <view
+                        url="../quotationDetail/quotationDetail"
+                        class="weui-media-box weui-media-box_appmsg"
+                        hover-class="weui-cell_active"
+                        wx:for="{{quotationsList}}"
+                        wx:key="unique"
+                        wx:for-item="cell"
+                        wx:for-index="cellIndex"
+                        data-quotation="{{cell}}"
+                        bindtap="handlerSelectQuotation"
+                >
+                    <view class="weui-cell__bd weui-cell_primary">
+                        <view>{{cell.quotationItems[0].itemName}}</view>
+                    </view>
+                    <view>指导价{{cell.quotationItems[0].guidePrice}}</view>
+                    <view>裸车价{{cell.quotationItems[0].sellingPrice}}</view>
+                    <view>下{{cell.quotationItems[0].downPrice}}</view>
+                    <view>客户手机:{{cell.customerMobile}}</view>
+                    <view wx:if="{{cell.read}}">已查看</view>
+                    <view wx:else>未查看</view>
                 </view>
             </view>
         </view>
     </view>
 </scroll-view>
-

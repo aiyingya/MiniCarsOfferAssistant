@@ -1,3 +1,7 @@
+<import src="../../../lib/dialog/dialog.wxml"/>
+
+<template is="dialog" data="{{ ...$wux.dialog }}"/>
+
 <view class="page">
     <view class="page__bd">
         <view class="weui-tab">
@@ -69,11 +73,22 @@
                 <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
                 </view>
 
-                <!--底部按钮， 目前直接暴露"分享"按钮以便调试-->
-                <button bindtap='handlerEditQuotationSnapshot'>编辑</button>
-                <button bindtap='handlerContactWithCustomerOrShareToCustomer'>联系客户/分享</button>
-                <button bindtap='handlerBookCar'>立即订车</button>
+                <!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/分享/联系客户/立即订车-->
+                <view wx:if="{{edit}}">
+                    <button bindtap='handlerSaveQuotationDraft'>完成</button>
+                </view>
+                <view wx:else>
+                    <button bindtap='handlerEditQuotation'>编辑</button>
+                    <view wx:if="{{quotation.customerMobile && quotation.customerMobile.length}}">
+                        <button bindtap='handlerContactWithCustomer'>联系客户</button>
+                    </view>
+                    <view wx:else>
+                        <button bindtap='handlerShareToCustomer'>分享</button>
+                    </view>
+                    <button bindtap='handlerBookCar'>立即订车</button>
+                </view>
             </view>
         </view>
     </view>
 </view>
+

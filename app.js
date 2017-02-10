@@ -1,5 +1,7 @@
 //app.js
 var config = require('./lib/config.js')
+import wux from 'lib/wux'
+
 App({
   onLaunch: function () {
     //调用API从本地缓存中获取数据
@@ -42,5 +44,6 @@ App({
   },
   globalData:{
     userInfo:null
-  }
+  },
+  wux: wux,
 })
