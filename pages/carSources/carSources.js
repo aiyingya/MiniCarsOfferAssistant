@@ -69,7 +69,7 @@ Page({
 	handlerQuoteCreate(e) {
 		let that = this;
 		wx.navigateTo({  
-      url: '../carSources/carSources?carInfo=' + JSON.stringify(that.data.QuoteCreateInfo)
+      url: '../quote/quotationCreate/quotationCreate?carInfo=' + JSON.stringify(that.data.QuoteCreateInfo)
     })
 	}
 })
