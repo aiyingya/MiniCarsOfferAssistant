@@ -1,6 +1,7 @@
-let sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
-let config = require('../../../lib/config.js');
-let util = require('../../../utils/util.js');
+let sliderWidth = 96 // 需要设置slider的宽度，用于计算中间位置
+let config = require('../../../lib/config.js')
+let util = require('../../../utils/util.js')
+const App = getApp()
 
 Page({
   data: {
@@ -10,18 +11,18 @@ Page({
     sliderLeft: 0,
 
     /* 报价单主体数据 */
-    quotationDraft: {
+    quotation: {
       quotationId: '0',
       draftId: '0',
-      quotationName: '报价单名称，没有可以不传',
+      quotationName: '',
       quotationItems: [
-        //   {
-        //     'itemNumber': '商品编号',
-        //     'itemName': '商品名称',
-        //     'specifications': '商品规格',
-        //     'guidePrice': '指导价',
-        //     'sellingPrice': '售价'
-        //   }
+        {
+          itemNumber: '',
+          itemName: '',
+          specifications: '',
+          guidePrice: '',
+          sellingPrice: ''
+        }
       ],
       hasLoan: true,          // 必传，true/false，boolean，是否贷款
       paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
@@ -34,11 +35,15 @@ Page({
       remark: '',
       loginChannel: 'weixin',
       snsId: '',
-      customerMobile: ''
+      customerMobile: '',
+      read: false
     }
   },
   onLoad(options) {
-    let that = this;
+    let that = this
+
+    /// 初始化自定义组件
+    this.$wuxDialog = App.wux(this).$wuxDialog
 
     // TODO: davidfu 需要从车源界面获取车的相关信息
     // let carsinfo = JSON.parse(options.carinfo);
@@ -46,11 +51,11 @@ Page({
     /// 车价格
     let advancePayment = 150109;
     let monthlyPayment = 8243;
-    let totalPaymentByLoan = util.totalPaymentByLoan(this.data.quotationDraft.annualRate, this.data.quotationDraft.stages);
+    let totalPaymentByLoan = util.totalPaymentByLoan(this.data.quotation.annualRate, this.data.quotation.stages);
     this.setData({
-      'quotationDraft.advancePayment': advancePayment,
-      'quotationDraft.monthlyPayment': monthlyPayment,
-      'quotationDraft.totalPaymentByLoan': totalPaymentByLoan
+      'quotation.advancePayment': advancePayment,
+      'quotation.monthlyPayment': monthlyPayment,
+      'quotation.totalPaymentByLoan': totalPaymentByLoan
     });
 
     wx.getSystemInfo({
@@ -70,12 +75,39 @@ Page({
     });
   },
   handlerSaveQuotationDraft(e) {
+    let that = this;
+
     this.requestSaveQuotationDraft(this.data.quotationDraft, {
       success: function (res) {
-        let quotationDraft = res.data.data;
-        // this.data.quotationDraft = quotationDraft;
+        let quotationDraft = res.data.data
+        // this.data.quotation = quotationDraft
 
-        // TODO: davidfu 显示自定义弹出， 弹出后询问客户的电话号码并发布
+        // 请求成功后弹出对话框
+        const hideDialog = that.$wuxDialog.open({
+          title: '保存成功',
+          content: '分享给客户',
+          phoneNumberPlaceholder: '输入对方11位手机号码',
+          confirmText: '分享',
+          cancelText: '暂不分享',
+          confirm: () => {
+            wx.switch({
+              url: '../quotationsList/quotationsList',
+              success: (res) => {
+
+              },
+              fail: () => {
+
+              },
+              complete: () => {
+
+              }
+            })
+          },
+          cancel: () => {
+            // 跳转
+          }
+        })
+
       },
       fail: function () {
 

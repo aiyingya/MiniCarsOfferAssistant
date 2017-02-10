@@ -1,6 +1,7 @@
 let sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
 let config = require('../../../lib/config.js');
 let util = require('../../../utils/util.js');
+const App = getApp()
 
 Page({
   data: {
@@ -13,15 +14,15 @@ Page({
     quotation: {
       quotationId: '0',
       draftId: '0',
-      quotationName: '报价单名称，没有可以不传',
+      quotationName: '',
       quotationItems: [
-        //   {
-        //     'itemNumber': '商品编号',
-        //     'itemName': '商品名称',
-        //     'specifications': '商品规格',
-        //     'guidePrice': '指导价',
-        //     'sellingPrice': '售价'
-        //   }
+        {
+          itemNumber: '',
+          itemName: '',
+          specifications: '',
+          guidePrice: '',
+          sellingPrice: ''
+        }
       ],
       hasLoan: true,          // 必传，true/false，boolean，是否贷款
       paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
@@ -34,23 +35,28 @@ Page({
       remark: '',
       loginChannel: 'weixin',
       snsId: '',
-      customerMobile: ''
-    }
+      customerMobile: '',
+      read: false
+    },
+    edit: false
   },
   onLoad(options) {
     let that = this;
 
+    /// 初始化自定义组件
+    this.$wuxDialog = App.wux(this).$wuxDialog
+
     // TODO: davidfu 需要从车源界面获取车的相关信息
-    // let carsinfo = JSON.parse(options.carinfo);
+    let quotation = JSON.parse(options.quotation);
 
     /// 车价格
     let advancePayment = 150109;
     let monthlyPayment = 8243;
-    let totalPaymentByLoan = util.totalPaymentByLoan(this.data.quotationDraft.annualRate, this.data.quotationDraft.stages);
+    let totalPaymentByLoan = util.totalPaymentByLoan(this.data.quotation.annualRate, this.data.quotation.stages);
     this.setData({
-      'quotationDraft.advancePayment': advancePayment,
-      'quotationDraft.monthlyPayment': monthlyPayment,
-      'quotationDraft.totalPaymentByLoan': totalPaymentByLoan
+      'quotation.advancePayment': advancePayment,
+      'quotation.monthlyPayment': monthlyPayment,
+      'quotation.totalPaymentByLoan': totalPaymentByLoan
     });
 
     wx.getSystemInfo({
@@ -70,31 +76,79 @@ Page({
     });
   },
   handlerEditQuotation(e) {
+    let that = this
     // TODO: 解除编辑态, 底部按钮应该变为完成
-
+    this.setData({
+      edit: !that.data.edit
+    })
   },
-  handlerContactWithCustomerOrShareToCustomer(e) {
-    if (true) {
-      // TODO：联系电话逻辑
-    } else {
-      // TODO: 分享给客户逻辑
-    }
+  handlerContactWithCustomer(e) {
+    let that = this;
+    wx.makePhoneCall({
+      phoneNumber: this.data.quotation.customerMobile,
+      success: function(res) {
+        console.log('拨打电话' + that.data.quotation.customerMobile + '成功');
+      }
+    })
+  },
+  handlerShareToCustomer(e) {
+    let that = this;
+
+    const hideDialog = this.$wuxDialog.open({
+      title: '保存成功',
+      content: '分享给客户',
+      phoneNumberPlaceholder: '输入对方11位手机号码',
+      confirmText: '分享',
+      cancelText: '暂不分享',
+      confirm: (res) => {
+        let mobile = res.mobile
+        that.requestPublishQuotation(that.data.draftId, mobile, {
+          success: (res) => {
+            // TODO: 发布报价单成功
+          },
+          fail: () => {
+            //
+          },
+          complete: () => {
+
+          }
+        })
+      },
+      cancel: () => {
+
+      }
+    })
   },
   handlerBookCar(e) {
-    this.requestBookCar({
-      success: function (res) {
-        
+    let that = this;
+
+    const hideDialog = this.$wuxDialog.open({
+      title: '发起订车后， 将会有工作人员与您联系',
+      content: '',
+      phoneNumberPlaceholder: '输入您的手机号',
+      confirmText: '发起订车',
+      cancelText: '取消',
+      confirm: (res) => {
+        let mobile = res.mobile
+        that.requestBookCar(that.data.quotationId, mobile, {
+          success: (res) => {
+            // TODO: 发起订车成功
+          },
+          fail: () => {
+
+          },
+          complete: () => {
+
+          }
+        })
       },
-      fail: function () {
-        
-      },
-      complete: function () {
-        
+      cancel: () => {
+
       }
     })
   },
   handlerSaveQuotationDraft(e) {
-    this.requestSaveQuotationDraft(this.data.quotationDraft, {
+    this.requestSaveQuotationDraft(this.data.quotation, {
       success: function (res) {
         let quotationDraft = res.data.data;
         // this.data.quotationDraft = quotationDraft;
@@ -113,7 +167,7 @@ Page({
     // TODO: davidfu 此处的电话号码应该为从自定义弹窗中获取的值
     let customerMobile = '18516103001';
 
-    this.requestPublishQuotation(this.data.quotationDraft.draftId, customerMobile, {
+    this.requestPublishQuotation(this.data.quotation.draftId, customerMobile, {
       success: function (res) {
         let quotation = res.data.data;
         // TODO: davidfu 这里是否需要考虑合并数据到 this.data
@@ -313,29 +367,36 @@ Page({
    "remark":"备注"
    }
    */
-  requestEditQuotationDraft(draftId, quotation, object) {
-    if (draftId && draftId !== '' && quotation && typeof quotation === 'object') {
-      wx.request({
-        url: config.ymcServerHTTPSUrl + 'sale/quotation/draft/' + draftId,
-        data: quotation,
-        method: 'PUT', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-        // header: {}, // 设置请求的 header
-        success: function(res){
-          // success
-        },
-        fail: function() {
-          // fail
-        },
-        complete: function() {
-          // complete
-        }
-      })
-    } else {
-      // 参数验证失败
-    }
-  },
+  // requestEditQuotationDraft(draftId, quotation, object) {
+  //   if (draftId && draftId !== '' && quotation && typeof quotation === 'object') {
+  //     wx.request({
+  //       url: config.ymcServerHTTPSUrl + 'sale/quotation/draft/' + draftId,
+  //       data: quotation,
+  //       method: 'PUT', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+  //       // header: {}, // 设置请求的 header
+  //       success: function(res){
+  //         // success
+  //       },
+  //       fail: function() {
+  //         // fail
+  //       },
+  //       complete: function() {
+  //         // complete
+  //       }
+  //     })
+  //   } else {
+  //     // 参数验证失败
+  //   }
+  // },
 
-  requestBookCar(object) {
+  /**
+   * 发起订车行为
+   *
+   * @param quotationId
+   * @param customerMobile
+   * @param object
+   */
+  requestBookCar(quotationId, customerMobile, object) {
 
   }
 });

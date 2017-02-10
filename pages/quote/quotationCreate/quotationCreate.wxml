@@ -1,3 +1,7 @@
+<import src="../../lib/dialog/dialog.wxml"/>
+
+<template is="dialog" data="{{ ...$wux.dialog }}"/>
+
 <view class="page">
     <view class="page__bd">
         <view class="weui-tab">

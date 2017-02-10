@@ -6,55 +6,113 @@ Page({
     pageSize: 10,
     quotationsList: [
       {
-        timeString: '3月1日',
-        quotations:[
+        quotationId: '0',
+        draftId: '0',
+        quotationName: '报价单名称，没有可以不传',
+        quotationItems: [
           {
-            carName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
-            guidePrice: '38万',
-            price: '11.68万',
-            downPrice: '2万',
-            customerMobile: '18516103001',
-            hasRead: true
-          },
-          {
-            carName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
-            guidePrice: '38万',
-            price: '11.68万',
-            downPrice: '2万',
-            customerMobile: '18516103001',
-            hasRead: true
-          },
-          {
-            carName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
-            guidePrice: '38万',
-            price: '11.68万',
-            downPrice: '2万',
-            customerMobile: '18516103001',
-            hasRead: true
+            itemNumber: '2131321',
+            itemName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
+            specifications: '商品规格',
+            guidePrice: '14万',
+            sellingPrice: '12万'
           }
-        ]
+        ],
+        hasLoan: true,          // 必传，true/false，boolean，是否贷款
+        paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
+        stages: 3,              // 贷款期数，int，全款时不传
+        annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
+        requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
+        otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
+        advancePayment: 0,       // 必传，首次支付金额，如果全款则为全款金额",
+        monthlyPayment: 0,        // 月供金额，每月还款金额，全款时不传",
+        remark: '',
+        loginChannel: 'weixin',
+        snsId: '',
+        customerMobile: '18516103001',
+        read: true
       },
       {
-        timeString: '2月28日',
-        quotations:[
+        quotationId: '0',
+        draftId: '0',
+        quotationName: '报价单名称，没有可以不传',
+        quotationItems: [
           {
-            carName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
-            guidePrice: '38万',
-            price: '11.68万',
-            downPrice: '2万',
-            customerMobile: '18516103001',
-            hasRead: true
-          },
-          {
-            carName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
-            guidePrice: '38万',
-            price: '11.68万',
-            downPrice: '2万',
-            customerMobile: '18516103001',
-            hasRead: true
+            itemNumber: '2131321',
+            itemName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
+            specifications: '商品规格',
+            guidePrice: '14万',
+            sellingPrice: '12万'
           }
-        ]
+        ],
+        hasLoan: true,          // 必传，true/false，boolean，是否贷款
+        paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
+        stages: 3,              // 贷款期数，int，全款时不传
+        annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
+        requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
+        otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
+        advancePayment: 0,       // 必传，首次支付金额，如果全款则为全款金额",
+        monthlyPayment: 0,        // 月供金额，每月还款金额，全款时不传",
+        remark: '',
+        loginChannel: 'weixin',
+        snsId: '',
+        customerMobile: '18516103001',
+        read: false
       },
+      {
+        quotationId: '0',
+        draftId: '0',
+        quotationName: '报价单名称，没有可以不传',
+        quotationItems: [
+          {
+            itemNumber: '2131321',
+            itemName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
+            specifications: '商品规格',
+            guidePrice: '14万',
+            sellingPrice: '12万'
+          }
+        ],
+        hasLoan: true,          // 必传，true/false，boolean，是否贷款
+        paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
+        stages: 3,              // 贷款期数，int，全款时不传
+        annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
+        requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
+        otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
+        advancePayment: 0,       // 必传，首次支付金额，如果全款则为全款金额",
+        monthlyPayment: 0,        // 月供金额，每月还款金额，全款时不传",
+        remark: '',
+        loginChannel: 'weixin',
+        snsId: '',
+        customerMobile: '18516103001',
+        read: false
+      },
+      {
+        quotationId: '0',
+        draftId: '0',
+        quotationName: '报价单名称，没有可以不传',
+        quotationItems: [
+          {
+            itemNumber: '2131321',
+            itemName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
+            specifications: '商品规格',
+            guidePrice: '14万',
+            sellingPrice: '12万'
+          }
+        ],
+        hasLoan: true,          // 必传，true/false，boolean，是否贷款
+        paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
+        stages: 3,              // 贷款期数，int，全款时不传
+        annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
+        requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
+        otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
+        advancePayment: 0,      // 必传，首次支付金额，如果全款则为全款金额",
+        monthlyPayment: 0,      // 月供金额，每月还款金额，全款时不传",
+        remark: '',
+        loginChannel: 'weixin',
+        snsId: '',
+        customerMobile: '18516103001',
+        read: true
+      }
     ]
   },
 
@@ -79,18 +137,19 @@ Page({
     });
   },
   handlerSelectQuotation(e) {
+    let quotation = e.currentTarget.dataset.quotation;
     wx.navigateTo({
-      url: 'pages/quote/quotationDetail/quotationDetail?quotationId=' + '',
-      success: function(res){
-        // success
+      url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+      success: function(res) {
+        console.log('quotationDetail 页面跳转成功');
       },
       fail: function() {
-        // fail
+        console.log('quotationDetail 页面跳转失败');
       },
       complete: function() {
-        // complete
+
       }
-    })
+    });
   },
 
   /**
