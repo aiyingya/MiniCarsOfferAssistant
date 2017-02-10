@@ -3,11 +3,11 @@
 <view class="car-sources container">
 	<view class="carSources-topbar weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
 			<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-					<image class="weui-media-box__thumb" src="{{imgAliyuncsUrl}}{{carModelsInfo.carSeriesPicUrl}}" />
+					<image class="weui-media-box__thumb" src="{{imgAliyuncsUrl}}{{carModelsInfo.lowestPriceSku.skuPic}}" />
 			</view>
 			<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-					<view class="weui-media-box__title">{{carModelsInfo.modelName}}</view>
-					<view class="weui-media-box__desc">指导价{{carModelsInfo.officePrice}}万</view>
+					<view class="weui-media-box__title">{{carModelsInfo.carModelName}}</view>
+					<view class="weui-media-box__desc">指导价{{carModelsInfo.officialPriceStr}}万</view>
 			</view>
 	</view>
 	
@@ -37,13 +37,11 @@
 				bindtap="headlerRemoveRmendCarFacade"
 				></view>
 			<view class="rmendCarFacade-inner topToBottom">
-				
-				<view class="weui-cell weui-cell_access" hover="true" hover-class="weui-cell_active">
-						<view class="weui-cell__bd weui-cell_primary">
-								<view>全部外观</view>
-						</view>
-				</view>
-				<view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+				<view 
+					class="weui-cell weui-cell_access" 
+					hover="true"
+					hover-class="weui-cell_active"
+					>
 						<view class="weui-cell__bd weui-cell_primary">
 								<view>北极白</view>
 						</view>
@@ -51,45 +49,54 @@
 							<image src="../../images/icons/icon_select_red.png"></image>
 						</view>
 				</view>
-				
 			</view>
 		</view>
 		<view class="carSources-cells">
 			<view 
-				wx:for="{{carModelsInfo.externalColorList}}"
+				wx:for="{{carSkuList}}"
 				wx:key="unique"
 				hover="true" 
 				class="carSources-cell"
 				hover-class="active"
+				data-quoteinfo="{{item}}"
 				bindtap="handlerShowQuoteView"
 				>
 				<view class="carSources-cell-list">
 					<view class="carSources-cell-label">
 						<view class="label">配色：</view>
-						<view class="message">{{item.name}}</view>
+						<view class="message">{{item.externalColorName}}</view>
 					</view>
 					<view class="carSources-cell-price">
-						<view class="price">{{item.price}}</view>万
+						<view class="price">{{item.priceStr}}</view>万
 					</view>
 				</view>
 				<view class="carSources-cell-list">
 					<view class="carSources-cell-label">
 						<view class="label">状态：</view>
-						<view class="message">有货</view>
+						<view 
+							class="message"
+							wx:if="{{item.status === 'no_stock'}}"
+							>无货</view>
+						<view 
+							class="message"
+							wx:else
+							>有货</view>
 					</view>
-					<view class="carSources-cell-price">
-						<image 
-							
+					<view 
+						class="carSources-cell-price"
+						wx:if="{{carModelsInfo.count !== '0.00'}}"
+						>
+						<image 	
 							class="depreciate-icon" 
-							src="../../../images/icons/icon_ price_down.png"
+							src="../../../images/icons/icon_price_down.png"
 							></image>
-						<view class="depreciate">{{item.officePrice}}</view>
+						<view class="depreciate">{{carModelsInfo.count}}万</view>
 					</view>
 				</view>
 				<view class="carSources-cell-list">
 					<view class="carSources-cell-label">
 						<view class="label">备注：</view>
-						<view class="message remark">打卡的那款的那段那是的那是的那段看大陇南市案例是娜娜说的那是单身</view>
+						<view class="message remark">{{item.remark}}</view>
 					</view>
 				</view>
 			</view>
@@ -119,6 +126,7 @@
 			class="navbar-quote-cell" 
 			hover="true" 
 			hover-class="navbar-quote-active"
+			bindtap="handlerQuoteCreate"
 			>生成报价</view>
 	</view>
 </view>

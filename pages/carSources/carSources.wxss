@@ -137,8 +137,7 @@
 	float: left;
 }
 .carSources-cell .carSources-cell-label .remark {
-	width: 70%;
-	line-height: 32rpx;
+	
 }
 .carSources-cell .carSources-cell-price {
 	font-size: 26rpx;

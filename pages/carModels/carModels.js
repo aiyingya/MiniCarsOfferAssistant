@@ -1,18 +1,15 @@
-let modules = require('../../lib/modules.js');
-let config = require('../../lib/config.js');
+let app = getApp();
 Page({
 	data: {
 		carModelsList: [],
-		carSeriesName: '',
 		windowHeight: ''
 	},
 	onLoad (options) {
 		let carsInfo = JSON.parse(options.carsInfo);
-		let HTTPS_YMCAPI = config.ymcServerHTTPSUrl;
+		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl;
 		let that = this;
 		try {
       var res = wx.getSystemInfoSync();
-			console.log(res)
       this.pixelRatio = res.pixelRatio;
       this.apHeight = 16;
       this.offsetTop = 80;
@@ -25,29 +22,19 @@ Page({
 			wx.setNavigationBarTitle({
 				title: carsInfo.seriesName
 			})
-			modules.request({
-				url: HTTPS_YMCAPI + '/carModel/modelsPromotion', //仅为示例，并非真实的接口地址
+			app.modules.request({
+				url: HTTPS_YMCAPI + 'product/car/spu', 
 				method: 'GET',
 				data: {
-					carSeriesId: carsInfo.id,
-					cityId: '7d04e3a1-ee87-431c-9aa7-ac245014c51a'
+					carSeriesId: carsInfo.id
 				},
 				success: function(res) {
-					console.log(res);
-					let carModelsList = [];
-					let data = res.data.data;
-					if(data) {
-						let carSeriesPicUrl = data.carSeriesPicUrl;
-						for(let item of data.carModelList) {
-							for(let list of item.carModelModelList) {
-								list.count = (list.officePrice - list.price).toFixed(2);
-								list.carSeriesPicUrl = carSeriesPicUrl;
-								carModelsList.push(list);
-							}
+					let carModelsList = res.data.data;
+					if(carModelsList) {
+						for(let item of carModelsList) {
+							item.count = ((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2);
 						}
-						console.log(carModelsList)
 						that.setData({
-							carSeriesName: data.carSeriesName,
 							carModelsList: carModelsList
 						})
 					}

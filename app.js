@@ -1,15 +1,16 @@
 //app.js
-var config = require('./lib/config.js')
+import config from 'lib/config'
 import wux from 'lib/wux'
-
+import clientjs from 'lib/client'
+import modules from 'lib/modules'
 App({
-  onLaunch: function () {
+  onLaunch () {
     //调用API从本地缓存中获取数据
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
   },
-  getUserInfo:function(cb){
+  getUserInfo (cb) {
     var that = this
     if(this.globalData.userInfo){
       typeof cb == "function" && cb(this.globalData.userInfo)
@@ -17,27 +18,25 @@ App({
       //调用登录接口
       wx.login({
         success: function (auth) {
-          wx.getUserInfo({
-            success: function (res) {
-							let HTTPS_URL = config.ucServerHTTPSUrl
-							console.log(res)
-              that.globalData.userInfo = res.userInfo
-              typeof cb == "function" && cb(that.globalData.userInfo)
-//							wx.request({
-//								url: HTTPS_URL + '/user/weixin', //仅为示例，并非真实的接口地址
-//								method: 'POST',
-//								data: {
-//
-//								},
-//								header: {
-//										'content-type': 'application/json'
-//								},
-//								success: function(res) {
-//									console.log(res.data)
-//								}
-//							})
-            }
-          })
+					wx.getUserInfo({
+						success: function (res) {
+							let HTTPS_URL = config.ucServerHTTPSUrl;
+							that.globalData.userInfo = res.userInfo
+							typeof cb == "function" && cb(that.globalData.userInfo)
+							modules.request({
+								url: HTTPS_URL + 'user/weixin', 
+								method: 'POST',
+								data: {
+									"code": auth.code,
+									"encryptedData": res.encryptedData,
+									"iv": res.iv
+								},
+								success: function(res) {
+									console.log(res.data)
+								}
+							})
+						}
+					})
         }
       })
     }
@@ -46,4 +45,6 @@ App({
     userInfo:null
   },
   wux: wux,
+	config: config,
+	modules: modules
 })

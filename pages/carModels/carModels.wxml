@@ -15,22 +15,26 @@
 					data-carmodelsinfo="{{item}}"
 					>
 					<view class="carModels-message-title">
-						{{item.modelName}} {{item.gearboxType}}
+						{{item.carModelName}} {{item.gearboxType}}
 					</view>
 					<view class="carModels-message-price">
-						<view class="price"><view class="price-num">{{item.price}}</view>万</view>
-						<view class="officePrice">指导价{{item.officePrice}}万</view>
-						<image 
-							wx:if="{{item.officePrice > item.price}}" 
-							class="depreciate-icon" 
-							src="../../../images/icons/icon_ price_down.png"
-							></image>
-						<image 
-							wx:else
-							class="depreciate-icon" 
-							src="../../../images/icons/icon_ price_up.png"
-							></image>
-						<view class="depreciate">{{item.count}}万</view>
+						<view class="price"><view class="price-num">{{item.lowestPriceSku.priceStr}}</view>万</view>
+						<view class="officePrice">指导价{{item.officialPriceStr}}万</view>
+						<view
+						 wx:if="{{item.count !== '0.00'}}"
+						 class="depreciate-wrap">
+							<image 
+								wx:if="{{item.lowestPriceSku.discount > 0}}" 
+								class="depreciate-icon" 
+								src="../../../images/icons/icon_ price_down.png"
+								></image>
+							<image 
+								wx:else
+								class="depreciate-icon" 
+								src="../../../images/icons/icon_ price_up.png"
+								></image>
+							<view class="depreciate">{{item.count}}万</view>
+						</view>
 					</view>
 					<view class="icon-arrows">
 						<image src="../../../images/icons/icon_arrow.png"></image>

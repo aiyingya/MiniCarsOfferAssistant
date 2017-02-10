@@ -1,6 +1,5 @@
 //index.js
-var app = getApp()
-var config = require('../../lib/config.js')
+let app = getApp();
 Page({
   data: {
 		hotCarLists: [],
@@ -21,7 +20,7 @@ Page({
 	},
   onLoad() {
     let that = this;
-		let HTTPS_URL = config.ymcServerHTTPSUrl;
+		let HTTPS_URL = app.config.ymcServerHTTPSUrl;
 		try {
       var res = wx.getSystemInfoSync();
       this.pixelRatio = res.pixelRatio;
@@ -37,7 +36,7 @@ Page({
 		// 获取页面数据.
 		
 		wx.request({
-			url: HTTPS_URL + '/carBrand/brandGroupsRecommend', //仅为示例，并非真实的接口地址
+			url: HTTPS_URL + 'carBrand/brandGroupsRecommend', //仅为示例，并非真实的接口地址
 			method: 'GET',
 			data: {
 				cityId: '7d04e3a1-ee87-431c-9aa7-ac245014c51a',

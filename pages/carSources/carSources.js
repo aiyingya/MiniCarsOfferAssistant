@@ -1,19 +1,20 @@
-let modules = require('../../lib/modules.js');
-let config = require('../../lib/config.js');
+let app = getApp();
 Page({
 	data: {
-		imgAliyuncsUrl: config.imgAliyuncsUrl,
+		imgAliyuncsUrl: app.config.imgAliyuncsUrl,
 		carModelsInfo: '',
 		windowHeight: '',
 		showRmendCarFacade:'',
-		showQuoteView: ''
+		showQuoteView: '',
+		carSkuList: [],
+		QuoteCreateInfo: ''
 	},
 	onLoad (options) {
 		let that = this;
 		let carModelsInfo = JSON.parse(options.carModelsInfo);
+		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl;
 		try {
       var res = wx.getSystemInfoSync();
-			console.log(res)
       this.pixelRatio = res.pixelRatio;
       this.apHeight = 16;
       this.offsetTop = 80;
@@ -21,9 +22,19 @@ Page({
     } catch (e) {
       
     }
-		console.log(carModelsInfo)
-		that.setData({
-			carModelsInfo: carModelsInfo
+		app.modules.request({
+			url: HTTPS_YMCAPI + 'product/car/sku', 
+			method: 'GET',
+			data: {
+				carSpuId: carModelsInfo.carModelId
+			},
+			success: function(res) {
+				let carSkuList = res.data.data.carSkuList;
+				that.setData({
+					carModelsInfo: carModelsInfo,
+					carSkuList: carSkuList
+				})
+			}
 		})
 	},
 	handlerAmendCarFacade(e) {
@@ -37,9 +48,11 @@ Page({
 			showRmendCarFacade: false
 		})
 	},
-	handlerShowQuoteView() {
+	handlerShowQuoteView(e) {
+		let quoteinfo = e.currentTarget.dataset.quoteinfo;		
 		this.setData({
-			showQuoteView: true
+			showQuoteView: true,
+			QuoteCreateInfo: quoteinfo
 		})
 	},
 	headlerRemoveQuoteView() {
@@ -47,4 +60,16 @@ Page({
 			showQuoteView: false
 		})
 	},
+	handlerMakePhoneCall() {
+		let phone = '021-52559255,8902'
+		wx.makePhoneCall({
+			phoneNumber: phone
+		})
+	},
+	handlerQuoteCreate(e) {
+		let that = this;
+		wx.navigateTo({  
+      url: '../carSources/carSources?carInfo=' + JSON.stringify(that.data.QuoteCreateInfo)
+    })
+	}
 })
