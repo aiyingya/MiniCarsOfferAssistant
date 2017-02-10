@@ -1,12 +1,11 @@
 <!--index.wxml-->
 <scroll-view scroll-y style="height: {{windowHeight}}" scroll-into-view="{{alpha}}">
-    <view class="container">
+    <view class="container page">
         <!-- quotations list.-->
         <view class="viewCarsList-wrap">
-            <view class="weui-cells weui-cells_in-small-appmsg">
-                <view
+            <view class="weui-cells_in-small-appmsg">
+                <view class="quotation-list weui-cells"
                         url="../quotationDetail/quotationDetail"
-                        class="weui-media-box weui-media-box_appmsg"
                         hover-class="weui-cell_active"
                         wx:for="{{quotationsList}}"
                         wx:key="unique"
@@ -15,15 +14,22 @@
                         data-quotation="{{cell}}"
                         bindtap="handlerSelectQuotation"
                 >
-                    <view class="weui-cell__bd weui-cell_primary">
-                        <view>{{cell.quotationItems[0].itemName}}</view>
+                    <view class="weui-cell quotation-item-hd">
+                        <view class="weui-cell__bd quotation-title">{{cell.quotationItems[0].itemName}}</view>
+                        <view class="weui-cell__ft quotation-price">
+                            <view class="red-price">22.8</view>万
+                        </view>
                     </view>
-                    <view>指导价{{cell.quotationItems[0].guidePrice}}</view>
-                    <view>裸车价{{cell.quotationItems[0].sellingPrice}}</view>
-                    <view>下{{cell.quotationItems[0].downPrice}}</view>
-                    <view>客户手机:{{cell.customerMobile}}</view>
-                    <view wx:if="{{cell.read}}">已查看</view>
-                    <view wx:else>未查看</view>
+                    <view class="quotation-msg">
+                        <view class="line-box">指导价{{cell.quotationItems[0].guidePrice}}</view>
+                        <view class="line-box min-font-gray">裸车价{{cell.quotationItems[0].sellingPrice}}</view>
+                        <view class="line-box">下{{cell.quotationItems[0].downPrice}}</view>
+                    </view>
+                    <view class="weui-cell">
+                        <view class="weui-cell__bd min-font-gray">客户手机:{{cell.customerMobile}}</view>
+                        <view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.read}}">已查看</view>
+                        <view class="weui-cell__ft text-right min-font-gray" wx:else>未查看</view>
+                    </view>
                 </view>
             </view>
         </view>
