@@ -7,7 +7,17 @@ Page({
 		showRmendCarFacade:'',
 		showQuoteView: '',
 		carSkuList: [],
-		QuoteCreateInfo: ''
+		cacheCarSkuList: [],
+		QuoteCreateInfo: '',
+		externalColor: [],
+		internalColor: [],
+		filters: [],
+		filtersData: '',
+		selectColorId: '0',
+		selectExternalColorId: '0',
+		selectExternalColorName: '全部外观',
+		selectInternalColorId: '1',
+		selectInternalColorName: '全部内饰'
 	},
 	onLoad (options) {
 		let that = this;
@@ -29,24 +39,82 @@ Page({
 				carSpuId: carModelsInfo.carModelId
 			},
 			success: function(res) {
+				let filters = res.data.data.filters;
 				let carSkuList = res.data.data.carSkuList;
 				that.setData({
 					carModelsInfo: carModelsInfo,
-					carSkuList: carSkuList
+					carSkuList: carSkuList,
+					cacheCarSkuList: carSkuList,
+					filters: filters
 				})
 			}
 		})
 	},
 	handlerAmendCarFacade(e) {
 		let that = this;
+		let type = e.currentTarget.dataset.type;
+		let firstFilters = [{
+			id: type,
+			name: that.data.filters[type].name
+		}];
+		let filtersData = firstFilters.concat(that.data.filters[type].items);
 		that.setData({
-			showRmendCarFacade: true
+			showRmendCarFacade: true,
+			selectColorId: type,
+			filtersData: filtersData
 		})
 	},
 	headlerRemoveRmendCarFacade() {
 		this.setData({
 			showRmendCarFacade: false
 		})
+	},
+	headlerSelectColor(e) {
+		let color = e.currentTarget.dataset.color;
+		let that = this;
+		let newCarSkuList = [];
+		let searchCarSkuList = that.data.cacheCarSkuList;
+		if(that.data.selectExternalColorId !== '0'  && that.data.selectInternalColorId !== '1') {
+			searchCarSkuList = that.data.carSkuList;
+		}
+		console.log(searchCarSkuList, that.data.selectInternalColorId, that.data.selectExternalColorId)
+		if(that.data.selectColorId === '0') {
+			that.setData({
+				selectExternalColorId: color.id,
+				selectExternalColorName: color.name
+			})
+			for(let item of searchCarSkuList) {
+				if(that.data.selectExternalColorId === item.externalColorId ) {
+					newCarSkuList.push(item);
+				}else if(that.data.selectExternalColorId === that.data.selectColorId) {
+					newCarSkuList.push(item);
+				}
+			}
+			that.setData({
+				carSkuList: newCarSkuList
+			})
+		}else {
+			that.setData({
+				selectInternalColorId: color.id,
+				selectInternalColorName: color.name
+			})
+			for(let item of searchCarSkuList) {
+				if(that.data.selectInternalColorId === item.internalColorId ) {
+					newCarSkuList.push(item);
+				}else if(that.data.selectInternalColorId === that.data.selectColorId) {
+					newCarSkuList.push(item);
+				}
+			}
+			
+			that.setData({
+				carSkuList: newCarSkuList
+			})
+		}
+		
+		this.setData({
+			carSkuList: newCarSkuList
+		})
+		that.headlerRemoveRmendCarFacade();
 	},
 	handlerShowQuoteView(e) {
 		let quoteinfo = e.currentTarget.dataset.quoteinfo;		

@@ -16,10 +16,15 @@
 			<view 
 				class="navbar cars-facade"
 				bindtap="handlerAmendCarFacade"
-				>全部外观
+				data-type="0"
+				>{{selectExternalColorName}}
 				<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
 			</view>
-			<view class="navbar cars-facade">全部内饰
+			<view 
+				class="navbar cars-facade"
+				bindtap="handlerAmendCarFacade"
+				data-type="1"
+				>{{selectInternalColorName}}
 				<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
 			</view>
 			<view class="navbar">
@@ -37,18 +42,26 @@
 				bindtap="headlerRemoveRmendCarFacade"
 				></view>
 			<view class="rmendCarFacade-inner topToBottom">
-				<view 
-					class="weui-cell weui-cell_access" 
-					hover="true"
-					hover-class="weui-cell_active"
-					>
-						<view class="weui-cell__bd weui-cell_primary">
-								<view>北极白</view>
-						</view>
-						<view class="weui-cell__ft">
-							<image src="../../images/icons/icon_select_red.png"></image>
-						</view>
-				</view>
+				<scroll-view scroll-y style="height: 520rpx">
+					<view 
+						class="weui-cell weui-cell_access" 
+						hover="true"
+						hover-class="weui-cell_active"
+						wx:for="{{filtersData}}"
+						wx:key="unique"
+						bindtap="headlerSelectColor"
+						data-color="{{item}}"
+						>
+							<view class="weui-cell__bd weui-cell_primary">
+									<view>{{item.name}}</view>
+							</view>
+							<view
+								wx:if="{{selectColorId == item.id}}"
+							 class="weui-cell__ft">
+								<image src="../../images/icons/icon_select_red.png"></image>
+							</view>
+					</view>
+				</scroll-view>
 			</view>
 		</view>
 		<view class="carSources-cells">
@@ -64,7 +77,7 @@
 				<view class="carSources-cell-list">
 					<view class="carSources-cell-label">
 						<view class="label">配色：</view>
-						<view class="message">{{item.externalColorName}}</view>
+						<view class="message">{{item.externalColorName}}/{{item.internalColorName}}</view>
 					</view>
 					<view class="carSources-cell-price">
 						<view class="price">{{item.priceStr}}</view>万
