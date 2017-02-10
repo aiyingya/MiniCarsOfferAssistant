@@ -44,8 +44,8 @@
 }
 .cell-img{
     display: inline-block;
-    height: auto;
-    width: 80px;
+    height: 100px;
+    width: 150px;
 }
 .fix-bt{
     position: fixed;
@@ -87,4 +87,22 @@
 
 .flex-item-3 {
    flex-grow: 3;
+}
+
+.loan-payment-block{
+    height:216rpx;
+}
+
+.advance-payment-block{
+    opacity: 0.9;
+    background: #ED4149;
+}
+
+.monthly-payment-block{
+    opacity: 0.8;
+    background: #ED4149;
+}
+
+.total-payment-block{
+    background: #ED4149;
 }

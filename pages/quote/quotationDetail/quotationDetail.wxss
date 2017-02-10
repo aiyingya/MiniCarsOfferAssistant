@@ -59,32 +59,54 @@
 .btn{
     border: 1px solid #eee;
 }
+
 .btn::after{
     border: none;
 }
+
 .btn-group .btn{
     border-radius: 0;
     border-bottom: none;
     background: #fff;
 }
+
 .btn-group .btn:first-child{
     border: none;
     border-top:1px solid #eee;
 }
+
 .btn-group .btn:last-child{
     border: none;
     background: #ED4149;
     color: #fff;
-
 }
+
 .flex-item-1 {
-   flex-grow: 1;
+    flex-grow: 1;
 }
 
 .flex-item-2 {
-   flex-grow: 2;
+    flex-grow: 2;
 }
 
 .flex-item-3 {
-   flex-grow: 3;
+    flex-grow: 3;
+}
+
+.loan-payment-block{
+    height:216rpx;
+}
+
+.advance-payment-block{
+    opacity: 0.9;
+    background: #ED4149;
+}
+
+.monthly-payment-block{
+    opacity: 0.8;
+    background: #ED4149;
+}
+
+.total-payment-block{
+    background: #ED4149;
 }

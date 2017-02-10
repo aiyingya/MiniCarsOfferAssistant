@@ -1,7 +1,6 @@
 let sliderWidth = 96 // 需要设置slider的宽度，用于计算中间位置
-let config = require('../../../lib/config.js')
 let util = require('../../../utils/util.js')
-const App = getApp()
+const app = getApp()
 
 Page({
   data: {
@@ -15,38 +14,50 @@ Page({
       quotationId: '0',
       draftId: '0',
       quotationName: '',
-      quotationItems: [
-        {
-          itemNumber: '',
-          itemName: '',
-          specifications: '',
-          guidePrice: '',
-          sellingPrice: ''
-        }
-      ],
+      quotationItems: [],     // skuId
       hasLoan: true,          // 必传，true/false，boolean，是否贷款
       paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
       stages: 3,              // 贷款期数，int，全款时不传
       annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
       requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
       otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
-      advancePayment: 0,       // 必传，首次支付金额，如果全款则为全款金额",
-      monthlyPayment: 0,        // 月供金额，每月还款金额，全款时不传",
-      remark: '',
-      loginChannel: 'weixin',
+      advancePayment: 0,      // 必传，首次支付金额，如果全款则为全款金额",
+      monthlyPayment: 0,      // 月供金额，每月还款金额，全款时不传",
+      totalPayment: 0,        // 总落地价格
+      remark: '',             // "无"
+      loginChannel: 'weixin', // 登录渠道
       snsId: '',
       customerMobile: '',
       read: false
+    },
+    carinfo: {
+      discount: 0,            // 73440 元
+      externalColorId: '',    // "013211E6-57FC-43DA-889D-782E69BEA5BF"
+      externalColorName: '',  // "星光棕"
+      internalColorId: '',    // "1B2AA0C6-F698-4CBC-89A5-B51F3498E28F"
+      internalColorName: '',  // "黑色"
+      price: 0,               // 232560
+      priceStr: '',           // "23.26"
+      remark: '',             // "无"
+      skuId: '',              // "1D71D878-4CBB-4DE7-AEC0-A59A00BEDBE3"
+      skuPic: '',             // "/upload/image/original/201512/021043092970.jpg"
+      status: '',             // "in_stock"
     }
   },
   onLoad(options) {
     let that = this
 
+    let carinfo = JSON.parse(options.carInfo)
+
+    let quotationItems = [carinfo.skuId]
+
+    this.setData({
+      'quotation.quotationItems': quotationItems,
+      carinfo: carinfo
+    })
+
     /// 初始化自定义组件
     this.$wuxDialog = App.wux(this).$wuxDialog
-
-    // TODO: davidfu 需要从车源界面获取车的相关信息
-    // let carsinfo = JSON.parse(options.carinfo);
 
     /// 车价格
     let advancePayment = 150109;
@@ -67,20 +78,45 @@ Page({
       }
     });
   },
+  onReady() {
+
+  },
+  onShow() {
+
+  },
+  onHide() {
+
+  },
+  onUnload() {
+
+  },
+  onShareAppMessage() {
+
+  },
+  onReachBottom() {
+
+  },
+  onPullDownRefresh() {
+
+  },
   // event handler
   handlerTabClick(e) {
+    let hasLoan = (e.currentTarget.id === '0')
     this.setData({
       sliderOffset: e.currentTarget.offsetLeft,
-      activeIndex: e.currentTarget.id
+      activeIndex: e.currentTarget.id,
+      'quotation.hasLoan': hasLoan
     });
   },
   handlerSaveQuotationDraft(e) {
     let that = this;
 
-    this.requestSaveQuotationDraft(this.data.quotationDraft, {
+    this.requestSaveQuotationDraft(this.data.quotation, {
       success: function (res) {
-        let quotationDraft = res.data.data
-        // this.data.quotation = quotationDraft
+        let quotationDraft = res
+        that.setData({
+          quotation: quotationDraft
+        })
 
         // 请求成功后弹出对话框
         const hideDialog = that.$wuxDialog.open({
@@ -89,8 +125,33 @@ Page({
           phoneNumberPlaceholder: '输入对方11位手机号码',
           confirmText: '分享',
           cancelText: '暂不分享',
-          confirm: () => {
-            wx.switch({
+          confirm: (res) => {
+            let mobile = res.mobile
+            that.requestPublishQuotation(that.data.quotation.draftId, mobile, {
+              success: (res) => {
+                wx.switchTab({
+                  url: '../quotationsList/quotationsList',
+                  success: (res) => {
+
+                  },
+                  fail: () => {
+
+                  },
+                  complete: () => {
+
+                  }
+                })
+              },
+              fail: () => {
+                //
+              },
+              complete: () => {
+
+              }
+            })
+          },
+          cancel: () => {
+            wx.switchTab({
               url: '../quotationsList/quotationsList',
               success: (res) => {
 
@@ -102,9 +163,6 @@ Page({
 
               }
             })
-          },
-          cancel: () => {
-            // 跳转
           }
         })
 
@@ -116,23 +174,6 @@ Page({
 
       }
     });
-  },
-  handlerPublishQuotation(e) {
-    // TODO: davidfu 此处的电话号码应该为从自定义弹窗中获取的值
-    let customerMobile = '18516103001';
-
-    this.requestPublishQuotation(this.data.quotationDraft.draftId, customerMobile, {
-      success: function (res) {
-        let quotation = res.data.data;
-        // TODO: davidfu 这里是否需要考虑合并数据到 this.data
-      },
-      fail: function () {
-
-      },
-      complete: function () {
-
-      }
-    })
   },
 
   /**
@@ -175,8 +216,8 @@ Page({
    */
   requestPublishQuotation(draftId, customerMobile, object) {
     if (draftId && draftId !== '' && customerMobile && customerMobile !== '') {
-      wx.request({
-        url: config.ymcServerHTTPSUrl + 'sale/quotation',
+      app.modules.request({
+        url: app.config.ymcServerHTTPSUrl + 'sale/quotation',
         data: {
           draftId: draftId,
           customerMobile: customerMobile
@@ -223,8 +264,8 @@ Page({
   requestSaveQuotationDraft(quotationDraft, object) {
     console.log(quotationDraft);
     if (quotationDraft && typeof quotationDraft === 'object') {
-      wx.request({
-        url: config.ymcServerHTTPSUrl + 'sale/quotation/draft',
+      app.modules.request({
+        url: app.config.ymcServerHTTPSUrl + 'sale/quotation/draft',
         data: quotationDraft,
         method: 'POST',
         success: function(res) {
@@ -238,6 +279,7 @@ Page({
         }
       })
     } else {
+
     }
   }
 });
