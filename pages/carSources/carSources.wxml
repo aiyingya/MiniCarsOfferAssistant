@@ -17,22 +17,29 @@
 				class="navbar cars-facade"
 				bindtap="handlerAmendCarFacade"
 				data-type="0"
-				>{{selectExternalColorName}}
-				<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
+				>
+				<view class="navbar-text">
+					{{selectExternalColorName}}
+					<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
+				</view>
 			</view>
 			<view 
 				class="navbar cars-facade"
 				bindtap="handlerAmendCarFacade"
 				data-type="1"
-				>{{selectInternalColorName}}
-				<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
+				>
+				<view class="navbar-text">
+					{{selectInternalColorName}}
+					<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
+				</view>
 			</view>
 			<view class="navbar">
 				<botton
 					hover-class="navbar-btn-active" 
-					class="navbar-btn" 
+					class="navbar-btn {{carStatus}}" 
 					type="primary"
-					>有货</botton>
+					bindtap="handlerSwitchCarStatus"
+					>{{carStatusName}}</botton>
 			</view>
 		</view>
 		<!-- 条件筛选.-->
@@ -56,15 +63,18 @@
 									<view>{{item.name}}</view>
 							</view>
 							<view
-								wx:if="{{selectColorId == item.id}}"
-							 class="weui-cell__ft">
+								wx:if="{{selectExternalColorId == item.id || selectInternalColorId == item.id}}"
+							  class="weui-cell__ft">
 								<image src="../../images/icons/icon_select_red.png"></image>
 							</view>
 					</view>
 				</scroll-view>
 			</view>
 		</view>
-		<view class="carSources-cells">
+		<view 
+			wx:if="{{carSkuList.length !== 0}}"
+			class="carSources-cells"
+			>
 			<view 
 				wx:for="{{carSkuList}}"
 				wx:key="unique"
@@ -72,6 +82,7 @@
 				class="carSources-cell"
 				hover-class="active"
 				data-quoteinfo="{{item}}"
+				wx:if="{{item.status === carStatus}}"
 				bindtap="handlerShowQuoteView"
 				>
 				<view class="carSources-cell-list">
@@ -101,7 +112,7 @@
 						>
 						<image 	
 							class="depreciate-icon" 
-							src="../../../images/icons/icon_price_down.png"
+							src=" ../../images/icons/icon_price_down.png"
 							></image>
 						<view class="depreciate">{{carModelsInfo.count}}万</view>
 					</view>
@@ -113,6 +124,12 @@
 					</view>
 				</view>
 			</view>
+			<view class="carSources-nodata nodata">
+				暂无数据
+			</view>
+		</view>
+		<view wx:else class="nodata">
+			暂无数据
 		</view>
 	</view>
 </view>

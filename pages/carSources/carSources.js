@@ -17,7 +17,9 @@ Page({
 		selectExternalColorId: '0',
 		selectExternalColorName: '全部外观',
 		selectInternalColorId: '1',
-		selectInternalColorName: '全部内饰'
+		selectInternalColorName: '全部内饰',
+		carStatus: 'in_stock',
+		carStatusName: '有货'
 	},
 	onLoad (options) {
 		let that = this;
@@ -74,47 +76,50 @@ Page({
 		let that = this;
 		let newCarSkuList = [];
 		let searchCarSkuList = that.data.cacheCarSkuList;
-		if(that.data.selectExternalColorId !== '0'  && that.data.selectInternalColorId !== '1') {
-			searchCarSkuList = that.data.carSkuList;
-		}
-		console.log(searchCarSkuList, that.data.selectInternalColorId, that.data.selectExternalColorId)
+		
 		if(that.data.selectColorId === '0') {
 			that.setData({
 				selectExternalColorId: color.id,
 				selectExternalColorName: color.name
-			})
-			for(let item of searchCarSkuList) {
-				if(that.data.selectExternalColorId === item.externalColorId ) {
-					newCarSkuList.push(item);
-				}else if(that.data.selectExternalColorId === that.data.selectColorId) {
-					newCarSkuList.push(item);
-				}
-			}
-			that.setData({
-				carSkuList: newCarSkuList
 			})
 		}else {
 			that.setData({
 				selectInternalColorId: color.id,
 				selectInternalColorName: color.name
 			})
-			for(let item of searchCarSkuList) {
-				if(that.data.selectInternalColorId === item.internalColorId ) {
-					newCarSkuList.push(item);
-				}else if(that.data.selectInternalColorId === that.data.selectColorId) {
-					newCarSkuList.push(item);
-				}
-			}
-			
-			that.setData({
-				carSkuList: newCarSkuList
-			})
 		}
-		
-		this.setData({
+		for(let item of searchCarSkuList) {
+			if(that.data.selectExternalColorId === item.externalColorId &&  that.data.selectInternalColorId === '1') {
+				newCarSkuList.push(item);
+			}else if(that.data.selectInternalColorId === item.internalColorId && that.data.selectExternalColorId === '0') {
+				newCarSkuList.push(item);
+			}else if(that.data.selectExternalColorId === item.externalColorId && that.data.selectInternalColorId === item.internalColorId) {
+				newCarSkuList.push(item);
+			}else if(that.data.selectExternalColorId === '0' && that.data.selectInternalColorId === '1') {
+				newCarSkuList.push(item);
+			}
+		}	
+		console.log(newCarSkuList)
+		that.setData({
 			carSkuList: newCarSkuList
 		})
 		that.headlerRemoveRmendCarFacade();
+	},
+	handlerSwitchCarStatus() {
+		let that = this;
+		let carStatus = that.data.carStatus;
+		let stock, stockName;
+		if(carStatus === 'in_stock') {
+			stock = 'no_stock';
+			stockName = '无货';
+		}else {
+			stock = 'in_stock';
+			stockName = '有货'
+		}
+		that.setData({
+			carStatus: stock,
+			carStatusName: stockName
+		})
 	},
 	handlerShowQuoteView(e) {
 		let quoteinfo = e.currentTarget.dataset.quoteinfo;		
@@ -137,7 +142,7 @@ Page({
 	handlerQuoteCreate(e) {
 		let that = this;
 		wx.navigateTo({  
-      url: '../quote/quotationCreate/quotationCreate?carInfo=' + JSON.stringify(that.data.QuoteCreateInfo)
+      url: '../quote/quotationCreate/quotationCreate?carInfo=' + JSON.stringify(that.data.QuoteCreateInfo)+'&carModelsInfo='+JSON.stringify(that.data.carModelsInfo)
     })
 	}
 })
