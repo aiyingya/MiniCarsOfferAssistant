@@ -72,8 +72,8 @@
 			</view>
 		</view>
 		<view 
-			wx:if="{{carSkuList.length !== 0}}"
-			class="carSources-cells"
+			wx:if="{{carSkuList.length > 0}}"
+			class="carSources-cells {{carSkuList.length}}"
 			>
 			<view 
 				wx:for="{{carSkuList}}"
@@ -123,9 +123,6 @@
 						<view class="message remark">{{item.remark}}</view>
 					</view>
 				</view>
-			</view>
-			<view class="carSources-nodata nodata">
-				暂无数据
 			</view>
 		</view>
 		<view wx:else class="nodata">

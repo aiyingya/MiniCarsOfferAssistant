@@ -16,7 +16,10 @@ Page({
   },
   //事件处理函数
   searchCarType() {
-		console.log(2)
+		console.log('To Search')
+		wx.navigateTo({
+			url: '../search/search'
+		})
 	},
   onLoad() {
     let that = this;
@@ -116,7 +119,10 @@ Page({
 	},
 	removeCarSeriesInner(e) {
 		let that = this;
-		that.setData({showCarSeries: ''});
+		that.setData({
+			showCarSeries: '',
+			carManufacturerSeriesList: []
+		});
 	},
 	handlerToCarsModels(e) {
 		let carsInfo = JSON.stringify(e.currentTarget.dataset.carsinfo);

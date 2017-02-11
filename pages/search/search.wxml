@@ -1,0 +1,50 @@
+<import src="../components/carModel/carModel.wxml" />
+<!-- search.-->
+<scroll-view scroll-y style="height: {{windowHeight}}">
+<view class="container search-wrapper">
+	<!-- searchbar.-->
+		<view class="searchbar search-wrap">
+			<view class="searchbar-inner search-inner">
+				<view class="search-icon">
+					<image class="search-img" src="../../images/icons/icon_find.png"></image>
+				</view>
+				<input 
+					class="search-input" 
+					placeholder-class="search-placeholder"
+					focus="true"
+					placeholder="输入指导价/车款名"
+					bindinput="headlerSearchInput" 
+					/>
+			</view>
+		</view>
+		
+		<!--search results.-->
+		<view 
+			class="search-results-wrap"
+			wx:if="{{searchResults.length > 0}}"
+			>
+			<view class="search-results-inner">
+				<view 
+					hover="true"
+					hover-class="active"
+					class="searchResults-cell"
+					wx:for="{{searchResults}}"
+					wx:key="unique"
+					bindtap="handlerChooseResults"
+					>
+					{{item.val}}
+				</view>
+			</view>
+		</view>
+		<view class="carModels-cells">
+		<block 
+			wx:for="{{data}}"
+			wx:key="unique"
+			>
+			<template is="carModel" data="{{item}}" /> 
+	 	</block>
+		</view>	
+		
+</view>
+</scroll-view>
+

@@ -53,9 +53,9 @@ Page({
 	},
 	handlerPromptly (e) {
 		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
-//		wx.navigateTo({  
-//      url: '../carSources/carSources?carModelsInfo='+ carModelsInfo
-//    }) 
+		wx.navigateTo({  
+      url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
+    }) 
 	}
 	
 })

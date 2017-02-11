@@ -1,0 +1,102 @@
+.carModels-cell {
+	padding: 40rpx 30rpx;
+	background-color: #fff;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20rpx;
+}
+.carModels-cell_active {
+	
+}
+.carModels-message {
+	width: 72.67%;
+	float: left;
+	position: relative;
+}
+.carModels-message:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	border-right: 1rpx solid #E4E4E4;
+}
+.carModels-quote-btn {
+	width: 27.33%;
+	float: left;
+}
+.carModels-quote-btn .quotebtn {
+	display: block;
+	width: 160rpx;
+	height: 64rpx;
+	background: #ED4149;
+	border-radius: 6px;
+	color: #fff;
+	font-size: 24rpx;
+	border: none;
+}
+.carModels-quote-btn .quotebtn-active {
+	background: rgba(237,65,73,.8);
+}
+.carModels-message-title {
+	width: 90%;
+	font-family: "PingFangSC-Medium";
+	font-size: 30rpx;
+	color: #333333;
+	letter-spacing: 0px;
+	line-height: 36rpx;
+}
+.carModels-message-price {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #333333;
+	margin-top: 20rpx;
+	display: flex;
+	align-items: center;
+}
+.carModels-message-price .price,
+.carModels-message-price .officePrice,
+.carModels-message-price .depreciate-icon,
+.carModels-message-price .depreciate {
+	float: left;
+	line-height: 28rpx;
+	margin-right: 14rpx;
+}
+.carModels-message-price .price {
+	position: relative;
+	display: inline;
+}
+.carModels-message-price .price .price-num {
+	display: inline;
+	font-family: "SFUIDisplay-Regular";
+	font-size: 44rpx;
+	color: #ED4149;
+	letter-spacing: 0px;
+	margin-right: 4rpx;
+}
+.carModels-message-price .officePrice {
+	text-decoration:line-through;
+	color: #999;
+}
+.carModels-message-price .depreciate-icon {
+	display: block;
+	width: 20rpx;
+	height: 24rpx;
+}
+.carModels-message .icon-arrows {
+	position: absolute;
+	top: 50%;
+	right: 20rpx;
+	width: 24rpx;
+	height: 24rpx;
+	margin-top: -12rpx;
+}
+.carModels-message .icon-arrows image {
+	width: 24rpx;
+	height: 24rpx;
+}
+.carModels-message-price .officePrice.no_stock {
+	text-decoration: none ;
+}

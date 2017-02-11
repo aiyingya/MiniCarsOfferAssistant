@@ -1,0 +1,62 @@
+@import '../../css/carmodel.wxss';
+.search-wrapper {
+	position: relative;
+}
+.searchbar{
+	width: 100%;
+	margin: 0;
+	padding: 30rpx 0;
+	background-color: #fff;
+	overflow: hidden;
+}
+.searchbar-inner {
+	width: 93.6%;
+	margin: 0 auto;
+	background: #F0F0F0;
+	border-radius: 8rpx;
+	position: relative;
+}
+.search-icon {
+	z-index: 99;
+	left: 30rpx;
+}
+.search-input {
+	padding-left: 70rpx;
+}
+.search-placeholder {
+	text-align: left;
+}
+
+.search-results-wrap {
+	position: relative;
+	width: 100%;
+}
+.search-results-inner {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	background-color: #fff;
+}
+.searchResults-cell {
+	position: relative;
+	height: 88rpx;
+	width: 100%;
+	line-height: 88rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 30rpx;
+	color: #333333;
+	padding-left: 30rpx;
+	text-indent: 20rpx;
+}
+.searchResults-cell:after {
+	content: '';
+	position: absolute;
+	left: 30rpx;
+	right: 0;
+	bottom: 0;
+	border-bottom: 1rpx solid #E4E4E4;
+}
+.searchResults-cell:last-child:after {
+	border: none;
+}
