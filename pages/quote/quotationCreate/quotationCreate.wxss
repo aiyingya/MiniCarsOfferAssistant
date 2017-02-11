@@ -128,3 +128,13 @@
 .total-payment-block{
     background: #ED4149;
 }
+.weui-navbar__item.weui-bar__item_on {
+    color: #ED4149;
+    font-size:32rpx;
+}
+.weui-navbar__item{
+    padding: 28rpx 0;
+}
+.weui-navbar{
+    border-bottom: none;
+}
