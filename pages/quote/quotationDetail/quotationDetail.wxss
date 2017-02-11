@@ -23,7 +23,7 @@
     padding: 15px 0; 
     display: -webkit-box;   
 }
-.white-box textarea{
+.white-box textarea,.textarea-box{
     width: calc(100% - 50px);
     background: #EFEFEF;
     border-radius: 5px;
