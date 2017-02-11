@@ -1,7 +1,3 @@
 {
-	"backgroundTextStyle":"light",
-	"navigationBarBackgroundColor": "#fff",
-	"navigationBarTitleText": "车源详情",
-	"navigationBarTextStyle":"black"
-  
+	"navigationBarTitleText": "车源详情"
 }

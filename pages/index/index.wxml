@@ -8,12 +8,15 @@
 					<image class="search-img" src="../../images/icons/icon_find.png"></image>
 				</view>
 				<input 
-					bindtap="searchCarType" 
 					class="search-input" 
 					placeholder-class="search-placeholder"
 					disabled 
 					placeholder="输入指导价/车款名" 
 					/>
+				<view 
+				  class="bindtap"
+				  bindtap="searchCarType"
+				  ></view>
 			</view>
 		</view>
 

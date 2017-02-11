@@ -104,37 +104,57 @@ Page({
   onLoad(options) {
     let that = this
 
-    var carSKUInfo = JSON.parse(options.carInfo)
-    let carModelInfo = JSON.parse(options.carModelsInfo)
-
-    /**
-     * 这里需要注意：
-     * 当页面从 `车源详情` 过来时，carSKUInfo 和 carModelInfo 是同事存在的
-     *
-     * 当页面从 `首页` 所有联想中的 SPU 立即报价过来，是没有 carSKUInfo 字段的，所以必须使用 carModelInfo 中
-     * lowestPriceSku 字段来设置 carSKUInfo 字段
-     */
-    if (!(carSKUInfo && typeof carSKUInfo === 'object')) {
-      carSKUInfo = carModelInfo.lowestPriceSku
-    }
-
-    /// 拼装图片链接
-    carSKUInfo.skuPic = app.config.imgAliyuncsUrl + carSKUInfo.skuPic
-
-    // 设置报价表单数据
-    let quotationItems = [
-      {
-        skuId: carSKUInfo.skuId,
-        sellingPrice: carSKUInfo.price
+    var quotation = JSON.parse(options.quotation)
+    console.log(quotation)
+    if (quotation && typeof quotation == 'object') {
+      /***
+       * 来源页面来自于详情页面， 参数中有 quotation
+       */
+      if (quotation.hasLoan) {
+        this.setData({
+          activeIndex: 0,
+          'withLoan.quotation': quotation
+        })
+      } else {
+        this.setData({
+          activeIndex: 1,
+          'withoutLoan.quotation': quotation
+        })
       }
-    ]
+    } else {
+      var carSKUInfo = JSON.parse(options.carInfo)
+      let carModelInfo = JSON.parse(options.carModelsInfo)
 
-    this.setData({
-      'withLoan.quotation.quotationItems': quotationItems,
-      'withoutLoan.quotation.quotationItems': quotationItems,
-      carSKUInfo: carSKUInfo,
-      carModelInfo: carModelInfo
-    })
+      /**
+       * 这里需要注意：
+       * 当页面从 `车源详情` 过来时，carSKUInfo 和 carModelInfo 是同事存在的
+       *
+       * 当页面从 `首页` 所有联想中的 SPU 立即报价过来，是没有 carSKUInfo 字段的，所以必须使用 carModelInfo 中
+       * lowestPriceSku 字段来设置 carSKUInfo 字段
+       */
+      if (!(carSKUInfo && typeof carSKUInfo === 'object')) {
+        carSKUInfo = carModelInfo.lowestPriceSku
+      }
+
+      // 设置报价表单数据
+      let quotationItems = [
+        {
+          itemNumber: carSKUInfo.skuId,
+          itemName: carModelInfo.carModelName,
+          itemPic: app.config.imgAliyuncsUrl + carSKUInfo.skuPic,
+          specifications: carSKUInfo.externalColorName + '/' + carSKUInfo.internalColorName,
+          guidePrice: carModelInfo.price,
+          sellingPrice: carSKUInfo.price
+        }
+      ]
+
+      this.setData({
+        'withLoan.quotation.quotationItems': quotationItems,
+        'withoutLoan.quotation.quotationItems': quotationItems,
+        carSKUInfo: carSKUInfo,
+        carModelInfo: carModelInfo
+      })
+    }
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
@@ -188,7 +208,7 @@ Page({
       let advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
       let monthlyLoanPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, expennseRate, stages * 12);
 
-      let officialPrice = this.data.carModelInfo.officialPrice
+      let officialPrice = this.data.withLoan.quotation.quotationItems[0].guidePrice
 
       /// 实时计算优惠点数
       let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed(2)
@@ -208,7 +228,7 @@ Page({
 
       let totalPayment = carPrice + requiredExpenses + otherExpenses
 
-      let officialPrice = this.data.carModelInfo.officialPrice
+      let officialPrice = this.data.withoutLoan.quotation.quotationItems[0].guidePrice
 
       /// 实时计算优惠点数
       let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed(2)
@@ -370,7 +390,17 @@ Page({
     })
   },
   handlerRemarkChange (e) {
+    let remark = e.detail.value
 
+    if (isLoanTabActive()) {
+      this.setData({
+        'withLoan.quotation.remark': remark
+      })
+    } else {
+      this.setData({
+        'withoutLoan.quotation.remark': remark
+      })
+    }
   },
   handlerSaveQuotationDraft(e) {
     let that = this;

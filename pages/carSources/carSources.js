@@ -13,6 +13,7 @@ Page({
 		internalColor: [],
 		filters: [],
 		filtersData: '',
+		cacheColor: '',
 		selectColorId: '0',
 		selectExternalColorId: '0',
 		selectExternalColorName: '全部外观',
@@ -76,7 +77,6 @@ Page({
 		let that = this;
 		let newCarSkuList = [];
 		let searchCarSkuList = that.data.cacheCarSkuList;
-		
 		if(that.data.selectColorId === '0') {
 			that.setData({
 				selectExternalColorId: color.id,
@@ -88,14 +88,18 @@ Page({
 				selectInternalColorName: color.name
 			})
 		}
+		let selectExternal = that.data.selectExternalColorId;
+		let selectInternal = that.data.selectInternalColorId;
+		let carStatus = that.data.carStatus;
 		for(let item of searchCarSkuList) {
-			if(that.data.selectExternalColorId === item.externalColorId &&  that.data.selectInternalColorId === '1') {
+			console.log(item)
+			if(selectExternal === item.externalColorId &&  selectInternal === '1') {
 				newCarSkuList.push(item);
-			}else if(that.data.selectInternalColorId === item.internalColorId && that.data.selectExternalColorId === '0') {
+			}else if(selectInternal === item.internalColorId && selectExternal === '0') {
 				newCarSkuList.push(item);
-			}else if(that.data.selectExternalColorId === item.externalColorId && that.data.selectInternalColorId === item.internalColorId) {
+			}else if(selectExternal === item.externalColorId && selectInternal === item.internalColorId) {
 				newCarSkuList.push(item);
-			}else if(that.data.selectExternalColorId === '0' && that.data.selectInternalColorId === '1') {
+			}else if(selectExternal === '0' && selectInternal === '1') {
 				newCarSkuList.push(item);
 			}
 		}	
@@ -119,7 +123,7 @@ Page({
 		that.setData({
 			carStatus: stock,
 			carStatusName: stockName
-		})
+		});
 	},
 	handlerShowQuoteView(e) {
 		let quoteinfo = e.currentTarget.dataset.quoteinfo;		

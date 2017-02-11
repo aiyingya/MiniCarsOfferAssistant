@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/carModels/carModels",
     "pages/carSources/carSources",
+    "pages/search/search",
     "pages/quote/quotationCreate/quotationCreate",
     "pages/quote/quotationDetail/quotationDetail",
     "pages/quote/quotationsList/quotationsList"
