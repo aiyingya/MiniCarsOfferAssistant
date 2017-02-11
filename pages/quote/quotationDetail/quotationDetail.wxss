@@ -95,8 +95,15 @@
 
 .loan-payment-block{
     height:216rpx;
+    color: #f7b1b4;
+    text-align: center;
+    font-size: 12px;    
 }
-
+.payment-price{
+    color: #fff;
+    padding-top: 40rpx;
+    font-size: 24px
+}
 .advance-payment-block{
     opacity: 0.9;
     background: #ED4149;
