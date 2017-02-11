@@ -37,6 +37,7 @@
 	left: 0;
 	right: 0;
 	background-color: #fff;
+	z-index: 9;
 }
 .searchResults-cell {
 	position: relative;
