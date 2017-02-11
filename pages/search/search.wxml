@@ -37,12 +37,14 @@
 			</view>
 		</view>
 		<view class="carModels-cells">
-		<block 
-			wx:for="{{data}}"
-			wx:key="unique"
-			>
-			<template is="carModel" data="{{item}}" /> 
-	 	</block>
+			<scroll-view scroll-y style="height: {{carModelsHeight}}">
+				<block 
+					wx:for="{{data}}"
+					wx:key="unique"
+					>
+					<template is="carModel" data="{{item}}" /> 
+				</block>
+			</scroll-view>
 		</view>	
 		
 </view>

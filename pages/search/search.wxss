@@ -5,9 +5,11 @@
 .searchbar{
 	width: 100%;
 	margin: 0;
-	padding: 30rpx 0;
 	background-color: #fff;
+	height: 130rpx;
 	overflow: hidden;
+	display: flex;
+	align-items: center;
 }
 .searchbar-inner {
 	width: 93.6%;
@@ -60,4 +62,7 @@
 }
 .searchResults-cell:last-child:after {
 	border: none;
+}
+.carModelsHeight {
+	height: calc(100% - 130rpx);
 }
