@@ -9,16 +9,17 @@
     padding-bottom: 0;    
 }
 .quotation-price{
-    font-size: 15px;
+    font-size: 30rpx;
     color: #333;
 }
 .quotation-title{
     font-weight: 700;
-    padding-right: 20px
+    padding-right: 20px;
+    font-size: 30rpx;
 }
 .red-price{
     color: #ED4149;
-    font-size: 22px;
+    font-size: 44rpx;
     font-weight: 700;
     display: inline
 }
@@ -28,7 +29,7 @@
 .line-box{
     display: inline-block;
     padding-right: 5px;
-    font-size: 12px;
+    font-size: 24rpx;
     color: #999;
 }
 .text-right{
@@ -36,7 +37,7 @@
 }
 .min-font-gray{
     color: #666;
-    font-size: 12px
+    font-size: 24rpx
 }
 
 

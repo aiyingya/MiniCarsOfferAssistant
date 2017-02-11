@@ -89,8 +89,8 @@
         </view>
 
         <!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/分享/联系客户/立即订车-->
-        <view wx:if="{{edit}}">
-            <button bindtap='handlerSaveQuotationDraft'>完成</button>
+        <view class="red-btn fix-bt" wx:if="{{edit}}"  bindtap='handlerSaveQuotationDraft'>
+            完成
         </view>
         <view class="btn-group fix-bt" wx:else>
             <button class='flex-item-1 btn' bindtap='handlerEditQuotation'>编辑</button>

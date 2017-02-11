@@ -2,10 +2,10 @@
     padding-bottom: 40px;
 }
 .weui-cells{
-    font-size: 16px;
+    font-size: 30rpx;
 }
 .h-cell-gray{
-    font-size: 16px;
+    font-size: 30rpx;
     padding:10px 15px;
     color: #888;
 }
@@ -27,10 +27,10 @@
     width: calc(100% - 50px);
     background: #EFEFEF;
     border-radius: 5px;
-    min-height: 60px;
+    min-height: 158rpx;
     margin:0 auto;
     padding: 10px;
-    font-size: 17px;
+    font-size: 30rpx;
     color: #999;
 }
 .ymc-cell-box .weui-cell__bd{
@@ -44,8 +44,8 @@
 }
 .cell-img{
     display: inline-block;
-    height: 100px;
-    width: 150px;
+    height: auto;
+    width: 150rpx;
 }
 .fix-bt{
     position: fixed;
@@ -59,49 +59,62 @@
 .btn{
     border: 1px solid #eee;
 }
+
 .btn::after{
     border: none;
 }
+
 .btn-group .btn{
     border-radius: 0;
     border-bottom: none;
     background: #fff;
+    font-size: 32rpx;
+    padding: 33rpx 0;
+    line-height: 32rpx;
+    display: inline-block;
 }
+
 .btn-group .btn:first-child{
     border: none;
     border-top:1px solid #eee;
 }
+
 .btn-group .btn:last-child{
     border: none;
     background: #ED4149;
     color: #fff;
-
+}
+.red-btn{
+   border: none;
+    background: #ED4149;
+    color: #fff; 
+    font-size: 32rpx;
+    text-align: center;
+    padding: 33rpx 0;
 }
 .flex-item-1 {
-   flex-grow: 1;
+    flex-grow: 1;
 }
 
 .flex-item-2 {
-   flex-grow: 2;
+    flex-grow: 2;
 }
 
 .flex-item-3 {
-   flex-grow: 3;
+    flex-grow: 3;
 }
-
 
 .loan-payment-block{
     height:216rpx;
     color: #f7b1b4;
     text-align: center;
-    font-size: 12px;    
+    font-size: 24rpx;    
 }
 .payment-price{
     color: #fff;
-    padding-top: 40rpx;
-    font-size: 24px
+    padding-top: 60rpx;
+    font-size: 60rpx;
 }
-
 .advance-payment-block{
     opacity: 0.9;
     background: #ED4149;
