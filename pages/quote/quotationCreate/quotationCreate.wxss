@@ -138,3 +138,7 @@
 .weui-navbar{
     border-bottom: none;
 }
+.weui-navbar__slider{
+    width: 50%;
+    background: #ED4149;
+}
