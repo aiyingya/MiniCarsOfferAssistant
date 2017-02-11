@@ -57,21 +57,21 @@
                     <view class="weui-cells weui-cells_after-title ymc-cell-box">
                         <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                             <view class="weui-cell__bd">
-                                <image class="cell-img" src="{{ carSKUInfo.skuPic }}"></image>
+                                <image class="cell-img" src="{{ withLoan.quotation.quotationItems[0].itemPic }}"></image>
                             </view>
                             <view class="weui-cell__ft">
-                                <view class="text-left">{{ carModelInfo.carModelName }}</view>
-                                <view class="text-left">指导价： {{ carModelInfo.officialPriceStr }}万</view>
+                                <view class="text-left">{{ withLoan.quotation.quotationItems[0].itemName }}</view>
+                                <view class="text-left">指导价： {{ withLoan.quotation.quotationItems[0].guidePrice }}万</view>
                             </view>
                         </view>
                         <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                             <view class="weui-cell__bd">配色</view>
-                            <view class="weui-cell__ft weui-cell__ft_in-access"> {{ carSKUInfo.externalColorName }}/{{ carSKUInfo.internalColorName }} </view>
+                            <view class="weui-cell__ft weui-cell__ft_in-access"> {{withloan.quotation.quotationItems[0].specifications}} </view>
                         </navigator>
                         <view url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
                             <view class="weui-cell__bd">裸车价</view>
                             <view class="weui-cell__ft weui-cell__ft_in-access">
-                                <view class="min-gray-font">(下{{ withLoan.downPrice }}万/{{withLoan.downPoint}}点)</view>￥ {{ carSKUInfo.price }}
+                                <view class="min-gray-font">(下{{ withLoan.downPrice }}万/{{withLoan.downPoint}}点)</view>￥ {{withloan.quotation.quotationItems[0].sellingPrice}}
                             </view>
                         </view>
                     </view>
@@ -110,21 +110,21 @@
                     <view class="weui-cells weui-cells_after-title ymc-cell-box">
                         <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                             <view class="weui-cell__bd">
-                                <image class="cell-img" src="{{ carSKUInfo.skuPic }}"></image>
+                                <image class="cell-img" src="{{ withoutLoan.quotation.quotationItems[0].itemPic }}"></image>
                             </view>
                             <view class="weui-cell__ft">
-                                <view class="text-left">{{ carModelInfo.carModelName }}</view>
-                                <view class="text-left">指导价： {{ carModelInfo.officialPriceStr }}万</view>
+                                <view class="text-left">{{ withoutLoan.quotation.quotationItems[0].itemName }}</view>
+                                <view class="text-left">指导价： {{ withoutLoan.quotation.quotationItems[0].guidePrice }}万</view>
                             </view>
                         </view>
                         <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
                             <view class="weui-cell__bd">配色</view>
-                            <view class="weui-cell__ft weui-cell__ft_in-access"> {{ carSKUInfo.externalColorName }}/{{ carSKUInfo.internalColorName }}  </view>
+                            <view class="weui-cell__ft weui-cell__ft_in-access"> {{withoutloan.quotation.quotationItems[0].specifications}}  </view>
                         </navigator>
                         <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                             <view class="weui-cell__bd">裸车价</view>
                             <view class="weui-cell__ft weui-cell__ft_in-access">
-                                <view class="min-gray-font">(下{{ withoutLoan.downPrice }}万/{{withoutLoan.downPoint}}点)</view> {{ carSKUInfo.priceStr }}
+                                <view class="min-gray-font">(下{{ withoutLoan.downPrice }}万/{{withoutLoan.downPoint}}点)</view> {{withoutloan.quotation.quotationItems[0].sellingPrice}}
                             </view>
                         </view>
                     </view>

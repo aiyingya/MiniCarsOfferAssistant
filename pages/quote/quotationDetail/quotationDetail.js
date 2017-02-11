@@ -38,8 +38,6 @@ Page({
       customerMobile: '',
       read: false
     },
-    // 编辑状态
-    edit: false
   },
   onLoad(options) {
     let that = this;
@@ -47,8 +45,8 @@ Page({
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
 
-    // TODO: davidfu 需要从车源界面获取车的相关信息
     let quotation = JSON.parse(options.quotation);
+
     this.setData({
       quotation: quotation
     })
@@ -92,9 +90,17 @@ Page({
   },
   handlerEditQuotation(e) {
     let that = this
-    // TODO: 解除编辑态, 底部按钮应该变为完成
-    this.setData({
-      edit: !that.data.edit
+    wx.navigateTo({
+      url: '../quotationCreate/quotationCreate?quotation=' + JSON.stringify(this.data.quotation),
+      success: function(res){
+        // success
+      },
+      fail: function() {
+        // fail
+      },
+      complete: function() {
+        // complete
+      }
     })
   },
   handlerContactWithCustomer(e) {
