@@ -1,4 +1,3 @@
-let sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
 let util = require('../../../utils/util.js');
 const app = getApp()
 
@@ -27,6 +26,7 @@ Page({
       hasLoan: true,          // 必传，true/false，boolean，是否贷款
       paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
       stages: 3,              // 贷款期数，int，全款时不传
+      expenseRate: 4,
       annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
       requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
       otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
@@ -46,6 +46,7 @@ Page({
     this.$wuxDialog = app.wux(this).$wuxDialog
 
     let quotation = JSON.parse(options.quotation);
+    quotation.quotationItems[0].itemPic = app.config.imgAliyuncsUrl + quotation.quotationItems[0].itemPic
 
     this.setData({
       quotation: quotation
@@ -53,10 +54,6 @@ Page({
 
     wx.getSystemInfo({
       success: function(res) {
-        that.setData({
-          sliderLeft: (res.windowWidth / 2 - sliderWidth) / 2,
-          sliderOffset: res.windowWidth / 2 * that.data.activeIndex
-        });
       }
     });
   },
@@ -153,7 +150,7 @@ Page({
       cancelText: '取消',
       confirm: (res) => {
         let mobile = res.mobile
-        that.requestBookCar(that.data.quotationId, mobile, {
+        that.requestBookCar([that.data.quotation.quotationItems[0].itemNumber], mobile, that.data.quotation.quotationId, {
           success: (res) => {
             // TODO: 发起订车成功
           },
@@ -169,51 +166,6 @@ Page({
         // TODO: 取消
       }
     })
-  },
-  // 编辑态下的完成按钮
-  handlerSaveQuotationDraft(e) {
-    let that = this;
-
-    this.requestSaveQuotationDraft(this.data.quotationDraft, {
-      success: function (res) {
-        let quotationDraft = res
-        // this.data.quotation = quotationDraft
-
-        // 请求成功后弹出对话框
-        const hideDialog = that.$wuxDialog.open({
-          title: '保存成功',
-          content: '分享给客户',
-          phoneNumberPlaceholder: '输入对方11位手机号码',
-          confirmText: '分享',
-          cancelText: '暂不分享',
-          confirm: (res) => {
-            let mobile = res.mobile
-            that.requestPublishQuotation(that.data.draftId, mobile, {
-              success: (res) => {
-                // TODO: 分享成功
-                let quotation = res;
-                // TODO: davidfu 这里是否需要考虑合并数据到 this.data
-              },
-              fail: () => {
-
-              },
-              complete: () => {
-
-              }
-            })
-          },
-          cancel: () => {
-            // TODO: 暂不分享
-          }
-        })
-      },
-      fail: function () {
-
-      },
-      complete: function () {
-
-      }
-    });
   },
 
   /**
@@ -380,66 +332,23 @@ Page({
   },
 
   /**
-   * 编辑报价草稿
-   *
-   * @param draftId   编辑的报价草稿 id
-   * @param quotation 编辑的报价草稿数据
-   *
-   {
-   "quotationName":"报价单名称，没有可以不传",
-   "quotationItems":[
-       "商品编号/skuId，数组至少要有一项",
-       "商品编号/skuId"
-   ],
-   "hasLoan":"必传，true/false，boolean，是否贷款",
-   "paymentRatio":"首付比例（%），decimal，全款时不传，取值范围0~100",
-   "stages":"贷款期数，int，全款时不传",
-   "annualRate":"贷款年利率（%），decimal，全款时不传，取值范围0~100",
-   "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
-   "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
-   "advancePayment":"必传，首次支付金额，如果全款则为全款金额",
-   "monthlyPayment":"月供金额，每月还款金额，全款时不传",
-   "remark":"备注"
-   }
-   */
-  // requestEditQuotationDraft(draftId, quotation, object) {
-  //   if (draftId && draftId !== '' && quotation && typeof quotation === 'object') {
-  //     wx.request({
-  //       url: config.ymcServerHTTPSUrl + 'sale/quotation/draft/' + draftId,
-  //       data: quotation,
-  //       method: 'PUT', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-  //       // header: {}, // 设置请求的 header
-  //       success: function(res){
-  //         // success
-  //       },
-  //       fail: function() {
-  //         // fail
-  //       },
-  //       complete: function() {
-  //         // complete
-  //       }
-  //     })
-  //   } else {
-  //     // 参数验证失败
-  //   }
-  // },
-
-  /**
    * 发起订车行为
    *
-   * @param quotationId
-   * @param customerMobile
+   * @param skuIds					[String]
+   * @param quotationId     可选
+   * @param customerMobile  可选
    * @param object
    */
-  requestBookCar(quotationId, customerMobile, object) {
-    if (quotationId && quotationId !== '' && customerMobile && customerMobile !== '') {
+  requestBookCar(skuIds, customerMobile, quotationId, object) {
+    if (skuIds && typeof skuIds === 'object' && customerMobile && customerMobile !== '') {
       app.modules.request({
-        url: config.ymcServerHTTPSUrl + 'sale/quotation/order',
+        url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
         data: {
-          quotationId: quotationId,
-          mobile: customerMobile
+          skuIds: skuIds,
+          mobile: customerMobile,
+          quotationId: quotationId
         },
-        method: 'GET',
+        method: 'POST',
         success: function(res){
           object.success()
         },

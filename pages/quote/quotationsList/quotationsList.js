@@ -6,10 +6,15 @@ Page({
     pageSize: 10,
     quotationsList: [],
     empty: false,
-    windowHeight:''
+    windowHeight:'',
+    snsId: ''
   },
   onLoad() {
     let that = this;
+
+        // 设置 snsId
+    let snsId = wx.getStorageSync('snsId')
+    this.data.snsId = snsId
 
     try {
       var res = wx.getSystemInfoSync();
@@ -22,62 +27,7 @@ Page({
     }
 
     this.setData({
-      quotationsList: [
-        {
-          quotationId: '0',
-          draftId: '0',
-          quotationName: '报价单名称，没有可以不传',
-          quotationItems: [
-            {
-              itemNumber: '2131321',
-              itemName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
-              specifications: '北极白/黑',
-              guidePrice: '14万',
-              sellingPrice: '12万'
-            }
-          ],
-          hasLoan: true,          // 必传，true/false，boolean，是否贷款
-          paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
-          stages: 3,              // 贷款期数，int，全款时不传
-          annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
-          requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
-          otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
-          advancePayment: 0,       // 必传，首次支付金额，如果全款则为全款金额",
-          monthlyPayment: 0,        // 月供金额，每月还款金额，全款时不传",
-          remark: '',
-          loginChannel: 'weixin',
-          snsId: '',
-          customerMobile: '18516103001',
-          read: true
-        },
-        {
-          quotationId: '0',
-          draftId: '0',
-          quotationName: '报价单名称，没有可以不传',
-          quotationItems: [
-            {
-              itemNumber: '2131321',
-              itemName: '宝马1系 2016款 2.0T都市设计套装国V 手自一体(AT)',
-              specifications: '北极白/黑',
-              guidePrice: '14万',
-              sellingPrice: '12万'
-            }
-          ],
-          hasLoan: false,          // 必传，true/false，boolean，是否贷款
-          paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
-          stages: 3,              // 贷款期数，int，全款时不传
-          annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
-          requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
-          otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
-          advancePayment: 0,       // 必传，首次支付金额，如果全款则为全款金额",
-          monthlyPayment: 0,        // 月供金额，每月还款金额，全款时不传",
-          remark: '',
-          loginChannel: 'weixin',
-          snsId: '',
-          customerMobile: '18516103001',
-          read: false
-        }
-      ]
+      quotationsList: []
     })
 
     this.setData({
@@ -97,10 +47,40 @@ Page({
 
       }
     });
-
   },
   onReady() { },
-  onShow() { },
+  onShow() {
+    let quotation = app.fuckingLarryNavigatorTo.quotation
+    let source = app.fuckingLarryNavigatorTo.source
+
+                    console.log("hehe")
+                    console.log(quotation)
+    if (quotation && typeof quotation === 'object') {
+      if (source === 'quotationDetail') {
+        /// 报价列表页面也换过来
+        wx.navigateTo({
+          url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+          success: function(res) { },
+          fail: function() { },
+          complete: function() {
+            app.fuckingLarryNavigatorTo.quotation = null
+            app.fuckingLarryNavigatorTo.source = null
+          }
+        })
+      } else {
+        /// 找车路径切换过来
+        wx.navigateTo({
+          url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+          success: function(res) { },
+          fail: function() { },
+          complete: function() {
+            app.fuckingLarryNavigatorTo.quotation = null
+            app.fuckingLarryNavigatorTo.source = null
+          }// complete
+        })
+      }
+    }
+  },
   onHide() { },
   onUnload() { },
   onShareAppMessage() { },
@@ -178,7 +158,7 @@ Page({
         url: app.config.ymcServerHTTPSUrl + 'sale/quotation',
         data: {
           channel: 'weixin',
-          snsId: 'fuck_larry',
+          snsId: this.data.snsId,
           pageIndex: pageIndex,
           pageSize: pageSize
         },

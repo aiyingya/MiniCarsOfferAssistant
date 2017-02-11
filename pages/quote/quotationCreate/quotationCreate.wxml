@@ -8,15 +8,16 @@
             <!--导航栏分区-->
             <view class="weui-navbar">
                 <view id="0" class="weui-navbar__item {{activeIndex == 0 ? 'weui-bar__item_on' : ''}}" bindtap="handlerTabClick">
-                    <view class="weui-navbar__title">按揭</view>
+                    <view class="weui-navbar__title">贷款</view>
                 </view>
                 <view id="1" class="weui-navbar__item {{activeIndex == 1 ? 'weui-bar__item_on' : ''}}" bindtap="handlerTabClick">
-                    <view class="weui-navbar__title">贷款</view>
+                    <view class="weui-navbar__title">全款</view>
                 </view>
                 <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
             </view>
             <!--导航栏分区-->
             <view class="weui-tab__panel">
+                <scroll-view scroll-y style="height:{{tabHeight}}">
                 <!--按揭内容-->
                 <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
                     <!--费用计算色块-->
@@ -47,9 +48,9 @@
                                 <view class="weui-cell__ft weui-cell__ft_in-access">{{ withLoan.stagesArray[withLoan.stagesIndex] }}</view>
                             </view>
                         </picker>
-                        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerAnnualRateChange">
-                            <view class="weui-cell__bd">年利率</view>
-                            <view class="weui-cell__ft weui-cell__ft_in-access">{{ withLoan.quotation.annualRate }}</view>
+                        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerExpenseRateChange">
+                            <view class="weui-cell__bd">费率</view>
+                            <view class="weui-cell__ft weui-cell__ft_in-access">{{ withLoan.quotation.expenseRate }}%</view>
                         </view>
                     </view>
                     <!--基础信息-->
@@ -66,12 +67,12 @@
                         </view>
                         <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                             <view class="weui-cell__bd">配色</view>
-                            <view class="weui-cell__ft weui-cell__ft_in-access"> {{withloan.quotation.quotationItems[0].specifications}} </view>
+                            <view class="weui-cell__ft weui-cell__ft_in-access"> {{withLoan.quotation.quotationItems[0].specifications}} </view>
                         </navigator>
                         <view url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
                             <view class="weui-cell__bd">裸车价</view>
                             <view class="weui-cell__ft weui-cell__ft_in-access">
-                                <view class="min-gray-font">(下{{ withLoan.downPrice }}万/{{withLoan.downPoint}}点)</view>￥ {{withloan.quotation.quotationItems[0].sellingPrice}}
+                                <view class="min-gray-font">(下{{ withLoan.downPrice }}万/{{withLoan.downPoint}}点)</view>￥ {{withLoan.quotation.quotationItems[0].sellingPrice}}
                             </view>
                         </view>
                     </view>
@@ -104,6 +105,7 @@
                     <view class="weui-flex loan-payment-block">
                         <view class="weui-flex__item advance-payment-block">
                                 <view class="payment-price">￥{{withoutLoan.quotation.advancePayment }}</view>
+                                <view>落地总额约(元)</view>
                         </view>
                     </view>
                     <!--基础信息-->
@@ -120,12 +122,12 @@
                         </view>
                         <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
                             <view class="weui-cell__bd">配色</view>
-                            <view class="weui-cell__ft weui-cell__ft_in-access"> {{withoutloan.quotation.quotationItems[0].specifications}}  </view>
+                            <view class="weui-cell__ft weui-cell__ft_in-access"> {{withoutLoan.quotation.quotationItems[0].specifications}}  </view>
                         </navigator>
                         <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                             <view class="weui-cell__bd">裸车价</view>
                             <view class="weui-cell__ft weui-cell__ft_in-access">
-                                <view class="min-gray-font">(下{{ withoutLoan.downPrice }}万/{{withoutLoan.downPoint}}点)</view> {{withoutloan.quotation.quotationItems[0].sellingPrice}}
+                                <view class="min-gray-font">(下{{ withoutLoan.downPrice }}万/{{withoutLoan.downPoint}}点)</view> {{withoutLoan.quotation.quotationItems[0].sellingPrice}}
                             </view>
                         </view>
                     </view>
@@ -153,9 +155,10 @@
                     </view>
                 </view>
 
-                <!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/分享/联系客户/立即订车-->
-                <view class="red-btn fix-bt" bindtap='handlerSaveQuotationDraft'>完成</view>
+                </scroll-view>
             </view>
         </view>
     </view>
+    <!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/分享/联系客户/立即订车-->
+    <view class="red-btn fix-bt" bindtap='handlerSaveQuotationDraft'>完成</view>
 </view>

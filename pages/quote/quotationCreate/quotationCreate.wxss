@@ -44,7 +44,7 @@
 }
 .cell-img{
     display: inline-block;
-    height: auto;
+    height: 100rpx;
     width: 150rpx;
 }
 .fix-bt{

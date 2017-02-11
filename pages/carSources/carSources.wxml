@@ -144,10 +144,11 @@
 			hover-class="navbar-quote-active"
 			bindtap="handlerMakePhoneCall"
 			>电话联系</view>
-		<view 
+		<view
 			class="navbar-quote-cell" 
 			hover="true" 
 			hover-class="navbar-quote-active"
+			bindtap="handlerBookCar"
 			>立即订车</view>
 		<view 
 			class="navbar-quote-cell" 

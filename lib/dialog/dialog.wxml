@@ -8,17 +8,17 @@
         <form bindsubmit="{{ dialogConfirm }}">
             <view class="weui-dialog__input" >
                 <input
-                        type="number"
-                        name="mobile"
+                        type="{{ inputType }}"
+                        name="inputNumber"
                         placeholder="{{ phoneNumberPlaceholder }}"
                         placeholder-class=""
                         focus="{{ visible }}"
-                        value="{{ phoneNumber }}"
-                        bindinput="{{ phoneNumberInput }}"
-                        bindconfirm="{{ phoneNumberConfirm }}"
-                        bindfocus="{{ phoneNumberFocus }}"
-                        bindblur="{{ phoneNumberBlur }}"
-                        maxlength="11"
+                        value="{{ inputNumber }}"
+                        bindinput="{{ inputNumberInput }}"
+                        bindconfirm="{{ inputNumberConfirm }}"
+                        bindfocus="{{ inputNumberFocus }}"
+                        bindblur="{{ inputNumberBlur }}"
+                        maxlength="{{ inputNumberMaxLength }}"
                 />
             </view>
             <view class="weui-dialog__ft">

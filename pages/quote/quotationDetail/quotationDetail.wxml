@@ -19,31 +19,31 @@
                 </view>
                 <!--费用计算列表-->
                 <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                    <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                    <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                         <view class="weui-cell__bd">首付比例</view>
                         <view class="weui-cell__ft">{{ quotation.paymentRatio }}%</view>
-                    </navigator>
-                    <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                    </view>
+                    <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                         <view class="weui-cell__bd">付款年限</view>
                         <view class="weui-cell__ft">{{ quotation.stages }}</view>
-                    </navigator>
-                    <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                        <view class="weui-cell__bd">年利率</view>
-                        <view class="weui-cell__ft">{{ quotation.annualRate }}</view>
-                    </navigator>
+                    </view>
+                    <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                        <view class="weui-cell__bd">费率</view>
+                        <view class="weui-cell__ft">{{ quotation.expenseRate }}%</view>
+                    </view>
                 </view>
             </view>
             <view class="weui-flex loan-payment-block" wx:else>
                 <view class="weui-flex__item advance-payment-block">
                         <view class="payment-price">￥{{ quotation.advancePayment }}</view>
-                        <view>预付款(元)</view>
+                        <view>落地总额约(元)</view>
                 </view>
             </view>
 
             <!--基础信息-->
             <view class="h-cell-gray">基础信息</view>
             <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">
                         <image class="cell-img" src="{{ quotation.quotationItems[0].itemPic }}"></image>
                     </view>
@@ -51,34 +51,34 @@
                         <view class="text-left">{{ quotation.quotationItems[0].itemName }}</view>
                         <view class="text-left">指导价： {{ quotation.quotationItems[0].guidePrice }}万</view>
                     </view>
-                </navigator>
-                <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                </view>
+                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">配色</view>
                     <view class="weui-cell__ft"> {{ quotation.quotationItems[0].specifications }} </view>
-                </navigator>
-                <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                </view>
+                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">裸车价</view>
                     <view class="weui-cell__ft">
                         <view class="min-gray-font">(下1.9万/6点)</view> {{ quotation.quotationItems[0].sellingPrice }}
                     </view>
-                </navigator>
+                </view>
             </view>
 
             <!--必要花费-->
             <view class="h-cell-gray">必要花费</view>
             <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">购置税、上牌费、车船税、保险等</view>
                     <view class="weui-cell__ft"> {{ quotation.requiredExpenses }} </view>
-                </navigator>
+                </view>
             </view>
             <!--其他花费-->
             <view class="h-cell-gray">其他花费</view>
             <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">精品费、安装费等</view>
                     <view class="weui-cell__ft"> {{ quotation.otherExpenses }} </view>
-                </navigator>
+                </view>
             </view>
             <!--备   注-->
             <view class="h-cell-gray">备注</view>
@@ -96,4 +96,3 @@
         </view>
     </view>
 </view>
-

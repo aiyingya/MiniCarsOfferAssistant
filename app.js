@@ -17,7 +17,10 @@ App({
     if(this.globalData.userInfo){
       typeof cb == "function" && cb(this.globalData.userInfo)
     } else {
-      //调用登录接口
+    	// FIXME: 设置 fucking_larray
+			wx.setStorageSync('snsId', 'fucking_larry')
+
+			//调用登录接口
       wx.login({
         success: function (auth) {
 					wx.getUserInfo({
@@ -49,5 +52,10 @@ App({
   wux: wux,
 	config: config,
 	modules: modules,
-	user: user
+	user: user,
+	// FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据
+	fuckingLarryNavigatorTo: {
+  	quotation: null,
+		source: ''
+	}
 })

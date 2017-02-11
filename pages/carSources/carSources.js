@@ -52,6 +52,9 @@ Page({
 				})
 			}
 		})
+
+    /// 初始化自定义组件
+    this.$wuxDialog = app.wux(this).$wuxDialog
 	},
 	handlerAmendCarFacade(e) {
 		let that = this;
@@ -143,10 +146,74 @@ Page({
 			phoneNumber: phone
 		})
 	},
+  // 非编辑态下的订车按钮
+  handlerBookCar(e) {
+    let that = this;
+
+    const hideDialog = this.$wuxDialog.open({
+      title: '发起订车后， 将会有工作人员与您联系',
+      content: '',
+      phoneNumberPlaceholder: '输入您的手机号',
+      confirmText: '发起订车',
+      cancelText: '取消',
+      confirm: (res) => {
+        let mobile = res.mobile
+				// FIXME: 这里的 skuIds 需要提供
+        that.requestBookCar([], null, mobile, null, {
+          success: (res) => {
+            // TODO: 发起订车成功
+          },
+          fail: () => {
+
+          },
+          complete: () => {
+
+          }
+        })
+      },
+      cancel: () => {
+        // TODO: 取消
+      }
+    })
+  },
 	handlerQuoteCreate(e) {
 		let that = this;
 		wx.navigateTo({  
       url: '../quote/quotationCreate/quotationCreate?carInfo=' + JSON.stringify(that.data.QuoteCreateInfo)+'&carModelsInfo='+JSON.stringify(that.data.carModelsInfo)
     })
-	}
+	},
+
+  /**
+   * 发起订车行为
+   *
+   * @param skuIds					[String]
+   * @param quotationId     可选
+   * @param customerMobile  可选
+   * @param object
+   */
+  requestBookCar(skuIds, customerMobile, quotationId, object) {
+    if (skuIds && typeof skuIds === 'object' && customerMobile && customerMobile !== '') {
+      app.modules.request({
+        url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
+        data: {
+					skuIds: skuIds,
+          mobile: customerMobile,
+          quotationId: quotationId
+        },
+        method: 'POST',
+        success: function(res){
+          object.success()
+        },
+        fail: function() {
+          object.fail()
+        },
+        complete: function() {
+          object.complete()
+        }
+      })
+    } else {
+      object.fail()
+      object.complete()
+    }
+  }
 })
