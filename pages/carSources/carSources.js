@@ -41,8 +41,8 @@ Page({
 				carSpuId: carModelsInfo.carModelId
 			},
 			success: function(res) {
-				let filters = res.data.data.filters;
-				let carSkuList = res.data.data.carSkuList;
+                                let filters = res.filters
+				let carSkuList = res.carSkuList;
 				that.setData({
 					carModelsInfo: carModelsInfo,
 					carSkuList: carSkuList,

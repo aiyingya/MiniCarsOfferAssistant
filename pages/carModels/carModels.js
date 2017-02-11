@@ -29,7 +29,7 @@ Page({
 					carSeriesId: carsInfo.id
 				},
 				success: function(res) {
-					let carModelsList = res.data.data;
+					let carModelsList = res;
 					if(carModelsList) {
 						for(let item of carModelsList) {
 							item.count = ((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2);

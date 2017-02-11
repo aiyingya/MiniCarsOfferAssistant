@@ -35,7 +35,7 @@ Page({
 		})
 		// 获取页面数据.
 		
-		wx.request({
+		app.modules.request({
 			url: HTTPS_URL + 'carBrand/brandGroupsRecommend', //仅为示例，并非真实的接口地址
 			method: 'GET',
 			data: {
@@ -47,7 +47,7 @@ Page({
 					'content-type': 'application/json'
 			},
 			success: function(res) {
-				let data = res.data.data;
+				let data = res;
 				let recommendCarBrandList = data.recommendCarBrandList;
 				let brandGroupList = data.brandGroupList;
 				that.setData({
@@ -92,7 +92,7 @@ Page({
 		let that = this;
 		let {HTTPS_YMCAPI} = this.data;
 		
-		wx.request({
+		app.modules.request({
 			url: HTTPS_YMCAPI + '/carSeries/seriesPromotion', //仅为示例，并非真实的接口地址
 			method: 'GET',
 			data: {
@@ -103,7 +103,7 @@ Page({
 					'content-type': 'application/json'
 			},
 			success: function(res) {
-				let data = res.data.data;
+				let data = res;
 				that.setData({
 					showCarSeriesImageUrl: data.logoUrl,
 					carManufacturerSeriesList: data.carManufacturerSeriesList

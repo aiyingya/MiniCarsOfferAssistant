@@ -3,6 +3,8 @@ import config from 'lib/config'
 import wux from 'lib/wux'
 import clientjs from 'lib/client'
 import modules from 'lib/modules'
+import user from 'lib/user'
+
 App({
   onLaunch () {
     //调用API从本地缓存中获取数据
@@ -32,7 +34,7 @@ App({
 									"iv": res.iv
 								},
 								success: function(res) {
-									console.log(res.data)
+									console.log(res)
 								}
 							})
 						}
@@ -46,5 +48,6 @@ App({
   },
   wux: wux,
 	config: config,
-	modules: modules
+	modules: modules,
+	user: user
 })

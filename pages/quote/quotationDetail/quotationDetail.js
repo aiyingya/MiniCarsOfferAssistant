@@ -1,7 +1,6 @@
 let sliderWidth = 96; // 需要设置slider的宽度，用于计算中间位置
-let config = require('../../../lib/config.js');
 let util = require('../../../utils/util.js');
-const App = getApp()
+const app = getApp()
 
 Page({
   data: {
@@ -19,9 +18,10 @@ Page({
         {
           itemNumber: '',
           itemName: '',
+          itemPic: '',
           specifications: '',
           guidePrice: '',
-          sellingPrice: ''
+          sellingPrice: '',
         }
       ],
       hasLoan: true,          // 必传，true/false，boolean，是否贷款
@@ -38,6 +38,7 @@ Page({
       customerMobile: '',
       read: false
     },
+    // 编辑状态
     edit: false
   },
   onLoad(options) {
@@ -48,16 +49,9 @@ Page({
 
     // TODO: davidfu 需要从车源界面获取车的相关信息
     let quotation = JSON.parse(options.quotation);
-
-    /// 车价格
-    let advancePayment = 150109;
-    let monthlyPayment = 8243;
-    let totalPaymentByLoan = util.totalPaymentByLoan(this.data.quotation.annualRate, this.data.quotation.stages);
     this.setData({
-      'quotation.advancePayment': advancePayment,
-      'quotation.monthlyPayment': monthlyPayment,
-      'quotation.totalPaymentByLoan': totalPaymentByLoan
-    });
+      quotation: quotation
+    })
 
     wx.getSystemInfo({
       success: function(res) {
@@ -67,6 +61,27 @@ Page({
         });
       }
     });
+  },
+  onReady() {
+
+  },
+  onShow() {
+
+  },
+  onHide() {
+
+  },
+  onUnload() {
+
+  },
+  onShareAppMessage() {
+
+  },
+  onReachBottom() {
+
+  },
+  onPullDownRefresh() {
+
   },
   // event handler
   handlerTabClick(e) {
@@ -86,11 +101,12 @@ Page({
     let that = this;
     wx.makePhoneCall({
       phoneNumber: this.data.quotation.customerMobile,
-      success: function(res) {
+      success: (res) => {
         console.log('拨打电话' + that.data.quotation.customerMobile + '成功');
       }
     })
   },
+  //
   handlerShareToCustomer(e) {
     let that = this;
 
@@ -119,6 +135,7 @@ Page({
       }
     })
   },
+  // 非编辑态下的订车按钮
   handlerBookCar(e) {
     let that = this;
 
@@ -143,17 +160,46 @@ Page({
         })
       },
       cancel: () => {
-
+        // TODO: 取消
       }
     })
   },
+  // 编辑态下的完成按钮
   handlerSaveQuotationDraft(e) {
-    this.requestSaveQuotationDraft(this.data.quotation, {
-      success: function (res) {
-        let quotationDraft = res.data.data;
-        // this.data.quotationDraft = quotationDraft;
+    let that = this;
 
-        // TODO: davidfu 显示自定义弹出， 弹出后询问客户的电话号码并发布
+    this.requestSaveQuotationDraft(this.data.quotationDraft, {
+      success: function (res) {
+        let quotationDraft = res
+        // this.data.quotation = quotationDraft
+
+        // 请求成功后弹出对话框
+        const hideDialog = that.$wuxDialog.open({
+          title: '保存成功',
+          content: '分享给客户',
+          phoneNumberPlaceholder: '输入对方11位手机号码',
+          confirmText: '分享',
+          cancelText: '暂不分享',
+          confirm: (res) => {
+            let mobile = res.mobile
+            that.requestPublishQuotation(that.data.draftId, mobile, {
+              success: (res) => {
+                // TODO: 分享成功
+                let quotation = res;
+                // TODO: davidfu 这里是否需要考虑合并数据到 this.data
+              },
+              fail: () => {
+
+              },
+              complete: () => {
+
+              }
+            })
+          },
+          cancel: () => {
+            // TODO: 暂不分享
+          }
+        })
       },
       fail: function () {
 
@@ -162,23 +208,6 @@ Page({
 
       }
     });
-  },
-  handlerPublishQuotation(e) {
-    // TODO: davidfu 此处的电话号码应该为从自定义弹窗中获取的值
-    let customerMobile = '18516103001';
-
-    this.requestPublishQuotation(this.data.quotation.draftId, customerMobile, {
-      success: function (res) {
-        let quotation = res.data.data;
-        // TODO: davidfu 这里是否需要考虑合并数据到 this.data
-      },
-      fail: function () {
-
-      },
-      complete: function () {
-
-      }
-    })
   },
 
   /**
@@ -221,7 +250,7 @@ Page({
    */
   requestPublishQuotation(draftId, customerMobile, object) {
     if (draftId && draftId !== '' && customerMobile && customerMobile !== '') {
-      wx.request({
+      app.modules.request({
         url: config.ymcServerHTTPSUrl + 'sale/quotation',
         data: {
           draftId: draftId,
@@ -268,7 +297,7 @@ Page({
    */
   requestSaveQuotationDraft(quotationDraft, object) {
     if (quotationDraft && typeof quotationDraft === 'object') {
-      wx.request({
+      app.modules.request({
         url: config.ymcServerHTTPSUrl + 'sale/quotation/draft',
         data: quotationDraft,
         method: 'POST',
@@ -324,7 +353,7 @@ Page({
    */
   requestQuotationDetail(quotationId, object) {
     if (quotationId && quotationId !== '') {
-      wx.request({
+      app.modules.request({
         url: config.ymcServerHTTPSUrl + 'sale/quotation/' + quotationId,
         data: {},
         method: 'GET',
@@ -397,6 +426,27 @@ Page({
    * @param object
    */
   requestBookCar(quotationId, customerMobile, object) {
-
+    if (quotationId && quotationId !== '' && customerMobile && customerMobile !== '') {
+      app.modules.request({
+        url: config.ymcServerHTTPSUrl + 'sale/quotation/order',
+        data: {
+          quotationId: quotationId,
+          mobile: customerMobile
+        },
+        method: 'GET',
+        success: function(res){
+          object.success()
+        },
+        fail: function() {
+          object.fail()
+        },
+        complete: function() {
+          object.complete()
+        }
+      })
+    } else {
+      object.fail()
+      object.complete()
+    }
   }
-});
+})
