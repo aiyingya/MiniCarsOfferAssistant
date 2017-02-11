@@ -9,10 +9,12 @@
                 <!--费用计算色块-->
                 <view class="weui-flex loan-payment-block">
                     <view class="weui-flex__item advance-payment-block">
-                        <view>￥ 8,243</view>
+                        <view class="payment-price">￥8,243</view>
+                        <view>预付款(元)</view>
                     </view>
                     <view class="weui-flex__item monthly-payment-block">
-                        <view>￥ 1,201</view>
+                        <view class="payment-price">￥1,201</view>
+                        <view>月供(元)</view>
                     </view>
                 </view>
                 <!--费用计算列表-->
@@ -87,10 +89,7 @@
         </view>
 
         <!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/分享/联系客户/立即订车-->
-        <view wx:if="{{edit}}">
-            <button bindtap='handlerSaveQuotationDraft'>完成</button>
-        </view>
-        <view class="btn-group fix-bt" wx:else>
+        <view class="btn-group fix-bt" >
             <button class='flex-item-1 btn' bindtap='handlerEditQuotation'>编辑</button>
             <button class='flex-item-2 btn' wx:if="{{quotation.customerMobile && quotation.customerMobile.length}}" bindtap='handlerContactWithCustomer'>联系客户</button>
             <button class='flex-item-3 btn' wx:else bindtap='handlerShareToCustomer'>分享</button>
