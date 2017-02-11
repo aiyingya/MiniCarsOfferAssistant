@@ -117,7 +117,7 @@
                                 <view class="text-left">指导价： {{ carModelInfo.officialPriceStr }}万</view>
                             </view>
                         </view>
-                        <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">>
+                        <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
                             <view class="weui-cell__bd">配色</view>
                             <view class="weui-cell__ft weui-cell__ft_in-access"> {{ carSKUInfo.externalColorName }}/{{ carSKUInfo.internalColorName }}  </view>
                         </navigator>
@@ -132,7 +132,7 @@
                     <!--必要花费-->
                     <view class="h-cell-gray">必要花费</view>
                     <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerRequiredExpensesChange">>
+                        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerRequiredExpensesChange">
                             <view class="weui-cell__bd">购置税、上牌费、车船税、保险等</view>
                             <view class="weui-cell__ft weui-cell__ft_in-access"> {{ withoutLoan.quotation.requiredExpenses }} </view>
                         </view>
@@ -140,7 +140,7 @@
                     <!--其他花费-->
                     <view class="h-cell-gray">其他花费</view>
                     <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerOtherExpensesChange">>
+                        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerOtherExpensesChange">
                             <view class="weui-cell__bd">精品费、安装费等</view>
                             <view class="weui-cell__ft weui-cell__ft_in-access"> {{ withoutLoan.quotation.otherExpenses }} </view>
                         </view>
@@ -148,7 +148,7 @@
                     <!--备   注-->
                     <view class="h-cell-gray">备注</view>
                     <view class="white-box">
-                        <textarea placeholder="请输入内容" value="{{ withoutLoan.quotation.remark }}"/>
+                        <textarea placeholder="请输入内容" value="{{ withoutLoan.quotation.remark }}" bindinput="handlerRemarkChange"/>
                     </view>
                 </view>
 
