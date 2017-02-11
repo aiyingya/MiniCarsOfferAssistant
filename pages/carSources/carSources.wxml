@@ -73,7 +73,7 @@
 		</view>
 		<view 
 			wx:if="{{carSkuList.length > 0}}"
-			class="carSources-cells {{carSkuList.length}}"
+			class="carSources-cells"
 			>
 			<view 
 				wx:for="{{carSkuList}}"
