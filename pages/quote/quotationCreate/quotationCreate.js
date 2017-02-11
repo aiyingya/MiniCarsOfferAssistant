@@ -1,4 +1,3 @@
-let sliderWidth = 96 // 需要设置slider的宽度，用于计算中间位置
 let util = require('../../../utils/util.js')
 const app = getApp()
 
@@ -145,7 +144,7 @@ Page({
     wx.getSystemInfo({
       success: function(res) {
         that.setData({
-          sliderLeft: (res.windowWidth / 2 - sliderWidth) / 2,
+          sliderLeft: 0,
           sliderOffset: res.windowWidth / 2 * that.data.activeIndex
         });
       }
@@ -238,7 +237,7 @@ Page({
     if (this.isLoanTabActive()) {
       this.setData({
         paymentRatiosIndex: e.detail.value,
-        'withLoan.quotation.paymentRatios': this.data.paymentRatiosArray[e.detail.value]
+        'withLoan.quotation.paymentRatios': this.data.withLoan.paymentRatiosArray[e.detail.value]
       })
     }
   },
@@ -246,7 +245,7 @@ Page({
     if (this.isLoanTabActive()) {
       this.setData({
         stagesIndex: e.detail.value,
-        'withLoan.quotation.stages': this.data.stagesArray[e.detail.value]
+        'withLoan.quotation.stages': this.data.withLoan.stagesArray[e.detail.value]
       })
     }
   },
@@ -255,7 +254,7 @@ Page({
       this.$wuxDialog.open({
         title: '贷款年利率',
         content: '1-100 之间的小数',
-        phoneNumber: this.data.quotation.annualRate,
+        phoneNumber: this.data.withLoan.quotation.annualRate,
         phoneNumberPlaceholder: '输入贷款年利率',
         confirmText: '确定',
         cancelText: '取消',
@@ -272,10 +271,16 @@ Page({
     }
   },
   handlerSellingPriceChange (e) {
+    let sellingPrice = 0
+    if (this.isLoanTabActive()) {
+      sellingPrice = this.data.withLoan.quotation.quotationItems[0].sellingPrice
+    } else {
+      sellingPrice = this.data.withoutLoan.quotation.quotationItems[0].sellingPrice
+    }
 
     this.$wuxDialog.open({
       title: '裸车价',
-      phoneNumber: this.data.quotation.requiredExpenses,
+      phoneNumber: sellingPrice,
       phoneNumberPlaceholder: '输入裸车价',
       confirmText: '确定',
       cancelText: '取消',
@@ -297,9 +302,17 @@ Page({
     })
   },
   handlerRequiredExpensesChange (e) {
+    let requiredExpenses = 0
+    if (this.isLoanTabActive()) {
+      requiredExpenses = this.data.withLoan.quotation.requiredExpenses
+    } else {
+      requiredExpenses = this.data.withoutLoan.quotation.requiredExpenses
+    }
+
     this.$wuxDialog.open({
       title: '必要花费',
-      phoneNumber: this.data.quotation.requiredExpenses,
+      content: '购置税、上牌费、车船税、保险等',
+      phoneNumber: requiredExpenses,
       phoneNumberPlaceholder: '输入必要花费',
       confirmText: '确定',
       cancelText: '取消',
@@ -323,9 +336,17 @@ Page({
     })
   },
   handlerOtherExpensesChange (e) {
+    let otherExpenses = 0
+    if (this.isLoanTabActive()) {
+      otherExpenses = this.data.withLoan.quotation.otherExpenses
+    } else {
+      otherExpenses = this.data.withoutLoan.quotation.otherExpenses
+    }
+
     this.$wuxDialog.open({
       title: '其他花费',
-      phoneNumber: this.data.quotation.otherExpenses,
+      content: '精品费、安装费等',
+      phoneNumber: otherExpenses,
       phoneNumberPlaceholder: '输入其他花费',
       confirmText: '确定',
       cancelText: '取消',
@@ -347,6 +368,9 @@ Page({
       cancel: () => {
       }
     })
+  },
+  handlerRemarkChange (e) {
+
   },
   handlerSaveQuotationDraft(e) {
     let that = this;
