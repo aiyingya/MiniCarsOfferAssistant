@@ -4,7 +4,7 @@
         <view class="weui-dialog__hd" wx:if="{{ title }}">
             <view class="weui-dialog__title">{{ title }}</view>
         </view>
-        <view class="weui-dialog__bd" wx:if="{{ content }}">{{ content }}</view>
+        <view class="weui-dialog__bd" wx:if="{{ content }}"><view class="weui-dialog__bd__centent">{{ content }}</view></view>
         <form bindsubmit="{{ dialogConfirm }}">
             <view class="weui-dialog__input" >
                 <input

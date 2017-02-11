@@ -100,9 +100,10 @@
                 </view>
                 <!--全款内容-->
                 <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
-                    <view class="weui-flex loan-payment-block" >
-                        <view class="weui-flex__item total-payment-block">
-                            <view>￥{{ withoutLoan.quotation.advancePayment }}</view>
+            
+                    <view class="weui-flex loan-payment-block">
+                        <view class="weui-flex__item advance-payment-block">
+                                <view class="payment-price">￥{{withoutLoan.quotation.advancePayment }}</view>
                         </view>
                     </view>
                     <!--基础信息-->

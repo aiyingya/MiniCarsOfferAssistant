@@ -9,11 +9,11 @@
                 <!--费用计算色块-->
                 <view class="weui-flex loan-payment-block">
                     <view class="weui-flex__item advance-payment-block">
-                        <view class="payment-price">￥8,243</view>
+                        <view class="payment-price">￥{{ quotation.advancePayment }}</view>
                         <view>预付款(元)</view>
-                    </view>
+                </view>
                     <view class="weui-flex__item monthly-payment-block">
-                        <view class="payment-price">￥1,201</view>
+                        <view class="payment-price">￥{{ quotation.monthlyPayment }}</view>
                         <view>月供(元)</view>
                     </view>
                 </view>
@@ -21,23 +21,22 @@
                 <view class="weui-cells weui-cells_after-title ymc-cell-box">
                     <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                         <view class="weui-cell__bd">首付比例</view>
-                        <view class="weui-cell__ft weui-cell__ft_in-access">{{ quotation.paymentRatio }}%</view>
+                        <view class="weui-cell__ft">{{ quotation.paymentRatio }}%</view>
                     </navigator>
                     <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                         <view class="weui-cell__bd">付款年限</view>
-                        <view class="weui-cell__ft weui-cell__ft_in-access">{{ quotation.stages }}</view>
+                        <view class="weui-cell__ft">{{ quotation.stages }}</view>
                     </navigator>
                     <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                         <view class="weui-cell__bd">年利率</view>
-                        <view class="weui-cell__ft weui-cell__ft_in-access">{{ quotation.annualRate }}</view>
+                        <view class="weui-cell__ft">{{ quotation.annualRate }}</view>
                     </navigator>
                 </view>
             </view>
-            <view wx:else>
-                <view class="weui-flex loan-payment-block" >
-                    <view class="weui-flex__item total-payment-block">
-                        <view>{{ quotation.advancePayment }}</view>
-                    </view>
+            <view class="weui-flex loan-payment-block" wx:else>
+                <view class="weui-flex__item advance-payment-block">
+                        <view class="payment-price">￥{{ quotation.advancePayment }}</view>
+                        <view>预付款(元)</view>
                 </view>
             </view>
 
@@ -55,11 +54,11 @@
                 </navigator>
                 <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">配色</view>
-                    <view class="weui-cell__ft weui-cell__ft_in-access"> {{ quotation.quotationItems[0].specifications }} </view>
+                    <view class="weui-cell__ft"> {{ quotation.quotationItems[0].specifications }} </view>
                 </navigator>
                 <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">裸车价</view>
-                    <view class="weui-cell__ft weui-cell__ft_in-access">
+                    <view class="weui-cell__ft">
                         <view class="min-gray-font">(下1.9万/6点)</view> {{ quotation.quotationItems[0].sellingPrice }}
                     </view>
                 </navigator>
@@ -70,7 +69,7 @@
             <view class="weui-cells weui-cells_after-title ymc-cell-box">
                 <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">购置税、上牌费、车船税、保险等</view>
-                    <view class="weui-cell__ft weui-cell__ft_in-access"> {{ quotation.requiredExpenses }} </view>
+                    <view class="weui-cell__ft"> {{ quotation.requiredExpenses }} </view>
                 </navigator>
             </view>
             <!--其他花费-->
@@ -78,13 +77,13 @@
             <view class="weui-cells weui-cells_after-title ymc-cell-box">
                 <navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">精品费、安装费等</view>
-                    <view class="weui-cell__ft weui-cell__ft_in-access"> {{ quotation.otherExpenses }} </view>
+                    <view class="weui-cell__ft"> {{ quotation.otherExpenses }} </view>
                 </navigator>
             </view>
             <!--备   注-->
             <view class="h-cell-gray">备注</view>
             <view class="white-box">
-                <textarea placeholder="请输入内容" value="{{ quotation.remark }}"/>
+               <view class="textarea-box">{{ quotation.remark }}</view>
             </view>
         </view>
 
