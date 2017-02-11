@@ -17,13 +17,88 @@ function formatNumber(n) {
 }
 
 /**
- * 贷款实际偿还金额
+ * 贷款月供计算公式
+ *
+ * @param carPrice      裸车价, 元
+ * @param paymentRatio  首付比例, %
+ * @param expenseRate   费率, %
+ * @param stages        期数, 月数
+ * @returns {number}    月供金额, 元
  */
-let totalPaymentByLoan = function(annualRate, stages) {
-  return 150109;
+let monthlyLoanPaymentByLoan = function(carPrice, paymentRatio, expenseRate, stages) {
+  let loanPayment = loanPaymentByLoan(carPrice, paymentRatio, expenseRate)
+  return loanPayment / stages;
+}
+
+/***
+ * 贷款总额计算公式
+ *
+ * @param carPrice      裸车价, 元
+ * @param paymentRatio  首付比例，%
+ * @param expenseRate   费率, %
+ * @returns {number}    贷款总额，元
+ */
+let loanPaymentByLoan = function (carPrice, paymentRatio, expenseRate) {
+  return (carPrice * (100 - paymentRatio) * 0.01 * (expenseRate * 0.01 + 1))
+}
+
+/**
+ * 首付计算公式
+ *
+ * @param carPrice          裸车价, 元
+ * @param paymentRatio      首付比例, %
+ * @param requiredExpenses  必要花费, 元
+ * @param otherExpenses     其他话费, 元
+ * @returns {number}        首付金额，元
+ */
+let advancePaymentByLoan = function(carPrice, paymentRatio, requiredExpenses, otherExpenses) {
+  return carPrice * paymentRatio * 0.01 + requiredExpenses + otherExpenses
+}
+
+/***
+ * 总费用计算公式
+ *
+ * @param carPrice          裸车价，元
+ * @param paymentRatio      首付比例，%
+ * @param expennseRate      费率，%
+ * @param stages            期数，月数
+ * @param requiredExpenses  必要花费，元
+ * @param otherExpenses     其他话费，元
+ * @returns {number}        总费用，元
+ */
+let totalPaymentByLoan = function (carPrice, paymentRatio, expennseRate, stages, requiredExpenses, otherExpenses) {
+  let advancePayment = advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses)
+  let loanPayment = loanPaymentByLoan(carPrice, paymentRatio, expennseRate)
+  return (advancePayment + loanPayment)
+}
+
+/***
+ * 优惠价格公式
+ *
+ * @param price
+ * @param originPrice
+ * @return {number}
+ */
+let downPrice = function (price, originPrice) {
+  return (originPrice - price)
+}
+
+/***
+ * 优惠点数公式
+ * @param price       修改价格
+ * @param originPrice 原价格
+ * @return {string}
+ */
+let downPoint = function (price, originPrice) {
+  return ((originPrice - price) * 100 / originPrice).toFixed()
 }
 
 module.exports = {
   formatTime: formatTime,
-  totalPaymentByLoan: totalPaymentByLoan
+  totalPaymentByLoan: totalPaymentByLoan,
+  advancePaymentByLoan: advancePaymentByLoan,
+  loanPaymentByLoan: loanPaymentByLoan,
+  monthlyLoanPaymentByLoan: monthlyLoanPaymentByLoan,
+  downPrice: downPrice,
+  downPoint: downPoint
 }

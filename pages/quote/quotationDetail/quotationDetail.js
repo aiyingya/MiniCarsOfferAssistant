@@ -45,7 +45,7 @@ Page({
     let that = this;
 
     /// 初始化自定义组件
-    this.$wuxDialog = App.wux(this).$wuxDialog
+    this.$wuxDialog = app.wux(this).$wuxDialog
 
     // TODO: davidfu 需要从车源界面获取车的相关信息
     let quotation = JSON.parse(options.quotation);
