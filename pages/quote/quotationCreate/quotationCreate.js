@@ -243,16 +243,16 @@ Page({
       /// 车贷款和全款的价格价格
       let carPrice = this.data.withLoan.quotation.quotationItems[0].sellingPrice
       let paymentRatio = this.data.withLoan.quotation.paymentRatio
-      let expennseRate = this.data.withLoan.quotation.expenseRate
+      let expenseRate = this.data.withLoan.quotation.expenseRate
       let requiredExpenses = this.data.withLoan.quotation.requiredExpenses
       let otherExpenses = this.data.withLoan.quotation.otherExpenses
       let stages = this.data.withLoan.quotation.stages
 
-      console.log(carPrice + ' ' + paymentRatio + '' + expennseRate + '' + requiredExpenses + ' ' + requiredExpenses + ' ' + stages)
+      console.log(carPrice + ' ' + paymentRatio + '' + expenseRate + '' + requiredExpenses + ' ' + requiredExpenses + ' ' + stages)
 
-      let totalPaymentByLoan = util.totalPaymentByLoan(carPrice, paymentRatio, expennseRate, stages * 12, requiredExpenses, otherExpenses)
+      let totalPaymentByLoan = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
       let advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
-      let monthlyLoanPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, expennseRate, stages * 12);
+      let monthlyLoanPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12);
 
       let officialPrice = this.data.withLoan.quotation.quotationItems[0].guidePrice
 
@@ -303,7 +303,7 @@ Page({
     if (this.isLoanTabActive()) {
       this.setData({
         'withLoan.paymentRatiosIndex': e.detail.value,
-        'withLoan.quotation.paymentRatios': this.data.withLoan.paymentRatiosArray[e.detail.value]
+        'withLoan.quotation.paymentRatio': this.data.withLoan.paymentRatiosArray[e.detail.value]
       })
       this.updateForSomeReason()
     }
