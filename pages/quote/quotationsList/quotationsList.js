@@ -102,6 +102,7 @@ Page({
     let that = this
     this.data.pageIndex = 1,
     this.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
+      loadingType: 'none',
       success: function(res) {
         let empty = res.content.length === 0
         that.setData({
