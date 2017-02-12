@@ -12,7 +12,7 @@ Page({
   onLoad() {
     let that = this;
 
-        // 设置 snsId
+    // 设置 snsId
     let snsId = wx.getStorageSync('snsId')
     this.data.snsId = snsId
 
@@ -25,8 +25,6 @@ Page({
     } catch (e) {
 
     }
-
-    this.getData()
   },
   onReady() { },
   onShow() {
@@ -35,28 +33,43 @@ Page({
 
     if (quotation && typeof quotation === 'object') {
       if (source === 'quotationDetail') {
-        /// 报价列表页面也换过来
-        wx.navigateTo({
-          url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
-          success: function(res) { },
-          fail: function() { },
-          complete: function() {
-            app.fuckingLarryNavigatorTo.quotation = null
-            app.fuckingLarryNavigatorTo.source = null
+        this.getData({
+          complete: function () {
+            /// 报价列表页面也换过来
+            wx.navigateTo({
+              url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+              success: function (res) {
+              },
+              fail: function () {
+              },
+              complete: function () {
+                app.fuckingLarryNavigatorTo.quotation = null
+                app.fuckingLarryNavigatorTo.source = null
+              }
+            })
           }
         })
+
       } else {
-        /// 找车路径切换过来
-        wx.navigateTo({
-          url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
-          success: function(res) { },
-          fail: function() { },
-          complete: function() {
-            app.fuckingLarryNavigatorTo.quotation = null
-            app.fuckingLarryNavigatorTo.source = null
-          }// complete
+        this.getData({
+          complete: function () {
+            /// 找车路径切换过来
+            wx.navigateTo({
+              url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+              success: function (res) {
+              },
+              fail: function () {
+              },
+              complete: function () {
+                app.fuckingLarryNavigatorTo.quotation = null
+                app.fuckingLarryNavigatorTo.source = null
+              }
+            })
+          }
         })
       }
+    } else {
+      this.getData({})
     }
   },
   onHide() { },
@@ -101,22 +114,22 @@ Page({
   getData(object) {
     let that = this
     this.data.pageIndex = 1,
-    this.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
-      loadingType: 'none',
-      success: function(res) {
-        let empty = res.content.length === 0
-        that.setData({
-          empty: empty,
-          quotationsList: res.content
-        })
-      },
-      fail: function() {
+      this.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
+        loadingType: 'none',
+        success: function(res) {
+          let empty = res.content.length === 0
+          that.setData({
+            empty: empty,
+            quotationsList: res.content
+          })
+        },
+        fail: function() {
 
-      },
-      complete: function() {
-        typeof object.complete === 'function' && object.complete()
-      }
-    })
+        },
+        complete: function() {
+          typeof object.complete === 'function' && object.complete()
+        }
+      })
   },
   handlerSelectQuotation(e) {
     let quotation = e.currentTarget.dataset.quotation;

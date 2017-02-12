@@ -490,6 +490,10 @@ Page({
           phoneNumberPlaceholder: '输入对方11位手机号码',
           confirmText: '分享',
           cancelText: '暂不分享',
+          validate: function (e) {
+            let mobile = e.detail.value
+            return mobile.length === 11
+          },
           confirm: (res) => {
             let mobile = res.inputNumber
             that.requestPublishQuotation(quotationDraft.draftId, mobile, {

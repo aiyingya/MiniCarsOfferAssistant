@@ -36,7 +36,8 @@ Page({
       loginChannel: 'weixin',
       snsId: '',
       customerMobile: '',
-      read: false
+      read: false,
+      source: 'quotationDetail'
     },
   },
   onLoad(options) {
@@ -118,11 +119,31 @@ Page({
       phoneNumberPlaceholder: '输入对方11位手机号码',
       confirmText: '分享',
       cancelText: '暂不分享',
+      validate: function (e) {
+        let mobile = e.detail.value
+        return mobile.length === 11
+      },
       confirm: (res) => {
-        let mobile = res.mobile
-        that.requestPublishQuotation(that.data.draftId, mobile, {
+        let mobile = res.inputNumber
+        that.requestPublishQuotation(that.data.quotation.draftId, mobile, {
           success: (res) => {
-            // TODO: 发布报价单成功
+            let quotation = res
+
+            app.fuckingLarryNavigatorTo.quotation = quotation
+            app.fuckingLarryNavigatorTo.source = that.data.source
+            
+            wx.navigateBack({
+              delta: 1, // 回退前 delta(默认为1) 页面
+              success: function(res){
+                // success
+              },
+              fail: function() {
+                // fail
+              },
+              complete: function() {
+                // complete
+              }
+            })
           },
           fail: () => {
             //
@@ -147,8 +168,12 @@ Page({
       phoneNumberPlaceholder: '输入您的手机号',
       confirmText: '发起订车',
       cancelText: '取消',
+      validate: function (e) {
+        let mobile = e.detail.value
+        return mobile.length === 11
+      },
       confirm: (res) => {
-        let mobile = res.mobile
+        let mobile = res.inputNumber
         that.requestBookCar([that.data.quotation.quotationItems[0].itemNumber], mobile, that.data.quotation.quotationId, {
           success: (res) => {
             // TODO: 发起订车成功
@@ -208,56 +233,13 @@ Page({
   requestPublishQuotation(draftId, customerMobile, object) {
     if (draftId && draftId !== '' && customerMobile && customerMobile !== '') {
       app.modules.request({
-        url: config.ymcServerHTTPSUrl + 'sale/quotation',
+        url: app.config.ymcServerHTTPSUrl + 'sale/quotation',
         data: {
           draftId: draftId,
           customerMobile: customerMobile
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
-        success: function(res) {
-          object.success(res);
-        },
-        fail: function() {
-          object.fail();
-        },
-        complete: function() {
-          object.complete();
-        }
-      })
-    } else {
-    }
-  },
-
-  /**
-   * 生成报价草稿
-   *
-   * @param quotationDraft 编辑的报价草稿数据
-   * @param object          回调对象
-   *
-   {
-   "quotationName":"报价单名称，没有可以不传",
-   "quotationItems":[
-       "商品编号/skuId，数组至少要有一项",
-       "商品编号/skuId"
-   ],
-   "hasLoan":"必传，true/false，boolean，是否贷款",
-   "paymentRatio":"首付比例（%），decimal，全款时不传，取值范围0~100",
-   "stages":"贷款期数，int，全款时不传",
-   "annualRate":"贷款年利率（%），decimal，全款时不传，取值范围0~100",
-   "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
-   "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
-   "advancePayment":"必传，首次支付金额，如果全款则为全款金额",
-   "monthlyPayment":"月供金额，每月还款金额，全款时不传",
-   "remark":"备注"
-   }
-   */
-  requestSaveQuotationDraft(quotationDraft, object) {
-    if (quotationDraft && typeof quotationDraft === 'object') {
-      app.modules.request({
-        url: config.ymcServerHTTPSUrl + 'sale/quotation/draft',
-        data: quotationDraft,
-        method: 'POST',
         success: function(res) {
           object.success(res);
         },
@@ -311,7 +293,7 @@ Page({
   requestQuotationDetail(quotationId, object) {
     if (quotationId && quotationId !== '') {
       app.modules.request({
-        url: config.ymcServerHTTPSUrl + 'sale/quotation/' + quotationId,
+        url: app.config.ymcServerHTTPSUrl + 'sale/quotation/' + quotationId,
         data: {},
         method: 'GET',
         success: function(res){
