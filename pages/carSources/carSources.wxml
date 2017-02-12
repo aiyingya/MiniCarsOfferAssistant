@@ -112,7 +112,7 @@
 						>
 						<image 	
 							class="depreciate-icon" 
-							src=" ../../images/icons/icon_price_down.png"
+							src="../../images/icons/icon_ price_down.png"
 							></image>
 						<view class="depreciate">{{carModelsInfo.count}}万</view>
 					</view>
