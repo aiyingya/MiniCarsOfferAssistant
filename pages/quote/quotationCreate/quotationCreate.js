@@ -337,7 +337,7 @@ Page({
           }
         },
         confirm: (res) => {
-          let expenseRate = res.inputNumber
+          let expenseRate = Number(res.inputNumber)
           that.setData({
             'withLoan.quotation.expenseRate': expenseRate
           })
@@ -366,7 +366,7 @@ Page({
       confirmText: '确定',
       cancelText: '取消',
       confirm: (res) => {
-        let sellingPrice = res.inputNumber
+        let sellingPrice = Number(res.inputNumber)
         if (that.isLoanTabActive()) {
           that.setData({
             'withLoan.quotation.quotationItems[0].sellingPrice': sellingPrice
@@ -401,7 +401,7 @@ Page({
       confirmText: '确定',
       cancelText: '取消',
       confirm: (res) => {
-        let requiredExpenses = res.inputNumber
+        let requiredExpenses = Number(res.inputNumber)
 
         if (that.isLoanTabActive()) {
           that.setData({
@@ -438,7 +438,7 @@ Page({
       confirmText: '确定',
       cancelText: '取消',
       confirm: (res) => {
-        let otherExpenses = res.inputNumber
+        let otherExpenses = Number(res.inputNumber)
 
         if (that.isLoanTabActive()) {
           that.setData({
