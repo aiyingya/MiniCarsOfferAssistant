@@ -104,7 +104,7 @@
             
                     <view class="weui-flex loan-payment-block">
                         <view class="weui-flex__item advance-payment-block">
-                                <view class="payment-price">￥{{withoutLoan.quotation.advancePayment }}</view>
+                                <view class="payment-price">￥{{withoutLoan.quotation.totalPayment }}</view>
                                 <view>落地总额约(元)</view>
                         </view>
                     </view>

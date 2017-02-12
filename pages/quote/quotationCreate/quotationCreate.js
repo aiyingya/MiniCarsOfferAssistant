@@ -272,7 +272,7 @@ Page({
       let requiredExpenses = this.data.withoutLoan.quotation.requiredExpenses
       let otherExpenses = this.data.withoutLoan.quotation.otherExpenses
 
-      let advancePayment = carPrice
+      let totalPayment = carPrice + requiredExpenses + otherExpenses
 
       let officialPrice = this.data.withoutLoan.quotation.quotationItems[0].guidePrice
 
@@ -281,7 +281,7 @@ Page({
       let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
       this.setData({
-        'withoutLoan.quotation.advancePayment': Math.floor(advancePayment),
+        'withoutLoan.quotation.totalPayment': Math.floor(totalPayment),
         'withoutLoan.downPrice': downPrice,
         'withoutLoan.downPoint': downPoint
       })
