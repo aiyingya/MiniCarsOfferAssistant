@@ -36,7 +36,9 @@ Page({
 
     this.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
       success: function(res) {
+        let empty = res.content.length === 0
         that.setData({
+          empty: empty,
           quotationsList: that.data.quotationsList.concat(res.content)
         })
       },
