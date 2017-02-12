@@ -26,29 +26,7 @@ Page({
 
     }
 
-    this.setData({
-      quotationsList: []
-    })
-
-    this.setData({
-      pageIndex: 1,
-    })
-
-    this.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
-      success: function(res) {
-        let empty = res.content.length === 0
-        that.setData({
-          empty: empty,
-          quotationsList: that.data.quotationsList.concat(res.content)
-        })
-      },
-      fail: function() {
-
-      },
-      complete: function() {
-
-      }
-    });
+    this.getData()
   },
   onReady() { },
   onShow() {
@@ -92,6 +70,7 @@ Page({
     let newPageIndex = this.data.pageIndex + 1
 
     this.requestQuotationsList(newPageIndex, this.data.pageSize, {
+      loadingType: 'navigation',
       success: function(res) {
         if (res.content.length === 0) {
           that.data.pageIndex = newPageIndex
@@ -101,7 +80,6 @@ Page({
         } else {
           that.data.pageIndex = originPageIndex
         }
-
       },
       fail: function() {
         that.data.pageIndex = originPageIndex
@@ -114,16 +92,20 @@ Page({
   onPullDownRefresh() {
     // 下拉刷新
     let that = this
-
-    this.setData({
-      pageIndex: 0,
+    this.getData({
+      complete: function() {
+        wx.stopPullDownRefresh()
+      }
     })
-
-    wx.stopPullDownRefresh()
-
+  },
+  getData(object) {
+    let that = this
+    this.data.pageIndex = 1,
     this.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
       success: function(res) {
+        let empty = res.content.length === 0
         that.setData({
+          empty: empty,
           quotationsList: res.content
         })
       },
@@ -131,9 +113,9 @@ Page({
 
       },
       complete: function() {
-
+        typeof object.complete === 'function' && object.complete()
       }
-    });
+    })
   },
   handlerSelectQuotation(e) {
     let quotation = e.currentTarget.dataset.quotation;
@@ -160,6 +142,7 @@ Page({
     if (pageIndex > 0 && pageSize > 0) {
       app.modules.request({
         url: app.config.ymcServerHTTPSUrl + 'sale/quotation',
+        loadingType: object.loadingType,
         data: {
           channel: 'weixin',
           snsId: this.data.snsId,

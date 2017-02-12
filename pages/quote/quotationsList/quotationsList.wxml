@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<scroll-view scroll-y style="height: {{windowHeight}}" scroll-into-view="{{alpha}}">
+<view class="container">
     <view class="container page">
         <view wx:if="{{ empty }}">
             <view>还没报过价~</view>
@@ -37,4 +37,4 @@
             </view>
         </view>
     </view>
-</scroll-view>
+</view>

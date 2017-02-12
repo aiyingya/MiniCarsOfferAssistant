@@ -9,7 +9,7 @@
     "pages/quote/quotationsList/quotationsList"
   ],
   "window":{
-    "backgroundTextStyle":"light",
+    "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "报价助手",
     "navigationBarTextStyle":"black"
