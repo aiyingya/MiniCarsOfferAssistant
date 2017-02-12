@@ -261,9 +261,9 @@ Page({
       let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
       this.setData({
-        'withLoan.quotation.totalPayment': totalPaymentByLoan,
-        'withLoan.quotation.advancePayment': advancePayment,
-        'withLoan.quotation.monthlyPayment': monthlyLoanPayment,
+        'withLoan.quotation.totalPayment': Math.floor(totalPaymentByLoan),
+        'withLoan.quotation.advancePayment': Math.floor(advancePayment),
+        'withLoan.quotation.monthlyPayment': Math.floor(monthlyLoanPayment),
         'withLoan.downPrice': downPrice,
         'withLoan.downPoint': downPoint
       });
@@ -281,7 +281,7 @@ Page({
       let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
       this.setData({
-        'withoutLoan.quotation.advancePayment': advancePayment,
+        'withoutLoan.quotation.advancePayment': Math.floor(advancePayment),
         'withoutLoan.downPrice': downPrice,
         'withoutLoan.downPoint': downPoint
       })
