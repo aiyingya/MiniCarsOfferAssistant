@@ -1,4 +1,4 @@
-<import src="../components/carModel/carModel.wxml" />
+<import src="../../components/carModel/carModel.wxml" />
 <!-- search.-->
 <scroll-view scroll-y style="height: {{windowHeight}}">
 <view class="container search-wrapper">

@@ -1,5 +1,5 @@
 <!-- 车款.-->
-<import src="../components/carModel/carModel.wxml" />
+<import src="../../components/carModel/carModel.wxml" />
 <scroll-view scroll-y style="height: {{windowHeight}}">
 	<view class="car-models container">
 		<view class="carModels-cells">

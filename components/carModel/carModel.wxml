@@ -21,18 +21,18 @@
 					<image 
 						wx:if="{{item.lowestPriceSku.discount > 0}}" 
 						class="depreciate-icon" 
-						src="../../../images/icons/icon_ price_down.png"
+						src="../../images/icons/icon_ price_down.png"
 						></image>
 					<image 
 						wx:else
 						class="depreciate-icon" 
-						src="../../../images/icons/icon_ price_up.png"
+						src="../../images/icons/icon_ price_up.png"
 						></image>
 					<view class="depreciate">{{item.count}}万</view>
 				</view>
 			</view>
 			<view class="icon-arrows">
-				<image src="../../../images/icons/icon_arrow.png"></image>
+				<image src="../../images/icons/icon_arrow.png"></image>
 			</view>
 		</view>
 		<view class="carModels-quote-btn">
