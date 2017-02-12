@@ -36,7 +36,9 @@ Page({
 
     this.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
       success: function(res) {
+        let empty = res.content.length === 0
         that.setData({
+          empty: empty,
           quotationsList: that.data.quotationsList.concat(res.content)
         })
       },
@@ -53,8 +55,6 @@ Page({
     let quotation = app.fuckingLarryNavigatorTo.quotation
     let source = app.fuckingLarryNavigatorTo.source
 
-                    console.log("hehe")
-                    console.log(quotation)
     if (quotation && typeof quotation === 'object') {
       if (source === 'quotationDetail') {
         /// 报价列表页面也换过来

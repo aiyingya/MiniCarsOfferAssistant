@@ -257,7 +257,7 @@ Page({
       let officialPrice = this.data.withLoan.quotation.quotationItems[0].guidePrice
 
       /// 实时计算优惠点数
-      let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed(2)
+      let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed()
       let downPoint = util.downPoint(carPrice, officialPrice)
 
       this.setData({
@@ -277,7 +277,7 @@ Page({
       let officialPrice = this.data.withoutLoan.quotation.quotationItems[0].guidePrice
 
       /// 实时计算优惠点数
-      let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed(2)
+      let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed(0)
       let downPoint = util.downPoint(carPrice, officialPrice)
 
       this.setData({
@@ -458,7 +458,6 @@ Page({
   },
   handlerRemarkChange (e) {
     let remark = e.detail.value
-
     if (isLoanTabActive()) {
       this.setData({
         'withLoan.quotation.remark': remark
