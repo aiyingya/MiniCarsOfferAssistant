@@ -258,7 +258,7 @@ Page({
 
       /// 实时计算优惠点数
       let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed()
-      let downPoint = util.downPoint(carPrice, officialPrice)
+      let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
       this.setData({
         'withLoan.quotation.totalPayment': totalPaymentByLoan,
@@ -278,7 +278,7 @@ Page({
 
       /// 实时计算优惠点数
       let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed(0)
-      let downPoint = util.downPoint(carPrice, officialPrice)
+      let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
       this.setData({
         'withoutLoan.quotation.advancePayment': advancePayment,

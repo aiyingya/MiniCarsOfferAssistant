@@ -27,7 +27,7 @@ function formatNumber(n) {
  */
 let monthlyLoanPaymentByLoan = function(carPrice, paymentRatio, expenseRate, stages) {
   let loanPayment = loanPaymentByLoan(carPrice, paymentRatio, expenseRate)
-  return (loanPayment / stages).toFixed(0);
+  return (loanPayment / stages);
 }
 
 /***
@@ -39,7 +39,7 @@ let monthlyLoanPaymentByLoan = function(carPrice, paymentRatio, expenseRate, sta
  * @returns {number}    贷款总额，元
  */
 let loanPaymentByLoan = function (carPrice, paymentRatio, expenseRate) {
-  return (carPrice * (100 - paymentRatio) * 0.01 * (expenseRate * 0.01 + 1)).toFixed(0)
+  return (carPrice * (100 - paymentRatio) * 0.01 * (expenseRate * 0.01 + 1))
 }
 
 /**
@@ -52,7 +52,7 @@ let loanPaymentByLoan = function (carPrice, paymentRatio, expenseRate) {
  * @returns {number}        首付金额，元
  */
 let advancePaymentByLoan = function(carPrice, paymentRatio, requiredExpenses, otherExpenses) {
-  return (carPrice * paymentRatio * 0.01 + requiredExpenses + otherExpenses).toFixed(0)
+  return (carPrice * paymentRatio * 0.01 + requiredExpenses + otherExpenses)
 }
 
 /***
@@ -87,10 +87,10 @@ let downPrice = function (price, originPrice) {
  * 优惠点数公式
  * @param price       修改价格
  * @param originPrice 原价格
- * @return {string}
+ * @return {number}
  */
 let downPoint = function (price, originPrice) {
-  return ((originPrice - price) * 100 / originPrice).toFixed()
+  return ((originPrice - price) * 100 / originPrice)
 }
 
 module.exports = {
