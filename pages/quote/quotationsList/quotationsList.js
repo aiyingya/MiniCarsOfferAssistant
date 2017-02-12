@@ -85,22 +85,26 @@ Page({
   onUnload() { },
   onShareAppMessage() { },
   onReachBottom() {
-    console.log("悲剧")
     // 上拉加载更多
     let that = this
 
-    this.setData({
-      pageIndex: that.data.pageIndex + 1
-    })
+    let originPageIndex = this.data.pageIndex
+    let newPageIndex = this.data.pageIndex + 1
 
-    this.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
+    this.requestQuotationsList(newPageIndex, this.data.pageSize, {
       success: function(res) {
-        that.setData({
-          quotationsList: that.data.quotationsList.concat(res.content)
-        })
+        if (res.content.length === 0) {
+          that.data.pageIndex = newPageIndex
+          that.setData({
+            quotationsList: that.data.quotationsList.concat(res.content)
+          })
+        } else {
+          that.data.pageIndex = originPageIndex
+        }
+
       },
       fail: function() {
-
+        that.data.pageIndex = originPageIndex
       },
       complete: function() {
 
