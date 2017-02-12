@@ -261,9 +261,9 @@ Page({
       let downPoint = util.downPoint(carPrice, officialPrice)
 
       this.setData({
-        'withLoan.quotation.totalPayment': totalPaymentByLoan,
-        'withLoan.quotation.advancePayment': advancePayment,
-        'withLoan.quotation.monthlyPayment': monthlyLoanPayment,
+        'withLoan.quotation.totalPayment': totalPaymentByLoan.toFixed(2),
+        'withLoan.quotation.advancePayment': advancePayment.toFixed(2),
+        'withLoan.quotation.monthlyPayment': monthlyLoanPayment.toFixed(2),
         'withLoan.downPrice': downPrice,
         'withLoan.downPoint': downPoint
       });
@@ -458,7 +458,6 @@ Page({
   },
   handlerRemarkChange (e) {
     let remark = e.detail.value
-
     if (isLoanTabActive()) {
       this.setData({
         'withLoan.quotation.remark': remark
