@@ -89,7 +89,7 @@ let downPrice = function (price, originPrice) {
  * @return {string}
  */
 let priceStringWithUnit = function (downPrice) {
-  let downPrice = Math.abs(downPrice)
+  downPrice = Math.abs(downPrice)
   if (downPrice > 10000) {
     return (downPrice / 10000).toFixed(2) + '万'
   } else {
