@@ -86,9 +86,6 @@ Page({
   onUnload() {
 
   },
-  onShareAppMessage() {
-
-  },
   onReachBottom() {
 
   },

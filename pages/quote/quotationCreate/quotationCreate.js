@@ -245,9 +245,6 @@ Page({
   onUnload() {
 
   },
-  onShareAppMessage() {
-
-  },
   onReachBottom() {
 
   },

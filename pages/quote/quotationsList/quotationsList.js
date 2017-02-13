@@ -95,7 +95,6 @@ Page({
   },
   onHide() { },
   onUnload() { },
-  onShareAppMessage() { },
   onReachBottom() {
     // 上拉加载更多
     let that = this
