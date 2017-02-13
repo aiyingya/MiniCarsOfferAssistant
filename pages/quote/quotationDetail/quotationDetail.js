@@ -32,6 +32,7 @@ Page({
       otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
       advancePayment: 0,       // 必传，首次支付金额，如果全款则为全款金额",
       monthlyPayment: 0,        // 月供金额，每月还款金额，全款时不传",
+      totalPayment: 0,        // 总落地价格
       remark: '',
       loginChannel: 'weixin',
       snsId: '',
