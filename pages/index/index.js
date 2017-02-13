@@ -12,7 +12,8 @@ Page({
 		imageDomain: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
 		HTTPS_YMCAPI: '',
 		showCarSeriesImageUrl: '',
-		carManufacturerSeriesList:[]
+		carManufacturerSeriesList:[],
+		userInfo: ''
   },
   //事件处理函数
   searchCarType() {
@@ -22,13 +23,13 @@ Page({
 		})
 	},
   onLoad() {
-    let that = this;
-		let HTTPS_URL = app.config.ymcServerHTTPSUrl;
+    let that = this
+		let HTTPS_URL = app.config.ymcServerHTTPSUrl
 		try {
-      var res = wx.getSystemInfoSync();
-      this.pixelRatio = res.pixelRatio;
-      this.apHeight = 16;
-      this.offsetTop = 80;
+      let res = wx.getSystemInfoSync()
+      this.pixelRatio = res.pixelRatio
+      this.apHeight = 16
+      this.offsetTop = 80
       this.setData({windowHeight: res.windowHeight + 'px'})
     } catch (e) {
       
@@ -50,9 +51,9 @@ Page({
 					'content-type': 'application/json'
 			},
 			success: function(res) {
-				let data = res;
-				let recommendCarBrandList = data.recommendCarBrandList;
-				let brandGroupList = data.brandGroupList;
+				let data = res
+				let recommendCarBrandList = data.recommendCarBrandList
+				let brandGroupList = data.brandGroupList
 				that.setData({
 					hotCarLists: recommendCarBrandList,
 					brandGroupList: brandGroupList
@@ -67,25 +68,26 @@ Page({
         userInfo:userInfo
       })
     })
+		
   },
 	handlerAlphaTap(e) {
-    let {ap} = e.target.dataset;
-		let that = this;
-    that.setData({alpha: ap});
-    that.setData({alphanetToast: ap});
+    let {ap} = e.target.dataset
+		let that = this
+    that.setData({alpha: ap})
+    that.setData({alphanetToast: ap})
   },
   handlerMove(e) {
-    let {brandGroupList} = this.data;
-    let moveY = e.touches[0].clientY;
-    let rY = moveY - this.offsetTop;
-		let that = this;
+    let {brandGroupList} = this.data
+    let moveY = e.touches[0].clientY
+    let rY = moveY - this.offsetTop
+		let that = this
     if(rY >= 0) {
-      let index = Math.ceil((rY - that.apHeight)/ that.apHeight);
+      let index = Math.ceil((rY - that.apHeight)/ that.apHeight)
       if(0 <= index < brandGroupList.length) {
-        let nonwAp = brandGroupList[index];
+        let nonwAp = brandGroupList[index]
 				if(nonwAp) {
-					that.setData({alpha: nonwAp.firstLetter});
-					that.setData({alphanetToast: nonwAp.firstLetter});
+					that.setData({alpha: nonwAp.firstLetter})
+					that.setData({alphanetToast: nonwAp.firstLetter})
 				}
       } 
     }

@@ -8,6 +8,7 @@ Page({
     slderOffset: 0,
     sliderLeft: 0,
     tabHeight: 40,
+		windowHeight: '',
     /* 贷款报价单主体数据 */
     withLoan: {
       quotation: {
@@ -103,11 +104,15 @@ Page({
   },
   onLoad(options) {
     let that = this
-
     try {
-      var res = wx.getSystemInfoSync();
-      var tabHeight = res.windowHeight - 40;
-      this.setData({tabHeight: tabHeight + 'px'})
+      let res = wx.getSystemInfoSync();
+      let tabHeight = res.windowHeight - 44;
+			this.apHeight = 16;
+      this.offsetTop = 80;
+      this.setData({
+				tabHeight: tabHeight + 'px',
+				windowHeight: res.windowHeight + 'px'
+			})
     } catch (e) {
 
     }
@@ -122,38 +127,32 @@ Page({
        */
       this.data.source = 'quotationDetail'
       var quotation = JSON.parse(quotationJSONString)
-      console.log(quotation)
+  
+			
       if (quotation.hasLoan) {
         this.setData({
-          activeIndex: 0,
-          'withLoan.quotation': quotation,
-          'withoutLoan.quotation.quotationItems': quotation.quotationItems,
-          'withoutLoan.quotation.draftId': quotation.draftId,
-          'withoutLoan.quotation.quotationId': quotation.quotationId,
-          'withoutLoan.quotation.quotationName': quotation.quotationName,
-          'withoutLoan.quotation.requiredExpenses': quotation.requiredExpenses,
-          'withoutLoan.quotation.otherExpenses': quotation.otherExpenses,
-          'withoutLoan.quotation.advancePayment': quotation.advancePayment,
-          'withoutLoan.quotation.totalPayment': quotation.totalPayment,
-          'withoutLoan.quotation.remark': quotation.remark,
-          'withoutLoan.quotation.snsId': quotation.snsId
+          activeIndex: 0, 
         })
       } else {
         this.setData({
           activeIndex: 1,
-          'withoutLoan.quotation': quotation,
-          'withLoan.quotation.quotationItems': quotation.quotationItems,
-          'withLoan.quotation.draftId': quotation.draftId,
-          'withLoan.quotation.quotationId': quotation.quotationId,
-          'withLoan.quotation.quotationName': quotation.quotationName,
-          'withLoan.quotation.requiredExpenses': quotation.requiredExpenses,
-          'withLoan.quotation.otherExpenses': quotation.otherExpenses,
-          'withLoan.quotation.advancePayment': quotation.advancePayment,
-          'withLoan.quotation.totalPayment': quotation.totalPayment,
-          'withLoan.quotation.remark': quotation.remark,
-          'withLoan.quotation.snsId': quotation.snsId
         })
       }
+			
+			this.setData({
+				'withLoan.quotation': quotation,
+				'withoutLoan.quotation.quotationItems': quotation.quotationItems,
+				'withoutLoan.quotation.draftId': quotation.draftId,
+				'withoutLoan.quotation.quotationId': quotation.quotationId,
+				'withoutLoan.quotation.quotationName': quotation.quotationName,
+				'withoutLoan.quotation.requiredExpenses': quotation.requiredExpenses,
+				'withoutLoan.quotation.otherExpenses': quotation.otherExpenses,
+				'withoutLoan.quotation.advancePayment': quotation.advancePayment,
+				'withoutLoan.quotation.totalPayment': quotation.totalPayment,
+				'withoutLoan.quotation.remark': quotation.remark,
+				'withoutLoan.quotation.snsId': quotation.snsId
+			})
+			
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
         let carModelInfo = JSON.parse(options.carModelsInfo)
@@ -189,8 +188,10 @@ Page({
           'withLoan.quotation.quotationItems': quotationItems,
           'withoutLoan.quotation.quotationItems': quotationItems,
           carSKUInfo: carSKUInfo,
-          carModelInfo: carModelInfo
+          carModelInfo: carModelInfo,
+					'withoutLoan.quotation.remark': 'wwwwwwww'
         })
+				console.log(that.data.withoutLoan.quotation.remark)
       }
     }
 

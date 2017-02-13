@@ -121,7 +121,7 @@
 							</view>
 							<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
 									<view class="weui-media-box__title">{{cell.seriesName}}</view>
-									<view class="weui-media-box__desc">在售{{cell.onSaleCount}}款 {{cell.colorCount}}</view>
+									<view class="weui-media-box__desc">在售{{cell.onSaleCount}}款</view>
 							</view>
 					</view>
 				</view>

@@ -13,21 +13,18 @@ App({
     wx.setStorageSync('logs', logs)
   },
   getUserInfo (cb) {
-    var that = this
+    let that = this
+		
     if(this.globalData.userInfo){
       typeof cb == "function" && cb(this.globalData.userInfo)
     } else {
     	// FIXME: 设置 fucking_larray
-			wx.setStorageSync('snsId', 'fucking_larry')
-
 			//调用登录接口
       wx.login({
         success: function (auth) {
 					wx.getUserInfo({
 						success: function (res) {
 							let HTTPS_URL = config.ucServerHTTPSUrl;
-							that.globalData.userInfo = res.userInfo
-							typeof cb == "function" && cb(that.globalData.userInfo)
 							modules.request({
 								url: HTTPS_URL + 'user/weixin', 
 								method: 'POST',
@@ -37,7 +34,9 @@ App({
 									"iv": res.iv
 								},
 								success: function(res) {
-									console.log(res)
+									let userinfo = res;
+									that.globalData.userInfo = userinfo;
+									typeof cb == "function" && cb(that.globalData.userInfo)
 								}
 							})
 						}
