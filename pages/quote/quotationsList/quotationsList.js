@@ -92,7 +92,7 @@ Page({
     let newPageIndex = this.data.pageIndex + 1
 
     this.requestQuotationsList(newPageIndex, this.data.pageSize, {
-      loadingType: 'navigation',
+      loadingType: 'none',
       success: function(res) {
         if (res.content.length === 0) {
           that.data.pageIndex = newPageIndex
