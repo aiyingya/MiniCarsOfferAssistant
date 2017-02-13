@@ -24,8 +24,19 @@
     display: inline
 }
 .quotation-msg{
-    padding: 0 15px;
+    line-height: 26rpx;
+    font-size: 26rpx;
+    margin: 20rpx 0;
+    padding-left: 30rpx;
+    color: #666666;
 }
+
+.quotation-submsg{
+    height: 88rpx;
+    line-height: 88rpx;
+    padding: 0 30rpx;
+}
+
 .line-box{
     display: inline-block;
     padding-right: 5px;
@@ -62,4 +73,14 @@
     top: 50%;
     left: 50%;
     margin: -100rpx 0 0 -100rpx;
+}
+
+.depreciate-wrap {
+    display: flex;
+}
+
+.depreciate-icon {
+    display: block;
+    width: 20rpx;
+    height: 24rpx;
 }

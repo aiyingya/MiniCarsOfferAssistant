@@ -164,9 +164,13 @@ Page({
     const hideDialog = this.$wuxDialog.open({
       title: '发起订车后， 将会有工作人员与您联系',
       content: '',
-      phoneNumberPlaceholder: '输入您的手机号',
+      inputNumberPlaceholder: '输入您的手机号',
       confirmText: '发起订车',
       cancelText: '取消',
+      validate: function (e) {
+        let mobile = e.detail.value
+        return mobile.length === 11
+      },
       confirm: (res) => {
         let mobile = res.inputNumber
 				// FIXME: 这里的 skuIds 需要提供

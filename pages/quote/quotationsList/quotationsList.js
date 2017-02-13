@@ -1,3 +1,4 @@
+let util = require('../../../utils/util.js');
 let app = getApp()
 
 Page({
@@ -5,6 +6,17 @@ Page({
     pageIndex: 1,
     pageSize: 10,
     quotationsList: [],
+    // {
+    //    viewModel: {
+    //      sellingPrice: '',
+    //      guidePrice: '',
+    //      totalPrice: '',
+    //      priceChange: {
+    //        flag: true,
+    //        price: '',
+    //      }
+    //    },
+    // }
     empty: false,
     windowHeight:'',
     snsId: ''
@@ -29,6 +41,7 @@ Page({
   },
   onReady() { },
   onShow() {
+    let that = this
     let quotation = app.fuckingLarryNavigatorTo.quotation
     let source = app.fuckingLarryNavigatorTo.source
 
@@ -36,34 +49,41 @@ Page({
       if (source === 'quotationDetail') {
         this.getData({
           complete: function () {
-            /// 报价列表页面也换过来
-            wx.navigateTo({
-              url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
-              success: function (res) {
-              },
-              fail: function () {
-              },
+            that.delayNavigationTo({
               complete: function () {
-                app.fuckingLarryNavigatorTo.quotation = null
-                app.fuckingLarryNavigatorTo.source = null
+                /// 报价列表页面也换过来
+                wx.navigateTo({
+                  url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+                  success: function (res) {
+                  },
+                  fail: function () {
+                  },
+                  complete: function () {
+                    app.fuckingLarryNavigatorTo.quotation = null
+                    app.fuckingLarryNavigatorTo.source = null
+                  }
+                })
               }
             })
           }
         })
-
       } else {
         this.getData({
           complete: function () {
-            /// 找车路径切换过来
-            wx.navigateTo({
-              url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
-              success: function (res) {
-              },
-              fail: function () {
-              },
+            that.delayNavigationTo({
               complete: function () {
-                app.fuckingLarryNavigatorTo.quotation = null
-                app.fuckingLarryNavigatorTo.source = null
+                /// 找车路径切换过来
+                wx.navigateTo({
+                  url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+                  success: function (res) {
+                  },
+                  fail: function () {
+                  },
+                  complete: function () {
+                    app.fuckingLarryNavigatorTo.quotation = null
+                    app.fuckingLarryNavigatorTo.source = null
+                  }
+                })
               }
             })
           }
@@ -84,7 +104,7 @@ Page({
     let newPageIndex = this.data.pageIndex + 1
 
     this.requestQuotationsList(newPageIndex, this.data.pageSize, {
-      loadingType: 'navigation',
+      loadingType: 'none',
       success: function(res) {
         if (res.content.length === 0) {
           that.data.pageIndex = newPageIndex
@@ -111,6 +131,16 @@ Page({
         wx.stopPullDownRefresh()
       }
     })
+  },
+  delayNavigationTo(object) {
+    wx.showToast({
+      title: "正在处理",
+      icon: 'loading'
+    })
+    setTimeout(function () {
+      typeof object.complete === 'function' && object.complete()
+      wx.hideToast()
+    }, 1000)
   },
   getData(object) {
     let that = this
@@ -166,6 +196,25 @@ Page({
         },
         method: 'GET',
         success: function(res){
+          let content = res.content
+          for (var item of content) {
+            let totalPayment = util.priceStringWithUnit(item.totalPayment);
+            let sellingPrice = util.priceStringWithUnit(item.quotationItems[0].sellingPrice);
+            let guidePrice = util.priceStringWithUnit(item.quotationItems[0].guidePrice);
+            let downPrice = util.downPrice(item.quotationItems[0].sellingPrice, item.quotationItems[0].guidePrice)
+            let downPriceFlag = downPrice > 0
+            let downPriceString = util.priceStringWithUnit(downPrice)
+            item.viewModel = {
+              totalPayment: totalPayment,
+              sellingPrice: sellingPrice,
+              guidePrice: guidePrice,
+              priceChange: {
+                flag: downPriceFlag,
+                price: downPriceString
+              }
+            }
+            item.priceChange
+          }
           object.success(res);
         },
         fail: function() {

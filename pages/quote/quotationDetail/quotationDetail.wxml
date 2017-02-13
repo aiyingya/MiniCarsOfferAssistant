@@ -59,7 +59,7 @@
                 <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">裸车价</view>
                     <view class="weui-cell__ft">
-                        <view class="min-gray-font">(下1.9万/6点)</view>￥{{ quotation.quotationItems[0].sellingPrice }}
+                        <view class="min-gray-font">({{ priceChange.flag }}{{ priceChange.price }}/{{ priceChange.point }}点)</view>￥{{ quotation.quotationItems[0].sellingPrice }}
                     </view>
                 </view>
             </view>

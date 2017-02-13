@@ -40,6 +40,11 @@ Page({
       read: false,
       source: 'quotationDetail'
     },
+    priceChange: {
+      flag: '',             // true 为上， false 为下
+      price: '',              // 1.9 万
+      point: ''               // 6 点
+    }
   },
   onLoad(options) {
     let that = this;
@@ -50,14 +55,24 @@ Page({
     let quotation = JSON.parse(options.quotation);
     quotation.quotationItems[0].itemPic = app.config.imgAliyuncsUrl + quotation.quotationItems[0].itemPic
 
-    this.setData({
-      quotation: quotation
-    })
+    console.log(quotation)
+    let carPrice = quotation.quotationItems[0].sellingPrice
+    let officialPrice = quotation.quotationItems[0].guidePrice
 
-    wx.getSystemInfo({
-      success: function(res) {
+    /// 实时计算优惠点数
+    let downPrice = util.downPrice(carPrice, officialPrice)
+    let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
+    let downPriceString = util.priceStringWithUnit(downPrice)
+    let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
+
+    this.setData({
+      quotation: quotation,
+      priceChange: {
+        flag: downPriceFlag,
+        price: downPriceString,
+        point: downPoint
       }
-    });
+    })
   },
   onReady() {
 
@@ -117,7 +132,7 @@ Page({
 
     const hideDialog = this.$wuxDialog.open({
       title: '分享给客户',
-      phoneNumberPlaceholder: '输入对方11位手机号码',
+      inputNumberPlaceholder: '输入对方11位手机号码',
       confirmText: '分享',
       cancelText: '暂不分享',
       validate: function (e) {
@@ -166,7 +181,7 @@ Page({
     const hideDialog = this.$wuxDialog.open({
       title: '发起订车后， 将会有工作人员与您联系',
       content: '',
-      phoneNumberPlaceholder: '输入您的手机号',
+      inputNumberPlaceholder: '输入您的手机号',
       confirmText: '发起订车',
       cancelText: '取消',
       validate: function (e) {
