@@ -117,7 +117,7 @@ Page({
 
     const hideDialog = this.$wuxDialog.open({
       title: '分享给客户',
-      phoneNumberPlaceholder: '输入对方11位手机号码',
+      inputNumberPlaceholder: '输入对方11位手机号码',
       confirmText: '分享',
       cancelText: '暂不分享',
       validate: function (e) {
@@ -166,7 +166,7 @@ Page({
     const hideDialog = this.$wuxDialog.open({
       title: '发起订车后， 将会有工作人员与您联系',
       content: '',
-      phoneNumberPlaceholder: '输入您的手机号',
+      inputNumberPlaceholder: '输入您的手机号',
       confirmText: '发起订车',
       cancelText: '取消',
       validate: function (e) {

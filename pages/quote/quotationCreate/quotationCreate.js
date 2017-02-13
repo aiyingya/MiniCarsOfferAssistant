@@ -490,7 +490,7 @@ Page({
         const hideDialog = that.$wuxDialog.open({
           title: '保存成功',
           content: '分享给客户',
-          phoneNumberPlaceholder: '输入对方11位手机号码',
+          inputNumberPlaceholder: '输入对方11位手机号码',
           confirmText: '分享',
           cancelText: '暂不分享',
           validate: function (e) {
