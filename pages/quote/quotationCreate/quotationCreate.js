@@ -137,27 +137,35 @@ Page({
 			
       if (quotation.hasLoan) {
         this.setData({
-          activeIndex: 0, 
+          activeIndex: 0,
+          'withLoan.quotation': quotation,
+          'withoutLoan.quotation.quotationItems': quotation.quotationItems,
+          'withoutLoan.quotation.draftId': quotation.draftId,
+          'withoutLoan.quotation.quotationId': quotation.quotationId,
+          'withoutLoan.quotation.quotationName': quotation.quotationName,
+          'withoutLoan.quotation.requiredExpenses': quotation.requiredExpenses,
+          'withoutLoan.quotation.otherExpenses': quotation.otherExpenses,
+          'withoutLoan.quotation.advancePayment': quotation.advancePayment,
+          'withoutLoan.quotation.totalPayment': quotation.totalPayment,
+          'withoutLoan.quotation.remark': quotation.remark,
+          'withoutLoan.quotation.snsId': quotation.snsId
         })
       } else {
         this.setData({
           activeIndex: 1,
+          'withoutLoan.quotation': quotation,
+          'withLoan.quotation.quotationItems': quotation.quotationItems,
+          'withLoan.quotation.draftId': quotation.draftId,
+          'withLoan.quotation.quotationId': quotation.quotationId,
+          'withLoan.quotation.quotationName': quotation.quotationName,
+          'withLoan.quotation.requiredExpenses': quotation.requiredExpenses,
+          'withLoan.quotation.otherExpenses': quotation.otherExpenses,
+          'withLoan.quotation.advancePayment': quotation.advancePayment,
+          'withLoan.quotation.totalPayment': quotation.totalPayment,
+          'withLoan.quotation.remark': quotation.remark,
+          'withLoan.quotation.snsId': quotation.snsId
         })
       }
-			
-			this.setData({
-				'withLoan.quotation': quotation,
-				'withoutLoan.quotation.quotationItems': quotation.quotationItems,
-				'withoutLoan.quotation.draftId': quotation.draftId,
-				'withoutLoan.quotation.quotationId': quotation.quotationId,
-				'withoutLoan.quotation.quotationName': quotation.quotationName,
-				'withoutLoan.quotation.requiredExpenses': quotation.requiredExpenses,
-				'withoutLoan.quotation.otherExpenses': quotation.otherExpenses,
-				'withoutLoan.quotation.advancePayment': quotation.advancePayment,
-				'withoutLoan.quotation.totalPayment': quotation.totalPayment,
-				'withoutLoan.quotation.remark': quotation.remark,
-				'withoutLoan.quotation.snsId': quotation.snsId
-			})
 			
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
