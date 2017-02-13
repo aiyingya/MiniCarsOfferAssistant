@@ -176,10 +176,8 @@ Page({
 				// FIXME: 这里的 skuIds 需要提供
 				that.requestBookCar(skuid, mobile, '',{
 					success (res){
-						// TODO: 发起订车成功
 						wx.showModal({
-							title: '提示',
-							content: '恭喜您，订车成功！',
+							content: '提交成功，请保持通话畅通',
 							success: function(res) {
 								if (res.confirm) {
 									that.headlerRemoveQuoteView()
@@ -189,7 +187,7 @@ Page({
 					},
 					fail (err) {
 						wx.showModal({
-							title: '提示',
+							title: '错误',
 							content: err.alertMessage,
 							success: function(res) {
 								if (res.confirm) {

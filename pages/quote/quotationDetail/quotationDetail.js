@@ -192,10 +192,25 @@ Page({
         let mobile = res.inputNumber
         that.requestBookCar([that.data.quotation.quotationItems[0].itemNumber], mobile, that.data.quotation.quotationId, {
           success: (res) => {
-            // TODO: 发起订车成功
+            wx.showModal({
+              content: '提交成功，请保持通话畅通',
+              success: function(res) {
+                if (res.confirm) {
+                  that.headlerRemoveQuoteView()
+                }
+              }
+            })
           },
-          fail: () => {
-
+          fail: (err) => {
+            wx.showModal({
+              title: '错误',
+              content: err.alertMessage,
+              success: function(res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                }
+              }
+            })
           },
           complete: () => {
 
