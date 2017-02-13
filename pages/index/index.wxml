@@ -35,7 +35,7 @@
 					<image 
 						mode="aspectFit" 
 						class="hot-carslogo" 
-						src="{{imageDomain}}{{item.carBrandLogoUrl}}"
+						src="{{item.carBrandLogoUrl}}"
 						bindtap="handlerSelectCarSeries"
 						data-carSeries="{{item}}"
 						></image>
@@ -94,37 +94,42 @@
 	<view class="carSeries-inner {{showCarSeriesInner}}">
 		<scroll-view scroll-y style="height: {{windowHeight}}">
 			<view class="carSeries-logo weui-flex">
-				<image class="" src="{{imageDomain}}{{showCarSeriesImageUrl}}"></image>
+				<image class="" src="{{showCarSeriesImageUrl}}"></image>
 			</view>
-			<view 
-				wx:for="{{carManufacturerSeriesList}}" 
-				wx:key="unique" 
-				id="{{item.id}}" 
-				class="viewCarsList-calls"
-				>
-				<view class="viewCarsList-index carSeries-title">{{item.carManufacturerName}}</view>
-				<view class="weui-cells weui-cells_in-small-appmsg">
-					<view 
-						class="weui-media-box weui-media-box_appmsg" 
-						hover="true"
-						hover-class="weui-cell_active"
-						wx:for="{{item.carSeriesList}}" 
-						wx:key="unique" 
-						wx:for-item="cell" 
-						wx:for-index="cellIndex" 
-						bindtap="handlerToCarsModels"
-						data-carsInfo="{{cell}}"
-						url="../search/carModels/carModels?carsInfo={{cell}}"
-						>
-							<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-								<image class="weui-media-box__thumb" src="{{imageDomain}}{{cell.picUrl}}"></image>
-							</view>
-							<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-									<view class="weui-media-box__title">{{cell.seriesName}}</view>
-									<view class="weui-media-box__desc">在售{{cell.onSaleCount}}款</view>
-							</view>
+			<block wx:if="{{carManufacturerSeriesList.length > 0}}">
+				<view 
+					wx:for="{{carManufacturerSeriesList}}" 
+					wx:key="unique" 
+					id="{{item.id}}" 
+					class="viewCarsList-calls"
+					>
+					<view class="viewCarsList-index carSeries-title">{{item.carManufacturerName}}</view>
+					<view class="weui-cells weui-cells_in-small-appmsg">
+						<view 
+							class="weui-media-box weui-media-box_appmsg" 
+							hover="true"
+							hover-class="weui-cell_active"
+							wx:for="{{item.carSeriesList}}" 
+							wx:key="unique" 
+							wx:for-item="cell" 
+							wx:for-index="cellIndex" 
+							bindtap="handlerToCarsModels"
+							data-carsInfo="{{cell}}"
+							url="../search/carModels/carModels?carsInfo={{cell}}"
+							>
+								<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+									<image class="weui-media-box__thumb" src="{{imageDomain}}{{cell.picUrl}}"></image>
+								</view>
+								<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+										<view class="weui-media-box__title">{{cell.seriesName}}</view>
+										<view class="weui-media-box__desc">在售{{cell.onSaleCount}}款</view>
+								</view>
+						</view>
 					</view>
 				</view>
+			</block>
+			<view wx:else class="nodata">
+				暂无数据
 			</view>
 		</scroll-view>
 	</view>

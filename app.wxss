@@ -55,6 +55,12 @@ page{
 	background: none;
 	z-index: 99;
 }
+.nodata {
+	width: 100%;
+	line-height: 88rpx;
+	color: #333;
+	text-align: center;
+}
 .showToast {
 	-webkit-animation: Toast 3500ms ease 1 forwards ;
 	animation: Toast 3500ms ease 1 forwards ;

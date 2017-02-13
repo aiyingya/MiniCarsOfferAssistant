@@ -51,13 +51,21 @@ Page({
 					'content-type': 'application/json'
 			},
 			success: function(res) {
-				let data = res
-				let recommendCarBrandList = data.recommendCarBrandList
-				let brandGroupList = data.brandGroupList
-				that.setData({
-					hotCarLists: recommendCarBrandList,
-					brandGroupList: brandGroupList
-				})
+				if(res){
+					let data = res
+					let recommendCarBrandList = data.recommendCarBrandList
+					let brandGroupList = data.brandGroupList
+					
+					for(let item of recommendCarBrandList) {
+						item.carBrandLogoUrl = that.data.imageDomain + item.carBrandLogoUrl
+					}
+					
+					that.setData({
+						hotCarLists: recommendCarBrandList,
+						brandGroupList: brandGroupList
+					})
+				}
+				
 			}
 		})
 		
@@ -108,11 +116,13 @@ Page({
 					'content-type': 'application/json'
 			},
 			success: function(res) {
-				let data = res;
-				that.setData({
-					showCarSeriesImageUrl: data.logoUrl,
-					carManufacturerSeriesList: data.carManufacturerSeriesList
-				})
+				if(res) {
+					let data = res;
+					that.setData({
+						showCarSeriesImageUrl: that.data.imageDomain+data.logoUrl,
+						carManufacturerSeriesList: data.carManufacturerSeriesList
+					})
+				}
 			}
 		})
 		that.setData({showCarSeries: carSeries});
@@ -123,7 +133,8 @@ Page({
 		let that = this;
 		that.setData({
 			showCarSeries: '',
-			carManufacturerSeriesList: []
+			carManufacturerSeriesList: [],
+			showCarSeriesImageUrl: ''
 		});
 	},
 	handlerToCarsModels(e) {

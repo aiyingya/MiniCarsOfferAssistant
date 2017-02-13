@@ -16,7 +16,7 @@
 				<view class="price"><view class="price-num">{{item.lowestPriceSku.priceStr}}</view>万</view>
 				<view class="officePrice">指导价{{item.officialPriceStr}}万</view>
 				<view
-				 wx:if="{{item.count !== '0.00'}}"
+				 wx:if="{{item.count !== 0}}"
 				 class="depreciate-wrap">
 					<image 
 						wx:if="{{item.lowestPriceSku.discount > 0}}" 

@@ -1,4 +1,7 @@
 <!-- 车源详情.-->
+<import src="../../lib/dialog/dialog.wxml"/>
+
+<template is="dialog" data="{{ ...$wux.dialog }}"/>
 <scroll-view scroll-y style="height: {{windowHeight}}">
 <view class="car-sources container">
 	<view class="carSources-topbar weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
@@ -108,13 +111,19 @@
 					</view>
 					<view 
 						class="carSources-cell-price"
-						wx:if="{{carModelsInfo.count !== '0.00'}}"
+						wx:if="{{item.count !== 0}}"
 						>
-						<image 	
+						<image
+						 	wx:if="{{item.discount>0}}"
 							class="depreciate-icon" 
 							src="../../images/icons/icon_ price_down.png"
 							></image>
-						<view class="depreciate">{{carModelsInfo.count}}万</view>
+						<image 	
+							wx:else
+							class="depreciate-icon" 
+							src="../../images/icons/icon_ price_up.png"
+							></image>
+						<view class="depreciate">{{item.count}}万</view>
 					</view>
 				</view>
 				<view class="carSources-cell-list">

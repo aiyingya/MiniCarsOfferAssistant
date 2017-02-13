@@ -42,8 +42,14 @@ Page({
 				carSpuId: carModelsInfo.carModelId
 			},
 			success: function(res) {
-                                let filters = res.filters
-				let carSkuList = res.carSkuList;
+        let filters = res.filters
+				let carSkuList = []
+
+				for(let item of res.carSkuList) {
+					item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
+					carSkuList.push(item)
+				}
+				
 				that.setData({
 					carModelsInfo: carModelsInfo,
 					carSkuList: carSkuList,
@@ -95,22 +101,20 @@ Page({
 		let selectInternal = that.data.selectInternalColorId;
 		let carStatus = that.data.carStatus;
 		for(let item of searchCarSkuList) {
-			console.log(item)
 			if(selectExternal === item.externalColorId &&  selectInternal === '1') {
-				newCarSkuList.push(item);
+				newCarSkuList.push(item)
 			}else if(selectInternal === item.internalColorId && selectExternal === '0') {
-				newCarSkuList.push(item);
+				newCarSkuList.push(item)
 			}else if(selectExternal === item.externalColorId && selectInternal === item.internalColorId) {
-				newCarSkuList.push(item);
+				newCarSkuList.push(item)
 			}else if(selectExternal === '0' && selectInternal === '1') {
-				newCarSkuList.push(item);
+				newCarSkuList.push(item)
 			}
 		}	
-		console.log(newCarSkuList)
 		that.setData({
 			carSkuList: newCarSkuList
 		})
-		that.headlerRemoveRmendCarFacade();
+		that.headlerRemoveRmendCarFacade()
 	},
 	handlerSwitchCarStatus() {
 		let that = this;
@@ -126,7 +130,7 @@ Page({
 		that.setData({
 			carStatus: stock,
 			carStatusName: stockName
-		});
+		})
 	},
 	handlerShowQuoteView(e) {
 		let quoteinfo = e.currentTarget.dataset.quoteinfo;		
@@ -146,10 +150,17 @@ Page({
 			phoneNumber: phone
 		})
 	},
-  // 非编辑态下的订车按钮
+	handlerQuoteCreate(e) {
+		let that = this
+		wx.navigateTo({  
+      url: '../quote/quotationCreate/quotationCreate?carInfo=' + JSON.stringify(that.data.QuoteCreateInfo)+'&carModelsInfo='+JSON.stringify(that.data.carModelsInfo)
+    })
+		that.headlerRemoveQuoteView()
+	},
+	// 非编辑态下的订车按钮
   handlerBookCar(e) {
-    let that = this;
-
+    let that = this
+		let skuid = [that.data.QuoteCreateInfo.skuId]
     const hideDialog = this.$wuxDialog.open({
       title: '发起订车后， 将会有工作人员与您联系',
       content: '',
@@ -157,32 +168,42 @@ Page({
       confirmText: '发起订车',
       cancelText: '取消',
       confirm: (res) => {
-        let mobile = res.mobile
+        let mobile = res.inputNumber
 				// FIXME: 这里的 skuIds 需要提供
-        that.requestBookCar([], null, mobile, null, {
-          success: (res) => {
-            // TODO: 发起订车成功
-          },
-          fail: () => {
+				that.requestBookCar(skuid, mobile, '',{
+					success (res){
+						// TODO: 发起订车成功
+						wx.showModal({
+							title: '提示',
+							content: '恭喜您，订车成功！',
+							success: function(res) {
+								if (res.confirm) {
+									that.headlerRemoveQuoteView()
+								}
+							}
+						})
+					},
+					fail (err) {
+						wx.showModal({
+							title: '提示',
+							content: err.alertMessage,
+							success: function(res) {
+								if (res.confirm) {
+									console.log('用户点击确定')
+								}
+							}
+						})
+					},
+					complete () {
 
-          },
-          complete: () => {
-
-          }
-        })
+					}
+				})
       },
       cancel: () => {
         // TODO: 取消
       }
     })
   },
-	handlerQuoteCreate(e) {
-		let that = this;
-		wx.navigateTo({  
-      url: '../quote/quotationCreate/quotationCreate?carInfo=' + JSON.stringify(that.data.QuoteCreateInfo)+'&carModelsInfo='+JSON.stringify(that.data.carModelsInfo)
-    })
-	},
-
   /**
    * 发起订车行为
    *
@@ -201,19 +222,14 @@ Page({
           quotationId: quotationId
         },
         method: 'POST',
-        success: function(res){
-          object.success()
-        },
-        fail: function() {
-          object.fail()
-        },
-        complete: function() {
-          object.complete()
-        }
+        success: object.success,
+        fail: object.fail,
+        complete: object.complete
       })
     } else {
       object.fail()
       object.complete()
     }
   }
+	
 })
