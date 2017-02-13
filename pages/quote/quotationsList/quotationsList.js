@@ -14,7 +14,7 @@ Page({
 
     // 设置 snsId
     app.getUserInfo(function (userInfo) {
-      that.data.snsId = snsId
+      that.data.snsId = userInfo.snsId
     })
 
     try {
