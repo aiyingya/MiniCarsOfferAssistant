@@ -477,7 +477,7 @@ Page({
   },
   handlerRemarkChange (e) {
     let remark = e.detail.value
-    if (isLoanTabActive()) {
+    if (this.isLoanTabActive()) {
       this.setData({
         'withLoan.quotation.remark': remark
       })
