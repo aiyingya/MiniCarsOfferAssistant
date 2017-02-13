@@ -106,7 +106,7 @@ Page({
     this.requestQuotationsList(newPageIndex, this.data.pageSize, {
       loadingType: 'none',
       success: function(res) {
-        if (res.content.length === 0) {
+        if (res.content.length !== 0) {
           that.data.pageIndex = newPageIndex
           that.setData({
             quotationsList: that.data.quotationsList.concat(res.content)
