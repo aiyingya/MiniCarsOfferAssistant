@@ -2,7 +2,10 @@
 <view class="container">
     <view class="container page">
         <view wx:if="{{ empty }}">
-            <view>还没报过价~</view>
+            <view class="noorder">
+                <image class="orderlist-noorder-image" src="../../../images/icons/orderlist_icon_noorder.png"></image>
+                <view class="orderlist-noorder-text">还没报过价~</view>
+            </view>
         </view>
         <view wx:else>
             <view class="viewCarsList-wrap">

@@ -201,8 +201,8 @@ Page({
     // 设置 snsId
     app.getUserInfo(function (userInfo) {
       console.log(userInfo)
-      that.data.withLoan.quotation.snsId = snsId
-      that.data.withoutLoan.quotation.snsId = snsId
+      that.data.withLoan.quotation.snsId = userInfo.snsId
+      that.data.withoutLoan.quotation.snsId = userInfo.snsId
     })
 
     /// 初始化自定义组件
