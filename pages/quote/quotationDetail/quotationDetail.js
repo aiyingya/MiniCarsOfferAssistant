@@ -62,7 +62,7 @@ Page({
     /// 实时计算优惠点数
     let downPrice = util.downPrice(carPrice, officialPrice)
     let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
-    let downPriceString = util.downPriceString(downPrice)
+    let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
     this.setData({

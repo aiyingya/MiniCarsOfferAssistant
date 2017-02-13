@@ -1,3 +1,4 @@
+let util = require('../../../utils/util.js');
 let app = getApp()
 
 Page({
@@ -5,6 +6,17 @@ Page({
     pageIndex: 1,
     pageSize: 10,
     quotationsList: [],
+    // {
+    //    viewModel: {
+    //      sellingPrice: '',
+    //      guidePrice: '',
+    //      totalPrice: '',
+    //      priceChange: {
+    //        flag: true,
+    //        price: '',
+    //      }
+    //    },
+    // }
     empty: false,
     windowHeight:'',
     snsId: ''
@@ -184,6 +196,25 @@ Page({
         },
         method: 'GET',
         success: function(res){
+          let content = res.content
+          for (var item of content) {
+            let totalPayment = util.priceStringWithUnit(item.totalPayment);
+            let sellingPrice = util.priceStringWithUnit(item.quotationItems[0].sellingPrice);
+            let guidePrice = util.priceStringWithUnit(item.quotationItems[0].guidePrice);
+            let downPrice = util.downPrice(item.quotationItems[0].sellingPrice, item.quotationItems[0].guidePrice)
+            let downPriceFlag = downPrice > 0
+            let downPriceString = util.priceStringWithUnit(downPrice)
+            item.viewModel = {
+              totalPayment: totalPayment,
+              sellingPrice: sellingPrice,
+              guidePrice: guidePrice,
+              priceChange: {
+                flag: downPriceFlag,
+                price: downPriceString
+              }
+            }
+            item.priceChange
+          }
           object.success(res);
         },
         fail: function() {

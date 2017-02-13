@@ -88,9 +88,9 @@ let downPrice = function (price, originPrice) {
  * @param downPrice
  * @return {string}
  */
-let downPriceString = function (downPrice) {
+let priceStringWithUnit = function (downPrice) {
   if (downPrice > 10000) {
-    return (downPrice / 10000).toFixed(2) + '万元'
+    return (downPrice / 10000).toFixed(2) + '万'
   } else {
     return downPrice.toFixed() + '元'
   }
@@ -113,6 +113,6 @@ module.exports = {
   loanPaymentByLoan: loanPaymentByLoan,
   monthlyLoanPaymentByLoan: monthlyLoanPaymentByLoan,
   downPrice: downPrice,
-  downPriceString: downPriceString,
+  priceStringWithUnit: priceStringWithUnit,
   downPoint: downPoint
 }
