@@ -37,7 +37,29 @@
 }
 .min-font-gray{
     color: #666;
-    font-size: 24rpx
+    font-size: 24rpx;
 }
 
+.orderlist-noorder-image{
+    width: 160rpx;
+    height: 160rpx;
+    margin: 0 auto;
+    display: block;
+}
 
+.orderlist-noorder-text{
+    font-size: 28rpx;
+    color: #999999;
+    letter-spacing: -0.56rpx;
+    line-height: 28rpx;
+    text-align: center;
+}
+
+.noorder{
+    position: absolute;
+    width: 200rpx;
+    heigh: 200rpx;
+    top: 50%;
+    left: 50%;
+    margin: -100rpx 0 0 -100rpx;
+}
