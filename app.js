@@ -28,6 +28,7 @@ App({
 							modules.request({
 								url: HTTPS_URL + 'user/weixin', 
 								method: 'POST',
+								loadingType: 'none',
 								data: {
 									"code": auth.code,
 									"encryptedData": res.encryptedData,
