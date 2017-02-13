@@ -40,6 +40,11 @@ Page({
       read: false,
       source: 'quotationDetail'
     },
+    priceChange: {
+      flag: '',             // true 为上， false 为下
+      price: '',              // 1.9 万
+      point: ''               // 6 点
+    }
   },
   onLoad(options) {
     let that = this;
@@ -50,14 +55,24 @@ Page({
     let quotation = JSON.parse(options.quotation);
     quotation.quotationItems[0].itemPic = app.config.imgAliyuncsUrl + quotation.quotationItems[0].itemPic
 
-    this.setData({
-      quotation: quotation
-    })
+    console.log(quotation)
+    let carPrice = quotation.quotationItems[0].sellingPrice
+    let officialPrice = quotation.quotationItems[0].guidePrice
 
-    wx.getSystemInfo({
-      success: function(res) {
+    /// 实时计算优惠点数
+    let downPrice = util.downPrice(carPrice, officialPrice)
+    let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
+    let downPriceString = util.downPriceString(downPrice)
+    let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
+
+    this.setData({
+      quotation: quotation,
+      priceChange: {
+        flag: downPriceFlag,
+        price: downPriceString,
+        point: downPoint
       }
-    });
+    })
   },
   onReady() {
 

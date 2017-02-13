@@ -84,6 +84,19 @@ let downPrice = function (price, originPrice) {
 }
 
 /***
+ * 优惠价格字符串显示
+ * @param downPrice
+ * @return {string}
+ */
+let downPriceString = function (downPrice) {
+  if (downPrice > 10000) {
+    return (downPrice / 10000).toFixed(2) + '万元'
+  } else {
+    return downPrice.toFixed() + '元'
+  }
+}
+
+/***
  * 优惠点数公式
  * @param price       修改价格
  * @param originPrice 原价格
@@ -100,5 +113,6 @@ module.exports = {
   loanPaymentByLoan: loanPaymentByLoan,
   monthlyLoanPaymentByLoan: monthlyLoanPaymentByLoan,
   downPrice: downPrice,
+  downPriceString: downPriceString,
   downPoint: downPoint
 }

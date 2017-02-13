@@ -34,8 +34,11 @@ Page({
         snsId: '',
         read: false,
       },
-      downPrice: '',            // 1.9 万
-      downPoint: '',            // 6 点
+      priceChange: {
+        flag: '',             // true 为上， false 为下
+        price: '',              // 1.9 万
+        point: ''               // 6 点
+      },
       /// 表单相关
       paymentRatiosArray: [10, 20, 30, 40, 50, 60, 70, 80, 90],
       paymentRatiosIndex: 2,
@@ -63,8 +66,11 @@ Page({
         snsId: '',
         read: false,
       },
-      downPrice: '',            // 1.9 万
-      downPoint: '',            // 6 点
+      priceChange: {
+        flag: '',             // true 为上， false 为下
+        price: '',              // 1.9 万
+        point: ''               // 6 点
+      }
     },
     carSKUInfo: {
       skuId: '',              // "1D71D878-4CBB-4DE7-AEC0-A59A00BEDBE3"
@@ -260,15 +266,20 @@ Page({
       let officialPrice = this.data.withLoan.quotation.quotationItems[0].guidePrice
 
       /// 实时计算优惠点数
-      let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed()
+      let downPrice = util.downPrice(carPrice, officialPrice)
+      let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
+      let downPriceString = util.downPriceString(downPrice)
       let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
       this.setData({
         'withLoan.quotation.totalPayment': Math.floor(totalPaymentByLoan),
         'withLoan.quotation.advancePayment': Math.floor(advancePayment),
         'withLoan.quotation.monthlyPayment': Math.floor(monthlyLoanPayment),
-        'withLoan.downPrice': downPrice,
-        'withLoan.downPoint': downPoint
+        'withLoan.priceChange': {
+          flag: downPriceFlag,
+          price: downPriceString,
+          point: downPoint
+        }
       });
     } else {
       let carPrice = this.data.withoutLoan.quotation.quotationItems[0].sellingPrice
@@ -280,13 +291,18 @@ Page({
       let officialPrice = this.data.withoutLoan.quotation.quotationItems[0].guidePrice
 
       /// 实时计算优惠点数
-      let downPrice = (util.downPrice(carPrice, officialPrice) / 10000).toFixed(0)
+      let downPrice = util.downPrice(carPrice, officialPrice)
+      let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
+      let downPriceString = util.downPriceString(downPrice)
       let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
       this.setData({
         'withoutLoan.quotation.totalPayment': Math.floor(totalPayment),
-        'withoutLoan.downPrice': downPrice,
-        'withoutLoan.downPoint': downPoint
+        'withoutLoan.priceChange': {
+          flag: downPriceFlag,
+          price: downPriceString,
+          point: downPoint
+        }
       })
     }
   },
