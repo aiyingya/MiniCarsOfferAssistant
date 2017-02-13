@@ -199,9 +199,11 @@ Page({
      * 公共行为
      */
     // 设置 snsId
-    let snsId = wx.getStorageSync('snsId')
-    this.data.withLoan.quotation.snsId = snsId
-    this.data.withoutLoan.quotation.snsId = snsId
+    app.getUserInfo(function (userInfo) {
+      console.log(userInfo)
+      that.data.withLoan.quotation.snsId = snsId
+      that.data.withoutLoan.quotation.snsId = snsId
+    })
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog

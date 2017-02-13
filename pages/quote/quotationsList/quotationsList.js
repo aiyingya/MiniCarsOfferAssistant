@@ -13,8 +13,9 @@ Page({
     let that = this;
 
     // 设置 snsId
-    let snsId = wx.getStorageSync('snsId')
-    this.data.snsId = snsId
+    app.getUserInfo(function (userInfo) {
+      that.data.snsId = snsId
+    })
 
     try {
       var res = wx.getSystemInfoSync();
