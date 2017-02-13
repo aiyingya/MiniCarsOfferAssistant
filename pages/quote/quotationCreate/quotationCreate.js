@@ -189,7 +189,7 @@ Page({
           'withoutLoan.quotation.quotationItems': quotationItems,
           carSKUInfo: carSKUInfo,
           carModelInfo: carModelInfo,
-					'withoutLoan.quotation.remark': 'wwwwwwww'
+					'withoutLoan.quotation.remark': ''
         })
 				console.log(that.data.withoutLoan.quotation.remark)
       }

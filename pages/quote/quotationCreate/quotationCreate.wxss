@@ -1,3 +1,6 @@
+page {
+	background-color: #fff;
+}
 .pad-bt{
     padding-bottom: 40px;
 }
@@ -5,9 +8,12 @@
     font-size: 30rpx;
 }
 .h-cell-gray{
-    font-size: 30rpx;
-    padding:10px 15px;
-    color: #888;
+	background: #EFEFEF;
+	font-size: 30rpx;
+	padding: 0 3.2%;
+	color: #888;
+	height: 88rpx;
+	line-height: 88rpx;
 }
 .min-gray-font{
     display: inline;
@@ -165,6 +171,7 @@
 	top: 88rpx;
 	height: auto;
 	background-color: #fff;
+	width: 100%;
 }
 .quote-btn {
 	width:93%;
