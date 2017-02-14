@@ -5,7 +5,6 @@
 		<view class="carModels-cells">
 			<block 
 				wx:for="{{carModelsList}}"
-				wx:key="unique"
 				>
 				<template is="carModel" data="{{item}}" /> 
 			</block>

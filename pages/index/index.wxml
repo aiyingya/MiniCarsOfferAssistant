@@ -30,7 +30,6 @@
 				<view 
 					class="stand-item"
 					wx:for="{{hotCarLists}}"
-					wx:key="unique" 
 					>
 					<image 
 						mode="aspectFit" 
@@ -47,8 +46,7 @@
 		<view class="viewCarsList-wrap">
 			<view 
 				wx:for="{{brandGroupList}}" 
-				wx:key="unique" 
-				id="{{item.firstLetter}}" 
+				id="{{item.firstLetter}}"
 				class="viewCarsList-calls"
 				>
 				<view class="viewCarsList-index">{{item.firstLetter}}</view>
@@ -58,8 +56,7 @@
 						hover="true"
 						hover-class="weui-cell_active"
 						wx:for="{{item.carBrandList}}" 
-						wx:key="unique" 
-						wx:for-item="cell" 
+						wx:for-item="cell"
 						wx:for-index="cellIndex" 
 						bindtap="handlerSelectCarSeries"
 						data-carSeries="{{cell}}"
@@ -79,7 +76,7 @@
 </scroll-view>
 <view wx:if="{{alphanetToast === alpha}}" class="alphanet-toast showToast">{{alpha}}</view>
 <view data-id="selector" catchtouchstart="handlerAlphaTap" catchtouchmove="handlerMove" class="alphanet-selector">
-	<view wx:for="{{brandGroupList}}" wx:key="unique" data-ap="{{item.firstLetter}}" class="selector-one">
+	<view wx:for="{{brandGroupList}}" data-ap="{{item.firstLetter}}" class="selector-one">
 		{{item.firstLetter}}
 	</view>
 </view>
@@ -99,8 +96,7 @@
 			<block wx:if="{{carManufacturerSeriesList.length > 0}}">
 				<view 
 					wx:for="{{carManufacturerSeriesList}}" 
-					wx:key="unique" 
-					id="{{item.id}}" 
+					id="{{item.id}}"
 					class="viewCarsList-calls"
 					>
 					<view class="viewCarsList-index carSeries-title">{{item.carManufacturerName}}</view>
@@ -110,8 +106,7 @@
 							hover="true"
 							hover-class="weui-cell_active"
 							wx:for="{{item.carSeriesList}}" 
-							wx:key="unique" 
-							wx:for-item="cell" 
+							wx:for-item="cell"
 							wx:for-index="cellIndex" 
 							bindtap="handlerToCarsModels"
 							data-carsInfo="{{cell}}"

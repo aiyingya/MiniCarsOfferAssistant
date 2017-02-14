@@ -95,7 +95,6 @@ Page({
   },
   onHide() { },
   onUnload() { },
-  onShareAppMessage() { },
   onReachBottom() {
     // 上拉加载更多
     let that = this
@@ -197,7 +196,8 @@ Page({
         method: 'GET',
         success: function(res){
           let content = res.content
-          for (var item of content) {
+          for (var i = 0; i < content.length; i++) {
+            var item = content[i]
             let totalPayment = util.priceStringWithUnit(item.totalPayment);
             let sellingPrice = util.priceStringWithUnit(item.quotationItems[0].sellingPrice);
             let guidePrice = util.priceStringWithUnit(item.quotationItems[0].guidePrice);

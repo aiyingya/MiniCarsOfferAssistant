@@ -37,7 +37,8 @@ Page({
 		let that = this;
 		let searchResults = [];
 		if(val) {
-			for(let item of that.data.newSearchResults) {
+			for (var i = 0; i < that.data.newSearchResults.length; i++) {
+				let item = that.data.newSearchResults[i]
 				if(item.val.indexOf(val) != -1) {
 					searchResults.push(item);
 				}

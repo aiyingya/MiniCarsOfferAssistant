@@ -27,7 +27,6 @@ Page({
       paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
       stages: 3,              // 贷款期数，int，全款时不传
       expenseRate: 4,
-      annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
       requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
       otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
       advancePayment: 0,       // 必传，首次支付金额，如果全款则为全款金额",
@@ -84,9 +83,6 @@ Page({
 
   },
   onUnload() {
-
-  },
-  onShareAppMessage() {
 
   },
   onReachBottom() {
@@ -192,10 +188,25 @@ Page({
         let mobile = res.inputNumber
         that.requestBookCar([that.data.quotation.quotationItems[0].itemNumber], mobile, that.data.quotation.quotationId, {
           success: (res) => {
-            // TODO: 发起订车成功
+            wx.showModal({
+              content: '提交成功，请保持通话畅通',
+              success: function(res) {
+                if (res.confirm) {
+                  that.headlerRemoveQuoteView()
+                }
+              }
+            })
           },
-          fail: () => {
-
+          fail: (err) => {
+            wx.showModal({
+              title: '错误',
+              content: err.alertMessage,
+              success: function(res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                }
+              }
+            })
           },
           complete: () => {
 
@@ -235,7 +246,6 @@ Page({
     "hasLoan":"必传，true/false，boolean，是否贷款",
     "paymentRatio":"首付比例（%），decimal，全款时没有，取值范围0~100",
     "stages":"贷款期数，int，全款时没有",
-    "annualRate":"贷款年利率（%），decimal，全款时没有，取值范围0~100",
     "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
     "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
     "advancePayment":"首次支付金额，如果全款则为全款金额",
@@ -295,7 +305,6 @@ Page({
     "hasLoan":"必传，true/false，boolean，是否贷款",
     "paymentRatio":"首付比例（%），decimal，全款时没有，取值范围0~100",
     "stages":"贷款期数，int，全款时没有",
-    "annualRate":"贷款年利率（%），decimal，全款时没有，取值范围0~100",
     "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
     "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
     "advancePayment":"首次支付金额，如果全款则为全款金额",

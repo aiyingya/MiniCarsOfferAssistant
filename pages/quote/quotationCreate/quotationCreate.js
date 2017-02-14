@@ -23,7 +23,6 @@ Page({
         paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
         stages: 3,              // 贷款期数，int，全款时不传
         expenseRate: 4,         // 贷款费率（%），decimal，全款时不传，取值范围0~100
-        annualRate: 4.5,        // 贷款年利率（%），decimal，全款时不传，取值范围0~100
         requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
         otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
         advancePayment: 0,      // 必传，首次支付金额，如果全款则为全款金额",
@@ -244,9 +243,6 @@ Page({
 
   },
   onUnload() {
-
-  },
-  onShareAppMessage() {
 
   },
   onReachBottom() {
@@ -646,7 +642,6 @@ Page({
     "hasLoan":"必传，true/false，boolean，是否贷款",
     "paymentRatio":"首付比例（%），decimal，全款时没有，取值范围0~100",
     "stages":"贷款期数，int，全款时没有",
-    "annualRate":"贷款年利率（%），decimal，全款时没有，取值范围0~100",
     "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
     "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
     "advancePayment":"首次支付金额，如果全款则为全款金额",
@@ -698,7 +693,6 @@ Page({
    "hasLoan":"必传，true/false，boolean，是否贷款",
    "paymentRatio":"首付比例（%），decimal，全款时不传，取值范围0~100",
    "stages":"贷款期数，int，全款时不传",
-   "annualRate":"贷款年利率（%），decimal，全款时不传，取值范围0~100",
    "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
    "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
    "advancePayment":"必传，首次支付金额，如果全款则为全款金额",
@@ -719,7 +713,6 @@ Page({
         paymentRatio: quotationDraft.paymentRatio,
         stages: quotationDraft.stages,
         expenseRate: quotationDraft.expenseRate,
-        annualRate: quotationDraft.annualRate,
         requiredExpenses: quotationDraft.requiredExpenses,
         otherExpenses: quotationDraft.otherExpenses,
         advancePayment: quotationDraft.advancePayment,

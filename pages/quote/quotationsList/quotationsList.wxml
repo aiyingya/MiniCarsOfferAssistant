@@ -13,7 +13,6 @@
                     <view class="quotation-list weui-cells"
                           hover-class="weui-cell_active"
                           wx:for="{{quotationsList}}"
-                          wx:key="unique"
                           wx:for-item="cell"
                           wx:for-index="cellIndex"
                           data-quotation="{{cell}}"
@@ -45,7 +44,7 @@
                             </view>
                         </view>
                         <view class="weui-cell quotation-submsg">
-                            <view class="weui-cell__bd min-font-gray">客户手机:{{ cell.viewModel.customerMobile }}</view>
+                            <view class="weui-cell__bd min-font-gray">客户手机:{{ cell.customerMobile }}</view>
                             <view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.read}}">已查看</view>
                             <view class="weui-cell__ft text-right min-font-gray" wx:else>未查看</view>
                         </view>

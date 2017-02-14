@@ -43,7 +43,7 @@
 					</picker>
 					<picker class="weui-cell_picker" bindchange="handlerStagesChange" value="{{withLoan.stagesIndex}}" range="{{withLoan.stagesArray}}">
 						<view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-							<view class="weui-cell__bd">付款年限</view>
+							<view class="weui-cell__bd">还款周期</view>
 							<view class="weui-cell__ft weui-cell__ft_in-access">{{ withLoan.stagesArray[withLoan.stagesIndex] }}</view>
 						</view>
 					</picker>
