@@ -29,7 +29,7 @@ Page({
         monthlyPayment: 0,      // 月供金额，每月还款金额，全款时不传",
         totalPayment: 0,        // 总落地价格
         remark: '',             // "无"
-        loginChannel: 'weixin', // 登录渠道
+        loginChannel: '', // 登录渠道
         snsId: '',
         read: false,
       },
@@ -61,7 +61,7 @@ Page({
         advancePayment: 0,      // 必传，首次支付金额，如果全款则为全款金额",
         totalPayment: 0,        // 总落地价格
         remark: '',             // "无"
-        loginChannel: 'weixin', // 登录渠道
+        loginChannel: '', // 登录渠道
         snsId: '',
         read: false,
       },
@@ -214,7 +214,9 @@ Page({
     app.getUserInfo(function (userInfo) {
       console.log(userInfo)
       that.data.withLoan.quotation.snsId = userInfo.snsId
+      that.data.withLoan.quotation.loginChannel = userInfo.loginChannel
       that.data.withoutLoan.quotation.snsId = userInfo.snsId
+      that.data.withoutLoan.quotation.loginChannel = userInfo.loginChannel
     })
 
     /// 初始化自定义组件

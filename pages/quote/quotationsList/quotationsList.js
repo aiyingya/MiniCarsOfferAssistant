@@ -18,7 +18,8 @@ Page({
     //    },
     // }
     empty: false,
-    windowHeight:'',
+    windowHeight: '',
+    loginChannel: '',
     snsId: ''
   },
   onLoad() {
@@ -27,6 +28,7 @@ Page({
     // 设置 snsId
     app.getUserInfo(function (userInfo) {
       that.data.snsId = userInfo.snsId
+      that.data.loginChannel = userInfo.loginChannel
     })
 
     try {
@@ -188,7 +190,7 @@ Page({
         url: app.config.ymcServerHTTPSUrl + 'sale/quotation',
         loadingType: object.loadingType,
         data: {
-          channel: 'weixin',
+          channel: this.data.loginChannel,
           snsId: this.data.snsId,
           pageIndex: pageIndex,
           pageSize: pageSize
