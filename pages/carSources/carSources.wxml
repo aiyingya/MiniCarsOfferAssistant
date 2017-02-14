@@ -58,7 +58,6 @@
 						hover="true"
 						hover-class="weui-cell_active"
 						wx:for="{{filtersData}}"
-						wx:key="unique"
 						bindtap="headlerSelectColor"
 						data-color="{{item}}"
 						>
@@ -80,8 +79,7 @@
 			>
 			<view 
 				wx:for="{{carSkuList}}"
-				wx:key="unique"
-				hover="true" 
+				hover="true"
 				class="carSources-cell"
 				hover-class="active"
 				data-quoteinfo="{{item}}"

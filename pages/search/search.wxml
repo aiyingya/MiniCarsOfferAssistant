@@ -29,7 +29,6 @@
 					hover-class="active"
 					class="searchResults-cell"
 					wx:for="{{searchResults}}"
-					wx:key="unique"
 					bindtap="handlerChooseResults"
 					>
 					{{item.val}}
@@ -40,7 +39,6 @@
 			<scroll-view scroll-y style="height: {{carModelsHeight}}">
 				<block 
 					wx:for="{{data}}"
-					wx:key="unique"
 					>
 					<template is="carModel" data="{{item}}" /> 
 				</block>

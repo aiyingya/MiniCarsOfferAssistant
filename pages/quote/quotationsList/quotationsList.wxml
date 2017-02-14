@@ -13,7 +13,6 @@
                     <view class="quotation-list weui-cells"
                           hover-class="weui-cell_active"
                           wx:for="{{quotationsList}}"
-                          wx:key="unique"
                           wx:for-item="cell"
                           wx:for-index="cellIndex"
                           data-quotation="{{cell}}"
