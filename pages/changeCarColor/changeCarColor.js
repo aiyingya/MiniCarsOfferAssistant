@@ -21,20 +21,22 @@ Page({
 		selectInternalColorName: '全部内饰',
 		carStatus: 'all',
 		carStatusAll: 'all',
-		carStatusName: '全部'
+		carStatusName: '全部',
+		carSKUInfo: ''
 	},
 	onLoad (options) {
-		let that = this;
-		let carModelsInfo = JSON.parse(options.carModelsInfo);
-		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl;
+		let that = this
+		let carModelsInfo = JSON.parse(options.carModelsInfo)
+		let carSKUInfo = JSON.parse(options.carSKUInfo)
+		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
 		try {
-      var res = wx.getSystemInfoSync();
-      this.pixelRatio = res.pixelRatio;
-      this.apHeight = 16;
-      this.offsetTop = 80;
+      let res = wx.getSystemInfoSync()
+      this.pixelRatio = res.pixelRatio
+      this.apHeight = 16
+      this.offsetTop = 80
       this.setData({windowHeight: res.windowHeight + 'px'})
     } catch (e) {
-      
+    
     }
 		app.modules.request({
 			url: HTTPS_YMCAPI + 'product/car/sku', 
@@ -55,7 +57,8 @@ Page({
 					carModelsInfo: carModelsInfo,
 					carSkuList: carSkuList,
 					cacheCarSkuList: carSkuList,
-					filters: filters
+					filters: filters,
+					carSKUInfo: carSKUInfo
 				})
 			}
 		})
@@ -136,108 +139,13 @@ Page({
 			carStatusAll: carStatusAll
 		})
 	},
-	handlerShowQuoteView(e) {
-		let quoteinfo = e.currentTarget.dataset.quoteinfo;		
-		this.setData({
-			showQuoteView: true,
-			QuoteCreateInfo: quoteinfo
+	handlerChangeCarColor (e) {
+		let carsInfo = e.currentTarget.dataset.quoteinfo
+		
+		wx.setStorage({
+			key:"changeCarsColorSTUInfo",
+			data: carsInfo
 		})
-	},
-	headlerRemoveQuoteView() {
-		this.setData({
-			showQuoteView: false
-		})
-	},
-	handlerMakePhoneCall() {
-		let phone = '021-52559255,8902'
-		wx.makePhoneCall({
-			phoneNumber: phone
-		})
-	},
-	handlerQuoteCreate(e) {
-		let that = this
-		wx.navigateTo({  
-      url: '../quote/quotationCreate/quotationCreate?carInfo=' + JSON.stringify(that.data.QuoteCreateInfo)+'&carModelsInfo='+JSON.stringify(that.data.carModelsInfo)
-    })
-		that.headlerRemoveQuoteView()
-	},
-	// 非编辑态下的订车按钮
-  handlerBookCar(e) {
-    let that = this
-		let skuid = [that.data.QuoteCreateInfo.skuId]
-    const hideDialog = this.$wuxDialog.open({
-      title: '发起订车后， 将会有工作人员与您联系',
-      content: '',
-      inputNumberPlaceholder: '输入您的手机号',
-      confirmText: '发起订车',
-      cancelText: '取消',
-      validate: function (e) {
-        let mobile = e.detail.value
-        return mobile.length === 11
-      },
-      confirm: (res) => {
-        let mobile = res.inputNumber
-				// FIXME: 这里的 skuIds 需要提供
-				that.requestBookCar(skuid, mobile, '',{
-					success (res){
-						// TODO: 发起订车成功
-						wx.showModal({
-							title: '提示',
-							content: '恭喜您，订车成功！',
-							success: function(res) {
-								if (res.confirm) {
-									that.headlerRemoveQuoteView()
-								}
-							}
-						})
-					},
-					fail (err) {
-						wx.showModal({
-							title: '提示',
-							content: err.alertMessage,
-							success: function(res) {
-								if (res.confirm) {
-									console.log('用户点击确定')
-								}
-							}
-						})
-					},
-					complete () {
-
-					}
-				})
-      },
-      cancel: () => {
-        // TODO: 取消
-      }
-    })
-  },
-  /**
-   * 发起订车行为
-   *
-   * @param skuIds					[String]
-   * @param quotationId     可选
-   * @param customerMobile  可选
-   * @param object
-   */
-  requestBookCar(skuIds, customerMobile, quotationId, object) {
-    if (skuIds && typeof skuIds === 'object' && customerMobile && customerMobile !== '') {
-      app.modules.request({
-        url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
-        data: {
-					skuIds: skuIds,
-          mobile: customerMobile,
-          quotationId: quotationId
-        },
-        method: 'POST',
-        success: object.success,
-        fail: object.fail,
-        complete: object.complete
-      })
-    } else {
-      object.fail()
-      object.complete()
-    }
-  }
-	
+		wx.navigateBack()
+	}
 })

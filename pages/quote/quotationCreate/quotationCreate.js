@@ -205,7 +205,6 @@ Page({
           carModelInfo: carModelInfo,
 					'withoutLoan.quotation.remark': ''
         })
-				console.log(that.data.withoutLoan.quotation.remark)
       }
     }
 
@@ -237,7 +236,9 @@ Page({
 
   },
   onShow() {
-
+		let changeCarsColorSTUInfo = wx.getStorageSync('changeCarsColorSTUInfo')
+		
+		console.log(changeCarsColorSTUInfo)
   },
   onHide() {
 
@@ -264,8 +265,6 @@ Page({
       let requiredExpenses = this.data.withLoan.quotation.requiredExpenses
       let otherExpenses = this.data.withLoan.quotation.otherExpenses
       let stages = this.data.withLoan.quotation.stages
-
-      console.log(carPrice + ' ' + paymentRatio + '' + expenseRate + '' + requiredExpenses + ' ' + requiredExpenses + ' ' + stages)
 
       let totalPaymentByLoan = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
       let advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
@@ -508,7 +507,6 @@ Page({
     this.requestSaveQuotationDraft(quotation, {
       success: function (res) {
         let quotationDraft = res
-        console.log(quotationDraft)
         // 请求成功后弹出对话框
         // TODO: 无论分享与否， 都要跳转到 `报价记录` tab 页面的详情页面
         const hideDialog = that.$wuxDialog.open({
@@ -748,5 +746,12 @@ Page({
     } else {
 
     }
-  }
+  },
+	headlerChangeColor (e) {
+		let carModelsInfo = e.currentTarget.dataset.carmodelinfo
+		let carSKUInfo = e.currentTarget.dataset.carskuinfo
+		wx.navigateTo({  
+      url: '../../changeCarColor/changeCarColor?carModelsInfo='+JSON.stringify(carModelsInfo)+'&carSKUInfo='+JSON.stringify(carSKUInfo)
+    })
+	}
 });

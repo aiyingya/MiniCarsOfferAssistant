@@ -1,0 +1,28 @@
+/* 车源详情.*/
+@import '../../css/carsources.wxss';
+.container {
+	height: 100%;
+}
+
+.carSources-cell .carSources-cell-list {
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+}
+.carSources-cell .carSources-cell-label {
+	width: 66%;
+}
+.carSources-cell .carSources-price {
+	padding-left: 0;
+}
+.carSources-select-icon {
+	position: absolute;
+	top: 50%;
+	right: 30rpx;
+	width: 36rpx;
+	height: 36rpx;
+	margin: -18rpx 0 0 -18rpx;
+}
+.carSources-select-icon image {
+	width: 36rpx;
+	height: 36rpx;
+}

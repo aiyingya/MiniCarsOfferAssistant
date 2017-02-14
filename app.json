@@ -6,7 +6,8 @@
     "pages/search/search",
     "pages/quote/quotationCreate/quotationCreate",
     "pages/quote/quotationDetail/quotationDetail",
-    "pages/quote/quotationsList/quotationsList"
+    "pages/quote/quotationsList/quotationsList",
+    "pages/changeCarColor/changeCarColor"
   ],
   "window":{
     "backgroundTextStyle":"dark",

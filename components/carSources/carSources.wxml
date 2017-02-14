@@ -1,14 +1,16 @@
-<!-- 车源详情.-->
-<import src="../../lib/dialog/dialog.wxml"/>
-<import src="../../components/carSources/carSources.wxml" />
-<template is="dialog" data="{{ ...$wux.dialog }}"/>
-<scroll-view scroll-y style="height: {{windowHeight}}">
-<view class="car-sources container">
-	<template 
-		is="carSourcesTopNavbar" 
-		data="{{imgAliyuncsUrl, carModelsInfo}}" 
-		/> 
-	
+<template name="carSourcesTopNavbar">
+	<view class="carSources-topbar weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+			<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+					<image class="weui-media-box__thumb" src="{{imgAliyuncsUrl}}{{carModelsInfo.lowestPriceSku.skuPic}}" />
+			</view>
+			<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+					<view class="weui-media-box__title">{{carModelsInfo.carModelName}}</view>
+					<view class="weui-media-box__desc">指导价{{carModelsInfo.officialPriceStr}}万</view>
+			</view>
+	</view>
+</template>
+
+<template name="carSourcesBody">
 	<view class="carSources-body">
 		<view class="carSources-navbar">
 			<view 
@@ -81,14 +83,14 @@
 				hover-class="active"
 				data-quoteinfo="{{item}}"
 				wx:if="{{carStatus === item.status || carStatusAll === 'all'}}"
-				bindtap="handlerShowQuoteView"
+				bindtap="handlerChangeCarColor"
 				>
 				<view class="carSources-cell-list">
 					<view class="carSources-cell-label">
 						<view class="label">配色：</view>
 						<view class="message">{{item.externalColorName}}/{{item.internalColorName}}</view>
 					</view>
-					<view class="carSources-cell-price">
+					<view class="carSources-cell-price carSources-price">
 						<view class="price">{{item.priceStr}}</view>万
 					</view>
 				</view>
@@ -127,39 +129,16 @@
 						<view class="message remark">{{item.remark}}</view>
 					</view>
 				</view>
+				
+				<view
+					wx:if="{{carSKUInfo.externalColorId === item.externalColorId && carSKUInfo.internalColorId === item.internalColorId}}"
+					class="carSources-select-icon">
+					<image src="../../images/icons/icon_select_red.png"></image>
+				</view>
 			</view>
 		</view>
 		<view wx:else class="nodata">
 			暂无数据
 		</view>
 	</view>
-</view>
-
-<!-- 报价.-->
-<view wx:if="{{showQuoteView}}" class="navbar-quote-popup">
-	<view 
-		class="navbar-quote-mask popup-mask showMask"
-		bindtap="headlerRemoveQuoteView"
-		></view>
-	<view class="navbar-quote-main">
-		<view 
-			class="navbar-quote-cell" 
-			hover="true" 
-			hover-class="navbar-quote-active"
-			bindtap="handlerMakePhoneCall"
-			>电话联系</view>
-		<view
-			class="navbar-quote-cell" 
-			hover="true" 
-			hover-class="navbar-quote-active"
-			bindtap="handlerBookCar"
-			>立即订车</view>
-		<view 
-			class="navbar-quote-cell" 
-			hover="true" 
-			hover-class="navbar-quote-active"
-			bindtap="handlerQuoteCreate"
-			>生成报价</view>
-	</view>
-</view>
-</scroll-view>
+</template>

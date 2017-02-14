@@ -55,19 +55,26 @@
 				<!--基础信息-->
 				<view class="h-cell-gray">基础信息</view>
 				<view class="weui-cells weui-cells_after-title ymc-cell-box">
-						<view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-								<view class="weui-cell__bd">
+						<view class="weui-cell weui-cell_access carsQuote-cell" hover-class="weui-cell_active">
+								<view class="carsQuote-pic">
 										<image class="cell-img" src="{{ withLoan.quotation.quotationItems[0].itemPic }}"></image>
 								</view>
 								<view class="weui-cell__ft">
-										<view class="text-left">{{ withLoan.quotation.quotationItems[0].itemName }}</view>
-										<view class="text-left">指导价： {{ withLoan.quotation.quotationItems[0].guidePrice }}万</view>
+										<view class="text-left carsQuote-title">{{ withLoan.quotation.quotationItems[0].itemName }}</view>
+										<view class="text-left carsQuote-label">指导价： {{ withLoan.quotation.quotationItems[0].guidePrice }}万</view>
 								</view>
 						</view>
-						<navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+						<view 
+							class="weui-cell weui-cell_access" 
+							hover="true"
+							hover-class="weui-cell_active"
+							data-carmodelinfo="{{carModelInfo}}"
+							data-carskuinfo="{{carSKUInfo}}"
+							bindtap="headlerChangeColor"
+							>
 								<view class="weui-cell__bd">配色</view>
 								<view class="weui-cell__ft weui-cell__ft_in-access"> {{withLoan.quotation.quotationItems[0].specifications}} </view>
-						</navigator>
+						</view>
 						<view url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
 								<view class="weui-cell__bd">裸车价</view>
 								<view class="weui-cell__ft weui-cell__ft_in-access">
@@ -114,19 +121,25 @@
 				<!--基础信息-->
 				<view class="h-cell-gray">基础信息</view>
 				<view class="weui-cells weui-cells_after-title ymc-cell-box">
-						<view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-								<view class="weui-cell__bd">
+						<view class="weui-cell carsQuote-cell weui-cell_access" hover-class="weui-cell_active">
+								<view class="carsQuote-pic">
 										<image class="cell-img" src="{{ withoutLoan.quotation.quotationItems[0].itemPic }}"></image>
 								</view>
 								<view class="weui-cell__ft">
-										<view class="text-left">{{ withoutLoan.quotation.quotationItems[0].itemName }}</view>
-										<view class="text-left">指导价： {{ withoutLoan.quotation.quotationItems[0].guidePrice }}元</view>
+										<view class="text-left carsQuote-title">{{ withoutLoan.quotation.quotationItems[0].itemName }}</view>
+										<view class="text-left carsQuote-label">指导价： {{ withoutLoan.quotation.quotationItems[0].guidePrice }}元</view>
 								</view>
 						</view>
-						<navigator url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+						<view 
+							class="weui-cell weui-cell_access" 
+							hover="true"
+							hover-class="weui-cell_active"
+							data-carsinfo="{{withoutLoan}}"
+							bindtap="headlerChangeColor"
+							>
 								<view class="weui-cell__bd">配色</view>
 								<view class="weui-cell__ft weui-cell__ft_in-access"> {{withoutLoan.quotation.quotationItems[0].specifications}}  </view>
-						</navigator>
+						</view>
 						<view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
 								<view class="weui-cell__bd">裸车价</view>
 								<view class="weui-cell__ft weui-cell__ft_in-access">
