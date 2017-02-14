@@ -33,7 +33,7 @@ Page({
       monthlyPayment: 0,        // 月供金额，每月还款金额，全款时不传",
       totalPayment: 0,        // 总落地价格
       remark: '',
-      loginChannel: 'weixin',
+      loginChannel: '',
       snsId: '',
       customerMobile: '',
       read: false,
@@ -277,6 +277,8 @@ Page({
         }
       })
     } else {
+      object.fail();
+      object.complete();
     }
   },
 
@@ -332,8 +334,8 @@ Page({
         }
       })
     } else {
-      fail();
-      complete();
+      object.fail();
+      object.complete();
     }
   },
 
