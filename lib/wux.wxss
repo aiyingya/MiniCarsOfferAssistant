@@ -95,7 +95,7 @@
 	-webkit-box-flex: 1;
 	-webkit-flex: 1;
 	flex: 1;
-	color: #3CC51F;
+	color: #ED4149;
 	text-decoration: none;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	position: relative;
@@ -130,7 +130,7 @@
 }
 
 .weui-dialog__btn_primary {
-	color: #0BB20C;
+	color: #ED4149;
 }
 
 .weui-toast-wrapper {
@@ -447,7 +447,7 @@
 	height: 20px;
 	font-size: 25px;
 	line-height: 18px;
-	color: #04BE02;
+	color: #ED4149;
 	border: 1px solid #ececec;
 }
 
