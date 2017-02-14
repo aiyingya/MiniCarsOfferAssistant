@@ -8,69 +8,41 @@ Page({
     slderOffset: 0,
     sliderLeft: 0,
     tabHeight: 40,
-		windowHeight: '',
+    windowHeight: '',
     /* 贷款报价单主体数据 */
-    withLoan: {
-      quotation: {
-        quotationId: '0',
-        draftId: '0',
-        quotationName: '',
-        quotationItems: [{
-          itemNumber: '',
-          sellingPrice: 0
-        }],     // skuId
-        hasLoan: true,          // 必传，true/false，boolean，是否贷款
-        paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
-        stages: 3,              // 贷款期数，int，全款时不传
-        expenseRate: 4,         // 贷款费率（%），decimal，全款时不传，取值范围0~100
-        requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
-        otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
-        advancePayment: 0,      // 必传，首次支付金额，如果全款则为全款金额",
-        monthlyPayment: 0,      // 月供金额，每月还款金额，全款时不传",
-        totalPayment: 0,        // 总落地价格
-        remark: '',             // "无"
-        loginChannel: '', // 登录渠道
-        snsId: '',
-        read: false,
-      },
-      priceChange: {
-        flag: '',             // true 为上， false 为下
-        price: '',              // 1.9 万
-        point: ''               // 6 点
-      },
-      /// 表单相关
-      paymentRatiosArray: [10, 20, 30, 40, 50, 60, 70, 80, 90],
-      paymentRatiosIndex: 2,
-      stagesArray: [1, 2, 3],
-      stagesIndex: 2
+    quotation: {
+      quotationId: '0',
+      draftId: '0',
+      quotationName: '',
+      quotationItems: [{
+        itemNumber: '',
+        sellingPrice: 0
+      }],     // skuId
+      hasLoan: true,          // 必传，true/false，boolean，是否贷款
+      paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
+      stages: 3,              // 贷款期数，int，全款时不传
+      expenseRate: 4,         // 贷款费率（%），decimal，全款时不传，取值范围0~100
+      requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
+      otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
+      advancePayment: 0,      // 必传，首次支付金额，如果全款则为全款金额",
+      monthlyPayment: 0,      // 月供金额，每月还款金额，全款时不传",
+      totalPayment: 0,        // 总落地价格
+      remark: '',             // "无"
+      loginChannel: '', // 登录渠道
+      snsId: '',
+      read: false,
     },
-
-    /* 全款报价单主体数据 */
-    withoutLoan: {
-      quotation: {
-        quotationId: '0',
-        draftId: '0',
-        quotationName: '',
-        quotationItems: [{
-          itemNumber: '',
-          sellingPrice: 0
-        }],     // skuId
-        hasLoan: false,          // 必传，true/false，boolean，是否贷款
-        requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
-        otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
-        advancePayment: 0,      // 必传，首次支付金额，如果全款则为全款金额",
-        totalPayment: 0,        // 总落地价格
-        remark: '',             // "无"
-        loginChannel: '', // 登录渠道
-        snsId: '',
-        read: false,
-      },
-      priceChange: {
-        flag: '',             // true 为上， false 为下
-        price: '',              // 1.9 万
-        point: ''               // 6 点
-      }
+    priceChange: {
+      flag: '',             // true 为上， false 为下
+      price: '',              // 1.9 万
+      point: ''               // 6 点
     },
+    /// 表单相关
+    paymentRatiosArray: [10, 20, 30, 40, 50, 60, 70, 80, 90],
+    paymentRatiosIndex: 2,
+    stagesArray: [1, 2, 3],
+    stagesIndex: 2,
+    /// SKU 数据
     carSKUInfo: {
       skuId: '',              // "1D71D878-4CBB-4DE7-AEC0-A59A00BEDBE3"
       skuPic: '',             // "/upload/image/original/201512/021043092970.jpg"
@@ -84,6 +56,7 @@ Page({
       status: '',             // "in_stock"
       remark: '',             // "无"
     },
+    // SPU 数据
     carModelInfo: {
       carModelId: '',         // "C5997556-CAB7-47F8-A2E6-21026C2EF082",
       carModelName: '',       // "宝马1系 2015款 120i 运动设计套装 欧V（符合国V标准）",
@@ -104,7 +77,6 @@ Page({
       },
       count: ''               // "7.34"
     },
-    snsId: '',
     source: ''                // carModels/carSources/quotationDetail/
   },
   onLoad(options) {
@@ -112,12 +84,12 @@ Page({
     try {
       let res = wx.getSystemInfoSync();
       let tabHeight = res.windowHeight - 44;
-			this.apHeight = 16;
+      this.apHeight = 16;
       this.offsetTop = 80;
       this.setData({
-				tabHeight: tabHeight + 'px',
-				windowHeight: res.windowHeight + 'px'
-			})
+        tabHeight: tabHeight + 'px',
+        windowHeight: res.windowHeight + 'px'
+      })
     } catch (e) {
 
     }
@@ -132,40 +104,12 @@ Page({
        */
       this.data.source = 'quotationDetail'
       var quotation = JSON.parse(quotationJSONString)
-  
-			
-      if (quotation.hasLoan) {
-        this.setData({
-          activeIndex: 0,
-          'withLoan.quotation': quotation,
-          'withoutLoan.quotation.quotationItems': quotation.quotationItems,
-          'withoutLoan.quotation.draftId': quotation.draftId,
-          'withoutLoan.quotation.quotationId': quotation.quotationId,
-          'withoutLoan.quotation.quotationName': quotation.quotationName,
-          'withoutLoan.quotation.requiredExpenses': quotation.requiredExpenses,
-          'withoutLoan.quotation.otherExpenses': quotation.otherExpenses,
-          'withoutLoan.quotation.advancePayment': quotation.advancePayment,
-          'withoutLoan.quotation.totalPayment': quotation.totalPayment,
-          'withoutLoan.quotation.remark': quotation.remark,
-          'withoutLoan.quotation.snsId': quotation.snsId
-        })
-      } else {
-        this.setData({
-          activeIndex: 1,
-          'withoutLoan.quotation': quotation,
-          'withLoan.quotation.quotationItems': quotation.quotationItems,
-          'withLoan.quotation.draftId': quotation.draftId,
-          'withLoan.quotation.quotationId': quotation.quotationId,
-          'withLoan.quotation.quotationName': quotation.quotationName,
-          'withLoan.quotation.requiredExpenses': quotation.requiredExpenses,
-          'withLoan.quotation.otherExpenses': quotation.otherExpenses,
-          'withLoan.quotation.advancePayment': quotation.advancePayment,
-          'withLoan.quotation.totalPayment': quotation.totalPayment,
-          'withLoan.quotation.remark': quotation.remark,
-          'withLoan.quotation.snsId': quotation.snsId
-        })
-      }
-			
+
+      this.setData({
+        activeIndex: quotation.hasLoan? 0: 1,
+        'quotation': quotation
+      })
+
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
         let carModelInfo = JSON.parse(options.carModelsInfo)
@@ -198,11 +142,10 @@ Page({
         ]
 
         this.setData({
-          'withLoan.quotation.quotationItems': quotationItems,
-          'withoutLoan.quotation.quotationItems': quotationItems,
+          'quotation.quotationItems': quotationItems,
+          'quotation.remark': '',
           carSKUInfo: carSKUInfo,
-          carModelInfo: carModelInfo,
-					'withoutLoan.quotation.remark': ''
+          carModelInfo: carModelInfo
         })
       }
     }
@@ -213,10 +156,8 @@ Page({
     // 设置 snsId
     app.getUserInfo(function (userInfo) {
       console.log(userInfo)
-      that.data.withLoan.quotation.snsId = userInfo.snsId
-      that.data.withLoan.quotation.loginChannel = userInfo.loginChannel
-      that.data.withoutLoan.quotation.snsId = userInfo.snsId
-      that.data.withoutLoan.quotation.loginChannel = userInfo.loginChannel
+      that.data.quotation.snsId = userInfo.snsId
+      that.data.quotation.loginChannel = userInfo.loginChannel
     })
 
     /// 初始化自定义组件
@@ -237,32 +178,30 @@ Page({
 
   },
   onShow() {
-		let changeCarsColorSTUInfo = wx.getStorageSync('changeCarsColorSTUInfo')
-	
-		if(changeCarsColorSTUInfo) {
-			let specifications = `${changeCarsColorSTUInfo.externalColorName}/${changeCarsColorSTUInfo.internalColorName}`
-			let sellingPrice = changeCarsColorSTUInfo.price
-			let itemNumber = changeCarsColorSTUInfo.skuId
-			this.setData({
-				carSKUInfo: changeCarsColorSTUInfo,
-				'withLoan.quotation.quotationItems[0].specifications': specifications,
-				'withLoan.quotation.quotationItems[0].sellingPrice': sellingPrice,
-				'withLoan.quotation.quotationItems[0].itemNumber': itemNumber,
-				'withoutLoan.quotation.quotationItems[0].specifications': specifications,
-				'withoutLoan.quotation.quotationItems[0].sellingPrice': sellingPrice,
-				'withoutLoan.quotation.quotationItems[0].itemNumber': itemNumber
-			})
-		}
+    let changeCarsColorSTUInfo = wx.getStorageSync('changeCarsColorSTUInfo')
+
+    if(changeCarsColorSTUInfo) {
+      let specifications = `${changeCarsColorSTUInfo.externalColorName}/${changeCarsColorSTUInfo.internalColorName}`
+      let sellingPrice = changeCarsColorSTUInfo.price
+      let itemNumber = changeCarsColorSTUInfo.skuId
+      this.setData({
+        carSKUInfo: changeCarsColorSTUInfo,
+        'quotation.quotationItems[0].specifications': specifications,
+        'quotation.quotationItems[0].sellingPrice': sellingPrice,
+        'quotation.quotationItems[0].itemNumber': itemNumber
+      })
+      this.updateForSomeReason()
+    }
   },
   onHide() {
-		
+
   },
   onUnload() {
-		try {
-			wx.removeStorageSync('changeCarsColorSTUInfo')
-		} catch (e) {
-			// Do something when catch error
-		}
+    try {
+      wx.removeStorageSync('changeCarsColorSTUInfo')
+    } catch (e) {
+      // Do something when catch error
+    }
   },
   onReachBottom() {
 
@@ -272,68 +211,51 @@ Page({
   },
   updateForSomeReason() {
 
+    let carPrice = this.data.quotation.quotationItems[0].sellingPrice
+    let officialPrice = this.data.quotation.quotationItems[0].guidePrice
+    let requiredExpenses = this.data.quotation.requiredExpenses
+    let otherExpenses = this.data.quotation.otherExpenses
+
+    let paymentRatio = this.data.quotation.paymentRatio
+    let expenseRate = this.data.quotation.expenseRate
+    let stages = this.data.quotation.stages
+
+    let monthlyPayment
+    let totalPayment
+    let advancePayment
     if (this.isLoanTabActive()) {
-      /// 车贷款和全款的价格价格
-      let carPrice = this.data.withLoan.quotation.quotationItems[0].sellingPrice
-      let paymentRatio = this.data.withLoan.quotation.paymentRatio
-      let expenseRate = this.data.withLoan.quotation.expenseRate
-      let requiredExpenses = this.data.withLoan.quotation.requiredExpenses
-      let otherExpenses = this.data.withLoan.quotation.otherExpenses
-      let stages = this.data.withLoan.quotation.stages
-
-      let totalPaymentByLoan = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
-      let advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
-      let monthlyLoanPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12);
-
-      let officialPrice = this.data.withLoan.quotation.quotationItems[0].guidePrice
-
-      /// 实时计算优惠点数
-      let downPrice = util.downPrice(carPrice, officialPrice)
-      let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
-      let downPriceString = util.priceStringWithUnit(downPrice)
-      let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
-
-      this.setData({
-        'withLoan.quotation.totalPayment': Math.floor(totalPaymentByLoan),
-        'withLoan.quotation.advancePayment': Math.floor(advancePayment),
-        'withLoan.quotation.monthlyPayment': Math.floor(monthlyLoanPayment),
-        'withLoan.priceChange': {
-          flag: downPriceFlag,
-          price: downPriceString,
-          point: downPoint
-        }
-      });
+      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
+      advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
+      monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12);
     } else {
-      let carPrice = this.data.withoutLoan.quotation.quotationItems[0].sellingPrice
-      let requiredExpenses = this.data.withoutLoan.quotation.requiredExpenses
-      let otherExpenses = this.data.withoutLoan.quotation.otherExpenses
-
-      let totalPayment = carPrice + requiredExpenses + otherExpenses
-
-      let officialPrice = this.data.withoutLoan.quotation.quotationItems[0].guidePrice
-
-      /// 实时计算优惠点数
-      let downPrice = util.downPrice(carPrice, officialPrice)
-      let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
-      let downPriceString = util.priceStringWithUnit(downPrice)
-      let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
-
-      this.setData({
-        'withoutLoan.quotation.totalPayment': Math.floor(totalPayment),
-        'withoutLoan.priceChange': {
-          flag: downPriceFlag,
-          price: downPriceString,
-          point: downPoint
-        }
-      })
+      totalPayment = carPrice + otherExpenses + requiredExpenses
+      advancePayment = carPrice
+      monthlyPayment = 0
     }
+
+    /// 实时计算优惠点数
+    let downPrice = util.downPrice(carPrice, officialPrice)
+    let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
+    let downPriceString = util.priceStringWithUnit(downPrice)
+    let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
+
+    this.setData({
+      'quotation.totalPayment': Math.floor(totalPayment),
+      'quotation.advancePayment': Math.floor(advancePayment),
+      'quotation.monthlyPayment': Math.floor(monthlyPayment),
+      hasLoan: this.isLoanTabActive(),
+      priceChange: {
+        flag: downPriceFlag,
+        price: downPriceString,
+        point: downPoint
+      }
+    });
   },
   isLoanTabActive(e) {
     return this.data.activeIndex == 0
   },
   // event handler
   handlerTabClick(e) {
-    let hasLoan = (e.currentTarget.id === '0')
     this.setData({
       sliderOffset: e.currentTarget.offsetLeft,
       activeIndex: e.currentTarget.id,
@@ -341,63 +263,52 @@ Page({
     this.updateForSomeReason()
   },
   handlerPaymentRatioChange (e) {
-    if (this.isLoanTabActive()) {
-      this.setData({
-        'withLoan.paymentRatiosIndex': e.detail.value,
-        'withLoan.quotation.paymentRatio': this.data.withLoan.paymentRatiosArray[e.detail.value]
-      })
-      this.updateForSomeReason()
-    }
+    this.setData({
+      'paymentRatiosIndex': e.detail.value,
+      'quotation.paymentRatio': this.data.paymentRatiosArray[e.detail.value]
+    })
+    this.updateForSomeReason()
   },
   handlerStagesChange (e) {
-    if (this.isLoanTabActive()) {
-      this.setData({
-        'withLoan.stagesIndex': e.detail.value,
-        'withLoan.quotation.stages': this.data.withLoan.stagesArray[e.detail.value]
-      })
-      this.updateForSomeReason()
-    }
+    this.setData({
+      'stagesIndex': e.detail.value,
+      'quotation.stages': this.data.stagesArray[e.detail.value]
+    })
+    this.updateForSomeReason()
   },
   handlerExpenseRateChange (e) {
     let that = this
 
-    if (this.isLoanTabActive()) {
-      this.$wuxDialog.open({
-        title: '贷款费率',
-        content: '0-100 之间的小数',
-        inputNumber: this.data.withLoan.quotation.expenseRate,
-        inputNumberPlaceholder: '输入贷款年利率',
-        inputType: 'digit',
-        confirmText: '确定',
-        cancelText: '取消',
-        validate: (e) => {
-          if (e.detail.value > 0 && e.detail.value < 100) {
-            return true
-          } else {
-            return false
-          }
-        },
-        confirm: (res) => {
-          let expenseRate = Number(res.inputNumber)
-          that.setData({
-            'withLoan.quotation.expenseRate': expenseRate
-          })
-          that.updateForSomeReason()
-        },
-        cancel: () => {
+    this.$wuxDialog.open({
+      title: '贷款费率',
+      content: '0-100 之间的小数',
+      inputNumber: this.data.quotation.expenseRate,
+      inputNumberPlaceholder: '输入贷款年利率',
+      inputType: 'digit',
+      confirmText: '确定',
+      cancelText: '取消',
+      validate: (e) => {
+        if (e.detail.value > 0 && e.detail.value < 100) {
+          return true
+        } else {
+          return false
         }
-      })
-    }
+      },
+      confirm: (res) => {
+        let expenseRate = Number(res.inputNumber)
+        that.setData({
+          'quotation.expenseRate': expenseRate
+        })
+        that.updateForSomeReason()
+      },
+      cancel: () => {
+      }
+    })
   },
   handlerSellingPriceChange (e) {
     let that = this
 
-    let sellingPrice = 0
-    if (this.isLoanTabActive()) {
-      sellingPrice = this.data.withLoan.quotation.quotationItems[0].sellingPrice
-    } else {
-      sellingPrice = this.data.withoutLoan.quotation.quotationItems[0].sellingPrice
-    }
+    let sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
 
     this.$wuxDialog.open({
       title: '裸车价',
@@ -408,15 +319,9 @@ Page({
       cancelText: '取消',
       confirm: (res) => {
         let sellingPrice = Number(res.inputNumber)
-        if (that.isLoanTabActive()) {
-          that.setData({
-            'withLoan.quotation.quotationItems[0].sellingPrice': sellingPrice
-          })
-        } else {
-          that.setData({
-            'withoutLoan.quotation.quotationItems[0].sellingPrice': sellingPrice
-          })
-        }
+        that.setData({
+          'quotation.quotationItems[0].sellingPrice': sellingPrice
+        })
         that.updateForSomeReason()
       },
       cancel: () => {
@@ -426,12 +331,7 @@ Page({
   handlerRequiredExpensesChange (e) {
     let that = this
 
-    let requiredExpenses = 0
-    if (this.isLoanTabActive()) {
-      requiredExpenses = this.data.withLoan.quotation.requiredExpenses
-    } else {
-      requiredExpenses = this.data.withoutLoan.quotation.requiredExpenses
-    }
+    let requiredExpenses = this.data.quotation.requiredExpenses
 
     this.$wuxDialog.open({
       title: '必要花费',
@@ -444,15 +344,9 @@ Page({
       confirm: (res) => {
         let requiredExpenses = Number(res.inputNumber)
 
-        if (that.isLoanTabActive()) {
-          that.setData({
-            'withLoan.quotation.requiredExpenses': requiredExpenses
-          })
-        } else {
-          that.setData({
-            'withoutLoan.quotation.requiredExpenses': requiredExpenses
-          })
-        }
+        that.setData({
+          'quotation.requiredExpenses': requiredExpenses
+        })
 
         that.updateForSomeReason()
       },
@@ -463,12 +357,7 @@ Page({
   handlerOtherExpensesChange (e) {
     let that = this
 
-    let otherExpenses = 0
-    if (this.isLoanTabActive()) {
-      otherExpenses = this.data.withLoan.quotation.otherExpenses
-    } else {
-      otherExpenses = this.data.withoutLoan.quotation.otherExpenses
-    }
+    let otherExpenses = this.data.quotation.otherExpenses
 
     this.$wuxDialog.open({
       title: '其他花费',
@@ -481,15 +370,9 @@ Page({
       confirm: (res) => {
         let otherExpenses = Number(res.inputNumber)
 
-        if (that.isLoanTabActive()) {
-          that.setData({
-            'withLoan.quotation.otherExpenses': otherExpenses
-          })
-        } else {
-          that.setData({
-            'withoutLoan.quotation.otherExpenses': otherExpenses
-          })
-        }
+        that.setData({
+          'quotation.otherExpenses': otherExpenses
+        })
 
         that.updateForSomeReason()
       },
@@ -499,25 +382,14 @@ Page({
   },
   handlerRemarkChange (e) {
     let remark = e.detail.value
-    if (this.isLoanTabActive()) {
-      this.setData({
-        'withLoan.quotation.remark': remark
-      })
-    } else {
-      this.setData({
-        'withoutLoan.quotation.remark': remark
-      })
-    }
+    this.setData({
+      'quotation.remark': remark
+    })
   },
   handlerSaveQuotationDraft(e) {
     let that = this;
 
-    let quotation = {}
-    if (this.isLoanTabActive()) {
-      quotation = this.data.withLoan.quotation
-    } else {
-      quotation = this.data.withoutLoan.quotation
-    }
+    let quotation = this.data.quotation
 
     this.requestSaveQuotationDraft(quotation, {
       success: function (res) {
@@ -586,7 +458,7 @@ Page({
             that.requestPublishQuotation(quotationDraft.draftId, null, {
               success: (res) => {
                 let quotation = res
-                
+
                 app.fuckingLarryNavigatorTo.quotation = quotation
                 app.fuckingLarryNavigatorTo.source = that.data.source
 
@@ -724,24 +596,43 @@ Page({
   requestSaveQuotationDraft(quotationDraft, object) {
     if (quotationDraft && typeof quotationDraft === 'object') {
       // FIXME: 直接将提交对象转换为正常的提交对象
-      let data = {
-        quotationName: quotationDraft.quotationName,
-        quotationItems: [{
-          itemNumber: quotationDraft.quotationItems[0].itemNumber,
-          sellingPrice: quotationDraft.quotationItems[0].sellingPrice
-        }],
-        hasLoan: quotationDraft.hasLoan,
-        paymentRatio: quotationDraft.paymentRatio,
-        stages: quotationDraft.stages,
-        expenseRate: quotationDraft.expenseRate,
-        requiredExpenses: quotationDraft.requiredExpenses,
-        otherExpenses: quotationDraft.otherExpenses,
-        advancePayment: quotationDraft.advancePayment,
-        monthlyPayment: quotationDraft.monthlyPayment,
-        totalPayment: quotationDraft.totalPayment,
-        remark: quotationDraft.remark,
-        loginChannel: quotationDraft.loginChannel,
-        snsId: quotationDraft.snsId
+      let data = {}
+      if (quotationDraft.hasLoan) {
+        data = {
+          quotationName: quotationDraft.quotationName,
+          quotationItems: [{
+            itemNumber: quotationDraft.quotationItems[0].itemNumber,
+            sellingPrice: quotationDraft.quotationItems[0].sellingPrice
+          }],
+          hasLoan: quotationDraft.hasLoan,
+          paymentRatio: quotationDraft.paymentRatio,
+          stages: quotationDraft.stages,
+          expenseRate: quotationDraft.expenseRate,
+          requiredExpenses: quotationDraft.requiredExpenses,
+          otherExpenses: quotationDraft.otherExpenses,
+          advancePayment: quotationDraft.advancePayment,
+          monthlyPayment: quotationDraft.monthlyPayment,
+          totalPayment: quotationDraft.totalPayment,
+          remark: quotationDraft.remark,
+          loginChannel: quotationDraft.loginChannel,
+          snsId: quotationDraft.snsId
+        }
+      } else {
+        data = {
+          quotationName: quotationDraft.quotationName,
+          quotationItems: [{
+            itemNumber: quotationDraft.quotationItems[0].itemNumber,
+            sellingPrice: quotationDraft.quotationItems[0].sellingPrice
+          }],
+          hasLoan: quotationDraft.hasLoan,
+          requiredExpenses: quotationDraft.requiredExpenses,
+          otherExpenses: quotationDraft.otherExpenses,
+          advancePayment: quotationDraft.advancePayment,
+          totalPayment: quotationDraft.totalPayment,
+          remark: quotationDraft.remark,
+          loginChannel: quotationDraft.loginChannel,
+          snsId: quotationDraft.snsId
+        }
       }
       app.modules.request({
         url: app.config.ymcServerHTTPSUrl + 'sale/quotation/draft',
@@ -762,11 +653,11 @@ Page({
       object.complete()
     }
   },
-	headlerChangeColor (e) {
-		let carModelsInfo = e.currentTarget.dataset.carmodelinfo
-		let carSKUInfo = e.currentTarget.dataset.carskuinfo
-		wx.navigateTo({  
+  headlerChangeColor (e) {
+    let carModelsInfo = e.currentTarget.dataset.carmodelinfo
+    let carSKUInfo = e.currentTarget.dataset.carskuinfo
+    wx.navigateTo({
       url: '../../changeCarColor/changeCarColor?carModelsInfo='+JSON.stringify(carModelsInfo)+'&carSKUInfo='+JSON.stringify(carSKUInfo)
     })
-	}
+  }
 });
