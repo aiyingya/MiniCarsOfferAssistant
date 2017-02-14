@@ -61,7 +61,7 @@
 								</view>
 								<view class="weui-cell__ft">
 										<view class="text-left carsQuote-title">{{ withLoan.quotation.quotationItems[0].itemName }}</view>
-										<view class="text-left carsQuote-label">指导价： {{ withLoan.quotation.quotationItems[0].guidePrice }}万</view>
+										<view class="text-left carsQuote-label">指导价： {{ withLoan.quotation.quotationItems[0].guidePrice }}元</view>
 								</view>
 						</view>
 						<view 
