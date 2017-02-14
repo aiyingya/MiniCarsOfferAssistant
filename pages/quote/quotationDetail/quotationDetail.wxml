@@ -24,7 +24,7 @@
                         <view class="weui-cell__ft">{{ quotation.paymentRatio }}%</view>
                     </view>
                     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                        <view class="weui-cell__bd">付款年限</view>
+                        <view class="weui-cell__bd">还款周期</view>
                         <view class="weui-cell__ft">{{ quotation.stages }}</view>
                     </view>
                     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
@@ -49,7 +49,7 @@
                     </view>
                     <view class="weui-cell__ft">
                         <view class="text-left">{{ quotation.quotationItems[0].itemName }}</view>
-                        <view class="text-left">指导价： {{ quotation.quotationItems[0].guidePrice }}万</view>
+                        <view class="text-left">指导价： {{ quotation.quotationItems[0].guidePrice }}元</view>
                     </view>
                 </view>
                 <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
