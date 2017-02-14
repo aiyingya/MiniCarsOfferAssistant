@@ -45,8 +45,10 @@
                         </view>
                         <view class="weui-cell quotation-submsg">
                             <view class="weui-cell__bd min-font-gray">客户手机:{{ cell.customerMobile }}</view>
-                            <view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.read}}">已查看</view>
-                            <view class="weui-cell__ft text-right min-font-gray" wx:else>未查看</view>
+                            <view wx:if="{{ cell.customerMobile.length }}">
+                                <view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.read}}">用户已查看</view>
+                                <view class="weui-cell__ft text-right min-font-gray" wx:else>用户未查看</view>
+                            </view>
                         </view>
                     </view>
                 </view>
