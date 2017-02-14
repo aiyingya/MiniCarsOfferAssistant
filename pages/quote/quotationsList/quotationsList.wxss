@@ -20,8 +20,9 @@
 .red-price{
     color: #ED4149;
     font-size: 44rpx;
-    font-weight: 700;
-    display: inline
+    display: inline;
+    letter-spacing: 0;
+    line-height: 40rpx;
 }
 .quotation-msg{
     line-height: 26rpx;
