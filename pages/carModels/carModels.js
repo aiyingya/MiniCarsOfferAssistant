@@ -31,9 +31,12 @@ Page({
 				success: function(res) {
 					let carModelsList = res;
 					if(carModelsList) {
-						for(let item of carModelsList) {
-							item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
-						}
+
+						for (var i = 0; i < carModelsList.length; i++) {
+						  let item = carModelsList[i]
+              item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
+            }
+
 						console.log(carModelsList)
 						that.setData({
 							carModelsList: carModelsList

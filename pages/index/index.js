@@ -55,10 +55,11 @@ Page({
 					let data = res
 					let recommendCarBrandList = data.recommendCarBrandList
 					let brandGroupList = data.brandGroupList
-					
-					for(let item of recommendCarBrandList) {
+
+          for (var i = 0; i < recommendCarBrandList.length; i++) {
+						let item = recommendCarBrandList[i]
 						item.carBrandLogoUrl = that.data.imageDomain + item.carBrandLogoUrl
-					}
+          }
 					
 					that.setData({
 						hotCarLists: recommendCarBrandList,
