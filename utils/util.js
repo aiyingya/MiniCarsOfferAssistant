@@ -104,7 +104,7 @@ let priceStringWithUnit = function (downPrice) {
  * @return {number}
  */
 let downPoint = function (price, originPrice) {
-  return ((originPrice - price) * 100 / originPrice)
+  return (Math.abs(originPrice - price) * 100 / originPrice)
 }
 
 module.exports = {
