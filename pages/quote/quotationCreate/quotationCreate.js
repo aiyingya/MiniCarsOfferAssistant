@@ -675,6 +675,8 @@ Page({
         }
       })
     } else {
+      object.fail();
+      object.complete();
     }
   },
 
@@ -739,7 +741,8 @@ Page({
         }
       })
     } else {
-
+      object.fail()
+      object.complete()
     }
   },
 	headlerChangeColor (e) {

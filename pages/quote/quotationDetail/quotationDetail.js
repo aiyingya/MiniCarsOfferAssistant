@@ -277,6 +277,8 @@ Page({
         }
       })
     } else {
+      object.fail();
+      object.complete();
     }
   },
 
@@ -332,8 +334,8 @@ Page({
         }
       })
     } else {
-      fail();
-      complete();
+      object.fail();
+      object.complete();
     }
   },
 
