@@ -245,7 +245,10 @@ Page({
 				carSKUInfo: changeCarsColorSTUInfo,
 				'withLoan.quotation.quotationItems[0].specifications': specifications,
 				'withLoan.quotation.quotationItems[0].sellingPrice': sellingPrice,
-				'withLoan.quotation.quotationItems[0].itemNumber': itemNumber
+				'withLoan.quotation.quotationItems[0].itemNumber': itemNumber,
+				'withoutLoan.quotation.quotationItems[0].specifications': specifications,
+				'withoutLoan.quotation.quotationItems[0].sellingPrice': sellingPrice,
+				'withoutLoan.quotation.quotationItems[0].itemNumber': itemNumber
 			})
 		}
   },

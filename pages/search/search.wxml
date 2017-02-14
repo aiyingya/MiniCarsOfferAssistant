@@ -13,8 +13,14 @@
 					placeholder-class="search-placeholder"
 					focus="true"
 					placeholder="输入指导价/车款名"
+					value="{{searchValue}}"
 					bindinput="headlerSearchInput" 
+					bindfocus="headlerSearchInput"
 					/>
+				<view 
+					class="search-cancel-btn"
+					bindtap="headlerCancelSearch"
+					>取消</view>
 			</view>
 		</view>
 		
@@ -30,8 +36,9 @@
 					class="searchResults-cell"
 					wx:for="{{associateResults}}"
 					bindtap="handlerChooseResults"
+					data-results="{{item}}"
 					>
-					{{item.val}}
+					{{item.content}}
 				</view>
 			</view>
 		</view>

@@ -134,7 +134,8 @@
 							class="weui-cell weui-cell_access" 
 							hover="true"
 							hover-class="weui-cell_active"
-							data-carsinfo="{{withoutLoan}}"
+							data-carmodelinfo="{{carModelInfo}}"
+							data-carskuinfo="{{carSKUInfo}}"
 							bindtap="headlerChangeColor"
 							>
 								<view class="weui-cell__bd">配色</view>

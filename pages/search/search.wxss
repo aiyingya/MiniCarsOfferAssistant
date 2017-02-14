@@ -14,7 +14,6 @@
 .searchbar-inner {
 	width: 93.6%;
 	margin: 0 auto;
-	background: #F0F0F0;
 	border-radius: 8rpx;
 	position: relative;
 }
@@ -24,9 +23,29 @@
 }
 .search-input {
 	padding-left: 70rpx;
+	background: #F0F0F0;
+	-webkit-box-sizing: border-box;
+  box-sizing: border-box; 
+	border-radius: 8rpx;
+	width: 85%;
 }
 .search-placeholder {
 	text-align: left;
+}
+
+.search-cancel-btn {
+	width: 80rpx;
+	height: 50rpx;
+	position: absolute;
+	top: 50%;
+	right: 0;
+	font-family: "PingFangSC-Regular";
+	font-size: 32rpx;
+	color: #666666;
+	line-height: 50rpx;
+	text-align: center;
+	z-index: 9;
+	margin-top: -25rpx;
 }
 
 .search-results-wrap {
@@ -65,4 +84,18 @@
 }
 .carModelsHeight {
 	height: calc(100% - 130rpx);
+}
+
+@-webkit-keyframes widthToChange {
+	0% {width: 100%}
+  100% { width: 85%}
+}
+@keyframes widthToChange {
+  0% {width: 100%}
+  100% { width: 85%}
+}
+.widthToChange {
+	-webkit-animation: widthToChange 500ms ease 1 forwards ;
+	animation: widthToChange 500ms ease 1 forwards ;
+	-webkit-animation-play-state: running;
 }

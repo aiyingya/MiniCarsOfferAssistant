@@ -6,7 +6,9 @@ Page({
 		searchResults: [],
 		windowHeight: '',
 		carModelsHeight: '',
-		HTTPS_YMCAPI: ''
+		HTTPS_YMCAPI: '',
+		searchValue:'',
+		widthToChange: ''
   },
 	onLoad() {
 		let that = this;
@@ -41,29 +43,49 @@ Page({
 				success: function(res) {
 					console.log(res)
 					that.setData({
-						associateResults: res
+						associateResults: res,
+						searchResults: []
 					})
 				}
 			})
 		}else {
 			that.setData({
-				associateResults: []
+				associateResults: [],
+				searchResults: []
 			})
 		}
+		that.setData({
+			widthToChange: 'widthToChange'
+		})
+	},
+	handlerChooseResults (e) {
+		let that = this
+		let results = e.currentTarget.dataset.results
 		
-		
-//		if(val) {
-//			for (var i = 0; i < that.data.newSearchResults.length; i++) {
-//				let item = that.data.newSearchResults[i]
-//				if(item.val.indexOf(val) != -1) {
-//					searchResults.push(item);
-//				}
-//			}	
-//		}
-//		that.setData({
-//			searchResults: searchResults
-//		})
-//		console.log(val,searchResults)
+		app.modules.request({
+			url: that.data.HTTPS_YMCAPI + 'product/car/spu', 
+			method: 'GET',
+			data: {
+				carSeriesId: results.id
+			},
+			success: function(res) {
+				let carModelsList = res;
+				if(carModelsList) {
+
+					for (var i = 0; i < carModelsList.length; i++) {
+						let item = carModelsList[i]
+						item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
+					}
+
+					console.log(carModelsList)
+					that.setData({
+						searchResults: carModelsList,
+						associateResults: [],
+						searchValue: results.content
+					})
+				}
+			}
+		})
 	},
 	handlerToCarSources (e) {
 		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
@@ -76,5 +98,9 @@ Page({
 		wx.navigateTo({  
       url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
     }) 
+	},
+	headlerCancelSearch () {
+		console.log(111)
+		wx.navigateBack()
 	}
 })
