@@ -18,17 +18,17 @@
 			</view>
 		</view>
 		
-		<!--search results.-->
+		<!-- 联想搜索 search results.-->
 		<view 
 			class="search-results-wrap"
-			wx:if="{{searchResults.length > 0}}"
+			wx:if="{{associateResults.length > 0}}"
 			>
 			<view class="search-results-inner">
 				<view 
 					hover="true"
 					hover-class="active"
 					class="searchResults-cell"
-					wx:for="{{searchResults}}"
+					wx:for="{{associateResults}}"
 					bindtap="handlerChooseResults"
 					>
 					{{item.val}}
@@ -38,7 +38,7 @@
 		<view class="carModels-cells">
 			<scroll-view scroll-y style="height: {{carModelsHeight}}">
 				<block 
-					wx:for="{{data}}"
+					wx:for="{{searchResults}}"
 					>
 					<template is="carModel" data="{{item}}" /> 
 				</block>

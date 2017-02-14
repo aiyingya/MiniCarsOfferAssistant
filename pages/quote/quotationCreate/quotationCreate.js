@@ -236,14 +236,28 @@ Page({
   },
   onShow() {
 		let changeCarsColorSTUInfo = wx.getStorageSync('changeCarsColorSTUInfo')
-		
-		console.log(changeCarsColorSTUInfo)
+	
+		if(changeCarsColorSTUInfo) {
+			let specifications = `${changeCarsColorSTUInfo.externalColorName}/${changeCarsColorSTUInfo.internalColorName}`
+			let sellingPrice = changeCarsColorSTUInfo.price
+			let itemNumber = changeCarsColorSTUInfo.skuId
+			this.setData({
+				carSKUInfo: changeCarsColorSTUInfo,
+				'withLoan.quotation.quotationItems[0].specifications': specifications,
+				'withLoan.quotation.quotationItems[0].sellingPrice': sellingPrice,
+				'withLoan.quotation.quotationItems[0].itemNumber': itemNumber
+			})
+		}
   },
   onHide() {
-
+		
   },
   onUnload() {
-
+		try {
+			wx.removeStorageSync('changeCarsColorSTUInfo')
+		} catch (e) {
+			// Do something when catch error
+		}
   },
   onReachBottom() {
 
