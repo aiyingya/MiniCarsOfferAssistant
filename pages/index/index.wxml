@@ -67,7 +67,7 @@
 						<view class="weui-cell__bd weui-cell_primary">
 								<view>{{cell.brandName}}</view>
 						</view>
-						<view class="viewCars-describe">在售{{cell.onSaleCount}}款</view>
+						<!--<view class="viewCars-describe">在售{{cell.onSaleCount}}款</view>-->
 					</view>
 				</view>
 			</view>
