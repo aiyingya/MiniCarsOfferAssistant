@@ -2,7 +2,7 @@ page {
 	background-color: #fff;
 }
 .container {
-	padding-bottom: 98rpx;
+	
 }
 .pad-bt{
     padding-bottom: 40px;
@@ -195,6 +195,7 @@ page {
 	height: auto;
 	background-color: #fff;
 	width: 100%;
+	padding-bottom: 98rpx;
 }
 .quote-btn {
 	width:100%;
