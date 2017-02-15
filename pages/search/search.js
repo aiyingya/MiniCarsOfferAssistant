@@ -41,9 +41,10 @@ Page({
 			app.modules.request({
 				url: that.data.HTTPS_YMCAPI + 'search/car/index', 
 				method: 'GET',
+				loadingType: 'none',
 				data: {
 					text: val,
-					n: 30
+					n: 12
 				},
 				success: function(res) {
 					console.log(res)
@@ -94,7 +95,6 @@ Page({
 				}else {
 					carModelsList = res
 				}
-				
 				searchNodata = carModelsList.length > 0 ? false : true
 				
 				if(carModelsList) {
@@ -125,7 +125,7 @@ Page({
 			data: {
 				text: val,
 				pageIndex: 1,
-				pageSize: 20
+				pageSize: 10
 			},
 			success: function(res) {
 				console.log(res)
