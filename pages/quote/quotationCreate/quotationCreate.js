@@ -299,14 +299,14 @@ Page({
 
     this.$wuxDialog.open({
       title: '贷款费率',
-      content: '0-100 之间的小数',
+      content: '费率(%)',
       inputNumber: this.data.quotation.expenseRate,
       inputNumberPlaceholder: '输入贷款年利率',
       inputType: 'digit',
       confirmText: '确定',
       cancelText: '取消',
       validate: (e) => {
-        if (e.detail.value > 0 && e.detail.value < 100) {
+        if (e.detail.value > 0) {
           return true
         } else {
           return false
