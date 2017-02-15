@@ -3,6 +3,7 @@ Page({
 	data: {
 		imgAliyuncsUrl: app.config.imgAliyuncsUrl,
 		carModelsInfo: '',
+		quotation: '',
 		windowHeight: '',
 		showRmendCarFacade:'',
 		showQuoteView: '',
@@ -26,42 +27,75 @@ Page({
 	},
 	onLoad (options) {
 		let that = this
-		let carModelsInfo = JSON.parse(options.carModelsInfo)
-		let carSKUInfo = JSON.parse(options.carSKUInfo)
+
 		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
-		try {
+    try {
       let res = wx.getSystemInfoSync()
       this.pixelRatio = res.pixelRatio
       this.apHeight = 16
       this.offsetTop = 80
       this.setData({windowHeight: res.windowHeight + 'px'})
     } catch (e) {
-    
-    }
-		app.modules.request({
-			url: HTTPS_YMCAPI + 'product/car/sku', 
-			method: 'GET',
-			data: {
-				carSpuId: carModelsInfo.carModelId
-			},
-			success: function(res) {
-        let filters = res.filters
-				let carSkuList = []
 
-				for(let item of res.carSkuList) {
-					item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
-					carSkuList.push(item)
-				}
-				
-				that.setData({
-					carModelsInfo: carModelsInfo,
-					carSkuList: carSkuList,
-					cacheCarSkuList: carSkuList,
-					filters: filters,
-					carSKUInfo: carSKUInfo
-				})
-			}
-		})
+    }
+
+		if (options.quotation) {
+      let quotation = JSON.parse(options.quotation)
+
+			// 从报价单详情页面过来
+      app.modules.request({
+        url: HTTPS_YMCAPI + 'product/car/sku/' + quotation.quotationItems[0].itemNumber,
+        method: 'GET',
+        success: function(res) {
+          let filters = res.filters
+          let carSkuList = []
+
+          for (var i = 0; i < res.carSkuList.length; i++) {
+          	let item = res.carSkuList[i]
+            item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
+            carSkuList.push(item)
+          }
+
+          that.setData({
+          	quotation: quotation,
+            carSkuList: carSkuList,
+            cacheCarSkuList: carSkuList,
+            filters: filters,
+            carModelsInfo: res
+          })
+        }
+      })
+		} else if (options.carModelsInfo && options.carSKUInfo) {
+			// 从车源或者车系页面过来
+      let carModelsInfo = JSON.parse(options.carModelsInfo)
+      let carSKUInfo = JSON.parse(options.carSKUInfo)
+
+      app.modules.request({
+        url: HTTPS_YMCAPI + 'product/car/sku',
+        method: 'GET',
+        data: {
+          carSpuId: carModelsInfo.carModelId
+        },
+        success: function(res) {
+          let filters = res.filters
+          let carSkuList = []
+
+          for (var i = 0; i < res.carSkuList.length; i++) {
+            let item = res.carSkuList[i]
+            item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
+            carSkuList.push(item)
+          }
+
+          that.setData({
+            carModelsInfo: carModelsInfo,
+            carSkuList: carSkuList,
+            cacheCarSkuList: carSkuList,
+            filters: filters,
+            carSKUInfo: carSKUInfo
+          })
+        }
+      })
+		}
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog

@@ -60,7 +60,7 @@ Page({
 
     /// 实时计算优惠点数
     let downPrice = util.downPrice(carPrice, officialPrice)
-    let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
+    let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
@@ -127,10 +127,10 @@ Page({
     let that = this;
 
     const hideDialog = this.$wuxDialog.open({
-      title: '分享给客户',
+      title: '发送给客户',
       inputNumberPlaceholder: '输入对方11位手机号码',
-      confirmText: '分享',
-      cancelText: '暂不分享',
+      confirmText: '发送报价单',
+      cancelText: '暂不发送',
       validate: function (e) {
         let mobile = e.detail.value
         return mobile.length === 11
@@ -199,7 +199,7 @@ Page({
           },
           fail: (err) => {
             wx.showModal({
-              title: '错误',
+              title: '提示',
               content: err.alertMessage,
               success: function(res) {
                 if (res.confirm) {
@@ -269,72 +269,17 @@ Page({
         success: function(res) {
           object.success(res);
         },
-        fail: function() {
-          object.fail();
+        fail: function(err) {
+          object.fail(err);
         },
         complete: function() {
           object.complete();
         }
       })
     } else {
-      object.fail();
-      object.complete();
-    }
-  },
-
-  /**
-   * 根据报价 id 获取报价详情
-   *
-   * @param quotationId 需要获取的报价 id
-   *
-   {
-    "quotationId":"报价单ID",
-    "draftId":"报价单草稿ID",
-    "quotationName":"报价单名称，没有可以不传",
-    "quotationItems":[{
-        "itemNumber":"商品编号",
-        "itemName":"商品名称",
-        "specifications":"商品规格",
-        "guidePrice":"指导价",
-        "sellingPrice":"售价"
-    }, {
-        "itemNumber":"商品编号",
-        "itemName":"商品名称",
-        "specifications":"商品规格",
-        "guidePrice":"指导价",
-        "sellingPrice":"售价"
-    }],
-    "hasLoan":"必传，true/false，boolean，是否贷款",
-    "paymentRatio":"首付比例（%），decimal，全款时没有，取值范围0~100",
-    "stages":"贷款期数，int，全款时没有",
-    "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
-    "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
-    "advancePayment":"首次支付金额，如果全款则为全款金额",
-    "monthlyPayment":"月供金额，每月还款金额，全款时没有",
-    "remark":"备注",
-    "loginChannel":"必传，登录渠道，目前固定为weixin",
-    "snsId":"必传，由上报微信用户信息的API返回",
-    "customerMobile":"客户手机号"
-   }
-   */
-  requestQuotationDetail(quotationId, object) {
-    if (quotationId && quotationId !== '') {
-      app.modules.request({
-        url: app.config.ymcServerHTTPSUrl + 'sale/quotation/' + quotationId,
-        data: {},
-        method: 'GET',
-        success: function(res){
-
-        },
-        fail: function() {
-          // fail
-        },
-        complete: function() {
-          // complete
-        }
+      object.fail({
+        alertMessage: "参数错误"
       })
-    } else {
-      object.fail();
       object.complete();
     }
   },
@@ -360,15 +305,17 @@ Page({
         success: function(res){
           object.success()
         },
-        fail: function() {
-          object.fail()
+        fail: function(err) {
+          object.fail(err)
         },
         complete: function() {
           object.complete()
         }
       })
     } else {
-      object.fail()
+      object.fail({
+        alertMessage: "参数错误"
+      })
       object.complete()
     }
   }

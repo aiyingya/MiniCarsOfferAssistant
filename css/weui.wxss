@@ -287,7 +287,7 @@ icon {
   -webkit-box-flex: 1;
   -webkit-flex: 1;
           flex: 1;
-  color: #3CC51F;
+  color: #ED4149;
   text-align: center;
 }
 .weui-form-preview__btn:after {
@@ -310,7 +310,7 @@ icon {
   color: #999999;
 }
 .weui-form-preview__btn_primary {
-  color: #0BB20C;
+  color: #ED4149;
 }
 .weui-cell_select {
   padding: 0;
@@ -365,11 +365,11 @@ icon {
   line-height: 2.58823529em;
   vertical-align: middle;
   font-size: 17px;
-  color: #3CC51F;
+  color: #ED4149;
   white-space: nowrap;
 }
 .weui-vcode-btn:active {
-  color: #52a341;
+  color: #ED4149;
 }
 .weui-cell_switch {
   padding-top: 6px;
@@ -929,7 +929,7 @@ icon {
   font-size: 0;
 }
 .weui-navbar__item.weui-bar__item_on {
-  color: #1AAD19;
+  color: #ED4149;
 }
 .weui-navbar__slider {
   position: absolute;
@@ -938,7 +938,7 @@ icon {
   bottom: 0;
   width: 6em;
   height: 3px;
-  background-color: #1AAD19;
+  background-color: #ED4149;
   -webkit-transition: -webkit-transform .3s;
   transition: -webkit-transform .3s;
   transition: transform .3s;
@@ -1035,6 +1035,6 @@ icon {
 .weui-search-bar__cancel-btn {
   margin-left: 10px;
   line-height: 28px;
-  color: #09BB07;
+  color: #ED4149;
   white-space: nowrap;
 }

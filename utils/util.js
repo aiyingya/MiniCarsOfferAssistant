@@ -97,6 +97,17 @@ let priceStringWithUnit = function (downPrice) {
   }
 }
 
+let downPriceFlag = function (downPrice) {
+  console.log(downPrice)
+  if (downPrice === 0) {
+    return 0;
+  } else if (downPrice > 0) {
+    return 1;
+  } else if (downPrice < 0) {
+    return -1;
+  }
+}
+
 /***
  * 优惠点数公式
  * @param price       修改价格
@@ -115,5 +126,6 @@ module.exports = {
   monthlyLoanPaymentByLoan: monthlyLoanPaymentByLoan,
   downPrice: downPrice,
   priceStringWithUnit: priceStringWithUnit,
-  downPoint: downPoint
+  downPoint: downPoint,
+  downPriceFlag: downPriceFlag
 }
