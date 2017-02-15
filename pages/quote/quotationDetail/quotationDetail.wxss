@@ -128,3 +128,20 @@
 .total-payment-block{
     background: #ED4149;
 }
+
+.carsQuote-cell {
+	-webkit-justify-content: flex-start;
+	justify-content: flex-start;
+}
+.carsQuote-cell .carsQuote-title {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #333333;
+	line-height: 36rpx;
+	margin-bottom: 10rpx;
+}
+.carsQuote-cell .carsQuote-label {
+	font-size: 24rpx;
+	color: #888888;
+	line-height: 24rpx;
+}
