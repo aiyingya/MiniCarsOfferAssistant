@@ -96,7 +96,7 @@
 			<block wx:if="{{carManufacturerSeriesList.length > 0}}">
 				<view 
 					wx:for="{{carManufacturerSeriesList}}" 
-					id="{{item.id}}"
+					data-id="{{item.id}}"
 					class="viewCarsList-calls"
 					>
 					<view class="viewCarsList-index carSeries-title">{{item.carManufacturerName}}</view>

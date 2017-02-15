@@ -4,6 +4,9 @@
 	height: 100%;
 }
 .searchbar{
+	position: fixed;
+	top: 0;
+	left: 0;
 	width: 100%;
 	margin: 0;
 	background-color: #fff;
@@ -11,6 +14,7 @@
 	overflow: hidden;
 	display: flex;
 	align-items: center;
+	z-index: 999;
 }
 .searchbar-inner {
 	width: 93.6%;
@@ -59,8 +63,11 @@
 	height: 70rpx;
 	line-height: 70rpx;
 }
-.search-results-wrap {
-	position: relative;
+.search-results-wrap,
+.carModels-cells {
+	position: absolute;
+	top: 130rpx;
+	left: 0;
 	width: 100%;
 }
 .search-results-inner {

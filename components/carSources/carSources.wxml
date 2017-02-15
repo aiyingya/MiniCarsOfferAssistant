@@ -20,7 +20,16 @@
 				>
 				<view class="navbar-text">
 					{{selectExternalColorName}}
-					<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
+					<image 
+						wx:if="{{showRmendCarFacade && selectColorId == '0'}}"
+						class="icon-dropdownarrow" 
+						src="../../images/icons/icon_dropdownarrow_up_gray.png"
+						></image>
+					<image 
+						wx:else
+						class="icon-dropdownarrow" 
+						src="../../images/icons/icon_dropdownarrow_down_gray.png"
+						></image>
 				</view>
 			</view>
 			<view 
@@ -30,7 +39,16 @@
 				>
 				<view class="navbar-text">
 					{{selectInternalColorName}}
-					<image class="icon-dropdownarrow" src="../../images/icons/icon_dropdownarrow_down_gray.png"></image>
+					<image 
+						wx:if="{{showRmendCarFacade && selectColorId == '1'}}"
+						class="icon-dropdownarrow" 
+						src="../../images/icons/icon_dropdownarrow_up_gray.png"
+						></image>
+					<image 
+						wx:else
+						class="icon-dropdownarrow" 
+						src="../../images/icons/icon_dropdownarrow_down_gray.png"
+						></image>
 				</view>
 			</view>
 			<view class="navbar">

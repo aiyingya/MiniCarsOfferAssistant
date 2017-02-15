@@ -1,6 +1,5 @@
 <import src="../../components/carModel/carModel.wxml" />
 <!-- search.-->
-<scroll-view scroll-y style="height: {{windowHeight}}">
 <view class="container search-wrapper">
 	<!-- searchbar.-->
 	<view class="searchbar search-wrap">
@@ -38,31 +37,27 @@
 		class="search-results-wrap"
 		wx:if="{{associateResults.length > 0 && showResultsSearch}}"
 		>
-		<scroll-view scroll-y style="height: {{carModelsHeight}}">
-			<view class="search-results-inner">
-				<view 
-					hover="true"
-					hover-class="active"
-					class="searchResults-cell"
-					wx:for="{{associateResults}}"
-					bindtap="handlerChooseResults"
-					data-results="{{item}}"
-					>
-					{{item.content}}
-				</view>
+		<view class="search-results-inner">
+			<view 
+				hover="true"
+				hover-class="active"
+				class="searchResults-cell"
+				wx:for="{{associateResults}}"
+				bindtap="handlerChooseResults"
+				data-results="{{item}}"
+				>
+				{{item.content}}
 			</view>
-		</scroll-view>
+		</view>
 	</view>
 	<view 
 		wx:if="{{searchResults.length > 0}}"
 		class="carModels-cells">
-		<scroll-view scroll-y style="height: {{carModelsHeight}}">
-			<block 
-				wx:for="{{searchResults}}"
-				>
-				<template is="carModel" data="{{item}}" /> 
-			</block>
-		</scroll-view>
+		<block 
+			wx:for="{{searchResults}}"
+			>
+			<template is="carModel" data="{{item}}" /> 
+		</block>
 	</view>	
 	
 	<!-- no search data.-->
@@ -78,5 +73,4 @@
 	</view>
 	
 </view>
-</scroll-view>
 

@@ -52,29 +52,32 @@
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
-	margin-top: 20rpx;
-	display: flex;
-	align-items: center;
+	margin-top: 30rpx;
+	display: block;
+	line-height: 28rpx;
 }
 .carModels-message-price .price,
 .carModels-message-price .officePrice,
 .carModels-message-price .depreciate-icon,
-.carModels-message-price .depreciate {
+.carModels-message-price .depreciate-wrap {
 	float: left;
-	line-height: 28rpx;
 	margin-right: 14rpx;
 }
 .carModels-message-price .price {
 	position: relative;
-	display: inline;
-}
-.carModels-message-price .price .price-num {
-	display: inline;
 	font-family: "SFUIDisplay-Regular";
 	font-size: 44rpx;
 	color: #ED4149;
 	letter-spacing: 0px;
-	margin-right: 4rpx;
+	margin-right: 10rpx;
+	padding-right: 30rpx;
+}
+.carModels-message-price .price .price-text {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	font-size: 26rpx;
+	color: #333333;
 }
 .carModels-message-price .officePrice {
 	text-decoration:line-through;
@@ -84,6 +87,11 @@
 	display: block;
 	width: 20rpx;
 	height: 24rpx;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	margin-top: -12rpx;
+	z-index: 9;
 }
 .carModels-message .icon-arrows {
 	position: absolute;
@@ -99,4 +107,9 @@
 }
 .carModels-message-price .officePrice.no_stock {
 	text-decoration: none ;
+}
+
+.carModels-message-price .depreciate-wrap {
+	position: relative;
+	padding-left: 34rpx;
 }

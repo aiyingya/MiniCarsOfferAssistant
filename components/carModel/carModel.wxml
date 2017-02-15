@@ -13,7 +13,7 @@
 				{{item.carModelName}} {{item.gearboxType}}
 			</view>
 			<view class="carModels-message-price">
-				<view class="price"><view class="price-num">{{item.lowestPriceSku.priceStr}}</view>万</view>
+				<view class="price">{{item.lowestPriceSku.priceStr}}<view class="price-text">万</view></view>
 				<view class="officePrice">指导价{{item.officialPriceStr}}万</view>
 				<view
 				 wx:if="{{item.count !== 0}}"
