@@ -43,13 +43,13 @@
             <!--基础信息-->
             <view class="h-cell-gray">基础信息</view>
             <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                    <view class="weui-cell__bd">
+                <view class="weui-cell weui-cell_access carsQuote-cell" hover-class="weui-cell_active">
+                    <view class="carsQuote-pic">
                         <image class="cell-img" src="{{ quotation.quotationItems[0].itemPic }}"></image>
                     </view>
                     <view class="weui-cell__ft">
-                        <view class="text-left">{{ quotation.quotationItems[0].itemName }}</view>
-                        <view class="text-left">指导价： {{ quotation.quotationItems[0].guidePrice }}元</view>
+                        <view class="text-left carsQuote-title">{{ quotation.quotationItems[0].itemName }}</view>
+                        <view class="text-left carsQuote-label">指导价： {{ quotation.quotationItems[0].guidePrice }}元</view>
                     </view>
                 </view>
                 <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
