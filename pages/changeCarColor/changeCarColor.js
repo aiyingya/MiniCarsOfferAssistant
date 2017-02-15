@@ -44,8 +44,11 @@ Page({
 
 			// 从报价单详情页面过来
       app.modules.request({
-        url: HTTPS_YMCAPI + 'product/car/sku/' + quotation.quotationItems[0].itemNumber,
+        url: HTTPS_YMCAPI + 'product/car/sku',
         method: 'GET',
+				data: {
+					carSkuId: quotation.quotationItems[0].itemNumber
+				},
         success: function(res) {
           let filters = res.filters
           let carSkuList = []
