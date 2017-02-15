@@ -21,16 +21,18 @@
 				<view
 				 wx:if="{{item.count !== 0}}"
 				 class="depreciate-wrap">
-					<image 
-						wx:if="{{item.lowestPriceSku.discount > 0}}" 
-						class="depreciate-icon" 
-						src="../../images/icons/icon_ price_down.png"
-						></image>
-					<image 
+					<view 
+						wx:if="{{item.lowestPriceSku.discount > 0}}"
+						class="depreciate-icon"
+						>
+						<image src="../../images/icons/icon_price_down.png"></image>
+					</view>
+					<view 
 						wx:else
-						class="depreciate-icon" 
-						src="../../images/icons/icon_ price_up.png"
-						></image>
+						class="depreciate-icon"
+						>
+						<image src="../../images/icons/icon_price_up.png"></image>
+					</view>
 					<view class="depreciate">{{item.count}}万</view>
 				</view>
 			</view>

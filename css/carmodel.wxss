@@ -97,6 +97,10 @@
 	margin-top: -12rpx;
 	z-index: 9;
 }
+.carModels-message-price .depreciate-icon image {
+	width: 20rpx;
+	height: 24rpx;
+}
 .carModels-message .icon-arrows {
 	position: absolute;
 	top: 50%;

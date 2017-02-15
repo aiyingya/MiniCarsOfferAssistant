@@ -173,7 +173,10 @@
 	top: 50%;
 	margin-top: -12rpx;
 }
-
+.carSources-cell .carSources-cell-price .depreciate-icon image {
+	width: 20rpx;
+	height: 24rpx;
+}
 .rmendCarFacade-popup-wrap {
 	position: absolute;
 	top: 88rpx;
