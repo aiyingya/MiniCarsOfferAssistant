@@ -169,7 +169,7 @@
 			hover="true" 
 			hover-class="navbar-quote-active"
 			bindtap="handlerBookCar"
-			>立即订车</view>
+			>立即定车</view>
 		<view 
 			class="navbar-quote-cell" 
 			hover="true" 
