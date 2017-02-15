@@ -187,14 +187,10 @@ Page({
 			let skuPic = `${app.config.imgAliyuncsUrl}${changeCarsColorSTUInfo.skuPic}`
 			this.setData({
 				carSKUInfo: changeCarsColorSTUInfo,
-				'withLoan.quotation.quotationItems[0].specifications': specifications,
-				'withLoan.quotation.quotationItems[0].sellingPrice': sellingPrice,
-				'withLoan.quotation.quotationItems[0].itemNumber': itemNumber,
-				'withLoan.quotation.quotationItems[0].itemPic': skuPic,
-				'withoutLoan.quotation.quotationItems[0].specifications': specifications,
-				'withoutLoan.quotation.quotationItems[0].sellingPrice': sellingPrice,
-				'withoutLoan.quotation.quotationItems[0].itemNumber': itemNumber,
-				'withoutLoan.quotation.quotationItems[0].itemPic': skuPic
+				'quotation.quotationItems[0].specifications': specifications,
+				'quotation.quotationItems[0].sellingPrice': sellingPrice,
+				'quotation.quotationItems[0].itemNumber': itemNumber,
+				'quotation.quotationItems[0].itemPic': skuPic,
 			})
 		}
   },
@@ -405,7 +401,7 @@ Page({
         const hideDialog = that.$wuxDialog.open({
           title: '保存成功',
           content: '发送给客户',
-          inputNumberPlaceholder: '输入对方11位手机号码',
+          inputNumberPlaceholder: '输入对方手机号码',
           confirmText: '发送报价单',
           cancelText: '暂不发送',
           validate: function (e) {

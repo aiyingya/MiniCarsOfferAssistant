@@ -52,19 +52,26 @@ Page({
         success: function(res) {
           let filters = res.filters
           let carSkuList = []
-
+					let carSKUInfo
           for (var i = 0; i < res.carSkuList.length; i++) {
           	let item = res.carSkuList[i]
             item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
             carSkuList.push(item)
+
+						if (item.skuId === quotation.quotationItems[0].itemNumber) {
+          		// 临时设置 lowestPriceSku 字段
+          		carSKUInfo = item
+							res.lowestPriceSku = carSKUInfo
+						}
           }
 
           that.setData({
           	quotation: quotation,
+						carModelsInfo: res,
             carSkuList: carSkuList,
             cacheCarSkuList: carSkuList,
             filters: filters,
-            carModelsInfo: res
+						carSKUInfo: carSKUInfo
           })
         }
       })

@@ -128,7 +128,7 @@ Page({
 
     const hideDialog = this.$wuxDialog.open({
       title: '发送给客户',
-      inputNumberPlaceholder: '输入对方11位手机号码',
+      inputNumberPlaceholder: '输入对方手机号码',
       confirmText: '发送报价单',
       cancelText: '暂不发送',
       validate: function (e) {

@@ -171,7 +171,8 @@
 				<view class="h-cell-gray">备注</view>
 				<view class="white-box">
 						<textarea 
-							placeholder="请输入内容" 
+							placeholder="请输入内容"
+							focus=false
 							cursor-spacing="40px"
 							value="{{quotation.remark}}" 
 							bindinput="handlerRemarkChange"/>
