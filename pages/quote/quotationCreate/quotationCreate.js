@@ -105,6 +105,12 @@ Page({
       this.data.source = 'quotationDetail'
       var quotation = JSON.parse(quotationJSONString)
 
+      if (!quotation.hasLoan) {
+        // 对于是全款的情况， 需要手动设置贷款的相应参数数据
+        quotation.paymentRatio = 30
+        quotation.stages =  3
+        quotation.expenseRate = 4
+      }
       this.setData({
         activeIndex: quotation.hasLoan? 0: 1,
         'quotation': quotation
@@ -246,7 +252,7 @@ Page({
       'quotation.totalPayment': Math.floor(totalPayment),
       'quotation.advancePayment': Math.floor(advancePayment),
       'quotation.monthlyPayment': Math.floor(monthlyPayment),
-      hasLoan: this.isLoanTabActive(),
+      'quotation.hasLoan': this.isLoanTabActive(),
       priceChange: {
         flag: downPriceFlag,
         price: downPriceString,
