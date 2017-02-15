@@ -198,6 +198,7 @@ Page({
 				'quotation.quotationItems[0].itemNumber': itemNumber,
 				'quotation.quotationItems[0].itemPic': skuPic,
 			})
+      this.updateForSomeReason()
 		}
   },
   onHide() {
