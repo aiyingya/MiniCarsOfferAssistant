@@ -127,10 +127,10 @@ Page({
     let that = this;
 
     const hideDialog = this.$wuxDialog.open({
-      title: '分享给客户',
+      title: '发送给客户',
       inputNumberPlaceholder: '输入对方11位手机号码',
-      confirmText: '分享',
-      cancelText: '暂不分享',
+      confirmText: '发送报价单',
+      cancelText: '暂不发送',
       validate: function (e) {
         let mobile = e.detail.value
         return mobile.length === 11

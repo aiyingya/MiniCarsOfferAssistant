@@ -70,6 +70,7 @@
 							hover-class="weui-cell_active"
 							data-carmodelinfo="{{carModelInfo}}"
 							data-carskuinfo="{{carSKUInfo}}"
+							data-quotation="{{quotation}}"
 							bindtap="headlerChangeColor"
 							>
 								<view class="weui-cell__bd">配色</view>
@@ -175,7 +176,7 @@
 							bindinput="handlerRemarkChange"/>
 				</view>
 		</view>
-		<!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/分享/联系客户/立即订车-->
+		<!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/发送报价/联系客户/立即订车-->
 		<view class="quote-btn" bindtap='handlerSaveQuotationDraft'>完成</view>	
 	</view> 
 </view>

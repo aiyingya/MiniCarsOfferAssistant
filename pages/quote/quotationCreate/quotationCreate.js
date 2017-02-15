@@ -395,13 +395,12 @@ Page({
       success: function (res) {
         let quotationDraft = res
         // 请求成功后弹出对话框
-        // TODO: 无论分享与否， 都要跳转到 `报价记录` tab 页面的详情页面
         const hideDialog = that.$wuxDialog.open({
           title: '保存成功',
-          content: '分享给客户',
+          content: '发送给客户',
           inputNumberPlaceholder: '输入对方11位手机号码',
-          confirmText: '分享',
-          cancelText: '暂不分享',
+          confirmText: '发送报价单',
+          cancelText: '暂不发送',
           validate: function (e) {
             let mobile = e.detail.value
             return mobile.length === 11
@@ -410,7 +409,7 @@ Page({
             let mobile = res.inputNumber
             that.requestPublishQuotation(quotationDraft.draftId, mobile, {
               success: (res) => {
-                /// 立即分享
+                /// 立即发送报价单
                 let quotation = res
 
                 app.fuckingLarryNavigatorTo.quotation = quotation
@@ -454,7 +453,7 @@ Page({
             })
           },
           cancel: () => {
-            /// 暂不分享, 不带电话号码发送
+            /// 暂不发送, 不带电话号码发送
             that.requestPublishQuotation(quotationDraft.draftId, null, {
               success: (res) => {
                 let quotation = res
@@ -641,23 +640,33 @@ Page({
         success: function(res) {
           object.success(res);
         },
-        fail: function() {
-          object.fail();
+        fail: function(err) {
+          object.fail(err);
         },
         complete: function() {
           object.complete();
         }
       })
     } else {
-      object.fail()
+      object.fail({
+        alertMessage: "参数验证错误"
+      })
       object.complete()
     }
   },
   headlerChangeColor (e) {
     let carModelsInfo = e.currentTarget.dataset.carmodelinfo
     let carSKUInfo = e.currentTarget.dataset.carskuinfo
-    wx.navigateTo({
-      url: '../../changeCarColor/changeCarColor?carModelsInfo='+JSON.stringify(carModelsInfo)+'&carSKUInfo='+JSON.stringify(carSKUInfo)
-    })
+    let quotation = e.currentTarget.dataset.quotation
+
+    if (this.data.source === 'quotationDetail') {
+      wx.navigateTo({
+        url: '../../changeCarColor/changeCarColor?quotation='+JSON.stringify(quotation)
+      })
+    } else if (this.data.source === 'carSources' || this.data.source === 'carModels') {
+      wx.navigateTo({
+        url: '../../changeCarColor/changeCarColor?carModelsInfo='+JSON.stringify(carModelsInfo)+'&carSKUInfo='+JSON.stringify(carSKUInfo)
+      })
+    }
   }
 });
