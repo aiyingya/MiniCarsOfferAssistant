@@ -49,7 +49,7 @@ Page({
 	},
 	handlerToCarSources (e) {
 		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
-		wx.navigateTo({  
+		wx.navigateTo({
       url: '../carSources/carSources?carModelsInfo='+ carModelsInfo
     }) 
 	},

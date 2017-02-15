@@ -10,7 +10,7 @@
                 <input
                         type="{{ inputType }}"
                         name="inputNumber"
-                        placeholder="{{ phoneNumberPlaceholder }}"
+                        placeholder="{{ inputNumberPlaceholder }}"
                         placeholder-class=""
                         focus="{{ visible }}"
                         value="{{ inputNumber }}"
