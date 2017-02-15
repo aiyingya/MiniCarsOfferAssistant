@@ -105,21 +105,26 @@ Page({
       this.data.source = 'quotationDetail'
       var quotation = JSON.parse(quotationJSONString)
 
-      if (!quotation.hasLoan) {
+      if (quotation.hasLoan) {
+        let stagesIndex = this.data.stagesArray.indexOf(quotation.stages)
+        let paymentRatiosIndex = this.data.paymentRatiosArray.indexOf(quotation.paymentRatio)
+        // 需要初始化设置已经设置的还款周期和首付比率
+        this.setData({
+          activeIndex: quotation.hasLoan? 0: 1,
+          quotation: quotation,
+          stagesIndex: stagesIndex,
+          paymentRatiosIndex: paymentRatiosIndex
+        })
+      } else {
         // 对于是全款的情况， 需要手动设置贷款的相应参数数据
         quotation.paymentRatio = 30
         quotation.stages =  3
         quotation.expenseRate = 4
+        this.setData({
+          activeIndex: quotation.hasLoan? 0: 1,
+          'quotation': quotation,
+        })
       }
-      this.setData({
-        activeIndex: quotation.hasLoan? 0: 1,
-        'quotation': quotation
-      })
-
-
-      this.setData({'quotation.remark': quotation.remark})
-      this.setData({'quotation.remark': quotation.remark})
-
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
         let carModelInfo = JSON.parse(options.carModelsInfo)
@@ -156,9 +161,6 @@ Page({
           carSKUInfo: carSKUInfo,
           carModelInfo: carModelInfo
         })
-
-        this.setData({'quotation.remark': ' '})
-        this.setData({'quotation.remark': ''})
       }
     }
 
