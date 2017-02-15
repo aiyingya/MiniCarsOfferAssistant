@@ -2,7 +2,6 @@
 <import src="../../lib/dialog/dialog.wxml"/>
 <import src="../../components/carSources/carSources.wxml" />
 <template is="dialog" data="{{ ...$wux.dialog }}"/>
-<scroll-view scroll-y style="height: {{windowHeight}}">
 <view class="car-sources container">
 	<template 
 		is="carSourcesTopNavbar" 
@@ -181,4 +180,3 @@
 			>生成报价</view>
 	</view>
 </view>
-</scroll-view>
