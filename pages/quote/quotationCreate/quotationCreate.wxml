@@ -171,14 +171,15 @@
 				<!--备   注-->
 				<view class="h-cell-gray">备注</view>
 				<view class="white-box">
-						<textarea 
+						<textarea
 							placeholder="请输入内容"
 							cursor-spacing="40px"
 							value="{{quotation.remark}}" 
 							bindinput="handlerRemarkChange"/>
 				</view>
+				<!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/发送报价/联系客户/立即定车-->
+				<view class="quote-btn" bindtap='handlerSaveQuotationDraft'>完成</view>	
 		</view>
 	</view> 
 </view>
-<!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/发送报价/联系客户/立即订车-->
-<view class="quote-btn" bindtap='handlerSaveQuotationDraft'>完成</view>	
+
