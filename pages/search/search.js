@@ -8,7 +8,11 @@ Page({
 		carModelsHeight: '',
 		HTTPS_YMCAPI: '',
 		searchValue:'',
-		widthToChange: ''
+		cacheSearchValue:'',
+		widthToChange: '',
+		showResultsSearch: true,
+		searchNodata: false,
+		showSearchBtn: false
   },
 	onLoad() {
 		let that = this;
@@ -29,7 +33,7 @@ Page({
       
     }
 	},
-	headlerSearchInput(e) {
+	handleSearchInput(e) {
 		let val = e.detail.value;
 		let that = this;
 		let searchResults = [];
@@ -38,52 +42,102 @@ Page({
 				url: that.data.HTTPS_YMCAPI + 'search/car/index', 
 				method: 'GET',
 				data: {
-					text: val
+					text: val,
+					n: 30
 				},
 				success: function(res) {
 					console.log(res)
 					that.setData({
 						associateResults: res,
-						searchResults: []
+						searchResults: [],
+						showResultsSearch: true,
+						searchNodata: false,
+						showSearchBtn: true,
+						cacheSearchValue: val
 					})
 				}
 			})
 		}else {
 			that.setData({
 				associateResults: [],
-				searchResults: []
+				searchResults: [],
+				searchNodata: false,
+				showSearchBtn: false,
+				cacheSearchValue: val
 			})
 		}
-		that.setData({
-			widthToChange: 'widthToChange'
-		})
 	},
 	handlerChooseResults (e) {
 		let that = this
 		let results = e.currentTarget.dataset.results
+		let url 
+		let data = {}
+		let carModelsList = []
+		let searchNodata = false
+		console.log(results)
 		
-		app.modules.request({
-			url: that.data.HTTPS_YMCAPI + 'product/car/spu', 
-			method: 'GET',
-			data: {
+		if(results.type === 'SPU') {
+			url = that.data.HTTPS_YMCAPI + 'product/car/spu/'+results.id
+		}else {
+			url = that.data.HTTPS_YMCAPI + 'product/car/spu'
+			data = {
 				carSeriesId: results.id
-			},
+			}
+		}
+		app.modules.request({
+			url: url, 
+			method: 'GET',
+			data: data,
 			success: function(res) {
-				let carModelsList = res;
+				if(!(res instanceof Array)) {
+					carModelsList.push(res)
+				}else {
+					carModelsList = res
+				}
+				
+				searchNodata = carModelsList.length > 0 ? false : true
+				
 				if(carModelsList) {
-
 					for (var i = 0; i < carModelsList.length; i++) {
 						let item = carModelsList[i]
 						item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
 					}
-
-					console.log(carModelsList)
 					that.setData({
 						searchResults: carModelsList,
 						associateResults: [],
-						searchValue: results.content
+						searchValue: results.content,
+						cacheSearchValue: results.content,
+						showResultsSearch: false,
+						searchNodata: searchNodata
 					})
 				}
+			}
+		})
+	},
+	handleSearchConfirm(e) {
+		let val = this.data.cacheSearchValue
+		let that = this
+		let searchResults = []
+		let searchNodata = false
+		app.modules.request({
+			url: that.data.HTTPS_YMCAPI+ '/search/car/spu', 
+			method: 'GET',
+			data: {
+				text: val,
+				pageIndex: 1,
+				pageSize: 20
+			},
+			success: function(res) {
+				console.log(res)
+				if(res.content.length <= 0) {
+					searchNodata = true
+				}
+				that.setData({
+					searchResults: res.content,
+					associateResults: [],
+					showResultsSearch: false,
+					searchNodata: searchNodata
+				})
 			}
 		})
 	},

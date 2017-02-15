@@ -238,19 +238,22 @@ Page({
   },
   onShow() {
 		let changeCarsColorSTUInfo = wx.getStorageSync('changeCarsColorSTUInfo')
-	
+		console.log(changeCarsColorSTUInfo,this.data.withLoan.quotation.quotationItems[0])
 		if(changeCarsColorSTUInfo) {
 			let specifications = `${changeCarsColorSTUInfo.externalColorName}/${changeCarsColorSTUInfo.internalColorName}`
 			let sellingPrice = changeCarsColorSTUInfo.price
 			let itemNumber = changeCarsColorSTUInfo.skuId
+			let skuPic = `${app.config.imgAliyuncsUrl}${changeCarsColorSTUInfo.skuPic}`
 			this.setData({
 				carSKUInfo: changeCarsColorSTUInfo,
 				'withLoan.quotation.quotationItems[0].specifications': specifications,
 				'withLoan.quotation.quotationItems[0].sellingPrice': sellingPrice,
 				'withLoan.quotation.quotationItems[0].itemNumber': itemNumber,
+				'withLoan.quotation.quotationItems[0].itemPic': skuPic,
 				'withoutLoan.quotation.quotationItems[0].specifications': specifications,
 				'withoutLoan.quotation.quotationItems[0].sellingPrice': sellingPrice,
-				'withoutLoan.quotation.quotationItems[0].itemNumber': itemNumber
+				'withoutLoan.quotation.quotationItems[0].itemNumber': itemNumber,
+				'withoutLoan.quotation.quotationItems[0].itemPic': skuPic
 			})
 		}
   },

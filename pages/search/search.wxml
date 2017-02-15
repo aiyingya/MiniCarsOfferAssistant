@@ -3,32 +3,42 @@
 <scroll-view scroll-y style="height: {{windowHeight}}">
 <view class="container search-wrapper">
 	<!-- searchbar.-->
-		<view class="searchbar search-wrap">
-			<view class="searchbar-inner search-inner">
-				<view class="search-icon">
-					<image class="search-img" src="../../images/icons/icon_find.png"></image>
-				</view>
-				<input 
-					class="search-input" 
-					placeholder-class="search-placeholder"
-					focus="true"
-					placeholder="输入指导价/车款名"
-					value="{{searchValue}}"
-					bindinput="headlerSearchInput" 
-					bindfocus="headlerSearchInput"
-					/>
-				<view 
-					class="search-cancel-btn"
-					bindtap="headlerCancelSearch"
-					>取消</view>
+	<view class="searchbar search-wrap">
+		<view class="searchbar-inner search-inner">
+			<view class="search-icon">
+				<image class="search-img" src="../../images/icons/icon_find.png"></image>
 			</view>
+			<input 
+				class="search-input" 
+				placeholder-class="search-placeholder"
+				focus="true"
+				placeholder="输入指导价/车款名"
+				value="{{searchValue}}"
+				bindinput="handleSearchInput" 
+				bindfocus="handleSearchInput"
+				bindconfirm="handleSearchConfirm"
+				/>
+			<view 
+				wx:if="{{showSearchBtn}}"
+				class="search-cancel-btn search-btn"
+				bindtap="handleSearchConfirm"
+				>
+				搜索
+			</view>
+			<view 
+				wx:else
+				class="search-cancel-btn"
+				bindtap="headlerCancelSearch"
+				>取消</view>	
 		</view>
+	</view>
 		
-		<!-- 联想搜索 search results.-->
-		<view 
-			class="search-results-wrap"
-			wx:if="{{associateResults.length > 0}}"
-			>
+	<!-- 联想搜索 search results.-->
+	<view 
+		class="search-results-wrap"
+		wx:if="{{associateResults.length > 0 && showResultsSearch}}"
+		>
+		<scroll-view scroll-y style="height: {{carModelsHeight}}">
 			<view class="search-results-inner">
 				<view 
 					hover="true"
@@ -41,17 +51,32 @@
 					{{item.content}}
 				</view>
 			</view>
-		</view>
-		<view class="carModels-cells">
-			<scroll-view scroll-y style="height: {{carModelsHeight}}">
-				<block 
-					wx:for="{{searchResults}}"
-					>
-					<template is="carModel" data="{{item}}" /> 
-				</block>
-			</scroll-view>
+		</scroll-view>
+	</view>
+	<view 
+		wx:if="{{searchResults.length > 0}}"
+		class="carModels-cells">
+		<scroll-view scroll-y style="height: {{carModelsHeight}}">
+			<block 
+				wx:for="{{searchResults}}"
+				>
+				<template is="carModel" data="{{item}}" /> 
+			</block>
+		</scroll-view>
+	</view>	
+	
+	<!-- no search data.-->
+	<view 
+		wx:if="{{searchNodata}}"
+		class="search-nodata">
+		<view class="searchNodata-inner">
+			<icon type="warn" size="60" color="#cccccc"></icon>
+			<view class="icon-box__ctn">
+				<view class="icon-box__desc">抱歉！没有相关车信息</view>
+			</view>	
 		</view>	
-		
+	</view>
+	
 </view>
 </scroll-view>
 

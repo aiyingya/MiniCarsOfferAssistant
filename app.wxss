@@ -92,8 +92,8 @@ page{
 	-webkit-animation-play-state: running;
 }
 .hideMask {
-	-webkit-animation: fadeout 500ms ease 1 forwards ;
-	animation: fadeout 500ms ease 1 forwards ;
+	-webkit-animation: fadeout 100ms ease 1 forwards ;
+	animation: fadeout 100ms ease 1 forwards ;
 	-webkit-animation-play-state: running;
 }
 @-webkit-keyframes fadein {
@@ -123,8 +123,8 @@ page{
     -webkit-animation-play-state: running;
 }
 .topToBottom {
-    -webkit-animation: topToBottom 500ms ease 1 forwards ;
-            animation: topToBottom 500ms ease 1 forwards ;
+    -webkit-animation: topToBottom 200ms ease 1 forwards ;
+            animation: topToBottom 200ms ease 1 forwards ;
     -webkit-animation-play-state: running;
 }
 @-webkit-keyframes rightToLeft {
@@ -171,8 +171,8 @@ page{
 }
 @-webkit-keyframes topToBottom {
 	from {
-		-webkit-transform: translate3d(0, -1000px, 0);
-  	transform: translate3d(0, -1000px, 0) ;
+		-webkit-transform: translate3d(0, 100rpx, 0);
+  	transform: translate3d(0, 100rpx, 0) ;
 	}
 	to {
 		-webkit-transform: translate3d(0, 0, 0);
@@ -181,8 +181,8 @@ page{
 }
 @keyframes topToBottom {
   from {
-		-webkit-transform: translate3d(0, -1000px, 0);
-  	transform: translate3d(0, -1000px, 0) ;
+		-webkit-transform: translate3d(0, 100rpx, 0);
+  	transform: translate3d(0, 100rpx, 0) ;
 	}
 	to {
 		-webkit-transform: translate3d(0, 0, 0);

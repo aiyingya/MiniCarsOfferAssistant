@@ -1,6 +1,7 @@
 @import '../../css/carmodel.wxss';
 .search-wrapper {
 	position: relative;
+	height: 100%;
 }
 .searchbar{
 	width: 100%;
@@ -26,28 +27,38 @@
 	background: #F0F0F0;
 	-webkit-box-sizing: border-box;
   box-sizing: border-box; 
-	border-radius: 8rpx;
-	width: 85%;
+	border-radius: 50rpx;
+	width: 84%;
+	height: 70rpx;
 }
 .search-placeholder {
 	text-align: left;
 }
 
 .search-cancel-btn {
-	width: 80rpx;
-	height: 50rpx;
+	width: 100rpx;
+	height: 68rpx;
 	position: absolute;
 	top: 50%;
 	right: 0;
 	font-family: "PingFangSC-Regular";
-	font-size: 32rpx;
+	font-size: 26rpx;
 	color: #666666;
-	line-height: 50rpx;
+	line-height: 68rpx;
 	text-align: center;
 	z-index: 9;
-	margin-top: -25rpx;
+	margin-top: -34rpx;
+	border: 1rpx solid #ccc;
+	background-color: #f1f1f1;
+	border-radius: 10rpx;
 }
-
+.search-btn {
+	border: none;
+	background-color: #df3a3e;
+	color: #fff;
+	height: 70rpx;
+	line-height: 70rpx;
+}
 .search-results-wrap {
 	position: relative;
 	width: 100%;
@@ -70,6 +81,10 @@
 	color: #333333;
 	padding-left: 30rpx;
 	text-indent: 20rpx;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	word-break:keep-all;           
+	white-space:nowrap;  
 }
 .searchResults-cell:after {
 	content: '';
@@ -98,4 +113,21 @@
 	-webkit-animation: widthToChange 500ms ease 1 forwards ;
 	animation: widthToChange 500ms ease 1 forwards ;
 	-webkit-animation-play-state: running;
+}
+
+
+.search-nodata {
+	position: absolute;
+	top: 130rpx;
+	bottom: 0;
+	width: 100%;
+	background-color: #fff;
+	text-align: center;
+	overflow: hidden;
+}
+.search-nodata .icon-box__desc {
+	color: #ccc;
+}
+.searchNodata-inner {
+	margin-top: 50rpx;
 }
