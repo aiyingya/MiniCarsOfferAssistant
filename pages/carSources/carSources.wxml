@@ -105,6 +105,7 @@
 						<view class="message">{{item.externalColorName}}/{{item.internalColorName}}</view>
 					</view>
 					<view class="carSources-cell-price">
+						<view class="label">裸车价:</view>
 						<view class="price">{{item.priceStr}}</view>万
 					</view>
 				</view>

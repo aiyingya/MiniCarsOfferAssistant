@@ -158,6 +158,11 @@
 	font-family: "SFUIDisplay-Regular";
 	font-size: 44rpx;
 	color: #ED4149;
+	line-height: 0;
+}
+.carSources-cell .carSources-cell-price .label {
+	display: inline;
+	color: #999;
 }
 .carSources-cell .carSources-cell-price .depreciate-icon {
 	display: block;

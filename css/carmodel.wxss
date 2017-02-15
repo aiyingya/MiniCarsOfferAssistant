@@ -52,7 +52,6 @@
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
-	margin-top: 30rpx;
 	display: block;
 	line-height: 28rpx;
 }
@@ -63,21 +62,26 @@
 	float: left;
 	margin-right: 14rpx;
 }
-.carModels-message-price .price {
+.carModels-price {
 	position: relative;
 	font-family: "SFUIDisplay-Regular";
 	font-size: 44rpx;
 	color: #ED4149;
 	letter-spacing: 0px;
-	margin-right: 10rpx;
+	margin-top: 10rpx;
 	padding-right: 30rpx;
 }
-.carModels-message-price .price .price-text {
-	position: absolute;
-	right: 0;
-	bottom: 0;
+.carModels-price .price-text {
+	display: inline;
 	font-size: 26rpx;
 	color: #333333;
+}
+.carModels-price .carModels-price-label {
+	display: inline;
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #999;
+	line-height: 28rpx;
 }
 .carModels-message-price .officePrice {
 	text-decoration:line-through;

@@ -132,6 +132,10 @@ Page({
 				if(res.content.length <= 0) {
 					searchNodata = true
 				}
+				for (var i = 0; i < res.content.length; i++) {
+					let item = res.content[i]
+					item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
+				}
 				that.setData({
 					searchResults: res.content,
 					associateResults: [],

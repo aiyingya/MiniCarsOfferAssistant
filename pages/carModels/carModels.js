@@ -36,8 +36,6 @@ Page({
 						  let item = carModelsList[i]
               item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
             }
-
-						console.log(carModelsList)
 						that.setData({
 							carModelsList: carModelsList
 						})
