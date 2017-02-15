@@ -30,12 +30,12 @@
                             <view class="line-box">
                                 <view class="depreciate-wrap">
                                     <image
-                                            wx:if="{{ cell.viewModel.priceChange.flag }}"
+                                            wx:if="{{ cell.viewModel.priceChange.flag === 1 }}"
                                             class="depreciate-icon"
                                             src="../../../images/icons/icon_ price_down.png"
                                     ></image>
                                     <image
-                                            wx:else
+                                            wx:if="{{ cell.viewModel.priceChange.flag === -1}}"
                                             class="depreciate-icon"
                                             src="../../../images/icons/icon_ price_up.png"
                                     ></image>

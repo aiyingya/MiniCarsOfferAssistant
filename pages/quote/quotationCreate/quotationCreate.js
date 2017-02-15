@@ -33,9 +33,9 @@ Page({
       read: false,
     },
     priceChange: {
-      flag: '',             // true 为上， false 为下
+      flag: 0,             // 1 为上， 0 为未增加, -1 为下
       price: '',              // 1.9 万
-      point: ''               // 6 点
+      point: ''
     },
     /// 表单相关
     paymentRatiosArray: [10, 20, 30, 40, 50, 60, 70, 80, 90],
@@ -235,9 +235,11 @@ Page({
 
     /// 实时计算优惠点数
     let downPrice = util.downPrice(carPrice, officialPrice)
-    let downPriceFlag = downPrice > 0 ? '下': '上' // true 为 下， false 为 上
+    let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
+
+    console.log(downPriceFlag)
 
     this.setData({
       'quotation.totalPayment': Math.floor(totalPayment),

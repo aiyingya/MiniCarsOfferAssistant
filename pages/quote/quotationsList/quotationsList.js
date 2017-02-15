@@ -203,9 +203,15 @@ Page({
             let totalPayment = util.priceStringWithUnit(item.totalPayment);
             let sellingPrice = util.priceStringWithUnit(item.quotationItems[0].sellingPrice);
             let guidePrice = util.priceStringWithUnit(item.quotationItems[0].guidePrice);
+
+            /// 实时计算优惠点数
             let downPrice = util.downPrice(item.quotationItems[0].sellingPrice, item.quotationItems[0].guidePrice)
-            let downPriceFlag = downPrice > 0
-            let downPriceString = util.priceStringWithUnit(downPrice)
+            let downPriceFlag = util.downPriceFlag(downPrice);
+            let downPriceString = ''
+            if (downPriceFlag !== 0) {
+              downPriceString = util.priceStringWithUnit(downPrice)
+            }
+
             item.viewModel = {
               totalPayment: totalPayment,
               sellingPrice: sellingPrice,
