@@ -1,5 +1,5 @@
 <!--index.wxml-->
-<scroll-view scroll-y style="height: {{windowHeight}}" scroll-into-view="{{alpha}}">
+<!--<scroll-view scroll-y style="height: {{windowHeight}}" scroll-into-view="{{alpha}}">-->
 	<view class="container">
 		<!-- 搜索车型.-->
 		<view class="search-wrap">
@@ -73,13 +73,13 @@
 			</view>
 		</view>
 	</view>
-</scroll-view>
+<!--</scroll-view>
 <view wx:if="{{alphanetToast === alpha}}" class="alphanet-toast showToast">{{alpha}}</view>
 <view data-id="selector" catchtouchstart="handlerAlphaTap" catchtouchmove="handlerMove" class="alphanet-selector">
 	<view wx:for="{{brandGroupList}}" data-ap="{{item.firstLetter}}" class="selector-one">
-		{{item.firstLetter}}
+		
 	</view>
-</view>
+</view>-->
 
 <!-- 车系.-->
 <view wx:if="{{showCarSeries !== ''}}" class="carSeries-wrap">
