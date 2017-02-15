@@ -138,6 +138,7 @@
 							hover-class="weui-cell_active"
 							data-carmodelinfo="{{carModelInfo}}"
 							data-carskuinfo="{{carSKUInfo}}"
+							data-quotation="{{quotation}}"
 							bindtap="headlerChangeColor"
 							>
 								<view class="weui-cell__bd">配色</view>
