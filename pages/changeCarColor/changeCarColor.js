@@ -41,7 +41,7 @@ Page({
 
 		if (options.quotation) {
       let quotation = JSON.parse(options.quotation)
-
+			console.log(quotation)
 			// 从报价单详情页面过来
       app.modules.request({
         url: HTTPS_YMCAPI + 'product/car/sku',
@@ -64,7 +64,8 @@ Page({
 							res.lowestPriceSku = carSKUInfo
 						}
           }
-
+					console.log(carSKUInfo)
+					console.log(carSkuList)
           that.setData({
           	quotation: quotation,
 						carModelsInfo: res,

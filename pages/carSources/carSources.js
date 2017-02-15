@@ -25,6 +25,7 @@ Page({
 	},
 	onLoad (options) {
 		let that = this;
+    console.log(options)
 		let carModelsInfo = JSON.parse(options.carModelsInfo);
 		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl;
 		try {
@@ -168,10 +169,10 @@ Page({
     let that = this
 		let skuid = [that.data.QuoteCreateInfo.skuId]
     const hideDialog = this.$wuxDialog.open({
-      title: '发起订车后， 将会有工作人员与您联系',
+      title: '发起定车后， 将会有工作人员与您联系',
       content: '',
       inputNumberPlaceholder: '输入您的手机号',
-      confirmText: '发起订车',
+      confirmText: '发起定车',
       cancelText: '取消',
       validate: function (e) {
         let mobile = e.detail.value

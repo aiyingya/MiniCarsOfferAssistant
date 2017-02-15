@@ -25,7 +25,7 @@
                     </view>
                     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                         <view class="weui-cell__bd">还款周期</view>
-                        <view class="weui-cell__ft">{{ quotation.stages }}</view>
+                        <view class="weui-cell__ft">{{ quotation.stages }}年</view>
                     </view>
                     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                         <view class="weui-cell__bd">费率</view>

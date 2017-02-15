@@ -116,6 +116,10 @@ Page({
         'quotation': quotation
       })
 
+
+      this.setData({'quotation.remark': quotation.remark})
+      this.setData({'quotation.remark': quotation.remark})
+
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
         let carModelInfo = JSON.parse(options.carModelsInfo)
@@ -149,10 +153,12 @@ Page({
 
         this.setData({
           'quotation.quotationItems': quotationItems,
-          'quotation.remark': '',
           carSKUInfo: carSKUInfo,
           carModelInfo: carModelInfo
         })
+
+        this.setData({'quotation.remark': ' '})
+        this.setData({'quotation.remark': ''})
       }
     }
 
@@ -191,25 +197,27 @@ Page({
 			let sellingPrice = changeCarsColorSTUInfo.price
 			let itemNumber = changeCarsColorSTUInfo.skuId
 			let skuPic = `${app.config.imgAliyuncsUrl}${changeCarsColorSTUInfo.skuPic}`
+      console.log('quotationCreate.onShow')
+      console.log(changeCarsColorSTUInfo)
 			this.setData({
 				carSKUInfo: changeCarsColorSTUInfo,
 				'quotation.quotationItems[0].specifications': specifications,
 				'quotation.quotationItems[0].sellingPrice': sellingPrice,
 				'quotation.quotationItems[0].itemNumber': itemNumber,
-				'quotation.quotationItems[0].itemPic': skuPic,
+				'quotation.quotationItems[0].itemPic': skuPic
 			})
       this.updateForSomeReason()
+      try {
+        wx.removeStorageSync('changeCarsColorSTUInfo')
+      } catch (e) {
+        // Do something when catch error
+      }
 		}
   },
   onHide() {
 
   },
   onUnload() {
-    try {
-      wx.removeStorageSync('changeCarsColorSTUInfo')
-    } catch (e) {
-      // Do something when catch error
-    }
   },
   onReachBottom() {
 
@@ -667,7 +675,7 @@ Page({
   headlerChangeColor (e) {
     let carModelsInfo = e.currentTarget.dataset.carmodelinfo
     let carSKUInfo = e.currentTarget.dataset.carskuinfo
-    let quotation = e.currentTarget.dataset.quotation
+    let quotation = this.data.quotation
 
     if (this.data.source === 'quotationDetail') {
       wx.navigateTo({

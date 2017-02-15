@@ -44,7 +44,7 @@
 				<picker class="weui-cell_picker" bindchange="handlerStagesChange" value="{{stagesIndex}}" range="{{stagesArray}}">
 					<view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
 						<view class="weui-cell__bd">还款周期</view>
-						<view class="weui-cell__ft weui-cell__ft_in-access">{{ stagesArray[stagesIndex] }}</view>
+						<view class="weui-cell__ft weui-cell__ft_in-access">{{ stagesArray[stagesIndex] }}年</view>
 					</view>
 				</picker>
 				<view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerExpenseRateChange">

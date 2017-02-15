@@ -150,10 +150,15 @@
 				</view>
 				
 				<view
-					wx:if="{{carSKUInfo.externalColorId === item.externalColorId && carSKUInfo.internalColorId === item.internalColorId}}"
-					class="carSources-select-icon">
+					wx:if="{{ carSKUInfo.skuId === item.skuId }}"
+					class="carSources-select-icon"
+				>
 					<image src="../../images/icons/icon_select_red.png"></image>
 				</view>
+				<view
+						wx:else
+						class="carSources-select-icon"
+				></view>
 			</view>
 		</view>
 		<view wx:else class="nodata">
