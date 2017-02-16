@@ -103,25 +103,22 @@ Page({
   },
 	handlerSelectCarSeries(e) {
 		let carSeries = e.currentTarget.dataset.carseries;
+		console.log(carSeries)
 		let that = this;
 		let {HTTPS_YMCAPI} = this.data;
 		
 		app.modules.request({
-			url: HTTPS_YMCAPI + '/carSeries/seriesPromotion', //仅为示例，并非真实的接口地址
+			url: HTTPS_YMCAPI + 'product/car/series', //仅为示例，并非真实的接口地址
 			method: 'GET',
 			data: {
-				carBrandId: carSeries.id,
-				cityId: '7d04e3a1-ee87-431c-9aa7-ac245014c51a'
-			},
-			header: {
-					'content-type': 'application/json'
+				brandId: carSeries.id
 			},
 			success: function(res) {
 				if(res) {
 					let data = res;
 					that.setData({
-						showCarSeriesImageUrl: that.data.imageDomain+data.logoUrl,
-						carManufacturerSeriesList: data.carManufacturerSeriesList
+						showCarSeriesImageUrl: that.data.imageDomain + data.brandLogoUrl,
+						carManufacturerSeriesList: data.manufacturers
 					})
 				}
 			}

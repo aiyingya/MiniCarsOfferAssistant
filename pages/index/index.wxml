@@ -99,25 +99,24 @@
 					data-id="{{item.id}}"
 					class="viewCarsList-calls"
 					>
-					<view class="viewCarsList-index carSeries-title">{{item.carManufacturerName}}</view>
+					<view class="viewCarsList-index carSeries-title">{{item.manufacturerName}}</view>
 					<view class="weui-cells weui-cells_in-small-appmsg">
 						<view 
 							class="weui-media-box weui-media-box_appmsg" 
 							hover="true"
 							hover-class="weui-cell_active"
-							wx:for="{{item.carSeriesList}}" 
+							wx:for="{{item.carSerieses}}"
 							wx:for-item="cell"
 							wx:for-index="cellIndex" 
 							bindtap="handlerToCarsModels"
 							data-carsInfo="{{cell}}"
-							url="../search/carModels/carModels?carsInfo={{cell}}"
+							url="../carModels/carModels?carsInfo={{cell}}"
 							>
 								<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-									<image class="weui-media-box__thumb" src="{{imageDomain}}{{cell.picUrl}}"></image>
+									<image class="weui-media-box__thumb" src="{{imageDomain}}{{cell.seriesPicUrl}}"></image>
 								</view>
 								<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
 										<view class="weui-media-box__title">{{cell.seriesName}}</view>
-										<view class="weui-media-box__desc">在售{{cell.onSaleCount}}款</view>
 								</view>
 						</view>
 					</view>
