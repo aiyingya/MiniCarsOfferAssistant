@@ -4,7 +4,7 @@ import wux from 'lib/wux'
 import clientjs from 'lib/client'
 import modules from 'lib/modules'
 import user from 'lib/user'
-
+import wxcharts from 'modules/wxcharts'
 App({
   onLaunch () {
     //调用API从本地缓存中获取数据
@@ -89,6 +89,7 @@ App({
 	config: config,
 	modules: modules,
 	user: user,
+	wxcharts: wxcharts,
 	// FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据
 	fuckingLarryNavigatorTo: {
   	quotation: null,

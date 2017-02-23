@@ -1,5 +1,4 @@
 .carSources-topbar {
-	width: 100%;
 	height: 160rpx;
 	background-color: #fff;
 	overflow: hidden;
@@ -55,7 +54,7 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	border-bottom: 1px solid #E4E4E4;
+	border-bottom: 1rpx solid #E4E4E4;
 }
 .carSources-navbar .navbar {
 	width: 20%;
@@ -118,7 +117,7 @@
 	top: 0;
 }
 .carSources-cell {
-	padding: 42rpx 30rpx;
+	padding: 30rpx 30rpx;
 	background-color: #fff;
 	position: relative;
 }
@@ -132,7 +131,7 @@
 }
 .carSources-cell .carSources-cell-label {
 	font-family: "PingFangSC-Regular";
-	font-size: 30rpx;
+	font-size: 26rpx;
 	color: #333333;
 	line-height: 60rpx;
 }
@@ -145,7 +144,7 @@
 	float: left;
 }
 .carSources-cell .carSources-cell-label .remark {
-	
+	color: #888888;
 }
 .carSources-cell .carSources-cell-price {
 	font-size: 26rpx;
@@ -160,6 +159,9 @@
 	color: #ED4149;
 	line-height: 0;
 }
+.carSources-cell .carSources-cell-price .no-stock {
+	color: #888888;
+}
 .carSources-cell .carSources-cell-price .label {
 	display: inline;
 	color: #999;
@@ -171,7 +173,7 @@
 	position: absolute;
 	left: 0;
 	top: 50%;
-	margin-top: -12rpx;
+	margin-top: -16rpx;
 }
 .carSources-cell .carSources-cell-price .depreciate-icon image {
 	width: 20rpx;
@@ -221,4 +223,7 @@
 	display: block;
 	width: 36rpx;
 	height: 36rpx;
+}
+.carSources-cell .carSources-cell-label .no-stock {
+	color: #888888;
 }

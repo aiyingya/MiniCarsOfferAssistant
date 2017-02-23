@@ -1,7 +1,11 @@
 /* 车源详情.*/
 @import '../../css/carsources.wxss';
+page {
+	height: 100%;
+}
 .container {
 	height: 100%;
+	width: 100%;
 }
 .navbar-quote-popup {
 	width: 100%;

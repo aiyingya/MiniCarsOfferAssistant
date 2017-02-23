@@ -8,7 +8,7 @@
 			/> 
 		<template 
 			is="carSourcesBody" 
-			data="{{carSKUInfo,selectExternalColorName,selectInternalColorName,carStatusName,showRmendCarFacade,filtersData,carSkuList,carStatus,carStatusAll}}" 
+			data="{{carSKUInfo,selectExternalColorName,selectInternalColorName,carStatusName,showRmendCarFacade,filtersData,carSkuList,carStatus,carStatusAll,selectExternalColorId,selectInternalColorId}}" 
 			/> 
 </view>
 </scroll-view>

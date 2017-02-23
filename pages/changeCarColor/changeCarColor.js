@@ -22,7 +22,7 @@ Page({
 		selectInternalColorName: '全部内饰',
 		carStatus: 'all',
 		carStatusAll: 'all',
-		carStatusName: '全部',
+		carStatusName: '有货',
 		carSKUInfo: ''
 	},
 	onLoad (options) {
@@ -41,7 +41,6 @@ Page({
 
 		if (options.quotation) {
       let quotation = JSON.parse(options.quotation)
-			console.log(quotation)
 			// 从报价单详情页面过来
       app.modules.request({
         url: HTTPS_YMCAPI + 'product/car/sku',
@@ -64,8 +63,7 @@ Page({
 							res.lowestPriceSku = carSKUInfo
 						}
           }
-					console.log(carSKUInfo)
-					console.log(carSkuList)
+					res.lowestPriceSku.skuPic = carSKUInfo.skuPic
           that.setData({
           	quotation: quotation,
 						carModelsInfo: res,
@@ -80,7 +78,7 @@ Page({
 			// 从车源或者车系页面过来
       let carModelsInfo = JSON.parse(options.carModelsInfo)
       let carSKUInfo = JSON.parse(options.carSKUInfo)
-
+			
       app.modules.request({
         url: HTTPS_YMCAPI + 'product/car/sku',
         method: 'GET',
@@ -96,7 +94,7 @@ Page({
             item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
             carSkuList.push(item)
           }
-
+					carModelsInfo.lowestPriceSku.skuPic = carSKUInfo.skuPic
           that.setData({
             carModelsInfo: carModelsInfo,
             carSkuList: carSkuList,
@@ -171,16 +169,13 @@ Page({
 		let stock, stockName, carStatusAll
 		if(carStatus === 'all') {
 			stock = 'in_stock'
-			stockName = '有货'
 			carStatusAll = 'no_stock'
 		}else {
 			stock = 'all'
-			stockName = '全部'
 			carStatusAll = 'all'
 		}
 		that.setData({
 			carStatus: stock,
-			carStatusName: stockName,
 			carStatusAll: carStatusAll
 		})
 	},

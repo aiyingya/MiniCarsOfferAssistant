@@ -12,12 +12,31 @@
 			<view class="carModels-message-title">
 				{{item.carModelName}} {{item.gearboxType}}
 			</view>
-			<view class="carModels-price">
-				<view class="carModels-price-label">裸车价:</view>
+			<view 
+				wx:if="{{item.lowestPriceSku.status === 'in_stock'}}"
+				class="carModels-price"
+				>
+				<view class="carModels-price-label">供货价:</view>
 				{{item.lowestPriceSku.priceStr}}<view class="price-text">万</view>
 			</view>
 			<view class="carModels-message-price">
-				<view class="officePrice">指导价{{item.officialPriceStr}}万</view>
+				<view 
+					wx:if="{{item.lowestPriceSku.status === 'no_stock'}}"
+					class="officePrice-noStocs">
+					指导价{{item.officialPriceStr}}万
+				</view>
+				<view 
+					wx:else
+					class="officePrice"
+					>指导价{{item.officialPriceStr}}万</view>
+					
+				<!-- 无货 icon-->
+				<view 
+					wx:if="{{item.lowestPriceSku.status === 'no_stock'}}"
+					class="nostock-icon"
+					>
+					无货
+				</view>
 				<view
 				 wx:if="{{item.count !== 0}}"
 				 class="depreciate-wrap">
