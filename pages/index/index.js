@@ -1,5 +1,5 @@
 //index.js
-let app = getApp();
+let app = getApp()
 Page({
   data: {
 		hotCarLists: [],
@@ -21,6 +21,19 @@ Page({
 		wx.navigateTo({
 			url: '../search/search'
 		})
+	},
+	createSimulationData: function () {
+			var categories = [];
+			var data = [];
+			for (var i = 0; i < 50; i++) {
+					categories.push('2016-' + (i + 1));
+					data.push(Math.random()*(20-10)+10);
+			}
+
+			return {
+					categories: categories,
+					data: data
+			}
 	},
   onLoad() {
     let that = this
@@ -78,6 +91,13 @@ Page({
       })
     })
 		
+		/// 初始化自定义组件
+    this.$wuxTrack = app.wux(this).$wuxTrack
+		
+//		const push = this.$wuxTrack.push({
+//			appVersion: '1.0.1'
+//		})
+
   },
 	handlerAlphaTap(e) {
     let {ap} = e.target.dataset
@@ -123,9 +143,11 @@ Page({
 				}
 			}
 		})
-		that.setData({showCarSeries: carSeries});
-		that.setData({showMask: 'showMask'});
-		that.setData({showCarSeriesInner: 'rightToLeft'});
+		that.setData({
+			showCarSeries: carSeries,
+			showMask: 'showMask',
+			showCarSeriesInner: 'rightToLeft'
+		})
 	},
 	removeCarSeriesInner(e) {
 		let that = this;
@@ -136,7 +158,7 @@ Page({
 		});
 	},
 	handlerToCarsModels(e) {
-		let carsInfo = JSON.stringify(e.currentTarget.dataset.carsinfo);
+		let carsInfo = JSON.stringify(e.currentTarget.dataset.carsinfo)
 		wx.navigateTo({  
       url: '../carModels/carModels?carsInfo='+ carsInfo
     }) 

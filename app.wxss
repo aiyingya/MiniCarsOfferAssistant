@@ -67,7 +67,7 @@ page{
 	-webkit-animation-play-state: running;
 }
 .active {
-	background-color: #f2f2f2 !important;
+	background-color: #fafafa !important;
 }
 .popup-mask {
 	position: fixed;

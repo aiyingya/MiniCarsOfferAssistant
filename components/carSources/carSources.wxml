@@ -108,8 +108,18 @@
 						<view class="label">配色：</view>
 						<view class="message">{{item.externalColorName}}/{{item.internalColorName}}</view>
 					</view>
-					<view class="carSources-cell-price carSources-price">
-						<view class="label">裸车价:</view>
+					<view 
+						wx:if="{{item.status === 'no_stock'}}"
+						class="no-stock carSources-cell-price carSources-price"
+						>
+						<view class="label">指导价:</view>
+						<view class="price no-stock">{{item.priceStr}}</view>万	
+					</view>
+					<view 
+						wx:else
+						class="carSources-cell-price carSources-price"
+						>
+						<view class="label">供货价:</view>
 						<view class="price">{{item.priceStr}}</view>万
 					</view>
 				</view>
@@ -117,7 +127,7 @@
 					<view class="carSources-cell-label">
 						<view class="label">状态：</view>
 						<view 
-							class="message"
+							class="message no-stock"
 							wx:if="{{item.status === 'no_stock'}}"
 							>无货</view>
 						<view 
@@ -144,7 +154,10 @@
 						<view class="depreciate">{{item.count}}万</view>
 					</view>
 				</view>
-				<view class="carSources-cell-list">
+				<view 
+					wx:if="{{item.remark !== '无'}}"
+					class="carSources-cell-list"
+					>
 					<view class="carSources-cell-label">
 						<view class="label">备注：</view>
 						<view class="message remark">{{item.remark}}</view>
@@ -155,12 +168,8 @@
 					wx:if="{{ carSKUInfo.skuId === item.skuId }}"
 					class="carSources-select-icon"
 				>
-					<image src="../../images/icons/icon_select_red.png"></image>
+					
 				</view>
-				<view
-						wx:else
-						class="carSources-select-icon"
-				></view>
 			</view>
 		</view>
 		<view wx:else class="nodata">

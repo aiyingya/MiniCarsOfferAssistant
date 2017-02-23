@@ -1,13 +1,11 @@
 <!-- 车款.-->
 <import src="../../components/carModel/carModel.wxml" />
-<scroll-view scroll-y style="height: {{windowHeight}}">
-	<view class="car-models container">
-		<view class="carModels-cells">
-			<block 
-				wx:for="{{carModelsList}}"
-				>
-				<template is="carModel" data="{{item}}" /> 
-			</block>
-		</view>
+<view class="car-models container">
+	<view class="carModels-cells">
+		<block 
+			wx:for="{{carModelsList}}"
+			>
+			<template is="carModel" data="{{item}}" /> 
+		</block>
 	</view>
-</scroll-view>
+</view>

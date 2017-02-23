@@ -21,15 +21,14 @@ Page({
 		selectInternalColorName: '全部内饰',
 		carStatus: 'all',
 		carStatusAll: 'all',
-		carStatusName: '全部'
+		carStatusName: '有货'
 	},
 	onLoad (options) {
-		let that = this;
-    console.log(options)
-		let carModelsInfo = JSON.parse(options.carModelsInfo);
-		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl;
+		let that = this
+		let carModelsInfo = JSON.parse(options.carModelsInfo)
+		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
 		try {
-      var res = wx.getSystemInfoSync();
+      let res = wx.getSystemInfoSync();
       this.pixelRatio = res.pixelRatio;
       this.apHeight = 16;
       this.offsetTop = 80;
@@ -123,19 +122,16 @@ Page({
 	handlerSwitchCarStatus() {
 		let that = this
 		let carStatus = that.data.carStatus;
-		let stock, stockName, carStatusAll
+		let stock, carStatusAll
 		if(carStatus === 'all') {
 			stock = 'in_stock'
-			stockName = '有货'
 			carStatusAll = 'no_stock'
 		}else {
 			stock = 'all'
-			stockName = '全部'
 			carStatusAll = 'all'
 		}
 		that.setData({
 			carStatus: stock,
-			carStatusName: stockName,
 			carStatusAll: carStatusAll
 		})
 	},
@@ -184,6 +180,7 @@ Page({
 				that.requestBookCar(skuid, mobile, '',{
 					success (res){
 						wx.showModal({
+							title: '提示',
 							content: '提交成功，请保持通话畅通',
 							success: function(res) {
 								if (res.confirm) {
@@ -194,11 +191,11 @@ Page({
 					},
 					fail (err) {
 						wx.showModal({
-							title: '错误',
+							title: '提示',
 							content: err.alertMessage,
 							success: function(res) {
 								if (res.confirm) {
-									console.log('用户点击确定')
+									that.headlerRemoveQuoteView()
 								}
 							}
 						})

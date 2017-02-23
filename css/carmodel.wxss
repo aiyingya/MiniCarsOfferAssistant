@@ -31,11 +31,12 @@
 	display: block;
 	width: 160rpx;
 	height: 64rpx;
+	line-height: 64rpx;
 	background: #ED4149;
 	border-radius: 6px;
 	color: #fff;
 	font-size: 24rpx;
-	border: none;
+	border: 0;
 }
 .carModels-quote-btn .quotebtn-active {
 	background: rgba(237,65,73,.8);
@@ -68,7 +69,6 @@
 	font-size: 44rpx;
 	color: #ED4149;
 	letter-spacing: 0px;
-	margin-top: 10rpx;
 	padding-right: 30rpx;
 }
 .carModels-price .price-text {
@@ -86,6 +86,23 @@
 .carModels-message-price .officePrice {
 	text-decoration:line-through;
 	color: #999;
+}
+.carModels-message-price .officePrice-noStocs {
+	margin-top: 20rpx;
+	color: #999;
+	float: left;
+}
+.carModels-message-price .nostock-icon {
+	width: 72rpx;
+	height: 32rpx;
+	float: left;
+	background: #B2B2B2;
+	border-radius: 4px;
+	margin: 18rpx 0 0 10rpx;
+	line-height: 32rpx;
+	text-align: center;
+	color: #fff;
+	font-size: 24rpx;
 }
 .carModels-message-price .depreciate-icon {
 	display: block;

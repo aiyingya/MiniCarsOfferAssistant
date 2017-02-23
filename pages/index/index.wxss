@@ -10,7 +10,7 @@
 .hot-carsbrand-title {
 	width: 93.6%;
 	height: 1rpx;
-	margin: 0 auto;
+	margin: 70rpx auto 0 auto;
 	position: relative;
 	background-color: #D9D9D9;
 	overflow: visible;

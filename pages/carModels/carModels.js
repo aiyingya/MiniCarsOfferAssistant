@@ -5,14 +5,14 @@ Page({
 		windowHeight: ''
 	},
 	onLoad (options) {
-		let carsInfo = JSON.parse(options.carsInfo);
-		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl;
-		let that = this;
+		let carsInfo = JSON.parse(options.carsInfo)
+		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
+		let that = this
 		try {
-      var res = wx.getSystemInfoSync();
-      this.pixelRatio = res.pixelRatio;
-      this.apHeight = 16;
-      this.offsetTop = 80;
+      let res = wx.getSystemInfoSync()
+      this.pixelRatio = res.pixelRatio
+      this.apHeight = 16
+      this.offsetTop = 80
       this.setData({windowHeight: res.windowHeight + 'px'})
     } catch (e) {
       
@@ -26,7 +26,7 @@ Page({
 				url: HTTPS_YMCAPI + 'product/car/spu', 
 				method: 'GET',
 				data: {
-					carSeriesId: carsInfo.id
+					carSeriesId: carsInfo.seriesId
 				},
 				success: function(res) {
 					let carModelsList = res;
@@ -34,7 +34,7 @@ Page({
 
 						for (var i = 0; i < carModelsList.length; i++) {
 						  let item = carModelsList[i]
-              item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
+              item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2))
             }
 						that.setData({
 							carModelsList: carModelsList

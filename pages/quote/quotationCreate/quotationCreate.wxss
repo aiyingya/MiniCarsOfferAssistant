@@ -34,7 +34,7 @@ page {
 }
 .white-box textarea{
 	width: 93%;
-	background: #EFEFEF;
+	background: #FAFAFA;
 	border-radius: 5px;
 	height: 158rpx;
 	margin: 0 auto;
@@ -207,7 +207,7 @@ page {
 	line-height: 98rpx;
 	text-align: center;
 	margin: 80rpx auto;
-	border-radius: 20rpx;
+	border-radius: 8rpx;
 }
 .weui-cell_picker {
 	position: relative;

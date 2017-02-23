@@ -75,8 +75,7 @@ Page({
 		let data = {}
 		let carModelsList = []
 		let searchNodata = false
-		console.log(results)
-		
+				
 		if(results.type === 'SPU') {
 			url = that.data.HTTPS_YMCAPI + 'product/car/spu/'+results.id
 		}else {
@@ -157,8 +156,17 @@ Page({
       url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
     }) 
 	},
-	headlerCancelSearch () {
-		console.log(111)
+	handleCancelSearch () {
 		wx.navigateBack()
+	},
+	handleCancelSearchValue () {
+		this.setData({
+			associateResults: [],
+			searchResults: [],
+			showResultsSearch: false,
+			searchNodata: false,
+			showSearchBtn: false,
+			searchValue: ''
+		})
 	}
 })
