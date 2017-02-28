@@ -3,7 +3,6 @@ let app = getApp()
 Page({
   data: {
 		hotCarLists: [],
-		hotCarsTypes: [],
     brandGroupList: [],
     alpha: '',
     windowHeight: '',
@@ -21,11 +20,6 @@ Page({
 		console.log('To Search')
 		wx.navigateTo({
 			url: '../search/search'
-		})
-	},
-	handleCheckMore() {
-		wx.navigateTo({
-			url: '../carList/carList'
 		})
 	},
 	createSimulationData: function () {
@@ -59,7 +53,7 @@ Page({
 		// 获取页面数据.
 		
 		app.modules.request({
-			url: HTTPS_URL + 'carBrand/brandGroupsRecommend', 
+			url: HTTPS_URL + 'carBrand/brandGroupsRecommend', //仅为示例，并非真实的接口地址
 			method: 'GET',
 			data: {
 				cityId: '7d04e3a1-ee87-431c-9aa7-ac245014c51a',
@@ -89,8 +83,6 @@ Page({
 			}
 		})
 		
-		// 获取热推车型.
-		that.getHotpushCars()
     //调用应用实例的方法获取全局数据
     app.getUserInfo(function(userInfo){
       //更新数据
@@ -107,26 +99,6 @@ Page({
 //		})
 
   },
-	getHotpushCars () {
-		let that = this
-		let HTTPS_URL = app.config.ymcServerHTTPSUrl
-		
-		app.modules.request({
-			url: HTTPS_URL + 'recommend/goods', 
-			method: 'GET',
-			data: {
-				channel: 'wxapp',
-				pageIndex: '1',
-				pageSize: '10'
-			},
-			success: function(res) {
-				let data = res.content
-				that.setData({
-					hotCarsTypes: data
-				})
-			}
-		})
-	},
 	handlerAlphaTap(e) {
     let {ap} = e.target.dataset
 		let that = this
@@ -190,11 +162,5 @@ Page({
 		wx.navigateTo({  
       url: '../carModels/carModels?carsInfo='+ carsInfo
     }) 
-	},
-	handlerMakePhoneCall() {
-		let phone = '021-52559255,8902'
-		wx.makePhoneCall({
-			phoneNumber: phone
-		})
 	}
 })

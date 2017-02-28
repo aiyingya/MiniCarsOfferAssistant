@@ -1,31 +1,33 @@
 .carModels-cell {
-	padding: 40rpx 30rpx;
+	width: 100%;
+	padding: 0 0 40rpx 0;
 	background-color: #fff;
 	overflow: hidden;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	margin-bottom: 20rpx;
 }
 .carModels-cell_active {
 	
 }
 .carModels-message {
-	width: 72.67%;
-	float: left;
 	position: relative;
+	padding: 15rpx 30rpx;
+	background: #FAFAFA;
+	display: flex;
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+	-webkit-align-items: center;
+	align-items: center;
 }
 .carModels-message:after {
 	content: '';
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	right: 0;
-	border-right: 1rpx solid #E4E4E4;
+	left: 0;
+	border-left: 8rpx solid #ED4149;
 }
 .carModels-quote-btn {
-	width: 27.33%;
-	float: left;
+	width: auto;
 }
 .carModels-quote-btn .quotebtn {
 	display: block;
@@ -42,99 +44,61 @@
 	background: rgba(237,65,73,.8);
 }
 .carModels-message-title {
-	width: 90%;
+	width: 72.67%;
 	font-family: "PingFangSC-Medium";
 	font-size: 30rpx;
 	color: #333333;
 	letter-spacing: 0px;
-	line-height: 36rpx;
-}
-.carModels-message-price {
-	font-family: "PingFangSC-Regular";
-	font-size: 26rpx;
-	color: #333333;
-	display: block;
-	line-height: 28rpx;
-}
-.carModels-message-price .price,
-.carModels-message-price .officePrice,
-.carModels-message-price .depreciate-icon,
-.carModels-message-price .depreciate-wrap {
-	float: left;
-	margin-right: 14rpx;
-}
-.carModels-price {
-	position: relative;
-	font-family: "SFUIDisplay-Regular";
-	font-size: 44rpx;
-	color: #ED4149;
-	letter-spacing: 0px;
-	padding-right: 30rpx;
-}
-.carModels-price .price-text {
-	display: inline;
-	font-size: 26rpx;
-	color: #333333;
-}
-.carModels-price .carModels-price-label {
-	display: inline;
-	font-family: "PingFangSC-Regular";
-	font-size: 26rpx;
-	color: #999;
-	line-height: 28rpx;
-}
-.carModels-message-price .officePrice {
-	text-decoration:line-through;
-	color: #999;
-}
-.carModels-message-price .officePrice-noStocs {
-	margin-top: 20rpx;
-	color: #999;
-	float: left;
-}
-.carModels-message-price .nostock-icon {
-	width: 72rpx;
-	height: 32rpx;
-	float: left;
-	background: #B2B2B2;
-	border-radius: 4px;
-	margin: 18rpx 0 0 10rpx;
-	line-height: 32rpx;
-	text-align: center;
-	color: #fff;
-	font-size: 24rpx;
-}
-.carModels-message-price .depreciate-icon {
-	display: block;
-	width: 20rpx;
-	height: 24rpx;
-	position: absolute;
-	top: 50%;
-	left: 0;
-	margin-top: -12rpx;
-	z-index: 9;
-}
-.carModels-message-price .depreciate-icon image {
-	width: 20rpx;
-	height: 24rpx;
-}
-.carModels-message .icon-arrows {
-	position: absolute;
-	top: 50%;
-	right: 20rpx;
-	width: 24rpx;
-	height: 24rpx;
-	margin-top: -12rpx;
-}
-.carModels-message .icon-arrows image {
-	width: 24rpx;
-	height: 24rpx;
-}
-.carModels-message-price .officePrice.no_stock {
-	text-decoration: none ;
+	line-height: 40rpx;
 }
 
-.carModels-message-price .depreciate-wrap {
-	position: relative;
-	padding-left: 34rpx;
+.carModels-info {
+	margin: 15rpx 0;
+	padding: 0 30rpx;
+	height: 40rpx;
+	line-height: 40rpx;
+	overflow: hidden;
+}
+.carModels-info .carModels-supplier,
+.carModels-info .carModels-repertory {
+	float: left;
+	font-family: "PingFangSC-Regular";
+	font-size: 28rpx;
+	color: #333333;
+	margin-right: 20rpx;
+}
+.carModels-info .carModels-repertory {
+	color: #ED4149;
+}
+.carModels-info .carModels-carcolor {
+	float: right;
+	overflow: hidden;
+}
+.carModels-info .carModels-carcolor .carcolor-label,
+.carModels-info .carModels-carcolor .carcolor-inner {
+	float: left;
+}
+.carModels-info .carModels-carcolor .carcolor-inner {
+	display: flex;
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+	align-items: center;
+	height: 40rpx;
+}
+.carcolor-item {
+	width: 24rpx;
+	height: 24rpx;
+	background: #FFFFFF;
+	border: 1px solid #878787; 
+	border-radius: 50%;
+	margin-left: 10rpx;
+}
+.charts-inner {
+	padding: 0 30rpx;
+	margin: 10rpx auto;
+}
+.charts-inner .canvas {
+	width: 100%;
+	height: 80px;
+	padding: 0;
 }

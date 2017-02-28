@@ -6,9 +6,103 @@ page {
 .container {
 	width: 100%;
 	height: auto;
+	padding-top: 174rpx;
 }
+
+.carModels-topbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: #fff;
+	z-index: 99;
+}
+.carModels-navbar {
+	position: relative;
+	width: 100%;
+	height: 88rpx;
+	display: flex;
+	-webkit-justify-content: space-around;
+	justify-content: space-around;
+	-webkit-align-items: center;
+	align-items: center;
+}
+.carModels-navbar:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-bottom: 1rpx solid #ccc;
+}
+.navbar-item {
+	position: relative;
+	width: 50%;
+	text-align: center;
+}
+.navbar-item:after {
+	content: '';
+	position: absolute;
+	top: 24rpx;
+	bottom: 24rpx;
+	right: 0;
+	border-right: 1rpx solid #ccc;
+}
+.navbar-item:last-child:after {
+	display: none;
+}
+.navbar-item .navbar-inner {
+	position: relative;
+	display: inline-block;
+	height: 88rpx;
+	line-height: 88rpx;
+	width: auto;
+	padding-right: 50rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 28rpx;
+	color: #666666;
+}
+.navbar-item .icon-arrows {
+	position: absolute;
+	width: 16rpx;
+	height: 16rpx;
+	right: 22rpx;
+	top: 50%;
+	margin-top: -8rpx;
+}
+.navbar-item .icon-filter {
+	width: 40rpx;
+	height: 40rpx;
+	right: 0;
+	margin-top: -20rpx;
+}
+.carModels-label {
+	width: 100%;
+	padding: 0 30rpx;
+	height: 96rpx;
+	-webkit-box-sizing: border-box;
+  box-sizing: border-box; 
+	background-color: #fff;
+	display: flex;
+	justify-content: flex-start;
+	-webkit-align-items: center;
+	align-items: center;
+}
+.carModels-label .label {
+	height: 48rpx;
+	line-height: 48rpx;
+	padding: 0 27rpx;
+	border: 1rpx solid #333333;
+	border-radius: 65rpx;
+	font-size: 24rpx;
+	color: #333;
+	margin-right: 10rpx;
+}
+
+
 
 .carModels-cells {
 	width: 100%;
 	margin-top: 30rpx;
+	
 }

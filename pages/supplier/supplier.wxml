@@ -1,0 +1,13 @@
+<view class="container supplier-view">
+	<view class="supplier-cells">
+		<view class="supplier-cell">
+			<view class="supplier-name">上海汽车经销商</view>
+			<view class="supplier-source">
+				<view class="label">来源：</view>
+				车行168
+			</view>
+		</view>
+	</view>
+
+
+</view>

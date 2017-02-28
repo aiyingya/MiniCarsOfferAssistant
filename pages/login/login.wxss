@@ -1,0 +1,90 @@
+.login-wrap {
+	width: 92%;
+	background-color: #fff;
+	border-radius: 8rpx;
+	min-height: 200rpx;
+	margin: 40rpx auto;
+}
+.login-cell {
+	height: 100rpx;
+	line-height: 100rpx;
+	position: relative;
+}
+.login-cell:after {
+	content: '';
+	position: absolute;
+	bottom: -1rpx;
+	left: 30rpx;
+	right: 0;
+	border-bottom: 1rpx solid #E4E4E4;
+}
+.login-cell:last-child:after {
+	display: none;
+}
+.login-cell .label {
+	font-family: "PingFangSC-Regular";
+	font-size: 30rpx;
+	color: #333333;
+	float: left;
+	margin-left: 30rpx;
+}
+.login-cell .login-input {
+	height: 100rpx;
+	line-height: 100rpx;
+	-webkit-box-sizing: border-box;
+  box-sizing: border-box; 
+	padding-left: 30rpx;
+	font-size: 30rpx;
+}
+.login-placeholder {
+	font-family: "PingFangSC-Regular";
+	font-size: 30rpx;
+	color: #B2B2B2;
+}
+.sms-code {
+	position: absolute;
+	top: 50%;
+	right: 30rpx;
+	width: 170rpx;
+	height: 54rpx;
+	margin-top: -27rpx;
+	line-height: 54rpx;
+	text-align: center;
+	border: 1rpx solid #CCCCCC;
+	border-radius: 8rpx;
+	font-size: 28rpx;
+  color: #F17C7C;
+	z-index: 99;
+}
+.weui-toast {
+	display: inline-block;
+	width: auto;
+	min-height: auto;
+	padding: 30rpx 50rpx;
+}
+.weui-toast__content {
+	margin: 0;
+}
+.login-btn {
+	width: 92%;
+	height: 88rpx;
+	line-height: 88rpx;
+	background: #ED4149;
+	border-radius: 8rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 32rpx;
+	color: #FFFFFF;
+	text-align: center;
+	margin: 20rpx auto;
+}
+.count-down {
+	background-color: #ccc;
+	color: #333;
+}
+.notUserInYMC {
+	font-family: "PingFangSC-Regular";
+	font-size: 24rpx;
+	color: #ED4149;
+	padding: 0 30rpx;
+	line-height: 40rpx;
+}

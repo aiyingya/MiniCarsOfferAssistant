@@ -16,14 +16,14 @@ var config = {
     xAxisLineHeight: 15,
     legendHeight: 15,
     yAxisTitleWidth: 15,
-    padding: 12,
+    padding: 1,
     columePadding: 3,
     fontSize: 10,
     dataPointShape: ['diamond', 'circle', 'triangle', 'rect'],
     colors: ['#7cb5ec', '#f7a35c', '#434348', '#90ed7d', '#f15c80', '#8085e9'],
     pieChartLinePadding: 25,
     pieChartTextPadding: 15,
-    xAxisTextPadding: 3,
+    xAxisTextPadding: 0,
     titleColor: '#333333',
     titleFontSize: 20,
     subtitleColor: '#999999',
@@ -769,7 +769,7 @@ function drawAreaDataPoints(series, opts, config, context) {
             context.setStrokeStyle(eachSeries.color);
             context.setFillStyle(eachSeries.color);
             context.setGlobalAlpha(0.6);
-            context.setLineWidth(2);
+            context.setLineWidth(1);
             if (points.length > 1) {
                 var firstPoint = points[0];
                 var lastPoint = points[points.length - 1];
@@ -1345,7 +1345,7 @@ var Charts = function Charts(opts) {
     // such as chart point coordinate
     this.chartData = {};
     this.event = new Event();
-
+		console.log(this.context)
     drawCharts.call(this, opts.type, opts, config$$1, this.context);
 };
 

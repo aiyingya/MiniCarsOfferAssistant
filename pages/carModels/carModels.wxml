@@ -1,6 +1,27 @@
 <!-- 车款.-->
 <import src="../../components/carModel/carModel.wxml" />
 <view class="car-models container">
+
+	<view class="carModels-topbar">
+		<view class="carModels-navbar">
+			<view class="navbar-item">
+				<view class="navbar-inner">全部车款
+					<image 
+						src="../../images/icons/icon_dropdownarrow_down_gray.png"
+						class="icon-arrows"></image>
+				</view>
+			</view>
+		</view>
+		
+		<!-- 标签.-->
+		<view class="carModels-label">
+			<view class="label">标签标签</view>
+			<view class="label">标签</view>
+			<view class="label">标签标签</view>
+			<view class="label">标签标签</view>
+		</view>
+	</view>
+
 	<view class="carModels-cells">
 		<block 
 			wx:for="{{carModelsList}}"

@@ -4,69 +4,52 @@
 		hover="true"
 		hover-class="carModels-cell_active"
 		>
+		<!-- title.-->
 		<view 
 			class="carModels-message"
 			bindtap="handlerToCarSources" 
 			data-carmodelsinfo="{{item}}"
 			>
 			<view class="carModels-message-title">
-				{{item.carModelName}} {{item.gearboxType}}
+				{{item.carModelName}} {{item.gearboxType}} 
 			</view>
-			<view 
-				wx:if="{{item.lowestPriceSku.status === 'in_stock'}}"
-				class="carModels-price"
-				>
-				<view class="carModels-price-label">供货价:</view>
-				{{item.lowestPriceSku.priceStr}}<view class="price-text">万</view>
-			</view>
-			<view class="carModels-message-price">
-				<view 
-					wx:if="{{item.lowestPriceSku.status === 'no_stock'}}"
-					class="officePrice-noStocs">
-					指导价{{item.officialPriceStr}}万
-				</view>
-				<view 
-					wx:else
-					class="officePrice"
-					>指导价{{item.officialPriceStr}}万</view>
-					
-				<!-- 无货 icon-->
-				<view 
-					wx:if="{{item.lowestPriceSku.status === 'no_stock'}}"
-					class="nostock-icon"
-					>
-					无货
-				</view>
-				<view
-				 wx:if="{{item.count !== 0}}"
-				 class="depreciate-wrap">
-					<view 
-						wx:if="{{item.lowestPriceSku.discount > 0}}"
-						class="depreciate-icon"
-						>
-						<image src="../../images/icons/icon_price_down.png"></image>
-					</view>
-					<view 
-						wx:else
-						class="depreciate-icon"
-						>
-						<image src="../../images/icons/icon_price_up.png"></image>
-					</view>
-					<view class="depreciate">{{item.count}}万</view>
-				</view>
-			</view>
-			<view class="icon-arrows">
-				<image src="../../images/icons/icon_arrow.png"></image>
+			
+			<view class="carModels-quote-btn">
+				<button 
+					hover-class="quotebtn-active" 
+					class="quotebtn" 
+					type="primary"
+					bindtap="handlerPromptly"
+					data-carmodelsinfo="{{item}}"
+					>立即报价</button>
 			</view>
 		</view>
-		<view class="carModels-quote-btn">
-			<button 
-				hover-class="quotebtn-active" 
-				class="quotebtn" 
-				type="primary"
-				bindtap="handlerPromptly"
-				data-carmodelsinfo="{{item}}"
-				>立即报价</button>
+		
+		<view class="carModels-inner">
+			<!-- cars info.-->
+			<view class="carModels-info">
+				<view class="carModels-supplier">8个人供货</view>
+				<view class="carModels-repertory">供货紧张</view>
+				<view class="carModels-carcolor">
+					<view class="carcolor-label">外饰：</view>
+					<view class="carcolor-inner">
+						<view class="carcolor-item"></view>
+						<view class="carcolor-item"></view>
+						<view class="carcolor-item"></view>
+						<view class="carcolor-item"></view>
+					</view>
+				</view>
+			</view>
+
+			<view class="charts-inner">
+				<canvas 
+					canvas-id="{{item.carModelId}}" 
+					class="canvas" 
+					bindtouchstart="touchHandler"
+					></canvas>
+			</view>
 		</view>
+		
+		
 	</view>
 </template>		

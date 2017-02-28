@@ -1,35 +1,129 @@
 /**index.wxss**/
 .container {
-	background-color: #fff;
 	overflow: hidden;
 }
-.hot-carsbrand-wrap {
+.topbar {
 	width: 100%;
 	height: auto;
-}
-.hot-carsbrand-title {
-	width: 93.6%;
-	height: 1rpx;
-	margin: 70rpx auto 0 auto;
-	position: relative;
-	background-color: #D9D9D9;
-	overflow: visible;
-}
-.hot-carsbrand-text {
-	width: 180rpx;
-	height: 30rpx;
-	line-height: 30rpx;
 	background-color: #fff;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin: -15rpx 0 0 -90rpx;
-	font-size: 28rpx;
-	text-align: center;
 }
+.topbar-ad {
+	width: 390rpx;
+	height: 40rpx;
+	margin: 0 auto;
+}
+.topbar-ad image {
+	width: 390rpx;
+	height: 40rpx;
+}
+.topbar-bg {
+	width: 750rpx;
+	height: 120rpx;
+}
+.topbar-search {
+	padding: 80rpx 0;
+	background-color: #ECF0F7;
+} 
+/* search.*/
+.search-wrap {
+	width: 86.67%;
+	height: 90rpx;
+	margin: 42rpx auto 0 auto;
+	background-color: #fff;
+	border-radius: 8rpx;
+	position: relative;
+	-webkit-box-shadow:0px 3rpx 10rpx rgba(50,57,68,.3);
+	box-shadow:0px 3rpx 10rpx rgba(50,57,68,.3);
+}
+.search-icon {
+	position: absolute;
+	width: 24rpx;
+	height: 24rpx;
+	top: 50%;
+	margin-top: -12rpx;
+	left: 27%;
+}
+.search-img {
+	display: block;
+	width: 100%;
+	height: 24rpx;
+}
+.search-input {
+	width: 100%;
+	height: 90rpx;
+	font-size: 30rpx;
+}
+.search-placeholder {
+	color: #aaa;
+	text-align: center;
+	font-size: 30rpx;
+	font-weight: 100;
+	font-family: "PingFangSC-Regular";
+}
+.hot-carsbrand-wrap,
+.hot-carstype-wrap {
+	width: 100%;
+	height: auto;
+	background-color: #fff;
+}
+.title {
+	position: relative;
+	width: 100%;
+	height: 88rpx;
+	padding: 0 30rpx;
+	line-height: 88rpx;
+	-webkit-box-sizing: border-box;
+  box-sizing: border-box; 
+	display: flex;
+	-webkit-justify-content: flex-end;
+	justify-content: space-between;
+}
+.title .text {
+	font-family: "PingFangSC-Medium";
+	font-size: 32rpx;
+	color: #333333;
+}
+.title .more {
+	position: relative;
+	padding-right: 30rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 28rpx;
+	color: #888888;
+}
+.title .more .icon-more {
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 14rpx;
+	height: 14rpx;
+	margin-top: -8rpx;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+	border-top: 1rpx solid #7A6D6E;
+	border-right: 1rpx solid #7A6D6E;
+}
+.title .more .icon-more:after {
+	content: '';
+	position: absolute;
+	right: 8rpx;
+	top: 60%;
+	width: 14rpx;
+	height: 14rpx;
+	border-top: 1rpx solid #7A6D6E;
+	border-right: 1rpx solid #7A6D6E;
+}
+.title:after {
+	content: '';
+	position: absolute;
+	left: 30rpx;
+	right: 30rpx;
+	bottom: 0;
+	border-bottom: 1rpx solid #e4e4e4;
+}
+
 .hot-carsbrand-stand {
 	width: 93.6%;
-	margin: 20rpx auto 0 20rpx;
+	margin: 20rpx auto;
 	overflow: hidden;
 }
 .stand-item {
@@ -42,6 +136,80 @@
 	display: block;
 	width: 120rpx;
 	height: 80rpx;
+}
+/* 热推车型*/
+.hot-carstype-wrap {
+	margin-top: 20rpx;
+}
+.hotCarsType-cells {
+	width: 100%;
+	background-color: #fff;
+}
+.hotCarsType-cell {
+	position: relative;
+	width: 100%;
+	-webkit-box-sizing: border-box;
+  box-sizing: border-box; 
+	padding: 12rpx 30rpx 30rpx;
+}
+.hotCarsType-cell:after {
+	content: '';
+	position: absolute;
+	left: 30rpx;
+	right: 30rpx;
+	bottom: 0;
+	border-bottom: 1rpx solid #E4E4E4;
+}
+.hotCarsType-cell:last-child:after {
+	display: none;
+}
+.hotCarsType-cell .hotCarsType-title,
+.hotCarsType-cell .hotCarsType-remark {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+.hotCarsType-cell .hotCarsType-remark {
+	margin-top: 12rpx;
+	min-height: 60rpx;
+}
+.hotCarsType-title .hotCarsType-title-inner {
+	width: 80%;
+	height: auto;
+	overflow: hidden;
+	font-family: "PingFangSC-Regular";
+	font-size: 30rpx;
+	color: #333333;
+	line-height: 40rpx;
+}
+.hotCarsType-remark .hotCarsType-remark-inner {
+	width: 80%;
+	padding: 16rpx;
+	background: #FAFAFA;
+	border-radius: 2rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 24rpx;
+	color: #888888;
+	line-height: 36rpx;
+}
+.hotCarsType-title .hotCarsType-title-price,
+.hotCarsType-remark .hotCarsType-title-relation{
+	position: absolute;
+	right: 0;
+	top: 0;
+	line-height: 40rpx;
+	font-size: 26rpx;
+	color: #333333;
+}
+.hotCarsType-remark .hotCarsType-title-relation {
+	width: 88rpx;
+	height: 56rpx;
+	border: 1rpx solid #ED4149;
+	border-radius: 6rpx;
+	font-family: "PingFangSC-Regular";
+	color: #ED4149;
+	line-height: 56rpx;
+	text-align: center;
 }
 
 .viewCarsList-wrap,
@@ -182,13 +350,6 @@
 	height: 88rpx;
 	line-height: 88rpx;
 }
-
-
-
-
-
-
-
 
 
 

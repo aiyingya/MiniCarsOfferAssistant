@@ -3,7 +3,6 @@ import config from 'lib/config'
 import wux from 'lib/wux'
 import clientjs from 'lib/client'
 import modules from 'lib/modules'
-import user from 'lib/user'
 import wxcharts from 'modules/wxcharts'
 App({
   onLaunch () {
@@ -26,7 +25,7 @@ App({
 						success: function (res) {
 							let HTTPS_URL = config.ucServerHTTPSUrl
 							modules.request({
-								url: HTTPS_URL + 'user/weixin', 
+								url: HTTPS_URL + 'cgi/user/weixin', 
 								method: 'POST',
 								loadingType: 'none',
 								data: {
@@ -66,6 +65,10 @@ App({
       })
     }
   },
+	userInfo() {
+		let userInfo = wx.getStorageSync('userInfo') || ''	
+		return JSON.parse(userInfo)
+	},
   globalData:{
     /***
 		 * 目前有两种情况，第一种，当用户授权微信信息，则数据结构如下，loginChannel 为 weixin
@@ -88,7 +91,6 @@ App({
   wux: wux,
 	config: config,
 	modules: modules,
-	user: user,
 	wxcharts: wxcharts,
 	// FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据
 	fuckingLarryNavigatorTo: {
