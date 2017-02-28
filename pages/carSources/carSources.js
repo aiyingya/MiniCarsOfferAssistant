@@ -337,7 +337,7 @@ Page({
     const carSource = e.currentTarget.dataset.carSource
     const supplier = e.currentTarget.dataset.supplier
 
-    this.requestFocusOrNotASupplier(supplier.id, supplier.hasFocused,{
+    this.requestFocusOrNotASupplier(supplier.id, !supplier.hasFocused,{
       success: function (res) {
         supplier.hasFocused = !supplier.hasFocused
         carSource.supplier = supplier
