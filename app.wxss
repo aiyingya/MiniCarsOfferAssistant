@@ -60,7 +60,17 @@ page{
 	line-height: 88rpx;
 	color: #333;
 	text-align: center;
+	margin-top: 150rpx;
 }
+.nodata-icon {
+	width: 160rpx;
+	height: 160rpx;
+	margin: 0 auto;
+}
+.nodata-text {
+	margin: 0;
+	line-height: 30rpx;
+} 
 .showToast {
 	-webkit-animation: Toast 3500ms ease 1 forwards ;
 	animation: Toast 3500ms ease 1 forwards ;

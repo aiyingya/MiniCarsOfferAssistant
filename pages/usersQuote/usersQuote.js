@@ -56,7 +56,7 @@ Page({
 		}
 	},
 	handleToQuoteRecord() {
-		let userInfo = app.userInfo()
+		let userInfo = this.data.userInfo
 		if(!userInfo) {
 			return
 		}
@@ -66,7 +66,7 @@ Page({
 		})
 	},
 	handleToSupplier() {
-		let userInfo = app.userInfo()
+		let userInfo = this.data.userInfo
 		if(!userInfo) {
 			return
 		}

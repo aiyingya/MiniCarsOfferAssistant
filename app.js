@@ -75,13 +75,14 @@ App({
 		let currentDate = new Date()
 		let currentTime = currentDate.getTime()
 		let userInfo = this.userInfo()
+		let User = new users
 		if(userInfo){
 			let token = userInfo.accessToken
-			let expireTime = userInfo.expireTime
+			let expireTime = userInfo.expireIn
 			let refreshToken = userInfo.refreshToken
 			if(currentTime > expireTime) {
 				console.log('登录超时，请重新登录')
-				users.newAccessToken({
+				User.newAccessToken({
 					refreshToken: refreshToken,
 					success(res) {
 						console.log(res)

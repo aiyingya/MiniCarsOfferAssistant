@@ -1,11 +1,30 @@
 <view class="container supplier-view">
 	<view class="supplier-cells">
-		<view class="supplier-cell">
-			<view class="supplier-name">上海汽车经销商</view>
-			<view class="supplier-source">
-				<view class="label">来源：</view>
-				车行168
+		<block
+			wx:if="{{supplierList.length > 0}}"
+			>
+			<view 
+				class="supplier-cell"
+				wx:for="{{supplierList}}"
+				wx:key="*this"
+				bindtap = "handletap" 
+				bindtouchstart = "handletouchtart" 
+				bindtouchmove="handletouchmove"
+				style="transform:translate3d({{moveX}}px, 0, 0); -webkit-transform: translate3d({{moveX}}px, 0, 0)"
+				>
+				<view class="supplier-name">上海汽车经销商</view>
+				<view class="supplier-source">
+					<view class="label">来源：</view>
+					车行168
+				</view>
 			</view>
+		</block>
+		<view 
+			class="nodata"
+			wx:else
+			>
+			<image class="nodata-icon" src="../../images/icons/orderlist_icon_noorder.png"></image>
+			<view class="nodata-text">您还没有收藏过任何供货商哦~</view>
 		</view>
 	</view>
 
