@@ -129,7 +129,7 @@
 						<view 
 							class="message no-stock"
 							wx:if="{{item.status === 'no_stock'}}"
-							>无货</view>
+							>无平台供货</view>
 						<view 
 							class="message"
 							wx:else

@@ -16,10 +16,10 @@ Page({
 		filtersData: '',
 		cacheColor: '',
 		selectColorId: '0',
-		selectExternalColorId: '0',
-		selectExternalColorName: '全部外观',
-		selectInternalColorId: '1',
-		selectInternalColorName: '全部内饰',
+		selectedCarColorId: '0',
+		selectedCarColorName: '全部外观',
+		selectSourceRegionId: '1',
+		selectedSourceRegionName: '全部内饰',
 		carStatus: 'all',
 		carStatusAll: 'all',
 		carStatusName: '有货',
@@ -144,8 +144,8 @@ Page({
 				selectInternalColorName: color.name
 			})
 		}
-		let selectExternal = that.data.selectExternalColorId;
-		let selectInternal = that.data.selectInternalColorId;
+		let selectExternal = that.data.selectedCarColorId;
+		let selectInternal = that.data.selectSourceRegionId;
 		let carStatus = that.data.carStatus;
 		for(let item of searchCarSkuList) {
 			if(selectExternal === item.externalColorId &&  selectInternal === '1') {
