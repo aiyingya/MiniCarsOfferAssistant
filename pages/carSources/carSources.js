@@ -28,12 +28,12 @@ Page({
     selectedSectionIndex: -1,
 	},
 	onLoad (options) {
-		let that = this
-		let carModelsInfo = JSON.parse(options.carModelsInfo)
+		const that = this
+    const carModelsInfo = JSON.parse(options.carModelsInfo)
 		console.log(carModelsInfo)
-		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
+    const HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
 		try {
-      let res = wx.getSystemInfoSync();
+      const res = wx.getSystemInfoSync();
       this.pixelRatio = res.pixelRatio;
       this.apHeight = 16;
       this.offsetTop = 80;
@@ -52,7 +52,7 @@ Page({
         	let carSourcesBySkuInSpuItem = res.carSourcesBySkuInSpuList[i]
 					//item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
 					for (let j = 0; j < carSourcesBySkuInSpuItem.carSourcesList.length ; j++) {
-						let carSourcesItem = carSourcesBySkuInSpuItem.carSourcesList[j]
+            const carSourcesItem = carSourcesBySkuInSpuItem.carSourcesList[j]
 						if (carSourcesItem.logistics.length) {
               carSourcesItem.selectedLogistics = carSourcesItem.logistics[0]
 							carSourcesItem.selectedLogisticsIndex = 0
@@ -104,7 +104,7 @@ Page({
    * @param carSource       车源实体
    */
   updateTheCarSource(skuIndex, carSourceIndex, carSource) {
-    let list = this.data.carSourcesBySkuInSpuList
+    const list = this.data.carSourcesBySkuInSpuList
     list[skuIndex].carSourcesList[carSourceIndex] = carSource
     this.setData({
       carSourcesBySkuInSpuList: list
@@ -179,8 +179,8 @@ Page({
     // })
   },
   handlerAmendCarFacade(e) {
-		let that = this;
-    let selectedFilterIndex = e.currentTarget.dataset.selectedFilterIndex;
+    const that = this;
+    const selectedFilterIndex = e.currentTarget.dataset.selectedFilterIndex;
 		if (selectedFilterIndex !== this.data.selectedFilterIndex) {
       let firstFilters = []
       if (selectedFilterIndex == 0) {
@@ -195,7 +195,7 @@ Page({
         })
       }
       console.log(firstFilters)
-      let dropDownFiltersData = firstFilters.concat(that.data.dropDownFilters[selectedFilterIndex].items);
+      const dropDownFiltersData = firstFilters.concat(that.data.dropDownFilters[selectedFilterIndex].items);
       that.setData({
         showRmendCarFacade: true,
         selectedFilterIndex: selectedFilterIndex,
@@ -217,8 +217,8 @@ Page({
    * @param e
    */
   handlerSelectItem(e) {
-		let filterItem = e.currentTarget.dataset.filterItem;
-		let that = this;
+    const filterItem = e.currentTarget.dataset.filterItem;
+    const that = this;
 		if(that.data.selectedFilterIndex === '0') {
       // 选择外观的筛选框
 			that.setData({
@@ -234,8 +234,8 @@ Page({
 		} else {
 			// 其他
 		}
-		let selectedCarColor = that.data.selectedCarColorId
-		let selectedSourceRegion = that.data.selectedSourceRegionId
+    const selectedCarColor = that.data.selectedCarColorId
+    const selectedSourceRegion = that.data.selectedSourceRegionId
 
     that.updateSearchResult({color: selectedCarColor, sourceRegion: selectedSourceRegion})
 		that.headlerRemoveRmendCarFacade()
@@ -291,7 +291,7 @@ Page({
    * @param e
    */
   handlerSelectSku(e) {
-		let index = e.currentTarget.dataset.skuIndex
+    const index = e.currentTarget.dataset.skuIndex
 		if (index === this.data.selectedSectionIndex) {
 			this.setData({
         selectedSectionIndex: -1
@@ -309,11 +309,11 @@ Page({
   handlerSelectLogisticsBlock(e) {
 		// 选择物流行为
 
-		let skuIndex = e.currentTarget.dataset.skuIndex
-		let carSourceIndex = e.currentTarget.dataset.carSourceIndex
-    let carSource = e.currentTarget.dataset.carSource
-		let logisticsIndex = e.currentTarget.dataset.logisticsIndex
-		let logistics = e.currentTarget.dataset.logistics
+    const skuIndex = e.currentTarget.dataset.skuIndex
+    const carSourceIndex = e.currentTarget.dataset.carSourceIndex
+    const carSource = e.currentTarget.dataset.carSource
+    const logisticsIndex = e.currentTarget.dataset.logisticsIndex
+    const logistics = e.currentTarget.dataset.logistics
 
 		if (logisticsIndex !== carSource.selectedLogisticsIndex) {
       carSource.selectedLogisticsIndex = logisticsIndex
@@ -329,12 +329,12 @@ Page({
    * @param e
    */
   handlerFollow(e) {
-    let that = this
+    const that = this
 
-    let skuIndex = e.currentTarget.dataset.skuIndex
-    let carSourceIndex = e.currentTarget.dataset.carSourceIndex
-    let carSource = e.currentTarget.dataset.carSource
-		let supplier = e.currentTarget.dataset.supplier
+    const skuIndex = e.currentTarget.dataset.skuIndex
+    const carSourceIndex = e.currentTarget.dataset.carSourceIndex
+    const carSource = e.currentTarget.dataset.carSource
+    const supplier = e.currentTarget.dataset.supplier
 
     this.requestFocusOrNotASupplier(supplier.supplierId, supplier.hasFocused,{
       success (res) {
@@ -349,16 +349,17 @@ Page({
    * @param e
    */
   handlerReliable(e) {
-    let that = this;
+    const that = this;
 
-    let skuIndex = e.currentTarget.dataset.skuIndex
-    let carSourceIndex = e.currentTarget.dataset.carSourceIndex
-    let carSource = e.currentTarget.dataset.carSource
-    let supplier = e.currentTarget.dataset.supplier
+    const skuIndex = e.currentTarget.dataset.skuIndex
+    const carSourceIndex = e.currentTarget.dataset.carSourceIndex
+    const carSource = e.currentTarget.dataset.carSource
+    const supplier = e.currentTarget.dataset.supplier
+    const spuId = this.data.carModelsInfo.carModelId
 
-		this.requestReliableOrNoteASupplier(supplier.supplierId, {
+		this.requestReliableOrNotASupplier(spuId, carSource.id, supplier.id, !supplier.hasBeenReliable, {
 			success (res) {
-			  supplier.hasBeenReliable = true
+			  supplier.hasBeenReliable = !supplier.hasBeenReliable
         carSource.supplier = supplier
         that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
 			}
@@ -369,19 +370,19 @@ Page({
    * @param e
    */
   handlerContact(e) {
-		let carSource = e.currentTarget.dataset.carSource;
-		let contact = carSource.supplier.contact;
+    const carSource = e.currentTarget.dataset.carSource;
+    const contact = carSource.supplier.contact;
     wx.makePhoneCall({
       phoneNumber: contact
     })
 	},
 	// 非编辑态下的订车按钮
   handlerBookCar(e) {
-    let that = this
+    const that = this
 
-    let sku = e.currentTarget.dataset.skuItem
+    const sku = e.currentTarget.dataset.skuItem
     // FIXME: 这里的 skuId 并不能确保获得
-    let skuId = sku.skuId;
+    const skuId = sku.skuId;
 
     const hideDialog = this.$wuxDialog.open({
       title: '发起定车后， 将会有工作人员与您联系',
@@ -463,7 +464,7 @@ Page({
    */
   requestFocusOrNotASupplier(supplierId, focusOrNot, object) {
     if (supplierId && typeof supplierId === 'string') {
-      let method = focusOrNot? 'DELETE': 'POST'
+      const method = focusOrNot? 'POST': 'DELETE'
       app.modules.request({
         url: app.config.ucServerHTTPSUrl + 'cgi/user/' + app.userinfo.userId + '/focus',
         data: {
@@ -485,15 +486,32 @@ Page({
    * @param supplierId
    * @param object
    */
-	requestReliableOrNoteASupplier(supplierId, object) {
-    if (supplierId && typeof supplierId === 'string') {
+	requestReliableOrNotASupplier(spuId, carSourceId, supplierId, reliableOrNot, object) {
+    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '靠谱', supplierId, reliableOrNot, object);
+	},
+  /**
+   * 打标签接口
+   * @param spuId
+   * @param carSourceId
+   * @param tagName
+   * @param supplierId
+   * @param addOrRemove
+   * @param object
+   */
+  requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, tagName, supplierId, addOrRemove, object) {
+    if (spuId && typeof spuId === 'string'
+      && carSourceId && typeof carSourceId === 'string'
+      && tagName && typeof tagName === 'string'
+      && supplierId && typeof supplierId === 'string') {
+      const method = addOrRemove ? 'POST' : 'DELETE'
       app.modules.request({
-        url: app.config.ucServerHTTPSUrl + 'cgi/user/' + app.userinfo.userId + '/focus',
+        url: app.config.ucServerHTTPSUrl + 'spu/' + spuId + '/source/' + carSourceId + '/tag',
         data: {
-          type: 'supplier',
-          targetId: supplierId
+          tagName: tagName,
+          userId: app.userinfo.userId,
+          supplierId: supplierId,
         },
-        method: 'POST',
+        method: method,
         success: object.success,
         fail: object.fail,
         complete: object.complete
@@ -502,6 +520,5 @@ Page({
       object.fail()
       object.complete()
     }
-	}
-
+  }
 })
