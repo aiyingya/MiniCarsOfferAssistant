@@ -38,7 +38,7 @@
 			<view 
 				bindtap="handleCheckMore"
 				class="more">查看更多
-				<view class="icon-more"></view>
+				<image src="../../images/icons/icon_arrow_more.png" class="icon-more"></image>
 			</view>
 		</view>
 
@@ -62,9 +62,11 @@
 	<view class="hot-carstype-wrap">
 		<view class="title hot-carsbrand-title">
 			<view class="text hot-carsbrand-text">热推车型</view>
+<!--
 			<view class="more">查看更多
 				<view class="icon-more"></view>
 			</view>
+-->
 		</view>
 		
 		<view class="hotCarsType-cells">

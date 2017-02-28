@@ -94,23 +94,9 @@
 	position: absolute;
 	right: 0;
 	top: 50%;
-	width: 14rpx;
-	height: 14rpx;
-	margin-top: -8rpx;
-	-webkit-transform: rotate(45deg);
-	transform: rotate(45deg);
-	border-top: 1rpx solid #7A6D6E;
-	border-right: 1rpx solid #7A6D6E;
-}
-.title .more .icon-more:after {
-	content: '';
-	position: absolute;
-	right: 8rpx;
-	top: 60%;
-	width: 14rpx;
-	height: 14rpx;
-	border-top: 1rpx solid #7A6D6E;
-	border-right: 1rpx solid #7A6D6E;
+	width: 24rpx;
+	height: 24rpx;
+	margin-top: -12rpx;
 }
 .title:after {
 	content: '';
