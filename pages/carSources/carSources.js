@@ -331,16 +331,23 @@ Page({
   handlerFollow(e) {
     const that = this
 
+    console.log(e)
     const skuIndex = e.currentTarget.dataset.skuIndex
     const carSourceIndex = e.currentTarget.dataset.carSourceIndex
     const carSource = e.currentTarget.dataset.carSource
     const supplier = e.currentTarget.dataset.supplier
 
-    this.requestFocusOrNotASupplier(supplier.supplierId, supplier.hasFocused,{
-      success (res) {
+    this.requestFocusOrNotASupplier(supplier.id, supplier.hasFocused,{
+      success: function (res) {
         supplier.hasFocused = !supplier.hasFocused
         carSource.supplier = supplier
         that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
+      },
+      fail: function() {
+
+      },
+      complete: function () {
+
       }
     })
 	},
@@ -358,11 +365,17 @@ Page({
     const spuId = this.data.carModelsInfo.carModelId
 
 		this.requestReliableOrNotASupplier(spuId, carSource.id, supplier.id, !supplier.hasBeenReliable, {
-			success (res) {
+			success: function (res) {
 			  supplier.hasBeenReliable = !supplier.hasBeenReliable
         carSource.supplier = supplier
         that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-			}
+			},
+      fail: function() {
+
+      },
+      complete: function () {
+
+      }
 		})
   },
   /**
@@ -466,11 +479,12 @@ Page({
     if (supplierId && typeof supplierId === 'string') {
       const method = focusOrNot? 'POST': 'DELETE'
       app.modules.request({
-        url: app.config.ucServerHTTPSUrl + 'cgi/user/' + app.userinfo.userId + '/focus',
+        url: app.config.ucServerHTTPSUrl + 'cgi/user/' + app.userInfo().userId + '/focus',
         data: {
           type: 'supplier',
           targetId: supplierId
         },
+        loadingType: 'none',
         method: method,
         success: object.success,
         fail: object.fail,
@@ -505,12 +519,13 @@ Page({
       && supplierId && typeof supplierId === 'string') {
       const method = addOrRemove ? 'POST' : 'DELETE'
       app.modules.request({
-        url: app.config.ucServerHTTPSUrl + 'spu/' + spuId + '/source/' + carSourceId + '/tag',
+        url: app.config.ymcServerHTTPSUrl + 'product/car/spu/' + spuId + '/source/' + carSourceId + '/tag',
         data: {
           tagName: tagName,
-          userId: app.userinfo.userId,
+          userId: app.userInfo().userId,
           supplierId: supplierId,
         },
+        loadingType: 'none',
         method: method,
         success: object.success,
         fail: object.fail,
