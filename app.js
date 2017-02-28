@@ -4,6 +4,7 @@ import wux from 'lib/wux'
 import clientjs from 'lib/client'
 import modules from 'lib/modules'
 import wxcharts from 'modules/wxcharts'
+import users from 'lib/users'
 App({
   onLaunch () {
     //调用API从本地缓存中获取数据
@@ -66,8 +67,28 @@ App({
     }
   },
 	userInfo() {
-		let userInfo = wx.getStorageSync('userInfo') || ''	
-		return JSON.parse(userInfo)
+		let userInfo = wx.getStorageSync('userInfo')
+		
+		return userInfo ? JSON.parse(userInfo) : ''
+	},
+	getNewAccessToken () {
+		let currentDate = new Date()
+		let currentTime = currentDate.getTime()
+		let userInfo = this.userInfo()
+		if(userInfo){
+			let token = userInfo.accessToken
+			let expireTime = userInfo.expireTime
+			let refreshToken = userInfo.refreshToken
+			if(currentTime > expireTime) {
+				console.log('登录超时，请重新登录')
+				users.newAccessToken({
+					refreshToken: refreshToken,
+					success(res) {
+						console.log(res)
+					}
+				})
+			}
+		}
 	},
   globalData:{
     /***

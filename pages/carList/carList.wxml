@@ -23,6 +23,7 @@
 -->
 
 		<!-- 热门品牌.-->
+<!--
 		<view class="hot-carsbrand-wrap">
 			<view class="hot-carsbrand-title">
 				<view class="hot-carsbrand-text">热门品牌</view>
@@ -43,6 +44,7 @@
 				</view>
 			</view>	
 		</view>
+-->
 
 		<!-- cars list.-->
 		<view class="viewCarsList-wrap">

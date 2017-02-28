@@ -18,6 +18,7 @@ Page({
 			app.modules.request({
 				url: _HTTPS, 
 				method: 'GET',
+				loadingType: 'none',
 				data: {
 					uid: userinfo.userId
 				},

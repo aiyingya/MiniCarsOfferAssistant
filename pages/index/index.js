@@ -105,7 +105,9 @@ Page({
 //		const push = this.$wuxTrack.push({
 //			appVersion: '1.0.1'
 //		})
-
+		// 刷新用户信息.
+		
+		app.getNewAccessToken()
   },
 	getHotpushCars () {
 		let that = this
@@ -187,9 +189,16 @@ Page({
 	},
 	handlerToCarsModels(e) {
 		let carsInfo = JSON.stringify(e.currentTarget.dataset.carsinfo)
-		wx.navigateTo({  
-      url: '../carModels/carModels?carsInfo='+ carsInfo
-    }) 
+		let userInfo = app.userInfo()
+		if(userInfo) {
+			wx.navigateTo({  
+				url: '../carModels/carModels?carsInfo='+ carsInfo
+			}) 
+		}else {
+			wx.navigateTo({  
+				url: '../login/login'
+			}) 
+		}	
 	},
 	handlerMakePhoneCall() {
 		let phone = '021-52559255,8902'

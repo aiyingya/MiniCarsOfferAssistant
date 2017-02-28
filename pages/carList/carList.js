@@ -159,8 +159,15 @@ Page({
 	},
 	handlerToCarsModels(e) {
 		let carsInfo = JSON.stringify(e.currentTarget.dataset.carsinfo)
-		wx.navigateTo({  
-      url: '../carModels/carModels?carsInfo='+ carsInfo
-    }) 
+		let userInfo = app.userInfo()
+		if(userInfo) {
+			wx.navigateTo({  
+				url: '../carModels/carModels?carsInfo='+ carsInfo
+			}) 
+		}else {
+			wx.navigateTo({  
+				url: '../login/login'
+			}) 
+		}	
 	}
 })
