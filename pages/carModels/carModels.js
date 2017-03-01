@@ -2,6 +2,7 @@ let app = getApp()
 Page({
 	data: {
 		carModelsList: [],
+		cacheCarModelsList: [],
 		windowHeight: '',
 		windowWidth: '',
 		showRmendCarFacade: false,
@@ -39,52 +40,15 @@ Page({
 					let filters = res.filters
 					let filtersData 
 					if(carModelsList) {
-						for (let item of carModelsList) {
-              if(item.supply) {
-              	new app.wxcharts({
-									canvasId: item.carModelId,
-									type: 'line',
-									categories: item.supply.chart.x,
-									animation: false,
-									color: '#ECF0F7',
-									legend: false,
-									series: [{
-										data: item.supply.chart.y,
-										format: function (val) {
-												return `${val.toFixed(0)}人`
-										}
-									}],
-									xAxis: {
-										disableGrid: false,
-										fontColor: '#999999',
-										gridColor: '#f1f1f1'
-									},
-									yAxis: {
-										disabled: true,
-										fontColor: '#4C6693',
-										min: 0,
-										max: 50,
-										format(val) {
-											return val.toFixed(0)
-										}
-									},
-									dataItem: {
-										color: '#ECF0F7'
-									},
-									width: that.windowWidth,
-									height: 80,
-									dataLabel: true,
-									dataPointShape: false
-								})
-              }
-            }
 						
+						that.drawCanvas(carModelsList)
 						for(let item of filters) {
 							filtersData = item.items
 						}
 						
 						that.setData({
 							carModelsList: carModelsList,
+							cacheCarModelsList: carModelsList,
 							filtersData: filtersData
 						})
 					}
@@ -112,11 +76,21 @@ Page({
 		
 		let selectItem = e.currentTarget.dataset.select
 		let selectId = e.currentTarget.dataset.id
+		let carModelsList = this.data.cacheCarModelsList
+		let newModelsList = []
 		
-		console.log(selectItem,selectId)
+		for(let item of carModelsList) {
+			if(item.yearStyle === selectItem.name) {
+				//console.log(item.yearStyle,selectItem.name)
+				newModelsList.push(item)
+			}
+		}
+		this.drawCanvas(newModelsList)
 		this.setData({
 			CarsModeleText: selectItem.name,
-			CarsModeleSelectId: selectId
+			CarsModeleSelectId: selectId,
+			carModelsList: newModelsList,
+			showRmendCarFacade: false
 		})
 	},
 	handlerToCarSources (e) {
@@ -131,6 +105,57 @@ Page({
 		wx.navigateTo({  
       url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
     }) 
+	},
+	drawCanvas(list) {
+		if (!list) {return}
+		let data = list
+		let that = this
+		try {
+      let res = wx.getSystemInfoSync()
+      that.pixelRatio = res.pixelRatio
+      that.apHeight = 16
+      that.offsetTop = 80
+			that.windowWidth = res.windowWidth - 30
+    } catch (e) {
+      
+    }
+		for (let item of data) {
+			if(item.supply) {
+				new app.wxcharts({
+					canvasId: item.carModelId,
+					type: 'line',
+					categories: item.supply.chart.x,
+					animation: false,
+					color: '#ECF0F7',
+					legend: false,
+					series: [{
+						data: item.supply.chart.y,
+						format: function (val) {
+								return `${val.toFixed(0)}人`
+						}
+					}],
+					xAxis: {
+						disableGrid: false,
+						fontColor: '#999999',
+						gridColor: '#f1f1f1'
+					},
+					yAxis: {
+						disabled: true,
+						fontColor: '#4C6693',
+						format(val) {
+							return val.toFixed(0)
+						}
+					},
+					dataItem: {
+						color: '#ECF0F7'
+					},
+					width: that.windowWidth,
+					height: 80,
+					dataLabel: true,
+					dataPointShape: false
+				})
+			}
+		}
 	}
 	
 })

@@ -75,7 +75,7 @@ Page({
 		let data = {}
 		let carModelsList = []
 		let searchNodata = false
-				
+		console.log(results)	
 		if(results.type === 'SPU') {
 			url = that.data.HTTPS_YMCAPI + 'supply/car/spu/'+results.id
 		}else {
@@ -196,8 +196,6 @@ Page({
 					yAxis: {
 						disabled: true,
 						fontColor: '#4C6693',
-						min: 0,
-						max: 50,
 						format(val) {
 							return val.toFixed(0)
 						}
@@ -206,7 +204,7 @@ Page({
 						color: '#ECF0F7'
 					},
 					width: that.windowWidth,
-					height: 120,
+					height: 80,
 					dataLabel: true,
 					dataPointShape: false
 				})
