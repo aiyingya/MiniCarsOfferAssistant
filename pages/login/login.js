@@ -82,6 +82,25 @@ Page({
 			}
 		},1000)	
 	},
+	userBindWeixin (opts) {
+		let weixinUsersInfo = app.globalData.userInfo
+		let snsId = weixinUsersInfo.snsId
+		let userId =opts.uid
+		
+		app.modules.request({
+			url: app.config.ucServerHTTPSUrl + 'cgi/user/weixin/binding', 
+			method: 'POST',
+			loadingType: 'none',
+			header: {
+				Authorization: opts.accessToken
+			},
+			data: {
+				snsId: snsId,
+				userId: userId
+			},
+			success: opts.success
+		})
+	},
 	userLogin() {
 		let that = this
 		if(!that.data.userPhoneValue) {
@@ -109,10 +128,16 @@ Page({
 			code: that.data.userCodeValue,
 			success(res) {
 				if(res){
-					wx.navigateBack()
+					that.userBindWeixin({
+						uid: res.userId,
+						accessToken: res.accessToken,
+						success(auth) {
+							console.log(auth)
+							wx.navigateBack()
+						}
+					})
 				}
 			}
 		})
 	}
-	
 })

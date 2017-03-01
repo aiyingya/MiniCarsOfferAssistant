@@ -34,7 +34,11 @@
 	</view>
 
 	<view class="users-cells weui-cells weui-cells_in-small-appmsg">
-			<view url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+			<view  
+				class="weui-cell weui-cell_access" 
+				hover="true"
+				hover-class="active"
+				>
 				<view class="weui-cell__hd">
 					<image src="../../images/icons/tab_icon_price_off.png" />
 				</view>
@@ -45,7 +49,11 @@
 						<view>报价记录</view>
 				</view>
 			</view>
-			<view url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+			<view 
+				class="weui-cell weui-cell_access" 
+				hover="true"
+				hover-class="active"
+				>
 				<view class="weui-cell__hd">
 					<image src="../../images/icons/icon_collection.png" />
 				</view>
