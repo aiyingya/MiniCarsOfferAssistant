@@ -26,6 +26,7 @@ Page({
 		logisticsList: [],
 		cacheCarSourcesBySkuInSpuList: [],
     selectedSectionIndex: -1,
+    app: app
 	},
 	onLoad (options) {
 		const that = this
@@ -43,7 +44,7 @@ Page({
       
     }
 		app.modules.request({
-			url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.spuId + '/sources',
+			url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.carModelId + '/sources',
 			method: 'GET',
 			success: function(res) {
 				console.log(res)
@@ -95,7 +96,98 @@ Page({
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
+    this.$wuxReliableDialog = app.wux(this).$wuxReliableDialog
 	},
+  onShow() {
+    const that = this
+    console.log("page show")
+    const valueString = wx.getStorageSync('recent_contact')
+    if (valueString && typeof valueString === 'string') {
+
+      const value = JSON.parse(valueString)
+      console.log(value)
+
+      const spuId = value.spuId
+      const carSource = value.carSource
+      const supplier = carSource.supplier
+      const skuIndex = value.skuIndex
+      const carSourceIndex = value.carSourceIndex
+      console.log("dsafda1")
+      console.log(spuId)
+      if (typeof value === 'object') {
+        const now = new Date()
+        const contactDate = new Date(value.dateString)
+        if (now - contactDate < 60 * 60 * 1000 * 24) {
+          // 24 小时以内， 弹框走起
+          const hideDialog = this.$wuxReliableDialog.open({
+            spuId: spuId,
+            carSource: carSource,
+            close: (updatedCarSource) => {
+                console.log(updatedCarSource)
+                if (updatedCarSource.hasBeenReliableByUser) {
+                  that.requestReliableOrNotASupplier(spuId, carSource.id, updatedCarSource.supplier.id, updatedCarSource.hasBeenReliableByUser, {
+                    success: function () {
+                      carSource.hasBeenReliableByUser = updatedCarSource.hasBeenReliableByUser
+                      that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
+                    },
+                    fail: function () {
+                    },
+                    complete: function () {
+                    }
+                  })
+                } else if (updatedCarSource.hasBeenUnReliableByUser) {
+                  that.requestUnReliableOrNotASupplier(spuId, carSource.id, updatedCarSource.supplier.id, updatedCarSource.hasBeenUnReliableByUser, {
+                    success: function () {
+                      carSource.hasBeenUnReliableByUser = updatedCarSource.hasBeenUnReliableByUser
+                      that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
+                    },
+                    fail: function () {
+                    },
+                    complete: function () {
+                    }
+                  })
+                }
+            },
+            follow: (updatedSupplier) => {
+              // 关注与否
+              console.log(supplier)
+              console.log(updatedSupplier)
+              console.log("111")
+                this.requestFocusOrNotASupplier(updatedSupplier.id, updatedSupplier.hasFocused, {
+                  success: function () {
+                    carSource.supplier.hasFocused = updatedSupplier.hasFocused
+                    that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
+                  },
+                  fail: function () {
+                  },
+                  complete: function () {
+                  }
+                })
+            }
+          })
+        } else {
+          // 24 小时以外
+        }
+
+        try {
+          wx.removeStorageSync('recent_contact')
+        } catch (e) {
+          wx.removeStorage({
+            key: 'recent_contact',
+            success: function (res) {
+              // success
+            },
+            fail: function () {
+              // fail
+            },
+            complete: function () {
+              // complete
+            }
+          })
+        }
+      }
+    }
+  },
   /**
    * 由于更新一个二维数组中的 carSource 对象暂时没有更好的办法，所以只能通过全量
    * 更新 this.data 中的二维数组才能达到目的
@@ -106,10 +198,15 @@ Page({
    */
   updateTheCarSource(skuIndex, carSourceIndex, carSource) {
     const list = this.data.carSourcesBySkuInSpuList
-    list[skuIndex].carSourcesList[carSourceIndex] = carSource
-    this.setData({
-      carSourcesBySkuInSpuList: list
-    })
+    const currentCarSource = list[skuIndex].carSourcesList[carSourceIndex]
+    if (currentCarSource.id === carSource.id) {
+      list[skuIndex].carSourcesList[carSourceIndex] = carSource
+      this.setData({
+        carSourcesBySkuInSpuList: list
+      })
+    } else {
+      console.log("车源对象不符合， 不提供更新功能")
+    }
   },
   getIdWithFiltersIndex(index) {
     console.log(this.data.scrollFiltersSelectedIndexes)
@@ -241,12 +338,12 @@ Page({
     that.updateSearchResult({color: selectedCarColor, sourceRegion: selectedSourceRegion})
 		that.headlerRemoveRmendCarFacade()
 	},
-	handlerMakePhoneCall() {
-		let phone = '021-52559255,8902'
-		wx.makePhoneCall({
-			phoneNumber: phone
-		})
-	},
+	// handlerMakePhoneCall() {
+	// 	let phone = '021-52559255,8902'
+	// 	wx.makePhoneCall({
+	// 		phoneNumber: phone
+	// 	})
+	// },
   /**
    * 横向滚动栏筛选项目点击行为
    * @param e
@@ -363,11 +460,11 @@ Page({
     const carSourceIndex = e.currentTarget.dataset.carSourceIndex
     const carSource = e.currentTarget.dataset.carSource
     const supplier = e.currentTarget.dataset.supplier
-    const spuId = this.data.carModelsInfo.spuId
+    const spuId = this.data.carModelsInfo.carModelId
 
-		this.requestReliableOrNotASupplier(spuId, carSource.id, supplier.id, !supplier.hasBeenReliable, {
+		this.requestReliableOrNotASupplier(spuId, carSource.id, supplier.id, !carSource.hasBeenReliableByUserByUser, {
 			success: function (res) {
-			  supplier.hasBeenReliable = !supplier.hasBeenReliable
+			  carSource.hasBeenReliableByUser = !carSource.hasBeenReliableByUser
         carSource.supplier = supplier
         that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
 			},
@@ -384,10 +481,29 @@ Page({
    * @param e
    */
   handlerContact(e) {
-    const carSource = e.currentTarget.dataset.carSource;
+    const carModelsInfo = this.data.carModelsInfo
+    const skuIndex = e.currentTarget.dataset.skuIndex
+    const carSourceIndex = e.currentTarget.dataset.carSourceIndex
+    const carSource = e.currentTarget.dataset.carSource
+    const supplier = carSource.supplier
     const contact = carSource.supplier.contact;
+
     wx.makePhoneCall({
-      phoneNumber: contact
+      phoneNumber: 'contact',
+      success: function(res) {
+        if (!carSource.supplierSelfSupport) {
+          // 非自营的供货商才可以评价靠谱与否
+          const now = new Date()
+          const value = {
+            skuIndex: skuIndex,
+            carSourceIndex: carSourceIndex,
+            spuId: carModelsInfo.carModelId,
+            carSource: carSource,
+            dateString: now.toDateString()
+          }
+          wx.setStorageSync('recent_contact', JSON.stringify(value))
+        }
+      }
     })
 	},
 	// 非编辑态下的订车按钮
@@ -502,8 +618,12 @@ Page({
    * @param object
    */
 	requestReliableOrNotASupplier(spuId, carSourceId, supplierId, reliableOrNot, object) {
+	  console.log("dsafda")
     this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '靠谱', supplierId, reliableOrNot, object);
 	},
+  requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, UnReliableOrNot, object) {
+    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '不靠谱', supplierId, UnReliableOrNot, object);
+  },
   /**
    * 打标签接口
    * @param spuId
