@@ -77,9 +77,9 @@ Page({
 		let searchNodata = false
 				
 		if(results.type === 'SPU') {
-			url = that.data.HTTPS_YMCAPI + 'product/car/spu/'+results.id
+			url = that.data.HTTPS_YMCAPI + 'supply/car/spu'+results.id
 		}else {
-			url = that.data.HTTPS_YMCAPI + 'product/car/spu'
+			url = that.data.HTTPS_YMCAPI + 'supply/car/spu'
 			data = {
 				carSeriesId: results.id
 			}
@@ -97,10 +97,7 @@ Page({
 				searchNodata = carModelsList.length > 0 ? false : true
 				
 				if(carModelsList) {
-					for (var i = 0; i < carModelsList.length; i++) {
-						let item = carModelsList[i]
-						item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
-					}
+					that.drawCanvas(carModelsList)
 					that.setData({
 						searchResults: carModelsList,
 						associateResults: [],
@@ -119,7 +116,7 @@ Page({
 		let searchResults = []
 		let searchNodata = false
 		app.modules.request({
-			url: that.data.HTTPS_YMCAPI+ '/search/car/spu', 
+			url: that.data.HTTPS_YMCAPI+ 'search/car/spu', 
 			method: 'GET',
 			data: {
 				text: val,
@@ -131,10 +128,7 @@ Page({
 				if(res.content.length <= 0) {
 					searchNodata = true
 				}
-				for (var i = 0; i < res.content.length; i++) {
-					let item = res.content[i]
-					item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
-				}
+				that.drawCanvas(res.content)
 				that.setData({
 					searchResults: res.content,
 					associateResults: [],
@@ -168,5 +162,58 @@ Page({
 			showSearchBtn: false,
 			searchValue: ''
 		})
+	},
+	drawCanvas(list) {
+		if (!list) {return}
+		let data = list
+		let that = this
+		try {
+      let res = wx.getSystemInfoSync()
+      that.pixelRatio = res.pixelRatio
+      that.apHeight = 16
+      that.offsetTop = 80
+			that.windowWidth = res.windowWidth - 30
+    } catch (e) {
+      
+    }
+		for (let item of data) {
+			if(item.supply) {
+				new app.wxcharts({
+					canvasId: item.spuId,
+					type: 'line',
+					categories: item.supply.chart.x,
+					animation: false,
+					color: '#ECF0F7',
+					legend: false,
+					series: [{
+						data: item.supply.chart.y,
+						format: function (val) {
+								return `${val.toFixed(0)}人`
+						}
+					}],
+					xAxis: {
+						disableGrid: false,
+						fontColor: '#999999',
+						gridColor: '#f1f1f1'
+					},
+					yAxis: {
+						disabled: true,
+						fontColor: '#4C6693',
+						min: 0,
+						max: 50,
+						format(val) {
+							return val.toFixed(0)
+						}
+					},
+					dataItem: {
+						color: '#ECF0F7'
+					},
+					width: that.windowWidth,
+					height: 120,
+					dataLabel: true,
+					dataPointShape: false
+				})
+			}
+		}
 	}
 })

@@ -41,7 +41,7 @@ Page({
 				url: HTTPS_YMCAPI + 'supply/car/spu', 
 				method: 'GET',
 				data: {
-					carSeriesId: '510E4658-8BED-4056-937B-A51600A7E791'//carsInfo.seriesId
+					carSeriesId: carsInfo.seriesId
 				},
 				success: function(res) {
 					let carModelsList = res;
@@ -51,7 +51,7 @@ Page({
               if(item.supply) {
               	new app.wxcharts({
 									canvasId: item.spuId,
-									type: 'area',
+									type: 'line',
 									categories: item.supply.chart.x,
 									animation: false,
 									color: '#ECF0F7',
@@ -71,6 +71,7 @@ Page({
 										disabled: true,
 										fontColor: '#4C6693',
 										min: 0,
+										max: 50,
 										format(val) {
 											return val.toFixed(0)
 										}
@@ -79,7 +80,7 @@ Page({
 										color: '#ECF0F7'
 									},
 									width: that.windowWidth,
-									height: 80,
+									height: 120,
 									dataLabel: true,
 									dataPointShape: false
 								})

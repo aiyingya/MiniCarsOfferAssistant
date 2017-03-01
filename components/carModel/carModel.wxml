@@ -31,15 +31,24 @@
 			>
 			<!-- cars info.-->
 			<view class="carModels-info">
-				<view class="carModels-supplier">8个人供货</view>
-				<view class="carModels-repertory">供货紧张</view>
+				<view class="carModels-supplier">{{item.supply.supplierCount}}个人供货</view>
+				<block wx:if="{{item.supply.status === '供货紧张'}}">
+					<view class="carModels-repertory">{{item.supply.status}}</view>
+				</block>
+				<block wx:else>
+					<view class="carModels-repertory adequate">{{item.supply.status}}</view>
+				</block>
 				<view class="carModels-carcolor">
 					<view class="carcolor-label">外饰：</view>
 					<view class="carcolor-inner">
-						<view class="carcolor-item"></view>
-						<view class="carcolor-item"></view>
-						<view class="carcolor-item"></view>
-						<view class="carcolor-item"></view>
+						<view 	
+							class="carcolor-item"
+							wx:for="{{item.supply.colors}}"	
+							wx:for-item="cell"
+							wx:for-index="cellIndex" 
+							wx:key="*this"
+							style="background:{{cell}}"
+							></view>
 					</view>
 				</view>
 			</view>
@@ -51,6 +60,11 @@
 					bindtouchstart="touchHandler"
 					></canvas>
 			</view>
-		</view>	
+		</view>
+		
+		<!-- 暂无供货.-->	
+		<view wx:else class="carModels-nodata">
+			暂无供货
+		</view>
 	</view>
 </template>		

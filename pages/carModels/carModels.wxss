@@ -6,16 +6,9 @@ page {
 .container {
 	width: 100%;
 	height: auto;
-	padding-top: 174rpx;
 }
-
 .carModels-topbar {
-	position: fixed;
-	top: 0;
-	left: 0;
 	width: 100%;
-	background-color: #fff;
-	z-index: 99;
 }
 .carModels-navbar {
 	position: relative;
@@ -26,6 +19,7 @@ page {
 	justify-content: space-around;
 	-webkit-align-items: center;
 	align-items: center;
+	background-color: #fff;
 }
 .carModels-navbar:after {
 	content: '';
@@ -99,10 +93,6 @@ page {
 	margin-right: 10rpx;
 }
 
-
-
 .carModels-cells {
-	width: 100%;
-	margin-top: 30rpx;
-	
+	width: 100%;	
 }

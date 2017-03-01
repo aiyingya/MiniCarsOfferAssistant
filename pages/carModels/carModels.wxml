@@ -14,12 +14,14 @@
 		</view>
 		
 		<!-- 标签.-->
+<!--
 		<view class="carModels-label">
 			<view class="label">标签标签</view>
 			<view class="label">标签</view>
 			<view class="label">标签标签</view>
 			<view class="label">标签标签</view>
 		</view>
+-->
 	</view>
 
 	<view class="carModels-cells">

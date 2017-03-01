@@ -70,6 +70,9 @@
 .carModels-info .carModels-repertory {
 	color: #ED4149;
 }
+.carModels-info .carModels-repertory.adequate {
+	color: #14A47D;
+}
 .carModels-info .carModels-carcolor {
 	float: right;
 	overflow: hidden;
@@ -99,6 +102,15 @@
 }
 .charts-inner .canvas {
 	width: 100%;
-	height: 80px;
+	height: 120px;
 	padding: 0;
+	background-color: #fff;
+}
+.carModels-nodata {
+	font-family: "PingFangSC-Regular";
+	font-size: 28rpx;
+	color: #888888;
+	line-height: 30rpx;
+	text-align: center;
+	margin-top: 20rpx;
 }
