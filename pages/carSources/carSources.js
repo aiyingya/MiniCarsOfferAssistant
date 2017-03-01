@@ -30,7 +30,8 @@ Page({
 	onLoad (options) {
 		const that = this
     const carModelsInfo = JSON.parse(options.carModelsInfo)
-		console.log(carModelsInfo)
+    console.log(options)
+    console.log(carModelsInfo)
     const HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
 		try {
       const res = wx.getSystemInfoSync();
@@ -42,7 +43,7 @@ Page({
       
     }
 		app.modules.request({
-			url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.carModelId + '/sources',
+			url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.spuId + '/sources',
 			method: 'GET',
 			success: function(res) {
 				console.log(res)
@@ -362,7 +363,7 @@ Page({
     const carSourceIndex = e.currentTarget.dataset.carSourceIndex
     const carSource = e.currentTarget.dataset.carSource
     const supplier = e.currentTarget.dataset.supplier
-    const spuId = this.data.carModelsInfo.carModelId
+    const spuId = this.data.carModelsInfo.spuId
 
 		this.requestReliableOrNotASupplier(spuId, carSource.id, supplier.id, !supplier.hasBeenReliable, {
 			success: function (res) {

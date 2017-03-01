@@ -6,12 +6,8 @@
 <view class="car-sources container">
 	<!-- SPU 详情展示 -->
 	<view class="carSources-topbar weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
-		<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-			<image class="weui-media-box__thumb" src="{{imgAliyuncsUrl}}{{carModelsInfo.lowestPriceSku.skuPic}}" />
-		</view>
 		<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-			<view class="weui-media-box__title">{{carModelsInfo.carModelName}}</view>
-			<view class="weui-media-box__desc">指导价{{carModelsInfo.officialPriceStr}}万</view>
+			<view class="weui-media-box__title">【{{carModelsInfo.officialPrice}}】 {{carModelsInfo.spuName}}</view>
 		</view>
 	</view>
 
