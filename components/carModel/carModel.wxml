@@ -11,7 +11,7 @@
 			data-carmodelsinfo="{{item}}"
 			>
 			<view class="carModels-message-title">
-				{{item.yearStyle}} {{item.spuName}} 
+				【{{item.officialPrice}}】 {{item.carModelName}} 
 			</view>
 			
 			<view class="carModels-quote-btn">
@@ -47,6 +47,7 @@
 							wx:for-item="cell"
 							wx:for-index="cellIndex" 
 							wx:key="*this"
+							wx:if="{{cellIndex < 4}}"
 							style="background:{{cell}}"
 							></view>
 					</view>
@@ -55,7 +56,7 @@
 
 			<view class="charts-inner">
 				<canvas 
-					canvas-id="{{item.spuId}}" 
+					canvas-id="{{item.carModelId}}" 
 					class="canvas" 
 					bindtouchstart="touchHandler"
 					></canvas>

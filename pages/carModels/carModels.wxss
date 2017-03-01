@@ -5,10 +5,11 @@ page {
 }
 .container {
 	width: 100%;
-	height: auto;
+	height: 100%;
 }
 .carModels-topbar {
 	width: 100%;
+	position: relative;
 }
 .carModels-navbar {
 	position: relative;
@@ -95,4 +96,51 @@ page {
 
 .carModels-cells {
 	width: 100%;	
+}
+
+.carModels-popup-select {
+	position: fixed;
+	top: 88rpx;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	z-index: 99;
+}
+
+.rmendCarFacade-popup-mask {
+	position: absolute;
+	width: 100%;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	background-color: rgba(0,0,0,.4);
+	z-index: 1;
+}
+.rmendCarFacade-inner {
+	width: 100%;
+	height: auto;
+	background-color: #fff;
+	position: relative;
+	z-index: 10;
+	-webkit-transform: translate3d(0, 100rpx, 0);
+  transform: translate3d(0, 100rpx, 0) ;
+} 
+.rmendCarFacade-inner .weui-cell {
+	height: 104rpx;
+	line-height: 104rpx;
+	padding: 0 30rpx;
+}
+.rmendCarFacade-inner .weui-cell:before {
+	left: 30rpx;
+}
+.rmendCarFacade-inner .weui-cell__bd {
+	font-family: "PingFangSC-Regular";
+	font-size: 30rpx;
+	color: #333333;
+}
+.rmendCarFacade-inner .weui-cell__ft,
+.rmendCarFacade-inner .weui-cell__ft image {
+	display: block;
+	width: 36rpx;
+	height: 36rpx;
 }

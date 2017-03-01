@@ -3,20 +3,11 @@ Page({
 	data: {
 		carModelsList: [],
 		windowHeight: '',
-		windowWidth: ''
-	},
-	createSimulationData () {
-			var categories = [];
-			var data = [];
-			for (var i = 0; i < 50; i++) {
-					categories.push('2016-' + (i + 1));
-					data.push(Math.random()*(20-10)+10);
-			}
-
-			return {
-					categories: categories,
-					data: data
-			}
+		windowWidth: '',
+		showRmendCarFacade: false,
+		filtersData: [],
+		CarsModeleText: '全部车款',
+		CarsModeleSelectId: 0
 	},
 	onLoad (options) {
 		let carsInfo = JSON.parse(options.carsInfo)
@@ -44,13 +35,14 @@ Page({
 					carSeriesId: carsInfo.seriesId
 				},
 				success: function(res) {
-					let carModelsList = res;
+					let carModelsList = res.content
+					let filters = res.filters
+					let filtersData 
 					if(carModelsList) {
-						
 						for (let item of carModelsList) {
               if(item.supply) {
               	new app.wxcharts({
-									canvasId: item.spuId,
+									canvasId: item.carModelId,
 									type: 'line',
 									categories: item.supply.chart.x,
 									animation: false,
@@ -80,14 +72,20 @@ Page({
 										color: '#ECF0F7'
 									},
 									width: that.windowWidth,
-									height: 120,
+									height: 80,
 									dataLabel: true,
 									dataPointShape: false
 								})
               }
             }
+						
+						for(let item of filters) {
+							filtersData = item.items
+						}
+						
 						that.setData({
-							carModelsList: carModelsList
+							carModelsList: carModelsList,
+							filtersData: filtersData
 						})
 					}
 				}
@@ -98,6 +96,29 @@ Page({
 	onShow () {
 		
 	},
+	handleCheckCarsModele() {
+		let weitch = this.data.showRmendCarFacade
+		if(weitch) {
+			this.setData({
+				showRmendCarFacade: false
+			})
+		}else {
+			this.setData({
+				showRmendCarFacade: true
+			})
+		}
+	},
+	handleSelectCarsModele(e) {
+		
+		let selectItem = e.currentTarget.dataset.select
+		let selectId = e.currentTarget.dataset.id
+		
+		console.log(selectItem,selectId)
+		this.setData({
+			CarsModeleText: selectItem.name,
+			CarsModeleSelectId: selectId
+		})
+	},
 	handlerToCarSources (e) {
 		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
 		wx.navigateTo({
@@ -105,7 +126,8 @@ Page({
     }) 
 	},
 	handlerPromptly (e) {
-		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
+		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo)
+		console.log(carModelsInfo)
 		wx.navigateTo({  
       url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
     }) 

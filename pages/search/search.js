@@ -77,7 +77,7 @@ Page({
 		let searchNodata = false
 				
 		if(results.type === 'SPU') {
-			url = that.data.HTTPS_YMCAPI + 'supply/car/spu'+results.id
+			url = that.data.HTTPS_YMCAPI + 'supply/car/spu/'+results.id
 		}else {
 			url = that.data.HTTPS_YMCAPI + 'supply/car/spu'
 			data = {
@@ -89,11 +89,8 @@ Page({
 			method: 'GET',
 			data: data,
 			success: function(res) {
-				if(!(res instanceof Array)) {
-					carModelsList.push(res)
-				}else {
-					carModelsList = res
-				}
+				console.log(res)			
+				carModelsList = res.content
 				searchNodata = carModelsList.length > 0 ? false : true
 				
 				if(carModelsList) {
@@ -179,7 +176,7 @@ Page({
 		for (let item of data) {
 			if(item.supply) {
 				new app.wxcharts({
-					canvasId: item.spuId,
+					canvasId: item.carModelId,
 					type: 'line',
 					categories: item.supply.chart.x,
 					animation: false,
