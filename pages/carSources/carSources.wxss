@@ -87,25 +87,69 @@ page {
 	height: 36rpx;
 }
 .filter-scroll-view {
-	padding: 24rpx 30rpx -24rpx -30rpx;
+	padding: 24rpx 30rpx 24rpx 30rpx;
+	height: 96rpx;
+	width: 150%;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	background-color:#fff;
+	display:flex;
+	justify-content:flex-start;
+	-webkit-align-items:center;
+	align-items:center;
+	white-space: nowrap;
 }
-.filter-scroll-view .scrollFilter {
-	float:left
+.filter-scroll-view .scroll-filter {
+	float:left;
+	white-space: nowrap;
+	-webkit-box-sizing:border-box;
+	box-sizing:border-box;
+	display:flex;
+	justify-content:flex-start;
+	-webkit-align-items:center;
+	align-items:center;
+	position:relative;
+	padding: 0 27rpx;
 }
-.filter-scroll-view .scrollFilter .filter {
-	border: 1rpx solid #333333;
-	border-radius: 65rpx;
-	height: 48rpx;
-	font-family: PingFangSC-Regular;
-	font-size: 24rpx;
-	color: #333333;
-	letter-spacing: 0rpx;
+.filter-scroll-view .scroll-filter:last-child {
+	padding: 0 0 0 27rpx;
+}
+.filter-scroll-view .scroll-filter:first-child {
+	padding: 0 27rpx 0 0;
+}
+.filter-scroll-view .scroll-filter:after {
+	content: '';
+	position: absolute;
+	top: 4rpx;
+	bottom: 4rpx;
+	right: 0;
+	left: 0;
+	border-right: 1rpx solid #CCCCCC;
+	z-index: -1;
+}
+.filter-scroll-view .scroll-filter:after:last-child {
+	border-right: 0rpx solid ;
+}
+.filter-scroll-view .scroll-filter .filter {
+	padding: 12rpx 27rpx 12rpx 27rpx;
+	border:1rpx solid #333333;
+	border-radius:65rpx;
+	font-size:24rpx;
+	margin-right:10rpx;
+	display:inline-block;
+	font-family: "PingFangSC-Regular";
+	letter-spacing: 0;
 	line-height: 24rpx;
 }
-.filter-scroll-view .scrollFilter .selected {
+.filter-scroll-view .scroll-filter .filter:last-child {
+	margin-right: 0rpx;
+}
+.filter-scroll-view .scroll-filter .selected {
+	border: 1px solid #ED4149;
 	color: #ED4149;
 }
-.filter-scroll-view .scrollFilter .unselected {
+.filter-scroll-view .scroll-filter .unselected {
+	border: 1px solid #333333;
 	color: #333333;
 }
 .carSources-topbar {
@@ -134,7 +178,8 @@ page {
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #999999;
-	line-height: 40rpx;
+	letter-spacing: 0rpx;
+	line-height: 26rpx;
 }
 .carSources-body {
 	width: 100%;
@@ -190,6 +235,11 @@ page {
 	position: relative;
 	display: inline-block;
 	padding-right: 30rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 28rpx;
+	color: #666666;
+	letter-spacing: 0rpx;
+	line-height: 28rpx;
 }
 .carSources-navbar .icon-dropdownarrow {
 	width: 16rpx;
@@ -239,40 +289,39 @@ page {
 	display: block;
 }
 .carSources-section .carSources-section-content .title {
-	font-family: PingFangSC-Regular;
+	font-family: "PingFangSC-Regular";
 	font-size: 30rpx;
 	color: #333333;
 	letter-spacing: 0rpx;
 	line-height: 30rpx;
+	margin-bottom: 20rpx;
 }
 .carSources-section .carSources-section-content .carSources-section-price {
+	display: inline;
+	margin-right: 20rpx;
 }
 .carSources-section .carSources-section-content .carSources-section-price .discount {
-	font-family: PingFangSC-Regular;
+	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
 	line-height: 26rpx;
+	display: inline;
 }
 .carSources-section .carSources-section-content .carSources-section-price .price {
-	font-family: SFUIDisplay-Regular;
+	display: inline;
+	font-family: "SFUIDisplay-Regular";
 	font-size: 34rpx;
 	color: #ED4149;
 	letter-spacing: 0rpx;
 	line-height: 32rpx;
 }
 .carSources-section .carSources-section-content .carSources-section-price .discount-icon {
-	display: block;
 	width: 20rpx;
 	height: 24rpx;
-	position: absolute;
-	top: 50%;
-	margin-top: -16rpx;
-}
-.carSources-section .carSources-section-content .carSources-section-price .discount-icon image {
-	width: 20rpx;
-	height: 24rpx;
+	position: relative;
 }
 .carSources-section .carSources-section-content .logisticsFree {
+	display: inline;
 	font-family: PingFangSC-Regular;
 	font-size: 26rpx;
 	color: #F76F6F;
@@ -285,9 +334,9 @@ page {
 	height: 16rpx;
 	position: absolute;
 	top: 50%;
+	right: 30rpx;
 	margin-top: -8rpx;
 }
-
 /* 供货 车源 cell样式 */
 .carSources-cells {
 	position: relative;
@@ -303,68 +352,359 @@ page {
 	background-color: #F7F7F7;
 	position: relative;
 }
-
 .carSources-cell .carSources-cell-content {
 
 }
-
-.carSources-cell .carSources-cell-content .carSources-cell-list {
-	display: -webkit-flex;
+/* 供应商信息 和 报价降价信息 */
+.first-part {
 	display: flex;
-	-webkit-justify-content: space-between;
+	align-items: baseline;
 	justify-content: space-between;
-	-webkit-align-items: center;
-	align-items: center;
 }
-.carSources-cell .carSources-cell-content .carSources-cell-label {
+.first-first-part {
+	display: flex;
+	justify-content: flex-end;
+	flex-direction: column;
+}
+.carSources-cell .carSources-cell-content .supplier-name {
+	margin-bottom: 20rpx;
+}
+.carSources-cell .carSources-cell-content .supplier-name .name {
+	display: inline;
+	font-family: "PingFangSC-Medium";
+	font-size: 30rpx;
+	color: #333333;
+	letter-spacing: 0rpx;
+	line-height: 30rpx;
+	margin-right: 8rpx;
+}
+.carSources-cell .carSources-cell-content .supplier-name .certification {
+	display: inline;
+	font-family: "PingFangSC-Medium";
+	font-size: 28rpx;
+	color: #ED4149;
+	letter-spacing: 0rpx;
+	line-height: 30rpx;
+}
+.carSources-cell .carSources-cell-content .carSources-cell-price {
+	display: inline;
+}
+.carSources-cell .carSources-cell-content .carSources-cell-price .discount {
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
-	line-height: 60rpx;
-}
-.carSources-cell .carSources-cell-content .carSources-cell-label .label {
-	font-size: 26rpx;
-	color: #888888;
-}
-.carSources-cell .carSources-cell-content .carSources-cell-label .label,
-.carSources-cell .carSources-cell-content .carSources-cell-label .message {
-	float: left;
-}
-.carSources-cell .carSources-cell-content .carSources-cell-label .remark {
-	color: #888888;
-}
-.carSources-cell .carSources-cell-content .carSources-cell-price {
-	font-size: 26rpx;
-	color: #333;
-	position: relative;
-	padding-left: 30rpx;
+	line-height: 26rpx;
+	display: inline;
 }
 .carSources-cell .carSources-cell-content .carSources-cell-price .price {
 	display: inline;
 	font-family: "SFUIDisplay-Regular";
-	font-size: 44rpx;
+	font-size: 34rpx;
 	color: #ED4149;
-	line-height: 0;
-}
-.carSources-cell .carSources-cell-content .carSources-cell-price .no-stock {
-	color: #888888;
-}
-.carSources-cell .carSources-cell-content .carSources-cell-price .label {
-	display: inline;
-	color: #999;
+	letter-spacing: 0rpx;
+	line-height: 32rpx;
 }
 .carSources-cell .carSources-cell-content .carSources-cell-price .discount-icon {
-	display: block;
 	width: 20rpx;
 	height: 24rpx;
+	position: relative;
+}
+.carSources-cell .carSources-cell-content .price-type {
 	position: absolute;
-	top: 50%;
-	margin-top: -16rpx;
+	right: 30rpx;
+	top:76rpx;
 }
-.carSources-cell .carSources-cell-content .carSources-cell-price .discount-icon image {
-	width: 20rpx;
-	height: 24rpx;
+.carSources-cell .carSources-cell-content .fixed {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #3377EE;
+	line-height: 26rpx;
 }
-.carSources-cell .carSources-cell-label .no-stock {
+.carSources-cell .carSources-cell-content .bare {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #999999;
+	line-height: 26rpx;
+}
+/* 关注和靠谱 */
+.carSources-cell .carSources-cell-content .social {
+	margin-bottom: 30rpx;
+}
+.carSources-cell .carSources-cell-content .social image{
+	height: 30rpx;
+	width: 30rpx;
+	padding-top: 8rpx;
+}
+.carSources-cell .carSources-cell-content .social .follow {
+	display: inline;
+	border: 2rpx solid #E4E4E4;
+	border-radius: 4rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 24rpx;
+	color: #666666;
+	height: 44rpx;
+	width: 80rpx;
+	padding: 6rpx 12rpx;
+	margin-right: 16rpx;
+}
+.carSources-cell .carSources-cell-content .social .reliable {
+	display: inline;
+	border: 2rpx solid #E4E4E4;
+	border-radius: 4rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 24rpx;
+	color: #666666;
+	height: 44rpx;
+	width: 80rpx;
+	padding: 6rpx 12rpx;
+}
+.carSources-cell .carSources-cell-content .social .active {
+}
+.carSources-cell .carSources-cell-content .social .none-active {
+}
+/* 车源基本信息 和 车源渠道信息 */
+.third-part {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	line-height: 26rpx;
+}
+.carSources-cell .carSources-cell-content .basic-infomation {
+
+}
+.carSources-cell .carSources-cell-content .basic-infomation .basic-label:last-child {
+	padding: 0 0 0 12rpx;
+}
+.carSources-cell .carSources-cell-content .basic-infomation .basic-label:first-child {
+	padding: 0 12rpx 0 0;
+}
+.carSources-cell .carSources-cell-content .basic-infomation .basic-label {
+	display: inline;
+	font-family: "PingFangSC-Regular";
+	font-size: 24rpx;
+	color: #999999;
+	letter-spacing: 0rpx;
+	line-height: 24rpx;
+	padding: 0 12rpx;
+}
+.carSources-cell .carSources-cell-content .basic-infomation .basic-label:after {
+	content: '';
+	position: absolute;
+	right: 0;
+	left: 0;
+	border-right: 1rpx solid #999999;
+	z-index: -1;
+}
+.carSources-cell .carSources-cell-content .basic-infomation .basic-label:after:last-child {
+	border-right: 0rpx solid ;
+}
+.carSources-cell .carSources-cell-content .carSource-channel {
+
+}
+.carSources-cell .carSources-cell-content .carSource-channel .publish-date {
+	display: inline;
+	font-family: "PingFangSC-Regular";
+	font-size: 24rpx;
+	color: #999999;
+	letter-spacing: 0rpx;
+	line-height: 24rpx;
+}
+.carSources-cell .carSources-cell-content .carSource-channel .channel {
+	display: inline;
+	font-family: "PingFangSC-Regular";
+	font-size: 24rpx;
+	color: #385C9A;
+	letter-spacing: 0rpx;
+	line-height: 24rpx;
+}
+/* 物流信息 */
+.forth-part {
+	display: flex;
+	align-items: center;
+	margin-bottom: 30rpx;
+	position: relative;
+}
+.forth-part .horizontal {
+	display: flex;
+}
+.forth-part .vertical {
+	display: flex;
+	flex-direction: column;
+	width: 45%;
+}
+.carSources-cell .carSources-cell-content .logistics {
+	display: flex;
+	margin-bottom: 16rpx;
+}
+.carSources-cell .carSources-cell-content .logistics-free {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #F76F6F;
+	letter-spacing: 0rpx;
+	line-height: 26rpx;
+	margin-right: 20rpx;
+}
+
+.carSources-cell .carSources-cell-content .logistics-none-free {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #666666;
+	letter-spacing: 0rpx;
+	line-height: 26rpx;
+	margin-right: 20rpx;
+}
+.carSources-cell .carSources-cell-content .logistics-date {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #666666;
+	letter-spacing: 0rpx;
+	line-height: 26rpx;
+}
+.carSources-cell .carSources-cell-content .logistics-tips {
+	font-family: "PingFangSC-Regular";
+	font-size: 22rpx;
+	color: #999999;
+	letter-spacing: 0rpx;
+	line-height: 22rpx;
+}
+.carSources-cell .carSources-cell-content .deposit-label {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #666666;
+	letter-spacing: 0rpx;
+	line-height: 26rpx;
+	margin-right: 20rpx;
+}
+.carSources-cell .carSources-cell-content .tips-label {
+	font-family: "PingFangSC-Regular";
+	font-size: 22rpx;
+	color: #999999;
+	letter-spacing: 0rpx;
+	line-height: 24rpx;
+}
+.carSources-cell .carSources-cell-content .logistics-list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.carSources-cell .carSources-cell-content .logistics-list .logistics-block {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 8rpx 19rpx;
+
+	border: 1rpx solid #B2B2B2;
+	border-radius: 8rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 22rpx;
 	color: #888888;
+	letter-spacing: 0rpx;
+	line-height: 22rpx;
+	margin-right: 13rpx;
+}
+.carSources-cell .carSources-cell-content .logistics-list .selected {
+	border: 1rpx solid #3377EE;
+	border-radius: 8rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 22rpx;
+	color: #3377EE;
+	letter-spacing: 0rpx;
+	line-height: 22rpx;
+}
+/* 提示信息 */
+.fivth-part {
+	display: flex;
+	align-items: baseline;
+}
+/* 底部按钮 */
+.sixth-part {
+	display: flex;
+	justify-content: space-between;
+}
+.carSources-cell .carSources-cell-content .button {
+	height: 64rpx;
+	line-height: 64rpx;
+	text-align: center;
+	width: 48.5%;
+	font-family: "PingFangSC-Regular";
+	font-size: 28rpx;
+	border-radius: 8rpx;
+    -webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.carSources-cell .carSources-cell-content .full {
+	width: 100%;
+}
+.carSources-cell .carSources-cell-content .confirm {
+	background: #ED4149;
+	color: #FFFFFF;
+}
+.carSources-cell .carSources-cell-content .normal {
+	border: 1rpx solid #ED4149;
+	color: #ED4149;
+}
+
+/* 点 前缀*/
+.icon-point-padding {
+	padding-left: 24rpx;
+}
+.icon-point {
+	position: relative;
+	padding-left: 24rpx;
+}
+.icon-point:before {
+	position: absolute;
+	content: '';
+	width: 8rpx;
+	height: 8rpx;
+	background: #999999;
+	-moz-border-radius: 4rpx;
+	-webkit-border-radius: 4rpx;
+	border-radius: 4rpx;
+	left: 0;
+	top: 50%;
+	margin-top: -4rpx;
+}
+
+.icon-small-point {
+	position: relative;
+	padding-left: 23rpx;
+}
+.icon-small-point:before {
+	position: absolute;
+	content: '';
+	width: 6rpx;
+	height: 6rpx;
+	background: #999999;
+	-moz-border-radius: 3rpx;
+	-webkit-border-radius: 3rpx;
+	border-radius: 3rpx;
+	left: 9rpx;
+	top: 50%;
+	margin-top: -3rpx;
+}
+/* 虚线 */
+.temp {
+	position: relative;
+	padding-top: 25rpx;
+	margin-top: 25rpx;
+	padding-bottom: 20rpx;
+	margin-bottom: 20rpx;
+}
+.temp:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	border-top: 1rpx dotted #D9D9D9;
+}
+.temp:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	border-bottom: 1rpx dotted #D9D9D9;
 }

@@ -318,7 +318,7 @@ Page({
 		if (logisticsIndex !== carSource.selectedLogisticsIndex) {
       carSource.selectedLogisticsIndex = logisticsIndex
       carSource.selectedLogistics = logistics
-      this.updateTheCarSource(skuIndex, carSourceIndex, carsource)
+      this.updateTheCarSource(skuIndex, carSourceIndex, carSource)
 
 		} else {
 			// 如果索引相同， 不作任何事情
