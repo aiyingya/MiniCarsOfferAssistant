@@ -208,7 +208,7 @@
 								</view>
 
 								<!-- 关注靠谱 -->
-								<view wx:if="{{carSourceItem.supplierSelfSupport}}}" class="social"></view>
+								<view wx:if="{{carSourceItem.supplierSelfSupport}}" class="social"></view>
 								<view wx:else class="social">
 									<button
 											wx:if="{{carSourceItem.supplier.hasFocused}}"
@@ -225,7 +225,6 @@
 									<button
 											wx:else
 											class="followed"
-											disabled="true"
 											bindtap="handlerFollow"
 											data-sku-index="{{skuItemIndex}}"
 											data-sku="{{skuItem}}"
@@ -245,7 +244,7 @@
 											data-car-source="{{carSourceItem}}"
 											data-supplier="{{carSourceItem.supplier}}"
 									>
-										靠谱
+										已靠谱
 									</button>
 									<button
 											wx:else
