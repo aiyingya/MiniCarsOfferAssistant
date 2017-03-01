@@ -1,0 +1,65 @@
+
+
+
+.reliableDialog .content-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.reliableDialog .title-section {
+    font-family: "PingFangSC-Medium";
+    font-size: 32rpx;
+    color: #333333;
+    letter-spacing: 0rpx;
+    line-height: 30rpx;
+    margin-top: 50rpx;
+}
+
+.reliableDialog .follow-section {
+    margin-top: 20rpx;
+}
+.reliableDialog .follow {
+    display: inline;
+    border: 2rpx solid #E4E4E4;
+    border-radius: 4rpx;
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #666666;
+    height: 44rpx;
+    width: 80rpx;
+    padding: 6rpx 12rpx;
+    margin-right: 16rpx;
+}
+.reliableDialog .follow image{
+    height: 30rpx;
+    width: 30rpx;
+    padding-top: 8rpx;
+}
+.reliableDialog .reliable-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 75rpx;
+    margin-bottom: 91rpx;
+    width: 60%;
+}
+.reliableDialog .reliable-section .reliable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "PingFangSC-Regular";
+    font-size: 30rpx;
+    color: #666666;
+}
+.reliableDialog .reliable-section .reliable image{
+    height: 64rpx;
+    width: 64rpx;
+    margin-bottom: 31rpx;
+}
+.reliableDialog .close image {
+    height: 30rpx;
+    width: 30rpx;
+    position: absolute;
+    top: 30rpx;
+    right: 30rpx;
+}

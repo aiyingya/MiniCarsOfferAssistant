@@ -2,12 +2,15 @@
 <import src="../../lib/dialog/dialog.wxml"/>
 <template is="dialog" data="{{ ...$wux.dialog }}"/>
 
+<import src="../../lib/dialog/reliableDialog.wxml"/>
+<template is="reliableDialog" data="{{ ...$wux.reliableDialog }}"/>
+
 <!-- 货源列表 -->
 <view class="car-sources container">
 	<!-- SPU 详情展示 -->
 	<view class="carSources-topbar weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
 		<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-			<view class="weui-media-box__title">【{{carModelsInfo.officialPrice}}】 {{carModelsInfo.spuName}}</view>
+			<view class="weui-media-box__title">【{{carModelsInfo.officialPriceStr}}】 {{carModelsInfo.carModelName}}</view>
 		</view>
 	</view>
 
@@ -211,10 +214,10 @@
 											data-car-source-index="{{carSourceItemIndex}}"
 											data-car-source="{{carSourceItem}}"
 											data-supplier="{{carSourceItem.supplier}}"
-											class="reliable {{carSourceItem.supplier.hasBeenReliable? 'active': 'none-active'}}"
+											class="reliable {{carSourceItem.hasBeenReliableByUser? 'active': 'none-active'}}"
 									>
 										<image
-												src="{{carSourceItem.supplier.hasBeenReliable? '../../images/icons/icon_reliable_small_active.png': '../../images/icons/icon_reliable_small_normal.png'}}"
+												src="{{carSourceItem.hasBeenReliableByUser? '../../images/icons/icon_reliable_small_active.png': '../../images/icons/icon_reliable_small_normal.png'}}"
 										>
 										</image>
 										靠谱
@@ -298,7 +301,10 @@
 									<view
 											class="button normal {{carSourceItem.supplierSelfSupport? '':'full'}}"
 										  	bindtap="handlerContact"
-										  	data-car-source="{{carSourceItem}}"
+											data-sku-index="{{skuItemIndex}}"
+											data-sku="{{skuItem}}"
+											data-car-source-index="{{carSourceItemIndex}}"
+											data-car-source="{{carSourceItem}}"
 									>
 										联系
 									</view>
