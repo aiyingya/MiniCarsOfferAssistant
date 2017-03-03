@@ -414,6 +414,13 @@ page {
 	position: absolute;
 	right: 30rpx;
 	top:76rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.carSources-cell .carSources-cell-content .price-type image{
+	height: 32rpx;
+	width: 32rpx;
 }
 .carSources-cell .carSources-cell-content .fixed {
 	font-family: "PingFangSC-Regular";
@@ -487,6 +494,7 @@ page {
 	letter-spacing: 0rpx;
 	line-height: 24rpx;
 	padding: 0 12rpx;
+	position: relative;
 }
 .carSources-cell .carSources-cell-content .basic-infomation .basic-label:after {
 	content: '';
@@ -494,7 +502,6 @@ page {
 	right: 0;
 	left: 0;
 	border-right: 1rpx solid #999999;
-	z-index: -1;
 }
 .carSources-cell .carSources-cell-content .basic-infomation .basic-label:after:last-child {
 	border-right: 0rpx solid ;
@@ -522,8 +529,8 @@ page {
 .forth-part {
 	display: flex;
 	align-items: center;
-	margin-bottom: 30rpx;
 	position: relative;
+	justify-content: space-between;
 }
 .forth-part .horizontal {
 	display: flex;

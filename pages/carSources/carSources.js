@@ -97,6 +97,7 @@ Page({
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
     this.$wuxReliableDialog = app.wux(this).$wuxReliableDialog
+    this.$wuxNormalDialog = app.wux(this).$wuxNormalDialog
 	},
   onShow() {
     const that = this
@@ -338,12 +339,6 @@ Page({
     that.updateSearchResult({color: selectedCarColor, sourceRegion: selectedSourceRegion})
 		that.headlerRemoveRmendCarFacade()
 	},
-	// handlerMakePhoneCall() {
-	// 	let phone = '021-52559255,8902'
-	// 	wx.makePhoneCall({
-	// 		phoneNumber: phone
-	// 	})
-	// },
   /**
    * 横向滚动栏筛选项目点击行为
    * @param e
@@ -449,6 +444,35 @@ Page({
       }
     })
 	},
+  /**
+   * 展示价格文案文案
+   * @param e
+   */
+  handlerShowTips(e) {
+    const carSource = e.currentTarget.dataset.carSource;
+
+    let content = ''
+
+    if (carSource.supplierSelfSupport && carSource.priceFixed) {
+      content = '一口价  垫资拿车'
+    } else if (carSource.supplierSelfSupport && !carSource.priceFixed) {
+      content = '裸车价  垫资拿车'
+    } else if (!carSource.supplierSelfSupport && !carSource.priceFixed) {
+      content = '裸车价'
+    }
+
+    if (content !== '') {
+      const hideDialog = this.$wuxNormalDialog.open({
+        title: content,
+        content: '',
+        showCancel: false,
+        confirmText: '确定',
+        confirm: (res) => {
+
+        }
+      })
+    }
+  },
   /**
 	 * 评价某一个供应商是否靠谱
    * @param e

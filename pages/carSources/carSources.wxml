@@ -5,6 +5,9 @@
 <import src="../../lib/dialog/reliableDialog.wxml"/>
 <template is="reliableDialog" data="{{ ...$wux.reliableDialog }}"/>
 
+<import src="../../lib/dialog/normalDialog.wxml"/>
+<template is="normalDialog" data="{{ ...$wux.normalDialog }}"/>
+
 <!-- 货源列表 -->
 <view class="car-sources container">
 	<!-- SPU 详情展示 -->
@@ -177,15 +180,40 @@
 								</view>
 
 								<!-- 是否为一口价, 一口价布局不能放在横向 flex 布局之中， 需要固定在报价之下 -->
-								<view wx:if="{{carSourceItem.priceFixed}}" class="price-type fixed">
-									一口价
+								<view
+										wx:if="{{carSourceItem.priceFixed && carSourceItem.supplierSelfSupport}}"
+										class="price-type fixed"
+										bindtap="handlerShowTips"
+										data-car-source="{{carSourceItem}}"
+								>
+									一口价 垫资拿车
 									<image
 											src='../../images/icons/icon_prompt.png'
 									>
 									</image>
 								</view>
-								<view wx:else class="price-type bare">
+								<view wx:if="{{!carSourceItem.priceFixed && carSourceItem.supplierSelfSupport}}"
+									  class="price-type fixed"
+									  bindtap="handlerShowTips"
+									  data-car-source="{{carSourceItem}}"
+								>
+									裸车价 垫资拿车
+									<image
+											src='../../images/icons/icon_prompt.png'
+									>
+									</image>
+								</view>
+								<view
+										wx:if="{{!carSourceItem.priceFixed && !carSourceItem.supplierSelfSupport}}"
+										class="price-type fixed"
+										bindtap="handlerShowTips"
+										data-car-source="{{carSourceItem}}"
+								>
 									裸车价
+									<image
+											src='../../images/icons/icon_prompt.png'
+									>
+									</image>
 								</view>
 
 								<!-- 第二部分-关注组件-->
@@ -280,7 +308,7 @@
 													data-logistics="{{logisticsItem}}"
 											>
 												<view class="title">
-													驿站{{logisticsItemIndex + 1}}
+													驿站{{carSourceItem.logistics.length > 1? logisticsItemIndex + 1: ''}}
 												</view>
 												<view class="value">
 													{{logisticsItem.destination}}
@@ -289,11 +317,6 @@
 										</view>
 									</view>
 
-									<!-- 第五部分-要买车平台自营的描述信息 -->
-									<view wx:if="{{carSourceItem.supplierSelfSupport}}" class="fivth-part">
-										<view class="deposit-label icon-point">定金拿车，到货前0利息</view>
-										<view class="tips-label">(到货后，5天内万4，5天外万6)</view>
-									</view>
 								</view>
 
 								<!-- 第六部分-底部按钮 -->
