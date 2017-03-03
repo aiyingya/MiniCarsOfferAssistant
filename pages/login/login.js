@@ -41,6 +41,7 @@ Page({
 		that.users.exsitTenanTmember({
 			mobile: that.data.userPhoneValue,
 			success(res) {
+				console.log(res)
 				if(res) {
 					console.log(res)
 					that.users.getSMSCode({
@@ -57,6 +58,14 @@ Page({
 						notUserInYMC: true
 					})
 				}
+			},
+			fail(err) {
+				that.$wuxToast.show({
+					type: false,
+					timer: 2000,
+					color: '#fff',
+					text: err.message
+				})
 			}
 		})
 	},
@@ -98,7 +107,8 @@ Page({
 				snsId: snsId,
 				userId: userId
 			},
-			success: opts.success
+			success: opts.success,
+			fail: opts.fail
 		})
 	},
 	userLogin() {
@@ -133,6 +143,9 @@ Page({
 						accessToken: res.accessToken,
 						success(auth) {
 							console.log(auth)
+							wx.navigateBack()
+						},
+						fail() {
 							wx.navigateBack()
 						}
 					})

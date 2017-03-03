@@ -16,7 +16,7 @@
 							bindtouchmove="handletouchmove"
 							bindtouchend="handletouchend"
 							bindtouchcancel="handletouchcancel"
-							style="{{item.txtStyle}}"
+							style="{{item.Style}}"
 							data-index="{{index}}"
 							>
 							<view class="supplier-name">上海汽车经销商</view>

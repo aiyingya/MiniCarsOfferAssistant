@@ -20,7 +20,7 @@ Page({
       this.apHeight = 16
       this.offsetTop = 80
 			this.windowWidth = res.windowWidth - 30
-      this.setData({windowHeight: res.windowHeight + 'px'})
+      this.setData({windowHeight: (res.windowHeight-44) + 'px'})
     } catch (e) {
       
     }
@@ -78,11 +78,14 @@ Page({
 		let selectId = e.currentTarget.dataset.id
 		let carModelsList = this.data.cacheCarModelsList
 		let newModelsList = []
-		
-		for(let item of carModelsList) {
-			if(item.yearStyle === selectItem.name) {
-				//console.log(item.yearStyle,selectItem.name)
-				newModelsList.push(item)
+		if(selectItem.name === '全部') {
+			newModelsList = carModelsList
+		}else {
+			for(let item of carModelsList) {
+				if(item.yearStyle === selectItem.name) {
+					//console.log(item.yearStyle,selectItem.name)
+					newModelsList.push(item)
+				}
 			}
 		}
 		this.drawCanvas(newModelsList)
@@ -105,6 +108,11 @@ Page({
 		wx.navigateTo({  
       url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
     }) 
+	},
+	headlerRemoveRmendCarFacade() {
+		this.setData({
+			showRmendCarFacade: false
+		})
 	},
 	drawCanvas(list) {
 		if (!list) {return}

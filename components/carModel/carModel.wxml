@@ -11,7 +11,7 @@
 			data-carmodelsinfo="{{item}}"
 			>
 			<view class="carModels-message-title">
-				【{{item.officialPrice}}】 {{item.carModelName}} 
+				【{{item.officialPriceStr}}】 {{item.carModelName}} 
 			</view>
 			
 			<view class="carModels-quote-btn">

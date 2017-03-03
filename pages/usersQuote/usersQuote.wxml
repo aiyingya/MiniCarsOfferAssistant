@@ -61,7 +61,7 @@
 					class="weui-cell__bd weui-cell_primary"
 					bindtap="handleToSupplier"
 					>
-						<view>收藏的供货商</view>
+						<view>关注的供货商</view>
 				</view>
 			</view>
 	</view>

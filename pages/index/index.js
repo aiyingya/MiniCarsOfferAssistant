@@ -19,9 +19,16 @@ Page({
   //事件处理函数
   searchCarType() {
 		console.log('To Search')
-		wx.navigateTo({
-			url: '../search/search'
-		})
+		let userInfo = app.userInfo()
+		if(userInfo) {
+			wx.navigateTo({
+				url: '../search/search'
+			})
+		}else {
+			wx.navigateTo({  
+				url: '../login/login'
+			}) 
+		}	
 	},
 	handleCheckMore() {
 		wx.navigateTo({
@@ -108,7 +115,13 @@ Page({
 		// 刷新用户信息.
 		
 		app.getNewAccessToken()
+		
   },
+	onShow() {
+		// 获取locationId
+		app.getLocationId()
+		
+	},
 	getHotpushCars () {
 		let that = this
 		let HTTPS_URL = app.config.ymcServerHTTPSUrl
@@ -190,6 +203,7 @@ Page({
 	handlerToCarsModels(e) {
 		let carsInfo = JSON.stringify(e.currentTarget.dataset.carsinfo)
 		let userInfo = app.userInfo()
+		
 		if(userInfo) {
 			wx.navigateTo({  
 				url: '../carModels/carModels?carsInfo='+ carsInfo
@@ -202,6 +216,7 @@ Page({
 	},
 	handlerMakePhoneCall() {
 		let phone = '021-52559255,8902'
+		
 		wx.makePhoneCall({
 			phoneNumber: phone
 		})
