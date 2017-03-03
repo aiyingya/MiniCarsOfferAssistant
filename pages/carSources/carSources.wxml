@@ -130,12 +130,18 @@
 					</view>
 					<view class = "carSources-section-price">
 						<image
+								wx:if="{{ skuItem.carSourcesList[0].discount !== 0 }}"
 								class="discount-icon"
 								src="{{skuItem.carSourcesList[0].discount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
 						>
 						</image>
-						<view class="discount">{{skuItem.carSourcesList[0].discount}}万/</view>
-						<view class="price">{{skuItem.carSourcesList[0].price}}万</view>
+						<view
+								wx:if="{{ skuItem.carSourcesList[0].discount !== 0 }}"
+								class="discount"
+						>
+							{{ skuItem.carSourcesList[0].discount > 0? skuItem.carSourcesList[0].discount : - skuItem.carSourcesList[0].discount }}元/
+						</view>
+						<view class="price">{{skuItem.carSourcesList[0].priceDesc}}</view>
 					</view>
 					<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'store'}}">包邮到门店</view>
 					<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'post'}}">包邮到驿站</view>
@@ -170,12 +176,18 @@
 									<!-- 供货价格 -->
 									<view class = "carSources-cell-price">
 										<image
+												wx:if="{{ skuItem.carSourcesList[0].discount !== 0 }}"
 												class="discount-icon"
-												src="{{carSourceItem.discount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+												src="{{skuItem.carSourcesList[0].discount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
 										>
 										</image>
-										<view class="discount">{{carSourceItem.discount}}万/</view>
-										<view class="price">{{carSourceItem.price}}万</view>
+										<view
+												wx:if="{{ skuItem.carSourcesList[0].discount !== 0 }}"
+												class="discount"
+										>
+											{{ skuItem.carSourcesList[0].discount > 0? skuItem.carSourcesList[0].discount : - skuItem.carSourcesList[0].discount }}元/
+										</view>
+										<view class="price">{{skuItem.carSourcesList[0].priceDesc}}</view>
 									</view>
 								</view>
 
@@ -269,7 +281,7 @@
 								</view>
 
 								<!-- 第四部分-物流信息 -->
-								<view class="temp">
+								<view class="temp" wx:if="{{ carSourceItem.logistics && carSourceItem.logistics.length }}">
 									<view class="forth-part">
 										<!-- 物流信息-费用和时间 -->
 										<view class="{{carSourceItem.logistics.length > 0? 'vertical':'horizontal'}}">

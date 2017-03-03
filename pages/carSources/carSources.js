@@ -65,7 +65,7 @@ Page({
 					//item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
 					for (let j = 0; j < carSourcesBySkuInSpuItem.carSourcesList.length ; j++) {
             const carSourcesItem = carSourcesBySkuInSpuItem.carSourcesList[j]
-						if (carSourcesItem.logistics.length) {
+						if (carSourcesBySkuInSpuList.logistics && carSourcesItem.logistics.length) {
               carSourcesItem.selectedLogistics = carSourcesItem.logistics[0]
 							carSourcesItem.selectedLogisticsIndex = 0
             } else {
