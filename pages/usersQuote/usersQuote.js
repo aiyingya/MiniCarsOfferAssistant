@@ -6,7 +6,8 @@ Page({
 	},
 	onLoad() {
 		let userinfo = app.userInfo()
-		
+
+    this.$wuxToast = app.wux(this).$wuxToast
 		console.log(userinfo)
 	},
 	onShow() {

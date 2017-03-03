@@ -43,9 +43,19 @@ Page({
     } catch (e) {
       
     }
-		app.modules.request({
+
+    console.log(app.globalData)
+
+    const locationIds = app.globalData.location.map(function(a) {return a.locationId;});
+    const locationIdsString = locationIds.join(',')
+
+    app.modules.request({
 			url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.carModelId + '/sources',
 			method: 'GET',
+      data: {
+			  userId: app.userInfo().userId,
+        locationIds: locationIdsString
+      },
 			success: function(res) {
 				console.log(res)
 				let carSourcesBySkuInSpuList = []
