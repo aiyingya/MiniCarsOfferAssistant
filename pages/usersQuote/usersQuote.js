@@ -26,13 +26,36 @@ Page({
 					Authorization: userinfo.accessToken
 				},
 				success (res) {
+					let location = []
 					userinfo.mobile = res.mobile
-					userinfo.weixinName = weixinUsersInfo.weixinName
+					userinfo.weixinName = weixinUsersInfo.weixinName || res.name
 					userinfo.weixinPortrait = weixinUsersInfo.weixinPortrait
 					userinfo.tenants = res.tenants
+					
+					if(res.tenants) {
+						for(let item of res.tenants) {
+							if(item.addressList.length > 0) {
+								for(let aitem of item.addressList) {
+									location.push(aitem.location)
+								}
+							}
+						}
+					}
+				
+					if(location) {
+						app.globalData.location = location
+					}	
 					that.setData({
 						userInfo: userinfo,
 						weixinPortrait: weixinUsersInfo.weixinPortrait
+					})
+				},
+				fail(err) {
+					that.$wuxToast.show({
+						type: false,
+						timer: 2000,
+						color: '#fff',
+						text: '服务器错误',
 					})
 				}
 			})

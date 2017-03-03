@@ -91,6 +91,39 @@ App({
 			}
 		}
 	},
+	getLocationId () {	
+		let that = this 
+		let userInfo = that.userInfo()
+		
+		if(userInfo) {
+			const _HTTPS = `${that.config.ucServerHTTPSUrl}cgi/tenant/member/tenant`			
+			that.modules.request({
+				url: _HTTPS, 
+				method: 'GET',
+				loadingType: 'none',
+				data: {
+					uid: userInfo.userId
+				},
+				header: {
+					Authorization: userInfo.accessToken
+				},
+				success (res) {
+					let location = []
+					let setLocation = {}
+					if(res.tenants) {
+						for(let item of res.tenants) {
+							if(item.addressList.length > 0) {
+								for(let aitem of item.addressList) {
+									location.push(aitem.location)
+								}
+							}
+						}
+					}
+					that.globalData.location = location
+				}
+			})
+		}
+	},
   globalData:{
     /***
 		 * 目前有两种情况，第一种，当用户授权微信信息，则数据结构如下，loginChannel 为 weixin
@@ -108,7 +141,8 @@ App({
      * weixinPortrait : "http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eopEuOnnoMv4l2otkB2d209UPSabmhQUzBGPXX3lic2HU3KahDicODEVskez8vzhSZ2qXjGZOibQhTeg/0"
 		 * loginChannel: 'weixin' 'weixin'|'guest'
      */
-    userInfo: null
+    userInfo: null,
+		location: null
   },
   wux: wux,
 	config: config,
