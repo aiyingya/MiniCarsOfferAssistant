@@ -98,6 +98,8 @@ Page({
     let carSKUInfoJSONString = options.carInfo
     let carModelInfoJSONString = options.carModelsInfo
 
+    console.log(options)
+
     if (quotationJSONString && quotationJSONString.length) {
       /***
        * 来源页面来自于详情页面， 参数中有 quotation

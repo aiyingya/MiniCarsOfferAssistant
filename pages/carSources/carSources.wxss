@@ -111,6 +111,7 @@ page {
 	align-items:center;
 	position:relative;
 	padding: 0 27rpx;
+	z-index: 1;
 }
 .filter-scroll-view .scroll-filter:last-child {
 	padding: 0 0 0 27rpx;
@@ -128,8 +129,8 @@ page {
 	border-right: 1rpx solid #CCCCCC;
 	z-index: -1;
 }
-.filter-scroll-view .scroll-filter:after:last-child {
-	border-right: 0rpx solid ;
+.filter-scroll-view .scroll-filter:last-child:after {
+	border-right: 1rpx solid #FFFFFF;
 }
 .filter-scroll-view .scroll-filter .filter {
 	padding: 12rpx 27rpx 12rpx 27rpx;
@@ -146,11 +147,11 @@ page {
 	margin-right: 0rpx;
 }
 .filter-scroll-view .scroll-filter .selected {
-	border: 1px solid #ED4149;
+	border: 1rpx solid #ED4149;
 	color: #ED4149;
 }
 .filter-scroll-view .scroll-filter .unselected {
-	border: 1px solid #333333;
+	border: 1rpx solid #333333;
 	color: #333333;
 }
 .carSources-topbar {
@@ -476,6 +477,7 @@ page {
 	align-items: baseline;
 	justify-content: space-between;
 	line-height: 26rpx;
+	margin-bottom: 20rpx;
 }
 .carSources-cell .carSources-cell-content .basic-infomation {
 
@@ -501,10 +503,12 @@ page {
 	position: absolute;
 	right: 0;
 	left: 0;
+	top: 4rpx;
+	bottom: 4rpx;
 	border-right: 1rpx solid #999999;
 }
-.carSources-cell .carSources-cell-content .basic-infomation .basic-label:after:last-child {
-	border-right: 0rpx solid ;
+.carSources-cell .carSources-cell-content .basic-infomation .basic-label:last-child:after {
+	border-right: 1rpx solid #FFFFFF;
 }
 .carSources-cell .carSources-cell-content .carSource-channel {
 

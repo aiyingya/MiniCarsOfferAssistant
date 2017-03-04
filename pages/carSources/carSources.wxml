@@ -268,9 +268,9 @@
 									<view class="third-part">
 										<!-- 车源基本信息 -->
 										<view class="basic-infomation">
-											<view class="basic-label">{{carSourceItem.sourceRegionDesc}}</view>
-											<view class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
-											<view class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
+											<view wx:if="{{carSourceItem.sourceRegionDesc && carSourceItem.sourceRegionDesc.length}}" class="basic-label">{{carSourceItem.sourceRegionDesc}}</view>
+											<view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
+											<view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
 										</view>
 
 										<!-- 货源渠道信息 -->
@@ -328,7 +328,6 @@
 												</view>
 											</view>
 										</view>
-
 									</view>
 
 									<!-- 第六部分-底部按钮 -->
