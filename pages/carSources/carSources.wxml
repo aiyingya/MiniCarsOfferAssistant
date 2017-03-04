@@ -346,7 +346,7 @@
 												wx:if="{{carSourceItem.supplierSelfSupport}}"
 												class="button confirm"
 												bindtap="handlerBookCar"
-												data-sku="skuItem"
+												data-sku-item="{{skuItem}}"
 												data-car-source="{{carSourceItem}}"
 										>
 											定车

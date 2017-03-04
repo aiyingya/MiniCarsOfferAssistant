@@ -283,6 +283,7 @@ page {
 .carSources-section {
 	background-color: #fff;
 	position: relative;
+	border: 1rpx solid #E4E4E4;
 }
 .carSources-section .carSources-section-content {
 	padding: 30rpx 30rpx;

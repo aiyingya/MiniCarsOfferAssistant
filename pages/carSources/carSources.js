@@ -525,7 +525,7 @@ Page({
     const contact = carSource.supplier.contact;
 
     wx.makePhoneCall({
-      phoneNumber: 'contact',
+      phoneNumber: contact,
       success: function(res) {
         if (!carSource.supplierSelfSupport) {
           // 非自营的供货商才可以评价靠谱与否
@@ -546,9 +546,8 @@ Page({
   handlerBookCar(e) {
     const that = this
 
-    const sku = e.currentTarget.dataset.skuItem
-    // FIXME: 这里的 skuId 并不能确保获得
-    const skuId = sku.skuId;
+    const skuItem = e.currentTarget.dataset.skuItem
+    const skuId = skuItem.carSku.skuId;
 
     const hideDialog = this.$wuxDialog.open({
       title: '发起定车后， 将会有工作人员与您联系',
