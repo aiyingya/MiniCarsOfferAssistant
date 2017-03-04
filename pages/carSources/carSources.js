@@ -31,6 +31,9 @@ Page({
 	onLoad (options) {
 		const that = this
     const carModelsInfo = JSON.parse(options.carModelsInfo)
+    this.setData({
+      carModelsInfo: carModelsInfo
+    })
     console.log(options)
     console.log(carModelsInfo)
     const HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
@@ -93,7 +96,6 @@ Page({
         console.log(scrollFilters)
 				
 				that.setData({
-					carModelsInfo: carModelsInfo,
           carSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
 					cacheCarSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
 					filters: filters,
