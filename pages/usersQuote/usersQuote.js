@@ -35,7 +35,7 @@ Page({
 					
 					if(res.tenants) {
 						for(let item of res.tenants) {
-							if(item.addressList.length > 0) {
+							if(item.addressList && item.addressList.length > 0) {
 								for(let aitem of item.addressList) {
 									location.push(aitem.location)
 								}
