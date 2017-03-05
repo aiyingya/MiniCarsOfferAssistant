@@ -287,7 +287,7 @@ page {
 }
 .carSources-section .carSources-section-content {
 	padding: 30rpx 30rpx;
-	height: 144rpx;
+	height: 100rpx;
 	position: relative;
 	display: block;
 }

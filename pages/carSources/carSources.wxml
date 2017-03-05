@@ -130,18 +130,18 @@
 						</view>
 						<view class = "carSources-section-price">
 							<image
-									wx:if="{{ skuItem.carSourcesList[0].discount !== 0 }}"
+									wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
 									class="discount-icon"
-									src="{{skuItem.carSourcesList[0].discount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+									src="{{skuItem.carSourcesList[0].viewModelDiscount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
 							>
 							</image>
 							<view
-									wx:if="{{ skuItem.carSourcesList[0].discount !== 0 }}"
+									wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
 									class="discount"
 							>
-								{{ skuItem.carSourcesList[0].discount > 0? skuItem.carSourcesList[0].discount : - skuItem.carSourcesList[0].discount }}元/
+								{{ skuItem.carSourcesList[0].viewModelDiscountDesc }}元/
 							</view>
-							<view class="price">{{skuItem.carSourcesList[0].priceDesc}}</view>
+							<view class="price">{{skuItem.carSourcesList[0].viewModelPriceDesc}}</view>
 						</view>
 						<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'store'}}">包邮到门店</view>
 						<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'post'}}">包邮到驿站</view>
@@ -176,18 +176,18 @@
 										<!-- 供货价格 -->
 										<view class = "carSources-cell-price">
 											<image
-													wx:if="{{ skuItem.carSourcesList[0].discount !== 0 }}"
+													wx:if="{{ carSourceItem.viewModelDiscount !== 0 }}"
 													class="discount-icon"
-													src="{{skuItem.carSourcesList[0].discount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+													src="{{ carSourceItem.viewModelDiscount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
 											>
 											</image>
 											<view
-													wx:if="{{ skuItem.carSourcesList[0].discount !== 0 }}"
+													wx:if="{{ carSourceItem.viewModelDiscount !== 0 }}"
 													class="discount"
 											>
-												{{ skuItem.carSourcesList[0].discount > 0? skuItem.carSourcesList[0].discount : - skuItem.carSourcesList[0].discount }}元/
+												{{ carSourceItem.viewModelDiscountDesc }}元/
 											</view>
-											<view class="price">{{skuItem.carSourcesList[0].priceDesc}}</view>
+											<view class="price">{{carSourceItem.viewModelPriceDesc}}</view>
 										</view>
 									</view>
 

@@ -1,4 +1,6 @@
 let app = getApp();
+let util = require('../../utils/util.js')
+
 Page({
 	data: {
 		// 全局视图
@@ -68,14 +70,10 @@ Page({
 					//item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
 					for (let j = 0; j < carSourcesBySkuInSpuItem.carSourcesList.length ; j++) {
             const carSourcesItem = carSourcesBySkuInSpuItem.carSourcesList[j]
-						if (carSourcesBySkuInSpuList.logistics && carSourcesItem.logistics.length) {
-              carSourcesItem.selectedLogistics = carSourcesItem.logistics[0]
-							carSourcesItem.selectedLogisticsIndex = 0
-            } else {
-							carSourcesItem.selectedLogistics = {}
-							carSourcesItem.selectedLogisticsIndex = -1
-						}
+            // 默认选择第一个物流选项项
+            that.selectLogistics(carSourcesItem, 0);
 					}
+
           carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
 				}
 
@@ -111,6 +109,33 @@ Page({
     this.$wuxReliableDialog = app.wux(this).$wuxReliableDialog
     this.$wuxNormalDialog = app.wux(this).$wuxNormalDialog
 	},
+  /**
+   * 该方法不会生成新的车源对象
+   * @param carSourceItem
+   * @param selectedLogisticsIndex
+   * @return {*}
+   */
+  selectLogistics(carSourceItem, selectedLogisticsIndex) {
+	  if (carSourceItem.logistics && carSourceItem.logistics.length) {
+      if (carSourceItem.logistics[selectedLogisticsIndex]) {
+        carSourceItem.selectedLogistics = carSourceItem.logistics[selectedLogisticsIndex]
+        carSourceItem.selectedLogisticsIndex = selectedLogisticsIndex
+        carSourceItem.viewModelPrice = carSourceItem.price + carSourceItem.selectedLogistics.logisticsFee
+        carSourceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourceItem.viewModelPrice)
+        carSourceItem.viewModelDiscount = util.downPrice(carSourceItem.viewModelPrice, this.data.carModelsInfo.officialPrice)
+        carSourceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourceItem.viewModelDiscount)
+        console.log(carSourceItem)
+        return carSourceItem;
+      }
+    }
+    carSourceItem.selectedLogistics = null;
+	  carSourceItem.selectedLogisticsIndex = -1;
+	  carSourceItem.viewModelPrice = carSourceItem.price;
+	  carSourceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourceItem.viewModelPrice);
+	  carSourceItem.viewModelDiscount = util.downPrice(carSourceItem.viewModelPrice, this.data.carModelsInfo.officialPrice);
+	  carSourceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourceItem.viewModelDiscount);
+	  return carSourceItem
+  },
   onShow() {
     const that = this
     console.log("page show")
@@ -416,13 +441,12 @@ Page({
 
     const skuIndex = e.currentTarget.dataset.skuIndex
     const carSourceIndex = e.currentTarget.dataset.carSourceIndex
-    const carSource = e.currentTarget.dataset.carSource
+    let carSource = e.currentTarget.dataset.carSource
     const logisticsIndex = e.currentTarget.dataset.logisticsIndex
     const logistics = e.currentTarget.dataset.logistics
 
 		if (logisticsIndex !== carSource.selectedLogisticsIndex) {
-      carSource.selectedLogisticsIndex = logisticsIndex
-      carSource.selectedLogistics = logistics
+      carSource = this.selectLogistics(carSource, logisticsIndex);
       this.updateTheCarSource(skuIndex, carSourceIndex, carSource)
 
 		} else {
