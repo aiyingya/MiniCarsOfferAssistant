@@ -20,7 +20,7 @@
 	<!-- 页面主体 -->
 	<view class="carSources-body">
 		<view
-				wx:if="{{carSourcesBySkuInSpuList && carSourcesBySkuInSpuList.length > 0}}"
+				wx:if="{{nodata}}"
 		>
 			<!-- 下拉框筛选 -->
 			<view class="carSources-navbar">
@@ -125,26 +125,39 @@
 						  data-sku-item="{{skuItem}}"
 					>
 						<!-- 库存分区列表 -->
-						<view class="title">
-							{{skuItem.carSku.externalColorName}}/{{skuItem.carSku.internalColorName}}
-						</view>
-						<view class = "carSources-section-price">
-							<image
-									wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
-									class="discount-icon"
-									src="{{skuItem.carSourcesList[0].viewModelDiscount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
-							>
-							</image>
-							<view
-									wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
-									class="discount"
-							>
-								{{ skuItem.carSourcesList[0].viewModelDiscountDesc }}元/
+						<view class="first-part">
+							<view class="title">
+								外:{{skuItem.carSku.externalColorName}} 内:{{skuItem.carSku.internalColorName}}
 							</view>
-							<view class="price">{{skuItem.carSourcesList[0].viewModelPriceDesc}}</view>
+							<view
+									wx:if="{{ skuItem.carSku.viewModelTagCollection.length }}"
+									class="tag-collection"
+							>
+								{{skuItem.carSku.viewModelTagCollection}}
+							</view>
 						</view>
-						<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'store'}}">包邮到门店</view>
-						<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'post'}}">包邮到驿站</view>
+
+						<view class="second-part">
+							<view class = "carSources-section-price">
+								<image
+										wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
+										class="discount-icon"
+										src="{{skuItem.carSourcesList[0].viewModelDiscount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+								>
+								</image>
+								<view
+										wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
+										class="discount"
+								>
+									{{ skuItem.carSourcesList[0].viewModelDiscountDesc }}元/
+								</view>
+								<view class="price">{{skuItem.carSourcesList[0].viewModelPriceDesc}}</view>
+								<view class="discount">起</view>
+							</view>
+						</view>
+						<!--<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'store'}}">包邮到门店</view>-->
+						<!--<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'post'}}">包邮到驿站</view>-->
+
 						<!-- 货源右侧的展开标记 -->
 						<image
 								class="icon-dropdownarrow"
@@ -271,6 +284,12 @@
 											<view wx:if="{{carSourceItem.sourceRegionDesc && carSourceItem.sourceRegionDesc.length}}" class="basic-label">{{carSourceItem.sourceRegionDesc}}</view>
 											<view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
 											<view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
+											<view
+													wx:if="{{ !(carSourceItem.sourceRegionDesc && carSourceItem.sourceRegionDesc.length) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
+													class="basic-label"
+											>
+												车源信息暂无
+											</view>
 										</view>
 
 										<!-- 货源渠道信息 -->
@@ -363,7 +382,8 @@
 			</view>
 		</view>
 		<view wx:else class="nodata">
-			供货暂无数据
+			<image class="carSource-sections-nodata-image" src="../../images/icons/orderlist_icon_noorder.png"></image>
+			<view class="carSource-sections-nodata-text">暂无货源</view>
 		</view>
 	</view>
 </view>

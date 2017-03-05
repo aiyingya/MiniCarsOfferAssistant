@@ -3,6 +3,8 @@ let util = require('../../utils/util.js')
 
 Page({
 	data: {
+	  // 有无数据
+    nodata: true,
 		// 全局视图
     windowHeight: '',
 		// 头部 SPU 信息视图
@@ -68,12 +70,29 @@ Page({
 				for (let i = 0; i < res.carSourcesBySkuInSpuList.length; i++) {
         	let carSourcesBySkuInSpuItem = res.carSourcesBySkuInSpuList[i]
 					//item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
+          const tagsCollection = []
+          let priceFixedFlag = false
+          let supplierSelfSupportFlag = false;
+
 					for (let j = 0; j < carSourcesBySkuInSpuItem.carSourcesList.length ; j++) {
             const carSourcesItem = carSourcesBySkuInSpuItem.carSourcesList[j]
             // 默认选择第一个物流选项项
             that.selectLogistics(carSourcesItem, 0);
+            if (carSourcesItem.priceFixed) {
+              if (!priceFixedFlag) {
+                tagsCollection.push("一口价")
+                priceFixedFlag = true
+              }
+            }
+            if (carSourcesItem.supplierSelfSupport) {
+              if (!supplierSelfSupportFlag) {
+                tagsCollection.push("垫资拿车")
+                supplierSelfSupportFlag = true
+              }
+            }
 					}
 
+					carSourcesBySkuInSpuItem.carSku.viewModelTagCollection = tagsCollection.join(" ");
           carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
 				}
 
@@ -91,9 +110,8 @@ Page({
           }
         }
 
-        console.log(scrollFilters)
-				
 				that.setData({
+				  nodata: carSourcesBySkuInSpuList.length !== 0,
           carSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
 					cacheCarSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
 					filters: filters,
@@ -246,6 +264,10 @@ Page({
       console.log("车源对象不符合， 不提供更新功能")
     }
   },
+  /**
+   * 更新 sku 分区数据
+   * @param skuIndex
+   */
   updateTheSkuSection(skuIndex) {
     const list = this.data.carSourcesBySkuInSpuList
     const section = this.data.carSourcesBySkuInSpuList[skuIndex]
