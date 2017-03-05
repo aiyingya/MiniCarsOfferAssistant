@@ -19,7 +19,7 @@
 					hover-class="quotebtn-active" 
 					class="quotebtn" 
 					type="primary"
-					bindtap="handlerPromptly"
+					catchtap="handlerPromptly"
 					data-carmodelsinfo="{{item}}"
 					>立即报价</button>
 			</view>
