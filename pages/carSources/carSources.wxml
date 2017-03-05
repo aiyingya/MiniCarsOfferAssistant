@@ -275,7 +275,7 @@
 
 										<!-- 货源渠道信息 -->
 										<view wx:if="{{!carSourceItem.supplierSelfSupport}}" class="carSource-channel">
-											<view class="publish-date">{{carSourceItem.publishDateDesc}}</view>
+											<view class="publish-date">{{carSourceItem.viewModelPublishDateDesc}}</view>
 											<view class="channel icon-small-point">{{carSourceItem.publishChannel}}</view>
 										</view>
 									</view>

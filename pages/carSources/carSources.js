@@ -109,33 +109,6 @@ Page({
     this.$wuxReliableDialog = app.wux(this).$wuxReliableDialog
     this.$wuxNormalDialog = app.wux(this).$wuxNormalDialog
 	},
-  /**
-   * 该方法不会生成新的车源对象
-   * @param carSourceItem
-   * @param selectedLogisticsIndex
-   * @return {*}
-   */
-  selectLogistics(carSourceItem, selectedLogisticsIndex) {
-	  if (carSourceItem.logistics && carSourceItem.logistics.length) {
-      if (carSourceItem.logistics[selectedLogisticsIndex]) {
-        carSourceItem.selectedLogistics = carSourceItem.logistics[selectedLogisticsIndex]
-        carSourceItem.selectedLogisticsIndex = selectedLogisticsIndex
-        carSourceItem.viewModelPrice = carSourceItem.price + carSourceItem.selectedLogistics.logisticsFee
-        carSourceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourceItem.viewModelPrice)
-        carSourceItem.viewModelDiscount = util.downPrice(carSourceItem.viewModelPrice, this.data.carModelsInfo.officialPrice)
-        carSourceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourceItem.viewModelDiscount)
-        console.log(carSourceItem)
-        return carSourceItem;
-      }
-    }
-    carSourceItem.selectedLogistics = null;
-	  carSourceItem.selectedLogisticsIndex = -1;
-	  carSourceItem.viewModelPrice = carSourceItem.price;
-	  carSourceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourceItem.viewModelPrice);
-	  carSourceItem.viewModelDiscount = util.downPrice(carSourceItem.viewModelPrice, this.data.carModelsInfo.officialPrice);
-	  carSourceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourceItem.viewModelDiscount);
-	  return carSourceItem
-  },
   onShow() {
     const that = this
     console.log("page show")
@@ -227,6 +200,33 @@ Page({
     }
   },
   /**
+   * 该方法不会生成新的车源对象
+   * @param carSourceItem
+   * @param selectedLogisticsIndex
+   * @return {*}
+   */
+  selectLogistics(carSourceItem, selectedLogisticsIndex) {
+    if (carSourceItem.logistics && carSourceItem.logistics.length) {
+      if (carSourceItem.logistics[selectedLogisticsIndex]) {
+        carSourceItem.selectedLogistics = carSourceItem.logistics[selectedLogisticsIndex]
+        carSourceItem.selectedLogisticsIndex = selectedLogisticsIndex
+        carSourceItem.viewModelPrice = carSourceItem.price + carSourceItem.selectedLogistics.logisticsFee
+        carSourceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourceItem.viewModelPrice)
+        carSourceItem.viewModelDiscount = util.downPrice(carSourceItem.viewModelPrice, this.data.carModelsInfo.officialPrice)
+        carSourceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourceItem.viewModelDiscount)
+        console.log(carSourceItem)
+        return carSourceItem;
+      }
+    }
+    carSourceItem.selectedLogistics = null;
+    carSourceItem.selectedLogisticsIndex = -1;
+    carSourceItem.viewModelPrice = carSourceItem.price;
+    carSourceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourceItem.viewModelPrice);
+    carSourceItem.viewModelDiscount = util.downPrice(carSourceItem.viewModelPrice, this.data.carModelsInfo.officialPrice);
+    carSourceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourceItem.viewModelDiscount);
+    return carSourceItem
+  },
+  /**
    * 由于更新一个二维数组中的 carSource 对象暂时没有更好的办法，所以只能通过全量
    * 更新 this.data 中的二维数组才能达到目的
    *
@@ -245,6 +245,19 @@ Page({
     } else {
       console.log("车源对象不符合， 不提供更新功能")
     }
+  },
+  updateTheSkuSection(skuIndex) {
+    const list = this.data.carSourcesBySkuInSpuList
+    const section = this.data.carSourcesBySkuInSpuList[skuIndex]
+    for (let i = 0; i < section.carSourcesList.length; i++) {
+      const carSource = section.carSourcesList[i]
+      const publishDate = new Date(carSource.publishDate)
+      carSource.viewModelPublishDateDesc = util.dateDiff(publishDate);
+    }
+
+    this.setData({
+      carSourcesBySkuInSpuList: list
+    })
   },
   getIdWithFiltersIndex(index) {
     console.log(this.data.scrollFiltersSelectedIndexes)
@@ -427,6 +440,7 @@ Page({
         selectedSectionIndex: -1
 			})
 		} else {
+      this.updateTheSkuSection(index);
       this.setData({
         selectedSectionIndex: index
       })

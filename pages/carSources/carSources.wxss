@@ -300,28 +300,28 @@ page {
 	margin-bottom: 20rpx;
 }
 .carSources-section .carSources-section-content .carSources-section-price {
-	display: inline;
+	display: flex;
+	justify-content: flex-start;
+	align-items: baseline;
 	margin-right: 20rpx;
+}
+.carSources-section .carSources-section-content .carSources-section-price .discount-icon {
+	width: 20rpx;
+	height: 24rpx;
+	position: relative;
 }
 .carSources-section .carSources-section-content .carSources-section-price .discount {
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
 	line-height: 26rpx;
-	display: inline;
 }
 .carSources-section .carSources-section-content .carSources-section-price .price {
-	display: inline;
 	font-family: "SFUIDisplay-Regular";
 	font-size: 34rpx;
 	color: #ED4149;
 	letter-spacing: 0rpx;
 	line-height: 32rpx;
-}
-.carSources-section .carSources-section-content .carSources-section-price .discount-icon {
-	width: 20rpx;
-	height: 24rpx;
-	position: relative;
 }
 .carSources-section .carSources-section-content .logisticsFree {
 	display: inline;
@@ -390,27 +390,27 @@ page {
 	line-height: 30rpx;
 }
 .carSources-cell .carSources-cell-content .carSources-cell-price {
-	display: inline;
+	display: flex;
+	justify-content: flex-end;
+	flex-basis: 400rpx;
+}
+.carSources-cell .carSources-cell-content .carSources-cell-price .discount-icon {
+	width: 20rpx;
+	height: 24rpx;
+	position: relative;
 }
 .carSources-cell .carSources-cell-content .carSources-cell-price .discount {
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
 	line-height: 26rpx;
-	display: inline;
 }
 .carSources-cell .carSources-cell-content .carSources-cell-price .price {
-	display: inline;
 	font-family: "SFUIDisplay-Regular";
 	font-size: 34rpx;
 	color: #ED4149;
 	letter-spacing: 0rpx;
 	line-height: 32rpx;
-}
-.carSources-cell .carSources-cell-content .carSources-cell-price .discount-icon {
-	width: 20rpx;
-	height: 24rpx;
-	position: relative;
 }
 .carSources-cell .carSources-cell-content .price-type {
 	position: absolute;
