@@ -315,7 +315,7 @@
 														</view>
 													</view>
 													<view class="logistics-date">
-														{{carSourceItem.selectedLogistics.expectedDeliveryDateDesc}}
+														{{carSourceItem.selectedLogistics.expectedDeliveryDaysDesc}}
 													</view>
 												</view>
 												<view class="logistics-tips icon-point-padding">

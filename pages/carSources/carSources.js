@@ -299,13 +299,13 @@ Page({
     const selectedColor = object.color || this.data.selectedCarColorId
     const selectedSourceRegion = object.sourceRegion || this.data.selectedSourceRegionId
     const selectedSourcePublishDate = object.sourcePublishDate || this.getIdWithFiltersIndex(0)
-    const selectedExpectedDeliveryDate = object.expectedDeliveryDate || this.getIdWithFiltersIndex(1)
+    const selectedExpectedDeliveryDays = object.expectedDeliveryDays || this.getIdWithFiltersIndex(1)
     const selectedLogistics = object.logistics || this.getIdWithFiltersIndex(2)
 
     console.log("selected color:" + selectedColor)
     console.log("selected source region:" + selectedSourceRegion)
     console.log("selected source publish date:" + selectedSourcePublishDate)
-    console.log("selected expected delivery date:" + selectedExpectedDeliveryDate)
+    console.log("selected expected delivery date:" + selectedExpectedDeliveryDays)
     console.log("selected logistics:" + selectedLogistics)
 
     // let newCarSkuList = [];
@@ -445,7 +445,7 @@ Page({
       that.updateSearchResult({sourcePublishDate: selectedFilterId})
     } else if (scrollFilterIndex == 1) {
       // 预计车辆到达时间
-      that.updateSearchResult({expectedDeliveryDate: selectedFilterId})
+      that.updateSearchResult({expectedDeliveryDays: selectedFilterId})
     } else if (scrollFilterIndex == 2) {
       // 是否包邮
       that.updateSearchResult({logistics: selectedFilterId})
