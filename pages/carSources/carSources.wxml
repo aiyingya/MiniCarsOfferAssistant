@@ -324,7 +324,12 @@
 											</view>
 
 											<!-- 物流信息-物流选择块 -->
-											<view class="logistics-list">
+
+											<!-- 门店的物流信息暂时取消 -->
+											<view
+													wx:if="{{ carSourceItem.logisticsType === 'post' }}"
+													class="logistics-list"
+											>
 												<view
 														wx:for="{{carSourceItem.logistics}}"
 														wx:for-item="logisticsItem"
@@ -342,7 +347,7 @@
 														驿站{{carSourceItem.logistics.length > 1? logisticsItemIndex + 1: ''}}
 													</view>
 													<view class="value">
-														{{logisticsItem.destination}}
+														{{logisticsItem.logisticsCenters[0].name}}
 													</view>
 												</view>
 											</view>
