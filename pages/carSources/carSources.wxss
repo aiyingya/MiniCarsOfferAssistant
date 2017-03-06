@@ -87,6 +87,15 @@ page {
 	width: 36rpx;
 	height: 36rpx;
 }
+.dropdown {
+	display: flex;
+}
+.dropdown .dropdown-first-level{
+	width: 50%;
+}
+.dropdown .dropdown-second-level{
+	width: 50%;
+}
 .filter-scroll-view {
 	padding: 24rpx 30rpx 24rpx 30rpx;
 	height: 96rpx;
@@ -223,7 +232,7 @@ page {
 	text-align: center;
 }
 .carSources-navbar .cars-facade {
-	width: 50%;
+	width: 100%;
 }
 .carSources-navbar .cars-facade:after {
 	content: '';
@@ -232,6 +241,9 @@ page {
 	bottom: -6rpx;
 	right: 0;
 	border-right: 1rpx solid #E4E4E4;
+}
+.carSources-navbar .cars-facade:last-child:after {
+	border-right: 1rpx solid #FFFFFF;
 }
 .carSources-navbar .navbar-text {
 	position: relative;
