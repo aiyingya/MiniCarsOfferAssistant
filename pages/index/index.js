@@ -102,7 +102,6 @@ Page({
 		// 刷新用户信息.
 		
 		app.getNewAccessToken()
-		
   },
 	onShow() {
 		// 获取locationId

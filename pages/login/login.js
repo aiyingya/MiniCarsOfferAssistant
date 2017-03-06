@@ -12,6 +12,7 @@ Page({
 	onLoad() {
 		this.users = new users
 		this.$wuxToast = app.wux(this).$wuxToast
+	
 	},
 	handleLoginPhone(e) {
 		let val = e.detail.value
@@ -96,7 +97,7 @@ Page({
 		let weixinUsersInfo = app.globalData.userInfo
 		let snsId = weixinUsersInfo.snsId
 		let userId =opts.uid
-		
+		console.log(weixinUsersInfo)
 		app.modules.request({
 			url: app.config.ucServerHTTPSUrl + 'cgi/user/weixin/binding', 
 			method: 'POST',
