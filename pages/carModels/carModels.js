@@ -139,11 +139,11 @@ Page({
 					series: [{
 						data: item.supply.chart.y,
 						format: function (val) {
-								return `${val.toFixed(0)}人`
+								return `${val.toFixed(0)}`
 						}
 					}],
 					xAxis: {
-						disableGrid: false,
+						disableGrid: true,
 						fontColor: '#999999',
 						gridColor: '#f1f1f1'
 					},
@@ -151,7 +151,7 @@ Page({
 						disabled: true,
 						fontColor: '#4C6693',
 						format(val) {
-							return val.toFixed(0)
+							return val.toFixed(2)
 						}
 					},
 					dataItem: {
