@@ -68,6 +68,7 @@ App({
   },
 	userInfo() {
 		let userInfo = wx.getStorageSync('userInfo')
+		let mobile = this.globalData.userMobile
 		
 		return userInfo ? JSON.parse(userInfo) : ''
 	},
@@ -120,6 +121,7 @@ App({
 						}
 					}
 					that.globalData.location = location
+					that.globalData.mobile = res.mobile
 				}
 			})
 		}
@@ -142,7 +144,8 @@ App({
 		 * loginChannel: 'weixin' 'weixin'|'guest'
      */
     userInfo: null,
-		location: null
+		location: null,
+		mobile: null
   },
   wux: wux,
 	config: config,

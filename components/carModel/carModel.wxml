@@ -27,7 +27,7 @@
 		
 		<view 
 			class="carModels-inner"
-			wx:if="{{item.supply}}"
+			wx:if="{{item.supply.supplierCount > 0}}"
 			>
 			<!-- cars info.-->
 			<view class="carModels-info">
@@ -38,7 +38,10 @@
 				<block wx:else>
 					<view class="carModels-repertory adequate">{{item.supply.status}}</view>
 				</block>
-				<view class="carModels-carcolor">
+				<view 
+					class="carModels-carcolor"
+					wx:if="{{item.supply.colors.lenght > 0}}"
+					>
 					<view class="carcolor-label">外饰：</view>
 					<view class="carcolor-inner">
 						<view 	
@@ -54,12 +57,28 @@
 				</view>
 			</view>
 
-			<view class="charts-inner">
-				<canvas 
-					canvas-id="{{item.carModelId}}" 
-					class="canvas" 
-					bindtouchstart="touchHandler"
-					></canvas>
+			<view 
+				class="charts-inner"
+				wx:if="{{item.supply.chart}}"
+				>
+				<block wx:if="{{showCharts}}">
+					<view class="charts-tagMessage">
+						<view class="charts-supply-number">
+							供货数量
+						</view>
+	<!--
+						<view class="charts-tagMessage-inner">
+							<view class="tagname">{{item.supply.chart.tagName}}</view>
+							<view class="tagvalue">{{item.supply.chart.tagValue}}</view>
+						</view>
+	-->
+					</view>
+					<canvas 
+						canvas-id="{{item.carModelId}}" 
+						class="canvas" 
+						bindtouchstart="touchHandler"
+						></canvas>
+				</block>
 			</view>
 		</view>
 		

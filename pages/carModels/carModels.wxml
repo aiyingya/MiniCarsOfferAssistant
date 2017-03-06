@@ -29,6 +29,7 @@
 			<view 
 				class="rmendCarFacade-popup-mask showMask"
 				bindtap="headlerRemoveRmendCarFacade"
+				bindtouchstart = "headlerRemoveRmendCarFacade" 
 				></view>
 			<view class="rmendCarFacade-inner topToBottom">
 				<view 
@@ -58,7 +59,7 @@
 		<block 
 			wx:for="{{carModelsList}}"
 			>
-			<template is="carModel" data="{{item}}" /> 
+			<template is="carModel" data="{{item,showCharts}}" /> 
 		</block>
 	</view>
 </view>

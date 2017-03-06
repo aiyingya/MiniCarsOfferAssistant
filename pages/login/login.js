@@ -26,10 +26,11 @@ Page({
 	},
 	handleGetSMSCode() {
 		let that = this
+		let reg = /^1[3|4|5|7|8][0-9]{9}$/
 		
 		if(!that.data.countDownOver) return
 		
-		if(!this.data.userPhoneValue) {
+		if(!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11 || !(reg.test(this.data.userPhoneValue))) {
 			that.$wuxToast.show({
 				type: false,
         timer: 2000,
@@ -150,6 +151,14 @@ Page({
 						}
 					})
 				}
+			},
+			fail(err) {
+				that.$wuxToast.show({
+					type: false,
+					timer: 2000,
+					color: '#fff',
+					text: err.message
+				})
 			}
 		})
 	}

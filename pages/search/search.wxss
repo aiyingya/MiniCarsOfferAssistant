@@ -7,9 +7,6 @@ page {
 	height: 100%;
 }
 .searchbar{
-	position: fixed;
-	top: 0;
-	left: 0;
 	width: 100%;
 	margin: 0;
 	background-color: #fff;
@@ -90,11 +87,14 @@ page {
 	height: 68rpx;
 	line-height: 68rpx;
 }
-.search-results-wrap,
-.carModels-cells {
+.search-results-wrap {
 	position: absolute;
 	top: 130rpx;
 	left: 0;
+	width: 100%;
+}
+.carModels-cells {
+	position: relative;
 	width: 100%;
 }
 .search-results-inner {

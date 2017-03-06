@@ -35,20 +35,7 @@ Page({
 			url: '../carList/carList'
 		})
 	},
-	createSimulationData: function () {
-			var categories = [];
-			var data = [];
-			for (var i = 0; i < 50; i++) {
-					categories.push('2016-' + (i + 1));
-					data.push(Math.random()*(20-10)+10);
-			}
-
-			return {
-					categories: categories,
-					data: data
-			}
-	},
-  onLoad() {
+  onLoad() {      
     let that = this
 		let HTTPS_URL = app.config.ymcServerHTTPSUrl
 		try {

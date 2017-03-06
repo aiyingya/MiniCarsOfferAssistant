@@ -8,7 +8,8 @@ Page({
 		showRmendCarFacade: false,
 		filtersData: [],
 		CarsModeleText: '全部车款',
-		CarsModeleSelectId: 0
+		CarsModeleSelectId: 0,
+		showCharts: true // 是否展示charts图表，解决弹出层无法点击问题
 	},
 	onLoad (options) {
 		let carsInfo = JSON.parse(options.carsInfo)
@@ -62,18 +63,21 @@ Page({
 	},
 	handleCheckCarsModele() {
 		let weitch = this.data.showRmendCarFacade
+		let carModelsList = this.data.carModelsList
 		if(weitch) {
+			this.drawCanvas(carModelsList)
 			this.setData({
-				showRmendCarFacade: false
+				showRmendCarFacade: false,
+				showCharts: true
 			})
 		}else {
 			this.setData({
-				showRmendCarFacade: true
+				showRmendCarFacade: true,
+				showCharts: false
 			})
 		}
 	},
 	handleSelectCarsModele(e) {
-		
 		let selectItem = e.currentTarget.dataset.select
 		let selectId = e.currentTarget.dataset.id
 		let carModelsList = this.data.cacheCarModelsList
@@ -93,7 +97,8 @@ Page({
 			CarsModeleText: selectItem.name,
 			CarsModeleSelectId: selectId,
 			carModelsList: newModelsList,
-			showRmendCarFacade: false
+			showRmendCarFacade: false,
+			showCharts: true
 		})
 	},
 	handlerToCarSources (e) {
@@ -110,8 +115,11 @@ Page({
     }) 
 	},
 	headlerRemoveRmendCarFacade() {
+		let carModelsList = this.data.carModelsList
+		this.drawCanvas(carModelsList)
 		this.setData({
-			showRmendCarFacade: false
+			showRmendCarFacade: false,
+			showCharts: true
 		})
 	},
 	drawCanvas(list) {
@@ -128,7 +136,7 @@ Page({
       
     }
 		for (let item of data) {
-			if(item.supply) {
+			if(item.supply.supplierCount > 0) {
 				new app.wxcharts({
 					canvasId: item.carModelId,
 					type: 'line',
@@ -136,22 +144,23 @@ Page({
 					animation: false,
 					color: '#ECF0F7',
 					legend: false,
+					background: '#ECF0F7',
 					series: [{
 						data: item.supply.chart.y,
 						format: function (val) {
-								return `${val.toFixed(0)}人`
+								return `${val.toFixed(0)}`
 						}
 					}],
 					xAxis: {
-						disableGrid: false,
+						disableGrid: true,
 						fontColor: '#999999',
-						gridColor: '#f1f1f1'
+						gridColor: '#afafaf'
 					},
 					yAxis: {
 						disabled: true,
 						fontColor: '#4C6693',
 						format(val) {
-							return val.toFixed(0)
+							return val.toFixed(2)
 						}
 					},
 					dataItem: {

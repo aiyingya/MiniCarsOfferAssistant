@@ -8,7 +8,6 @@ Page({
 		let userinfo = app.userInfo()
 
     this.$wuxToast = app.wux(this).$wuxToast
-		console.log(userinfo)
 	},
 	onShow() {
 		let userinfo = app.userInfo()
@@ -45,6 +44,7 @@ Page({
 				
 					if(location) {
 						app.globalData.location = location
+						app.globalData.mobile = res.mobile
 					}	
 					that.setData({
 						userInfo: userinfo,
