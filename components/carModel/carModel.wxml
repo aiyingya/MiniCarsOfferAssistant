@@ -3,13 +3,11 @@
 		class="carModels-cell"
 		hover="true"
 		hover-class="carModels-cell_active"
+		data-carmodelsinfo="{{item}}"
+		bindtap="handlerToCarSources" 
 		>
 		<!-- title.-->
-		<view 
-			class="carModels-message"
-			bindtap="handlerToCarSources" 
-			data-carmodelsinfo="{{item}}"
-			>
+		<view class="carModels-message">
 			<view class="carModels-message-title">
 				【{{item.officialPriceStr}}】 {{item.carModelName}} 
 			</view>
@@ -76,7 +74,6 @@
 					<canvas 
 						canvas-id="{{item.carModelId}}" 
 						class="canvas" 
-						bindtouchstart="touchHandler"
 						></canvas>
 				</block>
 			</view>
