@@ -307,7 +307,7 @@ Page({
     console.log("selected source publish date:" + selectedSourcePublishDate)
     console.log("selected expected delivery date:" + selectedExpectedDeliveryDate)
     console.log("selected logistics:" + selectedLogistics)
-    //
+
     // let newCarSkuList = [];
     // let carSourcesBySkuInSpuList = this.data.cacheCarSourcesBySkuInSpuList
     // // TODO: 处理剩余逻辑
@@ -603,15 +603,22 @@ Page({
     })
 	},
 	// 非编辑态下的订车按钮
-  handlerBookCar(e) {
+  handlerBookCar(e){
     const that = this
 
     const skuItem = e.currentTarget.dataset.skuItem
+    const carSourceItem = e.currentTarget.dataset.carSource
     const skuId = skuItem.carSku.skuId;
+    // TODO: 用户手机号
+    const contact = "11111111"
+
+    console.log(skuId)
+    console.log(contact)
 
     const hideDialog = this.$wuxDialog.open({
       title: '发起定车后， 将会有工作人员与您联系',
       content: '',
+      inputNumber: contact,
       inputNumberPlaceholder: '输入您的手机号',
       confirmText: '发起定车',
       cancelText: '取消',
@@ -622,7 +629,7 @@ Page({
       confirm: (res) => {
         let mobile = res.inputNumber
 				// FIXME: 这里的 skuIds 需要提供
-				that.requestBookCar(skuId, mobile, '',{
+				that.requestBookCar([skuId], mobile, '',{
 					success (res){
 						wx.showModal({
 							title: '提示',
@@ -640,7 +647,6 @@ Page({
 							content: err.alertMessage,
 							success: function(res) {
 								if (res.confirm) {
-									that.headlerRemoveQuoteView()
 								}
 							}
 						})
