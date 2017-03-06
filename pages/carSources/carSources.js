@@ -299,15 +299,15 @@ Page({
     const selectedColor = object.color || this.data.selectedCarColorId
     const selectedSourceRegion = object.sourceRegion || this.data.selectedSourceRegionId
     const selectedSourcePublishDate = object.sourcePublishDate || this.getIdWithFiltersIndex(0)
-    const selectedExpectedDeliveryDate = object.expectedDeliveryDate || this.getIdWithFiltersIndex(1)
+    const selectedExpectedDeliveryDays = object.expectedDeliveryDays || this.getIdWithFiltersIndex(1)
     const selectedLogistics = object.logistics || this.getIdWithFiltersIndex(2)
 
     console.log("selected color:" + selectedColor)
     console.log("selected source region:" + selectedSourceRegion)
     console.log("selected source publish date:" + selectedSourcePublishDate)
-    console.log("selected expected delivery date:" + selectedExpectedDeliveryDate)
+    console.log("selected expected delivery date:" + selectedExpectedDeliveryDays)
     console.log("selected logistics:" + selectedLogistics)
-    //
+
     // let newCarSkuList = [];
     // let carSourcesBySkuInSpuList = this.data.cacheCarSourcesBySkuInSpuList
     // // TODO: 处理剩余逻辑
@@ -445,7 +445,7 @@ Page({
       that.updateSearchResult({sourcePublishDate: selectedFilterId})
     } else if (scrollFilterIndex == 1) {
       // 预计车辆到达时间
-      that.updateSearchResult({expectedDeliveryDate: selectedFilterId})
+      that.updateSearchResult({expectedDeliveryDays: selectedFilterId})
     } else if (scrollFilterIndex == 2) {
       // 是否包邮
       that.updateSearchResult({logistics: selectedFilterId})
@@ -603,15 +603,22 @@ Page({
     })
 	},
 	// 非编辑态下的订车按钮
-  handlerBookCar(e) {
+  handlerBookCar(e){
     const that = this
 
     const skuItem = e.currentTarget.dataset.skuItem
+    const carSourceItem = e.currentTarget.dataset.carSource
     const skuId = skuItem.carSku.skuId;
+    // TODO: 用户手机号
+    const contact = "11111111"
+
+    console.log(skuId)
+    console.log(contact)
 
     const hideDialog = this.$wuxDialog.open({
       title: '发起定车后， 将会有工作人员与您联系',
       content: '',
+      inputNumber: contact,
       inputNumberPlaceholder: '输入您的手机号',
       confirmText: '发起定车',
       cancelText: '取消',
@@ -622,7 +629,7 @@ Page({
       confirm: (res) => {
         let mobile = res.inputNumber
 				// FIXME: 这里的 skuIds 需要提供
-				that.requestBookCar(skuId, mobile, '',{
+				that.requestBookCar([skuId], mobile, '',{
 					success (res){
 						wx.showModal({
 							title: '提示',
@@ -640,7 +647,6 @@ Page({
 							content: err.alertMessage,
 							success: function(res) {
 								if (res.confirm) {
-									that.headlerRemoveQuoteView()
 								}
 							}
 						})

@@ -243,39 +243,39 @@
 
 									<!-- 第二部分-关注组件-->
 									<!-- 关注靠谱 -->
-									<view wx:if="{{!carSourceItem.supplierSelfSupport}}" class="social">
-										<view
-												bindtap="handlerFollow"
-												data-sku-index="{{skuItemIndex}}"
-												data-sku="{{skuItem}}"
-												data-car-source-index="{{carSourceItemIndex}}"
-												data-car-source="{{carSourceItem}}"
-												data-supplier="{{carSourceItem.supplier}}"
-												class="follow {{carSourceItem.supplier.hasFocused? 'active': 'none-active'}}"
-										>
-											<image
-													src="{{carSourceItem.supplier.hasFocused? '../../images/icons/icon_follow_active.png': '../../images/icons/icon_follow_normal.png'}}"
-											>
-											</image>
-											{{carSourceItem.supplier.hasFocused? '已关注': '关注'}}
-										</view>
+									<!--<view wx:if="{{!carSourceItem.supplierSelfSupport}}" class="social">-->
+										<!--<view-->
+												<!--bindtap="handlerFollow"-->
+												<!--data-sku-index="{{skuItemIndex}}"-->
+												<!--data-sku="{{skuItem}}"-->
+												<!--data-car-source-index="{{carSourceItemIndex}}"-->
+												<!--data-car-source="{{carSourceItem}}"-->
+												<!--data-supplier="{{carSourceItem.supplier}}"-->
+												<!--class="follow {{carSourceItem.supplier.hasFocused? 'active': 'none-active'}}"-->
+										<!--&gt;-->
+											<!--<image-->
+													<!--src="{{carSourceItem.supplier.hasFocused? '../../images/icons/icon_follow_active.png': '../../images/icons/icon_follow_normal.png'}}"-->
+											<!--&gt;-->
+											<!--</image>-->
+											<!--{{carSourceItem.supplier.hasFocused? '已关注': '关注'}}-->
+										<!--</view>-->
 
-										<view
-												bindtap="handlerReliable"
-												data-sku-index="{{skuItemIndex}}"
-												data-sku="{{skuItem}}"
-												data-car-source-index="{{carSourceItemIndex}}"
-												data-car-source="{{carSourceItem}}"
-												data-supplier="{{carSourceItem.supplier}}"
-												class="reliable {{carSourceItem.hasBeenReliableByUser? 'active': 'none-active'}}"
-										>
-											<image
-													src="{{carSourceItem.hasBeenReliableByUser? '../../images/icons/icon_reliable_small_active.png': '../../images/icons/icon_reliable_small_normal.png'}}"
-											>
-											</image>
-											靠谱
-										</view>
-									</view>
+										<!--<view-->
+												<!--bindtap="handlerReliable"-->
+												<!--data-sku-index="{{skuItemIndex}}"-->
+												<!--data-sku="{{skuItem}}"-->
+												<!--data-car-source-index="{{carSourceItemIndex}}"-->
+												<!--data-car-source="{{carSourceItem}}"-->
+												<!--data-supplier="{{carSourceItem.supplier}}"-->
+												<!--class="reliable {{carSourceItem.hasBeenReliableByUser? 'active': 'none-active'}}"-->
+										<!--&gt;-->
+											<!--<image-->
+													<!--src="{{carSourceItem.hasBeenReliableByUser? '../../images/icons/icon_reliable_small_active.png': '../../images/icons/icon_reliable_small_normal.png'}}"-->
+											<!--&gt;-->
+											<!--</image>-->
+											<!--靠谱-->
+										<!--</view>-->
+									<!--</view>-->
 
 									<!-- 第三部分 车源基本信息 + 货源渠道 -->
 									<view class="third-part">
@@ -315,7 +315,7 @@
 														</view>
 													</view>
 													<view class="logistics-date">
-														{{carSourceItem.selectedLogistics.expectedDeliveryDateDesc}}
+														{{carSourceItem.selectedLogistics.expectedDeliveryDaysDesc}}
 													</view>
 												</view>
 												<view class="logistics-tips icon-point-padding">
