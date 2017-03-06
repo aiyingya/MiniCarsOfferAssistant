@@ -15,18 +15,18 @@
                 <view class="">{{carSource.supplier.name}}</view>
             </view>
 
-            <view class="follow-section">
-                <view
-                        class="follow {{carSource.supplier.hasFocused? 'active': 'none-active'}}"
-                        bindtap="{{reliableDialogFollow}}"
-                >
-                    <image
-                            src="{{carSource.supplier.hasFocused? '../../images/icons/icon_follow_active.png': '../../images/icons/icon_follow_normal.png'}}"
-                    >
-                    </image>
-                    {{carSource.supplier.hasFocused? '已关注': '关注'}}
-                </view>
-            </view>
+            <!--<view class="follow-section">-->
+                <!--<view-->
+                        <!--class="follow {{carSource.supplier.hasFocused? 'active': 'none-active'}}"-->
+                        <!--bindtap="{{reliableDialogFollow}}"-->
+                <!--&gt;-->
+                    <!--<image-->
+                            <!--src="{{carSource.supplier.hasFocused? '../../images/icons/icon_follow_active.png': '../../images/icons/icon_follow_normal.png'}}"-->
+                    <!--&gt;-->
+                    <!--</image>-->
+                    <!--{{carSource.supplier.hasFocused? '已关注': '关注'}}-->
+                <!--</view>-->
+            <!--</view>-->
 
             <view class="reliable-section">
                 <view
