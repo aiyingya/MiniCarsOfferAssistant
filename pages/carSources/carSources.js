@@ -273,7 +273,8 @@ Page({
     const section = this.data.carSourcesBySkuInSpuList[skuIndex]
     for (let i = 0; i < section.carSourcesList.length; i++) {
       const carSource = section.carSourcesList[i]
-      const publishDate = new Date(carSource.publishDate)
+      const publishDateString = carSource.publishDate.replace('-', '/')
+      const publishDate = new Date(publishDateString)
       carSource.viewModelPublishDateDesc = util.dateDiff(publishDate);
     }
 
