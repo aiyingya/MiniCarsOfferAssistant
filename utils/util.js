@@ -93,7 +93,7 @@ let priceStringWithUnit = function (downPrice) {
   if (downPrice > 10000) {
     return (downPrice / 10000).toFixed(2) + '万'
   } else {
-    return downPrice.toFixed() + '元'
+    return downPrice.toFixed()
   }
 }
 
