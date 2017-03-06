@@ -87,7 +87,7 @@ Page({
 		}else {
 			for(let item of carModelsList) {
 				if(item.yearStyle === selectItem.name) {
-					//console.log(item.yearStyle,selectItem.name)
+					
 					newModelsList.push(item)
 				}
 			}
@@ -109,7 +109,7 @@ Page({
 	},
 	handlerPromptly (e) {
 		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo)
-		console.log(carModelsInfo)
+		
 		wx.navigateTo({  
       url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
     }) 

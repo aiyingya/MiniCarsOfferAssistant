@@ -99,13 +99,14 @@ Page({
 //		const push = this.$wuxTrack.push({
 //			appVersion: '1.0.1'
 //		})
+  },
+	onShow() {
 		// 刷新用户信息.
 		
 		app.getNewAccessToken()
-  },
-	onShow() {
 		// 获取locationId
 		app.getLocationId()
+		
 		
 	},
 	getHotpushCars () {

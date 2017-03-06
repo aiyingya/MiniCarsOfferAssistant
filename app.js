@@ -68,7 +68,6 @@ App({
   },
 	userInfo() {
 		let userInfo = wx.getStorageSync('userInfo')
-		let mobile = this.globalData.userMobile
 		
 		return userInfo ? JSON.parse(userInfo) : ''
 	},
@@ -113,7 +112,7 @@ App({
 					let setLocation = {}
 					if(res.tenants) {
 						for(let item of res.tenants) {
-							if(item.addressList.length > 0) {
+							if(item.addressList && item.addressList.length > 0) {
 								for(let aitem of item.addressList) {
 									location.push(aitem.location)
 								}
