@@ -105,7 +105,7 @@ Page({
        * 来源页面来自于详情页面， 参数中有 quotation
        */
       this.data.source = 'quotationDetail'
-      var quotation = JSON.parse(quotationJSONString)
+      var quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
 
       if (quotation.hasLoan) {
         let stagesIndex = this.data.stagesArray.indexOf(quotation.stages)
@@ -129,14 +129,14 @@ Page({
       }
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
-        let carModelInfo = JSON.parse(options.carModelsInfo)
+        var carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
         var carSKUInfo = {}
         if (carSKUInfoJSONString && carSKUInfoJSONString.length) {
           /**
            * 页面来自于车源列表
            */
           this.data.source = 'carSources'
-          carSKUInfo = JSON.parse(options.carInfo)
+          carSKUInfo = util.urlDecodeValueForKeyFromOptions('carInfo', options)
         } else {
           /**
            * 页面来自于车系列表, 是没有 carSKUInfo 字段的，所以必须使用 carModelInfo 中
@@ -680,17 +680,25 @@ Page({
     }
   },
   headlerChangeColor (e) {
-    let carModelsInfo = e.currentTarget.dataset.carmodelinfo
-    let carSKUInfo = e.currentTarget.dataset.carskuinfo
-    let quotation = this.data.quotation
+
+
 
     if (this.data.source === 'quotationDetail') {
+      let quotation = this.data.quotation
+      const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotation)
+
       wx.navigateTo({
-        url: '/pages/changeCarColor/changeCarColor?quotation='+JSON.stringify(quotation)
+        url: '/pages/changeCarColor/changeCarColor?' + quotationKeyValueString
       })
     } else if (this.data.source === 'carSources' || this.data.source === 'carModels') {
+      let carModelsInfo = e.currentTarget.dataset.carmodelinfo
+      let carSKUInfo = e.currentTarget.dataset.carskuinfo
+
+      let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+      let carSKUInfoKeyValueString = util.urlEncodeValueForKey('carSKUInfo', carSKUInfo)
+
       wx.navigateTo({
-        url: '/pages/changeCarColor/changeCarColor?carModelsInfo='+JSON.stringify(carModelsInfo)+'&carSKUInfo='+JSON.stringify(carSKUInfo)
+        url: '/pages/changeCarColor/changeCarColor?' + carModelsInfoKeyValueString + '&' + carSKUInfoKeyValueString
       })
     }
   }

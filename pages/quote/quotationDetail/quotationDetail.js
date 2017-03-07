@@ -51,7 +51,7 @@ Page({
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
 
-    let quotation = JSON.parse(options.quotation);
+    let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
     quotation.quotationItems[0].itemPic = app.config.imgAliyuncsUrl + quotation.quotationItems[0].itemPic
 
     console.log(quotation)
@@ -100,8 +100,9 @@ Page({
   },
   handlerEditQuotation(e) {
     let that = this
+    const quotationKeyValueString = util.urlEncodeValueForKey('quotation', this.data.quotation)
     wx.navigateTo({
-      url: '/pages/quote/quotationCreate/quotationCreate?quotation=' + JSON.stringify(this.data.quotation),
+      url: '/pages/quote/quotationCreate/quotationCreate?' + quotationKeyValueString,
       success: function(res){
         // success
       },

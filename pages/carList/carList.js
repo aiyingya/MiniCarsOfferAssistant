@@ -1,5 +1,7 @@
 //index.js
 let app = getApp()
+const util = require('../../utils/util.js')
+
 Page({
   data: {
 		hotCarLists: [],
@@ -158,11 +160,11 @@ Page({
 		});
 	},
 	handlerToCarsModels(e) {
-		let carsInfo = JSON.stringify(e.currentTarget.dataset.carsinfo)
+		const carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
 		let userInfo = app.userInfo()
 		if(userInfo) {
 			wx.navigateTo({  
-				url: '../carModels/carModels?carsInfo='+ carsInfo
+				url: '../carModels/carModels?' + carsInfoKeyValueString
 			}) 
 		}else {
 			wx.navigateTo({  

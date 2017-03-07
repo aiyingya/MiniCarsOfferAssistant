@@ -1,4 +1,6 @@
 let app = getApp()
+let util = require('../../utils/util.js')
+
 Page({
 	data: {
 		carModelsList: [],
@@ -12,7 +14,7 @@ Page({
 		showCharts: true // 是否展示charts图表，解决弹出层无法点击问题
 	},
 	onLoad (options) {
-		let carsInfo = JSON.parse(options.carsInfo)
+		let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
 		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
 		let that = this
 		try {
@@ -103,7 +105,7 @@ Page({
 	},
 	handlerToCarSources (e) {
 		let item = e.currentTarget.dataset.carmodelsinfo
-		let carModelsInfo = JSON.stringify(item)
+		let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
 		let status = item.supply.status
 		
 		if(status === '暂无供货') {
@@ -116,14 +118,15 @@ Page({
 			return
 		}
 		wx.navigateTo({
-      url: '../carSources/carSources?carModelsInfo='+ carModelsInfo
+      url: '../carSources/carSources?' + carModelsInfoKeyValueString
     }) 
 	},
 	handlerPromptly (e) {
-		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo)
+
+		let carModelsInfoKeyValueString =  util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
 		
 		wx.navigateTo({  
-      url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
+      url: '../quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString
     }) 
 	},
 	headlerRemoveRmendCarFacade() {

@@ -38,12 +38,12 @@ Page({
 	},
 	onLoad (options) {
 		const that = this
-    const carModelsInfo = JSON.parse(options.carModelsInfo)
+
+    const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options);
+
     this.setData({
       carModelsInfo: carModelsInfo
     })
-    console.log(options)
-    console.log(carModelsInfo)
     const HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
 		try {
       const res = wx.getSystemInfoSync();

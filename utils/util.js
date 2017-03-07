@@ -171,6 +171,21 @@ let dateDiff = function(date, nowDate){
   return result;
 }
 
+const urlEncodeValueForKey = function(key, value) {
+  if (value && typeof value === 'object') {
+    const valueString = JSON.stringify(value)
+    return key + '=' + encodeURIComponent(valueString)
+  } else {
+    return ''
+  }
+}
+
+const urlDecodeValueForKeyFromOptions = function (key, options) {
+  const valueString = decodeURIComponent(options[key])
+  const value = JSON.parse(valueString)
+  return value
+}
+
 module.exports = {
   formatTime: formatTime,
   totalPaymentByLoan: totalPaymentByLoan,
@@ -182,5 +197,7 @@ module.exports = {
   downPoint: downPoint,
   downPriceFlag: downPriceFlag,
   dateDiff: dateDiff,
-  dateCompatibility: dateCompatibility
+  dateCompatibility: dateCompatibility,
+  urlEncodeValueForKey: urlEncodeValueForKey,
+  urlDecodeValueForKeyFromOptions: urlDecodeValueForKeyFromOptions
 }
