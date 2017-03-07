@@ -487,7 +487,7 @@ Page({
 
       let dropDownSubFiltersData;
       console.log(filterItem)
-      if (this.data.selectedExternalCarColorIndex != -1) {
+      if (filterIndex != -1) {
         if (filterItem.items) {
           dropDownSubFiltersData = subFirstFilters.concat(filterItem.items)
         } else {
@@ -633,11 +633,9 @@ Page({
     let content = ''
 
     if (carSource.supplierSelfSupport && carSource.priceFixed) {
-      content = '一口价  垫资拿车'
+      content = '70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货'
     } else if (carSource.supplierSelfSupport && !carSource.priceFixed) {
-      content = '裸车价  垫资拿车'
-    } else if (!carSource.supplierSelfSupport && !carSource.priceFixed) {
-      content = '裸车价'
+      content = '加盟门店可享支付定金拿车，详情请电话联系'
     }
 
     if (content !== '') {

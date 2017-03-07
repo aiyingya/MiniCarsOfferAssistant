@@ -267,15 +267,10 @@
 									</view>
 									<view
 											wx:if="{{!carSourceItem.priceFixed && !carSourceItem.supplierSelfSupport}}"
-											class="price-type fixed"
-											bindtap="handlerShowTips"
+											class="price-type bare"
 											data-car-source="{{carSourceItem}}"
 									>
 										裸车价
-										<image
-												src='../../images/icons/icon_prompt.png'
-										>
-										</image>
 									</view>
 
 									<!-- 第二部分-关注组件-->
