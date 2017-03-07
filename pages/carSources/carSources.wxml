@@ -20,7 +20,11 @@
 	<!-- 页面主体 -->
 	<view class="carSources-body">
 		<view
-				wx:if="{{nodata}}"
+				wx:if="{{nodata === 'init'}}"
+		>
+		</view>
+		<view
+				wx:if="{{nodata === 'data'}}"
 		>
 			<!-- 下拉框筛选 -->
 			<view class="carSources-navbar">
@@ -30,7 +34,7 @@
 						data-selected-filter-index="0"
 				>
 					<view class="navbar-text">
-						{{selectedCarColorName}}
+						外:{{selectedExternalCarColorName}} 内:{{selectedInternalCarColorName}}
 						<image
 								class="icon-dropdownarrow"
 								src="{{showRmendCarFacade && selectedFilterIndex === '0'? '../../images/icons/icon_dropdownarrow_up_gray.png': '../../images/icons/icon_dropdownarrow_down_gray.png'}}"
@@ -38,20 +42,21 @@
 						</image>
 					</view>
 				</view>
-				<view
-						class="navbar cars-facade"
-						bindtap="handlerAmendCarFacade"
-						data-selected-filter-index="1"
-				>
-					<view class="navbar-text">
-						{{selectedSourceRegionName}}
-						<image
-								class="icon-dropdownarrow"
-								src="{{showRmendCarFacade && selectedFilterIndex === '1'? '../../images/icons/icon_dropdownarrow_up_gray.png': '../../images/icons/icon_dropdownarrow_down_gray.png'}}"
-						>
-						</image>
-					</view>
-				</view>
+				<!-- 区域筛选移除 -->
+				<!--<view-->
+				<!--class="navbar cars-facade"-->
+				<!--bindtap="handlerAmendCarFacade"-->
+				<!--data-selected-filter-index="1"-->
+				<!--&gt;-->
+				<!--<view class="navbar-text">-->
+				<!--{{selectedSourceRegionName}}-->
+				<!--<image-->
+				<!--class="icon-dropdownarrow"-->
+				<!--src="{{showRmendCarFacade && selectedFilterIndex === '1'? '../../images/icons/icon_dropdownarrow_up_gray.png': '../../images/icons/icon_dropdownarrow_down_gray.png'}}"-->
+				<!--&gt;-->
+				<!--</image>-->
+				<!--</view>-->
+				<!--</view>-->
 			</view>
 			<!-- 条件筛选.-->
 			<view wx:if="{{showRmendCarFacade}}" class="rmendCarFacade-popup-wrap">
@@ -60,57 +65,89 @@
 						bindtap="headlerRemoveRmendCarFacade"
 				></view>
 				<view class="rmendCarFacade-inner topToBottom">
-					<scroll-view scroll-y style="height: 520rpx">
-						<view
-								class="weui-cell weui-cell_access"
-								hover="true"
-								hover-class="weui-cell_active"
-								wx:for="{{dropDownFiltersData}}"
-								wx:for-item="filterItem"
-								bindtap="handlerSelectItem"
-								data-filter-item="{{filterItem}}"
-						>
-							<view class="weui-cell__bd weui-cell_primary">
-								<view>{{filterItem.name}}</view>
-							</view>
+					<view class="dropdown">
+						<view class="dd dropdown-left">
 							<view
-									wx:if="{{(selectedFilterIndex == 0 && selectedCarColorId == filterItem.id) || (selectedFilterIndex == 1 && selectedSourceRegionId == filterItem.id)}}"
-									class="weui-cell__ft"
+									hover="true"
+									hover-class="weui-cell_active"
+									wx:for="{{dropDownFiltersData}}"
+									wx:for-item="filterItem"
+									wx:for-index="filterIndex"
+									class="weui-cell weui-cell_access"
+									bindtap="handlerSelectItem"
+									data-filter-position="left"
+									data-filter-Index="{{filterIndex}}"
+									data-filter-item="{{filterItem}}"
+									data-super-filter-item="{{}}"
 							>
-								<image src="../../images/icons/icon_select_red.png"></image>
+								<view class="weui-cell__bd weui-cell_primary">
+									<view>{{filterItem.name}}</view>
+								</view>
+								<view
+										wx:if="{{ selectedExternalCarColorName == filterItem.name }}"
+										class="weui-cell__ft"
+								>
+									<image src="../../images/icons/icon_select_red.png"></image>
+								</view>
 							</view>
 						</view>
-					</scroll-view>
-				</view>
-			</view>
-			<!-- 标签选择 -->
-			<scroll-view
-					scroll-x="true"
-					style="height: 96rpx; width: 100%;"
-			>
-				<view class="filter-scroll-view">
-					<view
-							wx:for="{{scrollFilters}}"
-							wx:for-index="scrollFilterIndex"
-							wx:for-item="scrollFilterItem"
-							class="scroll-filter"
-					>
-						<view
-								wx:for="{{scrollFilterItem.items}}"
-								wx:for-index="filterIndex"
-								wx:for-item="filterItem"
-								bindtap="handlerFilterSelected"
-								data-scroll-filter-index="{{scrollFilterIndex}}"
-								data-scroll-filter-item="{{scrollFilterItem}}"
-								data-filter-Index="{{filterIndex}}"
-								data-filter-item="{{filterItem}}"
-								class="filter {{filterIndex == scrollFiltersSelectedIndexes[scrollFilterIndex] ? 'selected': 'unselected'}}"
-						>
-							{{filterItem.name}}
+
+						<view class="dd dropdown-right">
+							<view
+									class="weui-cell weui-cell_access"
+									hover="true"
+									hover-class="weui-cell_active"
+									wx:for="{{dropDownSubFiltersData}}"
+									wx:for-item="filterItem"
+									wx:for-index="filterIndex"
+									bindtap="handlerSelectItem"
+									data-filter-position="right"
+									data-filter-Index="{{filterIndex}}"
+									data-filter-item="{{filterItem}}"
+									data-super-filter-item="{{dropDownFiltersData[selectedExternalCarColorIndex]}}"
+							>
+								<view class="weui-cell__bd weui-cell_primary">
+									<view>{{filterItem.name}}</view>
+								</view>
+								<view
+										wx:if="{{ selectedInternalCarColorName == filterItem.name }}"
+										class="weui-cell__ft"
+								>
+									<image src="../../images/icons/icon_select_red.png"></image>
+								</view>
+							</view>
 						</view>
 					</view>
 				</view>
-			</scroll-view>
+			</view>
+			<!-- 标签选择 -->
+			<!--<scroll-view-->
+			<!--scroll-x="true"-->
+			<!--style="height: 96rpx; width: 100%;"-->
+			<!--&gt;-->
+			<view class="filter-scroll-view">
+				<view
+						wx:for="{{scrollFilters}}"
+						wx:for-index="scrollFilterIndex"
+						wx:for-item="scrollFilterItem"
+						class="scroll-filter"
+				>
+					<view
+							wx:for="{{scrollFilterItem.items}}"
+							wx:for-index="filterIndex"
+							wx:for-item="filterItem"
+							bindtap="handlerFilterSelected"
+							data-scroll-filter-index="{{scrollFilterIndex}}"
+							data-scroll-filter-item="{{scrollFilterItem}}"
+							data-filter-Index="{{filterIndex}}"
+							data-filter-item="{{filterItem}}"
+							class="filter {{filterIndex == scrollFiltersSelectedIndexes[scrollFilterIndex] ? 'selected': 'unselected'}}"
+					>
+						{{filterItem.name}}
+					</view>
+				</view>
+			</view>
+			<!--</scroll-view>-->
 			<!-- 货源列表 -->
 			<view class="carSources-sections">
 				<view
@@ -230,51 +267,46 @@
 									</view>
 									<view
 											wx:if="{{!carSourceItem.priceFixed && !carSourceItem.supplierSelfSupport}}"
-											class="price-type fixed"
-											bindtap="handlerShowTips"
+											class="price-type bare"
 											data-car-source="{{carSourceItem}}"
 									>
 										裸车价
-										<image
-												src='../../images/icons/icon_prompt.png'
-										>
-										</image>
 									</view>
 
 									<!-- 第二部分-关注组件-->
 									<!-- 关注靠谱 -->
 									<!--<view wx:if="{{!carSourceItem.supplierSelfSupport}}" class="social">-->
-										<!--<view-->
-												<!--bindtap="handlerFollow"-->
-												<!--data-sku-index="{{skuItemIndex}}"-->
-												<!--data-sku="{{skuItem}}"-->
-												<!--data-car-source-index="{{carSourceItemIndex}}"-->
-												<!--data-car-source="{{carSourceItem}}"-->
-												<!--data-supplier="{{carSourceItem.supplier}}"-->
-												<!--class="follow {{carSourceItem.supplier.hasFocused? 'active': 'none-active'}}"-->
-										<!--&gt;-->
-											<!--<image-->
-													<!--src="{{carSourceItem.supplier.hasFocused? '../../images/icons/icon_follow_active.png': '../../images/icons/icon_follow_normal.png'}}"-->
-											<!--&gt;-->
-											<!--</image>-->
-											<!--{{carSourceItem.supplier.hasFocused? '已关注': '关注'}}-->
-										<!--</view>-->
+									<!--<view-->
+									<!--bindtap="handlerFollow"-->
+									<!--data-sku-index="{{skuItemIndex}}"-->
+									<!--data-sku="{{skuItem}}"-->
+									<!--data-car-source-index="{{carSourceItemIndex}}"-->
+									<!--data-car-source="{{carSourceItem}}"-->
+									<!--data-supplier="{{carSourceItem.supplier}}"-->
+									<!--class="follow {{carSourceItem.supplier.hasFocused? 'active': 'none-active'}}"-->
+									<!--&gt;-->
+									<!--<image-->
+									<!--src="{{carSourceItem.supplier.hasFocused? '../../images/icons/icon_follow_active.png': '../../images/icons/icon_follow_normal.png'}}"-->
+									<!--&gt;-->
+									<!--</image>-->
+									<!--{{carSourceItem.supplier.hasFocused? '已关注': '关注'}}-->
+									<!--</view>-->
 
-										<!--<view-->
-												<!--bindtap="handlerReliable"-->
-												<!--data-sku-index="{{skuItemIndex}}"-->
-												<!--data-sku="{{skuItem}}"-->
-												<!--data-car-source-index="{{carSourceItemIndex}}"-->
-												<!--data-car-source="{{carSourceItem}}"-->
-												<!--data-supplier="{{carSourceItem.supplier}}"-->
-												<!--class="reliable {{carSourceItem.hasBeenReliableByUser? 'active': 'none-active'}}"-->
-										<!--&gt;-->
-											<!--<image-->
-													<!--src="{{carSourceItem.hasBeenReliableByUser? '../../images/icons/icon_reliable_small_active.png': '../../images/icons/icon_reliable_small_normal.png'}}"-->
-											<!--&gt;-->
-											<!--</image>-->
-											<!--靠谱-->
-										<!--</view>-->
+									<!--<view-->
+									<!--bindtap="handlerReliable"-->
+									<!--data-sku-index="{{skuItemIndex}}"-->
+									<!--data-sku="{{skuItem}}"-->
+									<!--data-car-source-index="{{carSourceItemIndex}}"-->
+									<!--data-car-source="{{carSourceItem}}"-->
+									<!--data-supplier="{{carSourceItem.supplier}}"-->
+									<!--class="reliable {{carSourceItem.hasBeenReliableByUser? 'active': 'none-active'}}"-->
+									<!--&gt;-->
+									<!--<image-->
+									<!--src="{{carSourceItem.hasBeenReliableByUser? '../../images/icons/icon_reliable_small_active.png': '../../images/icons/icon_reliable_small_normal.png'}}"-->
+									<!--&gt;-->
+									<!--</image>-->
+									<!--靠谱-->
+									<!--</view>-->
 									<!--</view>-->
 
 									<!-- 第三部分 车源基本信息 + 货源渠道 -->
@@ -347,7 +379,7 @@
 														驿站{{carSourceItem.logistics.length > 1? logisticsItemIndex + 1: ''}}
 													</view>
 													<view class="value">
-														{{logisticsItem.logisticsCenters[0].name}}
+														{{logisticsItem.name}}
 													</view>
 												</view>
 											</view>
@@ -386,7 +418,10 @@
 				</view>
 			</view>
 		</view>
-		<view wx:else class="nodata">
+		<view
+				wx:if="{{nodata === 'none'}}"
+				class="nodata"
+		>
 			<image class="carSource-sections-nodata-image" src="../../images/icons/orderlist_icon_noorder.png"></image>
 			<view class="carSource-sections-nodata-text">暂无货源</view>
 		</view>

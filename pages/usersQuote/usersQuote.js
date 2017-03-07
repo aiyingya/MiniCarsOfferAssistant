@@ -10,6 +10,25 @@ Page({
     this.$wuxToast = app.wux(this).$wuxToast
 	},
 	onShow() {
+    /**
+     * fucking larry 跳转流程
+     * @type {*}
+     */
+    let quotation = app.fuckingLarryNavigatorTo.quotation
+    let source = app.fuckingLarryNavigatorTo.source
+
+    if (quotation && typeof quotation === 'object') {
+      wx.navigateTo({
+        url: '/pages/quote/quotationsList/quotationsList',
+        success: function (res) {
+        },
+        fail: function () {
+        },
+        complete: function () {
+        }
+      })
+    }
+
 		let userinfo = app.userInfo()
 		let that = this
 		let weixinUsersInfo = app.globalData.userInfo

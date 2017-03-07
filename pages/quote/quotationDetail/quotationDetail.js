@@ -101,7 +101,7 @@ Page({
   handlerEditQuotation(e) {
     let that = this
     wx.navigateTo({
-      url: '../quotationCreate/quotationCreate?quotation=' + JSON.stringify(this.data.quotation),
+      url: '/pages/quote/quotationCreate/quotationCreate?quotation=' + JSON.stringify(this.data.quotation),
       success: function(res){
         // success
       },

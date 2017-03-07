@@ -3,8 +3,8 @@ let util = require('../../utils/util.js')
 
 Page({
 	data: {
-	  // 有无数据
-    nodata: true,
+	  // 有无数据 init/data/none
+    nodata: "init",
 		// 全局视图
     windowHeight: '',
 		// 头部 SPU 信息视图
@@ -16,11 +16,15 @@ Page({
     // 下拉菜单筛选
     dropDownFilters: [],
     dropDownFiltersData: '',
+    dropDownSubFiltersData: '',
+    // 选择哪一个数据筛选集合
 		selectedFilterIndex: -1,
-		selectedCarColorId: '-1',
-		selectedCarColorName: '全部外观',
-		selectedSourceRegionId: '-1',
-		selectedSourceRegionName: '全部区域',
+    selectedExternalCarColorIndex: -1,
+		selectedExternalCarColorId: '-1',
+		selectedExternalCarColorName: '全部',
+    selectedInternalCarColorIndex: -1,
+    selectedInternalCarColorId: '-1',
+    selectedInternalCarColorName: '全部',
     // 横向滚动菜单筛选
     scrollFilters: [],
     scrollFiltersData: [],
@@ -100,10 +104,20 @@ Page({
 				let dropDownFilters = []
         let scrollFilters = []
         let scrollFiltersSelectedIndexes = []
+
+        let sourcePublishDateFilterId
         for (let i = 0; i < filters.length; i++) {
 				  let filter = filters[i]
-          if (i === 0 || i ===1 ) {
+          // FIXME: 这里的问题是使用了不严谨的方法获取数据
+          if (i === 0) {
             dropDownFilters.push(filter)
+          } else if (i == 1) {
+				    // 车源发布信息， 默认为 24小时
+            scrollFilters.push(filter)
+            scrollFiltersSelectedIndexes.push(1)
+            if (filter.items && filter.items.length) {
+              sourcePublishDateFilterId = filter.items[1].id
+            }
           } else {
 				    scrollFilters.push(filter)
             scrollFiltersSelectedIndexes.push(-1)
@@ -111,14 +125,15 @@ Page({
         }
 
 				that.setData({
-				  nodata: carSourcesBySkuInSpuList.length !== 0,
-          carSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
+				  nodata: carSourcesBySkuInSpuList.length !== 0? 'data': 'none',
 					cacheCarSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
 					filters: filters,
           dropDownFilters: dropDownFilters,
           scrollFilters: scrollFilters,
           scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
 				})
+
+        that.updateSearchResult({sourcePublishDate: sourcePublishDateFilterId})
 			}
 		})
 
@@ -273,9 +288,8 @@ Page({
     const section = this.data.carSourcesBySkuInSpuList[skuIndex]
     for (let i = 0; i < section.carSourcesList.length; i++) {
       const carSource = section.carSourcesList[i]
-      const publishDateString = carSource.publishDate.replace('-', '/')
-      const publishDate = new Date(publishDateString)
-      carSource.viewModelPublishDateDesc = util.dateDiff(publishDate);
+      const publishDate = util.dateCompatibility(carSource.publishDate)
+      carSource.viewModelPublishDateDesc = util.dateDiff(publishDate)
     }
 
     this.setData({
@@ -292,86 +306,151 @@ Page({
       return this.data.scrollFilters[index].items[selectedIndex].id
     }
   },
+  /**
+   * 页面数据主入口，由于该页面有筛选条件，所以页面的初始数据也必须走这个接口以保证初始的筛选条件无误
+   * @param object
+   */
   updateSearchResult(object) {
     const that = this
-    console.log(object)
-    let searchCarSkuList = that.data.cacheCarSourcesBySkuInSpuList;
 
-    const selectedColor = object.color || this.data.selectedCarColorId
-    const selectedSourceRegion = object.sourceRegion || this.data.selectedSourceRegionId
+    const selectedExternalCarColorName = this.data.selectedExternalCarColorName
+    const selectedInternalCarColorName = this.data.selectedInternalCarColorName
     const selectedSourcePublishDate = object.sourcePublishDate || this.getIdWithFiltersIndex(0)
-    const selectedExpectedDeliveryDays = object.expectedDeliveryDays || this.getIdWithFiltersIndex(1)
-    const selectedLogistics = object.logistics || this.getIdWithFiltersIndex(2)
+    //const selectedExpectedDeliveryDays = object.expectedDeliveryDays || this.getIdWithFiltersIndex(2)
+    const selectedLogistics = object.logistics || this.getIdWithFiltersIndex(1)
 
-    console.log("selected color:" + selectedColor)
-    console.log("selected source region:" + selectedSourceRegion)
+    console.log("selected color: ex:" + selectedExternalCarColorName + "in:" + selectedInternalCarColorName)
     console.log("selected source publish date:" + selectedSourcePublishDate)
-    console.log("selected expected delivery date:" + selectedExpectedDeliveryDays)
+    //console.log("selected expected delivery date:" + selectedExpectedDeliveryDays)
     console.log("selected logistics:" + selectedLogistics)
 
-    // let newCarSkuList = [];
-    // let carSourcesBySkuInSpuList = this.data.cacheCarSourcesBySkuInSpuList
-    // // TODO: 处理剩余逻辑
-    //
-    // for (let i = 0; i < searchCarSkuList.length; i++) {
-    //   let carSourcesBySkuInSpuItem = searchCarSkuList[i]
-    //   // SKU 分区搜索
-    //
-    //   for (let j = 0; j < carSourcesBySkuInSpuItem.carSourcesList.length; j++) {
-    //     // 具体每个SKU内部的筛选
-    //
-    //     let carSourcesItem = carSourcesBySkuInSpuItem.carSourcesList[j]
-    //     if (carSourcesItem.logistics.length) {
-    //       carSourcesItem.selectedLogistics = carSourcesItem.logistics[0]
-    //       carSourcesItem.selectedLogisticsIndex = 0;
-    //     } else {
-    //       carSourcesItem.selectedLogistics = {};
-    //       carSourcesItem.selectedLogisticsIndex = -1;
-    //     }
-    //   }
-    //   carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
-    // }
+    const selectedSourcePublishDateFilter = function (filterId, carSource) {
+      const now = new Date().getTime();
+      const publishDate = util.dateCompatibility(carSource.publishDate)
+      const diff = now - publishDate
 
-    // FIXME: 老搜索逻辑
-    // for (let i = 0; i < searchCarSkuList.length; i++) {
-    // 	let item = searchCarSkuList[i]
-    // 	if(selectExternal === item.externalColorId &&  selectInternal === '1') {
-    // 		newCarSkuList.push(item)
-    // 	} else if(selectInternal === item.internalColorId && selectExternal === '0') {
-    // 		newCarSkuList.push(item)
-    // 	} else if(selectExternal === item.externalColorId && selectInternal === item.internalColorId) {
-    // 		newCarSkuList.push(item)
-    // 	} else if(selectExternal === '0' && selectInternal === '1') {
-    // 		newCarSkuList.push(item)
-    // 	}
-    // }
+      const minute = 1000 * 60
+      const hour = minute * 60
 
-    // that.setData({
-    //   carSourcesBySkuInSpuList: newCarSkuList
-    // })
+      const _hour = diff/hour
+
+      if (filterId === '-1') {
+        return true
+      } else if (filterId === '0') {
+        return _hour <= 12
+      } else if (filterId === '1') {
+        return _hour <= 24
+      } else if (filterId === '2') {
+        return _hour > 24
+      }
+      return true;
+    }
+
+    const selectedLogisticsFilter = function (filterId, carSource) {
+      if (filterId === '-1') {
+        return true
+      } else if (filterId === '0') {
+        return carSource.logisticsFree
+      }
+      return true
+    }
+
+    const selectedColorFilter = function (externalColorName,
+                                          internalColorName,
+                                          carSourcesBySku) {
+      if (externalColorName === '全部') {
+        return true
+      } else {
+        if (externalColorName === carSourcesBySku.carSku.externalColorName) {
+          if (internalColorName === '全部') {
+            return true
+          } else {
+            if (internalColorName === carSourcesBySku.carSku.internalColorName) {
+              return true
+            } else {
+              return false
+            }
+          }
+        } else {
+          return false
+        }
+      }
+    }
+
+    const carSourcesBySkuInSpuList = this.data.cacheCarSourcesBySkuInSpuList
+    const newCarSourcesBySkuInSpuList = []
+    for (let i = 0; i < carSourcesBySkuInSpuList.length; i++) {
+      const carSourcesBySkuItem = carSourcesBySkuInSpuList[i]
+
+      const newCarSourcesList = []
+      for (let j = 0; j < carSourcesBySkuItem.carSourcesList.length; j++) {
+        const carSourceItem = carSourcesBySkuItem.carSourcesList[j]
+        if (selectedColorFilter(selectedExternalCarColorName, selectedInternalCarColorName, carSourcesBySkuItem)) {
+          if (selectedLogisticsFilter(selectedLogistics, carSourceItem)
+            && selectedSourcePublishDateFilter(selectedSourcePublishDate, carSourceItem)) {
+            newCarSourcesList.push(carSourceItem)
+          }
+        }
+      }
+
+      if (newCarSourcesList.length) {
+        // 如果有值
+        const newCarSourcesBySkuItem = {}
+        newCarSourcesBySkuItem.carSku = {}
+        newCarSourcesBySkuItem.carSourcesList = newCarSourcesList
+        newCarSourcesBySkuItem.carSku.externalColorId = carSourcesBySkuItem.carSku.externalColorId
+        newCarSourcesBySkuItem.carSku.externalColorName = carSourcesBySkuItem.carSku.externalColorName
+        newCarSourcesBySkuItem.carSku.internalColorId = carSourcesBySkuItem.carSku.internalColorId
+        newCarSourcesBySkuItem.carSku.internalColorName = carSourcesBySkuItem.carSku.internalColorName
+        newCarSourcesBySkuItem.carSku.skuId = carSourcesBySkuItem.carSku.skuId
+        newCarSourcesBySkuInSpuList.push(newCarSourcesBySkuItem)
+      } else {
+
+      }
+    }
+
+    this.setData({
+      carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
+      // 重置选择
+      selectedSectionIndex: -1,
+    })
   },
   handlerAmendCarFacade(e) {
     const that = this;
     const selectedFilterIndex = e.currentTarget.dataset.selectedFilterIndex;
 		if (selectedFilterIndex !== this.data.selectedFilterIndex) {
-      let firstFilters = []
+      // 父级
+		  let firstFilters = []
       if (selectedFilterIndex == 0) {
         firstFilters.push({
           id: '-1',
-          name: "全部外观"
-        })
-      } else if (selectedFilterIndex == 1) {
-        firstFilters.push({
-          id: '-1',
-          name: "全部区域"
+          name: "全部"
         })
       }
-      console.log(firstFilters)
-      const dropDownFiltersData = firstFilters.concat(that.data.dropDownFilters[selectedFilterIndex].items);
+      const dropDownFiltersData = firstFilters.concat(this.data.dropDownFilters[selectedFilterIndex].items);
+
+      // 子级
+      let subFirstFilters = []
+      subFirstFilters.push({
+        id: '-1',
+        name: '全部'
+      })
+
+      let dropDownSubFiltersData;
+      if (this.data.selectedExternalCarColorIndex != -1) {
+        const filter = this.data.dropDownFilters[selectedFilterIndex].items[this.data.selectedExternalCarColorIndex]
+        if (filter.items) {
+          dropDownSubFiltersData = subFirstFilters.concat(filter.items)
+        }
+      } else {
+        dropDownSubFiltersData = subFirstFilters
+      }
+
       that.setData({
         showRmendCarFacade: true,
         selectedFilterIndex: selectedFilterIndex,
-        dropDownFiltersData: dropDownFiltersData
+        dropDownFiltersData: dropDownFiltersData,
+        dropDownSubFiltersData: dropDownSubFiltersData,
       })
 		} else {
 			this.setData({
@@ -380,6 +459,7 @@ Page({
 		}
 	},
 	headlerRemoveRmendCarFacade() {
+    this.updateSearchResult({color: -1})
 		this.setData({
 			showRmendCarFacade: false
 		})
@@ -389,28 +469,52 @@ Page({
    * @param e
    */
   handlerSelectItem(e) {
-    const filterItem = e.currentTarget.dataset.filterItem;
-    const that = this;
-		if(that.data.selectedFilterIndex === '0') {
-      // 选择外观的筛选框
-			that.setData({
-        selectedCarColorId: filterItem.id,
-        selectedCarColorName: filterItem.name
-			})
-		} else if (that.data.selectedFilterIndex === '1') {
-			// 选择区域的筛选框
-			that.setData({
-        selectedSourceRegionId: filterItem.id,
-        selectedSourceRegionName: filterItem.name
-			})
-		} else {
-			// 其他
-		}
-    const selectedCarColor = that.data.selectedCarColorId
-    const selectedSourceRegion = that.data.selectedSourceRegionId
+    const filterItem = e.currentTarget.dataset.filterItem
+    const superFilterItem = e.currentTarget.dataset.superFilterItem
+    const filterIndex = e.currentTarget.dataset.filterIndex
+    const filterPosition = e.currentTarget.dataset.filterPosition
+    const superFilterPosition = e.currentTarget.dataset.superFilterPosition
 
-    that.updateSearchResult({color: selectedCarColor, sourceRegion: selectedSourceRegion})
-		that.headlerRemoveRmendCarFacade()
+    const that = this
+    if (filterPosition === 'left') {
+
+      // 子级
+      let subFirstFilters = []
+      subFirstFilters.push({
+        id: '-1',
+        name: '全部'
+      })
+
+      let dropDownSubFiltersData;
+      console.log(filterItem)
+      if (filterIndex != -1) {
+        if (filterItem.items) {
+          dropDownSubFiltersData = subFirstFilters.concat(filterItem.items)
+        } else {
+          dropDownSubFiltersData = subFirstFilters
+        }
+      } else {
+        dropDownSubFiltersData = subFirstFilters
+      }
+
+      this.setData({
+        selectedExternalCarColorIndex: filterIndex,
+        selectedExternalCarColorId: filterItem.id,
+        selectedExternalCarColorName: filterItem.name,
+        selectedInternalCarColorIndex: '-1',
+        selectedInternalCarColorId: '-1',
+        selectedInternalCarColorName: '全部',
+        dropDownSubFiltersData: dropDownSubFiltersData
+      })
+    } else if (filterPosition === 'right') {
+      this.setData({
+        selectedInternalCarColorIndex: filterIndex,
+        selectedInternalCarColorId: filterItem.id,
+        selectedInternalCarColorName: filterItem.name
+      })
+
+      that.headlerRemoveRmendCarFacade()
+    }
 	},
   /**
    * 横向滚动栏筛选项目点击行为
@@ -445,12 +549,14 @@ Page({
       // 车源发布时间
       that.updateSearchResult({sourcePublishDate: selectedFilterId})
     } else if (scrollFilterIndex == 1) {
-      // 预计车辆到达时间
-      that.updateSearchResult({expectedDeliveryDays: selectedFilterId})
-    } else if (scrollFilterIndex == 2) {
       // 是否包邮
       that.updateSearchResult({logistics: selectedFilterId})
     }
+    // FIXME: 被 larray 移除
+    // } else if (scrollFilterIndex == 2) {
+    //   that.updateSearchResult({expectedDeliveryDays: selectedFilterId})
+      // 预计车辆到达时间
+    // }
   },
   /**
 	 * 选择 SKU 分区
@@ -527,11 +633,9 @@ Page({
     let content = ''
 
     if (carSource.supplierSelfSupport && carSource.priceFixed) {
-      content = '一口价  垫资拿车'
+      content = '70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货'
     } else if (carSource.supplierSelfSupport && !carSource.priceFixed) {
-      content = '裸车价  垫资拿车'
-    } else if (!carSource.supplierSelfSupport && !carSource.priceFixed) {
-      content = '裸车价'
+      content = '加盟门店可享支付定金拿车，详情请电话联系'
     }
 
     if (content !== '') {
@@ -610,11 +714,7 @@ Page({
     const skuItem = e.currentTarget.dataset.skuItem
     const carSourceItem = e.currentTarget.dataset.carSource
     const skuId = skuItem.carSku.skuId;
-    // TODO: 用户手机号
-    const contact = "11111111"
-
-    console.log(skuId)
-    console.log(contact)
+    const contact = app.globalData.mobile
 
     const hideDialog = this.$wuxDialog.open({
       title: '发起定车后， 将会有工作人员与您联系',

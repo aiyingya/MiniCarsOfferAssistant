@@ -118,6 +118,16 @@ let downPoint = function (price, originPrice) {
   return (Math.abs(originPrice - price) * 100 / originPrice)
 }
 
+let dateCompatibility = function (dateString) {
+  if (dateString && dateString.length ) {
+    const dateCompatibilityString = dateString.replace(/-/g, '/')
+    const dateCompatibility = new Date(dateCompatibilityString)
+    return dateCompatibility
+  } else {
+    return new Date()
+  }
+}
+
 /**
  * [dateDiff 算时间差]
  * @param  {[type=Number]} hisTime [历史时间戳，必传]
@@ -171,5 +181,6 @@ module.exports = {
   priceStringWithUnit: priceStringWithUnit,
   downPoint: downPoint,
   downPriceFlag: downPriceFlag,
-  dateDiff: dateDiff
+  dateDiff: dateDiff,
+  dateCompatibility: dateCompatibility
 }
