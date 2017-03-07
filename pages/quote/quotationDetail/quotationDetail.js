@@ -174,9 +174,12 @@ Page({
   handlerBookCar(e) {
     let that = this;
 
+    const contact = app.globalData.mobile
+
     const hideDialog = this.$wuxDialog.open({
       title: '发起定车后， 将会有工作人员与您联系',
       content: '',
+      inputNumber: contact,
       inputNumberPlaceholder: '输入您的手机号',
       confirmText: '发起定车',
       cancelText: '取消',
