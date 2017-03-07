@@ -444,7 +444,8 @@ Page({
                       // success
                     },
                     fail: function() {
-                      app.fuckingLarryNavigatorTo = null
+                      app.fuckingLarryNavigatorTo.source = null
+                      app.fuckingLarryNavigatorTo.quotation = null
                     },
                     complete: function() {
                       // complete
@@ -458,7 +459,8 @@ Page({
 
                     },
                     fail: () => {
-                      app.fuckingLarryNavigatorTo = null
+                      app.fuckingLarryNavigatorTo.source = null
+                      app.fuckingLarryNavigatorTo.quotation = null
                     },
                     complete: () => {
 
@@ -504,7 +506,8 @@ Page({
 
                     },
                     fail: () => {
-                      app.fuckingLarryNavigatorTo = null
+                      app.fuckingLarryNavigatorTo.source = null
+                      app.fuckingLarryNavigatorTo.quotation = null
                     },
                     complete: () => {
 
