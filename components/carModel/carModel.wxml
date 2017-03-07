@@ -3,13 +3,11 @@
 		class="carModels-cell"
 		hover="true"
 		hover-class="carModels-cell_active"
+		data-carmodelsinfo="{{item}}"
+		bindtap="handlerToCarSources" 
 		>
 		<!-- title.-->
-		<view 
-			class="carModels-message"
-			bindtap="handlerToCarSources" 
-			data-carmodelsinfo="{{item}}"
-			>
+		<view class="carModels-message">
 			<view class="carModels-message-title">
 				【{{item.officialPriceStr}}】 {{item.carModelName}} 
 			</view>
@@ -19,7 +17,7 @@
 					hover-class="quotebtn-active" 
 					class="quotebtn" 
 					type="primary"
-					bindtap="handlerPromptly"
+					catchtap="handlerPromptly"
 					data-carmodelsinfo="{{item}}"
 					>立即报价</button>
 			</view>
@@ -27,7 +25,7 @@
 		
 		<view 
 			class="carModels-inner"
-			wx:if="{{item.supply}}"
+			wx:if="{{item.supply.supplierCount > 0}}"
 			>
 			<!-- cars info.-->
 			<view class="carModels-info">
@@ -38,7 +36,10 @@
 				<block wx:else>
 					<view class="carModels-repertory adequate">{{item.supply.status}}</view>
 				</block>
-				<view class="carModels-carcolor">
+				<view 
+					class="carModels-carcolor"
+					wx:if="{{item.supply.colors.length > 0}}"
+					>
 					<view class="carcolor-label">外饰：</view>
 					<view class="carcolor-inner">
 						<view 	
@@ -54,12 +55,27 @@
 				</view>
 			</view>
 
-			<view class="charts-inner">
-				<canvas 
-					canvas-id="{{item.carModelId}}" 
-					class="canvas" 
-					bindtouchstart="touchHandler"
-					></canvas>
+			<view 
+				class="charts-inner"
+				wx:if="{{item.supply.chart}}"
+				>
+				<block wx:if="{{showCharts}}">
+					<view class="charts-tagMessage">
+						<view class="charts-supply-number">
+							供货数量
+						</view>
+	<!--
+						<view class="charts-tagMessage-inner">
+							<view class="tagname">{{item.supply.chart.tagName}}</view>
+							<view class="tagvalue">{{item.supply.chart.tagValue}}</view>
+						</view>
+	-->
+					</view>
+					<canvas 
+						canvas-id="{{item.carModelId}}" 
+						class="canvas" 
+						></canvas>
+				</block>
 			</view>
 		</view>
 		

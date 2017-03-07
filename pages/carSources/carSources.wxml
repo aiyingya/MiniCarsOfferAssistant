@@ -5,6 +5,9 @@
 <import src="../../lib/dialog/reliableDialog.wxml"/>
 <template is="reliableDialog" data="{{ ...$wux.reliableDialog }}"/>
 
+<import src="../../lib/dialog/normalDialog.wxml"/>
+<template is="normalDialog" data="{{ ...$wux.normalDialog }}"/>
+
 <!-- 货源列表 -->
 <view class="car-sources container">
 	<!-- SPU 详情展示 -->
@@ -16,72 +19,112 @@
 
 	<!-- 页面主体 -->
 	<view class="carSources-body">
-		<!-- 下拉框筛选 -->
-		<view class="carSources-navbar">
-			<view
-					class="navbar cars-facade"
-					bindtap="handlerAmendCarFacade"
-					data-selected-filter-index="0"
-			>
-				<view class="navbar-text">
-					{{selectedCarColorName}}
-					<image
-							class="icon-dropdownarrow"
-							src="{{showRmendCarFacade && selectedFilterIndex === '0'? '../../images/icons/icon_dropdownarrow_up_gray.png': '../../images/icons/icon_dropdownarrow_down_gray.png'}}"
-					>
-					</image>
-				</view>
-			</view>
-			<view
-					class="navbar cars-facade"
-					bindtap="handlerAmendCarFacade"
-					data-selected-filter-index="1"
-			>
-				<view class="navbar-text">
-					{{selectedSourceRegionName}}
-					<image
-							class="icon-dropdownarrow"
-							src="{{showRmendCarFacade && selectedFilterIndex === '1'? '../../images/icons/icon_dropdownarrow_up_gray.png': '../../images/icons/icon_dropdownarrow_down_gray.png'}}"
-					>
-					</image>
-				</view>
-			</view>
+		<view
+				wx:if="{{nodata === 'init'}}"
+		>
 		</view>
-		<!-- 条件筛选.-->
-		<view wx:if="{{showRmendCarFacade}}" class="rmendCarFacade-popup-wrap">
-			<view
-					class="rmendCarFacade-popup-mask showMask"
-					bindtap="headlerRemoveRmendCarFacade"
-			></view>
-			<view class="rmendCarFacade-inner topToBottom">
-				<scroll-view scroll-y style="height: 520rpx">
-					<view
-							class="weui-cell weui-cell_access"
-							hover="true"
-							hover-class="weui-cell_active"
-							wx:for="{{dropDownFiltersData}}"
-							wx:for-item="filterItem"
-							bindtap="handlerSelectItem"
-							data-filter-item="{{filterItem}}"
-					>
-						<view class="weui-cell__bd weui-cell_primary">
-							<view>{{filterItem.name}}</view>
-						</view>
-						<view
-								wx:if="{{(selectedFilterIndex == 0 && selectedCarColorId == filterItem.id) || (selectedFilterIndex == 1 && selectedSourceRegionId == filterItem.id)}}"
-								class="weui-cell__ft"
+		<view
+				wx:if="{{nodata === 'data'}}"
+		>
+			<!-- 下拉框筛选 -->
+			<view class="carSources-navbar">
+				<view
+						class="navbar cars-facade"
+						bindtap="handlerAmendCarFacade"
+						data-selected-filter-index="0"
+				>
+					<view class="navbar-text">
+						外:{{selectedExternalCarColorName}} 内:{{selectedInternalCarColorName}}
+						<image
+								class="icon-dropdownarrow"
+								src="{{showRmendCarFacade && selectedFilterIndex === '0'? '../../images/icons/icon_dropdownarrow_up_gray.png': '../../images/icons/icon_dropdownarrow_down_gray.png'}}"
 						>
-							<image src="../../images/icons/icon_select_red.png"></image>
+						</image>
+					</view>
+				</view>
+				<!-- 区域筛选移除 -->
+				<!--<view-->
+				<!--class="navbar cars-facade"-->
+				<!--bindtap="handlerAmendCarFacade"-->
+				<!--data-selected-filter-index="1"-->
+				<!--&gt;-->
+				<!--<view class="navbar-text">-->
+				<!--{{selectedSourceRegionName}}-->
+				<!--<image-->
+				<!--class="icon-dropdownarrow"-->
+				<!--src="{{showRmendCarFacade && selectedFilterIndex === '1'? '../../images/icons/icon_dropdownarrow_up_gray.png': '../../images/icons/icon_dropdownarrow_down_gray.png'}}"-->
+				<!--&gt;-->
+				<!--</image>-->
+				<!--</view>-->
+				<!--</view>-->
+			</view>
+			<!-- 条件筛选.-->
+			<view wx:if="{{showRmendCarFacade}}" class="rmendCarFacade-popup-wrap">
+				<view
+						class="rmendCarFacade-popup-mask showMask"
+						bindtap="headlerRemoveRmendCarFacade"
+				></view>
+				<view class="rmendCarFacade-inner topToBottom">
+					<view class="dropdown">
+						<view class="dd dropdown-left">
+							<view
+									hover="true"
+									hover-class="weui-cell_active"
+									wx:for="{{dropDownFiltersData}}"
+									wx:for-item="filterItem"
+									wx:for-index="filterIndex"
+									class="weui-cell weui-cell_access"
+									bindtap="handlerSelectItem"
+									data-filter-position="left"
+									data-filter-Index="{{filterIndex}}"
+									data-filter-item="{{filterItem}}"
+									data-super-filter-item="{{}}"
+							>
+								<view class="weui-cell__bd weui-cell_primary">
+									<view>{{filterItem.name}}</view>
+								</view>
+								<view
+										wx:if="{{ selectedExternalCarColorName == filterItem.name }}"
+										class="weui-cell__ft"
+								>
+									<image src="../../images/icons/icon_select_red.png"></image>
+								</view>
+							</view>
+						</view>
+
+						<view class="dd dropdown-right">
+							<view
+									class="weui-cell weui-cell_access"
+									hover="true"
+									hover-class="weui-cell_active"
+									wx:for="{{dropDownSubFiltersData}}"
+									wx:for-item="filterItem"
+									wx:for-index="filterIndex"
+									bindtap="handlerSelectItem"
+									data-filter-position="right"
+									data-filter-Index="{{filterIndex}}"
+									data-filter-item="{{filterItem}}"
+									data-super-filter-item="{{dropDownFiltersData[selectedExternalCarColorIndex]}}"
+							>
+								<view class="weui-cell__bd weui-cell_primary">
+									<view>{{filterItem.name}}</view>
+								</view>
+								<view
+										wx:if="{{ selectedInternalCarColorName == filterItem.name }}"
+										class="weui-cell__ft"
+								>
+									<image src="../../images/icons/icon_select_red.png"></image>
+								</view>
+							</view>
 						</view>
 					</view>
-				</scroll-view>
+				</view>
 			</view>
-		</view>
-		<!-- 标签选择 -->
-		<scroll-view
-				scroll-x="true"
-				style="height: 96rpx; width: 100%;"
-		>
+			<!-- 标签选择 -->
+			<!--<scroll-view-->
+			<!--scroll-x="true"-->
+			<!--style="height: 96rpx; width: 100%;"-->
+			<!--&gt;-->
 			<view class="filter-scroll-view">
 				<view
 						wx:for="{{scrollFilters}}"
@@ -104,231 +147,283 @@
 					</view>
 				</view>
 			</view>
-		</scroll-view>
-		<!-- 货源列表 -->
-		<view
-				wx:if="{{carSourcesBySkuInSpuList.length > 0}}"
-				class="carSources-sections"
-		>
-			<view
-					wx:for="{{carSourcesBySkuInSpuList}}"
-					wx:for-item="skuItem"
-					wx:for-index="skuItemIndex"
-					class="carSources-section"
-			>
-				<view class="carSources-section-content"
-					  bindtap="handlerSelectSku"
-					  data-sku-index="{{skuItemIndex}}"
-					  data-sku-item="{{skuItem}}"
+			<!--</scroll-view>-->
+			<!-- 货源列表 -->
+			<view class="carSources-sections">
+				<view
+						wx:for="{{carSourcesBySkuInSpuList}}"
+						wx:for-item="skuItem"
+						wx:for-index="skuItemIndex"
+						class="carSources-section"
 				>
-					<!-- 库存分区列表 -->
-					<view class="title">
-						{{skuItem.carSku.externalColorName}}/{{skuItem.carSku.internalColorName}}
-					</view>
-					<view class = "carSources-section-price">
+					<view class="carSources-section-content"
+						  bindtap="handlerSelectSku"
+						  data-sku-index="{{skuItemIndex}}"
+						  data-sku-item="{{skuItem}}"
+					>
+						<!-- 库存分区列表 -->
+						<view class="first-part">
+							<view class="title">
+								外:{{skuItem.carSku.externalColorName}} 内:{{skuItem.carSku.internalColorName}}
+							</view>
+							<view
+									wx:if="{{ skuItem.carSku.viewModelTagCollection.length }}"
+									class="tag-collection"
+							>
+								{{skuItem.carSku.viewModelTagCollection}}
+							</view>
+						</view>
+
+						<view class="second-part">
+							<view class = "carSources-section-price">
+								<image
+										wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
+										class="discount-icon"
+										src="{{skuItem.carSourcesList[0].viewModelDiscount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+								>
+								</image>
+								<view
+										wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
+										class="discount"
+								>
+									{{ skuItem.carSourcesList[0].viewModelDiscountDesc }}元/
+								</view>
+								<view class="price">{{skuItem.carSourcesList[0].viewModelPriceDesc}}</view>
+								<view class="discount">起</view>
+							</view>
+						</view>
+						<!--<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'store'}}">包邮到门店</view>-->
+						<!--<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'post'}}">包邮到驿站</view>-->
+
+						<!-- 货源右侧的展开标记 -->
 						<image
-								class="discount-icon"
-								src="{{skuItem.carSourcesList[0].discount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+								class="icon-dropdownarrow"
+								src="{{skuItemIndex === selectedSectionIndex? '../../images/icons/icon_dropdownarrow_up_gray.png': '../../images/icons/icon_dropdownarrow_down_gray.png'}}"
 						>
 						</image>
-						<view class="discount">{{skuItem.carSourcesList[0].discount}}万/</view>
-						<view class="price">{{skuItem.carSourcesList[0].price}}万</view>
 					</view>
-					<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'store'}}">包邮到门店</view>
-					<view class="logisticsFree" wx:if="{{skuItem.carSourcesList[0].logisticsFree && skuItem.carSourcesList[0].logisticsType === 'post'}}">包邮到驿站</view>
-					<!-- 货源右侧的展开标记 -->
-					<image
-							class="icon-dropdownarrow"
-							src="{{skuItemIndex === selectedSectionIndex? '../../images/icons/icon_dropdownarrow_up_gray.png': '../../images/icons/icon_dropdownarrow_down_gray.png'}}"
-					>
-					</image>
-				</view>
 
-				<view wx:if="{{skuItemIndex === selectedSectionIndex}}">
-					<view
-							wx:if="{{skuItem.carSourcesList.length > 0}}"
-							class="carSources-cells"
-					>
+					<view wx:if="{{skuItemIndex === selectedSectionIndex}}">
 						<view
-								wx:for="{{skuItem.carSourcesList}}"
-								wx:for-item="carSourceItem"
-								wx:for-index="carSourceItemIndex"
-								class="carSources-cell"
+								wx:if="{{skuItem.carSourcesList.length > 0}}"
+								class="carSources-cells"
 						>
-							<view class="carSources-cell-content">
-								<!-- 第一部分-供应商名称 + 价格 + 一口价还是裸车价 -->
-								<view class="first-part">
-									<!-- 供应商名称 -->
-									<view class="supplier-name">
-										<view class="name">{{carSourceItem.supplier.name}}</view>
-										<view wx:if="{{carSourceItem.supplierSelfSupport}}" class="certification">V</view>
+							<view
+									wx:for="{{skuItem.carSourcesList}}"
+									wx:for-item="carSourceItem"
+									wx:for-index="carSourceItemIndex"
+									class="carSources-cell"
+							>
+								<view class="carSources-cell-content">
+									<!-- 第一部分-供应商名称 + 价格 + 一口价还是裸车价 -->
+									<view class="first-part">
+										<!-- 供应商名称 -->
+										<view class="supplier-name">
+											<view class="name">{{carSourceItem.supplier.name}}</view>
+											<view wx:if="{{carSourceItem.supplierSelfSupport}}" class="certification">V</view>
+										</view>
+
+										<!-- 供货价格 -->
+										<view class = "carSources-cell-price">
+											<image
+													wx:if="{{ carSourceItem.viewModelDiscount !== 0 }}"
+													class="discount-icon"
+													src="{{ carSourceItem.viewModelDiscount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+											>
+											</image>
+											<view
+													wx:if="{{ carSourceItem.viewModelDiscount !== 0 }}"
+													class="discount"
+											>
+												{{ carSourceItem.viewModelDiscountDesc }}元/
+											</view>
+											<view class="price">{{carSourceItem.viewModelPriceDesc}}</view>
+										</view>
 									</view>
 
-									<!-- 供货价格 -->
-									<view class = "carSources-cell-price">
-										<image
-												class="discount-icon"
-												src="{{carSourceItem.discount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
-										>
-										</image>
-										<view class="discount">{{carSourceItem.discount}}万/</view>
-										<view class="price">{{carSourceItem.price}}万</view>
-									</view>
-								</view>
-
-								<!-- 是否为一口价, 一口价布局不能放在横向 flex 布局之中， 需要固定在报价之下 -->
-								<view wx:if="{{carSourceItem.priceFixed}}" class="price-type fixed">
-									一口价
-									<image
-											src='../../images/icons/icon_prompt.png'
-									>
-									</image>
-								</view>
-								<view wx:else class="price-type bare">
-									裸车价
-								</view>
-
-								<!-- 第二部分-关注组件-->
-								<!-- 关注靠谱 -->
-								<view wx:if="{{!carSourceItem.supplierSelfSupport}}" class="social">
+									<!-- 是否为一口价, 一口价布局不能放在横向 flex 布局之中， 需要固定在报价之下 -->
 									<view
-											bindtap="handlerFollow"
-											data-sku-index="{{skuItemIndex}}"
-											data-sku="{{skuItem}}"
-											data-car-source-index="{{carSourceItemIndex}}"
+											wx:if="{{carSourceItem.priceFixed && carSourceItem.supplierSelfSupport}}"
+											class="price-type fixed"
+											bindtap="handlerShowTips"
 											data-car-source="{{carSourceItem}}"
-											data-supplier="{{carSourceItem.supplier}}"
-											class="follow {{carSourceItem.supplier.hasFocused? 'active': 'none-active'}}"
 									>
+										一口价 垫资拿车
 										<image
-												src="{{carSourceItem.supplier.hasFocused? '../../images/icons/icon_follow_active.png': '../../images/icons/icon_follow_normal.png'}}"
+												src='../../images/icons/icon_prompt.png'
 										>
 										</image>
-										{{carSourceItem.supplier.hasFocused? '已关注': '关注'}}
 									</view>
-
+									<view wx:if="{{!carSourceItem.priceFixed && carSourceItem.supplierSelfSupport}}"
+										  class="price-type fixed"
+										  bindtap="handlerShowTips"
+										  data-car-source="{{carSourceItem}}"
+									>
+										裸车价 垫资拿车
+										<image
+												src='../../images/icons/icon_prompt.png'
+										>
+										</image>
+									</view>
 									<view
-											bindtap="handlerReliable"
-											data-sku-index="{{skuItemIndex}}"
-											data-sku="{{skuItem}}"
-											data-car-source-index="{{carSourceItemIndex}}"
+											wx:if="{{!carSourceItem.priceFixed && !carSourceItem.supplierSelfSupport}}"
+											class="price-type bare"
 											data-car-source="{{carSourceItem}}"
-											data-supplier="{{carSourceItem.supplier}}"
-											class="reliable {{carSourceItem.hasBeenReliableByUser? 'active': 'none-active'}}"
 									>
-										<image
-												src="{{carSourceItem.hasBeenReliableByUser? '../../images/icons/icon_reliable_small_active.png': '../../images/icons/icon_reliable_small_normal.png'}}"
-										>
-										</image>
-										靠谱
-									</view>
-								</view>
-
-								<!-- 第三部分 车源基本信息 + 货源渠道 -->
-								<view class="third-part">
-									<!-- 车源基本信息 -->
-									<view class="basic-infomation">
-										<view class="basic-label">{{carSourceItem.sourceRegionDesc}}</view>
-										<view class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
-										<view class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
+										裸车价
 									</view>
 
-									<!-- 货源渠道信息 -->
-									<view wx:if="{{!carSourceItem.supplierSelfSupport}}" class="carSource-channel">
-										<view class="publish-date">{{carSourceItem.publishDateDesc}}</view>
-										<view class="channel icon-small-point">{{carSourceItem.publishChannel}}</view>
-									</view>
-								</view>
+									<!-- 第二部分-关注组件-->
+									<!-- 关注靠谱 -->
+									<!--<view wx:if="{{!carSourceItem.supplierSelfSupport}}" class="social">-->
+									<!--<view-->
+									<!--bindtap="handlerFollow"-->
+									<!--data-sku-index="{{skuItemIndex}}"-->
+									<!--data-sku="{{skuItem}}"-->
+									<!--data-car-source-index="{{carSourceItemIndex}}"-->
+									<!--data-car-source="{{carSourceItem}}"-->
+									<!--data-supplier="{{carSourceItem.supplier}}"-->
+									<!--class="follow {{carSourceItem.supplier.hasFocused? 'active': 'none-active'}}"-->
+									<!--&gt;-->
+									<!--<image-->
+									<!--src="{{carSourceItem.supplier.hasFocused? '../../images/icons/icon_follow_active.png': '../../images/icons/icon_follow_normal.png'}}"-->
+									<!--&gt;-->
+									<!--</image>-->
+									<!--{{carSourceItem.supplier.hasFocused? '已关注': '关注'}}-->
+									<!--</view>-->
 
-								<!-- 第四部分-物流信息 -->
-								<view class="temp">
-									<view class="forth-part">
-										<!-- 物流信息-费用和时间 -->
-										<view class="{{carSourceItem.logistics.length > 0? 'vertical':'horizontal'}}">
-											<view class="icon-point logistics">
-												<view wx:if="{{carSourceItem.logisticsFree}}" class="logistics-free ">
-													<block wx:if="{{carSourceItem.logisticsType === 'store'}}">包邮到门店</block>
-													<block wx:if="{{carSourceItem.logisticsType === 'post'}}">包邮到驿站</block>
-												</view>
-												<view wx:else class="logistics-none-free">
-													<view>
-														运费约: {{carSourceItem.selectedLogistics.logisticsFeeDesc}}
+									<!--<view-->
+									<!--bindtap="handlerReliable"-->
+									<!--data-sku-index="{{skuItemIndex}}"-->
+									<!--data-sku="{{skuItem}}"-->
+									<!--data-car-source-index="{{carSourceItemIndex}}"-->
+									<!--data-car-source="{{carSourceItem}}"-->
+									<!--data-supplier="{{carSourceItem.supplier}}"-->
+									<!--class="reliable {{carSourceItem.hasBeenReliableByUser? 'active': 'none-active'}}"-->
+									<!--&gt;-->
+									<!--<image-->
+									<!--src="{{carSourceItem.hasBeenReliableByUser? '../../images/icons/icon_reliable_small_active.png': '../../images/icons/icon_reliable_small_normal.png'}}"-->
+									<!--&gt;-->
+									<!--</image>-->
+									<!--靠谱-->
+									<!--</view>-->
+									<!--</view>-->
+
+									<!-- 第三部分 车源基本信息 + 货源渠道 -->
+									<view class="third-part">
+										<!-- 车源基本信息 -->
+										<view class="basic-infomation">
+											<view wx:if="{{carSourceItem.sourceRegionDesc && carSourceItem.sourceRegionDesc.length}}" class="basic-label">{{carSourceItem.sourceRegionDesc}}</view>
+											<view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
+											<view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
+											<view
+													wx:if="{{ !(carSourceItem.sourceRegionDesc && carSourceItem.sourceRegionDesc.length) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
+													class="basic-label"
+											>
+												车源信息暂无
+											</view>
+										</view>
+
+										<!-- 货源渠道信息 -->
+										<view wx:if="{{!carSourceItem.supplierSelfSupport}}" class="carSource-channel">
+											<view class="publish-date">{{carSourceItem.viewModelPublishDateDesc}}</view>
+											<view class="channel icon-small-point">{{carSourceItem.publishChannel}}</view>
+										</view>
+									</view>
+
+									<!-- 第四部分-物流信息 -->
+									<view class="temp" wx:if="{{ carSourceItem.logistics && carSourceItem.logistics.length }}">
+										<view class="forth-part">
+											<!-- 物流信息-费用和时间 -->
+											<view class="{{carSourceItem.logistics.length > 0? 'vertical':'horizontal'}}">
+												<view class="icon-point logistics">
+													<view wx:if="{{carSourceItem.logisticsFree}}" class="logistics-free ">
+														<block wx:if="{{carSourceItem.logisticsType === 'store'}}">包邮到门店</block>
+														<block wx:if="{{carSourceItem.logisticsType === 'post'}}">包邮到驿站</block>
+													</view>
+													<view wx:else class="logistics-none-free">
+														<view>
+															运费约: {{carSourceItem.selectedLogistics.logisticsFeeDesc}}
+														</view>
+													</view>
+													<view class="logistics-date">
+														{{carSourceItem.selectedLogistics.expectedDeliveryDaysDesc}}
 													</view>
 												</view>
-												<view class="logistics-date">
-													{{carSourceItem.selectedLogistics.expectedDeliveryDateDesc}}
+												<view class="logistics-tips icon-point-padding">
+													(物流信息仅供参考)
 												</view>
 											</view>
-											<view class="logistics-tips icon-point-padding">
-												(物流信息仅供参考)
-											</view>
-										</view>
 
-										<!-- 物流信息-物流选择块 -->
-										<view class="logistics-list">
+											<!-- 物流信息-物流选择块 -->
+
+											<!-- 门店的物流信息暂时取消 -->
 											<view
-													wx:for="{{carSourceItem.logistics}}"
-													wx:for-item="logisticsItem"
-													wx:for-index="logisticsItemIndex"
-													class="logistics-block {{logisticsItemIndex == carSourceItem.selectedLogisticsIndex? 'selected': ''}}"
-													bindtap="handlerSelectLogisticsBlock"
-													data-sku-index="{{skuItemIndex}}"
-													data-sku="{{skuItem}}"
-													data-car-source-index="{{carSourceItemIndex}}"
-													data-car-source="{{carSourceItem}}"
-													data-logistics-index="{{logisticsItemIndex}}"
-													data-logistics="{{logisticsItem}}"
+													wx:if="{{ carSourceItem.logisticsType === 'post' }}"
+													class="logistics-list"
 											>
-												<view class="title">
-													驿站{{logisticsItemIndex + 1}}
-												</view>
-												<view class="value">
-													{{logisticsItem.destination}}
+												<view
+														wx:for="{{carSourceItem.logistics}}"
+														wx:for-item="logisticsItem"
+														wx:for-index="logisticsItemIndex"
+														class="logistics-block {{logisticsItemIndex == carSourceItem.selectedLogisticsIndex? 'selected': ''}}"
+														bindtap="handlerSelectLogisticsBlock"
+														data-sku-index="{{skuItemIndex}}"
+														data-sku="{{skuItem}}"
+														data-car-source-index="{{carSourceItemIndex}}"
+														data-car-source="{{carSourceItem}}"
+														data-logistics-index="{{logisticsItemIndex}}"
+														data-logistics="{{logisticsItem}}"
+												>
+													<view class="title">
+														驿站{{carSourceItem.logistics.length > 1? logisticsItemIndex + 1: ''}}
+													</view>
+													<view class="value">
+														{{logisticsItem.name}}
+													</view>
 												</view>
 											</view>
 										</view>
 									</view>
 
-									<!-- 第五部分-要买车平台自营的描述信息 -->
-									<view wx:if="{{carSourceItem.supplierSelfSupport}}" class="fivth-part">
-										<view class="deposit-label icon-point">定金拿车，到货前0利息</view>
-										<view class="tips-label">(到货后，5天内万4，5天外万6)</view>
-									</view>
-								</view>
-
-								<!-- 第六部分-底部按钮 -->
-								<view class="sixth-part">
-									<view
-											class="button normal {{carSourceItem.supplierSelfSupport? '':'full'}}"
-										  	bindtap="handlerContact"
-											data-sku-index="{{skuItemIndex}}"
-											data-sku="{{skuItem}}"
-											data-car-source-index="{{carSourceItemIndex}}"
-											data-car-source="{{carSourceItem}}"
-									>
-										联系
-									</view>
-									<view
-											wx:if="{{carSourceItem.supplierSelfSupport}}"
-										  	class="button confirm"
-										  	bindtap="handlerBookCar"
-										  	data-sku="skuItem"
-										  	data-car-source="{{carSourceItem}}"
-									>
-										定车
+									<!-- 第六部分-底部按钮 -->
+									<view class="sixth-part">
+										<view
+												class="button normal {{carSourceItem.supplierSelfSupport? '':'full'}}"
+												bindtap="handlerContact"
+												data-sku-index="{{skuItemIndex}}"
+												data-sku="{{skuItem}}"
+												data-car-source-index="{{carSourceItemIndex}}"
+												data-car-source="{{carSourceItem}}"
+										>
+											联系
+										</view>
+										<view
+												wx:if="{{carSourceItem.supplierSelfSupport}}"
+												class="button confirm"
+												bindtap="handlerBookCar"
+												data-sku-item="{{skuItem}}"
+												data-car-source="{{carSourceItem}}"
+										>
+											定车
+										</view>
 									</view>
 								</view>
 							</view>
 						</view>
-					</view>
-					<view wx:else class="nodata">
-						该 SKU 下供货暂无数据
+						<view wx:else class="nodata">
+							该 SKU 下供货暂无数据
+						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-		<view wx:else class="nodata">
-			供货暂无数据
+		<view
+				wx:if="{{nodata === 'none'}}"
+				class="nodata"
+		>
+			<image class="carSource-sections-nodata-image" src="../../images/icons/orderlist_icon_noorder.png"></image>
+			<view class="carSource-sections-nodata-text">暂无货源</view>
 		</view>
 	</view>
 </view>

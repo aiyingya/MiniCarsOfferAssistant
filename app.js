@@ -112,7 +112,7 @@ App({
 					let setLocation = {}
 					if(res.tenants) {
 						for(let item of res.tenants) {
-							if(item.addressList.length > 0) {
+							if(item.addressList && item.addressList.length > 0) {
 								for(let aitem of item.addressList) {
 									location.push(aitem.location)
 								}
@@ -120,6 +120,7 @@ App({
 						}
 					}
 					that.globalData.location = location
+					that.globalData.mobile = res.mobile
 				}
 			})
 		}
@@ -142,7 +143,8 @@ App({
 		 * loginChannel: 'weixin' 'weixin'|'guest'
      */
     userInfo: null,
-		location: null
+		location: null,
+		mobile: null
   },
   wux: wux,
 	config: config,

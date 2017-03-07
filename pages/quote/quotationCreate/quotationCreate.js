@@ -98,6 +98,8 @@ Page({
     let carSKUInfoJSONString = options.carInfo
     let carModelInfoJSONString = options.carModelsInfo
 
+    console.log(options)
+
     if (quotationJSONString && quotationJSONString.length) {
       /***
        * 来源页面来自于详情页面， 参数中有 quotation
@@ -451,7 +453,7 @@ Page({
 
                 } else {
                   wx.switchTab({
-                    url: '../quotationsList/quotationsList',
+                    url: '/pages/usersQuote/usersQuote',
                     success: (res) => {
 
                     },
@@ -497,7 +499,7 @@ Page({
 
                 } else {
                   wx.switchTab({
-                    url: '../quotationsList/quotationsList',
+                    url: '/pages/quote/quotationsList/quotationsList',
                     success: (res) => {
 
                     },
@@ -681,11 +683,11 @@ Page({
 
     if (this.data.source === 'quotationDetail') {
       wx.navigateTo({
-        url: '../../changeCarColor/changeCarColor?quotation='+JSON.stringify(quotation)
+        url: '/pages/changeCarColor/changeCarColor?quotation='+JSON.stringify(quotation)
       })
     } else if (this.data.source === 'carSources' || this.data.source === 'carModels') {
       wx.navigateTo({
-        url: '../../changeCarColor/changeCarColor?carModelsInfo='+JSON.stringify(carModelsInfo)+'&carSKUInfo='+JSON.stringify(carSKUInfo)
+        url: '/pages/changeCarColor/changeCarColor?carModelsInfo='+JSON.stringify(carModelsInfo)+'&carSKUInfo='+JSON.stringify(carSKUInfo)
       })
     }
   }

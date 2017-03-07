@@ -1,5 +1,7 @@
 <!-- 车款.-->
 <import src="../../components/carModel/carModel.wxml" />
+<import src="../../lib/toast/toast.wxml"/>
+<template is="toast" data="{{ ...$wux.toast }}"/>
 <view class="car-models container">
 
 	<view class="carModels-topbar">
@@ -29,6 +31,7 @@
 			<view 
 				class="rmendCarFacade-popup-mask showMask"
 				bindtap="headlerRemoveRmendCarFacade"
+				bindtouchstart = "headlerRemoveRmendCarFacade" 
 				></view>
 			<view class="rmendCarFacade-inner topToBottom">
 				<view 
@@ -58,7 +61,7 @@
 		<block 
 			wx:for="{{carModelsList}}"
 			>
-			<template is="carModel" data="{{item}}" /> 
+			<template is="carModel" data="{{item,showCharts}}" /> 
 		</block>
 	</view>
 </view>

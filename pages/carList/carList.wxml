@@ -98,20 +98,20 @@
 				<image class="" src="{{showCarSeriesImageUrl}}"></image>
 			</view>
 			<block wx:if="{{carManufacturerSeriesList.length > 0}}">
-				<view 
-					wx:for="{{carManufacturerSeriesList}}" 
+				<view
+					wx:for="{{carManufacturerSeriesList}}"
 					data-id="{{item.id}}"
 					class="viewCarsList-calls"
 					>
 					<view class="viewCarsList-index carSeries-title">{{item.manufacturerName}}</view>
 					<view class="weui-cells weui-cells_in-small-appmsg">
-						<view 
-							class="weui-media-box weui-media-box_appmsg" 
+						<view
+							class="weui-media-box weui-media-box_appmsg"
 							hover="true"
 							hover-class="weui-cell_active"
 							wx:for="{{item.carSerieses}}"
 							wx:for-item="cell"
-							wx:for-index="cellIndex" 
+							wx:for-index="cellIndex"
 							bindtap="handlerToCarsModels"
 							data-carsInfo="{{cell}}"
 							url="../carModels/carModels?carsInfo={{cell}}"
@@ -131,7 +131,7 @@
 			</view>
 		</scroll-view>
 	</view>
-	
+
 </view>
 
 

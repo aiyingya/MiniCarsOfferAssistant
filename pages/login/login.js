@@ -12,6 +12,7 @@ Page({
 	onLoad() {
 		this.users = new users
 		this.$wuxToast = app.wux(this).$wuxToast
+	
 	},
 	handleLoginPhone(e) {
 		let val = e.detail.value
@@ -26,10 +27,11 @@ Page({
 	},
 	handleGetSMSCode() {
 		let that = this
+		let reg = /^1[3|4|5|7|8][0-9]{9}$/
 		
 		if(!that.data.countDownOver) return
 		
-		if(!this.data.userPhoneValue) {
+		if(!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11 || !(reg.test(this.data.userPhoneValue))) {
 			that.$wuxToast.show({
 				type: false,
         timer: 2000,
@@ -95,7 +97,7 @@ Page({
 		let weixinUsersInfo = app.globalData.userInfo
 		let snsId = weixinUsersInfo.snsId
 		let userId =opts.uid
-		
+		console.log(weixinUsersInfo)
 		app.modules.request({
 			url: app.config.ucServerHTTPSUrl + 'cgi/user/weixin/binding', 
 			method: 'POST',
@@ -150,6 +152,14 @@ Page({
 						}
 					})
 				}
+			},
+			fail(err) {
+				that.$wuxToast.show({
+					type: false,
+					timer: 2000,
+					color: '#fff',
+					text: err.message
+				})
 			}
 		})
 	}

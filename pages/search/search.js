@@ -12,7 +12,8 @@ Page({
 		widthToChange: '',
 		showResultsSearch: true,
 		searchNodata: false,
-		showSearchBtn: false
+		showSearchBtn: false,
+		showCharts: true
   },
 	onLoad() {
 		let that = this;
@@ -185,13 +186,13 @@ Page({
 					series: [{
 						data: item.supply.chart.y,
 						format: function (val) {
-								return `${val.toFixed(0)}人`
+								return `${val.toFixed(0)}`
 						}
 					}],
 					xAxis: {
 						disableGrid: false,
 						fontColor: '#999999',
-						gridColor: '#f1f1f1'
+						gridColor: '#afafaf'
 					},
 					yAxis: {
 						disabled: true,

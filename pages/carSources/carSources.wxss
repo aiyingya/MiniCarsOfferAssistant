@@ -87,6 +87,34 @@ page {
 	width: 36rpx;
 	height: 36rpx;
 }
+.dropdown {
+	position: relative;
+	height: 450rpx;
+	z-index: 5;
+}
+.dropdown .dd{
+	overflow-y: scroll;
+	float: left;
+	width: 50%;
+	height: 450rpx;
+	line-height: 80rpx;
+	box-sizing: border-box;
+	font-size: 14px;
+	color: #717273;
+}
+.dd view{
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space:nowrap;
+	padding-left: 15rpx;
+}
+.dropdown-left{
+	background: #fff;
+}
+.dropdown-right{
+	background: #fff;
+}
+
 .filter-scroll-view {
 	padding: 24rpx 30rpx 24rpx 30rpx;
 	height: 96rpx;
@@ -111,6 +139,7 @@ page {
 	align-items:center;
 	position:relative;
 	padding: 0 27rpx;
+	z-index: 1;
 }
 .filter-scroll-view .scroll-filter:last-child {
 	padding: 0 0 0 27rpx;
@@ -128,8 +157,8 @@ page {
 	border-right: 1rpx solid #CCCCCC;
 	z-index: -1;
 }
-.filter-scroll-view .scroll-filter:after:last-child {
-	border-right: 0rpx solid ;
+.filter-scroll-view .scroll-filter:last-child:after {
+	border-right: 1rpx solid #FFFFFF;
 }
 .filter-scroll-view .scroll-filter .filter {
 	padding: 12rpx 27rpx 12rpx 27rpx;
@@ -146,11 +175,11 @@ page {
 	margin-right: 0rpx;
 }
 .filter-scroll-view .scroll-filter .selected {
-	border: 1px solid #ED4149;
+	border: 1rpx solid #ED4149;
 	color: #ED4149;
 }
 .filter-scroll-view .scroll-filter .unselected {
-	border: 1px solid #333333;
+	border: 1rpx solid #333333;
 	color: #333333;
 }
 .carSources-topbar {
@@ -222,7 +251,7 @@ page {
 	text-align: center;
 }
 .carSources-navbar .cars-facade {
-	width: 50%;
+	width: 100%;
 }
 .carSources-navbar .cars-facade:after {
 	content: '';
@@ -231,6 +260,9 @@ page {
 	bottom: -6rpx;
 	right: 0;
 	border-right: 1rpx solid #E4E4E4;
+}
+.carSources-navbar .cars-facade:last-child:after {
+	border-right: 1rpx solid #FFFFFF;
 }
 .carSources-navbar .navbar-text {
 	position: relative;
@@ -268,7 +300,19 @@ page {
 	border: 1px solid #ED4149;
 	color: #ED4149;
 }
-
+.carSource-sections-nodata-image{
+	width: 160rpx;
+	height: 160rpx;
+	margin: 0 auto;
+	display: block;
+}
+.carSource-sections-nodata-text{
+	font-size: 28rpx;
+	color: #999999;
+	letter-spacing: -0.56rpx;
+	line-height: 28rpx;
+	text-align: center;
+}
 /* 供货 SKU 分区样式 */
 .carSources-sections {
 	position: relative;
@@ -282,12 +326,19 @@ page {
 .carSources-section {
 	background-color: #fff;
 	position: relative;
+	border: 1rpx solid #E4E4E4;
 }
 .carSources-section .carSources-section-content {
 	padding: 30rpx 30rpx;
-	height: 144rpx;
+	height: 80rpx;
 	position: relative;
 	display: block;
+}
+
+.carSources-section .carSources-section-content .first-part {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
 }
 .carSources-section .carSources-section-content .title {
 	font-family: "PingFangSC-Regular";
@@ -297,38 +348,52 @@ page {
 	line-height: 30rpx;
 	margin-bottom: 20rpx;
 }
-.carSources-section .carSources-section-content .carSources-section-price {
-	display: inline;
+.carSources-section .carSources-section-content .tag-collection {
+	font-family:"PingFangSC-Regular";
+	font-size:26rpx;
+	color:#3377EE;
+	line-height:26rpx;
 	margin-right: 20rpx;
 }
-.carSources-section .carSources-section-content .carSources-section-price .discount {
-	font-family: "PingFangSC-Regular";
-	font-size: 26rpx;
-	color: #333333;
-	line-height: 26rpx;
-	display: inline;
-}
-.carSources-section .carSources-section-content .carSources-section-price .price {
-	display: inline;
-	font-family: "SFUIDisplay-Regular";
-	font-size: 34rpx;
-	color: #ED4149;
-	letter-spacing: 0rpx;
-	line-height: 32rpx;
+.carSources-section .carSources-section-content .carSources-section-price {
+	display: flex;
+	justify-content: flex-start;
+	align-items: baseline;
+	margin-right: 20rpx;
+	flex-basis: 50%;
 }
 .carSources-section .carSources-section-content .carSources-section-price .discount-icon {
 	width: 20rpx;
 	height: 24rpx;
 	position: relative;
 }
-.carSources-section .carSources-section-content .logisticsFree {
-	display: inline;
-	font-family: PingFangSC-Regular;
+.carSources-section .carSources-section-content .carSources-section-price .discount {
+	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
-	color: #F76F6F;
-	letter-spacing: 0rpx;
+	color: #333333;
 	line-height: 26rpx;
 }
+.carSources-section .carSources-section-content .carSources-section-price .price {
+	font-family: "SFUIDisplay-Regular";
+	font-size: 34rpx;
+	color: #ED4149;
+	letter-spacing: 0rpx;
+	line-height: 32rpx;
+}
+
+.carSources-section .carSources-section-content .second-part {
+
+}
+
+/* 暂时移除 */
+/*.carSources-section .carSources-section-content .logisticsFree {*/
+	/*display: inline;*/
+	/*font-family: PingFangSC-Regular;*/
+	/*font-size: 26rpx;*/
+	/*color: #F76F6F;*/
+	/*letter-spacing: 0rpx;*/
+	/*line-height: 26rpx;*/
+/*}*/
 
 .carSources-section .carSources-section-content .icon-dropdownarrow {
 	width: 16rpx;
@@ -357,18 +422,19 @@ page {
 
 }
 /* 供应商信息 和 报价降价信息 */
-.first-part {
+.carSources-cell .carSources-cell-content .first-part {
 	display: flex;
 	align-items: baseline;
 	justify-content: space-between;
 }
-.first-first-part {
+.carSources-cell .carSources-cell-content .first-first-part {
 	display: flex;
 	justify-content: flex-end;
 	flex-direction: column;
 }
 .carSources-cell .carSources-cell-content .supplier-name {
 	margin-bottom: 20rpx;
+	min-height: 100rpx;
 }
 .carSources-cell .carSources-cell-content .supplier-name .name {
 	display: inline;
@@ -388,32 +454,39 @@ page {
 	line-height: 30rpx;
 }
 .carSources-cell .carSources-cell-content .carSources-cell-price {
-	display: inline;
-}
-.carSources-cell .carSources-cell-content .carSources-cell-price .discount {
-	font-family: "PingFangSC-Regular";
-	font-size: 26rpx;
-	color: #333333;
-	line-height: 26rpx;
-	display: inline;
-}
-.carSources-cell .carSources-cell-content .carSources-cell-price .price {
-	display: inline;
-	font-family: "SFUIDisplay-Regular";
-	font-size: 34rpx;
-	color: #ED4149;
-	letter-spacing: 0rpx;
-	line-height: 32rpx;
+	display: flex;
+	justify-content: flex-end;
+	min-width: 300rpx;
 }
 .carSources-cell .carSources-cell-content .carSources-cell-price .discount-icon {
 	width: 20rpx;
 	height: 24rpx;
 	position: relative;
 }
+.carSources-cell .carSources-cell-content .carSources-cell-price .discount {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #333333;
+	line-height: 26rpx;
+}
+.carSources-cell .carSources-cell-content .carSources-cell-price .price {
+	font-family: "SFUIDisplay-Regular";
+	font-size: 34rpx;
+	color: #ED4149;
+	letter-spacing: 0rpx;
+	line-height: 32rpx;
+}
 .carSources-cell .carSources-cell-content .price-type {
 	position: absolute;
 	right: 30rpx;
 	top:76rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.carSources-cell .carSources-cell-content .price-type image{
+	height: 32rpx;
+	width: 32rpx;
 }
 .carSources-cell .carSources-cell-content .fixed {
 	font-family: "PingFangSC-Regular";
@@ -464,11 +537,12 @@ page {
 .carSources-cell .carSources-cell-content .social .none-active {
 }
 /* 车源基本信息 和 车源渠道信息 */
-.third-part {
+.carSources-cell .carSources-cell-content .third-part {
 	display: flex;
 	align-items: baseline;
 	justify-content: space-between;
 	line-height: 26rpx;
+	margin-bottom: 20rpx;
 }
 .carSources-cell .carSources-cell-content .basic-infomation {
 
@@ -487,20 +561,24 @@ page {
 	letter-spacing: 0rpx;
 	line-height: 24rpx;
 	padding: 0 12rpx;
+	position: relative;
 }
 .carSources-cell .carSources-cell-content .basic-infomation .basic-label:after {
 	content: '';
 	position: absolute;
 	right: 0;
 	left: 0;
+	top: 4rpx;
+	bottom: 4rpx;
 	border-right: 1rpx solid #999999;
-	z-index: -1;
 }
-.carSources-cell .carSources-cell-content .basic-infomation .basic-label:after:last-child {
-	border-right: 0rpx solid ;
+.carSources-cell .carSources-cell-content .basic-infomation .basic-label:last-child:after {
+	border-right: 1rpx solid #FFFFFF;
 }
 .carSources-cell .carSources-cell-content .carSource-channel {
-
+	display: flex;
+	justify-content: flex-end;
+	flex-basis: 50%;
 }
 .carSources-cell .carSources-cell-content .carSource-channel .publish-date {
 	display: inline;
@@ -519,16 +597,16 @@ page {
 	line-height: 24rpx;
 }
 /* 物流信息 */
-.forth-part {
+.carSources-cell .carSources-cell-content .forth-part {
 	display: flex;
 	align-items: center;
-	margin-bottom: 30rpx;
 	position: relative;
+	justify-content: space-between;
 }
-.forth-part .horizontal {
+.carSources-cell .carSources-cell-content .forth-part .horizontal {
 	display: flex;
 }
-.forth-part .vertical {
+.carSources-cell .carSources-cell-content .forth-part .vertical {
 	display: flex;
 	flex-direction: column;
 }
@@ -613,12 +691,12 @@ page {
 	line-height: 22rpx;
 }
 /* 提示信息 */
-.fivth-part {
+.carSources-cell .carSources-cell-content .fivth-part {
 	display: flex;
 	align-items: baseline;
 }
 /* 底部按钮 */
-.sixth-part {
+.carSources-cell .carSources-cell-content .sixth-part {
 	display: flex;
 	justify-content: space-between;
 }

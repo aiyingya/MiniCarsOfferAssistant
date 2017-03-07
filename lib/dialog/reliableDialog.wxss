@@ -16,26 +16,26 @@
     margin-top: 50rpx;
 }
 
-.reliableDialog .follow-section {
-    margin-top: 20rpx;
-}
-.reliableDialog .follow {
-    display: inline;
-    border: 2rpx solid #E4E4E4;
-    border-radius: 4rpx;
-    font-family: "PingFangSC-Regular";
-    font-size: 24rpx;
-    color: #666666;
-    height: 44rpx;
-    width: 80rpx;
-    padding: 6rpx 12rpx;
-    margin-right: 16rpx;
-}
-.reliableDialog .follow image{
-    height: 30rpx;
-    width: 30rpx;
-    padding-top: 8rpx;
-}
+/*.reliableDialog .follow-section {*/
+    /*margin-top: 20rpx;*/
+/*}*/
+/*.reliableDialog .follow {*/
+    /*display: inline;*/
+    /*border: 2rpx solid #E4E4E4;*/
+    /*border-radius: 4rpx;*/
+    /*font-family: "PingFangSC-Regular";*/
+    /*font-size: 24rpx;*/
+    /*color: #666666;*/
+    /*height: 44rpx;*/
+    /*width: 80rpx;*/
+    /*padding: 6rpx 12rpx;*/
+    /*margin-right: 16rpx;*/
+/*}*/
+/*.reliableDialog .follow image{*/
+    /*height: 30rpx;*/
+    /*width: 30rpx;*/
+    /*padding-top: 8rpx;*/
+/*}*/
 .reliableDialog .reliable-section {
     display: flex;
     justify-content: space-between;

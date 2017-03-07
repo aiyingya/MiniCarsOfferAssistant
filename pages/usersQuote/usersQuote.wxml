@@ -49,6 +49,7 @@
 						<view>报价记录</view>
 				</view>
 			</view>
+<!--
 			<view 
 				class="weui-cell weui-cell_access" 
 				hover="true"
@@ -64,6 +65,7 @@
 						<view>关注的供货商</view>
 				</view>
 			</view>
+-->
 	</view>
 	
 	<view 

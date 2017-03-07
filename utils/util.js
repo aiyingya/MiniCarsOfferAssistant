@@ -93,7 +93,7 @@ let priceStringWithUnit = function (downPrice) {
   if (downPrice > 10000) {
     return (downPrice / 10000).toFixed(2) + '万'
   } else {
-    return downPrice.toFixed() + '元'
+    return downPrice.toFixed()
   }
 }
 
@@ -118,6 +118,59 @@ let downPoint = function (price, originPrice) {
   return (Math.abs(originPrice - price) * 100 / originPrice)
 }
 
+let dateCompatibility = function (dateString) {
+  if (dateString && dateString.length ) {
+    const dateCompatibilityString = dateString.replace(/-/g, '/')
+    const dateCompatibility = new Date(dateCompatibilityString)
+    return dateCompatibility
+  } else {
+    return new Date()
+  }
+}
+
+/**
+ * [dateDiff 算时间差]
+ * @param  {[type=Number]} hisTime [历史时间戳，必传]
+ * @param  {[type=Number]} nowTime [当前时间戳，不传将获取当前时间戳]
+ * @return {[string]}         [string]
+ */
+let dateDiff = function(date, nowDate){
+  const now = nowDate ? nowDate: new Date().getTime()
+  const diffValue = now - date
+  let result = ""
+
+  const minute = 1000 * 60
+  const hour = minute * 60
+  const day = hour * 24
+  const halfamonth = day * 15
+  const month = day * 30
+  const year = month * 12
+
+  const _year = diffValue/year
+  const _month = diffValue/month
+  const _week = diffValue/(7 * day)
+  const _day = diffValue/day
+  const _hour = diffValue/hour
+  const _min = diffValue/minute
+
+  if (_year>=1) {
+    result = parseInt(_year) + "年前"
+  } else if (_month>=1) {
+    result = parseInt(_month) + "个月前"
+  } else if(_week>=1) {
+    result = parseInt(_week) + "周前"
+  } else if(_day>=1) {
+    result = parseInt(_day) + "天前"
+  } else if(_hour>=1) {
+    result = parseInt(_hour) + "个小时前"
+  } else if(_min>=1) {
+    result = parseInt(_min) + "分钟前"
+  } else {
+    result = "刚刚"
+  }
+  return result;
+}
+
 module.exports = {
   formatTime: formatTime,
   totalPaymentByLoan: totalPaymentByLoan,
@@ -127,5 +180,7 @@ module.exports = {
   downPrice: downPrice,
   priceStringWithUnit: priceStringWithUnit,
   downPoint: downPoint,
-  downPriceFlag: downPriceFlag
+  downPriceFlag: downPriceFlag,
+  dateDiff: dateDiff,
+  dateCompatibility: dateCompatibility
 }
