@@ -25,6 +25,7 @@ Page({
     } catch (e) {
       
     }
+		this.$wuxToast = app.wux(this).$wuxToast
 		if (carsInfo) {
 			// 设置NavigationBarTitle.
 			wx.setNavigationBarTitle({
@@ -56,7 +57,6 @@ Page({
 				}
 			})
 		}
-	
 	},
 	onShow () {
 		
@@ -102,7 +102,19 @@ Page({
 		})
 	},
 	handlerToCarSources (e) {
-		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
+		let item = e.currentTarget.dataset.carmodelsinfo
+		let carModelsInfo = JSON.stringify(item)
+		let status = item.supply.status
+		
+		if(status === '暂无供货') {
+			this.$wuxToast.show({
+				type: false,
+        timer: 2000,
+        color: '#fff',
+        text: '暂无供货',
+			})
+			return
+		}
 		wx.navigateTo({
       url: '../carSources/carSources?carModelsInfo='+ carModelsInfo
     }) 
