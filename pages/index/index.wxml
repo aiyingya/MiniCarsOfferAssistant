@@ -1,85 +1,96 @@
 <!--index.wxml-->
-<!--<scroll-view scroll-y style="height: {{windowHeight}}" scroll-into-view="{{alpha}}">-->
-	<view class="container">
-		<!-- 搜索车型.-->
-		<view class="search-wrap">
-			<view class="search-inner">
-				<view class="search-icon">
-					<image class="search-img" src="../../images/icons/icon_find.png"></image>
-				</view>
-				<input 
-					class="search-input" 
-					placeholder-class="search-placeholder"
-					disabled 
-					placeholder="输入指导价/车款名" 
-					/>
-				<view 
-				  class="bindtap"
-				  bindtap="searchCarType"
-				  ></view>
+<view class="container">
+	<!-- 搜索车型.-->
+	<view class="topbar">
+		<view class="topbar-search">
+			<view class="topbar-ad">
+				<image src="../../images/pages/home/home_slogan_pic.png"></image>
 			</view>
-		</view>
-
-		<!-- 热门品牌.-->
-		<view class="hot-carsbrand-wrap">
-			<view class="hot-carsbrand-title">
-				<view class="hot-carsbrand-text">热门品牌</view>
-			</view>
-
-			<view class="hot-carsbrand-stand">
-				<view 
-					class="stand-item"
-					wx:for="{{hotCarLists}}"
-					>
-					<image 
-						mode="aspectFit" 
-						class="hot-carslogo" 
-						src="{{item.carBrandLogoUrl}}"
-						bindtap="handlerSelectCarSeries"
-						data-carSeries="{{item}}"
-						></image>
-				</view>
-			</view>	
-		</view>
-
-		<!-- cars list.-->
-		<view class="viewCarsList-wrap">
-			<view 
-				wx:for="{{brandGroupList}}" 
-				id="{{item.firstLetter}}"
-				class="viewCarsList-calls"
-				>
-				<view class="viewCarsList-index">{{item.firstLetter}}</view>
-				<view class="weui-cells weui-cells_in-small-appmsg">
-					<view
-						class="weui-cell weui-cell_access" 
-						hover="true"
-						hover-class="weui-cell_active"
-						wx:for="{{item.carBrandList}}" 
-						wx:for-item="cell"
-						wx:for-index="cellIndex" 
-						bindtap="handlerSelectCarSeries"
-						data-carSeries="{{cell}}"
-						>
-						<view class="weui-cell__hd">
-							<image src="{{imageDomain}}{{cell.logoUrl}}" class="viewCarsList_icon-index" />
-						</view>
-						<view class="weui-cell__bd weui-cell_primary">
-								<view>{{cell.brandName}}</view>
-						</view>
-						<!--<view class="viewCars-describe">在售{{cell.onSaleCount}}款</view>-->
+			<view class="search-wrap">
+				<view class="search-inner">
+					<view class="search-icon">
+						<image class="search-img" src="../../images/icons/icon_find.png"></image>
 					</view>
+					<input 
+						class="search-input" 
+						placeholder-class="search-placeholder"
+						disabled 
+						placeholder="输入指导价/车款名" 
+						/>
+					<view 
+						class="bindtap"
+						bindtap="searchCarType"
+						></view>
+				</view>
+			</view>
+		</view>	
+		<image 
+			class="topbar-bg"
+			src="../../images/pages/home/home_bg_pic.png"	
+			></image>
+	</view>
+	
+
+	<!-- 热门品牌.-->
+	<view class="hot-carsbrand-wrap">
+		<view class="title hot-carsbrand-title">
+			<view class="text hot-carsbrand-text">热门品牌</view>
+			<view 
+				bindtap="handleCheckMore"
+				class="more">查看更多
+				<image src="../../images/icons/icon_arrow_more.png" class="icon-more"></image>
+			</view>
+		</view>
+
+		<view class="hot-carsbrand-stand">
+			<view 
+				class="stand-item"
+				wx:for="{{hotCarLists}}"
+				>
+				<image 
+					mode="aspectFit" 
+					class="hot-carslogo" 
+					src="{{item.carBrandLogoUrl}}"
+					bindtap="handlerSelectCarSeries"
+					data-carSeries="{{item}}"
+					></image>
+			</view>
+		</view>	
+	</view>
+
+	<!-- 热推车型.-->
+	<view class="hot-carstype-wrap">
+		<view class="title hot-carsbrand-title">
+			<view class="text hot-carsbrand-text">热推车型</view>
+<!--
+			<view class="more">查看更多
+				<view class="icon-more"></view>
+			</view>
+-->
+		</view>
+		
+		<view class="hotCarsType-cells">
+			<view 
+				class="hotCarsType-cell"
+				wx:for="{{hotCarsTypes}}"
+				>
+				<view class="hotCarsType-title">
+					<view class="hotCarsType-title-inner">{{item.name}}</view>
+					<view class="hotCarsType-title-price">{{item.price}}</view>
+				</view>
+				<view class="hotCarsType-remark">
+					<view class="hotCarsType-remark-inner">{{item.remark}}</view>
+					<view 
+						class="hotCarsType-title-relation"
+						bindtap="handlerMakePhoneCall"
+						>联系</view>
 				</view>
 			</view>
 		</view>
-	</view>
-<!--</scroll-view>
-<view wx:if="{{alphanetToast === alpha}}" class="alphanet-toast showToast">{{alpha}}</view>
-<view data-id="selector" catchtouchstart="handlerAlphaTap" catchtouchmove="handlerMove" class="alphanet-selector">
-	<view wx:for="{{brandGroupList}}" data-ap="{{item.firstLetter}}" class="selector-one">
+		
 		
 	</view>
-</view>-->
+</view>
 
 <!-- 车系.-->
 <view wx:if="{{showCarSeries !== ''}}" class="carSeries-wrap">

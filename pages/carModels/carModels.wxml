@@ -1,11 +1,67 @@
 <!-- 车款.-->
 <import src="../../components/carModel/carModel.wxml" />
+<import src="../../lib/toast/toast.wxml"/>
+<template is="toast" data="{{ ...$wux.toast }}"/>
 <view class="car-models container">
+
+	<view class="carModels-topbar">
+		<view class="carModels-navbar">
+			<view 
+				class="navbar-item"
+				bindtap="handleCheckCarsModele"
+				>
+				<view class="navbar-inner">{{CarsModeleText}}
+					<image 
+						src="../../images/icons/icon_dropdownarrow_down_gray.png"
+						class="icon-arrows"></image>
+				</view>
+			</view>
+		</view>
+		
+		<!-- 标签.-->
+<!--
+		<view class="carModels-label">
+			<view class="label">标签标签</view>
+			<view class="label">标签</view>
+			<view class="label">标签标签</view>
+			<view class="label">标签标签</view>
+		</view>
+-->
+		<view wx:if="{{showRmendCarFacade}}" class="carModels-popup-select rmendCarFacade-popup-wrap">
+			<view 
+				class="rmendCarFacade-popup-mask showMask"
+				bindtap="headlerRemoveRmendCarFacade"
+				bindtouchstart = "headlerRemoveRmendCarFacade" 
+				></view>
+			<view class="rmendCarFacade-inner topToBottom">
+				<view 
+					class="weui-cell weui-cell_access" 
+					hover="true"
+					hover-class="weui-cell_active"
+					wx:for="{{filtersData}}"
+					wx:key="unique"
+					bindtap="handleSelectCarsModele"
+					data-select="{{item}}"
+					data-id="{{index}}"
+					>
+						<view class="weui-cell__bd weui-cell_primary">
+								<view>{{item.name}}</view>
+						</view>
+						<view
+							wx:if="{{CarsModeleSelectId == index}}"
+							class="weui-cell__ft">
+							<image src="../../images/icons/icon_select_red.png"></image>
+						</view>
+				</view>
+			</view>
+		</view>
+	</view>
+
 	<view class="carModels-cells">
 		<block 
 			wx:for="{{carModelsList}}"
 			>
-			<template is="carModel" data="{{item}}" /> 
+			<template is="carModel" data="{{item,showCharts}}" /> 
 		</block>
 	</view>
 </view>

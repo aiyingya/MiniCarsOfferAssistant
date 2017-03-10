@@ -1,8 +1,11 @@
 //index.js
+const util = require('../../utils/util.js')
+
 let app = getApp()
 Page({
   data: {
 		hotCarLists: [],
+		hotCarsTypes: [],
     brandGroupList: [],
     alpha: '',
     windowHeight: '',
@@ -18,24 +21,23 @@ Page({
   //事件处理函数
   searchCarType() {
 		console.log('To Search')
+		let userInfo = app.userInfo()
+		if(userInfo) {
+			wx.navigateTo({
+				url: '../search/search'
+			})
+		}else {
+			wx.navigateTo({  
+				url: '../login/login'
+			}) 
+		}	
+	},
+	handleCheckMore() {
 		wx.navigateTo({
-			url: '../search/search'
+			url: '../carList/carList'
 		})
 	},
-	createSimulationData: function () {
-			var categories = [];
-			var data = [];
-			for (var i = 0; i < 50; i++) {
-					categories.push('2016-' + (i + 1));
-					data.push(Math.random()*(20-10)+10);
-			}
-
-			return {
-					categories: categories,
-					data: data
-			}
-	},
-  onLoad() {
+  onLoad() {      
     let that = this
 		let HTTPS_URL = app.config.ymcServerHTTPSUrl
 		try {
@@ -53,7 +55,7 @@ Page({
 		// 获取页面数据.
 		
 		app.modules.request({
-			url: HTTPS_URL + 'carBrand/brandGroupsRecommend', //仅为示例，并非真实的接口地址
+			url: HTTPS_URL + 'carBrand/brandGroupsRecommend', 
 			method: 'GET',
 			data: {
 				cityId: '7d04e3a1-ee87-431c-9aa7-ac245014c51a',
@@ -83,6 +85,8 @@ Page({
 			}
 		})
 		
+		// 获取热推车型.
+		that.getHotpushCars()
     //调用应用实例的方法获取全局数据
     app.getUserInfo(function(userInfo){
       //更新数据
@@ -97,8 +101,36 @@ Page({
 //		const push = this.$wuxTrack.push({
 //			appVersion: '1.0.1'
 //		})
-
   },
+	onShow() {
+		// 刷新用户信息.
+		
+		app.getNewAccessToken()
+		// 获取locationId
+		app.getLocationId()
+		
+		
+	},
+	getHotpushCars () {
+		let that = this
+		let HTTPS_URL = app.config.ymcServerHTTPSUrl
+		
+		app.modules.request({
+			url: HTTPS_URL + 'recommend/goods', 
+			method: 'GET',
+			data: {
+				channel: 'wxapp',
+				pageIndex: '1',
+				pageSize: '10'
+			},
+			success: function(res) {
+				let data = res.content
+				that.setData({
+					hotCarsTypes: data
+				})
+			}
+		})
+	},
 	handlerAlphaTap(e) {
     let {ap} = e.target.dataset
 		let that = this
@@ -158,9 +190,24 @@ Page({
 		});
 	},
 	handlerToCarsModels(e) {
-		let carsInfo = JSON.stringify(e.currentTarget.dataset.carsinfo)
-		wx.navigateTo({  
-      url: '../carModels/carModels?carsInfo='+ carsInfo
-    }) 
+		let carsInfoKeyValueString = url.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
+		let userInfo = app.userInfo()
+		
+		if(userInfo) {
+			wx.navigateTo({  
+				url: '../carModels/carModels?' + carsInfoKeyValueString
+			}) 
+		}else {
+			wx.navigateTo({  
+				url: '../login/login'
+			}) 
+		}	
+	},
+	handlerMakePhoneCall() {
+		let phone = '021-52559255,8902'
+		
+		wx.makePhoneCall({
+			phoneNumber: phone
+		})
 	}
 })

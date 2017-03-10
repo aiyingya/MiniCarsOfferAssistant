@@ -1,4 +1,6 @@
 let app = getApp();
+let util = require('../../utils/util.js');
+
 Page({
 	data: {
 		imgAliyuncsUrl: app.config.imgAliyuncsUrl,
@@ -16,10 +18,10 @@ Page({
 		filtersData: '',
 		cacheColor: '',
 		selectColorId: '0',
-		selectExternalColorId: '0',
-		selectExternalColorName: '全部外观',
-		selectInternalColorId: '1',
-		selectInternalColorName: '全部内饰',
+    selectExternalColorId: '0',
+    selectExternalColorName: '全部外观',
+    selectInternalColorId: '1',
+    selectInternalColorName: '全部内饰',
 		carStatus: 'all',
 		carStatusAll: 'all',
 		carStatusName: '有货',
@@ -40,7 +42,7 @@ Page({
     }
 
 		if (options.quotation) {
-      let quotation = JSON.parse(options.quotation)
+      let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
 			// 从报价单详情页面过来
       app.modules.request({
         url: HTTPS_YMCAPI + 'product/car/sku',
@@ -76,8 +78,8 @@ Page({
       })
 		} else if (options.carModelsInfo && options.carSKUInfo) {
 			// 从车源或者车系页面过来
-      let carModelsInfo = JSON.parse(options.carModelsInfo)
-      let carSKUInfo = JSON.parse(options.carSKUInfo)
+      let carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
+      let carSKUInfo = util.urlDecodeValueForKeyFromOptions('carSKUInfo', options)
 			
       app.modules.request({
         url: HTTPS_YMCAPI + 'product/car/sku',

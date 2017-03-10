@@ -1,0 +1,57 @@
+<template name="reliableDialog">
+    <view class="reliableDialog weui-mask {{ animateCss }}" hidden="{{ !visible }}"></view>
+    <view class="reliableDialog weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
+        <view
+                class="close"
+                bindtap="{{reliableDialogClose}}"
+        >
+            <image
+                src="../../images/icons/icon_close.png"
+            >
+            </image>
+        </view>
+        <view class="content-section">
+            <view class="title-section">
+                <view class="">{{carSource.supplier.name}}</view>
+            </view>
+
+            <!--<view class="follow-section">-->
+                <!--<view-->
+                        <!--class="follow {{carSource.supplier.hasFocused? 'active': 'none-active'}}"-->
+                        <!--bindtap="{{reliableDialogFollow}}"-->
+                <!--&gt;-->
+                    <!--<image-->
+                            <!--src="{{carSource.supplier.hasFocused? '../../images/icons/icon_follow_active.png': '../../images/icons/icon_follow_normal.png'}}"-->
+                    <!--&gt;-->
+                    <!--</image>-->
+                    <!--{{carSource.supplier.hasFocused? '已关注': '关注'}}-->
+                <!--</view>-->
+            <!--</view>-->
+
+            <view class="reliable-section">
+                <view
+                        class="reliable"
+                        bindtap="{{reliableDialogReliable}}"
+                        data-reliable="true"
+                >
+                    <image
+                            src="{{carSource.hasBeenReliableByUser? '../../images/icons/icon_reliable_active.png': '../../images/icons/icon_reliable_normal.png'}}"
+                    >
+                    </image>
+                    靠谱
+                </view>
+                <view
+                        class="reliable"
+                        bindtap="{{reliableDialogReliable}}"
+                        data-reliable="false"
+                >
+                    <image
+                            src="{{carSource.hasBeenUnReliableByUser? '../../images/icons/icon_unreliable_active.png': '../../images/icons/icon_unreliable_normal.png'}}"
+                    >
+                    </image>
+                    不靠谱
+                </view>
+            </view>
+        </view>
+    </view>
+</template>

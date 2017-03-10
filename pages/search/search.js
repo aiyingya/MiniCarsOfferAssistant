@@ -1,5 +1,8 @@
 /* search.js*/
 let app = getApp();
+
+const util = require('../../utils/util.js')
+
 Page({
 	data: {
 		associateResults: [],
@@ -12,7 +15,8 @@ Page({
 		widthToChange: '',
 		showResultsSearch: true,
 		searchNodata: false,
-		showSearchBtn: false
+		showSearchBtn: false,
+		showCharts: true
   },
 	onLoad() {
 		let that = this;
@@ -75,11 +79,11 @@ Page({
 		let data = {}
 		let carModelsList = []
 		let searchNodata = false
-				
+		console.log(results)	
 		if(results.type === 'SPU') {
-			url = that.data.HTTPS_YMCAPI + 'product/car/spu/'+results.id
+			url = that.data.HTTPS_YMCAPI + 'supply/car/spu/'+results.id
 		}else {
-			url = that.data.HTTPS_YMCAPI + 'product/car/spu'
+			url = that.data.HTTPS_YMCAPI + 'supply/car/spu'
 			data = {
 				carSeriesId: results.id
 			}
@@ -89,18 +93,12 @@ Page({
 			method: 'GET',
 			data: data,
 			success: function(res) {
-				if(!(res instanceof Array)) {
-					carModelsList.push(res)
-				}else {
-					carModelsList = res
-				}
+				console.log(res)			
+				carModelsList = res.content
 				searchNodata = carModelsList.length > 0 ? false : true
 				
 				if(carModelsList) {
-					for (var i = 0; i < carModelsList.length; i++) {
-						let item = carModelsList[i]
-						item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
-					}
+					that.drawCanvas(carModelsList)
 					that.setData({
 						searchResults: carModelsList,
 						associateResults: [],
@@ -119,7 +117,7 @@ Page({
 		let searchResults = []
 		let searchNodata = false
 		app.modules.request({
-			url: that.data.HTTPS_YMCAPI+ '/search/car/spu', 
+			url: that.data.HTTPS_YMCAPI+ 'search/car/spu', 
 			method: 'GET',
 			data: {
 				text: val,
@@ -131,10 +129,7 @@ Page({
 				if(res.content.length <= 0) {
 					searchNodata = true
 				}
-				for (var i = 0; i < res.content.length; i++) {
-					let item = res.content[i]
-					item.count = Math.abs(((item.officialPrice - item.lowestPriceSku.price)/10000).toFixed(2));
-				}
+				that.drawCanvas(res.content)
 				that.setData({
 					searchResults: res.content,
 					associateResults: [],
@@ -145,15 +140,15 @@ Page({
 		})
 	},
 	handlerToCarSources (e) {
-		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
+		const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
 		wx.navigateTo({  
-      url: '../carSources/carSources?carModelsInfo='+ carModelsInfo
+      url: '../carSources/carSources?' + carModelsInfoKeyValueString
     }) 
 	},
 	handlerPromptly (e) {
-		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
-		wx.navigateTo({  
-      url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
+    const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
+		wx.navigateTo({
+      url: '../quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString
     }) 
 	},
 	handleCancelSearch () {
@@ -168,5 +163,56 @@ Page({
 			showSearchBtn: false,
 			searchValue: ''
 		})
+	},
+	drawCanvas(list) {
+		if (!list) {return}
+		let data = list
+		let that = this
+		try {
+      let res = wx.getSystemInfoSync()
+      that.pixelRatio = res.pixelRatio
+      that.apHeight = 16
+      that.offsetTop = 80
+			that.windowWidth = res.windowWidth - 30
+    } catch (e) {
+      
+    }
+		for (let item of data) {
+			if(item.supply) {
+				new app.wxcharts({
+					canvasId: item.carModelId,
+					type: 'line',
+					categories: item.supply.chart.x,
+					animation: false,
+					color: '#ECF0F7',
+					legend: false,
+					series: [{
+						data: item.supply.chart.y,
+						format: function (val) {
+								return `${val.toFixed(0)}`
+						}
+					}],
+					xAxis: {
+						disableGrid: false,
+						fontColor: '#999999',
+						gridColor: '#afafaf'
+					},
+					yAxis: {
+						disabled: true,
+						fontColor: '#4C6693',
+						format(val) {
+							return val.toFixed(0)
+						}
+					},
+					dataItem: {
+						color: '#ECF0F7'
+					},
+					width: that.windowWidth,
+					height: 80,
+					dataLabel: true,
+					dataPointShape: false
+				})
+			}
+		}
 	}
 })

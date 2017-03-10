@@ -54,8 +54,9 @@ Page({
             that.delayNavigationTo({
               complete: function () {
                 /// 报价列表页面也换过来
+                const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotation)
                 wx.navigateTo({
-                  url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+                  url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
                   success: function (res) {
                   },
                   fail: function () {
@@ -75,8 +76,9 @@ Page({
             that.delayNavigationTo({
               complete: function () {
                 /// 找车路径切换过来
+                const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotation)
                 wx.navigateTo({
-                  url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+                  url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
                   success: function (res) {
                   },
                   fail: function () {
@@ -164,9 +166,9 @@ Page({
       })
   },
   handlerSelectQuotation(e) {
-    let quotation = e.currentTarget.dataset.quotation;
+    let quotationKeyValueString = util.urlEncodeValueForKey('quotation', e.currentTarget.dataset.quotation)
     wx.navigateTo({
-      url: '../quotationDetail/quotationDetail?quotation=' + JSON.stringify(quotation),
+      url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString ,
       success: function(res) {
         console.log('quotationDetail 页面跳转成功');
       },

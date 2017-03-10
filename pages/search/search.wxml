@@ -65,7 +65,7 @@
 		<block 
 			wx:for="{{searchResults}}"
 			>
-			<template is="carModel" data="{{item}}" /> 
+			<template is="carModel" data="{{item,showCharts}}" /> 
 		</block>
 	</view>	
 	

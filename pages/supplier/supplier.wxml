@@ -1,0 +1,44 @@
+<view class="container supplier-view">
+	<view class="supplier-cells">
+		<scroll-view scroll-y style="height: {{windowHeight}}">
+			<block 
+				wx:if="{{supplierList.length > 0}}"	
+				>
+				<block
+					wx:for="{{supplierList}}"
+					wx:key="*this"
+					>
+					<view class="supplier-cell-inner">
+						<view 
+							class="supplier-cell"
+							bindtap = "handletap" 
+							bindtouchstart = "handletouchtart" 
+							bindtouchmove="handletouchmove"
+							bindtouchend="handletouchend"
+							bindtouchcancel="handletouchcancel"
+							style="{{item.Style}}"
+							data-index="{{index}}"
+							>
+							<view class="supplier-name">上海汽车经销商</view>
+							<view class="supplier-source">
+								<view class="label">来源：</view>
+								车行168
+							</view>
+						</view>
+						<!-- 电话联系.-->
+						<view class="phone-contact">电话联系</view>
+						<!-- 删除.-->
+						<view class="cancel-attention">删除</view>
+					</view>
+				</block>
+			</block>
+			<view 
+				class="nodata"
+				wx:else
+				>
+				<image class="nodata-icon" src="../../images/icons/orderlist_icon_noorder.png"></image>
+				<view class="nodata-text">您还没有收藏过任何供货商哦~</view>
+			</view>
+		</scroll-view>
+	</view>
+</view>

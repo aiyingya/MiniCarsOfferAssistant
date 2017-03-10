@@ -7,12 +7,16 @@
     "pages/quote/quotationCreate/quotationCreate",
     "pages/quote/quotationDetail/quotationDetail",
     "pages/quote/quotationsList/quotationsList",
-    "pages/changeCarColor/changeCarColor"
+    "pages/changeCarColor/changeCarColor",
+		"pages/login/login",
+		"pages/carList/carList",
+		"pages/usersQuote/usersQuote",
+		"pages/supplier/supplier"
   ],
   "window":{
     "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "报价助手",
+    "navigationBarTitleText": "要卖车",
     "navigationBarTextStyle":"black"
   },
   "tabBar": {
@@ -25,11 +29,11 @@
         "selectedIconPath": "images/icons/tab_icon_home_on.png",
         "text": "首页"
       },
-      {
-        "pagePath": "pages/quote/quotationsList/quotationsList",
+			{
+        "pagePath": "pages/usersQuote/usersQuote",
         "iconPath": "images/icons/tab_icon_price_off.png",
         "selectedIconPath": "images/icons/tab_icon_price_on.png",
-        "text": "报价记录"
+        "text": "我的报价"
       }
     ]
   },

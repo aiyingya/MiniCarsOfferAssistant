@@ -3,8 +3,8 @@ import config from 'lib/config'
 import wux from 'lib/wux'
 import clientjs from 'lib/client'
 import modules from 'lib/modules'
-import user from 'lib/user'
 import wxcharts from 'modules/wxcharts'
+import users from 'lib/users'
 App({
   onLaunch () {
     //调用API从本地缓存中获取数据
@@ -26,7 +26,7 @@ App({
 						success: function (res) {
 							let HTTPS_URL = config.ucServerHTTPSUrl
 							modules.request({
-								url: HTTPS_URL + 'user/weixin', 
+								url: HTTPS_URL + 'cgi/user/weixin', 
 								method: 'POST',
 								loadingType: 'none',
 								data: {
@@ -66,6 +66,65 @@ App({
       })
     }
   },
+	userInfo() {
+		let userInfo = wx.getStorageSync('userInfo')
+		
+		return userInfo ? JSON.parse(userInfo) : ''
+	},
+	getNewAccessToken () {
+		let currentDate = new Date()
+		let currentTime = currentDate.getTime()
+		let userInfo = this.userInfo()
+		let User = new users
+		if(userInfo){
+			let token = userInfo.accessToken
+			let expireTime = userInfo.expireIn
+			let refreshToken = userInfo.refreshToken
+			if(currentTime > expireTime) {
+				console.log('登录超时，请重新登录')
+				User.newAccessToken({
+					refreshToken: refreshToken,
+					success(res) {
+						console.log(res)
+					}
+				})
+			}
+		}
+	},
+	getLocationId () {	
+		let that = this 
+		let userInfo = that.userInfo()
+		
+		if(userInfo) {
+			const _HTTPS = `${that.config.ucServerHTTPSUrl}cgi/tenant/member/tenant`			
+			that.modules.request({
+				url: _HTTPS, 
+				method: 'GET',
+				loadingType: 'none',
+				data: {
+					uid: userInfo.userId
+				},
+				header: {
+					Authorization: userInfo.accessToken
+				},
+				success (res) {
+					let location = []
+					let setLocation = {}
+					if(res.tenants) {
+						for(let item of res.tenants) {
+							if(item.addressList && item.addressList.length > 0) {
+								for(let aitem of item.addressList) {
+									location.push(aitem.location)
+								}
+							}
+						}
+					}
+					that.globalData.location = location
+					that.globalData.mobile = res.mobile
+				}
+			})
+		}
+	},
   globalData:{
     /***
 		 * 目前有两种情况，第一种，当用户授权微信信息，则数据结构如下，loginChannel 为 weixin
@@ -83,12 +142,13 @@ App({
      * weixinPortrait : "http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eopEuOnnoMv4l2otkB2d209UPSabmhQUzBGPXX3lic2HU3KahDicODEVskez8vzhSZ2qXjGZOibQhTeg/0"
 		 * loginChannel: 'weixin' 'weixin'|'guest'
      */
-    userInfo: null
+    userInfo: null,
+		location: null,
+		mobile: null
   },
   wux: wux,
 	config: config,
 	modules: modules,
-	user: user,
 	wxcharts: wxcharts,
 	// FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据
 	fuckingLarryNavigatorTo: {
