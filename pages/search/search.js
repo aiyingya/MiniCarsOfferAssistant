@@ -1,5 +1,8 @@
 /* search.js*/
 let app = getApp();
+
+const util = require('../../utils/util.js')
+
 Page({
 	data: {
 		associateResults: [],
@@ -137,15 +140,15 @@ Page({
 		})
 	},
 	handlerToCarSources (e) {
-		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
+		const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
 		wx.navigateTo({  
-      url: '../carSources/carSources?carModelsInfo='+ carModelsInfo
+      url: '../carSources/carSources?' + carModelsInfoKeyValueString
     }) 
 	},
 	handlerPromptly (e) {
-		let carModelsInfo = JSON.stringify(e.currentTarget.dataset.carmodelsinfo);
-		wx.navigateTo({  
-      url: '../quote/quotationCreate/quotationCreate?carModelsInfo='+ carModelsInfo
+    const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
+		wx.navigateTo({
+      url: '../quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString
     }) 
 	},
 	handleCancelSearch () {

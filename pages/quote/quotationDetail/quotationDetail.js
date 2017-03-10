@@ -51,7 +51,7 @@ Page({
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
 
-    let quotation = JSON.parse(options.quotation);
+    let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
     quotation.quotationItems[0].itemPic = app.config.imgAliyuncsUrl + quotation.quotationItems[0].itemPic
 
     console.log(quotation)
@@ -100,8 +100,9 @@ Page({
   },
   handlerEditQuotation(e) {
     let that = this
+    const quotationKeyValueString = util.urlEncodeValueForKey('quotation', this.data.quotation)
     wx.navigateTo({
-      url: '/pages/quote/quotationCreate/quotationCreate?quotation=' + JSON.stringify(this.data.quotation),
+      url: '/pages/quote/quotationCreate/quotationCreate?' + quotationKeyValueString,
       success: function(res){
         // success
       },
@@ -174,9 +175,12 @@ Page({
   handlerBookCar(e) {
     let that = this;
 
+    const contact = app.globalData.mobile
+
     const hideDialog = this.$wuxDialog.open({
       title: '发起定车后， 将会有工作人员与您联系',
       content: '',
+      inputNumber: contact,
       inputNumberPlaceholder: '输入您的手机号',
       confirmText: '发起定车',
       cancelText: '取消',
