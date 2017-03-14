@@ -1,0 +1,278 @@
+.weui-dialog {
+    position: fixed;
+    z-index: 5000;
+    width: 90%;
+    max-width: 90%;
+    max-height: 90%;
+    text-align: left;
+}
+
+.carSourceDetailDialog .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 18rpx;
+    padding-bottom: 18rpx;
+    margin-right: 40rpx;
+    margin-left: 40rpx;
+    border-bottom: 1rpx solid #E4E4E4;
+}
+
+.carSourceDetailDialog .header .title {
+    font-family: "PingFangSC-Medium";
+    font-size: 32rpx;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 42rpx;
+    padding-right: 53rpx;
+}
+
+.carSourceDetailDialog .header .close image {
+    height: 30rpx;
+    width: 30rpx;
+}
+
+.carSourceDetailDialog .body {
+    margin: 30rpx 30rpx;
+}
+
+.carSourceDetailDialog .body .first-part {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 26rpx;
+    border-bottom: 1rpx solid #E4E4E4;
+}
+
+.carSourceDetailDialog .body .first-part .line-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 16rpx;
+}
+.carSourceDetailDialog .body .first-part .line-item:last-child {
+    padding-bottom: 0rpx;
+}
+.carSourceDetailDialog .body .first-part .line-item .line-title {
+    flex: 0 0 100rpx;
+    text-align: left;
+    white-space: nowrap;
+    font-family: 'PingFangSC-Regular';
+    font-size: 24rpx;
+    color: #666666;
+    letter-spacing: 0;
+    line-height: 24rpx;
+}
+.carSourceDetailDialog .body .first-part .line-item .car-color {
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 24rpx;
+}
+.carSourceDetailDialog .body .first-part .basic-infomation {
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #333333;
+    letter-spacing: 0rpx;
+    line-height: 24rpx;
+}
+.carSourceDetailDialog .body .first-part .basic-infomation .basic-label:last-child {
+    padding: 0 0 0 12rpx;
+}
+.carSourceDetailDialog .body .first-part .basic-infomation .basic-label:first-child {
+    padding: 0 12rpx 0 0;
+}
+.carSourceDetailDialog .body .first-part .basic-infomation .basic-label {
+    display: inline;
+    padding: 0 12rpx;
+    position: relative;
+}
+.carSourceDetailDialog .body .first-part .basic-infomation .basic-label:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 4rpx;
+    bottom: 4rpx;
+    border-right: 1rpx solid #999999;
+}
+.carSourceDetailDialog .body .first-part .basic-infomation .basic-label:last-child:after {
+    border-right: 1rpx solid #FFFFFF;
+}
+.carSourceDetailDialog .body .first-part .logistics-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.carSourceDetailDialog .body .first-part .logistics-list .logistics-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8rpx 19rpx;
+
+    border: 1rpx solid #B2B2B2;
+    border-radius: 8rpx;
+    font-family: "PingFangSC-Regular";
+    font-size: 22rpx;
+    color: #888888;
+    letter-spacing: 0rpx;
+    line-height: 22rpx;
+    margin-right: 13rpx;
+}
+.carSourceDetailDialog .body .first-part .logistics-list .selected {
+    border: 1rpx solid #3377EE;
+    border-radius: 8rpx;
+    font-family: "PingFangSC-Regular";
+    font-size: 22rpx;
+    color: #3377EE;
+    letter-spacing: 0rpx;
+    line-height: 22rpx;
+}
+.carSourceDetailDialog .body .first-part .logistics-information {
+    display: flex;
+    align-items: baseline;
+}
+.carSourceDetailDialog .body .first-part .logistics-date {
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 24rpx;
+}
+.carSourceDetailDialog .body .first-part .logistics-tips {
+    font-family: "PingFangSC-Regular";
+    font-size: 22rpx;
+    color: #999999;
+    letter-spacing: 0;
+    line-height: 22rpx;
+}
+.carSourceDetailDialog .body .second-part {
+    padding-top: 21rpx;
+    padding-bottom: 19rpx;
+    border-bottom: 1rpx solid #E4E4E4;
+}
+.carSourceDetailDialog .body .second-part .line-item {
+    padding-top: 28rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.carSourceDetailDialog .body .second-part .line-item:first-child{
+    padding-top: 0;
+}
+.carSourceDetailDialog .body .second-part .vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.carSourceDetailDialog .body .second-part .tag-collection {
+    align-items: center;
+    display: flex;
+}
+.carSourceDetailDialog .body .second-part .tag-collection .tag {
+    background: rgba(241,124,124,0.08);
+    border-radius: 4rpx;
+    font-family: "PingFangSC-Regular";
+    font-size: 22rpx;
+    color: #F17C7C;
+    line-height: 24rpx;
+    margin-right: 10rpx;
+    padding: 8rpx 27rpx;
+}
+
+.carSourceDetailDialog .body .second-part .jumpto image {
+    height: 24rpx;
+    width: 24rpx;
+}
+.carSourceDetailDialog .body .third-part {
+}
+.carSourceDetailDialog .body .third-part .line-item {
+    padding-top: 28rpx;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.carSourceDetailDialog .body .third-part .line-item .line-title {
+    flex: 0 0 100rpx;
+    text-align: left;
+    white-space: nowrap;
+    font-family: 'PingFangSC-Regular';
+    font-size: 24rpx;
+    color: #666666;
+    letter-spacing: 0;
+    line-height: 24rpx;
+}
+.carSourceDetailDialog .body .line-item .line-content {
+    text-align: left;
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #333333;
+    line-height: 36rpx;
+}
+.carSourceDetailDialog .body .third-part .line-item .report-error {
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #3377EE;
+    line-height: 24rpx;
+}
+
+.carSourceDetailDialog .body .line-item .icon-dropdownarrow {
+    width: 16rpx;
+    height: 16rpx;
+}
+.carSourceDetailDialog .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 42rpx 30rpx;
+    border-top: 1rpx solid #E4E4E4;
+}
+
+.carSourceDetailDialog .footer .carSources-section-price {
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    margin-right: 20rpx;
+}
+.carSourceDetailDialog .footer .carSources-section-price .discount-icon {
+    width: 20rpx;
+    height: 24rpx;
+    position: relative;
+}
+.carSourceDetailDialog .footer .carSources-section-price .discount {
+    font-family: "PingFangSC-Regular";
+    font-size: 26rpx;
+    color: #333333;
+    line-height: 26rpx;
+}
+.carSourceDetailDialog .footer .carSources-section-price .price {
+    font-family: "SFUIDisplay-Regular";
+    font-size: 34rpx;
+    color: #ED4149;
+    letter-spacing: 0rpx;
+    line-height: 32rpx;
+}
+.carSourceDetailDialog .footer .logistics-information-tips {
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #333333;
+    line-height: 26rpx;
+}
+.carSourceDetailDialog .footer .button {
+    height: 56rpx;
+    width: 160rpx;
+    line-height: 26rpx;
+    text-align: center;
+    font-family: "PingFangSC-Regular";
+    font-size: 26rpx;
+    border-radius: 6rpx;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 15rpx 28rpx;
+}
+.carSourceDetailDialog .footer .confirm {
+    background: #ED4149;
+    color: #FFFFFF;
+}

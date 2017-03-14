@@ -15,27 +15,6 @@
     line-height: 30rpx;
     margin-top: 50rpx;
 }
-
-/*.reliableDialog .follow-section {*/
-    /*margin-top: 20rpx;*/
-/*}*/
-/*.reliableDialog .follow {*/
-    /*display: inline;*/
-    /*border: 2rpx solid #E4E4E4;*/
-    /*border-radius: 4rpx;*/
-    /*font-family: "PingFangSC-Regular";*/
-    /*font-size: 24rpx;*/
-    /*color: #666666;*/
-    /*height: 44rpx;*/
-    /*width: 80rpx;*/
-    /*padding: 6rpx 12rpx;*/
-    /*margin-right: 16rpx;*/
-/*}*/
-/*.reliableDialog .follow image{*/
-    /*height: 30rpx;*/
-    /*width: 30rpx;*/
-    /*padding-top: 8rpx;*/
-/*}*/
 .reliableDialog .reliable-section {
     display: flex;
     justify-content: space-between;
@@ -48,12 +27,19 @@
     flex-direction: column;
     align-items: center;
     font-family: "PingFangSC-Regular";
-    font-size: 30rpx;
+    font-size: 28rpx;
+    line-height: 28rpx;
     color: #666666;
 }
+.reliableDialog .reliable-section .selected {
+    font-family: "PingFangSC-Regular";
+    font-size: 28rpx;
+    color: #3377EE;
+    line-height: 28rpx;
+}
 .reliableDialog .reliable-section .reliable image{
-    height: 64rpx;
-    width: 64rpx;
+    height: 100rpx;
+    width: 100rpx;
     margin-bottom: 31rpx;
 }
 .reliableDialog .close image {
