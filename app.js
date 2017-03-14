@@ -72,10 +72,12 @@ App({
 		return userInfo ? JSON.parse(userInfo) : ''
 	},
 	getNewAccessToken () {
+    
 		let currentDate = new Date()
 		let currentTime = currentDate.getTime()
 		let userInfo = this.userInfo()
 		let User = new users
+    
 		if(userInfo){
 			let token = userInfo.accessToken
 			let expireTime = userInfo.expireIn
@@ -86,7 +88,10 @@ App({
 					refreshToken: refreshToken,
 					success(res) {
 						console.log(res)
-					}
+					},
+          fail(err) {
+            console.log(res)
+          }
 				})
 			}
 		}
@@ -96,14 +101,12 @@ App({
 		let userInfo = that.userInfo()
 		
 		if(userInfo) {
-			const _HTTPS = `${that.config.ucServerHTTPSUrl}cgi/tenant/member/tenant`			
+			const _HTTPS = `${that.config.ucServerHTTPSUrl}cgi/tenant/member/${userInfo.userId}/tenant`			
 			that.modules.request({
 				url: _HTTPS, 
 				method: 'GET',
 				loadingType: 'none',
-				data: {
-					uid: userInfo.userId
-				},
+				data: {},
 				header: {
 					Authorization: userInfo.accessToken
 				},

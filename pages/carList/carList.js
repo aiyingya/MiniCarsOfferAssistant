@@ -39,7 +39,7 @@ Page({
 	},
   onLoad() {
     let that = this
-		let HTTPS_URL = app.config.ymcServerHTTPSUrl
+		let HTTPS_URL = app.config.tradeServerHTTPSUrl
 		try {
       let res = wx.getSystemInfoSync()
       this.pixelRatio = res.pixelRatio
@@ -55,30 +55,22 @@ Page({
 		// 获取页面数据.
 		
 		app.modules.request({
-			url: HTTPS_URL + 'carBrand/brandGroupsRecommend', //仅为示例，并非真实的接口地址
-			method: 'GET',
+			url: HTTPS_URL + 'cgi/navigate/brands/query', //仅为示例，并非真实的接口地址
+			method: 'POST',
 			data: {
-				cityId: '7d04e3a1-ee87-431c-9aa7-ac245014c51a',
-				recommendPositionCode: 'sy004',
-				num: '10'
+				"code": "0",
+        "deleted": false,
+        "group": true,
+        "joinOnSaleCount": true,
+        "level": 1
 			},
 			header: {
 					'content-type': 'application/json'
 			},
 			success: function(res) {
 				if(res){
-					let data = res
-					let recommendCarBrandList = data.recommendCarBrandList
-					let brandGroupList = data.brandGroupList
-
-          for (var i = 0; i < recommendCarBrandList.length; i++) {
-						let item = recommendCarBrandList[i]
-						item.carBrandLogoUrl = that.data.imageDomain + item.carBrandLogoUrl
-          }
-					
 					that.setData({
-						hotCarLists: recommendCarBrandList,
-						brandGroupList: brandGroupList
+						brandGroupList: res
 					})
 				}
 				
@@ -130,17 +122,21 @@ Page({
 		let {HTTPS_YMCAPI} = this.data;
 		
 		app.modules.request({
-			url: HTTPS_YMCAPI + 'product/car/series', //仅为示例，并非真实的接口地址
-			method: 'GET',
+			url: HTTPS_YMCAPI + 'cgi/navigate/models/query', 
+			method: 'POST',
 			data: {
-				brandId: carSeries.id
+				brandId: carSeries.id,
+        deleted: false,
+        group: true,
+        joinOnSaleCount: true,
+        level: 1
 			},
 			success: function(res) {
 				if(res) {
-					let data = res;
+					let data = res
 					that.setData({
-						showCarSeriesImageUrl: that.data.imageDomain + data.brandLogoUrl,
-						carManufacturerSeriesList: data.manufacturers
+						showCarSeriesImageUrl: carSeries.logoUrl,
+						carManufacturerSeriesList: data
 					})
 				}
 			}

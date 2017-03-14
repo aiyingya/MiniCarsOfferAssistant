@@ -16,11 +16,12 @@ Page({
 		showResultsSearch: true,
 		searchNodata: false,
 		showSearchBtn: false,
-		showCharts: true
+		showCharts: true,
+    YMC_HTTPS_URL: app.config.ymcServerHTTPSUrl
   },
 	onLoad() {
 		let that = this;
-		let HTTPS_URL = app.config.ymcServerHTTPSUrl;
+		let HTTPS_URL = app.config.tradeServerHTTPSUrl;
 		try {
       let res = wx.getSystemInfoSync();
 			let carModelsHeight;
@@ -43,7 +44,7 @@ Page({
 		let searchResults = [];
 		if(val) {
 			app.modules.request({
-				url: that.data.HTTPS_YMCAPI + 'search/car/index', 
+				url: that.data.HTTPS_YMCAPI + 'cgi/search/car/index', 
 				method: 'GET',
 				loadingType: 'none',
 				data: {
@@ -81,9 +82,9 @@ Page({
 		let searchNodata = false
 		console.log(results)	
 		if(results.type === 'SPU') {
-			url = that.data.HTTPS_YMCAPI + 'supply/car/spu/'+results.id
+			url = that.data.YMC_HTTPS_URL + 'supply/car/spu/'+results.id
 		}else {
-			url = that.data.HTTPS_YMCAPI + 'supply/car/spu'
+			url = that.data.YMC_HTTPS_URL + 'supply/car/spu'
 			data = {
 				carSeriesId: results.id
 			}
@@ -117,7 +118,7 @@ Page({
 		let searchResults = []
 		let searchNodata = false
 		app.modules.request({
-			url: that.data.HTTPS_YMCAPI+ 'search/car/spu', 
+			url: that.data.YMC_HTTPS_URL+ 'search/car/spu', 
 			method: 'GET',
 			data: {
 				text: val,

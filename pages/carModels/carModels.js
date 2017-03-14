@@ -11,11 +11,12 @@ Page({
 		filtersData: [],
 		CarsModeleText: '全部车款',
 		CarsModeleSelectId: 0,
-		showCharts: true // 是否展示charts图表，解决弹出层无法点击问题
+		showCharts: true, // 是否展示charts图表，解决弹出层无法点击问题
+    HTTPS_YMCAPI: app.config.tradeServerHTTPSUrl
 	},
 	onLoad (options) {
 		let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
-		let HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
+		let HTTPS_YMCAPI =this.data.HTTPS_YMCAPI
 		let that = this
 		try {
       let res = wx.getSystemInfoSync()
@@ -29,15 +30,16 @@ Page({
     }
 		this.$wuxToast = app.wux(this).$wuxToast
 		if (carsInfo) {
+      console.log(carsInfo)
 			// 设置NavigationBarTitle.
 			wx.setNavigationBarTitle({
-				title: carsInfo.seriesName
+				title: carsInfo.name
 			})
 			app.modules.request({
-				url: HTTPS_YMCAPI + 'supply/car/spu', 
+				url: app.config.ymcServerHTTPSUrl + 'supply/car/spu',
 				method: 'GET',
 				data: {
-					carSeriesId: carsInfo.seriesId
+					carSeriesId: carsInfo.brandId
 				},
 				success: function(res) {
 					let carModelsList = res.content

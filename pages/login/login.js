@@ -66,7 +66,7 @@ Page({
 					type: false,
 					timer: 2000,
 					color: '#fff',
-					text: err.message
+					text: '服务器错误，请稍后再试'
 				})
 			}
 		})

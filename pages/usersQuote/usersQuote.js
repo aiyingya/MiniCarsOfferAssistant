@@ -33,19 +33,18 @@ Page({
 		let that = this
 		let weixinUsersInfo = app.globalData.userInfo
 		if(userinfo) {
-			const _HTTPS = `${app.config.ucServerHTTPSUrl}cgi/tenant/member/tenant`			
+			const _HTTPS = `${app.config.ucServerHTTPSUrl}cgi/tenant/member/${userinfo.userId}/tenant`			
 			app.modules.request({
 				url: _HTTPS, 
 				method: 'GET',
 				loadingType: 'none',
-				data: {
-					uid: userinfo.userId
-				},
+				data: {},
 				header: {
 					Authorization: userinfo.accessToken
 				},
 				success (res) {
 					let location = []
+          console.log(weixinUsersInfo)
 					userinfo.mobile = res.mobile
 					userinfo.weixinName = weixinUsersInfo.weixinName || res.name
 					userinfo.weixinPortrait = weixinUsersInfo.weixinPortrait
