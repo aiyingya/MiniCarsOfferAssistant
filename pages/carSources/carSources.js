@@ -74,29 +74,34 @@ Page({
 				for (let i = 0; i < res.carSourcesBySkuInSpuList.length; i++) {
         	let carSourcesBySkuInSpuItem = res.carSourcesBySkuInSpuList[i]
 					//item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
-          const tagsCollection = []
+          const tagsCollectionForSkuItem = []
           let priceFixedFlag = false
           let supplierSelfSupportFlag = false;
 
 					for (let j = 0; j < carSourcesBySkuInSpuItem.carSourcesList.length ; j++) {
             const carSourcesItem = carSourcesBySkuInSpuItem.carSourcesList[j]
             // 默认选择第一个物流选项项
+            const tagsCollectionForCarSourceItem = []
             that.selectLogistics(carSourcesItem, 0);
             if (carSourcesItem.priceFixed) {
+              tagsCollectionForCarSourceItem.push("一口价")
               if (!priceFixedFlag) {
-                tagsCollection.push("一口价")
+                tagsCollectionForSkuItem.push("一口价")
                 priceFixedFlag = true
               }
             }
             if (carSourcesItem.supplierSelfSupport) {
+              tagsCollectionForCarSourceItem.push("垫资拿车")
               if (!supplierSelfSupportFlag) {
-                tagsCollection.push("垫资拿车")
+                tagsCollectionForSkuItem.push("垫资拿车")
                 supplierSelfSupportFlag = true
               }
             }
+
+            carSourcesItem.viewModelTagCollection = tagsCollectionForCarSourceItem
 					}
 
-					carSourcesBySkuInSpuItem.carSku.viewModelTagCollection = tagsCollection.join(" ");
+					carSourcesBySkuInSpuItem.carSku.viewModelTagCollection = tagsCollectionForSkuItem;
           carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
 				}
 
@@ -141,6 +146,7 @@ Page({
     this.$wuxDialog = app.wux(this).$wuxDialog
     this.$wuxReliableDialog = app.wux(this).$wuxReliableDialog
     this.$wuxNormalDialog = app.wux(this).$wuxNormalDialog
+    this.$wuxCarSourceDetailDialog = app.wux(this).$wuxCarSourceDetailDialog
 	},
   onShow() {
     const that = this
@@ -162,53 +168,7 @@ Page({
         const now = new Date()
         const contactDate = new Date(value.dateString)
         if (now - contactDate < 60 * 60 * 1000 * 24) {
-          // 24 小时以内， 弹框走起
-          const hideDialog = this.$wuxReliableDialog.open({
-            spuId: spuId,
-            carSource: carSource,
-            close: (updatedCarSource) => {
-                console.log(updatedCarSource)
-                if (updatedCarSource.hasBeenReliableByUser) {
-                  that.requestReliableOrNotASupplier(spuId, carSource.id, updatedCarSource.supplier.id, updatedCarSource.hasBeenReliableByUser, {
-                    success: function () {
-                      carSource.hasBeenReliableByUser = updatedCarSource.hasBeenReliableByUser
-                      that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-                    },
-                    fail: function () {
-                    },
-                    complete: function () {
-                    }
-                  })
-                } else if (updatedCarSource.hasBeenUnReliableByUser) {
-                  that.requestUnReliableOrNotASupplier(spuId, carSource.id, updatedCarSource.supplier.id, updatedCarSource.hasBeenUnReliableByUser, {
-                    success: function () {
-                      carSource.hasBeenUnReliableByUser = updatedCarSource.hasBeenUnReliableByUser
-                      that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-                    },
-                    fail: function () {
-                    },
-                    complete: function () {
-                    }
-                  })
-                }
-            },
-            follow: (updatedSupplier) => {
-              // 关注与否
-              console.log(supplier)
-              console.log(updatedSupplier)
-              console.log("111")
-                this.requestFocusOrNotASupplier(updatedSupplier.id, updatedSupplier.hasFocused, {
-                  success: function () {
-                    carSource.supplier.hasFocused = updatedSupplier.hasFocused
-                    that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-                  },
-                  fail: function () {
-                  },
-                  complete: function () {
-                  }
-                })
-            }
-          })
+          this.showReliableDialog(spuId, skuIndex, carSource, carSourceIndex)
         } else {
           // 24 小时以外
         }
@@ -232,6 +192,52 @@ Page({
       }
     }
   },
+  showReliableDialog(spuId, skuIndex, carSource, carSourceIndex) {
+    // 24 小时以内， 弹框走起
+    const that = this
+    const hideDialog = this.$wuxReliableDialog.open({
+      spuId: spuId,
+      carSource: carSource,
+      close: (updatedCarSource) => {
+        console.log(updatedCarSource)
+        if (updatedCarSource.hasBeenReliableByUser) {
+          that.requestReliableOrNotASupplier(spuId, carSource.id, updatedCarSource.supplier.id, updatedCarSource.hasBeenReliableByUser, {
+            success: function () {
+              carSource.hasBeenReliableByUser = updatedCarSource.hasBeenReliableByUser
+              that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
+            },
+            fail: function () {
+            },
+            complete: function () {
+            }
+          })
+        } else if (updatedCarSource.hasBeenUnReliableByUser) {
+          that.requestUnReliableOrNotASupplier(spuId, carSource.id, updatedCarSource.supplier.id, updatedCarSource.hasBeenUnReliableByUser, {
+            success: function () {
+              carSource.hasBeenUnReliableByUser = updatedCarSource.hasBeenUnReliableByUser
+              that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
+            },
+            fail: function () {
+            },
+            complete: function () {
+            }
+          })
+        }
+      },
+      follow: (updatedSupplier) => {
+        this.requestFocusOrNotASupplier(updatedSupplier.id, updatedSupplier.hasFocused, {
+          success: function () {
+            carSource.supplier.hasFocused = updatedSupplier.hasFocused
+            that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
+          },
+          fail: function () {
+          },
+          complete: function () {
+          }
+        })
+      }
+    })
+  },
   /**
    * 该方法不会生成新的车源对象
    * @param carSourceItem
@@ -247,7 +253,6 @@ Page({
         carSourceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourceItem.viewModelPrice)
         carSourceItem.viewModelDiscount = util.downPrice(carSourceItem.viewModelPrice, this.data.carModelsInfo.officialPrice)
         carSourceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourceItem.viewModelDiscount)
-        console.log(carSourceItem)
         return carSourceItem;
       }
     }
@@ -403,6 +408,9 @@ Page({
         newCarSourcesBySkuItem.carSku.internalColorId = carSourcesBySkuItem.carSku.internalColorId
         newCarSourcesBySkuItem.carSku.internalColorName = carSourcesBySkuItem.carSku.internalColorName
         newCarSourcesBySkuItem.carSku.skuId = carSourcesBySkuItem.carSku.skuId
+        // 这里的设置可以使用 object.assign 来处理
+        newCarSourcesBySkuItem.carSku.viewModelTagCollection = carSourcesBySkuItem.carSku.viewModelTagCollection
+        console.log(newCarSourcesBySkuItem)
         newCarSourcesBySkuInSpuList.push(newCarSourcesBySkuItem)
       } else {
 
@@ -576,27 +584,6 @@ Page({
     }
 	},
   /**
-	 * 选择不同的物流终点
-   * @param e
-   */
-  handlerSelectLogisticsBlock(e) {
-		// 选择物流行为
-
-    const skuIndex = e.currentTarget.dataset.skuIndex
-    const carSourceIndex = e.currentTarget.dataset.carSourceIndex
-    let carSource = e.currentTarget.dataset.carSource
-    const logisticsIndex = e.currentTarget.dataset.logisticsIndex
-    const logistics = e.currentTarget.dataset.logistics
-
-		if (logisticsIndex !== carSource.selectedLogisticsIndex) {
-      carSource = this.selectLogistics(carSource, logisticsIndex);
-      this.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-
-		} else {
-			// 如果索引相同， 不作任何事情
-		}
-	},
-  /**
 	 * 关注一个供应商
    * @param e
    */
@@ -655,6 +642,7 @@ Page({
    * @param e
    */
   handlerReliable(e) {
+    console.log("handlerReliable")
     const that = this;
 
     const skuIndex = e.currentTarget.dataset.skuIndex
@@ -663,19 +651,7 @@ Page({
     const supplier = e.currentTarget.dataset.supplier
     const spuId = this.data.carModelsInfo.carModelId
 
-		this.requestReliableOrNotASupplier(spuId, carSource.id, supplier.id, !carSource.hasBeenReliableByUserByUser, {
-			success: function (res) {
-			  carSource.hasBeenReliableByUser = !carSource.hasBeenReliableByUser
-        carSource.supplier = supplier
-        that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-			},
-      fail: function() {
-
-      },
-      complete: function () {
-
-      }
-		})
+    this.showReliableDialog(spuId, skuIndex, carSource, carSourceIndex)
   },
   /**
 	 * 联系电话
@@ -686,6 +662,7 @@ Page({
     const skuIndex = e.currentTarget.dataset.skuIndex
     const carSourceIndex = e.currentTarget.dataset.carSourceIndex
     const carSource = e.currentTarget.dataset.carSource
+
     const supplier = carSource.supplier
     const contact = carSource.supplier.contact;
 
@@ -760,6 +737,55 @@ Page({
       cancel: () => {
         // TODO: 取消
       }
+    })
+  },
+  /**
+   * 点击供货列表项目得到的供货详情
+   * @param e
+   */
+  handlerCarSourceDetail(e) {
+    const carSourceItem = e.currentTarget.dataset.carSource
+    const skuItem = e.currentTarget.dataset.sku
+    const hideDialog = this.$wuxCarSourceDetailDialog.open({
+      carModel: this.data.carModelsInfo,
+      skuItem: skuItem,
+      carSourceItem: carSourceItem,
+      bookCar: ()=> {
+        console.log("bookCar")
+      },
+      jumpTo: ()=> {
+        console.log("jumpTo")
+      },
+      selectLogisticsBlock: (e) => {
+        const skuIndex = e.currentTarget.dataset.skuIndex
+        const carSourceIndex = e.currentTarget.dataset.carSourceIndex
+        let carSource = e.currentTarget.dataset.carSource
+        const logisticsIndex = e.currentTarget.dataset.logisticsIndex
+        const logistics = e.currentTarget.dataset.logistics
+
+        if (logisticsIndex !== carSource.selectedLogisticsIndex) {
+          carSource = this.selectLogistics(carSource, logisticsIndex);
+          this.updateTheCarSource(skuIndex, carSourceIndex, carSource)
+        } else {
+          // 如果索引相同， 不作任何事情
+        }
+      },
+      close: () => {
+        console.log("close")
+      },
+      reportError: (e) => {
+        console.log("report error")
+      }
+    })
+  },
+  handlerCreateQuoted(e) {
+    const skuItem = e.currentTarget.dataset.sku
+
+    const carModelsInfoKeyValueString =  util.urlEncodeValueForKey('carModelsInfo', this.data.carModelsInfo)
+    const carInfoKeyValueString = util.urlEncodeValueForKey('carInfo', skuItem.carSku)
+
+    wx.navigateTo({
+      url: '../quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carInfoKeyValueString
     })
   },
   /**

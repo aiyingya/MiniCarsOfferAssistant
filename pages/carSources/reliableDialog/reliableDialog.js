@@ -1,4 +1,4 @@
-import tools from '../tools'
+import tools from '../../../lib/tools'
 
 /**
  * 自定义 reliableDialog 组件
@@ -106,15 +106,29 @@ class wux {
         }
         $scope.reliableDialogReliable = (e) => {
           const reliable = e.currentTarget.dataset.reliable
-          if (reliable === 'true') {
-            if (!options.carSource.hasBeenReliableByUser) {
-              options.carSource.hasBeenReliableByUser = true
-              options.carSource.hasBeenUnReliableByUser = false
+          if (reliable === '1') {
+            if (options.carSource.hasBeenReliableByUser === 1) {
+              options.carSource.hasBeenReliableCount ? options.carSource.hasBeenReliableCount -- : null
+              options.carSource.hasBeenReliableByUser = 0
+            } else {
+              options.carSource.hasBeenReliableCount ? options.carSource.hasBeenReliableCount ++ : null
+              if (options.carSource.hasBeenReliableByUser === 0) {
+              } else {
+                options.carSource.hasBeenUnReliableCount ? options.carSource.hasBeenUnReliableCount -- : null
+              }
+              options.carSource.hasBeenReliableByUser = 1
             }
-          } else if (reliable === 'false') {
-            if (!options.carSource.hasBeenUnReliableByUser) {
-              options.carSource.hasBeenReliableByUser = false
-              options.carSource.hasBeenUnReliableByUser = true
+          } else if (reliable === '-1') {
+            if (options.carSource.hasBeenReliableByUser === -1) {
+              options.carSource.hasBeenUnReliableCount ? options.carSource.hasBeenUnReliableCount -- : null
+              options.carSource.hasBeenReliableByUser = 0
+            } else {
+              options.carSource.hasBeenUnReliableCount ? options.carSource.hasBeenUnReliableCount ++ : null
+              if (options.carSource.hasBeenReliableByUser === 0) {
+              } else {
+                options.carSource.hasBeenReliableCount ? options.carSource.hasBeenReliableCount -- : null
+              }
+              options.carSource.hasBeenReliableByUser = -1
             }
           }
           $scope.setData({
