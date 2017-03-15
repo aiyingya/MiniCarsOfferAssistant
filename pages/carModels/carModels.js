@@ -156,18 +156,19 @@ Page({
 			if(item.supply.supplierCount > 0) {
 				new app.wxcharts({
 					canvasId: item.carModelId,
-					type: 'line',
+					type: 'column',
 					categories: item.supply.chart.x,
 					animation: false,
 					color: '#ECF0F7',
 					legend: false,
 					background: '#ECF0F7',
 					series: [{
-						data: item.supply.chart.y,
-						format: function (val) {
-								return `${val.toFixed(0)}`
-						}
-					}],
+            name: '1',
+            data: item.supply.chart.y
+          },{
+            name: '1',
+            data: [3,8,5]
+          }],
 					xAxis: {
 						disableGrid: true,
 						fontColor: '#999999',
