@@ -57,90 +57,95 @@ Page({
 
     console.log(app.globalData)
 
-    const locationIds = app.globalData.location.map(function(a) {return a.locationId;});
-    const locationIdsString = locationIds.join(',')
+    // MARK： 目前只取地址列表中的第一个
+    const location = app.globalData.location[0]
+    if (location) {
+      app.modules.request({
+        url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.carModelId + '/sources',
+        method: 'GET',
+        data: {
+          userId: app.userInfo().userId,
+          pid: location.provinceId,
+          cid: location.cityId,
+          did: location.districtId
+        },
+        success: function (res) {
+          console.log(res)
+          let carSourcesBySkuInSpuList = []
 
-    app.modules.request({
-			url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.carModelId + '/sources',
-			method: 'GET',
-      data: {
-			  userId: app.userInfo().userId,
-        locationIds: locationIdsString
-      },
-			success: function(res) {
-				console.log(res)
-				let carSourcesBySkuInSpuList = []
+          for (let i = 0; i < res.carSourcesBySkuInSpuList.length; i++) {
+            let carSourcesBySkuInSpuItem = res.carSourcesBySkuInSpuList[i]
+            //item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
+            const tagsCollectionForSkuItem = []
+            let priceFixedFlag = false
+            let supplierSelfSupportFlag = false;
 
-				for (let i = 0; i < res.carSourcesBySkuInSpuList.length; i++) {
-        	let carSourcesBySkuInSpuItem = res.carSourcesBySkuInSpuList[i]
-					//item.count = Math.abs(((res.officialPrice - item.price)/10000).toFixed(2))
-          const tagsCollectionForSkuItem = []
-          let priceFixedFlag = false
-          let supplierSelfSupportFlag = false;
-
-					for (let j = 0; j < carSourcesBySkuInSpuItem.carSourcesList.length ; j++) {
-            const carSourcesItem = carSourcesBySkuInSpuItem.carSourcesList[j]
-            // 默认选择第一个物流选项项
-            const tagsCollectionForCarSourceItem = []
-            that.selectLogistics(carSourcesItem, 0);
-            if (carSourcesItem.priceFixed) {
-              tagsCollectionForCarSourceItem.push("一口价")
-              if (!priceFixedFlag) {
-                tagsCollectionForSkuItem.push("一口价")
-                priceFixedFlag = true
+            for (let j = 0; j < carSourcesBySkuInSpuItem.carSourcesList.length; j++) {
+              const carSourcesItem = carSourcesBySkuInSpuItem.carSourcesList[j]
+              // 默认选择第一个物流选项项
+              const tagsCollectionForCarSourceItem = []
+              that.selectLogistics(carSourcesItem, 0);
+              if (carSourcesItem.priceFixed) {
+                tagsCollectionForCarSourceItem.push("一口价")
+                if (!priceFixedFlag) {
+                  tagsCollectionForSkuItem.push("一口价")
+                  priceFixedFlag = true
+                }
               }
-            }
-            if (carSourcesItem.supplierSelfSupport) {
-              tagsCollectionForCarSourceItem.push("垫资拿车")
-              if (!supplierSelfSupportFlag) {
-                tagsCollectionForSkuItem.push("垫资拿车")
-                supplierSelfSupportFlag = true
+              if (carSourcesItem.supplierSelfSupport) {
+                tagsCollectionForCarSourceItem.push("垫资拿车")
+                if (!supplierSelfSupportFlag) {
+                  tagsCollectionForSkuItem.push("垫资拿车")
+                  supplierSelfSupportFlag = true
+                }
               }
+
+              carSourcesItem.viewModelTagCollection = tagsCollectionForCarSourceItem
             }
 
-            carSourcesItem.viewModelTagCollection = tagsCollectionForCarSourceItem
-					}
-
-					carSourcesBySkuInSpuItem.carSku.viewModelTagCollection = tagsCollectionForSkuItem;
-          carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
-				}
-
-        let filters = res.filters
-				let dropDownFilters = []
-        let scrollFilters = []
-        let scrollFiltersSelectedIndexes = []
-
-        let sourcePublishDateFilterId
-        for (let i = 0; i < filters.length; i++) {
-				  let filter = filters[i]
-          // FIXME: 这里的问题是使用了不严谨的方法获取数据
-          if (i === 0) {
-            dropDownFilters.push(filter)
-          } else if (i == 1) {
-				    // 车源发布信息， 默认为 24小时
-            scrollFilters.push(filter)
-            scrollFiltersSelectedIndexes.push(1)
-            if (filter.items && filter.items.length) {
-              sourcePublishDateFilterId = filter.items[1].id
-            }
-          } else {
-				    scrollFilters.push(filter)
-            scrollFiltersSelectedIndexes.push(-1)
+            carSourcesBySkuInSpuItem.carSku.viewModelTagCollection = tagsCollectionForSkuItem;
+            carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
           }
+
+          let filters = res.filters
+          let dropDownFilters = []
+          let scrollFilters = []
+          let scrollFiltersSelectedIndexes = []
+
+          let sourcePublishDateFilterId
+          for (let i = 0; i < filters.length; i++) {
+            let filter = filters[i]
+            // FIXME: 这里的问题是使用了不严谨的方法获取数据
+            if (i === 0) {
+              dropDownFilters.push(filter)
+            } else if (i == 1) {
+              // 车源发布信息， 默认为 24小时
+              scrollFilters.push(filter)
+              scrollFiltersSelectedIndexes.push(1)
+              if (filter.items && filter.items.length) {
+                sourcePublishDateFilterId = filter.items[1].id
+              }
+            } else {
+              scrollFilters.push(filter)
+              scrollFiltersSelectedIndexes.push(-1)
+            }
+          }
+
+          that.setData({
+            nodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
+            cacheCarSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
+            filters: filters,
+            dropDownFilters: dropDownFilters,
+            scrollFilters: scrollFilters,
+            scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
+          })
+
+          that.updateSearchResult({sourcePublishDate: sourcePublishDateFilterId})
         }
-
-				that.setData({
-				  nodata: carSourcesBySkuInSpuList.length !== 0? 'data': 'none',
-					cacheCarSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
-					filters: filters,
-          dropDownFilters: dropDownFilters,
-          scrollFilters: scrollFilters,
-          scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
-				})
-
-        that.updateSearchResult({sourcePublishDate: sourcePublishDateFilterId})
-			}
-		})
+      })
+    } else {
+      console.log("location 对象为空")
+    }
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog

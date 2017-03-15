@@ -282,13 +282,14 @@
 													class="reliable"
 											>
 												<image
-														src="/images/icons/icon_reliable_line.png"
+														src="{{carSourceItem.hasBeenReliable === 0 ? '/images/icons/icon_reliable_line.png' : (carSourceItem.hasBeenReliable === -1 ? '/images/icons/icon_reliable_line_down.png' : '/images/icons/icon_reliable_line_up.png')}}"
 														catchtap="handlerReliable"
 														data-car-source-index="{{carSourceItemIndex}}"
 														data-car-source="{{carSourceItem}}"
 														data-sku-index="{{skuItemIndex}}"
 												>
 												</image>
+												靠谱({{carSourceItem.hasBeenReliable === 0 ? '' : carSourceItem.hasBeenReliableCount}})
 											</view>
 											</view>
 
