@@ -3,7 +3,6 @@ let util = require('../../utils/util.js');
 
 Page({
 	data: {
-		imgAliyuncsUrl: app.config.imgAliyuncsUrl,
 		carModelsInfo: '',
 		quotation: '',
 		windowHeight: '',

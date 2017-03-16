@@ -151,7 +151,7 @@ Page({
           {
             itemNumber: carSKUInfo.skuId,
             itemName: carModelInfo.carModelName,
-            itemPic: app.config.imgAliyuncsUrl + carSKUInfo.skuPic,
+            itemPic: carSKUInfo.skuPic,
             specifications: carSKUInfo.externalColorName + '/' + carSKUInfo.internalColorName,
             guidePrice: carModelInfo.officialPrice,
             sellingPrice: carSKUInfo.price

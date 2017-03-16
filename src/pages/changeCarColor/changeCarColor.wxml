@@ -4,7 +4,7 @@
 <view class="car-sources container">
 		<template 
 			is="carSourcesTopNavbar" 
-			data="{{imgAliyuncsUrl, carModelsInfo}}" 
+			data="{{carModelsInfo}}"
 			/> 
 		<template 
 			is="carSourcesBody" 
