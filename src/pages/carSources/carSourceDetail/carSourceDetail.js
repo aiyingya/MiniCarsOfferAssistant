@@ -103,13 +103,15 @@ class wux {
           options.carSourceItem.viewModelContentItems = contentItems
         }
 
-        for (let logisticsDestination of options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
-          if (logisticsDestination.destType === 'store') {
-            logisticsDestination.viewModelDestTypeDesc = '门店'
-          } else if (logisticsDestination.destType === 'station') {
-            logisticsDestination.viewModelDestTypeDesc = '客栈'
-          } else if (logisticsDestination.destType === 'mainline') {
-            logisticsDestination.viewModelDestTypeDesc = '干线自提'
+        if (options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
+          for (let logisticsDestination of options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
+            if (logisticsDestination.destType === 'store') {
+              logisticsDestination.viewModelDestTypeDesc = '门店'
+            } else if (logisticsDestination.destType === 'station') {
+              logisticsDestination.viewModelDestTypeDesc = '客栈'
+            } else if (logisticsDestination.destType === 'mainline') {
+              logisticsDestination.viewModelDestTypeDesc = '干线自提'
+            }
           }
         }
 

@@ -296,16 +296,28 @@
 											<view
 													wx:if="{{!carSourceItem.supplierSelfSupport}}"
 													class="reliable"
+													catchtap="handlerReliable"
+													data-car-source-index="{{carSourceItemIndex}}"
+													data-car-source="{{carSourceItem}}"
+													data-sku-index="{{skuItemIndex}}"
 											>
 												<image
-														src="{{carSourceItem.hasBeenReliableByUser === 0 ? '/images/icons/icon_reliable_line.png' : (carSourceItem.hasBeenReliable === -1 ? '/images/icons/icon_reliable_line_down.png' : '/images/icons/icon_reliable_line_up.png')}}"
-														catchtap="handlerReliable"
-														data-car-source-index="{{carSourceItemIndex}}"
-														data-car-source="{{carSourceItem}}"
-														data-sku-index="{{skuItemIndex}}"
+														wx:if="{{carSourceItem.hasBeenReliableByUser === 0}}"
+														src="/images/icons/icon_reliable_line.png"
+												>
+												</image>
+												<image
+														wx:if="{{carSourceItem.hasBeenReliableByUser === 1}}"
+														src="/images/icons/icon_reliable_line_up.png"
+												>
+												</image>
+												<image
+														wx:if="{{carSourceItem.hasBeenReliableByUser === -1}}"
+														src="/images/icons/icon_reliable_line_down.png"
 												>
 												</image>
 												<view
+														class="reliable-text"
 													wx:if="{{carSourceItem.hasBeenReliableByUser !== 0}}"
 												>
 												靠谱({{carSourceItem.hasBeenReliableCount}})

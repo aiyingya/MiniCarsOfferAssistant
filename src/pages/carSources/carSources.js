@@ -176,47 +176,24 @@ Page({
   showReliableDialog(spuId, skuIndex, carSource, carSourceIndex) {
     // 24 小时以内， 弹框走起
     const that = this
+    const hasBeenReliableByUser = carSource.hasBeenReliableByUser
     const hideDialog = this.$wuxReliableDialog.open({
       spuId: spuId,
       carSource: carSource,
       close: (updatedCarSource) => {
-        console.log(updatedCarSource)
-        if (updatedCarSource.hasBeenReliableByUser) {
-          that.requestReliableOrNotASupplier(spuId, carSource.id, updatedCarSource.supplier.id, updatedCarSource.hasBeenReliableByUser, {
-            success: function () {
-              carSource.hasBeenReliableByUser = updatedCarSource.hasBeenReliableByUser
-              that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-            },
-            fail: function () {
-            },
-            complete: function () {
-            }
-          })
-        } else if (updatedCarSource.hasBeenUnReliableByUser) {
-          that.requestUnReliableOrNotASupplier(spuId, carSource.id, updatedCarSource.supplier.id, updatedCarSource.hasBeenUnReliableByUser, {
-            success: function () {
-              carSource.hasBeenUnReliableByUser = updatedCarSource.hasBeenUnReliableByUser
-              that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-            },
-            fail: function () {
-            },
-            complete: function () {
-            }
-          })
-        }
-      },
-      follow: (updatedSupplier) => {
-        this.requestFocusOrNotASupplier(updatedSupplier.id, updatedSupplier.hasFocused, {
+        that.requestReliable(spuId, carSource.id, updatedCarSource.supplier.id, hasBeenReliableByUser, updatedCarSource.hasBeenReliableByUser, {
           success: function () {
-            carSource.supplier.hasFocused = updatedSupplier.hasFocused
-            that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
           },
           fail: function () {
           },
           complete: function () {
           }
         })
-      }
+        that.updateTheCarSource(skuIndex, carSourceIndex, updatedCarSource)
+        that.setData({
+          carSourcesBySkuInSpuList: that.data.carSourcesBySkuInSpuList
+        })
+      },
     })
   },
   /**
@@ -427,10 +404,12 @@ Page({
     if (carSourceItem) {
       actualCarSourceItem = carSourceItem
     } else {
-      actualCarSourceItem = this.data.carSourcesBySkuInSpuList[carSkuIndex][carSourceIndex]
+      actualCarSourceItem = this.data.carSourcesBySkuInSpuList[carSkuIndex].carSourcesList[carSourceIndex]
     }
 
     this.processCarSourceItem(actualCarSourceItem)
+
+    this.data.carSourcesBySkuInSpuList[carSkuIndex].carSourcesList[carSourceIndex] = actualCarSourceItem
   },
   /**
    * 更新 sku 分区数据
@@ -992,8 +971,29 @@ Page({
    * @param supplierId
    * @param object
    */
+  requestReliable(spuId, carSourceId, supplierId, hasBeenReliableByUser, updatedHasBeenReliableByUser, object) {
+    console.log(spuId)
+    console.log(carSourceId)
+    console.log(supplierId)
+    console.log(hasBeenReliableByUser)
+    console.log(updatedHasBeenReliableByUser)
+    if (hasBeenReliableByUser === updatedHasBeenReliableByUser) {
+      // 没变化
+    } else {
+      if (hasBeenReliableByUser === -1) {
+        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
+      } else if (hasBeenReliableByUser === 1) {
+        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
+      }
+
+      if (updatedHasBeenReliableByUser === -1) {
+        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
+      } else if (updatedHasBeenReliableByUser === 1) {
+        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
+      }
+    }
+  },
   requestReliableOrNotASupplier(spuId, carSourceId, supplierId, reliableOrNot, object) {
-    console.log("dsafda")
     this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '靠谱', supplierId, reliableOrNot, object);
   },
   requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, UnReliableOrNot, object) {
@@ -1009,17 +1009,14 @@ Page({
    * @param object
    */
   requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, tagName, supplierId, addOrRemove, object) {
-    if (spuId && typeof spuId === 'string'
-      && carSourceId && typeof carSourceId === 'string'
-      && tagName && typeof tagName === 'string'
-      && supplierId && typeof supplierId === 'string') {
+    if (spuId && carSourceId  && tagName && supplierId) {
       const method = addOrRemove ? 'POST' : 'DELETE'
       app.modules.request({
         url: app.config.ymcServerHTTPSUrl + 'product/car/spu/' + spuId + '/source/' + carSourceId + '/tag',
         data: {
           tagName: tagName,
           userId: app.userInfo().userId,
-          supplierId: supplierId,
+          supplierId: supplierId
         },
         loadingType: 'none',
         method: method,

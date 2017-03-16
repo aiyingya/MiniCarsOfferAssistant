@@ -98,36 +98,40 @@ class wux {
           hideReliableDialog(options.close(options.carSource))
         }
         $scope.reliableDialogFollow = (e) => {
-          options.carSource.supplier.hasFocused = !options.carSource.supplier.hasFocused
-          $scope.setData({
-            [`$wux.reliableDialog.carSource`]: options.carSource
-          })
-          noHideReliableDialog(options.follow(options.carSource.supplier))
+          // 关注
         }
         $scope.reliableDialogReliable = (e) => {
           const reliable = e.currentTarget.dataset.reliable
           if (reliable === '1') {
             if (options.carSource.hasBeenReliableByUser === 1) {
-              options.carSource.hasBeenReliableCount ? options.carSource.hasBeenReliableCount -- : null
+              if (options.carSource.hasBeenReliableCount) {
+                options.carSource.hasBeenReliableCount --
+              }
               options.carSource.hasBeenReliableByUser = 0
             } else {
-              options.carSource.hasBeenReliableCount ? options.carSource.hasBeenReliableCount ++ : null
               if (options.carSource.hasBeenReliableByUser === 0) {
               } else {
-                options.carSource.hasBeenUnReliableCount ? options.carSource.hasBeenUnReliableCount -- : null
+                if (options.carSource.hasBeenUnReliableCount) {
+                  options.carSource.hasBeenUnReliableCount --
+                }
               }
+              options.carSource.hasBeenReliableCount ++
               options.carSource.hasBeenReliableByUser = 1
             }
           } else if (reliable === '-1') {
             if (options.carSource.hasBeenReliableByUser === -1) {
-              options.carSource.hasBeenUnReliableCount ? options.carSource.hasBeenUnReliableCount -- : null
+              if (options.carSource.hasBeenUnReliableCount) {
+                options.carSource.hasBeenUnReliableCount --
+              }
               options.carSource.hasBeenReliableByUser = 0
             } else {
-              options.carSource.hasBeenUnReliableCount ? options.carSource.hasBeenUnReliableCount ++ : null
               if (options.carSource.hasBeenReliableByUser === 0) {
               } else {
-                options.carSource.hasBeenReliableCount ? options.carSource.hasBeenReliableCount -- : null
+                if (options.carSource.hasBeenReliableCount) {
+                  options.carSource.hasBeenReliableCount --
+                }
               }
+              options.carSource.hasBeenUnReliableCount ++
               options.carSource.hasBeenReliableByUser = -1
             }
           }

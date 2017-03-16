@@ -535,12 +535,15 @@ page {
 .carSources-cell .carSources-cell-content .reliable{
 	display: flex;
 	align-items: center;
-	font-family: "PingFangSC-Regular";
 	font-size: 22rpx;
+	margin-left: 30rpx;
+}
+.carSources-cell .carSources-cell-content .reliable .reliable-text {
+	font-family: "PingFangSC-Regular";
 	color: #3377EE;
 	letter-spacing: 0;
 	line-height: 22rpx;
-	margin-left: 30rpx;
+	margin-left: 16rpx;
 }
 .carSources-cell .carSources-cell-content .reliable image {
 	width: 40rpx;
