@@ -1,4 +1,3 @@
-/*jslint forin: true, plusplus: true, sloppy: true, vars: true*/
 //
 //  users.js 用户登录注册.
 //  Version 1.0.0
@@ -6,8 +5,8 @@
 //  Created by pandali on 17-02-23.
 //  Copyright (c) 2016年 yaomaiche. All rights reserved.
 //
-import config from 'config'
-import modules from 'modules'
+import config from './config'
+import modules from './modules'
 
 class users {
 	constructor() {
@@ -15,7 +14,8 @@ class users {
 	
 	__sendMessage(opts) {
 		const _HTTPS = `${config.ucServerHTTPSUrl}${opts.path}`
-		modules.request({
+		const module = new modules
+		module.request({
 			url: _HTTPS, 
 			method: opts.method,
 			header: opts.header,

@@ -1,5 +1,5 @@
 let app = getApp()
-let util = require('../../utils/util.js')
+let util = require('../../utils/util')
 
 Page({
 	data: {

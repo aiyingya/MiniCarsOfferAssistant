@@ -1,5 +1,5 @@
 /* 配置后台服务器地址 */
-let evn = 'dev';
+let evn = 'gqc';
 let ucServerHTTPSUrl = function() {
   let HTTPS = {
     dev: 'https://test.yaomaiche.com/ucdev/',
@@ -8,7 +8,6 @@ let ucServerHTTPSUrl = function() {
   };
   return HTTPS[evn];
 }();
-
 let ymcServerHTTPSUrl = function() {
   let HTTPS = {
     dev: 'https://test.yaomaiche.com/ymcdev/',
@@ -17,7 +16,6 @@ let ymcServerHTTPSUrl = function() {
   };
   return HTTPS[evn];
 }();
-
 let tradeServerHTTPSUrl = function() {
   let HTTPS = {
     dev: 'https://test.yaomaiche.com/tradedev/',
@@ -26,19 +24,17 @@ let tradeServerHTTPSUrl = function() {
   };
   return HTTPS[evn];
 }()
-/* 图片地址.*/
 let imgAliyuncsUrl = function () {
-	let URLS = {
-		dev: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
-		gqc: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
-		prd: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops'
-	};
-	return URLS[evn];
+  let URLS = {
+    dev: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
+    gqc: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
+    prd: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops'
+  };
+  return URLS[evn];
 }();
-
 module.exports = {
   ucServerHTTPSUrl: ucServerHTTPSUrl,
   ymcServerHTTPSUrl: ymcServerHTTPSUrl,
-	imgAliyuncsUrl: imgAliyuncsUrl,
+  imgAliyuncsUrl: imgAliyuncsUrl,
   tradeServerHTTPSUrl: tradeServerHTTPSUrl
-};
+}

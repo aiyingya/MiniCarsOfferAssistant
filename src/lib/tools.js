@@ -1,7 +1,4 @@
-class Tools{
-  constructor() {
-  }
-
+class Tools {
   /**
    * 返回文件后缀
    * @param  {Object} file

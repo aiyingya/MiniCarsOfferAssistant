@@ -1,0 +1,8 @@
+[ignore]
+.*/build/.*
+.*/dist/.*
+.*/node_modules/.*
+
+[options]
+strip_root=true
+suppress_comment= \\(.\\|\n\\)*\\$Flow

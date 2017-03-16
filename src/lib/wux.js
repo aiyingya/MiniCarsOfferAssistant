@@ -1,9 +1,9 @@
-import Dialog from 'dialog/dialog'
+import Dialog from './dialog/dialog'
 import ReliableDialog from '../pages/carSources/reliableDialog/reliableDialog'
-import NormalDialog from 'dialog/normalDialog'
+import NormalDialog from './dialog/normalDialog'
 import CarSourceDialog from '../pages/carSources/carSourceDetail/carSourceDetail'
-import Toast from 'toast/toast'
-import Track from 'track'
+import Toast from './toast/toast'
+import Track from './track'
 
 export default function(scope) {
   return {

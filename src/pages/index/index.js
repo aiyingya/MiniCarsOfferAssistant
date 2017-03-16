@@ -53,7 +53,6 @@ Page({
 			HTTPS_YMCAPI: HTTPS_URL
 		})
 		// 获取页面数据.
-		
 		app.modules.request({
 			url: HTTPS_URL + 'cgi/navigate/brands/hot', 
 			method: 'GET',

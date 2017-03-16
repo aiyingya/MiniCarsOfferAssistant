@@ -198,11 +198,11 @@
 						</view>
 
 						<view
-								wx:if="{{skuItem.carSku.viewModelTagCollection.length > 0}}"
+								wx:if="{{skuItem.carSku.viewModelTags.length > 0}}"
 								class="third-part tag-collection"
 						>
 							<view
-									wx:for="{{skuItem.carSku.viewModelTagCollection}}"
+									wx:for="{{skuItem.carSku.viewModelTags}}"
 									class="tag"
 							>
 								{{item}}
@@ -232,9 +232,14 @@
 								>
 									<!-- 头部选择部分 -->
 									<view
-											wx:if="{{carSourceItem.supplierSelfSupport}}"
 											class="header"
 									>
+										<view
+											wx:for="{{carSourceItem.viewModelTabs}}"
+										>
+											{{item.name}}
+										</view>
+
 										<view class="tab selected">
 											价格低
 										</view>

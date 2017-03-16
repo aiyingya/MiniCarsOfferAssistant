@@ -2,15 +2,15 @@
 //
 //  clientjs.js 为用户生成clientId.
 //  Version 1.0.0
-//  
+//
 //  Created by pandali on 16-12-30.
 //  Copyright (c) 2016年 yaomaiche. All rights reserved.
 //
 
-let modules = require('./modules.js');
-let config = require('./config.js')
+import modules from './modules'
+import config from './config'
+
 ;(function() {
-  "use strict";
 
   function generateUUID(){
     let d = new Date().getTime();
@@ -30,7 +30,7 @@ let config = require('./config.js')
     init () {
       const that = this;
       this.getClientId(function(clientId) {
-        console.log("本次的用户的 clientId 为" + clientId)
+        console.log('本次的用户的 clientId 为' + clientId)
       })
     },
     setClientId (clientId) {
@@ -48,7 +48,7 @@ let config = require('./config.js')
       } else {
         try {
           let clientId = wx.getStorageSync('clientId')
-          console.log("fucking_larry" + clientId)
+
           if (clientId && clientId.length) {
             that.clientId = clientId
             typeof cb === 'function' && cb(this.clientId)

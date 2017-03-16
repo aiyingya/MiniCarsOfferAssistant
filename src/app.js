@@ -1,12 +1,13 @@
 //app.js
-import config from 'lib/config'
-import wux from 'lib/wux'
-import clientjs from 'lib/client'
-import modules from 'lib/modules'
-import wxcharts from 'modules/wxcharts'
-import users from 'lib/users'
+import wux from './lib/wux'
+import clientjs from './lib/client'
+import modules from './lib/modules'
+import wxcharts from './modules/wxcharts'
+import users from './lib/users'
+import config from './lib/config'
 App({
   onLaunch () {
+  	console.log(modules)
     //调用API从本地缓存中获取数据
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
@@ -25,7 +26,7 @@ App({
 					wx.getUserInfo({
 						success: function (res) {
 							let HTTPS_URL = config.ucServerHTTPSUrl
-							modules.request({
+							that.modules.request({
 								url: HTTPS_URL + 'cgi/user/weixin', 
 								method: 'POST',
 								loadingType: 'none',
@@ -149,7 +150,7 @@ App({
   },
   wux: wux,
 	config: config,
-	modules: modules,
+	modules: new modules,
 	wxcharts: wxcharts,
 	// FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据
 	fuckingLarryNavigatorTo: {
