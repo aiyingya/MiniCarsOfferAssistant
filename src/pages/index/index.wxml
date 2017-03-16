@@ -77,10 +77,10 @@
 				>
 				<view class="hotCarsType-title">
 					<view class="hotCarsType-title-inner">{{item.name}}</view>
-					<view class="hotCarsType-title-price">{{item.price}}</view>
+					<view class="hotCarsType-title-price">{{item.salePrice}}</view>
 				</view>
 				<view class="hotCarsType-remark">
-					<view class="hotCarsType-remark-inner">{{item.remark}}</view>
+					<view class="hotCarsType-remark-inner">{{item.description}}</view>
 					<view 
 						class="hotCarsType-title-relation"
 						bindtap="handlerMakePhoneCall"

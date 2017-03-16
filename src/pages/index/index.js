@@ -102,7 +102,7 @@ Page({
 		let HTTPS_URL = this.data.HTTPS_YMCAPI
 		
 		app.modules.request({
-			url: HTTPS_URL + 'cgi/navigate/models/hot', 
+			url: HTTPS_URL + 'cgi/navigate/items/hot',
 			method: 'GET',
 			data: {
 				channel: 'wxapp',
