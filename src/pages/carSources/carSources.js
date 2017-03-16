@@ -257,12 +257,14 @@ Page({
           {name: '价格低', value: carSourcePlaceLowest},
           {name: '到货快', value: carSourcePlaceFastest}
         ]
+        carSourceItem.viewModelTabMore = null
         selectedCarSourcePlace = carSourcePlaceLowest
       }
     } else if (!carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低和到货快 同时不存在
       if (carSourceItem.others.length === 1) {
         carSourceItem.viewModelTabs = null
+        carSourceItem.viewModelTabMore = null
         selectedCarSourcePlace = carSourceItem.others[0]
       } else {
         carSourceItem.viewModelTabs = [
@@ -283,6 +285,7 @@ Page({
         carSourceItem.viewModelTabs = [
           {name: '到货快', value: carSourcePlaceFastest}
         ]
+        carSourceItem.viewModelTabMore = null
         selectedCarSourcePlace = carSourcePlaceFastest
       }
     } else if (carSourcePlaceFastest && !carSourcePlaceLowest) {
@@ -297,6 +300,7 @@ Page({
         carSourceItem.viewModelTabs = [
           {name: '价格低', value: carSourcePlaceLowest}
         ]
+        carSourceItem.viewModelTabMore = null
         selectedCarSourcePlace = carSourcePlaceLowest
       }
     }
@@ -333,6 +337,8 @@ Page({
     } else {
       const section = actualCarSourcesBySkuInSpuList[selectedCarSkuIndex]
       this.updateTheCarSku(selectedCarSkuIndex, section)
+
+      console.log(this.data.carSourcesBySkuInSpuList)
 
       this.setData({
         carSourcesBySkuInSpuList: actualCarSourcesBySkuInSpuList,
@@ -374,6 +380,8 @@ Page({
         carSourcePlaceItem.viewModelPriceDesc = util.priceStringWithUnit(selectedLogisticsDestination.totalPrice)
         carSourcePlaceItem.viewModelDiscount = selectedLogisticsDestination.discount
         carSourcePlaceItem.viewModelDiscountDesc = util.priceStringWithUnit(selectedLogisticsDestination.discount)
+        carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = '约' + selectedLogisticsDestination.expectedDeliveryDays + '天'
+        carSourcePlaceItem.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc = util.priceStringWithUnit(selectedLogisticsDestination.logisticsFee)
         this.setData({
           carSourcesBySkuInSpuList: this.data.carSourcesBySkuInSpuList
         })
@@ -386,6 +394,7 @@ Page({
     carSourcePlaceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourcePlaceItem.totalPrice)
     carSourcePlaceItem.viewModelDiscount = carSourcePlaceItem.discount
     carSourcePlaceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourcePlaceItem.discount)
+    carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = ''
     this.setData({
       carSourcesBySkuInSpuList: this.data.carSourcesBySkuInSpuList
     })

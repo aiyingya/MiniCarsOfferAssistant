@@ -108,7 +108,7 @@ class wux {
             if (logisticsDestination.destType === 'store') {
               logisticsDestination.viewModelDestTypeDesc = '门店'
             } else if (logisticsDestination.destType === 'station') {
-              logisticsDestination.viewModelDestTypeDesc = '客栈'
+              logisticsDestination.viewModelDestTypeDesc = '驿站'
             } else if (logisticsDestination.destType === 'mainline') {
               logisticsDestination.viewModelDestTypeDesc = '干线自提'
             }

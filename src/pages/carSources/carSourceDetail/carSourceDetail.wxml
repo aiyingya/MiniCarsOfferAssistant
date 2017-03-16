@@ -36,7 +36,7 @@
                         <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
                         <view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
                         <view
-                                wx:if="{{ !(carSourceItem.sourceRegionDesc && carSourceItem.sourceRegionDesc.length) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
+                                wx:if="{{ !(carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
                                 class="basic-label"
                         >
                             暂无
@@ -57,7 +57,7 @@
                             wx:else
                             class="line-title"
                     >
-                        运   费   约: {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.logisticsFeeDesc}}
+                        运   费   约: {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc}}
                     </view>
 
                     <view
@@ -94,7 +94,7 @@
                     <view class="line-title">物流时间:</view>
                     <view class="logistics-information">
                         <view class="logistics-date">
-                            {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.expectedDeliveryDaysDesc}}
+                            {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelExpectedDeliveryDaysDesc}}
                         </view>
                         <view class="logistics-tips">
                             (物流信息仅供参考)

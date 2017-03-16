@@ -238,7 +238,7 @@
 								>
 									<!-- 头部选择部分 -->
 									<view
-											wx:if="{{carSourceItem.viewModelTabs || carSourceItem.viewModelMore}}"
+											wx:if="{{carSourceItem.viewModelTabs || carSourceItem.viewModelTabMore}}"
 											class="header"
 									>
 										<view
@@ -251,7 +251,7 @@
 										</view>
 
 										<view
-												wx:if="{{carSourceItem.viewModelMore}}"
+												wx:if="{{carSourceItem.viewModelTabMore.length}}"
 												class="tab"
 												bindtap="handlerCarSourceMore"
 										>
@@ -392,19 +392,20 @@
 											>
 												<view class="logistics">
 													<view
-															wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.logisticsFree }}"
+															wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
 														  	class="logistics-free"
 													>
 														<block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'store'}}">包邮到门店</block>
-														<block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'post'}}">包邮到驿站</block>
+														<block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'station'}}">包邮到驿站</block>
+														<block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'mainline'}}">干线自提</block>
 													</view>
 													<view wx:else class="logistics-none-free">
 														<view>
-															运费约: {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.logisticsFeeDesc }}
+															运费约: {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc }}
 														</view>
 													</view>
 													<view class="logistics-date">
-														{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.expectedDeliveryDaysDesc }}
+														{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelExpectedDeliveryDaysDesc }}
 													</view>
 												</view>
 											</view>
