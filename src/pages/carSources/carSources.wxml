@@ -160,8 +160,8 @@
 						class="carSources-section"
 				>
 					<view class="carSources-section-content"
-						  bindtap="handlerSelectSku"
-						  data-sku-index="{{skuItemIndex}}"
+						  bindtap="handlerSelectCarSku"
+						  data-sku-item-index="{{skuItemIndex}}"
 						  data-sku-item="{{skuItem}}"
 					>
 						<!-- 库存分区列表 -->
@@ -232,21 +232,22 @@
 								>
 									<!-- 头部选择部分 -->
 									<view
+											wx:if="{{carSourceItem.viewModelTabs || carSourceItem.viewModelMore}}"
 											class="header"
 									>
 										<view
-											wx:for="{{carSourceItem.viewModelTabs}}"
+												class="tab"
+												wx:for="{{carSourceItem.viewModelTabs}}"
+												bindtap="handlerCarSourceTabClick"
 										>
 											{{item.name}}
 										</view>
 
-										<view class="tab selected">
-											价格低
-										</view>
-										<view class="tab">
-											到货快
-										</view>
-										<view class="tab">
+										<view
+												wx:if="{{carSourceItem.viewModelMore}}"
+												class="tab"
+												bindtap="handlerCarSourceMore"
+										>
 											更多
 										</view>
 									</view>
@@ -322,7 +323,7 @@
 										<view class="second-part">
 											<!-- 车源基本信息 -->
 											<view class="basic-infomation">
-												<view wx:if="{{carSourceItem.sourceRegionDesc && carSourceItem.sourceRegionDesc.length}}" class="basic-label">{{carSourceItem.sourceRegionDesc}}</view>
+												<view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length}}" class="basic-label">{{carSourceItem.viewModelSelectedCarSourcePlace.name}}</view>
 												<view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
 												<view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
 												<view
@@ -336,50 +337,53 @@
 											<!-- 供货价格 -->
 											<view class = "carSources-cell-price">
 												<image
-														wx:if="{{ carSourceItem.viewModelDiscount !== 0 }}"
+														wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.discount !== 0 }}"
 														class="discount-icon"
-														src="{{ carSourceItem.viewModelDiscount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+														src="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.discount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
 												>
 												</image>
 												<view
 														wx:if="{{ carSourceItem.viewModelDiscount !== 0 }}"
 														class="discount"
 												>
-													{{ carSourceItem.viewModelDiscountDesc }}元/
+													{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelDiscountDesc }}元/
 												</view>
-												<view class="price">{{carSourceItem.viewModelPriceDesc}}</view>
+												<view class="price">{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelPriceDesc }}</view>
 											</view>
 										</view>
 
 										<!-- 第三部分 物流信息 -->
 										<view
-												wx:if="{{ carSourceItem.logistics && carSourceItem.logistics.length }}"
+												wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination }}"
 												class="third-part"
 										>
 											<view
 													class="logistics-information"
 											>
 												<view class="logistics">
-													<view wx:if="{{carSourceItem.logisticsFree}}" class="logistics-free">
-														<block wx:if="{{carSourceItem.logisticsType === 'store'}}">包邮到门店</block>
-														<block wx:if="{{carSourceItem.logisticsType === 'post'}}">包邮到驿站</block>
+													<view
+															wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.logisticsFree }}"
+														  	class="logistics-free"
+													>
+														<block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'store'}}">包邮到门店</block>
+														<block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'post'}}">包邮到驿站</block>
 													</view>
 													<view wx:else class="logistics-none-free">
 														<view>
-															运费约: {{carSourceItem.selectedLogistics.logisticsFeeDesc}}
+															运费约: {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.logisticsFeeDesc }}
 														</view>
 													</view>
 													<view class="logistics-date">
-														{{carSourceItem.selectedLogistics.expectedDeliveryDaysDesc}}
+														{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.expectedDeliveryDaysDesc }}
 													</view>
 												</view>
 											</view>
-											<view
+											<viewxw
 													wx:if="{{carSourceItem.logisticsFree}}"
 													class="logistics-information-tips"
 											>
 												(含运费)
-											</view>
+											</viewxw>
 										</view>
 
 										<!-- 第四部分 标签 -->

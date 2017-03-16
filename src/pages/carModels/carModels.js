@@ -39,7 +39,7 @@ Page({
 				url: app.config.ymcServerHTTPSUrl + 'supply/car/spu',
 				method: 'GET',
 				data: {
-					carSeriesId: carsInfo.brandId
+					carSeriesId: carsInfo.id
 				},
 				success: function(res) {
 					let carModelsList = res.content

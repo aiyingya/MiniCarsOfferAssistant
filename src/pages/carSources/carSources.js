@@ -58,66 +58,70 @@ Page({
     console.log(app.globalData)
 
     // MARK： 目前只取地址列表中的第一个
-    const location = app.globalData.location[0]
-    if (location) {
-      app.modules.request({
-        url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.carModelId + '/sources',
-        method: 'GET',
-        data: {
-          userId: app.userInfo().userId,
-          pid: location.provinceId,
-          cid: location.cityId,
-          did: location.districtId
-        },
-        success: function (res) {
-          let carSourcesBySkuInSpuList = []
-          for (let carSourcesBySkuInSpuItem of res.carSourcesBySkuInSpuList) {
-            for (let carSourceItem of carSourcesBySkuInSpuItem.carSourcesList) {
-              that.preprocessCarSourceItem(carSourceItem)
-            }
-            that.preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem)
-            carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
-          }
-
-          let filters = res.filters
-          let dropDownFilters = []
-          let scrollFilters = []
-          let scrollFiltersSelectedIndexes = []
-
-          let sourcePublishDateFilterId
-          for (let i = 0; i < filters.length; i++) {
-            let filter = filters[i]
-            // FIXME: 这里的问题是使用了不严谨的方法获取数据
-            if (i === 0) {
-              dropDownFilters.push(filter)
-            } else if (i == 1) {
-              // 车源发布信息， 默认为 24小时
-              scrollFilters.push(filter)
-              scrollFiltersSelectedIndexes.push(1)
-              if (filter.items && filter.items.length) {
-                sourcePublishDateFilterId = filter.items[1].id
-              }
-            } else {
-              scrollFilters.push(filter)
-              scrollFiltersSelectedIndexes.push(-1)
-            }
-          }
-
-          that.setData({
-            nodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
-            cacheCarSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
-            filters: filters,
-            dropDownFilters: dropDownFilters,
-            scrollFilters: scrollFilters,
-            scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
-          })
-
-          that.updateSearchResult({sourcePublishDate: sourcePublishDateFilterId})
-        }
-      })
+    const location = app.globalData.location
+    let data;
+    if (location.length > 0) {
+      data = {
+        userId: app.userInfo().userId,
+        pid: location[0].provinceId,
+        cid: location[0].cityId,
+        did: location[0].districtId
+      }
     } else {
-      console.log('location 对象为空')
+      data = {
+        userId: app.userInfo().userId
+      }
     }
+
+    app.modules.request({
+      url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.carModelId + '/sources',
+      method: 'GET',
+      data: data,
+      success: function (res) {
+        // let carSourcesBySkuInSpuList = []
+        // for (let carSourcesBySkuInSpuItem of res.carSourcesBySkuInSpuList) {
+          // that.preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem)
+          // carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
+        // }
+
+        let filters = res.filters
+        let dropDownFilters = []
+        let scrollFilters = []
+        let scrollFiltersSelectedIndexes = []
+
+        let sourcePublishDateFilterId
+        for (let i = 0; i < filters.length; i++) {
+          let filter = filters[i]
+          // FIXME: 这里的问题是使用了不严谨的方法获取数据
+          if (i === 0) {
+            dropDownFilters.push(filter)
+          } else if (i == 1) {
+            // 车源发布信息， 默认为 24小时
+            scrollFilters.push(filter)
+            scrollFiltersSelectedIndexes.push(1)
+            if (filter.items && filter.items.length) {
+              sourcePublishDateFilterId = filter.items[1].id
+            }
+          } else {
+            scrollFilters.push(filter)
+            scrollFiltersSelectedIndexes.push(-1)
+          }
+        }
+
+        const carSourcesBySkuInSpuList = res.carSourcesBySkuInSpuList
+
+        that.setData({
+          nodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
+          cacheCarSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
+          filters: filters,
+          dropDownFilters: dropDownFilters,
+          scrollFilters: scrollFilters,
+          scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
+        })
+
+        that.updateSearchResult({sourcePublishDate: sourcePublishDateFilterId})
+      }
+    })
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
@@ -263,15 +267,15 @@ Page({
       // 价格低和到货快 同时存在
       if (carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
-          { name: '价格低', value: carSourcePlaceLowest },
-          { name: '到货快', value: carSourcePlaceFastest }
+          {name: '价格低', value: carSourcePlaceLowest},
+          {name: '到货快', value: carSourcePlaceFastest}
         ]
         carSourceItem.viewModelTabMore = carSourceItem.others
         selectedCarSourcePlace = carSourcePlaceLowest
       } else {
         carSourceItem.viewModelTabs = [
-          { name: '价格低', value: carSourcePlaceLowest },
-          { name: '到货快', value: carSourcePlaceFastest }
+          {name: '价格低', value: carSourcePlaceLowest},
+          {name: '到货快', value: carSourcePlaceFastest}
         ]
         selectedCarSourcePlace = carSourcePlaceLowest
       }
@@ -282,7 +286,7 @@ Page({
         selectedCarSourcePlace = carSourceItem.others[0]
       } else {
         carSourceItem.viewModelTabs = [
-          { name: '推荐', value: carSourceItem.others[0] }
+          {name: '推荐', value: carSourceItem.others[0]}
         ]
         carSourceItem.viewModelTabMore = carSourceItem.others.shift()
         selectedCarSourcePlace = carSourceItem.others[0]
@@ -291,13 +295,13 @@ Page({
       // 价格低不存在， 到货快存在
       if (carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
-          { name: '到货快', value: carSourcePlaceFastest }
-          ]
+          {name: '到货快', value: carSourcePlaceFastest}
+        ]
         carSourceItem.viewModelTabMore = carSourceItem.others
         selectedCarSourcePlace = carSourcePlaceFastest
       } else {
         carSourceItem.viewModelTabs = [
-          { name: '到货快', value: carSourcePlaceFastest }
+          {name: '到货快', value: carSourcePlaceFastest}
         ]
         selectedCarSourcePlace = carSourcePlaceFastest
       }
@@ -305,13 +309,13 @@ Page({
       // 价格低存在， 到货快不存在
       if (carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
-          { name: '价格低', value: carSourcePlaceLowest }
+          {name: '价格低', value: carSourcePlaceLowest}
         ]
         carSourceItem.viewModelTabMore = carSourceItem.others
         selectedCarSourcePlace = carSourcePlaceLowest
       } else {
         carSourceItem.viewModelTabs = [
-          { name: '价格低', value: carSourcePlaceLowest }
+          {name: '价格低', value: carSourcePlaceLowest}
         ]
         selectedCarSourcePlace = carSourcePlaceLowest
       }
@@ -544,7 +548,7 @@ Page({
         newCarSourcesBySkuItem.carSourcesList = newCarSourcesList
         newCarSourcesBySkuItem.carSku = {}
 
-        object.assign(newCarSourcesBySkuItem.carSku, carSourcesBySkuItem.carSku)
+        Object.assign(newCarSourcesBySkuItem.carSku, carSourcesBySkuItem.carSku)
 
         this.preprocessCarSourcesBySkuInSpuItem(newCarSourcesBySkuItem)
 
@@ -712,12 +716,12 @@ Page({
    * @param e
    */
   handlerSelectCarSku(e) {
-    const index = e.currentTarget.dataset.skuIndex
+    const index = e.currentTarget.dataset.skuItemIndex
     const skuItem = e.currentTarget.dataset.skuItem
     if (index === this.data.selectedSectionIndex) {
-      this.selectCarSku(skuItem, -1)
+      this.selectCarSku(-1)
     } else {
-      this.selectCarSku(skuItem, index)
+      this.selectCarSku(index)
     }
   },
   /**
