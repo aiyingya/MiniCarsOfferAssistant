@@ -63,18 +63,21 @@ Page({
       userId: app.userInfo().userId
     }
 
-    const location = locations[0]
-    if (location.provinceId) {
-      data.pid = location.provinceId
+    if (locations && locations.length > 0) {
+      const location = locations[0]
+      if (location.provinceId) {
+        data.pid = location.provinceId
+      }
+
+      if (location.cityId) {
+        data.cid = location.cityId
+      }
+
+      if (location.districtId) {
+        data.did = location.districtId
+      }
     }
 
-    if (location.cityId) {
-      data.cid = location.cityId
-    }
-
-    if (location.districtId) {
-      data.did = location.districtId
-    }
 
     app.modules.request({
       url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.carModelId + '/sources',
