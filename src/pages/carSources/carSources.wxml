@@ -1,15 +1,15 @@
 <!-- 货源列表（原车源详情） -->
-<import src="../../lib/dialog/dialog.wxml"/>
-<template is="dialog" data="{{ ...$wux.dialog }}"/>
-
-<import src="../../lib/dialog/normalDialog.wxml"/>
-<template is="normalDialog" data="{{ ...$wux.normalDialog }}"/>
+<import src="../carSources/carSourceDetail/carSourceDetail.wxml"/>
+<template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}"/>
 
 <import src="../carSources/reliableDialog/reliableDialog.wxml"/>
 <template is="reliableDialog" data="{{ ...$wux.reliableDialog }}"/>
 
-<import src="../carSources/carSourceDetail/carSourceDetail.wxml"/>
-<template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}"/>
+<import src="../../lib/dialog/normalDialog.wxml"/>
+<template is="normalDialog" data="{{ ...$wux.normalDialog }}"/>
+
+<import src="../../lib/dialog/dialog.wxml"/>
+<template is="dialog" data="{{ ...$wux.dialog }}"/>
 
 <!-- 货源列表 -->
 <view class="car-sources container">
@@ -76,6 +76,7 @@
 									wx:for="{{dropDownFiltersData}}"
 									wx:for-item="filterItem"
 									wx:for-index="filterIndex"
+									wx:key="*this"
 									class="weui-cell weui-cell_access"
 									bindtap="handlerSelectItem"
 									data-filter-position="left"
@@ -133,12 +134,14 @@
 						wx:for="{{scrollFilters}}"
 						wx:for-index="scrollFilterIndex"
 						wx:for-item="scrollFilterItem"
+						wx:key="*this"
 						class="scroll-filter"
 				>
 					<view
 							wx:for="{{scrollFilterItem.items}}"
 							wx:for-index="filterIndex"
 							wx:for-item="filterItem"
+							wx:key="*this"
 							bindtap="handlerFilterSelected"
 							data-scroll-filter-index="{{scrollFilterIndex}}"
 							data-scroll-filter-item="{{scrollFilterItem}}"
@@ -157,6 +160,7 @@
 						wx:for="{{carSourcesBySkuInSpuList}}"
 						wx:for-item="skuItem"
 						wx:for-index="skuItemIndex"
+						wx:key="*this"
 						class="carSources-section"
 				>
 					<view class="carSources-section-content"
@@ -181,18 +185,18 @@
 						<view class="second-part">
 							<view class = "carSources-section-price">
 								<image
-										wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
+										wx:if="{{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
 										class="discount-icon"
-										src="{{skuItem.carSourcesList[0].viewModelDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
+										src="{{skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
 								>
 								</image>
 								<view
-										wx:if="{{ skuItem.carSourcesList[0].viewModelDiscount !== 0 }}"
+										wx:if="{{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
 										class="discount"
 								>
-									{{ skuItem.carSourcesList[0].viewModelDiscountDesc }}元/
+									{{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscountDesc }}元/
 								</view>
-								<view class="price">{{skuItem.carSourcesList[0].viewModelPriceDesc}}</view>
+								<view class="price">{{skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelPriceDesc}}</view>
 								<view class="discount">起</view>
 							</view>
 						</view>
@@ -203,6 +207,7 @@
 						>
 							<view
 									wx:for="{{skuItem.carSku.viewModelTags}}"
+									wx:key="*this"
 									class="tag"
 							>
 								{{item}}
@@ -225,6 +230,7 @@
 									wx:for="{{skuItem.carSourcesList}}"
 									wx:for-item="carSourceItem"
 									wx:for-index="carSourceItemIndex"
+									wx:key="*this"
 									class="carSources-cell"
 							>
 								<view
@@ -238,6 +244,7 @@
 										<view
 												class="tab"
 												wx:for="{{carSourceItem.viewModelTabs}}"
+												wx:key="*this"
 												bindtap="handlerCarSourceTabClick"
 										>
 											{{item.name}}
@@ -264,13 +271,15 @@
 											<!-- 供应商名称 -->
 											<view class="first-first-part">
 											<view class="supplier-name">
-												<view class="name">{{carSourceItem.supplier.name}}</view>
-												<image
-														wx:if="{{carSourceItem.supplierSelfSupport}}"
-														src="/images/icons/icon_label_ymc_certification.png"
-														class="certification"
-												>
-												</image>
+												<view class="name">
+													{{carSourceItem.supplier.name}}
+													<image
+															wx:if="{{carSourceItem.supplierSelfSupport}}"
+															src="/images/icons/icon_label_ymc_certification.png"
+															class="certification"
+													>
+													</image>
+												</view>
 												<image
 														class="contact"
 														src="/images/icons/icon_call_line.png"
@@ -285,17 +294,22 @@
 											<!-- 靠谱 -->
 											<!--wx:if="{{!carSourceItem.supplierSelfSupport}}"-->
 											<view
+													wx:if="{{!carSourceItem.supplierSelfSupport}}"
 													class="reliable"
 											>
 												<image
-														src="{{carSourceItem.hasBeenReliable === 0 ? '/images/icons/icon_reliable_line.png' : (carSourceItem.hasBeenReliable === -1 ? '/images/icons/icon_reliable_line_down.png' : '/images/icons/icon_reliable_line_up.png')}}"
+														src="{{carSourceItem.hasBeenReliableByUser === 0 ? '/images/icons/icon_reliable_line.png' : (carSourceItem.hasBeenReliable === -1 ? '/images/icons/icon_reliable_line_down.png' : '/images/icons/icon_reliable_line_up.png')}}"
 														catchtap="handlerReliable"
 														data-car-source-index="{{carSourceItemIndex}}"
 														data-car-source="{{carSourceItem}}"
 														data-sku-index="{{skuItemIndex}}"
 												>
 												</image>
-												靠谱({{carSourceItem.hasBeenReliable === 0 ? '' : carSourceItem.hasBeenReliableCount}})
+												<view
+													wx:if="{{carSourceItem.hasBeenReliableByUser !== 0}}"
+												>
+												靠谱({{carSourceItem.hasBeenReliableCount}})
+												</view>
 											</view>
 											</view>
 
@@ -337,18 +351,22 @@
 											<!-- 供货价格 -->
 											<view class = "carSources-cell-price">
 												<image
-														wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.discount !== 0 }}"
+														wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
 														class="discount-icon"
-														src="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.discount > 0? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+														src="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
 												>
 												</image>
 												<view
-														wx:if="{{ carSourceItem.viewModelDiscount !== 0 }}"
+														wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
 														class="discount"
 												>
-													{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelDiscountDesc }}元/
+													{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscountDesc }}元/
 												</view>
-												<view class="price">{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelPriceDesc }}</view>
+												<view
+														class="price"
+												>
+													{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelPriceDesc }}
+												</view>
 											</view>
 										</view>
 
@@ -389,11 +407,12 @@
 										<!-- 第四部分 标签 -->
 										<view class="forth-part">
 											<view
-													wx:if="{{carSourceItem.viewModelTagCollection.length > 0}}"
+													wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}"
 													class="tag-collection"
 											>
 												<view
-														wx:for="{{carSourceItem.viewModelTagCollection}}"
+														wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags}}"
+														wx:key="*this"
 														class="tag"
 												>
 													{{item}}

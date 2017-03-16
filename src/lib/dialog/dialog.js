@@ -74,8 +74,10 @@ class wux {
         confirmText: '确定',
         confirmDisabled: true,
         cancelText: '取消',
-        confirm: function(res) {},
-        cancel: function() {},
+        confirm: function (res) {
+        },
+        cancel: function () {
+        },
       },
       /**
        * 显示dialog组件
@@ -99,7 +101,7 @@ class wux {
         }
 
         // 渲染组件
-        
+
         $scope.setData({
           [`$wux.dialog`]: options,
           [`$wux.dialog.dialogConfirm`]: `dialogConfirm`,

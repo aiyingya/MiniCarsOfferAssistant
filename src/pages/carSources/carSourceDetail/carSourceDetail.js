@@ -81,15 +81,37 @@ class wux {
       open(opts = {}) {
         const options = extend(clone(this.defaults), opts)
         /// 原文基本数据
-        options.carSourceItem.originalText = "\
-        [甜点车款4]一汽大众\
-        17款速腾1528白16500\
-        17款速腾1628白17500\
-        17款高尔夫百万辆纪念版1449白16500\
-        17款高尔夫百万辆纪念版1549白17500\
-        16款宝来1198白15000\
-        16款宝来1318白15000\
-        浙江现车 本月开票,可单台，量大价更优"
+
+        const contentItems = []
+        const content = options.carSourceItem.content
+        if (content && content.length) {
+          const indexOf = options.carSourceItem.indexOf
+          for (let i = 0; i < content.length; i++) {
+            const contentItem = content[i]
+            if (indexOf.includes(i)) {
+              contentItems.push({
+                a: contentItem,
+                b: true
+              })
+            } else {
+              contentItems.push({
+                a: contentItem,
+                b: false
+              })
+            }
+          }
+          options.carSourceItem.viewModelContentItems = contentItems
+        }
+
+        for (let logisticsDestination of options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
+          if (logisticsDestination.destType === 'store') {
+            logisticsDestination.viewModelDestTypeDesc = '门店'
+          } else if (logisticsDestination.destType === 'station') {
+            logisticsDestination.viewModelDestTypeDesc = '客栈'
+          } else if (logisticsDestination.destType === 'mainline') {
+            logisticsDestination.viewModelDestTypeDesc = '干线自提'
+          }
+        }
 
         const hideCarSourceDetailDialog = (cb) => {
           that.setHidden('carSourceDetailDialog')
@@ -123,7 +145,6 @@ class wux {
           $scope.setData({
             [`$wux.carSourceDetailDialog.hasFoldTagCollection`]: options.hasFoldTagCollection
           })
-          noHideCarSourceDetailDialog(options.jumpTo(e))
         }
 
         /**

@@ -77,15 +77,15 @@ gulp.task('templates:watch', () => {
  */
 gulp.task('styles', () => {
   return gulp.src(['./src/**/*.wxss', '!./src/styles/**'])
-    .pipe($.less())
-    .pipe($.postcss([
-      autoprefixer([
-        'iOS >= 8',
-        'Android >= 4.1'
-      ])
-    ]))
-    .pipe($.if(prod, $.cssnano()))
-    .pipe($.rename((path) => path.extname = '.wxss'))
+    // .pipe($.less())
+    // .pipe($.postcss([
+    //   autoprefixer([
+    //     'iOS >= 8',
+        // 'Android >= 4.1'
+      // ])
+    // ]))
+    // .pipe($.if(prod, $.cssnano()))
+    // .pipe($.rename((path) => path.extname = '.wxss'))
     .pipe(gulp.dest('./dist'))
 })
 

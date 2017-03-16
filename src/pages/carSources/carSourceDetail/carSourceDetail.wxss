@@ -33,14 +33,15 @@
 }
 
 .carSourceDetailDialog .body {
-    margin: 30rpx 30rpx;
+    margin: 0rpx 30rpx 0rpx 30rpx;
 }
 
 .carSourceDetailDialog .body .first-part {
     display: flex;
     flex-direction: column;
-    padding-bottom: 26rpx;
     border-bottom: 1rpx solid #E4E4E4;
+    padding-top: 30rpx;
+    padding-bottom: 26rpx;
 }
 
 .carSourceDetailDialog .body .first-part .line-item {
@@ -148,20 +149,19 @@
     line-height: 22rpx;
 }
 .carSourceDetailDialog .body .second-part {
-    padding-top: 21rpx;
-    padding-bottom: 19rpx;
-    border-bottom: 1rpx solid #E4E4E4;
 }
 .carSourceDetailDialog .body .second-part .line-item {
-    padding-top: 28rpx;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1rpx solid #E4E4E4;
+    padding-top: 21rpx;
+    padding-bottom: 19rpx;
 }
-.carSourceDetailDialog .body .second-part .line-item:first-child{
-    padding-top: 0;
+.carSourceDetailDialog .body .second-part .line-item:last-child{
+    border-bottom: 1rpx solid #ffffff;
 }
-.carSourceDetailDialog .body .second-part .vertical {
+.carSourceDetailDialog .body .vertical {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -186,13 +186,31 @@
     height: 24rpx;
     width: 24rpx;
 }
+
+.carSourceDetailDialog .body .second-part .line-content {
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #333333;
+    line-height: 36rpx;
+}
 .carSourceDetailDialog .body .third-part {
 }
 .carSourceDetailDialog .body .third-part .line-item {
-    padding-top: 28rpx;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding-top: 28rpx;
+    padding-bottom: 30rpx;
+    border-bottom: 1rpx solid #E4E4E4;
+}
+.carSourceDetailDialog .body .third-part .line-item:last-child{
+    border-bottom: 1rpx solid #ffffff;
+}
+.carSourceDetailDialog .body .third-part .line-item-content {
+    padding-top: 28rpx;
+    padding-bottom: 30rpx;
+    display: flex;
+    flex-direction: column;
 }
 .carSourceDetailDialog .body .third-part .line-item .line-title {
     flex: 0 0 100rpx;
@@ -204,20 +222,30 @@
     letter-spacing: 0;
     line-height: 24rpx;
 }
-.carSourceDetailDialog .body .line-item .line-content {
-    text-align: left;
+.carSourceDetailDialog .body .third-part .line-item-content .line-content .content-highlight {
+    display: inline;
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #ED4149;
+    line-height: 24rpx;
+}
+.carSourceDetailDialog .body .third-part .line-item-content .line-content .content-text {
+    display: inline;
     font-family: "PingFangSC-Regular";
     font-size: 24rpx;
     color: #333333;
-    line-height: 36rpx;
+    line-height: 24rpx;
 }
-.carSourceDetailDialog .body .third-part .line-item .report-error {
+.carSourceDetailDialog .body .third-part .line-item-content .line-content {
+    width: 100%;
+    padding-bottom: 14rpx;
+}
+.carSourceDetailDialog .body .third-part .line-item-content .report-error {
     font-family: "PingFangSC-Regular";
     font-size: 24rpx;
     color: #3377EE;
     line-height: 24rpx;
 }
-
 .carSourceDetailDialog .body .line-item .icon-dropdownarrow {
     width: 16rpx;
     height: 16rpx;
@@ -229,7 +257,6 @@
     padding: 42rpx 30rpx;
     border-top: 1rpx solid #E4E4E4;
 }
-
 .carSourceDetailDialog .footer .carSources-section-price {
     display: flex;
     justify-content: flex-start;

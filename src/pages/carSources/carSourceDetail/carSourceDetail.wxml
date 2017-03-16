@@ -32,7 +32,7 @@
                 <view class="line-item">
                     <view class="line-title">车源信息:</view>
                     <view class="basic-infomation">
-                        <view wx:if="{{carSourceItem.sourceRegionDesc && carSourceItem.sourceRegionDesc.length}}" class="basic-label">{{carSourceItem.sourceRegionDesc}}</view>
+                        <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length}}" class="basic-label">{{carSourceItem.viewModelSelectedCarSourcePlace.name}}</view>
                         <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
                         <view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
                         <view
@@ -44,11 +44,11 @@
                     </view>
                 </view>
                 <view
-                        wx:if="{{carSourceItem.logistics && carSourceItem.logistics.length > 0}}"
+                        wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length > 0}}"
                         class="line-item"
                 >
                     <view
-                            wx:if="{{carSourceItem.logisticsFree}}"
+                            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
                             class="line-title"
                     >
                         包   邮   至:
@@ -57,18 +57,19 @@
                             wx:else
                             class="line-title"
                     >
-                        运   费   约: {{carSourceItem.selectedLogistics.logisticsFeeDesc}}
+                        运   费   约: {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.logisticsFeeDesc}}
                     </view>
 
                     <view
-                            wx:if="{{ carSourceItem.logisticsType === 'post' }}"
+                            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
                             class="logistics-list"
                     >
                         <view
-                                wx:for="{{carSourceItem.logistics}}"
+                                wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList}}"
                                 wx:for-item="logisticsItem"
                                 wx:for-index="logisticsItemIndex"
-                                class="logistics-block {{logisticsItemIndex == carSourceItem.selectedLogisticsIndex? 'selected': ''}}"
+                                wx:key="*this"
+                                class="logistics-block {{logisticsItemIndex == carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex ? 'selected' : ''}}"
                                 bindtap="{{carSourceDetailDialogSelectLogisticsBlock}}"
                                 data-sku-index="{{skuItemIndex}}"
                                 data-sku="{{skuItem}}"
@@ -78,7 +79,7 @@
                                 data-logistics="{{logisticsItem}}"
                         >
                             <view class="title">
-                                驿站{{carSourceItem.logistics.length > 1? logisticsItemIndex + 1: ''}}
+                                {{logisticsItem.viewModelDestTypeDesc}}
                             </view>
                             <view class="value">
                                 {{logisticsItem.name}}
@@ -87,13 +88,13 @@
                     </view>
                 </view>
                 <view
-                        wx:if="{{carSourceItem.logistics && carSourceItem.logistics.length > 0}}"
+                        wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
                         class="line-item"
                 >
                     <view class="line-title">物流时间:</view>
                     <view class="logistics-information">
                         <view class="logistics-date">
-                            {{carSourceItem.selectedLogistics.expectedDeliveryDaysDesc}}
+                            {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.expectedDeliveryDaysDesc}}
                         </view>
                         <view class="logistics-tips">
                             (物流信息仅供参考)
@@ -104,7 +105,7 @@
             <view
                     class="second-part"
                     bindtap="{{carSourceDetailDialogJumpTo}}"
-                    wx:if="{{carSourceItem.viewModelTagCollection.length > 0}}"
+                    wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}"
             >
                 <view
                         class="line-item"
@@ -113,7 +114,8 @@
                             class="tag-collection"
                     >
                         <view
-                                wx:for="{{carSourceItem.viewModelTagCollection}}"
+                                wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags}}"
+                                wx:key="*this"
                                 class="tag"
                         >
                             {{item}}
@@ -131,7 +133,7 @@
                 >
                     <view
                             class="line-content"
-                            wx:if="{{carSourceItem.supplierSelfSupport && carSourceItem.priceFixed}}"
+                            wx:if="{{carSourceItem.supplierSelfSupport && carSourceItem.viewModelSelectedCarSourcePlace.priceFixed}}"
                     >
                         一口价: 70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货
                     </view>
@@ -143,16 +145,19 @@
                     </view>
                 </view>
             </view>
-            <!--wx:if="{{!carSourceItem.supplierSelfSupport}}"-->
             <view
+                    wx:if="{{!carSourceItem.supplierSelfSupport}}"
                     class="third-part"
             >
                 <view
                         class="line-item"
                         bindtap="{{carSourceDetailDialogSwitchFold}}"
                 >
-                    <view class="line-title">查看原文</view>
-
+                    <view
+                            class="line-title"
+                    >
+                        查看原文
+                    </view>
                     <image
                             class="icon-dropdownarrow"
                             src="{{hasFoldOriginalText? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
@@ -161,18 +166,26 @@
                 </view>
                 <view
                         wx:if="{{hasFoldOriginalText}}"
-                        class="line-item"
+                        class="line-item-content"
                 >
-                    <view class="line-content">
-                        {{carSourceItem.originalText}}
-
+                    <scroll-view
+                            scroll-y style="height: 270rpx"
+                    >
+                        <view
+                                class="line-content"
+                        >
+                            <view
+                                    wx:for="{{carSourceItem.viewModelContentItems}}"
+                                    class="{{item.b ? 'content-highlight' : 'content-text'}}"
+                            >{{item.a}}</view>
+                        </view>
                         <view
                                 class="report-error"
                                 bindtap="{{carSourceDetailDialogReportError}}"
                         >
                             信息有误
                         </view>
-                    </view>
+                    </scroll-view>
                 </view>
             </view>
         </view>
@@ -182,18 +195,22 @@
             <!-- 供货价格 -->
             <view class = "carSources-section-price">
                 <image
-                        wx:if="{{ carSourceItem.viewModelDiscount !== 0 }}"
+                        wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
                         class="discount-icon"
-                        src="{{ carSourceItem.viewModelDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
+                        src="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
                 >
                 </image>
                 <view
-                        wx:if="{{ carSourceItem.viewModelDiscount !== 0 }}"
+                        wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
                         class="discount"
                 >
-                    {{ carSourceItem.viewModelDiscountDesc }}元/
+                    {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscountDesc}}元/
                 </view>
-                <view class="price">{{carSourceItem.viewModelPriceDesc}}</view>
+                <view
+                        class="price"
+                >
+                    {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelPriceDesc}}
+                </view>
                 <view
                         wx:if="{{carSourceItem.supplierSelfSupport}}"
                         class="logistics-information-tips"

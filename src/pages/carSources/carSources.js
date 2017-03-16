@@ -58,19 +58,22 @@ Page({
     console.log(app.globalData)
 
     // MARK： 目前只取地址列表中的第一个
-    const location = app.globalData.location
-    let data;
-    if (location.length > 0) {
-      data = {
-        userId: app.userInfo().userId,
-        pid: location[0].provinceId,
-        cid: location[0].cityId,
-        did: location[0].districtId
-      }
-    } else {
-      data = {
-        userId: app.userInfo().userId
-      }
+    const locations = app.globalData.location
+    const data = {
+      userId: app.userInfo().userId
+    }
+
+    const location = locations[0]
+    if (location.provinceId) {
+      data.pid = location.provinceId
+    }
+
+    if (location.cityId) {
+      data.cid = location.cityId
+    }
+
+    if (location.districtId) {
+      data.did = location.districtId
     }
 
     app.modules.request({
@@ -80,8 +83,8 @@ Page({
       success: function (res) {
         // let carSourcesBySkuInSpuList = []
         // for (let carSourcesBySkuInSpuItem of res.carSourcesBySkuInSpuList) {
-          // that.preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem)
-          // carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
+        // that.preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem)
+        // carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
         // }
 
         let filters = res.filters
@@ -221,10 +224,10 @@ Page({
    * @param carSourcesBySkuInSpuItem
    */
   preprocessCarSourcesBySkuInSpuItem (carSourcesBySkuInSpuItem) {
-    const tags = []
+    let tags = []
     for (let carSourceItem of carSourcesBySkuInSpuItem.carSourcesList) {
       this.processCarSourceItem(carSourceItem)
-      tags.concat(carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags)
+      tags = tags.concat(carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags)
     }
     // 合并不同的标签集合
     const tagsSet = new Set(tags)
@@ -335,6 +338,9 @@ Page({
     carSourceItem.viewModelSelectedCarSourcePlace = carSourcePlaceItem
   },
   selectCarSku (selectedCarSkuIndex, carSourcesBySkuInSpuList) {
+
+    console.log(carSourcesBySkuInSpuList)
+
     let actualCarSourcesBySkuInSpuList
     if (carSourcesBySkuInSpuList) {
       actualCarSourcesBySkuInSpuList = carSourcesBySkuInSpuList
@@ -349,7 +355,7 @@ Page({
       })
     } else {
       const section = actualCarSourcesBySkuInSpuList[selectedCarSkuIndex]
-      this.updateTheCarSku(section, selectedCarSkuIndex)
+      this.updateTheCarSku(selectedCarSkuIndex, section)
 
       this.setData({
         carSourcesBySkuInSpuList: actualCarSourcesBySkuInSpuList,
@@ -387,8 +393,10 @@ Page({
       if (selectedLogisticsDestination) {
         carSourcePlaceItem.viewModelSelectedLogisticsDestination = selectedLogisticsDestination
         carSourcePlaceItem.viewModelSelectedLogisticsDestinationIndex = selectedLogisticsDestinationIndex
-        selectedLogisticsDestination.viewModelPriceDesc = util.priceStringWithUnit(selectedLogisticsDestination.totalPrice)
-        selectedLogisticsDestination.viewModelDiscountDesc = util.priceStringWithUnit(selectedLogisticsDestination.discount)
+        carSourcePlaceItem.viewModelPrice = selectedLogisticsDestination.totalPrice
+        carSourcePlaceItem.viewModelPriceDesc = util.priceStringWithUnit(selectedLogisticsDestination.totalPrice)
+        carSourcePlaceItem.viewModelDiscount = selectedLogisticsDestination.discount
+        carSourcePlaceItem.viewModelDiscountDesc = util.priceStringWithUnit(selectedLogisticsDestination.discount)
         this.setData({
           carSourcesBySkuInSpuList: this.data.carSourcesBySkuInSpuList
         })
@@ -397,6 +405,10 @@ Page({
     }
     carSourcePlaceItem.viewModelSelectedLogisticsDestination = null
     carSourcePlaceItem.viewModelSelectedLogisticsDestinationIndex = -1
+    carSourcePlaceItem.viewModelPrice = carSourcePlaceItem.totalPrice
+    carSourcePlaceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourcePlaceItem.totalPrice)
+    carSourcePlaceItem.viewModelDiscount = carSourcePlaceItem.discount
+    carSourcePlaceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourcePlaceItem.discount)
     this.setData({
       carSourcesBySkuInSpuList: this.data.carSourcesBySkuInSpuList
     })
@@ -559,8 +571,6 @@ Page({
     this.selectCarSku(-1, newCarSourcesBySkuInSpuList)
   },
   getIdWithFiltersIndex (index) {
-    console.log(this.data.scrollFiltersSelectedIndexes)
-    console.log(this.data.scrollFilters)
     const selectedIndex = this.data.scrollFiltersSelectedIndexes[index]
     if (selectedIndex === -1) {
       return '-1'
@@ -639,7 +649,6 @@ Page({
       })
 
       let dropDownSubFiltersData;
-      console.log(filterItem)
       if (filterIndex != -1) {
         if (filterItem.items) {
           dropDownSubFiltersData = subFirstFilters.concat(filterItem.items)
@@ -675,7 +684,6 @@ Page({
    */
   handlerFilterSelected(e) {
     const that = this
-    console.log(e)
 
     const scrollFilterIndex = e.currentTarget.dataset.scrollFilterIndex
     const scrollFilterItem = e.currentTarget.dataset.scrollFilterItem
@@ -731,7 +739,6 @@ Page({
   handlerFollow(e) {
     const that = this
 
-    console.log(e)
     const skuIndex = e.currentTarget.dataset.skuIndex
     const carSourceIndex = e.currentTarget.dataset.carSourceIndex
     const carSource = e.currentTarget.dataset.carSource
@@ -829,7 +836,7 @@ Page({
   handlerBookCar(e){
     const that = this
 
-    const skuItem = e.currentTarget.dataset.skuItem
+    const skuItem = e.currentTarget.dataset.sku
     const carSourceItem = e.currentTarget.dataset.carSource
     const skuId = skuItem.carSku.skuId;
     const contact = app.globalData.mobile
@@ -885,17 +892,16 @@ Page({
    * @param e
    */
   handlerCarSourceDetail(e) {
+    const that = this
     const carSourceItem = e.currentTarget.dataset.carSource
     const skuItem = e.currentTarget.dataset.sku
+
     const hideDialog = this.$wuxCarSourceDetailDialog.open({
       carModel: this.data.carModelsInfo,
       skuItem: skuItem,
       carSourceItem: carSourceItem,
       bookCar: () => {
-        console.log("bookCar")
-      },
-      jumpTo: () => {
-        console.log("jumpTo")
+        that.handlerBookCar(e)
       },
       selectLogisticsBlock: (e) => {
         const skuIndex = e.currentTarget.dataset.skuIndex

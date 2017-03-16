@@ -481,7 +481,6 @@ page {
 .carSources-cell .carSources-cell-content .first-first-part {
 	display: flex;
 	justify-content: flex-start;
-	flex: 0 0 70%;
 }
 /* 车源基本信息 和 价格 */
 .carSources-cell .carSources-cell-content .second-part {
@@ -508,7 +507,8 @@ page {
 .carSources-cell .carSources-cell-content .supplier-name {
 	display: flex;
 	align-items: center;
-	max-width: 60%;
+	overflow: hidden;
+	width: 240rpx;
 }
 .carSources-cell .carSources-cell-content .supplier-name .name {
 	font-family: "PingFangSC-Medium";
@@ -521,19 +521,20 @@ page {
 	overflow: hidden;
 	text-overflow:ellipsis;
 	white-space: nowrap;
+	width: 200rpx;
 }
-.carSources-cell .carSources-cell-content .supplier-name .certification{
+.carSources-cell .carSources-cell-content .supplier-name .name .certification{
 	width: 23rpx;
 	height: 21rpx;
 	margin-right: 16rpx;
-	flex: 0 0 23rpx;
 }
 .carSources-cell .carSources-cell-content .supplier-name .contact{
 	width: 40rpx;
 	height: 40rpx;
-	flex: 0 0 40rpx;
 }
 .carSources-cell .carSources-cell-content .reliable{
+	display: flex;
+	align-items: center;
 	font-family: "PingFangSC-Regular";
 	font-size: 22rpx;
 	color: #3377EE;
@@ -544,12 +545,12 @@ page {
 .carSources-cell .carSources-cell-content .reliable image {
 	width: 40rpx;
 	height: 40rpx;
-	flex: 0 0 40rpx;
 }
 
 .carSources-cell .carSources-cell-content .carSources-cell-price {
 	display: flex;
 	justify-content: flex-end;
+	align-items: baseline;
 	min-width: 300rpx;
 }
 .carSources-cell .carSources-cell-content .carSources-cell-price .discount-icon {
@@ -650,6 +651,7 @@ page {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
+	flex: 0 0 180rpx;
 }
 .carSources-cell .carSources-cell-content .carSource-channel .publish-date {
 	font-family: "PingFangSC-Regular";
