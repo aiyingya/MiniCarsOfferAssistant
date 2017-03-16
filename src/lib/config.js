@@ -1,5 +1,5 @@
 /* 配置后台服务器地址 */
-let evn = 'dev'
+let evn = 'gqc'
 
 let ucServerHTTPSUrl = (function () {
   let HTTPS = {
