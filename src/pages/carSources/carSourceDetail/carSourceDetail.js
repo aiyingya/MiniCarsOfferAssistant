@@ -153,10 +153,12 @@ class wux {
          * 选择不同的物流终点
          * @param e
          */
-        $scope.carSourceDetailDialogSelectLogisticsBlock = (e) => {
+        $scope.carSourceDetailDialogSelectLogisticsBlock = function (e) {
           // 选择物流行为
-
-          noHideCarSourceDetailDialog(options.selectLogisticsBlock(e))
+          const carSource = options.selectLogisticsBlock(e)
+          $scope.setData({
+            [`$wux.carSourceDetailDialog.carSourceItem`]: carSource
+          })
         }
 
         $scope.carSourceDetailDialogSwitchFold = (e) => {
