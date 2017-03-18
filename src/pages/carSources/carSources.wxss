@@ -414,18 +414,22 @@ page {
 }
 /* 供货 车源 cell样式 */
 .carSources-cells {
+	padding: 10rpx 0rpx;
 	position: relative;
 	width: 100%;
 	overflow: hidden;
+	background-color: #F7F7F7;
 }
 .carSources-cells .carSources-nodata {
 	position: absolute;
 	top: 0;
 }
 .carSources-cell {
-	padding: 10rpx 10rpx 0rpx 10rpx;
-	background-color: #F7F7F7;
 	position: relative;
+	padding: 0 10rpx 10rpx 10rpx;
+}
+.carSources-cell:last-child {
+	padding-bottom: 0rpx;
 }
 .carSources-cell .carSources-cell-content {
 	background: #FFFFFF;
@@ -559,7 +563,7 @@ page {
 	display: flex;
 	align-items: center;
 	overflow: hidden;
-	width: 240rpx;
+	width: 320rpx;
 }
 .carSources-cell .carSources-cell-content .supplier-name .name {
 	font-family: "PingFangSC-Medium";
@@ -572,7 +576,7 @@ page {
 	overflow: hidden;
 	text-overflow:ellipsis;
 	white-space: nowrap;
-	width: 200rpx;
+	width: 280rpx;
 }
 .carSources-cell .carSources-cell-content .supplier-name .name .certification{
 	width: 23rpx;

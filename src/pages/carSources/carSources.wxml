@@ -323,7 +323,6 @@
 													</image>
 													<view
 															class="reliable-text"
-															wx:if="{{carSourceItem.hasBeenReliableByUser !== 0}}"
 													>
 														靠谱({{carSourceItem.hasBeenReliableCount}})
 													</view>

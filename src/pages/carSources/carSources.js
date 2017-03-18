@@ -104,7 +104,7 @@ Page({
           } else if (i == 1) {
             // 车源发布信息， 默认为 24小时
             scrollFilters.push(filter)
-            scrollFiltersSelectedIndexes.push(1)
+            scrollFiltersSelectedIndexes.push(-1)
             if (filter.items && filter.items.length) {
               sourcePublishDateFilterId = filter.items[1].id
             }
@@ -125,7 +125,7 @@ Page({
           scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
         })
 
-        const newCarSourcesBySkuInSpuList = that.updateSearchResult({sourcePublishDate: sourcePublishDateFilterId})
+        const newCarSourcesBySkuInSpuList = that.updateSearchResult({})
         that.selectCarSku(-1, newCarSourcesBySkuInSpuList)
         that.setData({
           carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
@@ -551,6 +551,7 @@ Page({
       }
     }
 
+    console.log(newCarSourcesBySkuInSpuList)
     return newCarSourcesBySkuInSpuList
   },
   getIdWithFiltersIndex (index) {
