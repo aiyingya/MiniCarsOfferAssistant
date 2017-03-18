@@ -482,6 +482,57 @@ page {
 	display: flex;
 	justify-content: flex-start;
 }
+
+.carSources-cell .carSources-cell-content .more {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+.carSources-cell .carSources-cell-content .more .line {
+	display: flex;
+	justify-content: space-around;
+}
+.carSources-cell .carSources-cell-content .more .item {
+	display: flex;
+	justify-content: space-around;
+	align-items: baseline;
+}
+.carSources-cell .carSources-cell-content .more .carSources-place {
+	background: rgba(241,124,124,0.08);
+	border-radius: 4rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 22rpx;
+	color: #F17C7C;
+	line-height: 24rpx;
+	margin-right: 10rpx;
+	padding: 8rpx 27rpx;
+}
+
+.carSources-cell .carSources-cell-content .more .carSources-cell-price {
+	display: flex;
+	justify-content: flex-end;
+	align-items: baseline;
+	min-width: 300rpx;
+}
+.carSources-cell .carSources-cell-content .more .carSources-cell-price .discount-icon {
+	width: 20rpx;
+	height: 24rpx;
+	position: relative;
+}
+.carSources-cell .carSources-cell-content .more .carSources-cell-price .discount {
+	font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+	color: #333333;
+	line-height: 26rpx;
+}
+.carSources-cell .carSources-cell-content .more .carSources-cell-price .price {
+	font-family: "SFUIDisplay-Regular";
+	font-size: 26rpx;
+	color: #ED4149;
+	letter-spacing: 0rpx;
+	line-height: 26rpx;
+}
+
 /* 车源基本信息 和 价格 */
 .carSources-cell .carSources-cell-content .second-part {
 	display: flex;

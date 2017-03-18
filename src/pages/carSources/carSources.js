@@ -309,6 +309,11 @@ Page({
       }
     }
     this.selectCarSourcePlace(selectedCarSourcePlace, carSourceItem)
+
+    // 更新发布时间
+    const publishDate = util.dateCompatibility(carSourceItem.publishDate)
+    carSourceItem.viewModelPublishDateDesc = util.dateDiff(publishDate)
+
     this.processCarSourcePlaceItem(selectedCarSourcePlace, carSourceItem)
   },
   processCarSourcePlaceItem (carSourcePlaceItem, carSourceItem) {
@@ -882,6 +887,7 @@ Page({
 
     carSourceItem.viewModelSelectedTabMore = true
 
+    console.log(carSourceItem)
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
 
     this.setData({
@@ -896,7 +902,6 @@ Page({
     const carSourceItem = e.currentTarget.dataset.carSource
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
-    console.log(this.data.carSourcesBySkuInSpuList)
     carSourceItem.viewModelSelectedTabMore = false
     this.selectCarSourcePlace(tabItem.value, carSourceItem)
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
@@ -916,9 +921,14 @@ Page({
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItem = e.currentTarget.dataset.carSource
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
+    const carSourcePlaceItem = e.currentTarget.dataset.carSourcePlaceItem
 
-    console.log(carSourceItem)
-    const hideDialog = this.$wuxCarSourceDetailDialog.open({
+    /// 判断有没有需要设置的 car source place， 没有则使用默认设置好的
+    if (carSourcePlaceItem) {
+      this.selectCarSourcePlace(carSourcePlaceItem, carSourceItem)
+    }
+
+    this.$wuxCarSourceDetailDialog.open({
       carModel: this.data.carModelsInfo,
       skuItem: skuItem,
       carSourceItem: carSourceItem,
@@ -932,24 +942,20 @@ Page({
         const logistics = e.currentTarget.dataset.logistics
 
         if (logisticsIndex != carSource.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex) {
-          console.log("索引不同")
-          console.log(carSource)
           carSource = that.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSource, carSource.viewModelSelectedCarSourcePlace, logisticsIndex)
-          console.log(carSource)
           that.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSource)
         } else {
-          console.log("索引相同")
           // 如果索引相同， 不作任何事情
         }
         return carSource
       },
       close: function () {
-        this.setData({
+        that.setData({
           carSourcesBySkuInSpuList: that.data.carSourcesBySkuInSpuList
         })
       },
       reportError: function (e) {
-        console.log("report error")
+        console.log('report error')
       }
     })
   },
