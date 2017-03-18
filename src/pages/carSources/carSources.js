@@ -921,11 +921,12 @@ Page({
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItem = e.currentTarget.dataset.carSource
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
-    const carSourcePlaceItem = e.currentTarget.dataset.carSourcePlaceItem
+    const carSourcePlaceItem = e.currentTarget.dataset.carSourcePlace
 
     /// 判断有没有需要设置的 car source place， 没有则使用默认设置好的
     if (carSourcePlaceItem) {
       this.selectCarSourcePlace(carSourcePlaceItem, carSourceItem)
+      this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
     }
 
     this.$wuxCarSourceDetailDialog.open({

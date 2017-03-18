@@ -251,7 +251,6 @@
 												data-sku-index="{{skuItemIndex}}"
 												data-car-source="{{carSourceItem}}"
 												data-car-source-index="{{carSourceItemIndex}}"
-												data-car-source-place="{{item.value}}"
 										>
 											{{item.name}}
 										</view>
@@ -418,7 +417,7 @@
 													<view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
 													<view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
 													<view
-															wx:if="{{ !(carSourceItem.sourceRegionDesc && carSourceItem.sourceRegionDesc.length) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
+															wx:if="{{ !(carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
 															class="basic-label"
 													>
 														车源信息暂无
