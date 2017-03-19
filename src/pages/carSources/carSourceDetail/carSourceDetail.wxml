@@ -178,6 +178,7 @@
                             >
                                 <view
                                         wx:for="{{carSourceItem.viewModelContentItems}}"
+                                        wx:key="*this"
                                         class="{{item.b ? 'content-highlight' : 'content-text'}}"
                                 >{{item.a}}</view>
                             </view>
