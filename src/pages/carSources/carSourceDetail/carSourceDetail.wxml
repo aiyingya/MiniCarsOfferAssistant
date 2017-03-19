@@ -1,5 +1,10 @@
 <template name="carSourceDetailDialog">
-    <view class="carSourceDetailDialog weui-mask {{ animateCss }}" hidden="{{ !visible }}"></view>
+    <view
+            class="carSourceDetailDialog weui-mask {{ animateCss }}"
+            hidden="{{ !visible }}"
+            bindtap="{{carSourceDetailDialogClose}}"
+    >
+    </view>
     <view class="carSourceDetailDialog weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
         <view
                 class="header"

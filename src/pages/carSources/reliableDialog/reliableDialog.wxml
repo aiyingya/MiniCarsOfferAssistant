@@ -1,5 +1,10 @@
 <template name="reliableDialog">
-    <view class="reliableDialog weui-mask {{ animateCss }}" hidden="{{ !visible }}"></view>
+    <view
+            class="reliableDialog weui-mask {{ animateCss }}"
+            hidden="{{ !visible }}"
+            bindtap="{{reliableDialogClose}}"
+    >
+    </view>
     <view class="reliableDialog weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
         <view
                 class="close"
