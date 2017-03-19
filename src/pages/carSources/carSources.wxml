@@ -175,7 +175,7 @@
 							</view>
 							<view
 									class="button confirm create-quoted"
-									bindtap="handlerCreateQuoted"
+									catchtap="handlerCreateQuoted"
 									data-sku="{{skuItem}}"
 							>
 								生成报价单

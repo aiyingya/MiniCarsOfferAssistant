@@ -965,10 +965,9 @@ Page({
     const skuItem = e.currentTarget.dataset.sku
 
     const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', this.data.carModelsInfo)
-    const carInfoKeyValueString = util.urlEncodeValueForKey('carInfo', skuItem.carSku)
 
     wx.navigateTo({
-      url: '../quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carInfoKeyValueString
+      url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString
     })
   },
   /**
