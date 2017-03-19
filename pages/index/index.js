@@ -200,5 +200,10 @@ Page({
 		wx.makePhoneCall({
 			phoneNumber: phone
 		})
-	}
+	},
+  handleToCharts() {
+    wx.navigateTo({
+      url: '../charts/charts'
+    })
+  }
 })

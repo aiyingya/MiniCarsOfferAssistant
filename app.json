@@ -11,7 +11,8 @@
 		"pages/login/login",
 		"pages/carList/carList",
 		"pages/usersQuote/usersQuote",
-		"pages/supplier/supplier"
+		"pages/supplier/supplier",
+		"pages/charts/charts"
   ],
   "window":{
     "backgroundTextStyle":"dark",

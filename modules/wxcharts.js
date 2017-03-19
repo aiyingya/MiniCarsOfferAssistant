@@ -12,12 +12,12 @@
 var config = {
     yAxisWidth: 15,
     yAxisSplit: 5,
-    xAxisHeight: 15,
+    xAxisHeight: 6,
     xAxisLineHeight: 15,
     legendHeight: 15,
     yAxisTitleWidth: 15,
     padding: 12,
-    columePadding: 3,
+    columePadding: 0,
     fontSize: 10,
     dataPointShape: ['diamond', 'circle', 'triangle', 'rect'],
     colors: ['#7cb5ec', '#f7a35c', '#434348', '#90ed7d', '#f15c80', '#8085e9'],
@@ -411,9 +411,10 @@ function getXAxisPoints(categories, opts, config) {
 
 function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config) {
     var process = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 1;
-
+    console.log(config)
     var points = [];
     var validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+  
     data.forEach(function (item, index) {
         if (item === null) {
             points.push(null);
@@ -422,7 +423,11 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
             point.x = xAxisPoints[index] + Math.round(eachSpacing / 2);
             var height = validHeight * (item - minRange) / (maxRange - minRange);
             height *= process;
-            point.y = opts.height - config.xAxisHeight - config.legendHeight - Math.round(height) - config.padding;
+            point.y = opts.height - config.xAxisHeight - config.legendHeight - Math.round(height) - config.padding ;
+            if(point.y < 58) {
+              point.y+=20
+            }
+          console.log(config.legendHeight)
             points.push(point);
         }
     });
@@ -468,6 +473,7 @@ function getYAxisTextList(series, opts, config) {
 function calYAxisData(series, opts, config) {
 
     var ranges = getYAxisTextList(series, opts, config);
+    
     var yAxisWidth = config.yAxisWidth;
     var rangesFormat = ranges.map(function (item) {
         item = util.toFixed(item, 2);
@@ -685,6 +691,7 @@ function drawPieText(series, opts, config, context, radius, center) {
 }
 
 function drawYAxisTitle(title, opts, config, context) {
+  
     var startX = config.xAxisHeight + (opts.height - config.xAxisHeight - measureText(title)) / 2;
     context.save();
     context.beginPath();
@@ -696,11 +703,170 @@ function drawYAxisTitle(title, opts, config, context) {
     context.stroke();
     context.closePath();
     context.restore();
+  
 }
+function drawYAxisDividingLine(categories, opts, config, context) {
+    var _getXAxisPoints4 = getXAxisPoints(categories, opts, config),
+        xAxisPoints = _getXAxisPoints4.xAxisPoints,
+        startX = _getXAxisPoints4.startX,
+        endX = _getXAxisPoints4.endX,
+        eachSpacing = _getXAxisPoints4.eachSpacing;
+  
+    var lineWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
+    
+    var moveX = lineWidth*0.3 + config.yAxisWidth;
+    var startY = 0;
+    var endY = opts.height - config.padding - config.xAxisHeight -1;
+  
+    context.beginPath();
+    context.rect(moveX+config.padding, startY , lineWidth*0.4, endY);
+    context.setFillStyle('#e2eaf7');
+    context.closePath();
+    context.fill();
+    categories.forEach(function (item, index) {
+//      var i = (index+1);
+//      if(index < (categories.length -1)) {
+//        context.beginPath();
+//        context.setStrokeStyle("#f85e5e");
+//        context.setLineWidth(1);
+//        context.moveTo((moveX*i+config.padding), startY);
+//        context.lineTo((moveX*i+config.padding), endY);
+//        context.closePath();
+//        context.stroke();
+//      }
+//      
+      // 对X轴列表做抽稀处理
+      var validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
+      var maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / 1.5));
+      var ratio = Math.ceil(categories.length / maxXAxisListLength);
 
+      categories = categories.map(function (item, index) {
+          return index % ratio !== 0 ? '' : item;
+      });
+
+      if (config._xAxisTextAngle_ === 0) {
+          context.beginPath();
+          context.setFontSize(config.fontSize);
+          categories.forEach(function (item, index) {
+              var offset = eachSpacing / 2 - measureText(item) / 2;
+              if(item.indexOf('适宜') != '-1') {
+                console.log(item)
+                context.setFillStyle("#427ddb");
+              }else {
+                context.setFillStyle("#a5a5a5");
+              }
+              context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
+          });
+          context.closePath();
+          context.stroke();
+      } else {
+          categories.forEach(function (item, index) {
+              context.save();
+              context.beginPath();
+              context.setFontSize(config.fontSize);
+              context.setFillStyle(opts.xAxis.fontColor || '#666666');
+              var textWidth = measureText(item);
+              var offset = eachSpacing / 2 - textWidth;
+
+              var _calRotateTranslate = calRotateTranslate(xAxisPoints[index] + eachSpacing / 2, startY + config.fontSize / 2 + 5, opts.height),
+                  transX = _calRotateTranslate.transX,
+                  transY = _calRotateTranslate.transY;
+
+              context.rotate(-1 * config._xAxisTextAngle_);
+              context.translate(transX, transY);
+              context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
+              context.closePath();
+              context.stroke();
+              context.restore();
+          });
+      }
+    });
+}
+function drawYAxisCoordLine(series, opts, config, context) {
+    
+    var _calYAxisData4 = calYAxisData(series, opts, config),
+        rangesFormat = _calYAxisData4.rangesFormat;
+    var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
+
+    var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+    var eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
+    var startX = config.padding + yAxisTotalWidth;
+    var endX = opts.width - config.padding;
+    var startY = config.padding;
+    var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+
+    var points = [];
+    for (var i = 0; i < config.yAxisSplit; i++) {
+        points.push(config.padding + eachSpacing * i);
+    }
+  
+    context.beginPath();
+    context.setStrokeStyle(opts.xAxis.gridColor || "#cccccc");
+    context.setLineWidth(1);
+    context.moveTo(startX, 4);
+    context.lineTo(startX, endY);
+    context.closePath();
+    context.stroke();
+  
+    context.beginPath();
+    context.setStrokeStyle(opts.yAxis.gridColor || "#cccccc");
+    context.setLineWidth(1);
+    points.forEach(function (item, index) {
+        context.moveTo(startX-4, item);
+        context.lineTo(startX, item);
+    });
+    context.closePath();
+    context.stroke();
+    context.beginPath();
+    context.setFontSize(config.fontSize);
+    context.setFillStyle(opts.yAxis.fontColor || '#666666');
+    rangesFormat.splice((rangesFormat.length-1),1)
+    rangesFormat.forEach(function (item, index) {
+        var pos = points[index] ? points[index] : endY;
+        context.fillText(item, (config.padding + config.yAxisTitleWidth), pos + config.fontSize / 2 -1);
+    });
+    context.closePath();
+    context.stroke();
+
+    if (opts.yAxis.title) {
+        drawYAxisTitle(opts.yAxis.title, opts, config, context);
+    }
+}
+function drawXAxisHint(series, opts, config, context) {
+    
+    var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
+    var lineWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
+    var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+    var eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
+    var startX = config.padding + yAxisTotalWidth + lineWidth*0.5 ;
+    var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+    
+    var endX = opts.width - config.padding;
+    var startY = config.padding;
+    var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+
+    
+  
+    context.beginPath();
+    context.setStrokeStyle("red");
+    // 设置填充颜色
+    context.setFillStyle("red"); 
+    // 绘制圆形区域
+    context.arc(startX, endY, 1, 0, 2 * Math.PI, false);
+    context.setLineWidth(1);
+    context.moveTo(startX, endY);
+    context.lineTo(startX+10, endY-40);
+  
+    context.moveTo(startX+10, endY-40);
+    context.lineTo(startX+20, endY-40);
+    context.fillText(opts.extra.hint, startX+25, endY-37);
+    context.closePath();
+    context.stroke();
+}
 function drawColumnDataPoints(series, opts, config, context) {
     var process = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
-
+    
+  
     var _calYAxisData = calYAxisData(series, opts, config),
         ranges = _calYAxisData.ranges;
 
@@ -711,15 +877,16 @@ function drawColumnDataPoints(series, opts, config, context) {
     var minRange = ranges.pop();
     var maxRange = ranges.shift();
     var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
-
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
         var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
         points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config);
-
+       
         // 绘制柱状数据图
         context.beginPath();
+        context.setStrokeStyle("#5274bc");
         context.setFillStyle(eachSeries.color);
+      
         points.forEach(function (item, index) {
             if (item !== null) {
                 var startX = item.x - item.width / 2 + 1;
@@ -730,6 +897,7 @@ function drawColumnDataPoints(series, opts, config, context) {
         });
         context.closePath();
         context.fill();
+        context.stroke();
     });
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
@@ -899,7 +1067,7 @@ function drawXAxis(categories, opts, config, context) {
     }
     context.closePath();
     context.stroke();
-
+    console.log(config.yAxisWidth ,config.yAxisTitleWidth)
     // 对X轴列表做抽稀处理
     var validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
     var maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / 1.5));
@@ -1214,7 +1382,7 @@ function drawCharts(type, opts, config, context) {
     var _calYAxisData = calYAxisData(series, opts, config),
         yAxisWidth = _calYAxisData.yAxisWidth;
 
-    config.yAxisWidth = yAxisWidth;
+    config.yAxisWidth = yAxisWidth + 20;
     if (categories && categories.length) {
         var _calCategoriesData = calCategoriesData(categories, opts, config),
             xAxisHeight = _calCategoriesData.xAxisHeight,
@@ -1252,8 +1420,13 @@ function drawCharts(type, opts, config, context) {
                 duration: duration,
                 onProcess: function onProcess(process) {
                     drawYAxis(series, opts, config, context);
+                    drawYAxisCoordLine(series, opts, config, context);
                     drawXAxis(categories, opts, config, context);
+                    
+                  
+                    drawYAxisDividingLine(opts.extra.area, opts, config, context)
                     _this.chartData.xAxisPoints = drawColumnDataPoints(series, opts, config, context, process);
+                    drawXAxisHint(categories, opts, config, context);
                     drawLegend(opts.series, opts, config, context);
                     drawCanvas(opts, context);
                 },
@@ -1345,7 +1518,6 @@ var Charts = function Charts(opts) {
     // such as chart point coordinate
     this.chartData = {};
     this.event = new Event();
-		console.log(this.context)
     drawCharts.call(this, opts.type, opts, config$$1, this.context);
 };
 

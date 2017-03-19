@@ -164,30 +164,35 @@ Page({
 					background: '#ECF0F7',
 					series: [{
             name: '1',
-            data: item.supply.chart.y
-          },{
-            name: '1',
-            data: [3,8,5]
+            data: item.supply.chart.y,
+            color: '#d2e1f6'
           }],
 					xAxis: {
-						disableGrid: true,
-						fontColor: '#999999',
-						gridColor: '#afafaf'
-					},
-					yAxis: {
-						disabled: true,
-						fontColor: '#4C6693',
-						format(val) {
-							return val.toFixed(2)
-						}
-					},
-					dataItem: {
-						color: '#ECF0F7'
-					},
-					width: that.windowWidth,
-					height: 80,
-					dataLabel: true,
-					dataPointShape: false
+            disableGrid: true,
+            fontColor: '#333333',
+            gridColor: '#333333'
+          },
+          yAxis: {
+            disabled: true,
+            fontColor: '#333333',
+            gridColor: '#333333',
+            min: 10,
+            max: 50,
+            format(val) {
+              return val.toFixed(0)
+            }
+          },
+          dataItem: {
+            color: '#ECF0F7'
+          },
+          width: that.windowWidth,
+          height: 110,
+          dataLabel: true,
+          dataPointShape: false,
+          extra: {
+            area: ['风险','适宜2.43~3.73','偏贵'],
+            hint: '参考成交价2.89'
+          }
 				})
 			}
 		}
