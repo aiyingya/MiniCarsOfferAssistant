@@ -406,8 +406,8 @@
 														data-sku-index="{{skuItemIndex}}"
 														data-car-source="{{carSourceItem}}"
 														data-car-source-index="{{carSourceItemIndex}}"
-														data-car-source-place="{{carSourcePlaceItem}}"
-														data-car-source-place-index="{{carSourcePlaceItemIndex}}"
+														data-car-source-place="{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1]}}"
+														data-car-source-place-index="{{carSourcePlaceItemIndex + 1}}"
 														class="item"
 												>
 													<!--右边-->
