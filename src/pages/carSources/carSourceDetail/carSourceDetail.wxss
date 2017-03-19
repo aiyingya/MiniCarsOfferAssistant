@@ -156,7 +156,6 @@
 .carSourceDetailDialog .body .second-part .line-item {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     border-bottom: 1rpx solid #E4E4E4;
     padding-top: 21rpx;
     padding-bottom: 19rpx;

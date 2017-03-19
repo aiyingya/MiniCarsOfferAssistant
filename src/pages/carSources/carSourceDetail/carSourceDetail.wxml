@@ -140,15 +140,11 @@
                         <view
                                 class="line-content"
                                 wx:if="{{carSourceItem.supplierSelfSupport && carSourceItem.viewModelSelectedCarSourcePlace.priceFixed}}"
-                        >
-                            一口价: 70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货
-                        </view>
+                        >一口价: 70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货</view>
                         <view
                                 class="line-content"
                                 wx:if="{{carSourceItem.supplierSelfSupport}}"
-                        >
-                            垫资拿车: 加盟门店可享支付定金拿车，详情请电话联系
-                        </view>
+                        >垫资拿车: 加盟门店可享支付定金拿车，详情请电话联系</view>
                     </view>
                 </view>
                 <view
