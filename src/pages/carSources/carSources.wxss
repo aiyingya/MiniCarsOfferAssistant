@@ -326,7 +326,10 @@ page {
 .carSources-section {
 	background-color: #fff;
 	position: relative;
-	border: 1rpx solid #E4E4E4;
+	border-bottom: 1rpx solid #E4E4E4;
+}
+.carSources-section:first-child {
+	border-top: 1rpx solid #E4E4E4;
 }
 .carSources-section .carSources-section-content {
 	padding: 25rpx 30rpx;
