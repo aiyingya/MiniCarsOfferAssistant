@@ -65,7 +65,7 @@ class wux {
        */
       defaults: {
         showCancel: !0,
-        hasFoldOriginalText: false,
+        hasFoldOriginalText: true,
         hasFoldTagCollection: false,
         spuId: '',
         carModel: {},
