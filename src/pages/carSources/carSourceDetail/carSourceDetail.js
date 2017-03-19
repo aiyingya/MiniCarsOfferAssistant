@@ -129,6 +129,7 @@ class wux {
           [`$wux.carSourceDetailDialog`]: options,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogClose`]: `carSourceDetailDialogClose`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogBookCar`]: `carSourceDetailDialogBookCar`,
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogContact`]: `carSourceDetailDialogContact`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogJumpTo`]: `carSourceDetailDialogJumpTo`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSelectLogisticsBlock`]: `carSourceDetailDialogSelectLogisticsBlock`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSwitchFold`]: `carSourceDetailDialogSwitchFold`,
@@ -141,6 +142,9 @@ class wux {
         }
         $scope.carSourceDetailDialogBookCar = (e) => {
           noHideCarSourceDetailDialog(options.bookCar(e))
+        }
+        $scope.carSourceDetailDialogContact = (e) => {
+          noHideCarSourceDetailDialog(options.contact(e))
         }
         $scope.carSourceDetailDialogJumpTo = (e) => {
           options.hasFoldTagCollection = !options.hasFoldTagCollection

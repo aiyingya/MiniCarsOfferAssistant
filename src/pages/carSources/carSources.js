@@ -808,10 +808,11 @@ Page({
     const skuIndex = e.currentTarget.dataset.skuIndex
     const carSourceIndex = e.currentTarget.dataset.carSourceIndex
     const carSource = e.currentTarget.dataset.carSource
-
-    const supplier = carSource.supplier
     const contact = carSource.supplier.contact;
 
+    this.actionContact(carModelsInfo.carModelId, skuIndex, carSourceIndex, carSource, contact)
+  },
+  actionContact (spuId, skuItemIndex, carSourceItemIndex, carSourceItem, contact) {
     wx.makePhoneCall({
       phoneNumber: contact,
       success: function (res) {
@@ -819,10 +820,10 @@ Page({
           // 非自营的供货商才可以评价靠谱与否
           const now = new Date()
           const value = {
-            skuIndex: skuIndex,
-            carSourceIndex: carSourceIndex,
-            spuId: carModelsInfo.carModelId,
-            carSource: carSource,
+            skuIndex: skuItemIndex,
+            carSourceIndex: carSourceItemIndex,
+            spuId: spuId,
+            carSource: carSourceItem,
             dateString: now.toDateString()
           }
           wx.setStorageSync('recent_contact', JSON.stringify(value))
@@ -839,6 +840,12 @@ Page({
     const skuId = skuItem.carSku.skuId;
     const contact = app.globalData.mobile
 
+    that.actionBookCar(skuId)
+  },
+  actionBookCar (skuId) {
+    const contact = app.globalData.mobile
+
+    const that = this
     const hideDialog = this.$wuxDialog.open({
       title: '发起定车后， 将会有工作人员与您联系',
       content: '',
@@ -922,11 +929,13 @@ Page({
   handlerCarSourceDetail (e) {
     const that = this
 
+    const carModelsInfo = this.data.carModelsInfo
     const skuItem = e.currentTarget.dataset.sku
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItem = e.currentTarget.dataset.carSource
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
     const carSourcePlaceItem = e.currentTarget.dataset.carSourcePlace
+    const contact = carSourceItem.supplier.contact
 
     /// 判断有没有需要设置的 car source place， 没有则使用默认设置好的
     if (carSourcePlaceItem) {
@@ -938,8 +947,11 @@ Page({
       carModel: this.data.carModelsInfo,
       skuItem: skuItem,
       carSourceItem: carSourceItem,
-      bookCar: function () {
-        that.handlerBookCar(e)
+      bookCar: function (e) {
+        that.actionBookCar(skuItem.skuId)
+      },
+      contact: function () {
+        that.actionContact(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, contact)
       },
       selectLogisticsBlock: function (e) {
         console.log(e)

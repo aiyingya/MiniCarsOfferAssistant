@@ -1,12 +1,14 @@
-.weui-dialog {
+.carSourceDetailDialog .weui-dialog {
     position: fixed;
-    z-index: 5000;
+    z-index: 999;
     width: 90%;
     max-width: 90%;
     max-height: 90%;
     text-align: left;
 }
-
+.carSourceDetailDialog .weui-mask {
+    z-index: 998;
+}
 .carSourceDetailDialog .header {
     display: flex;
     align-items: center;
