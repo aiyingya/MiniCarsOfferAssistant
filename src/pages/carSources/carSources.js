@@ -816,7 +816,7 @@ Page({
     wx.makePhoneCall({
       phoneNumber: contact,
       success: function (res) {
-        if (!carSource.supplierSelfSupport) {
+        if (!carSourceItem.supplierSelfSupport) {
           // 非自营的供货商才可以评价靠谱与否
           const now = new Date()
           const value = {
