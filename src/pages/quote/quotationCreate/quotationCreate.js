@@ -680,26 +680,6 @@ Page({
     }
   },
   headlerChangeColor (e) {
-
-
-
-    if (this.data.source === 'quotationDetail') {
-      let quotation = this.data.quotation
-      const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotation)
-
-      wx.navigateTo({
-        url: '/pages/changeCarColor/changeCarColor?' + quotationKeyValueString
-      })
-    } else if (this.data.source === 'carSources' || this.data.source === 'carModels') {
-      let carModelsInfo = e.currentTarget.dataset.carmodelinfo
-      let carSKUInfo = e.currentTarget.dataset.carskuinfo
-
-      let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
-      let carSKUInfoKeyValueString = util.urlEncodeValueForKey('carSKUInfo', carSKUInfo)
-
-      wx.navigateTo({
-        url: '/pages/changeCarColor/changeCarColor?' + carModelsInfoKeyValueString + '&' + carSKUInfoKeyValueString
-      })
-    }
+    // 输入车源
   }
 });
