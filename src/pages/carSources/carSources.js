@@ -505,6 +505,10 @@ Page({
     const selectedColorFilter = function (externalColorName,
                                           internalColorName,
                                           carSourcesBySkuItem) {
+      console.log(externalColorName)
+      console.log(internalColorName)
+      console.log(carSourcesBySkuItem)
+
       if (externalColorName === '全部') {
         return true
       } else {
@@ -535,19 +539,19 @@ Page({
             newCarSourcesList.push(carSourceItem)
           }
         }
-      }
 
-      if (newCarSourcesList.length) {
-        // 如果有值
-        const newCarSourcesBySkuItem = {}
-        newCarSourcesBySkuItem.carSourcesList = newCarSourcesList
-        newCarSourcesBySkuItem.carSku = {}
+        if (newCarSourcesList.length) {
+          // 如果有值
+          const newCarSourcesBySkuItem = {}
+          newCarSourcesBySkuItem.carSourcesList = newCarSourcesList
+          newCarSourcesBySkuItem.carSku = {}
 
-        Object.assign(newCarSourcesBySkuItem.carSku, carSourcesBySkuItem.carSku)
+          Object.assign(newCarSourcesBySkuItem.carSku, carSourcesBySkuItem.carSku)
 
-        this.preprocessCarSourcesBySkuInSpuItem(newCarSourcesBySkuItem)
+          this.preprocessCarSourcesBySkuInSpuItem(newCarSourcesBySkuItem)
 
-        newCarSourcesBySkuInSpuList.push(newCarSourcesBySkuItem)
+          newCarSourcesBySkuInSpuList.push(newCarSourcesBySkuItem)
+        }
       }
     }
 
@@ -606,10 +610,10 @@ Page({
     }
   },
   headlerRemoveRmendCarFacade() {
-    this.updateSearchResult({color: -1})
-    this.selectCarSku(-1)
+    const carSourcesBySkuInSpuList = this.updateSearchResult({color: -1})
+    this.selectCarSku(-1, carSourcesBySkuInSpuList)
     this.setData({
-      carSourcesBySkuInSpuList: this.data.carSourcesBySkuInSpuList,
+      carSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
       selectedSectionIndex: -1,
       showRmendCarFacade: false
     })
