@@ -48,4 +48,5 @@
     position: absolute;
     top: 30rpx;
     right: 30rpx;
+    margin: 15rpx;
 }
