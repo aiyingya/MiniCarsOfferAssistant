@@ -356,29 +356,29 @@
 										>
 											<!--更多选项卡-->
 											<view
-												wx:for="{{carSourceItem.viewModelTabMore}}"
-												wx:key="*this"
-												wx:for-item="carSourcePlaceItem"
-												wx:for-index="carSourcePlaceItemIndex"
-												class="line"
+													wx:for="{{carSourceItem.viewModelTabMore}}"
+													wx:key="*this"
+													wx:for-item="carSourcePlaceItem"
+													wx:for-index="carSourcePlaceItemIndex"
+													class="line"
 											>
+												<!--左边-->
 												<view
-													bindtap="handlerCarSourceDetail"
-													data-sku="{{skuItem}}"
-													data-sku-index="{{skuItemIndex}}"
-													data-car-source="{{carSourceItem}}"
-													data-car-source-index="{{carSourceItemIndex}}"
-													data-car-source-place="{{carSourcePlaceItem}}"
-													data-car-source-place-index="{{carSourcePlaceItemIndex}}"
-													class="item"
+														wx:if="{{carSourcePlaceItemIndex % 2 === 0}}"
+														bindtap="handlerCarSourceDetail"
+														data-sku="{{skuItem}}"
+														data-sku-index="{{skuItemIndex}}"
+														data-car-source="{{carSourceItem}}"
+														data-car-source-index="{{carSourceItemIndex}}"
+														data-car-source-place="{{carSourcePlaceItem}}"
+														data-car-source-place-index="{{carSourcePlaceItemIndex}}"
+														class="item"
 												>
-													<view
-														class="carSources-place"
-													>
+													<view class="carSources-place" >
 														{{carSourcePlaceItem.name}}货源
 													</view>
 													<!-- 供货价格 -->
-													<view class = "carSources-cell-price">
+													<view class="carSources-cell-price">
 														<image
 																wx:if="{{ carSourcePlaceItem.viewModelDiscount !== 0 }}"
 																class="discount-icon"
@@ -395,6 +395,43 @@
 																class="price"
 														>
 															{{ carSourcePlaceItem.viewModelPriceDesc }}
+														</view>
+													</view>
+												</view>
+
+												<view
+														wx:if="{{(carSourcePlaceItemIndex % 2 === 0) && carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1]}}"
+														bindtap="handlerCarSourceDetail"
+														data-sku="{{skuItem}}"
+														data-sku-index="{{skuItemIndex}}"
+														data-car-source="{{carSourceItem}}"
+														data-car-source-index="{{carSourceItemIndex}}"
+														data-car-source-place="{{carSourcePlaceItem}}"
+														data-car-source-place-index="{{carSourcePlaceItemIndex}}"
+														class="item"
+												>
+													<!--右边-->
+													<view class="carSources-place" >
+														{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].name}}货源
+													</view>
+													<!-- 供货价格 -->
+													<view class="carSources-cell-price">
+														<image
+																wx:if="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount !== 0 }}"
+																class="discount-icon"
+																src="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+														>
+														</image>
+														<view
+																wx:if="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount !== 0 }}"
+																class="discount"
+														>
+															{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscountDesc }}元/
+														</view>
+														<view
+																class="price"
+														>
+															{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelPriceDesc }}
 														</view>
 													</view>
 												</view>
@@ -516,4 +553,3 @@
 		</view>
 	</view>
 </view>
-
