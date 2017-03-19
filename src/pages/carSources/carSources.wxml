@@ -360,6 +360,7 @@
 													wx:key="*this"
 													wx:for-item="carSourcePlaceItem"
 													wx:for-index="carSourcePlaceItemIndex"
+                          wx:if="{{carSourcePlaceItemIndex % 2 === 0}}"
 													class="line"
 											>
 												<!--左边-->

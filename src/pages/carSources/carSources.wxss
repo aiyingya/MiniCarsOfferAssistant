@@ -498,6 +498,10 @@ page {
 .carSources-cell .carSources-cell-content .more .line {
 	display: flex;
 	justify-content: flex-start;
+  margin-bottom: 29rpx;
+}
+.carSources-cell .carSources-cell-content .more .line:last-child {
+  margin-bottom: 0rpx;
 }
 .carSources-cell .carSources-cell-content .more .item {
 	display: flex;
