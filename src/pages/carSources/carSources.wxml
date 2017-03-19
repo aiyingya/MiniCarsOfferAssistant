@@ -484,10 +484,10 @@
 
 											<!-- 第二部分 物流信息 -->
 											<view
-													wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination }}"
 													class="third-part"
 											>
 												<view
+														wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination }}"
 														class="logistics-information"
 												>
 													<view class="logistics">
@@ -509,18 +509,30 @@
 														</view>
 													</view>
 												</view>
-												<viewxw
+												<view
+													wx:else
+												>
+												</view>
+												<view
 														wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
 														class="logistics-information-tips"
 												>
 													(含运费)
-												</viewxw>
+												</view>
+												<view
+														wx:else
+														class="bare-price"
+												>
+													裸车价
+												</view>
 											</view>
 
 											<!-- 第三部分 标签 -->
-											<view class="forth-part">
+											<view
+													wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}"
+													class="forth-part"
+											>
 												<view
-														wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}"
 														class="tag-collection"
 												>
 													<view
