@@ -510,7 +510,7 @@
 													</view>
 												</view>
 												<viewxw
-														wx:if="{{carSourceItem.logisticsFree}}"
+														wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
 														class="logistics-information-tips"
 												>
 													(含运费)
