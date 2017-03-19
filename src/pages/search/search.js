@@ -81,9 +81,9 @@ Page({
 		let carModelsList = []
 		let searchNodata = false
 		console.log(results)	
-		if(results.type === 'SPU') {
+		if(results.type === 'CAR_SPU') {
 			url = that.data.YMC_HTTPS_URL + 'supply/car/spu/'+results.id
-		}else {
+		} else if (results.type === 'CAR_SERIES') {
 			url = that.data.YMC_HTTPS_URL + 'supply/car/spu'
 			data = {
 				carSeriesId: results.id
