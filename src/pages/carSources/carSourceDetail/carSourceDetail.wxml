@@ -223,6 +223,12 @@
                     >
                         (含运费)
                     </view>
+                    <view
+                            wx:else
+                            class="bare-price"
+                    >
+                        裸车价
+                    </view>
                 </view>
                 <!--立即订车-->
                 <view

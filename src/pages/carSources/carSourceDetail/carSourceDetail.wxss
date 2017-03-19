@@ -290,6 +290,12 @@
     color: #333333;
     line-height: 26rpx;
 }
+.carSourceDetailDialog .footer .bare-price {
+    font-family: "PingFangSC-Regular";
+    font-size: 24rpx;
+    color: #888888;
+    line-height: 24rpx;
+}
 .carSourceDetailDialog .footer .button {
     height: 56rpx;
     width: 160rpx;
