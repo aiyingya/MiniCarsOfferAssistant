@@ -214,7 +214,7 @@
                     {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelPriceDesc}}
                 </view>
                 <view
-                        wx:if="{{carSourceItem.supplierSelfSupport}}"
+                        wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
                         class="logistics-information-tips"
                 >
                     (含运费)
