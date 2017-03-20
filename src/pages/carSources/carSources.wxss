@@ -454,6 +454,17 @@ page {
 	margin-left: 20rpx;
 	flex-basis: 72rpx;
 	text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 20rpx;
+}
+.carSources-cell .carSources-cell-content .header .tab image{
+  width: 20rpx;
+  height: 12rpx;
+}
+.carSources-cell .carSources-cell-content .header .tab .image-hidden {
+  visibility: hidden;
 }
 .carSources-cell .carSources-cell-content .header .selected {
 	font-family: "PingFangSC-Regular";
@@ -510,14 +521,15 @@ page {
 	width: 50%;
 }
 .carSources-cell .carSources-cell-content .more .carSources-place {
-	background: rgba(241,124,124,0.08);
+	background: #EFEFEF;
 	border-radius: 4rpx;
 	font-family: "PingFangSC-Regular";
-	font-size: 22rpx;
-	color: #000000;
-	line-height: 24rpx;
 	margin-right: 10rpx;
 	padding: 8rpx 16rpx;
+  font-size: 22rpx;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 24rpx;
 }
 
 .carSources-cell .carSources-cell-content .more .carSources-cell-price {
