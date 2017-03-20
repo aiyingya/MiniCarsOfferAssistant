@@ -848,10 +848,11 @@ function drawXAxisHint(categories, opts, config, context) {
         var offset = eachSpacing / 2 - measureText(item) / 2 + 23;
         if(opts.extra.index === index) {
           var hintStartX = xAxisPoints[index] + offset;
+          var itemWidth = measureText(opts.extra.hint);
           var hintMoveX = index === categories.length -1 ? hintStartX-10 : hintStartX+10;
           var hintMoveX2 = index === categories.length -1 ? hintStartX-20 : hintStartX+20;
-          var hintMoveX3 = index === categories.length -1 ? hintStartX-25 : hintStartX+25;
-          console.log(index , categories.length -1)
+          var hintMoveX3 = index === categories.length -1 ? hintStartX-25-itemWidth : hintStartX+25;
+          
           context.beginPath();
           context.setStrokeStyle("red");
           // 设置填充颜色
