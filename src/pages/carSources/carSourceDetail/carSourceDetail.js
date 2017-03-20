@@ -101,19 +101,6 @@ class wux {
           typeof cb === 'function' && cb()
         }
 
-        // 渲染组件
-
-        $scope.setData({
-          [`$wux.carSourceDetailDialog`]: options,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogClose`]: `carSourceDetailDialogClose`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogBookCar`]: `carSourceDetailDialogBookCar`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogContact`]: `carSourceDetailDialogContact`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogJumpTo`]: `carSourceDetailDialogJumpTo`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogSelectLogisticsBlock`]: `carSourceDetailDialogSelectLogisticsBlock`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogSwitchFold`]: `carSourceDetailDialogSwitchFold`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogReportError`]: `carSourceDetailDialogReportError`
-        })
-
         if (!options.carSourceItem.supplierSelfSupport && !options.carSourceItem.viewModelContentItems) {
           options.carSourceItem.viewModelLoading = '原文加载中...'
 
@@ -159,6 +146,18 @@ class wux {
             }
           })
         }
+
+        // 渲染组件
+        $scope.setData({
+          [`$wux.carSourceDetailDialog`]: options,
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogClose`]: `carSourceDetailDialogClose`,
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogBookCar`]: `carSourceDetailDialogBookCar`,
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogContact`]: `carSourceDetailDialogContact`,
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogJumpTo`]: `carSourceDetailDialogJumpTo`,
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogSelectLogisticsBlock`]: `carSourceDetailDialogSelectLogisticsBlock`,
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogSwitchFold`]: `carSourceDetailDialogSwitchFold`,
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogReportError`]: `carSourceDetailDialogReportError`
+        })
 
         // 绑定tap事件
         $scope.carSourceDetailDialogClose = (e) => {
