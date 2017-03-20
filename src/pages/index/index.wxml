@@ -73,7 +73,6 @@
 			<view 
 				class="hotCarsType-cell"
 				wx:for="{{hotCarsTypes}}"
-				bindtap="handleToCharts"
 				>
 				<view class="hotCarsType-title">
 					<view class="hotCarsType-title-inner">{{item.name}}</view>

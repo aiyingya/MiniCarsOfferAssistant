@@ -845,7 +845,7 @@ function drawXAxisHint(categories, opts, config, context) {
     var ratio = Math.ceil(categories.length / maxXAxisListLength);
     
     categories.forEach(function (item, index) {
-        var offset = eachSpacing / 2 - measureText(item) / 2 + 23;
+        var offset = eachSpacing / 2 - measureText(item) / 2 + 21;
         if(opts.extra.index === index) {
           var hintStartX = xAxisPoints[index] + offset;
           var itemWidth = measureText(opts.extra.hint);
