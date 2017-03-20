@@ -421,7 +421,7 @@ page {
 	position: relative;
 	width: 100%;
 	overflow: hidden;
-	background-color: #F7F7F7;
+  background: #DCE1E6;
 }
 .carSources-cells .carSources-nodata {
 	position: absolute;
@@ -444,7 +444,7 @@ page {
 	justify-content: flex-end;
 	align-items: center;
 	height: 70rpx;
-	background: #FAFAFA;
+  background: #E9EDEF;
 }
 .carSources-cell .carSources-cell-content .header .tab {
 	font-family: "PingFangSC-Regular";
@@ -477,6 +477,7 @@ page {
 	color: #888888;
 }
 .carSources-cell .carSources-cell-content .body {
+  background: #F6F7F8;
 	padding:20rpx;
 }
 /* 供应商信息 和 报价降价信息 */
