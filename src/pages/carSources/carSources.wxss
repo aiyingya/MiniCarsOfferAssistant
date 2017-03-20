@@ -602,7 +602,7 @@ page {
 	display: flex;
 	align-items: center;
 	overflow: hidden;
-	width: 320rpx;
+  max-width: 320rpx;
 }
 .carSources-cell .carSources-cell-content .supplier-name .name {
 	font-family: "PingFangSC-Medium";

@@ -352,16 +352,17 @@
                         <view class="publish-date">
                           {{carSourceItem.viewModelPublishDateDesc}}
                         </view>
-                        <image
-                          wx:if="{{carSourceItem.publishChannel === '微信朋友圈'}}"
-                          src="/images/icons/icon_source_moments.png"
-                        >
-                        </image>
-                        <image
-                          wx:if="{{carSourceItem.publishChannel === '微信群'}}"
-                          src="/images/icons/icon_source_wechat.png"
-                        >
-                        </image>
+                        <!--朋友圈信息暂时去掉-->
+                        <!--<image-->
+                          <!--wx:if="{{carSourceItem.publishChannel === '微信朋友圈'}}"-->
+                          <!--src="/images/icons/icon_source_moments.png"-->
+                        <!--&gt;-->
+                        <!--</image>-->
+                        <!--<image-->
+                          <!--wx:if="{{carSourceItem.publishChannel === '微信群'}}"-->
+                          <!--src="/images/icons/icon_source_wechat.png"-->
+                        <!--&gt;-->
+                        <!--</image>-->
                       </view>
                     </view>
 
