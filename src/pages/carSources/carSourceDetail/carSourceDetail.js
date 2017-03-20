@@ -66,7 +66,7 @@ class wux {
       defaults: {
         showCancel: !0,
         hasFoldOriginalText: true,
-        hasFoldTagCollection: false,
+        hasFoldTagCollection: true,
         spuId: '',
         carModel: {},
         skuItem: {},
@@ -156,7 +156,8 @@ class wux {
           [`$wux.carSourceDetailDialog.carSourceDetailDialogJumpTo`]: `carSourceDetailDialogJumpTo`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSelectLogisticsBlock`]: `carSourceDetailDialogSelectLogisticsBlock`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSwitchFold`]: `carSourceDetailDialogSwitchFold`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogReportError`]: `carSourceDetailDialogReportError`
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogReportError`]: `carSourceDetailDialogReportError`,
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogContactStaff`]: `carSourceDetailDialogContactStaff`
         })
 
         // 绑定tap事件
@@ -173,6 +174,14 @@ class wux {
           options.hasFoldTagCollection = !options.hasFoldTagCollection
           $scope.setData({
             [`$wux.carSourceDetailDialog.hasFoldTagCollection`]: options.hasFoldTagCollection
+          })
+        }
+        $scope.carSourceDetailDialogContactStaff = (e) => {
+          const contact = e.currentTarget.dataset.contact
+          wx.makePhoneCall({
+            phoneNumber: contact,
+            success: function (res) {
+            }
           })
         }
 

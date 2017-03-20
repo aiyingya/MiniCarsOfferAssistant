@@ -114,43 +114,47 @@
           wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}"
         >
           <view
-            class="line-item"
+            class="line-item vertical"
           >
             <view
-              class="tag-collection"
+              class="line-content {{hasFoldTagCollection ? 'line-content-min' : ''}}"
+              wx:if="{{carSourceItem.supplierSelfSupport && carSourceItem.viewModelSelectedCarSourcePlace.priceFixed}}"
             >
               <view
-                wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags}}"
-                wx:key="*this"
-                class="tag"
+                class="tag-title"
               >
-                {{item}}
+                一口价
+              </view>
+              <view
+                class="tag-content"
+              >
+                70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货
               </view>
             </view>
+            <view
+              class="line-content {{hasFoldTagCollection ? 'line-content-min' : ''}}"
+              wx:if="{{carSourceItem.supplierSelfSupport}}"
+            >
+              <view
+                class="tag-title"
+              >
+                垫款发车
+              </view>
+              <view
+                class="tag-content"
+              >
+                <view>1-在途融资：车辆到驿站/门店，回款放车，单证回款当天邮寄</view>
+                <view>2-展车融资：车辆到店，先放车再回款，单证回款当天邮寄</view>
+                <view>3-利息：运输周期万四利息，到目的地后1-5天万四，6-15天万六；回款结息！</view>
+                <view>4-具体方案请联系： <view catchtap="{{carSourceDetailDialogContactStaff}}" data-contact="18501707827" class="contact" > 金洲锋 </view> </view>
+              </view>
+            </view>
+
             <image
               class="icon-dropdownarrow"
               src="{{hasFoldTagCollection? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
             >
             </image>
-          </view>
-          <view
-            class="line-item vertical"
-            wx:if="{{hasFoldTagCollection}}"
-          >
-            <view
-              class="line-content"
-              wx:if="{{carSourceItem.supplierSelfSupport && carSourceItem.viewModelSelectedCarSourcePlace.priceFixed}}"
-            >一口价: 70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货</view>
-            <view
-              class="line-content"
-              wx:if="{{carSourceItem.supplierSelfSupport}}"
-            ><view>垫款发车:</view>
-              <view>※在途融资：车辆到驿站/门店，回款放车，单证回款当天邮寄；</view>
-              <view>※展车融资：车辆到店，先放车再回款，单证回款当天邮寄；</view>
-
-              <view>利息：运输周期万四利息，到目的地后1-5天万四，6-15天万六；回款结息！</view>
-              <view>具体方案请联系：金洲锋 18501707827</view>>
-            </view>
           </view>
         </view>
         <view
