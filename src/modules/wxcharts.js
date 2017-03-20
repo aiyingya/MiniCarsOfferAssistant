@@ -847,8 +847,6 @@ function drawXAxisHint(categories, opts, config, context) {
     categories.forEach(function (item, index) {
         var offset = eachSpacing / 2 - measureText(item) / 2 + 23;
         if(opts.extra.index === index) {
-          console.log(index)
-          context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
           context.beginPath();
           context.setStrokeStyle("red");
           // 设置填充颜色
