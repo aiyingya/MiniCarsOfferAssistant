@@ -387,7 +387,7 @@ Page({
       tags.push('一口价')
     }
     if (carSourceItem.supplierSelfSupport) {
-      tags.push('垫资拿车')
+      tags.push('垫款发车')
     }
     carSourcePlaceItem.viewModelTags = tags
     this.updateTheLogisticsDestination(carSourcePlaceItem.viewModelSelectedLogisticsDestination, carSourcePlaceItem, carSourceItem)
@@ -944,6 +944,7 @@ Page({
     }
 
     this.$wuxCarSourceDetailDialog.open({
+      app: app,
       carModel: this.data.carModelsInfo,
       skuItem: skuItem,
       carSourceItem: carSourceItem,
