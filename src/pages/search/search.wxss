@@ -168,3 +168,12 @@ page {
 .searchNodata-inner {
 	margin-top: 50rpx;
 }
+.weui-toast {
+	display: inline-block;
+	width: auto;
+	min-height: auto;
+	padding: 30rpx 50rpx;
+}
+.weui-toast__content {
+	margin: 0;
+}

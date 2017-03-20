@@ -1,4 +1,6 @@
 <import src="../../components/carModel/carModel.wxml" />
+<import src="../../lib/toast/toast.wxml"/>
+<template is="toast" data="{{ ...$wux.toast }}"/>
 <!-- search.-->
 <view class="container search-wrapper">
 	<!-- searchbar.-->
