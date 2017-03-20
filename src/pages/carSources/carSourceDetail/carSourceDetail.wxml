@@ -1,258 +1,268 @@
 <template name="carSourceDetailDialog">
-    <view class="carSourceDetailDialog">
-        <view
-                class="weui-mask {{ animateCss }}"
-                hidden="{{ !visible }}"
-                bindtap="{{carSourceDetailDialogClose}}"
-        >
-        </view>
-        <view
-                class="weui-dialog {{ animateCss }}"
-                hidden="{{ !visible }}"
-        >
-            <view
-                    class="header"
-            >
-                <view
-                        class="title"
-                >
-                    【{{carModel.officialPriceStr}}】 {{carModel.carModelName}}
-                </view>
-                <view
-                        class="close"
-                        bindtap="{{carSourceDetailDialogClose}}"
-                >
-                    <image
-                            src="/images/icons/icon_close.png"
-                    >
-                    </image>
-                </view>
-            </view>
-            <view
-                    class="body"
-            >
-                <view
-                        class="first-part"
-                >
-                    <view class="line-item">
-                        <view class="line-title">车辆配色:</view>
-                        <view class="car-color">{{skuItem.carSku.externalColorName}} / {{skuItem.carSku.internalColorName}} </view>
-                    </view>
-                    <view class="line-item">
-                        <view class="line-title">车源信息:</view>
-                        <view class="basic-infomation">
-                            <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length}}" class="basic-label">{{carSourceItem.viewModelSelectedCarSourcePlace.name}}</view>
-                            <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
-                            <view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
-                            <view
-                                    wx:if="{{ !(carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
-                                    class="basic-label"
-                            >
-                                暂无
-                            </view>
-                        </view>
-                    </view>
-                    <view
-                            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length > 0}}"
-                            class="line-item"
-                    >
-                        <view
-                                wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
-                                class="line-title"
-                        >
-                            包   邮   至:
-                        </view>
-                        <view
-                                wx:else
-                                class="line-title"
-                        >
-                            运   费   约: {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc}}
-                        </view>
-
-                        <view
-                                wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
-                                class="logistics-list"
-                        >
-                            <view
-                                    wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList}}"
-                                    wx:for-item="logisticsItem"
-                                    wx:for-index="logisticsItemIndex"
-                                    wx:key="*this"
-                                    class="logistics-block {{logisticsItemIndex == carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex ? 'selected' : ''}}"
-                                    bindtap="{{carSourceDetailDialogSelectLogisticsBlock}}"
-                                    data-car-source="{{carSourceItem}}"
-                                    data-logistics-index="{{logisticsItemIndex}}"
-                                    data-logistics="{{logisticsItem}}"
-                            >
-                                <view class="title">
-                                    {{logisticsItem.viewModelDestTypeDesc}}
-                                </view>
-                                <view class="value">
-                                    {{logisticsItem.name}}
-                                </view>
-                            </view>
-                        </view>
-                    </view>
-                    <view
-                            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
-                            class="line-item"
-                    >
-                        <view class="line-title">物流时间:</view>
-                        <view class="logistics-information">
-                            <view class="logistics-date">
-                                {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelExpectedDeliveryDaysDesc}}
-                            </view>
-                            <view class="logistics-tips">
-                                (物流信息仅供参考)
-                            </view>
-                        </view>
-                    </view>
-                </view>
-                <view
-                        class="second-part"
-                        bindtap="{{carSourceDetailDialogJumpTo}}"
-                        wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}"
-                >
-                    <view
-                            class="line-item"
-                    >
-                        <view
-                                class="tag-collection"
-                        >
-                            <view
-                                    wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags}}"
-                                    wx:key="*this"
-                                    class="tag"
-                            >
-                                {{item}}
-                            </view>
-                        </view>
-                        <image
-                                class="icon-dropdownarrow"
-                                src="{{hasFoldTagCollection? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
-                        >
-                        </image>
-                    </view>
-                    <view
-                            class="line-item vertical"
-                            wx:if="{{hasFoldTagCollection}}"
-                    >
-                        <view
-                                class="line-content"
-                                wx:if="{{carSourceItem.supplierSelfSupport && carSourceItem.viewModelSelectedCarSourcePlace.priceFixed}}"
-                        >一口价: 70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货</view>
-                        <view
-                                class="line-content"
-                                wx:if="{{carSourceItem.supplierSelfSupport}}"
-                        ><view>垫款发车:</view>
-                          <view>※在途融资：车辆到驿站/门店，回款放车，单证回款当天邮寄；</view>
-                          <view>※展车融资：车辆到店，先放车再回款，单证回款当天邮寄；</view>
-
-                          <view>利息：运输周期万四利息，到目的地后1-5天万四，6-15天万六；回款结息！</view>
-                          <view>具体方案请联系：金洲锋 18501707827</view>>
-                        </view>
-                    </view>
-                </view>
-                <view
-                        wx:if="{{!carSourceItem.supplierSelfSupport}}"
-                        class="third-part"
-                >
-                    <view
-                            class="line-item"
-                            bindtap="{{carSourceDetailDialogSwitchFold}}"
-                    >
-                        <view
-                                class="line-title"
-                        >
-                            查看原文
-                        </view>
-                        <image
-                                class="icon-dropdownarrow"
-                                src="{{hasFoldOriginalText? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
-                        >
-                        </image>
-                    </view>
-                    <view
-                            wx:if="{{hasFoldOriginalText}}"
-                            class="line-item-content"
-                    >
-                        <scroll-view
-                                scroll-y style="height: 270rpx"
-                        >
-                            <view
-                                    class="line-content"
-                            >
-                                <view
-                                        wx:for="{{carSourceItem.viewModelContentItems}}"
-                                        wx:key="*this"
-                                        class="{{item.b ? 'content-highlight' : 'content-text'}}"
-                                >{{item.a}}</view>
-                            </view>
-                            <view
-                                    class="report-error"
-                                    bindtap="{{carSourceDetailDialogReportError}}"
-                            >
-                                信息有误
-                            </view>
-                        </scroll-view>
-                    </view>
-                </view>
-            </view>
-            <view
-                    class="footer"
-            >
-                <!-- 供货价格 -->
-                <view class = "carSources-section-price">
-                    <image
-                            wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
-                            class="discount-icon"
-                            src="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
-                    >
-                    </image>
-                    <view
-                            wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
-                            class="discount"
-                    >
-                        {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscountDesc}}元/
-                    </view>
-                    <view
-                            class="price"
-                    >
-                        {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelPriceDesc}}
-                    </view>
-                    <view
-                            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
-                            class="logistics-information-tips"
-                    >
-                        (含运费)
-                    </view>
-                    <view
-                            wx:else
-                            class="bare-price"
-                    >
-                        裸车价
-                    </view>
-                </view>
-                <!--立即订车-->
-                <view
-                        wx:if="{{carSourceItem.supplierSelfSupport}}"
-                        class="button confirm"
-                        bindtap="{{carSourceDetailDialogBookCar}}"
-                        data-sku-item="{{skuItem}}"
-                        data-car-source="{{carSourceItem}}"
-                >
-                    立即定车
-                </view>
-                <view
-                        wx:else
-                        class="button confirm"
-                        bindtap="{{carSourceDetailDialogContact}}"
-                        data-sku-item="{{skuItem}}"
-                        data-car-source="{{carSourceItem}}"
-                >
-                    电话联系
-                </view>
-            </view>
-        </view>
+  <view class="carSourceDetailDialog">
+    <view
+      class="weui-mask {{ animateCss }}"
+      hidden="{{ !visible }}"
+      bindtap="{{carSourceDetailDialogClose}}"
+    >
     </view>
+    <view
+      class="weui-dialog {{ animateCss }}"
+      hidden="{{ !visible }}"
+    >
+      <view
+        class="header"
+      >
+        <view
+          class="title"
+        >
+          【{{carModel.officialPriceStr}}】 {{carModel.carModelName}}
+        </view>
+        <view
+          class="close"
+          bindtap="{{carSourceDetailDialogClose}}"
+        >
+          <image
+            src="/images/icons/icon_close.png"
+          >
+          </image>
+        </view>
+      </view>
+      <view
+        class="body"
+      >
+        <view
+          class="first-part"
+        >
+          <view class="line-item">
+            <view class="line-title">车辆配色:</view>
+            <view class="car-color">{{skuItem.carSku.externalColorName}} / {{skuItem.carSku.internalColorName}} </view>
+          </view>
+          <view class="line-item">
+            <view class="line-title">车源信息:</view>
+            <view class="basic-infomation">
+              <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length}}" class="basic-label">{{carSourceItem.viewModelSelectedCarSourcePlace.name}}</view>
+              <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
+              <view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
+              <view
+                wx:if="{{ !(carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
+                class="basic-label"
+              >
+                暂无
+              </view>
+            </view>
+          </view>
+          <view
+            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length > 0}}"
+            class="line-item"
+          >
+            <view
+              wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
+              class="line-title"
+            >
+              包   邮   至:
+            </view>
+            <view
+              wx:else
+              class="line-title"
+            >
+              运   费   约: {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc}}
+            </view>
+
+            <view
+              wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
+              class="logistics-list"
+            >
+              <view
+                wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList}}"
+                wx:for-item="logisticsItem"
+                wx:for-index="logisticsItemIndex"
+                wx:key="*this"
+                class="logistics-block {{logisticsItemIndex == carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex ? 'selected' : ''}}"
+                bindtap="{{carSourceDetailDialogSelectLogisticsBlock}}"
+                data-car-source="{{carSourceItem}}"
+                data-logistics-index="{{logisticsItemIndex}}"
+                data-logistics="{{logisticsItem}}"
+              >
+                <view class="title">
+                  {{logisticsItem.viewModelDestTypeDesc}}
+                </view>
+                <view class="value">
+                  {{logisticsItem.name}}
+                </view>
+              </view>
+            </view>
+          </view>
+          <view
+            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
+            class="line-item"
+          >
+            <view class="line-title">物流时间:</view>
+            <view class="logistics-information">
+              <view class="logistics-date">
+                {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelExpectedDeliveryDaysDesc}}
+              </view>
+              <view class="logistics-tips">
+                (物流信息仅供参考)
+              </view>
+            </view>
+          </view>
+        </view>
+        <view
+          class="second-part"
+          bindtap="{{carSourceDetailDialogJumpTo}}"
+          wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}"
+        >
+          <view
+            class="line-item"
+          >
+            <view
+              class="tag-collection"
+            >
+              <view
+                wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags}}"
+                wx:key="*this"
+                class="tag"
+              >
+                {{item}}
+              </view>
+            </view>
+            <image
+              class="icon-dropdownarrow"
+              src="{{hasFoldTagCollection? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
+            >
+            </image>
+          </view>
+          <view
+            class="line-item vertical"
+            wx:if="{{hasFoldTagCollection}}"
+          >
+            <view
+              class="line-content"
+              wx:if="{{carSourceItem.supplierSelfSupport && carSourceItem.viewModelSelectedCarSourcePlace.priceFixed}}"
+            >一口价: 70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货</view>
+            <view
+              class="line-content"
+              wx:if="{{carSourceItem.supplierSelfSupport}}"
+            ><view>垫款发车:</view>
+              <view>※在途融资：车辆到驿站/门店，回款放车，单证回款当天邮寄；</view>
+              <view>※展车融资：车辆到店，先放车再回款，单证回款当天邮寄；</view>
+
+              <view>利息：运输周期万四利息，到目的地后1-5天万四，6-15天万六；回款结息！</view>
+              <view>具体方案请联系：金洲锋 18501707827</view>>
+            </view>
+          </view>
+        </view>
+        <view
+          wx:if="{{!carSourceItem.supplierSelfSupport}}"
+          class="third-part"
+        >
+          <view
+            class="line-item"
+            bindtap="{{carSourceDetailDialogSwitchFold}}"
+          >
+            <view
+              class="line-title"
+            >
+              查看原文
+            </view>
+            <image
+              class="icon-dropdownarrow"
+              src="{{hasFoldOriginalText? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
+            >
+            </image>
+          </view>
+          <view
+            wx:if="{{hasFoldOriginalText}}"
+            class="line-item-content"
+          >
+            <scroll-view
+              scroll-y style="height: 270rpx"
+            >
+              <view
+                class="line-content"
+              >
+                <view
+                  wx:if="{{carSourceItem.viewModelContentItems}}"
+                >
+                  <view
+                    wx:for="{{carSourceItem.viewModelContentItems}}"
+                    wx:key="*this"
+                    class="{{item.b ? 'content-highlight' : 'content-text'}}"
+                  >{{item.a}}</view>
+                  <view
+                    class="report-error"
+                    bindtap="{{carSourceDetailDialogReportError}}"
+                  >
+                    信息有误
+                  </view>
+                </view>
+                <view
+                  wx:else
+                  class="content-text"
+                >
+                  {{carSourceItem.viewModelLoading}}
+                </view>
+              </view>
+            </scroll-view>
+          </view>
+        </view>
+      </view>
+      <view
+        class="footer"
+      >
+        <!-- 供货价格 -->
+        <view class = "carSources-section-price">
+          <image
+            wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
+            class="discount-icon"
+            src="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
+          >
+          </image>
+          <view
+            wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
+            class="discount"
+          >
+            {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscountDesc}}元/
+          </view>
+          <view
+            class="price"
+          >
+            {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelPriceDesc}}
+          </view>
+          <view
+            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
+            class="logistics-information-tips"
+          >
+            (含运费)
+          </view>
+          <view
+            wx:else
+            class="bare-price"
+          >
+            裸车价
+          </view>
+        </view>
+        <!--立即订车-->
+        <view
+          wx:if="{{carSourceItem.supplierSelfSupport}}"
+          class="button confirm"
+          bindtap="{{carSourceDetailDialogBookCar}}"
+          data-sku-item="{{skuItem}}"
+          data-car-source="{{carSourceItem}}"
+        >
+          立即定车
+        </view>
+        <view
+          wx:else
+          class="button confirm"
+          bindtap="{{carSourceDetailDialogContact}}"
+          data-sku-item="{{skuItem}}"
+          data-car-source="{{carSourceItem}}"
+        >
+          电话联系
+        </view>
+      </view>
+    </view>
+  </view>
 </template>

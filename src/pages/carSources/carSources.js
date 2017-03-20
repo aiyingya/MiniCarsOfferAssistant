@@ -944,6 +944,7 @@ Page({
     }
 
     this.$wuxCarSourceDetailDialog.open({
+      app: app,
       carModel: this.data.carModelsInfo,
       skuItem: skuItem,
       carSourceItem: carSourceItem,

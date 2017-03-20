@@ -80,28 +80,6 @@ class wux {
        */
       open(opts = {}) {
         const options = extend(clone(this.defaults), opts)
-        /// 原文基本数据
-
-        const contentItems = []
-        const content = options.carSourceItem.content
-        if (content && content.length) {
-          const indexOf = options.carSourceItem.indexOf
-          for (let i = 0; i < content.length; i++) {
-            const contentItem = content[i]
-            if (indexOf.includes(i)) {
-              contentItems.push({
-                a: contentItem,
-                b: true
-              })
-            } else {
-              contentItems.push({
-                a: contentItem,
-                b: false
-              })
-            }
-          }
-          options.carSourceItem.viewModelContentItems = contentItems
-        }
 
         if (options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
           for (let logisticsDestination of options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
@@ -135,6 +113,52 @@ class wux {
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSwitchFold`]: `carSourceDetailDialogSwitchFold`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogReportError`]: `carSourceDetailDialogReportError`
         })
+
+        if (!options.carSourceItem.supplierSelfSupport && !options.carSourceItem.viewModelContentItems) {
+          options.carSourceItem.viewModelLoading = '原文加载中...'
+
+          const app = options.app
+          app.modules.request({
+            url: app.config.ymcServerHTTPSUrl + 'product/car/source/' + options.carSourceItem.id + '/content',
+            loadingType: 'none',
+            method: 'GET',
+            success: function (res) {
+              if (res) {
+                /// 原文基本数据
+                const contentItems = []
+                const content = res.content
+                if (content && content.length) {
+                  const indexOf = res.indexOf
+                  for (let i = 0; i < content.length; i++) {
+                    const contentItem = content[i]
+                    if (indexOf.includes(i)) {
+                      contentItems.push({
+                        a: contentItem,
+                        b: true
+                      })
+                    } else {
+                      contentItems.push({
+                        a: contentItem,
+                        b: false
+                      })
+                    }
+                  }
+                  options.carSourceItem.viewModelContentItems = contentItems
+                }
+              } else {
+                options.carSourceItem.viewModelLoading = '加载失败'
+              }
+            },
+            fail: function () {
+              options.carSourceItem.viewModelLoading = '加载失败'
+            },
+            complete: function () {
+              $scope.setData({
+                [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem
+              })
+            }
+          })
+        }
 
         // 绑定tap事件
         $scope.carSourceDetailDialogClose = (e) => {
