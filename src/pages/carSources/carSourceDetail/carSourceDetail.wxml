@@ -144,7 +144,13 @@
                         <view
                                 class="line-content"
                                 wx:if="{{carSourceItem.supplierSelfSupport}}"
-                        >垫资拿车: 加盟门店可享支付定金拿车，详情请电话联系</view>
+                        ><view>垫款发车:</view>
+                          <view>※在途融资：车辆到驿站/门店，回款放车，单证回款当天邮寄；</view>
+                          <view>※展车融资：车辆到店，先放车再回款，单证回款当天邮寄；</view>
+
+                          <view>利息：运输周期万四利息，到目的地后1-5天万四，6-15天万六；回款结息！</view>
+                          <view>具体方案请联系：金洲锋 18501707827</view>>
+                        </view>
                     </view>
                 </view>
                 <view
