@@ -237,8 +237,9 @@ Page({
           dataPointShape: false,
           extra: {
             area: ['风险','适宜2.43~3.73','偏贵'],
-            hint: '参考成交价2.89',
-            ratio: '0.4'
+            hint: item.supply.chart.hint,
+            ratio: '0.4',
+            index: item.supply.chart.priceIndex 
           }
 				})
 			}

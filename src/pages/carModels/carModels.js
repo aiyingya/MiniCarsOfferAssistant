@@ -42,12 +42,12 @@ Page({
 					carSeriesId: carsInfo.id
 				},
 				success: function(res) {
-					let carModelsList = res.content
-					let filters = res.filters
-					let filtersData 
-					if(carModelsList) {
-						
-						that.drawCanvas(carModelsList)
+          if(res) {
+            let carModelsList = res.content
+            let filters = res.filters
+            let filtersData 
+            
+            that.drawCanvas(carModelsList)
 						for(let item of filters) {
 							filtersData = item.items
 						}
@@ -57,7 +57,7 @@ Page({
 							cacheCarModelsList: carModelsList,
 							filtersData: filtersData
 						})
-					}
+          }
 				}
 			})
 		}
@@ -202,8 +202,9 @@ Page({
           dataPointShape: false,
           extra: {
             area: ['风险','适宜2.43~3.73','偏贵'],
-            hint: '参考成交价2.89',
-            ratio: '0.4'
+            hint: item.supply.chart.hint,
+            ratio: '0.4',
+            index: item.supply.chart.priceIndex 
           }
 				})
 			}

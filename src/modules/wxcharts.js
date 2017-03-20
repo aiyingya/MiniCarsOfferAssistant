@@ -411,7 +411,6 @@ function getXAxisPoints(categories, opts, config) {
 
 function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config) {
     var process = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 1;
-    console.log(config)
     var points = [];
     var validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
   
@@ -427,7 +426,6 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
             if(point.y < 58) {
               point.y+=20
             }
-          console.log(config.legendHeight)
             points.push(point);
         }
     });
@@ -750,7 +748,6 @@ function drawYAxisDividingLine(categories, opts, config, context) {
           categories.forEach(function (item, index) {
               var offset = eachSpacing / 2 - measureText(item) / 2;
               if(item.indexOf('适宜') != '-1') {
-                console.log(item)
                 context.setFillStyle("#427ddb");
               }else {
                 context.setFillStyle("#a5a5a5");
@@ -832,36 +829,43 @@ function drawYAxisCoordLine(series, opts, config, context) {
         drawYAxisTitle(opts.yAxis.title, opts, config, context);
     }
 }
-function drawXAxisHint(series, opts, config, context) {
-    
-    var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
-    var lineWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
-    var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
-    var eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
-    var startX = config.padding + yAxisTotalWidth + lineWidth*0.5 ;
-    var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
-    
-    var endX = opts.width - config.padding;
-    var startY = config.padding;
-    var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+function drawXAxisHint(categories, opts, config, context) {
 
+    var _getXAxisPoints4 = getXAxisPoints(categories, opts, config),
+        xAxisPoints = _getXAxisPoints4.xAxisPoints,
+        startX = _getXAxisPoints4.startX,
+        endX = _getXAxisPoints4.endX,
+        eachSpacing = _getXAxisPoints4.eachSpacing;
+
+    var startY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    var endY = startY + config.xAxisLineHeight;
     
-  
-    context.beginPath();
-    context.setStrokeStyle("red");
-    // 设置填充颜色
-    context.setFillStyle("red"); 
-    // 绘制圆形区域
-    context.arc(startX, endY, 1, 0, 2 * Math.PI, false);
-    context.setLineWidth(1);
-    context.moveTo(startX, endY);
-    context.lineTo(startX+10, endY-40);
-  
-    context.moveTo(startX+10, endY-40);
-    context.lineTo(startX+20, endY-40);
-    context.fillText(opts.extra.hint, startX+25, endY-37);
-    context.closePath();
-    context.stroke();
+    var validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
+    var maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / 1.5));
+    var ratio = Math.ceil(categories.length / maxXAxisListLength);
+    
+    categories.forEach(function (item, index) {
+        var offset = eachSpacing / 2 - measureText(item) / 2 + 23;
+        if(opts.extra.index === index) {
+          console.log(index)
+          context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
+          context.beginPath();
+          context.setStrokeStyle("red");
+          // 设置填充颜色
+          context.setFillStyle("red"); 
+          // 绘制圆形区域
+          context.arc(xAxisPoints[index] + offset, startY, 1, 0, 2 * Math.PI, false);
+          context.setLineWidth(1);
+          context.moveTo(xAxisPoints[index] + offset, startY);
+          context.lineTo(xAxisPoints[index] + offset+10, startY-40);
+
+          context.moveTo(xAxisPoints[index] + offset+10, startY-40);
+          context.lineTo(xAxisPoints[index] + offset+20, startY-40);
+          context.fillText(opts.extra.hint, xAxisPoints[index] + offset+25, startY-37);
+          context.closePath();
+          context.stroke();
+        }
+    });
 }
 function drawColumnDataPoints(series, opts, config, context) {
     var process = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
@@ -1067,7 +1071,6 @@ function drawXAxis(categories, opts, config, context) {
     }
     context.closePath();
     context.stroke();
-    console.log(config.yAxisWidth ,config.yAxisTitleWidth)
     // 对X轴列表做抽稀处理
     var validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth;
     var maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / 1.5));
@@ -1420,11 +1423,9 @@ function drawCharts(type, opts, config, context) {
                 duration: duration,
                 onProcess: function onProcess(process) {
                     drawYAxis(series, opts, config, context);
-                    drawYAxisCoordLine(series, opts, config, context);
                     drawXAxis(categories, opts, config, context);
-                    
-                  
-                    drawYAxisDividingLine(opts.extra.area, opts, config, context)
+                    drawYAxisCoordLine(series, opts, config, context);
+                    //drawYAxisDividingLine(opts.extra.area, opts, config, context)
                     _this.chartData.xAxisPoints = drawColumnDataPoints(series, opts, config, context, process);
                     drawXAxisHint(categories, opts, config, context);
                     drawLegend(opts.series, opts, config, context);

@@ -59,7 +59,7 @@
 
 	<view 
 	  class="carModels-cells"
-	  wx:if="carModelsList.length > 0"
+	  wx:if="{{carModelsList.length > 0}}"
 	  >
 		<block 
 			wx:for="{{carModelsList}}"
@@ -67,8 +67,9 @@
 			<template is="carModel" data="{{item,showCharts}}" /> 
 		</block>
 	</view>
+	
 	<view 
-   class="nodata"
+   class="nodata" 
    wx:else
    >
     <icon type="warn" size="60" color="#cccccc"></icon>
@@ -76,4 +77,5 @@
       <view class="icon-box__desc">抱歉！没有相关车信息</view>
     </view>	
 	</view>
+	
 </view>
