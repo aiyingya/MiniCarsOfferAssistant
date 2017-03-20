@@ -70,7 +70,7 @@
 	
 	<view 
    class="nodata" 
-   wx:else
+   wx:if="{{carModelsList.length === 0 && showNodata}}"
    >
     <icon type="warn" size="60" color="#cccccc"></icon>
     <view class="icon-box__ctn">

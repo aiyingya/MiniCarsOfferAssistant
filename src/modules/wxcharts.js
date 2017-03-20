@@ -847,19 +847,24 @@ function drawXAxisHint(categories, opts, config, context) {
     categories.forEach(function (item, index) {
         var offset = eachSpacing / 2 - measureText(item) / 2 + 23;
         if(opts.extra.index === index) {
+          var hintStartX = xAxisPoints[index] + offset;
+          var hintMoveX = index === categories.length -1 ? hintStartX-10 : hintStartX+10;
+          var hintMoveX2 = index === categories.length -1 ? hintStartX-20 : hintStartX+20;
+          var hintMoveX3 = index === categories.length -1 ? hintStartX-25 : hintStartX+25;
+          console.log(index , categories.length -1)
           context.beginPath();
           context.setStrokeStyle("red");
           // 设置填充颜色
           context.setFillStyle("red"); 
           // 绘制圆形区域
-          context.arc(xAxisPoints[index] + offset, startY, 1, 0, 2 * Math.PI, false);
+          context.arc(hintStartX, startY, 1, 0, 2 * Math.PI, false);
           context.setLineWidth(1);
-          context.moveTo(xAxisPoints[index] + offset, startY);
-          context.lineTo(xAxisPoints[index] + offset+10, startY-40);
+          context.moveTo(hintStartX, startY);
+          context.lineTo(hintMoveX, startY-40);
 
-          context.moveTo(xAxisPoints[index] + offset+10, startY-40);
-          context.lineTo(xAxisPoints[index] + offset+20, startY-40);
-          context.fillText(opts.extra.hint, xAxisPoints[index] + offset+25, startY-37);
+          context.moveTo(hintMoveX, startY-40);
+          context.lineTo(hintMoveX2, startY-40);
+          context.fillText(opts.extra.hint, hintMoveX3, startY-37);
           context.closePath();
           context.stroke();
         }
