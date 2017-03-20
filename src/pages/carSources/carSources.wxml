@@ -153,7 +153,6 @@
           </view>
         </view>
       </view>
-      <!--</scroll-view>-->
       <!-- 货源列表 -->
       <view class="carSources-sections">
         <view
@@ -214,11 +213,20 @@
               </view>
             </view>
             <!-- 货源右侧的展开标记 -->
+            <view class="dropdownarrow">
+              <view
+                wx:if="{{skuItemIndex !== selectedSectionIndex}}"
+                class="carsource-count"
+              > <view class="carsource-count-text">
+                {{skuItem.carSku.viewModelCarSourceCount}}
+                </view>
+              </view>
             <image
               class="icon-dropdownarrow"
               src="{{skuItemIndex === selectedSectionIndex? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
             >
             </image>
+            </view>
           </view>
 
           <view wx:if="{{skuItemIndex === selectedSectionIndex}}">

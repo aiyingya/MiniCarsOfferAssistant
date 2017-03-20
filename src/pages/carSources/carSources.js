@@ -217,6 +217,7 @@ Page({
     // 合并不同的标签集合
     const tagsSet = new Set(tags)
     carSourcesBySkuInSpuItem.carSku.viewModelTags = [...tagsSet]
+    carSourcesBySkuInSpuItem.carSku.viewModelCarSourceCount = carSourcesBySkuInSpuItem.carSourcesList.length
   },
   /**
    * 处理车源对象

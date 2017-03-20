@@ -407,12 +407,31 @@ page {
 	margin-right: 10rpx;
 	padding: 8rpx 27rpx;
 }
+.carSources-section .carSources-section-content .dropdownarrow {
+  display: flex;
+  align-items: flex-end;
+  position: absolute;
+  right: 30rpx;
+  bottom: 20rpx;
+}
+.carSources-section .carSources-section-content .carsource-count {
+  width: 32rpx;
+  height: 32rpx;
+  background: rgba(241, 124, 124, 0.1);
+  border-radius: 100%;
+  margin-right: 15rpx;
+}
+.carSources-section .carSources-section-content .carsource-count-text {
+  font-family: "PingFangSC-Regular";
+  font-size: 20rpx;
+  color: #F17C7C;
+  line-height: 24rpx;
+  padding: 4rpx 6rpx;
+  text-align: center;
+}
 .carSources-section .carSources-section-content .icon-dropdownarrow {
 	width: 16rpx;
 	height: 16rpx;
-	position: absolute;
-	right: 30rpx;
-	bottom: 20rpx;
 	margin-top: -8rpx;
 }
 /* 供货 车源 cell样式 */
