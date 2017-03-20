@@ -106,7 +106,7 @@ Page({
 			CarsModeleSelectId: selectId,
 			carModelsList: newModelsList,
 			showRmendCarFacade: false,
-			showCharts: false
+			showCharts: true
 		})
 	},
 	handlerToCarSources (e) {
