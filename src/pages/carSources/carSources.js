@@ -308,6 +308,8 @@ Page({
         selectedCarSourcePlace = carSourcePlaceLowest
       }
     }
+
+    carSourceItem.viewModelSelectedTab = 0
     this.selectCarSourcePlace(selectedCarSourcePlace, carSourceItem)
 
     // 更新发布时间
@@ -897,7 +899,7 @@ Page({
     const carSourceItem = e.currentTarget.dataset.carSource
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
-    carSourceItem.viewModelSelectedTabMore = true
+    carSourceItem.viewModelSelectedTab = -1
 
     console.log(carSourceItem)
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
@@ -914,7 +916,7 @@ Page({
     const carSourceItem = e.currentTarget.dataset.carSource
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
-    carSourceItem.viewModelSelectedTabMore = false
+    carSourceItem.viewModelSelectedTab = tabItemIndex
     this.selectCarSourcePlace(tabItem.value, carSourceItem)
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
 
