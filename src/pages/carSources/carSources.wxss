@@ -595,7 +595,7 @@ page {
 	overflow: hidden;
 	text-overflow:ellipsis;
 	white-space: nowrap;
-	width: 280rpx;
+	max-width: 280rpx;
 }
 .carSources-cell .carSources-cell-content .supplier-name .name .certification{
 	width: 23rpx;
