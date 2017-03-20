@@ -109,14 +109,25 @@ Page({
 		let item = e.currentTarget.dataset.carmodelsinfo
 		let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
 		let status = item.supply.status
-		
+		let that = this
+    let carModelsList = this.data.carModelsList
+    
 		if(status === '暂无供货') {
+      this.setData({
+        showCharts: false
+      })
 			this.$wuxToast.show({
 				type: false,
         timer: 2000,
         color: '#fff',
-        text: '暂无供货',
+        text: '暂无供货'
 			})
+      setTimeout(function() {
+        that.drawCanvas(carModelsList)
+        that.setData({
+          showCharts: true
+        })
+      },2000)
 			return
 		}
 		wx.navigateTo({
@@ -191,7 +202,8 @@ Page({
           dataPointShape: false,
           extra: {
             area: ['风险','适宜2.43~3.73','偏贵'],
-            hint: '参考成交价2.89'
+            hint: '参考成交价2.89',
+            ratio: '0.4'
           }
 				})
 			}

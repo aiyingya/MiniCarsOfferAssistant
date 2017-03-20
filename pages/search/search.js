@@ -20,15 +20,15 @@ Page({
     YMC_HTTPS_URL: app.config.ymcServerHTTPSUrl
   },
 	onLoad() {
-		let that = this;
-		let HTTPS_URL = app.config.tradeServerHTTPSUrl;
+		let that = this
+		let HTTPS_URL = app.config.tradeServerHTTPSUrl
 		try {
-      let res = wx.getSystemInfoSync();
-			let carModelsHeight;
-      this.pixelRatio = res.pixelRatio;
-      this.apHeight = 16;
-      this.offsetTop = 80;
-			carModelsHeight = res.windowHeight - 55;
+      let res = wx.getSystemInfoSync()
+			let carModelsHeight
+      this.pixelRatio = res.pixelRatio
+      this.apHeight = 16
+      this.offsetTop = 80
+			carModelsHeight = res.windowHeight - 55
       this.setData({
 				windowHeight: res.windowHeight + 'px',
 				carModelsHeight: carModelsHeight+ 'px',
@@ -37,6 +37,7 @@ Page({
     } catch (e) {
       
     }
+    this.$wuxToast = app.wux(this).$wuxToast
 	},
 	handleSearchInput(e) {
 		let val = e.detail.value;
@@ -52,7 +53,6 @@ Page({
 					n: 12
 				},
 				success: function(res) {
-					console.log(res)
 					that.setData({
 						associateResults: res,
 						searchResults: [],
@@ -79,8 +79,7 @@ Page({
 		let url 
 		let data = {}
 		let carModelsList = []
-		let searchNodata = false
-		console.log(results)	
+		let searchNodata = false	
 		if(results.type === 'SPU') {
 			url = that.data.YMC_HTTPS_URL + 'supply/car/spu/'+results.id
 		}else {
@@ -93,8 +92,7 @@ Page({
 			url: url, 
 			method: 'GET',
 			data: data,
-			success: function(res) {
-				console.log(res)			
+			success: function(res) {	
 				carModelsList = res.content
 				searchNodata = carModelsList.length > 0 ? false : true
 				
@@ -127,10 +125,8 @@ Page({
 			},
 			success: function(res) {
 				console.log(res)
-				if(res.content.length <= 0) {
-					searchNodata = true
-				}
-				that.drawCanvas(res.content)
+        searchNodata = res.content.length > 0 ? false : true
+        that.drawCanvas(res.content)
 				that.setData({
 					searchResults: res.content,
 					associateResults: [],
@@ -141,8 +137,31 @@ Page({
 		})
 	},
 	handlerToCarSources (e) {
-		const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
-		wx.navigateTo({  
+    let item = e.currentTarget.dataset.carmodelsinfo
+		let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
+		let status = item.supply.status
+		let that = this
+    let carModelsList = this.data.searchResults
+    
+		if(status === '暂无供货') {
+      this.setData({
+        showCharts: false
+      })
+			this.$wuxToast.show({
+				type: false,
+        timer: 2000,
+        color: '#fff',
+        text: '暂无供货'
+			})
+      setTimeout(function() {
+        that.setData({
+          showCharts: true
+        })
+        that.drawCanvas(carModelsList)
+      },2000)
+			return
+		}
+		wx.navigateTo({
       url: '../carSources/carSources?' + carModelsInfoKeyValueString
     }) 
 	},
@@ -179,39 +198,47 @@ Page({
       
     }
 		for (let item of data) {
-			if(item.supply) {
+			if(item.supply.chart) {
 				new app.wxcharts({
 					canvasId: item.carModelId,
-					type: 'line',
+					type: 'column',
 					categories: item.supply.chart.x,
 					animation: false,
 					color: '#ECF0F7',
 					legend: false,
+					background: '#ECF0F7',
 					series: [{
-						data: item.supply.chart.y,
-						format: function (val) {
-								return `${val.toFixed(0)}`
-						}
-					}],
+            name: '1',
+            data: item.supply.chart.y,
+            color: '#d2e1f6'
+          }],
 					xAxis: {
-						disableGrid: false,
-						fontColor: '#999999',
-						gridColor: '#afafaf'
-					},
-					yAxis: {
-						disabled: true,
-						fontColor: '#4C6693',
-						format(val) {
-							return val.toFixed(0)
-						}
-					},
-					dataItem: {
-						color: '#ECF0F7'
-					},
-					width: that.windowWidth,
-					height: 80,
-					dataLabel: true,
-					dataPointShape: false
+            disableGrid: true,
+            fontColor: '#333333',
+            gridColor: '#333333'
+          },
+          yAxis: {
+            disabled: true,
+            fontColor: '#333333',
+            gridColor: '#333333',
+            min: 10,
+            max: 50,
+            format(val) {
+              return val.toFixed(0)
+            }
+          },
+          dataItem: {
+            color: '#ECF0F7'
+          },
+          width: that.windowWidth,
+          height: 110,
+          dataLabel: true,
+          dataPointShape: false,
+          extra: {
+            area: ['风险','适宜2.43~3.73','偏贵'],
+            hint: '参考成交价2.89',
+            ratio: '0.4'
+          }
 				})
 			}
 		}
