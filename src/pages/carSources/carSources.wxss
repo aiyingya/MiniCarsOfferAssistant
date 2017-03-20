@@ -407,12 +407,31 @@ page {
 	margin-right: 10rpx;
 	padding: 8rpx 27rpx;
 }
+.carSources-section .carSources-section-content .dropdownarrow {
+  display: flex;
+  align-items: flex-end;
+  position: absolute;
+  right: 30rpx;
+  bottom: 20rpx;
+}
+.carSources-section .carSources-section-content .carsource-count {
+  width: 32rpx;
+  height: 32rpx;
+  background: rgba(241, 124, 124, 0.1);
+  border-radius: 100%;
+  margin-right: 15rpx;
+}
+.carSources-section .carSources-section-content .carsource-count-text {
+  font-family: "PingFangSC-Regular";
+  font-size: 20rpx;
+  color: #F17C7C;
+  line-height: 24rpx;
+  padding: 4rpx 6rpx;
+  text-align: center;
+}
 .carSources-section .carSources-section-content .icon-dropdownarrow {
 	width: 16rpx;
 	height: 16rpx;
-	position: absolute;
-	right: 30rpx;
-	bottom: 20rpx;
 	margin-top: -8rpx;
 }
 /* 供货 车源 cell样式 */
@@ -421,7 +440,7 @@ page {
 	position: relative;
 	width: 100%;
 	overflow: hidden;
-	background-color: #F7F7F7;
+  background: #DCE1E6;
 }
 .carSources-cells .carSources-nodata {
 	position: absolute;
@@ -444,7 +463,7 @@ page {
 	justify-content: flex-end;
 	align-items: center;
 	height: 70rpx;
-	background: #FAFAFA;
+  background: #E9EDEF;
 }
 .carSources-cell .carSources-cell-content .header .tab {
 	font-family: "PingFangSC-Regular";
@@ -477,6 +496,7 @@ page {
 	color: #888888;
 }
 .carSources-cell .carSources-cell-content .body {
+  background: #F6F7F8;
 	padding:20rpx;
 }
 /* 供应商信息 和 报价降价信息 */
@@ -582,7 +602,7 @@ page {
 	display: flex;
 	align-items: center;
 	overflow: hidden;
-	width: 320rpx;
+  max-width: 320rpx;
 }
 .carSources-cell .carSources-cell-content .supplier-name .name {
 	font-family: "PingFangSC-Medium";
