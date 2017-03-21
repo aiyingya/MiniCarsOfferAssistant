@@ -808,64 +808,34 @@ Page({
       }
     })
   },
-  // 非编辑态下的订车按钮
-  handlerBookCar (e) {
+  actionBookCar (carModelsInfo, skuItem, carSourceItem) {
     const that = this
+    const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
+    const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
 
-    const skuItem = e.currentTarget.dataset.sku
-    const carSourceItem = e.currentTarget.dataset.carSource
-    const skuId = skuItem.carSku.skuId;
-    const contact = app.globalData.mobile
-
-    that.actionBookCar(skuId)
-  },
-  actionBookCar (skuId) {
-    const contact = app.globalData.mobile
-
-    const that = this
-    const hideDialog = this.$wuxDialog.open({
-      title: '发起定车后， 将会有工作人员与您联系',
-      content: '',
-      inputNumber: contact,
-      inputNumberPlaceholder: '输入您的手机号',
-      confirmText: '发起定车',
-      cancelText: '取消',
-      validate: function (e) {
-        let mobile = e.detail.value
-        return mobile.length === 11
-      },
-      confirm: (res) => {
-        let mobile = res.inputNumber
-        // FIXME: 这里的 skuIds 需要提供
-        that.requestBookCar([skuId], mobile, '', {
-          success (res){
-            wx.showModal({
-              title: '提示',
-              content: '提交成功，请保持通话畅通',
-              success: function (res) {
-                if (res.confirm) {
-                  that.headlerRemoveQuoteView()
-                }
-              }
-            })
-          },
-          fail (err) {
-            wx.showModal({
-              title: '提示',
-              content: err.alertMessage,
-              success: function (res) {
-                if (res.confirm) {
-                }
-              }
-            })
-          },
-          complete () {
-
+    that.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
+      success (res){
+        wx.showModal({
+          title: '提示',
+          content: '提交成功，请保持通话畅通',
+          success: function (res) {
+            if (res.confirm) {
+            }
           }
         })
       },
-      cancel: () => {
-        // TODO: 取消
+      fail (err) {
+        wx.showModal({
+          title: '提示',
+          content: err.alertMessage,
+          success: function (res) {
+            if (res.confirm) {
+            }
+          }
+        })
+      },
+      complete () {
+
       }
     })
   },
@@ -925,8 +895,8 @@ Page({
       carModel: this.data.carModelsInfo,
       skuItem: skuItem,
       carSourceItem: carSourceItem,
-      bookCar: function (e) {
-        that.actionBookCar(skuItem.skuId)
+      bookCar: function (updateCarSourceItem) {
+        that.actionBookCar(carModelsInfo, skuItem, updateCarSourceItem)
       },
       contact: function () {
         that.actionContact(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, contact)
@@ -974,24 +944,21 @@ Page({
    * @param customerMobile  可选
    * @param object
    */
-  requestBookCar (skuIds, customerMobile, quotationId, object) {
-    if (skuIds && typeof skuIds === 'object' && customerMobile && customerMobile !== '') {
-      app.modules.request({
-        url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
-        data: {
-          skuIds: skuIds,
-          mobile: customerMobile,
-          quotationId: quotationId
-        },
-        method: 'POST',
-        success: object.success,
-        fail: object.fail,
-        complete: object.complete
-      })
-    } else {
-      object.fail()
-      object.complete()
-    }
+  requestBookCar(itemName, spec, itemPrice, itemCount, object) {
+    app.modules.request({
+      url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
+      data: {
+        userId: app.userInfo().userId,
+        itemName: itemName,
+        spec: spec,
+        itemPrice: itemPrice,
+        itemCount: itemCount
+      },
+      method: 'POST',
+      success: object.success,
+      fail: object.fail,
+      complete: object.complete
+    })
   },
   /**
    * 对某一个供应商关注/取消操作

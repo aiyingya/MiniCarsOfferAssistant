@@ -194,12 +194,12 @@
                     wx:key="*this"
                     class="{{item.b ? 'content-highlight' : 'content-text'}}"
                   >{{item.a}}</view>
-                  <view
-                    class="report-error"
-                    bindtap="{{carSourceDetailDialogReportError}}"
-                  >
-                    信息有误
-                  </view>
+                  <!--<view-->
+                    <!--class="report-error"-->
+                    <!--bindtap="{{carSourceDetailDialogReportError}}"-->
+                  <!--&gt;-->
+                    <!--信息有误-->
+                  <!--</view>-->
                 </view>
                 <view
                   wx:else

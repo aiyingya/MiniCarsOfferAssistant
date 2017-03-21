@@ -15,7 +15,6 @@ Page({
       quotationName: '',
       quotationItems: [
         {
-          itemNumber: '',
           itemName: '',
           itemPic: '',
           specifications: '',
@@ -103,13 +102,13 @@ Page({
     const quotationKeyValueString = util.urlEncodeValueForKey('quotation', this.data.quotation)
     wx.navigateTo({
       url: '/pages/quote/quotationCreate/quotationCreate?' + quotationKeyValueString,
-      success: function(res){
+      success: function (res) {
         // success
       },
-      fail: function() {
+      fail: function () {
         // fail
       },
-      complete: function() {
+      complete: function () {
         // complete
       }
     })
@@ -147,13 +146,13 @@ Page({
 
             wx.navigateBack({
               delta: 1, // 回退前 delta(默认为1) 页面
-              success: function(res){
+              success: function (res) {
                 // success
               },
-              fail: function() {
+              fail: function () {
                 // fail
               },
-              complete: function() {
+              complete: function () {
                 // complete
               }
             })
@@ -173,52 +172,32 @@ Page({
   },
   // 非编辑态下的订车按钮
   handlerBookCar(e) {
-    let that = this;
-
-    const contact = app.globalData.mobile
-
-    const hideDialog = this.$wuxDialog.open({
-      title: '发起定车后， 将会有工作人员与您联系',
-      content: '',
-      inputNumber: contact,
-      inputNumberPlaceholder: '输入您的手机号',
-      confirmText: '发起定车',
-      cancelText: '取消',
-      validate: function (e) {
-        let mobile = e.detail.value
-        return mobile.length === 11
-      },
-      confirm: (res) => {
-        let mobile = res.inputNumber
-        that.requestBookCar([that.data.quotation.quotationItems[0].itemNumber], mobile, that.data.quotation.quotationId, {
-          success: (res) => {
-            wx.showModal({
-              content: '提交成功，请保持通话畅通',
-              success: function(res) {
-                if (res.confirm) {
-                  that.headlerRemoveQuoteView()
-                }
-              }
-            })
-          },
-          fail: (err) => {
-            wx.showModal({
-              title: '提示',
-              content: err.alertMessage,
-              success: function(res) {
-                if (res.confirm) {
-                  console.log('用户点击确定')
-                }
-              }
-            })
-          },
-          complete: () => {
-
+    const that = this
+    const quotationItem = that.data.quotation.quotationItems[0]
+    that.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.sellingPrice, 1, {
+      success: (res) => {
+        wx.showModal({
+          content: '提交成功，请保持通话畅通',
+          success: function (res) {
+            if (res.confirm) {
+              that.headlerRemoveQuoteView()
+            }
           }
         })
       },
-      cancel: () => {
-        // TODO: 取消
+      fail: (err) => {
+        wx.showModal({
+          title: '提示',
+          content: err.alertMessage,
+          success: function (res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            }
+          }
+        })
+      },
+      complete: () => {
+
       }
     })
   },
@@ -270,13 +249,13 @@ Page({
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
-        success: function(res) {
+        success: function (res) {
           object.success(res);
         },
-        fail: function(err) {
+        fail: function (err) {
           object.fail(err);
         },
-        complete: function() {
+        complete: function () {
           object.complete();
         }
       })
@@ -291,36 +270,31 @@ Page({
   /**
    * 发起订车行为
    *
-   * @param skuIds					[String]
+   * @param skuIds          [String]
    * @param quotationId     可选
    * @param customerMobile  可选
    * @param object
    */
-  requestBookCar(userId, itemId, itemName, spec, itemPrice, itemCount, object) {
-    if (skuIds && typeof skuIds === 'object' && customerMobile && customerMobile !== '') {
-      app.modules.request({
-        url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
-        data: {
-          skuIds: skuIds,
-          mobile: customerMobile,
-          quotationId: quotationId
-        },
-        method: 'POST',
-        success: function(res){
-          object.success()
-        },
-        fail: function(err) {
-          object.fail(err)
-        },
-        complete: function() {
-          object.complete()
-        }
-      })
-    } else {
-      object.fail({
-        alertMessage: '参数错误'
-      })
-      object.complete()
-    }
+  requestBookCar(itemName, spec, itemPrice, itemCount, object) {
+    app.modules.request({
+      url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
+      data: {
+        userId: app.userInfo().userId,
+        itemName: itemName,
+        spec: spec,
+        itemPrice: itemPrice,
+        itemCount: itemCount
+      },
+      method: 'POST',
+      success: function (res) {
+        object.success()
+      },
+      fail: function (err) {
+        object.fail(err)
+      },
+      complete: function () {
+        object.complete()
+      }
+    })
   }
 })

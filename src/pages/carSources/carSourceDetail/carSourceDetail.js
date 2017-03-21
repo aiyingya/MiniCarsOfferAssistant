@@ -165,7 +165,7 @@ class wux {
           hideCarSourceDetailDialog(options.close(e))
         }
         $scope.carSourceDetailDialogBookCar = (e) => {
-          noHideCarSourceDetailDialog(options.bookCar(e))
+          noHideCarSourceDetailDialog(options.bookCar(options.carSourceItem))
         }
         $scope.carSourceDetailDialogContact = (e) => {
           noHideCarSourceDetailDialog(options.contact(e))
@@ -192,8 +192,9 @@ class wux {
         $scope.carSourceDetailDialogSelectLogisticsBlock = function (e) {
           // 选择物流行为
           const carSource = options.selectLogisticsBlock(e)
+          options.carSourceItem = carSource
           $scope.setData({
-            [`$wux.carSourceDetailDialog.carSourceItem`]: carSource
+            [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem
           })
         }
 

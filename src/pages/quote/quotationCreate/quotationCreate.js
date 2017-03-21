@@ -15,11 +15,11 @@ Page({
       draftId: '0',
       quotationName: '',
       quotationItems: [{
-        itemType: '', // self/third/party
+        itemType: 'self', // self/third/party
         itemName: '',
         itemPic: '',
         specifications: '',
-        guidePrice: '',
+        guidePrice: 0,
         sellingPrice: 0
       }],     // skuId
       hasLoan: true,          // 必传，true/false，boolean，是否贷款
@@ -83,7 +83,7 @@ Page({
     },
     source: ''                // carModels/carSources/quotationDetail/
   },
-  onLoad(options) {
+  onLoad (options) {
     let that = this
     try {
       let res = wx.getSystemInfoSync();
@@ -150,6 +150,8 @@ Page({
           carSkuInfo = carModelInfo.lowestPriceSku
         }
 
+        const itemNumber = carSkuInfo.skuId || ''
+        const itemType = carSkuInfo === '' ? 'third' : 'self'
         const itemPic = carSkuInfo.skuPic || carModelInfo.Pic
         const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
@@ -158,6 +160,8 @@ Page({
         // 设置报价表单数据
         let quotationItems = [
           {
+            itemNumber: itemNumber,
+            itemType: itemType,
             itemName: carModelInfo.carModelName,
             itemPic: itemPic,
             specifications: specifications,
@@ -186,6 +190,7 @@ Page({
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
+    this.$wuxSpecificationsDialog = app.wux(this).$wuxSpecificationsDialog
 
     this.updateForSomeReason()
 
@@ -540,7 +545,6 @@ Page({
       }
     })
   },
-
   /**
    * 发布当前报价草稿到某个用户
    *
@@ -597,7 +601,6 @@ Page({
       object.complete();
     }
   },
-
   /**
    * 生成报价草稿
    *
@@ -629,11 +632,11 @@ Page({
         data = {
           quotationName: quotationDraft.quotationName,
           quotationItems: [{
-            itemType: '', // self/third/party
-            itemName: '',
-            itemPic: '',
-            specifications: '',
-            guidePrice: '',
+            itemType: quotationDraft.quotationItems[0].itemType,
+            itemName: quotationDraft.quotationItems[0].itemName,
+            itemPic: quotationDraft.quotationItems[0].itemPic,
+            specifications: quotationDraft.quotationItems[0].specifications,
+            guidePrice: quotationDraft.quotationItems[0].guidePrice,
             sellingPrice: quotationDraft.quotationItems[0].sellingPrice
           }],
           hasLoan: quotationDraft.hasLoan,
@@ -653,11 +656,11 @@ Page({
         data = {
           quotationName: quotationDraft.quotationName,
           quotationItems: [{
-            itemType: '', // self/third/party
-            itemName: '',
-            itemPic: '',
-            specifications: '',
-            guidePrice: '',
+            itemType: quotationDraft.quotationItems[0].itemType,
+            itemName: quotationDraft.quotationItems[0].itemName,
+            itemPic: quotationDraft.quotationItems[0].itemPic,
+            specifications: quotationDraft.quotationItems[0].specifications,
+            guidePrice: quotationDraft.quotationItems[0].guidePrice,
             sellingPrice: quotationDraft.quotationItems[0].sellingPrice
           }],
           hasLoan: quotationDraft.hasLoan,
@@ -692,6 +695,28 @@ Page({
     }
   },
   headlerChangeColor (e) {
+    const that = this
+    const specifications = this.data.quotation.quotationItems[0].specifications
+    const array = specifications.split('/')
+
+    const externalColorName = array[0]
+    const internalColorName = array[1]
     // 输入车源
+    const hide = this.$wuxSpecificationsDialog.open({
+      title: '配色',
+      content: '填写 外饰/内饰 颜色， 如果为空， 会显示为 未知',
+      externalColorName: externalColorName,
+      internalColorName: internalColorName,
+      confirmText: '确定',
+      cancelText: '取消',
+      confirm: (externalColorName, internalColorName) => {
+        that.setData({
+          'quotation.quotationItems[0].specifications': externalColorName + '/' + internalColorName
+        })
+      },
+      cancel: () => {
+
+      }
+    })
   }
 });
