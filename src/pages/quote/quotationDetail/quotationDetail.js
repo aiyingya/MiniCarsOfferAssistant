@@ -178,7 +178,7 @@ Page({
     this.$wuxNormalDialog.open({
       title: '提示',
       content: '发起定车后， 将会有工作人员与您联系',
-      confirmText: '发起订车',
+      confirmText: '发起定车',
       confirm: function () {
         const quotationItem = that.data.quotation.quotationItems[0]
         that.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.sellingPrice, 1, {
