@@ -1,29 +1,19 @@
 <template name="carModel">
-	<view 
+	<view
 		class="carModels-cell"
 		hover="true"
 		hover-class="carModels-cell_active"
 		data-carmodelsinfo="{{item}}"
-		bindtap="handlerToCarSources" 
+		bindtap="handlerToCarSources"
 		>
 		<!-- title.-->
 		<view class="carModels-message">
 			<view class="carModels-message-title">
-				【{{item.officialPriceStr}}】 {{item.carModelName}} 
-			</view>
-			
-			<view class="carModels-quote-btn">
-				<button 
-					hover-class="quotebtn-active" 
-					class="quotebtn" 
-					type="primary"
-					catchtap="handlerPromptly"
-					data-carmodelsinfo="{{item}}"
-					>立即报价</button>
+				【{{item.officialPriceStr}}】 {{item.carModelName}}
 			</view>
 		</view>
-		
-		<view 
+
+		<view
 			class="carModels-inner"
 			wx:if="{{item.supply.supplierCount > 0}}"
 			>
@@ -36,17 +26,17 @@
 				<block wx:else>
 					<view class="carModels-repertory adequate">{{item.supply.status}}</view>
 				</block>
-				<view 
+				<view
 					class="carModels-carcolor"
 					wx:if="{{item.supply.colors.length > 0}}"
 					>
 					<view class="carcolor-label">外饰：</view>
 					<view class="carcolor-inner">
-						<view 	
+						<view
 							class="carcolor-item"
-							wx:for="{{item.supply.colors}}"	
+							wx:for="{{item.supply.colors}}"
 							wx:for-item="cell"
-							wx:for-index="cellIndex" 
+							wx:for-index="cellIndex"
 							wx:key="*this"
 							wx:if="{{cellIndex < 4}}"
 							style="background:{{cell}}"
@@ -55,7 +45,7 @@
 				</view>
 			</view>
 
-			<view 
+			<view
 				class="charts-inner"
 				wx:if="{{item.supply.chart}}"
 				>
@@ -71,17 +61,17 @@
 						</view>
 	-->
 					</view>
-					<canvas 
-						canvas-id="{{item.carModelId}}" 
-						class="canvas" 
+					<canvas
+						canvas-id="{{item.carModelId}}"
+						class="canvas"
 						></canvas>
 				</block>
 			</view>
 		</view>
-		
-		<!-- 暂无供货.-->	
+
+		<!-- 暂无供货.-->
 		<view wx:else class="carModels-nodata">
 			暂无供货
 		</view>
 	</view>
-</template>		
+</template>

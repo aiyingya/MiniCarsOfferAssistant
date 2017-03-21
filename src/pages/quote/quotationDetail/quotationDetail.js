@@ -144,7 +144,7 @@ Page({
 
             app.fuckingLarryNavigatorTo.quotation = quotation
             app.fuckingLarryNavigatorTo.source = that.data.source
-            
+
             wx.navigateBack({
               delta: 1, // 回退前 delta(默认为1) 页面
               success: function(res){
@@ -296,7 +296,7 @@ Page({
    * @param customerMobile  可选
    * @param object
    */
-  requestBookCar(skuIds, customerMobile, quotationId, object) {
+  requestBookCar(userId, itemId, itemName, spec, itemPrice, itemCount, object) {
     if (skuIds && typeof skuIds === 'object' && customerMobile && customerMobile !== '') {
       app.modules.request({
         url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
@@ -318,7 +318,7 @@ Page({
       })
     } else {
       object.fail({
-        alertMessage: "参数错误"
+        alertMessage: '参数错误'
       })
       object.complete()
     }
