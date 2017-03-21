@@ -152,7 +152,7 @@ Page({
 
         const itemNumber = carSkuInfo.skuId || ''
         const itemType = carSkuInfo === '' ? 'third' : 'self'
-        const itemPic = carSkuInfo.skuPic || carModelInfo.Pic
+        const itemPic = carSkuInfo.skuPic || carModelInfo.lowestPriceSku.skuPic
         const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
         const sellingPrice = carSkuInfo.price || carModelInfo.officialPrice
