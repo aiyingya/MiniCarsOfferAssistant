@@ -49,6 +49,7 @@ Page({
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
+    this.$wuxNormalDialog = app.wux(this).$wuxNormalDialog
 
     let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
     quotation.quotationItems[0].itemPic = app.config.imgAliyuncsUrl + quotation.quotationItems[0].itemPic
@@ -173,31 +174,41 @@ Page({
   // 非编辑态下的订车按钮
   handlerBookCar(e) {
     const that = this
-    const quotationItem = that.data.quotation.quotationItems[0]
-    that.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.sellingPrice, 1, {
-      success: (res) => {
-        wx.showModal({
-          content: '提交成功，请保持通话畅通',
-          success: function (res) {
-            if (res.confirm) {
-              that.headlerRemoveQuoteView()
-            }
-          }
-        })
-      },
-      fail: (err) => {
-        wx.showModal({
-          title: '提示',
-          content: err.alertMessage,
-          success: function (res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-            }
-          }
-        })
-      },
-      complete: () => {
 
+    this.$wuxNormalDialog.open({
+      title: '提示',
+      content: '发起定车后， 将会有工作人员与您联系',
+      confirmText: '发起定车',
+      confirm: function () {
+        const quotationItem = that.data.quotation.quotationItems[0]
+        that.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.sellingPrice, 1, {
+          success: (res) => {
+            wx.showModal({
+              content: '提交成功，请保持通话畅通',
+              success: function (res) {
+                if (res.confirm) {
+                }
+              }
+            })
+          },
+          fail: (err) => {
+            wx.showModal({
+              title: '提示',
+              content: err.alertMessage,
+              success: function (res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                }
+              }
+            })
+          },
+          complete: () => {
+
+          }
+        })
+      },
+      cancel: function () {
+        // 取消
       }
     })
   },

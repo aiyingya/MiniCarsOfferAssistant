@@ -104,9 +104,7 @@ class modules {
           } else if (options.loadingType === 'none') {
             // 不使用任何加载
           } else {
-            setTimeout(function () {
-              wx.hideToast()
-            }, 750)
+            wx.hideToast()
           }
           typeof options.complete === 'function' && options.complete()
         }
@@ -118,9 +116,7 @@ class modules {
       } else if (options.loadingType === 'none') {
         // 不使用任何加载
       } else {
-        setTimeout(function () {
-          wx.hideToast()
-        }, 750)
+        wx.hideToast()
       }
 
       typeof options.fail === 'function' && options.fail(error)

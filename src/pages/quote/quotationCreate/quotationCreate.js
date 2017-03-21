@@ -704,7 +704,7 @@ Page({
     // 输入车源
     const hide = this.$wuxSpecificationsDialog.open({
       title: '配色',
-      content: '填写 外饰/内饰 颜色， 如果为空， 会显示为 未知',
+      content: '填写 外饰/内饰 颜色',
       externalColorName: externalColorName,
       internalColorName: internalColorName,
       confirmText: '确定',

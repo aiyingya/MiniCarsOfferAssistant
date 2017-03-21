@@ -810,32 +810,43 @@ Page({
   },
   actionBookCar (carModelsInfo, skuItem, carSourceItem) {
     const that = this
-    const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
-    const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
 
-    that.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
-      success (res){
-        wx.showModal({
-          title: '提示',
-          content: '提交成功，请保持通话畅通',
-          success: function (res) {
-            if (res.confirm) {
-            }
+    this.$wuxNormalDialog.open({
+      title: '提示',
+      content: '发起定车后， 将会有工作人员与您联系',
+      confirmText: '发起定车',
+      confirm: function () {
+        const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
+        const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
+
+        that.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
+          success (res){
+            wx.showModal({
+              title: '提示',
+              content: '提交成功，请保持通话畅通',
+              success: function (res) {
+                if (res.confirm) {
+                }
+              }
+            })
+          },
+          fail (err) {
+            wx.showModal({
+              title: '提示',
+              content: err.alertMessage,
+              success: function (res) {
+                if (res.confirm) {
+                }
+              }
+            })
+          },
+          complete () {
+
           }
         })
       },
-      fail (err) {
-        wx.showModal({
-          title: '提示',
-          content: err.alertMessage,
-          success: function (res) {
-            if (res.confirm) {
-            }
-          }
-        })
-      },
-      complete () {
-
+      cancel: function () {
+        // 取消
       }
     })
   },
