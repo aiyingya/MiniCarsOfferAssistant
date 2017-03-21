@@ -4,7 +4,7 @@
 		<view class="users-head">
 			<image src="{{weixinPortrait}}"></image>
 		</view>
-		
+
 		<block
 			wx:if="{{userInfo}}"
 			>
@@ -19,14 +19,14 @@
 
 			<!-- 标签.-->
 			<view class="users-label">
-				<view 
+				<view
 					class="label"
 					wx:for="{{userInfo.tenants}}"
 					wx:key="*this"
 					>{{item.tenantName}}</view>
 			</view>
 		</block>
-		<view 
+		<view
 			wx:else
 			class="users-login"
 			bindtap="handleToLogin"
@@ -34,31 +34,31 @@
 	</view>
 
 	<view class="users-cells weui-cells weui-cells_in-small-appmsg">
-			<view  
-				class="weui-cell weui-cell_access" 
+			<view
+				class="weui-cell weui-cell_access"
 				hover="true"
 				hover-class="active"
+        bindtap="handleToQuoteRecord"
 				>
 				<view class="weui-cell__hd">
 					<image src="../../images/icons/tab_icon_price_off.png" />
 				</view>
-				<view 
+				<view
 					class="weui-cell__bd weui-cell_primary"
-					bindtap="handleToQuoteRecord"
 					>
 						<view>报价记录</view>
 				</view>
 			</view>
 <!--
-			<view 
-				class="weui-cell weui-cell_access" 
+			<view
+				class="weui-cell weui-cell_access"
 				hover="true"
 				hover-class="active"
 				>
 				<view class="weui-cell__hd">
 					<image src="../../images/icons/icon_collection.png" />
 				</view>
-				<view 
+				<view
 					class="weui-cell__bd weui-cell_primary"
 					bindtap="handleToSupplier"
 					>
@@ -67,8 +67,8 @@
 			</view>
 -->
 	</view>
-	
-	<view 
+
+	<view
 		class="users-logout"
 		hover="true"
 		hover-class="users-logout_active"
