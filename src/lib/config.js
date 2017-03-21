@@ -23,7 +23,7 @@ let tradeServerHTTPSUrl = (function () {
   let HTTPS = {
     dev: 'https://test.yaomaiche.com/tradedev/',
     gqc: 'https://test.yaomaiche.com/tradegqc/',
-    prd: 'https://ymcapi.yaomaiche.com/ymc/'
+    prd: 'https://trade.yaomaiche.com/trade/'
   }
   return HTTPS[evn]
 }())
