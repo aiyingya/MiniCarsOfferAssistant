@@ -509,10 +509,9 @@ Page({
                       // complete
                     }
                   })
-
                 } else {
                   wx.switchTab({
-                    url: '/pages/quote/quotationsList/quotationsList',
+                    url: '/pages/usersQuote/usersQuote',
                     success: (res) => {
 
                     },
