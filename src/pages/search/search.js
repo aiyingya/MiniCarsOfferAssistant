@@ -17,7 +17,9 @@ Page({
 		searchNodata: false,
 		showSearchBtn: false,
 		showCharts: true,
-    YMC_HTTPS_URL: app.config.ymcServerHTTPSUrl
+    YMC_HTTPS_URL: app.config.ymcServerHTTPSUrl,
+    pageIndex: 1,
+    pageInfo: ''
   },
 	onLoad() {
 		let that = this
@@ -111,32 +113,66 @@ Page({
 			}
 		})
 	},
-	handleSearchConfirm(e) {
-		let val = this.data.cacheSearchValue
+  getSearchConfirm(pageIndex) {
+    let val = this.data.cacheSearchValue
 		let that = this
-		let searchResults = []
-		let searchNodata = false
-		app.modules.request({
+    let searchNodata = false
+    let searchResults = []
+    app.modules.request({
 			url: that.data.YMC_HTTPS_URL+ 'search/car/spu',
 			method: 'GET',
 			data: {
 				text: val,
-				pageIndex: 1,
+				pageIndex: pageIndex,
 				pageSize: 10
 			},
 			success: function(res) {
-				console.log(res)
-        searchNodata = res.content.length > 0 ? false : true
-        that.drawCanvas(res.content)
+        if(res.first) {
+          searchNodata = res.content.length > 0 ? false : true
+          searchResults = res.content
+        } else {
+          searchResults = that.data.searchResults
+          for(let item of res.content) {
+            searchResults.push(item)
+          }
+        }
+        
+        that.data.pageInfo = {
+          first: res.first,
+          hasNext: res.hasNext,
+          hasPrevious: res.hasPrevious,
+          last: res.last,
+          number: res.number,
+          numberOfElements: res.numberOfElements,
+          size: res.size,
+          totalElements: res.totalElements,
+          totalPages: res.totalPages
+        }
+        that.drawCanvas(searchResults)
 				that.setData({
-					searchResults: res.content,
+					searchResults: searchResults,
 					associateResults: [],
 					showResultsSearch: false,
 					searchNodata: searchNodata
 				})
 			}
 		})
+  },
+	handleSearchConfirm(e) {
+		let val = this.data.cacheSearchValue
+		let that = this
+		this.data.pageIndex = 1
+    this.getSearchConfirm(this.data.pageIndex)
 	},
+  onReachBottom() {
+    let that = this
+    let searchPageInfo = that.data.pageInfo 
+    if(!searchPageInfo.hasNext) return
+    
+    this.data.pageIndex++
+    this.getSearchConfirm(this.data.pageIndex)
+    console.log(searchPageInfo)
+  },
 	handlerToCarSources (e) {
     let item = e.currentTarget.dataset.carmodelsinfo
 		let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
