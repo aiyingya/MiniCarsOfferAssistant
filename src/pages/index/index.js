@@ -111,7 +111,7 @@ Page({
         
         for(let item of res) {
           item.depreciate = (item.guidePrice - item.salePrice)
-          item.depreciateSTR = Math.abs(item.guidePrice - item.salePrice).toFixed(2)
+          item.depreciateSTR = (Math.abs(item.guidePrice - item.salePrice) /10000).toFixed(2)
         }
 				that.setData({
 					hotCarsTypes: res
