@@ -218,6 +218,7 @@ Page({
     const tagsSet = new Set(tags)
     carSourcesBySkuInSpuItem.carSku.viewModelTags = [...tagsSet]
     carSourcesBySkuInSpuItem.carSku.viewModelCarSourceCount = carSourcesBySkuInSpuItem.carSourcesList.length
+    carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSourcesList[0].supplierSelfSupport
   },
   /**
    * 处理车源对象
@@ -625,7 +626,7 @@ Page({
    * 搜索入口方法，收集所有的搜索条件，合并后得出结果
    * @param e
    */
-  handlerSelectItem(e) {
+  handlerSelectItem (e) {
     const filterItem = e.currentTarget.dataset.filterItem
     const superFilterItem = e.currentTarget.dataset.superFilterItem
     const filterIndex = e.currentTarget.dataset.filterIndex
@@ -676,7 +677,7 @@ Page({
    * 横向滚动栏筛选项目点击行为
    * @param e
    */
-  handlerFilterSelected(e) {
+  handlerFilterSelected (e) {
     const that = this
 
     const scrollFilterIndex = e.currentTarget.dataset.scrollFilterIndex
@@ -715,7 +716,7 @@ Page({
    * 选择 SKU 分区
    * @param e
    */
-  handlerSelectCarSku(e) {
+  handlerSelectCarSku (e) {
     const index = e.currentTarget.dataset.skuItemIndex
     const skuItem = e.currentTarget.dataset.skuItem
 
@@ -759,33 +760,6 @@ Page({
   //     }
   //   })
   // },
-  /**
-   * 展示价格文案文案
-   * @param e
-   */
-  handlerShowTips(e) {
-    const carSource = e.currentTarget.dataset.carSource;
-
-    let content = ''
-
-    if (carSource.supplierSelfSupport && carSource.priceFixed) {
-      content = '70多个品牌全网一口价、所见即所得。承诺无就赔、慢就赔，7天内到货'
-    } else if (carSource.supplierSelfSupport && !carSource.priceFixed) {
-      content = '加盟门店可享支付定金拿车，详情请电话联系'
-    }
-
-    if (content !== '') {
-      const hideDialog = this.$wuxNormalDialog.open({
-        title: content,
-        content: '',
-        showCancel: false,
-        confirmText: '确定',
-        confirm: (res) => {
-
-        }
-      })
-    }
-  },
   /**
    * 评价某一个供应商是否靠谱
    * @param e
@@ -984,10 +958,12 @@ Page({
   handlerCreateQuoted (e) {
     const skuItem = e.currentTarget.dataset.sku
 
+    console.log(skuItem)
     const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', this.data.carModelsInfo)
+    const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', skuItem.carSku)
 
     wx.navigateTo({
-      url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString
+      url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
     })
   },
   /**

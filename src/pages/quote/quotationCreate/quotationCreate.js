@@ -15,7 +15,11 @@ Page({
       draftId: '0',
       quotationName: '',
       quotationItems: [{
-        itemNumber: '',
+        itemType: '', // self/third/party
+        itemName: '',
+        itemPic: '',
+        specifications: '',
+        guidePrice: '',
         sellingPrice: 0
       }],     // skuId
       hasLoan: true,          // 必传，true/false，boolean，是否贷款
@@ -95,7 +99,7 @@ Page({
     }
 
     let quotationJSONString = options.quotation
-    let carSKUInfoJSONString = options.carInfo
+    let carSkuInfoJSONString = options.carSkuInfo
     let carModelInfoJSONString = options.carModelsInfo
 
     console.log(options)
@@ -112,7 +116,7 @@ Page({
         let paymentRatiosIndex = this.data.paymentRatiosArray.indexOf(quotation.paymentRatio)
         // 需要初始化设置已经设置的还款周期和首付比率
         this.setData({
-          activeIndex: quotation.hasLoan? 0: 1,
+          activeIndex: quotation.hasLoan ? 0 : 1,
           quotation: quotation,
           stagesIndex: stagesIndex,
           paymentRatiosIndex: paymentRatiosIndex
@@ -120,47 +124,51 @@ Page({
       } else {
         // 对于是全款的情况， 需要手动设置贷款的相应参数数据
         quotation.paymentRatio = 30
-        quotation.stages =  3
+        quotation.stages = 3
         quotation.expenseRate = 4
         this.setData({
-          activeIndex: quotation.hasLoan? 0: 1,
-          'quotation': quotation,
+          activeIndex: quotation.hasLoan ? 0 : 1,
+          'quotation': quotation
         })
       }
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
         var carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
-        var carSKUInfo = {}
-        if (carSKUInfoJSONString && carSKUInfoJSONString.length) {
+        var carSkuInfo = {}
+        if (carSkuInfoJSONString && carSkuInfoJSONString.length) {
           /**
            * 页面来自于车源列表
            */
           this.data.source = 'carSources'
-          carSKUInfo = util.urlDecodeValueForKeyFromOptions('carInfo', options)
+          carSkuInfo = util.urlDecodeValueForKeyFromOptions('carSkuInfo', options)
         } else {
           /**
            * 页面来自于车系列表, 是没有 carSKUInfo 字段的，所以必须使用 carModelInfo 中
            * lowestPriceSku 字段来设置 carSKUInfo 字段
            */
           this.data.source = 'carModels'
-          carSKUInfo = carModelInfo.lowestPriceSku
+          carSkuInfo = carModelInfo.lowestPriceSku
         }
+
+        const itemPic = carSkuInfo.skuPic || carModelInfo.Pic
+        const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
+        const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
+        const sellingPrice = carSkuInfo.price || carModelInfo.officialPrice
 
         // 设置报价表单数据
         let quotationItems = [
           {
-            itemNumber: carSKUInfo.skuId,
             itemName: carModelInfo.carModelName,
-            itemPic: carSKUInfo.skuPic,
-            specifications: carSKUInfo.externalColorName + '/' + carSKUInfo.internalColorName,
-            guidePrice: carModelInfo.officialPrice,
-            sellingPrice: carSKUInfo.price
+            itemPic: itemPic,
+            specifications: specifications,
+            guidePrice: guidePrice,
+            sellingPrice: sellingPrice
           }
         ]
 
         this.setData({
           'quotation.quotationItems': quotationItems,
-          carSKUInfo: carSKUInfo,
+          carSKUInfo: carSkuInfo,
           carModelInfo: carModelInfo
         })
       }
@@ -182,7 +190,7 @@ Page({
     this.updateForSomeReason()
 
     wx.getSystemInfo({
-      success: function(res) {
+      success: function (res) {
         that.setData({
           sliderLeft: 0,
           sliderOffset: res.windowWidth / 2 * that.data.activeIndex
@@ -190,46 +198,44 @@ Page({
       }
     });
   },
-  onReady() {
+  onReady () {
 
   },
-  onShow() {
-		let changeCarsColorSTUInfo = wx.getStorageSync('changeCarsColorSTUInfo')
-		
-		if(changeCarsColorSTUInfo) {
-			let specifications = `${changeCarsColorSTUInfo.externalColorName}/${changeCarsColorSTUInfo.internalColorName}`
-			let sellingPrice = changeCarsColorSTUInfo.price
-			let itemNumber = changeCarsColorSTUInfo.skuId
-			let skuPic = `${app.config.imgAliyuncsUrl}${changeCarsColorSTUInfo.skuPic}`
+  onShow () {
+    let changeCarsColorSTUInfo = wx.getStorageSync('changeCarsColorSTUInfo')
+
+    if (changeCarsColorSTUInfo) {
+      let specifications = `${changeCarsColorSTUInfo.externalColorName}/${changeCarsColorSTUInfo.internalColorName}`
+      let sellingPrice = changeCarsColorSTUInfo.price
+      let skuPic = `${app.config.imgAliyuncsUrl}${changeCarsColorSTUInfo.skuPic}`
       console.log('quotationCreate.onShow')
       console.log(changeCarsColorSTUInfo)
-			this.setData({
-				carSKUInfo: changeCarsColorSTUInfo,
-				'quotation.quotationItems[0].specifications': specifications,
-				'quotation.quotationItems[0].sellingPrice': sellingPrice,
-				'quotation.quotationItems[0].itemNumber': itemNumber,
-				'quotation.quotationItems[0].itemPic': skuPic
-			})
+      this.setData({
+        carSKUInfo: changeCarsColorSTUInfo,
+        'quotation.quotationItems[0].specifications': specifications,
+        'quotation.quotationItems[0].sellingPrice': sellingPrice,
+        'quotation.quotationItems[0].itemPic': skuPic
+      })
       this.updateForSomeReason()
       try {
         wx.removeStorageSync('changeCarsColorSTUInfo')
       } catch (e) {
         // Do something when catch error
       }
-		}
+    }
   },
-  onHide() {
+  onHide () {
 
   },
-  onUnload() {
+  onUnload () {
   },
-  onReachBottom() {
+  onReachBottom () {
 
   },
-  onPullDownRefresh() {
+  onPullDownRefresh () {
 
   },
-  updateForSomeReason() {
+  updateForSomeReason () {
 
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let officialPrice = this.data.quotation.quotationItems[0].guidePrice
@@ -273,11 +279,11 @@ Page({
       }
     });
   },
-  isLoanTabActive(e) {
+  isLoanTabActive (e) {
     return this.data.activeIndex == 0
   },
   // event handler
-  handlerTabClick(e) {
+  handlerTabClick (e) {
     this.setData({
       sliderOffset: e.currentTarget.offsetLeft,
       activeIndex: e.currentTarget.id,
@@ -440,14 +446,14 @@ Page({
                 if (that.data.source === 'quotationDetail') {
                   wx.navigateBack({
                     delta: 2, // 回退前 delta(默认为1) 页面
-                    success: function(res){
+                    success: function (res) {
                       // success
                     },
-                    fail: function() {
+                    fail: function () {
                       app.fuckingLarryNavigatorTo.source = null
                       app.fuckingLarryNavigatorTo.quotation = null
                     },
-                    complete: function() {
+                    complete: function () {
                       // complete
                     }
                   })
@@ -488,13 +494,13 @@ Page({
                 if (that.data.source === 'quotationDetail') {
                   wx.navigateBack({
                     delta: 2, // 回退前 delta(默认为1) 页面
-                    success: function(res){
+                    success: function (res) {
                       // success
                     },
-                    fail: function() {
+                    fail: function () {
                       // fail
                     },
-                    complete: function() {
+                    complete: function () {
                       // complete
                     }
                   })
@@ -532,7 +538,7 @@ Page({
       complete: function () {
 
       }
-    });
+    })
   },
 
   /**
@@ -547,7 +553,6 @@ Page({
     "draftId":"报价单草稿ID",
     "quotationName":"报价单名称，没有可以不传",
     "quotationItems":[{
-        "itemNumber":"商品编号",
         "itemName":"商品名称",
         "specifications":"商品规格",
         "guidePrice":"指导价",
@@ -567,7 +572,7 @@ Page({
     "customerMobile":"客户手机号"
    }
    */
-  requestPublishQuotation(draftId, customerMobile, object) {
+  requestPublishQuotation (draftId, customerMobile, object) {
     if (draftId && draftId !== '') {
       app.modules.request({
         url: app.config.ymcServerHTTPSUrl + 'sale/quotation',
@@ -577,13 +582,13 @@ Page({
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
-        success: function(res) {
+        success: function (res) {
           object.success(res);
         },
-        fail: function() {
+        fail: function () {
           object.fail();
         },
-        complete: function() {
+        complete: function () {
           object.complete();
         }
       })
@@ -603,7 +608,6 @@ Page({
    "quotationName":"报价单名称，没有可以不传",
    "quotationItems":[
       {
-        itemNumber: '',
         sellingPrice: ''
       }
    ],
@@ -625,7 +629,11 @@ Page({
         data = {
           quotationName: quotationDraft.quotationName,
           quotationItems: [{
-            itemNumber: quotationDraft.quotationItems[0].itemNumber,
+            itemType: '', // self/third/party
+            itemName: '',
+            itemPic: '',
+            specifications: '',
+            guidePrice: '',
             sellingPrice: quotationDraft.quotationItems[0].sellingPrice
           }],
           hasLoan: quotationDraft.hasLoan,
@@ -645,7 +653,11 @@ Page({
         data = {
           quotationName: quotationDraft.quotationName,
           quotationItems: [{
-            itemNumber: quotationDraft.quotationItems[0].itemNumber,
+            itemType: '', // self/third/party
+            itemName: '',
+            itemPic: '',
+            specifications: '',
+            guidePrice: '',
             sellingPrice: quotationDraft.quotationItems[0].sellingPrice
           }],
           hasLoan: quotationDraft.hasLoan,
@@ -662,19 +674,19 @@ Page({
         url: app.config.ymcServerHTTPSUrl + 'sale/quotation/draft',
         data: data,
         method: 'POST',
-        success: function(res) {
+        success: function (res) {
           object.success(res);
         },
-        fail: function(err) {
+        fail: function (err) {
           object.fail(err);
         },
-        complete: function() {
+        complete: function () {
           object.complete();
         }
       })
     } else {
       object.fail({
-        alertMessage: "参数验证错误"
+        alertMessage: '参数验证错误'
       })
       object.complete()
     }

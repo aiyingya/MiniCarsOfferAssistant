@@ -35,7 +35,7 @@ Page({
 				HTTPS_YMCAPI: HTTPS_URL
 			})
     } catch (e) {
-      
+
     }
     this.$wuxToast = app.wux(this).$wuxToast
 	},
@@ -45,7 +45,7 @@ Page({
 		let searchResults = [];
 		if(val) {
 			app.modules.request({
-				url: that.data.HTTPS_YMCAPI + 'cgi/search/car/index', 
+				url: that.data.HTTPS_YMCAPI + 'cgi/search/car/index',
 				method: 'GET',
 				loadingType: 'none',
 				data: {
@@ -76,11 +76,11 @@ Page({
 	handlerChooseResults (e) {
 		let that = this
 		let results = e.currentTarget.dataset.results
-		let url 
+		let url
 		let data = {}
 		let carModelsList = []
 		let searchNodata = false
-		console.log(results)	
+		console.log(results)
 		if(results.type === 'CAR_SPU') {
 			url = that.data.YMC_HTTPS_URL + 'supply/car/spu/'+results.id
 		} else if (results.type === 'CAR_SERIES') {
@@ -90,13 +90,13 @@ Page({
 			}
 		}
 		app.modules.request({
-			url: url, 
+			url: url,
 			method: 'GET',
 			data: data,
-			success: function(res) {	
+			success: function(res) {
 				carModelsList = res.content
 				searchNodata = carModelsList.length > 0 ? false : true
-				
+
 				if(carModelsList) {
 					that.drawCanvas(carModelsList)
 					that.setData({
@@ -117,7 +117,7 @@ Page({
 		let searchResults = []
 		let searchNodata = false
 		app.modules.request({
-			url: that.data.YMC_HTTPS_URL+ 'search/car/spu', 
+			url: that.data.YMC_HTTPS_URL+ 'search/car/spu',
 			method: 'GET',
 			data: {
 				text: val,
@@ -143,7 +143,7 @@ Page({
 		let status = item.supply.status
 		let that = this
     let carModelsList = this.data.searchResults
-    
+
 		if(status === '暂无供货') {
       this.setData({
         showCharts: false
@@ -164,13 +164,13 @@ Page({
 		}
 		wx.navigateTo({
       url: '../carSources/carSources?' + carModelsInfoKeyValueString
-    }) 
+    })
 	},
 	handlerPromptly (e) {
     const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
 		wx.navigateTo({
       url: '../quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString
-    }) 
+    })
 	},
 	handleCancelSearch () {
 		wx.navigateBack()
@@ -196,7 +196,7 @@ Page({
       that.offsetTop = 80
 			that.windowWidth = res.windowWidth - 30
     } catch (e) {
-      
+
     }
 		for (let item of data) {
 			if(item.supply.chart) {
@@ -239,7 +239,7 @@ Page({
             area: ['风险','适宜2.43~3.73','偏贵'],
             hint: item.supply.chart.hint,
             ratio: '0.4',
-            index: item.supply.chart.priceIndex 
+            index: item.supply.chart.priceIndex
           }
 				})
 			}

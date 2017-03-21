@@ -27,7 +27,7 @@ Page({
 			this.windowWidth = res.windowWidth - 30
       this.setData({windowHeight: (res.windowHeight-44) + 'px'})
     } catch (e) {
-      
+
     }
 		this.$wuxToast = app.wux(this).$wuxToast
 		if (carsInfo) {
@@ -46,7 +46,7 @@ Page({
           if(res) {
             let carModelsList = res.content
             let filters = res.filters
-            let filtersData 
+            let filtersData
             let showNodata = false
             that.drawCanvas(carModelsList)
 						for(let item of filters) {
@@ -67,7 +67,7 @@ Page({
 		}
 	},
 	onShow () {
-		
+
 	},
 	handleCheckCarsModele() {
 		let weitch = this.data.showRmendCarFacade
@@ -95,7 +95,7 @@ Page({
 		}else {
 			for(let item of carModelsList) {
 				if(item.yearStyle === selectItem.name) {
-					
+
 					newModelsList.push(item)
 				}
 			}
@@ -115,7 +115,7 @@ Page({
 		let status = item.supply.status
 		let that = this
     let carModelsList = this.data.carModelsList
-    
+
 		if(status === '暂无供货') {
       this.setData({
         showCharts: false
@@ -136,15 +136,7 @@ Page({
 		}
 		wx.navigateTo({
       url: '../carSources/carSources?' + carModelsInfoKeyValueString
-    }) 
-	},
-	handlerPromptly (e) {
-
-		let carModelsInfoKeyValueString =  util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
-		
-		wx.navigateTo({  
-      url: '../quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString
-    }) 
+    })
 	},
 	headlerRemoveRmendCarFacade() {
 		let carModelsList = this.data.carModelsList
@@ -165,7 +157,7 @@ Page({
       that.offsetTop = 80
 			that.windowWidth = res.windowWidth - 30
     } catch (e) {
-      
+
     }
 		for (let item of data) {
 			if(item.supply.supplierCount > 0) {
@@ -208,11 +200,11 @@ Page({
             area: ['风险','适宜2.43~3.73','偏贵'],
             hint: item.supply.chart.hint,
             ratio: '0.4',
-            index: item.supply.chart.priceIndex 
+            index: item.supply.chart.priceIndex
           }
 				})
 			}
 		}
 	}
-	
+
 })
