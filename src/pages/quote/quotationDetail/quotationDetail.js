@@ -52,7 +52,6 @@ Page({
     this.$wuxNormalDialog = app.wux(this).$wuxNormalDialog
 
     let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
-    quotation.quotationItems[0].itemPic = app.config.imgAliyuncsUrl + quotation.quotationItems[0].itemPic
 
     console.log(quotation)
     let carPrice = quotation.quotationItems[0].sellingPrice

@@ -8,7 +8,6 @@ Page({
     // 全局视图
     windowHeight: '',
     // 头部 SPU 信息视图
-    imgAliyuncsUrl: app.config.imgAliyuncsUrl,
     carModelsInfo: '',
     // 筛选下拉视图
     showRmendCarFacade: '',

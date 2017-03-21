@@ -207,27 +207,6 @@ Page({
 
   },
   onShow () {
-    let changeCarsColorSTUInfo = wx.getStorageSync('changeCarsColorSTUInfo')
-
-    if (changeCarsColorSTUInfo) {
-      let specifications = `${changeCarsColorSTUInfo.externalColorName}/${changeCarsColorSTUInfo.internalColorName}`
-      let sellingPrice = changeCarsColorSTUInfo.price
-      let skuPic = `${app.config.imgAliyuncsUrl}${changeCarsColorSTUInfo.skuPic}`
-      console.log('quotationCreate.onShow')
-      console.log(changeCarsColorSTUInfo)
-      this.setData({
-        carSKUInfo: changeCarsColorSTUInfo,
-        'quotation.quotationItems[0].specifications': specifications,
-        'quotation.quotationItems[0].sellingPrice': sellingPrice,
-        'quotation.quotationItems[0].itemPic': skuPic
-      })
-      this.updateForSomeReason()
-      try {
-        wx.removeStorageSync('changeCarsColorSTUInfo')
-      } catch (e) {
-        // Do something when catch error
-      }
-    }
   },
   onHide () {
 

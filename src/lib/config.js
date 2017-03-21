@@ -28,18 +28,8 @@ let tradeServerHTTPSUrl = (function () {
   return HTTPS[evn]
 }())
 
-let imgAliyuncsUrl = (function () {
-  let URLS = {
-    dev: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
-    gqc: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
-    prd: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops'
-  }
-  return URLS[evn]
-}())
-
 module.exports = {
   ucServerHTTPSUrl: ucServerHTTPSUrl,
   ymcServerHTTPSUrl: ymcServerHTTPSUrl,
-  imgAliyuncsUrl: imgAliyuncsUrl,
   tradeServerHTTPSUrl: tradeServerHTTPSUrl
 }
