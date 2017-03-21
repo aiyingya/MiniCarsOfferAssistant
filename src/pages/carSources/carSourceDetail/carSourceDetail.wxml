@@ -152,7 +152,7 @@
 
             <image
               class="icon-dropdownarrow"
-              src="{{hasFoldTagCollection? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
+              src="{{hasFoldTagCollection? '/images/icons/icon_dropdownarrow_down_gray.png' : '/images/icons/icon_dropdownarrow_up_gray.png'}}"
             >
             </image>
           </view>

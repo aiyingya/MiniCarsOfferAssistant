@@ -250,7 +250,7 @@
                     class="header"
                   >
                     <view
-                      class="tab"
+                      class="tab {{carSourceItem.viewModelSelectedTab == index ? 'selected' : ''}}"
                       wx:for="{{carSourceItem.viewModelTabs}}"
                       wx:key="*this"
                       bindtap="handlerCarSourceTabClick"
@@ -263,12 +263,11 @@
                       {{item.name}}
                       <image
                         src="/images/icons/icon_triangle_nav.png"
-                        class="{{carSourceItem.viewModelSelectedTab == index ? '' : 'image-hidden'}}"
                       ></image>
                     </view>
                     <view
                       wx:if="{{carSourceItem.viewModelTabMore.length}}"
-                      class="tab"
+                      class="tab {{carSourceItem.viewModelSelectedTab == -1 ? 'selected' : ''}}"
                       bindtap="handlerCarSourceMore"
                       data-sku-index="{{skuItemIndex}}"
                       data-car-source="{{carSourceItem}}"
@@ -277,7 +276,6 @@
                       更多
                       <image
                         src="/images/icons/icon_triangle_nav.png"
-                        class="{{carSourceItem.viewModelSelectedTab == -1 ? '' : 'image-hidden'}}"
                       ></image>
                     </view>
                   </view>

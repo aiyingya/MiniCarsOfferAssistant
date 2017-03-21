@@ -249,7 +249,7 @@ Page({
      * 判断各种奇葩情况下每个货源的展示情况
      */
     let selectedCarSourcePlace = null
-    if (carSourcePlaceLowest && carSourcePlaceLowest) {
+    if (carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低和到货快 同时存在
       if (carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
@@ -279,7 +279,7 @@ Page({
         carSourceItem.viewModelTabMore = carSourceItem.others.shift()
         selectedCarSourcePlace = carSourceItem.others[0]
       }
-    } else if (!carSourcePlaceFastest && carSourcePlaceLowest) {
+    } else if (carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低不存在， 到货快存在
       if (carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
@@ -294,7 +294,7 @@ Page({
         carSourceItem.viewModelTabMore = null
         selectedCarSourcePlace = carSourcePlaceFastest
       }
-    } else if (carSourcePlaceFastest && !carSourcePlaceLowest) {
+    } else if (!carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低存在， 到货快不存在
       if (carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [

@@ -478,17 +478,16 @@ page {
   flex-direction: column;
   margin-top: 20rpx;
 }
+.carSources-cell .carSources-cell-content .header .selected {
+  color: #333333;
+}
 .carSources-cell .carSources-cell-content .header .tab image{
   width: 20rpx;
   height: 12rpx;
-}
-.carSources-cell .carSources-cell-content .header .tab .image-hidden {
   visibility: hidden;
 }
-.carSources-cell .carSources-cell-content .header .selected {
-	font-family: "PingFangSC-Regular";
-	font-size: 24rpx;
-	color: #333333;
+.carSources-cell .carSources-cell-content .header .selected image {
+  visibility: visible;
 }
 .carSources-cell .carSources-cell-content .header {
 	font-family: "PingFangSC-Regular";
