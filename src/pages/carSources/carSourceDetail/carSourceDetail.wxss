@@ -32,7 +32,7 @@
 .carSourceDetailDialog .header .close image {
   height: 30rpx;
   width: 30rpx;
-  margin: 15rpx;
+  padding: 15rpx;
 }
 
 .carSourceDetailDialog .body {
