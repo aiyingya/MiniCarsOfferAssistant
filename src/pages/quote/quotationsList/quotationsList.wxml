@@ -38,7 +38,12 @@
 										class="depreciate-icon"
 										src="../../../images/icons/icon_price_up.png"
 								></image>
-								<view class="depreciate">{{ cell.viewModel.priceChange.price }}</view>
+								<view
+                    wx:if="{{ cell.viewModel.priceChange.flag !== 0 }}"
+                    class="depreciate"
+                >
+                  {{ cell.viewModel.priceChange.price }}元
+                </view>
 							</view>
 						</view>
 					</view>
