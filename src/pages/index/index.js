@@ -16,7 +16,8 @@ Page({
 		HTTPS_YMCAPI: '',
 		showCarSeriesImageUrl: '',
 		carManufacturerSeriesList:[],
-		userInfo: ''
+		userInfo: '',
+    showNodata: false
   },
   //事件处理函数
   searchCarType() {
@@ -153,10 +154,15 @@ Page({
 			},
 			success: function(res) {
 				if(res) {
-					let data = res;
+					let data = res
+          let showNodata = false
+          if(data.length === 0) {
+            showNodata = true
+          }
 					that.setData({
 						showCarSeriesImageUrl: carSeries.logoUrl,
-						carManufacturerSeriesList: data
+						carManufacturerSeriesList: data,
+            showNodata: showNodata
 					})
 				}
 			}
@@ -172,7 +178,8 @@ Page({
 		that.setData({
 			showCarSeries: '',
 			carManufacturerSeriesList: [],
-			showCarSeriesImageUrl: ''
+			showCarSeriesImageUrl: '',
+      showNodata: false
 		});
 	},
 	handlerToCarsModels(e) {

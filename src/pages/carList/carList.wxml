@@ -126,7 +126,10 @@
 					</view>
 				</view>
 			</block>
-			<view wx:else class="nodata">
+			<view 
+			  wx:if="{{carManufacturerSeriesList.length === 0 && showNodata}}" 
+			  class="nodata"
+			  >
 				暂无数据
 			</view>
 		</scroll-view>

@@ -15,7 +15,8 @@ Page({
 		HTTPS_YMCAPI: '',
 		showCarSeriesImageUrl: '',
 		carManufacturerSeriesList:[],
-		userInfo: ''
+		userInfo: '',
+    showNodata: false
   },
   //事件处理函数
   searchCarType() {
@@ -55,7 +56,7 @@ Page({
 		// 获取页面数据.
 		
 		app.modules.request({
-			url: HTTPS_URL + 'cgi/navigate/brands/query', //仅为示例，并非真实的接口地址
+			url: HTTPS_URL + 'cgi/navigate/brands/query', 
 			method: 'POST',
 			data: {
 				"code": "0",
@@ -134,9 +135,14 @@ Page({
 			success: function(res) {
 				if(res) {
 					let data = res
+          let showNodata = false
+          if(data.length === 0) {
+            showNodata = true
+          }
 					that.setData({
 						showCarSeriesImageUrl: carSeries.logoUrl,
-						carManufacturerSeriesList: data
+						carManufacturerSeriesList: data,
+            showNodata: showNodata
 					})
 				}
 			}
@@ -152,7 +158,8 @@ Page({
 		that.setData({
 			showCarSeries: '',
 			carManufacturerSeriesList: [],
-			showCarSeriesImageUrl: ''
+			showCarSeriesImageUrl: '',
+      showNodata: false
 		});
 	},
 	handlerToCarsModels(e) {
