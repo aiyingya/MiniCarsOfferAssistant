@@ -44,7 +44,7 @@
 	background: rgba(237,65,73,.8);
 }
 .carModels-message-title {
-	width: 72.67%;
+	
 	font-family: "PingFangSC-Medium";
 	font-size: 30rpx;
 	color: #333333;
