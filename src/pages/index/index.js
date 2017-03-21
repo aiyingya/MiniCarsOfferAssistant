@@ -98,6 +98,11 @@ Page({
 		
 		
 	},
+  onPullDownRefresh() {
+    // 下拉刷新
+    wx.stopPullDownRefresh()
+    this.onLoad()
+  },
 	getHotpushCars () {
 		let that = this
 		let HTTPS_URL = this.data.HTTPS_YMCAPI

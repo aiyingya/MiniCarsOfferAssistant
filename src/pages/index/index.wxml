@@ -82,7 +82,7 @@
 					  >
 					  <block wx:if="{{item.depreciate > 0}}">下</block>
 					  <block wx:else>上</block>
-					  {{item.depreciateSTR}}
+					  {{item.depreciateSTR}}万
           </view>
 				</view>
 				<view class="hotCarsType-remark">
