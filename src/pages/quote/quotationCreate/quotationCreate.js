@@ -150,9 +150,18 @@ Page({
           carSkuInfo = carModelInfo.lowestPriceSku
         }
 
+        console.log(carSkuInfo)
+
         const itemNumber = carSkuInfo.skuId || ''
-        const itemType = carSkuInfo === '' ? 'third' : 'self'
-        const itemPic = carSkuInfo.skuPic || carModelInfo.lowestPriceSku.skuPic
+        const itemType = carSkuInfo.viewModelSupplierSelfSupport ? 'self' : 'third'
+        let itemPic = ''
+        if (carSkuInfo.skuPic) {
+          itemPic = carSkuInfo.skuPic
+        } else {
+          if (itemPic.lowestPriceSku) {
+            itemPic = itemPic.lowestPriceSku.skuPic
+          }
+        }
         const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
         const sellingPrice = carSkuInfo.price || carModelInfo.officialPrice
