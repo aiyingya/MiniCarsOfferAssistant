@@ -163,7 +163,7 @@ Page({
       that.pixelRatio = res.pixelRatio
       that.apHeight = 16
       that.offsetTop = 80
-			that.windowWidth = res.windowWidth - 30
+			that.windowWidth = res.windowWidth
     } catch (e) {
       
     }
@@ -185,7 +185,8 @@ Page({
 					xAxis: {
             disableGrid: true,
             fontColor: '#333333',
-            gridColor: '#333333'
+            gridColor: '#333333',
+            unitText: '（万）'
           },
           yAxis: {
             disabled: true,
@@ -193,6 +194,7 @@ Page({
             gridColor: '#333333',
             min: 10,
             max: 50,
+            unitText: '（个）',
             format(val) {
               return val.toFixed(0)
             }
@@ -201,7 +203,7 @@ Page({
             color: '#ECF0F7'
           },
           width: that.windowWidth,
-          height: 110,
+          height: 120,
           dataLabel: true,
           dataPointShape: false,
           extra: {
