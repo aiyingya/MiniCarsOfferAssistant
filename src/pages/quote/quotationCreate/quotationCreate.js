@@ -153,7 +153,7 @@ Page({
         console.log(carSkuInfo)
 
         const itemNumber = carSkuInfo.skuId || ''
-        const itemType = carSkuInfo.viewModelSupplierSelfSupport ? 'self' : 'third'
+        const itemType = carSkuInfo.viewModelSupplierSelfSupport ? 'self' : 'third_party'
         let itemPic = ''
         if (carSkuInfo.skuPic) {
           itemPic = carSkuInfo.skuPic
