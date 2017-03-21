@@ -76,7 +76,14 @@
 				>
 				<view class="hotCarsType-title">
 					<view class="hotCarsType-title-inner">{{item.name}}</view>
-					<view class="hotCarsType-title-price">{{item.guidePrice}}</view>
+					<view
+					  class="hotCarsType-title-price"
+					  wx:if="{{item.depreciate != 0}}"
+					  >
+					  <block wx:if="{{item.depreciate > 0}}">下</block>
+					  <block wx:else>上</block>
+					  {{item.depreciateSTR}}
+          </view>
 				</view>
 				<view class="hotCarsType-remark">
 					<view class="hotCarsType-remark-inner">{{item.description}}</view>

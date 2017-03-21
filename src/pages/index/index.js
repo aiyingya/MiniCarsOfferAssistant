@@ -107,7 +107,12 @@ Page({
 			method: 'GET',
 			data: {},
 			success: function(res) {
-				let data = res.content
+        let depreciate
+        
+        for(let item of res) {
+          item.depreciate = (item.guidePrice - item.salePrice)
+          item.depreciateSTR = Math.abs(item.guidePrice - item.salePrice).toFixed(2)
+        }
 				that.setData({
 					hotCarsTypes: res
 				})
