@@ -217,7 +217,7 @@ Page({
             disableGrid: true,
             fontColor: '#333333',
             gridColor: '#333333',
-            unitText: '（万）'
+            unitText: '下（万）'
           },
           yAxis: {
             disabled: true,
