@@ -426,9 +426,7 @@
                           class="item"
                         >
                           <!--右边-->
-                          <view class="carSources-place" >
-                            {{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].name}}货源
-                          </view>
+                          <view class="carSources-place" >{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].name}}货源</view>
                           <!-- 供货价格 -->
                           <view class="carSources-cell-price">
                             <image
@@ -440,14 +438,10 @@
                             <view
                               wx:if="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount !== 0 }}"
                               class="discount"
-                            >
-                              {{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscountDesc }}元/
-                            </view>
+                            >{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscountDesc }}元/</view>
                             <view
                               class="price"
-                            >
-                              {{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelPriceDesc }}
-                            </view>
+                            >{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelPriceDesc }}</view>
                           </view>
                         </view>
                       </view>

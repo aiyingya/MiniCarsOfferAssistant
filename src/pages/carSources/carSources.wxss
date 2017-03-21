@@ -543,12 +543,13 @@ page {
 	background: #EFEFEF;
 	border-radius: 4rpx;
 	font-family: "PingFangSC-Regular";
-	margin-right: 10rpx;
-	padding: 8rpx 16rpx;
+	margin-right: 4rpx;
+	padding: 8rpx 8rpx;
   font-size: 22rpx;
   color: #333333;
   letter-spacing: 0;
   line-height: 24rpx;
+  overflow: hidden;
 }
 
 .carSources-cell .carSources-cell-content .more .carSources-cell-price {
