@@ -1,0 +1,36 @@
+<template name="specificationsDialog">
+  <view class="specificationsDialog">
+    <view class="weui-mask {{ animateCss }}" hidden="{{ !visible }}"></view>
+    <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
+      <view class="weui-dialog__hd" wx:if="{{ title }}">
+        <view class="weui-dialog__title">{{ title }}</view>
+      </view>
+      <view class="weui-dialog__bd" wx:if="{{ content }}"><view class="weui-dialog__bd__centent">{{ content }}</view></view>
+      <form bindsubmit="{{ specificationsDialogConfirm }}">
+        <view style="display:flex;">
+          <view class="weui-dialog__input" >
+            <input
+              type="text"
+              name="externalColorName"
+              value="{{ externalColorName }}"
+              placeholder="外饰"
+            />
+          </view>
+          <view style="margin: 25rpx; font-size: 36rpx;">/</view>
+          <view class="weui-dialog__input" style="margin-left: 0rpx; margin-right: 50rpx;">
+            <input
+              type="text"
+              name="internalColorName"
+              value="{{ internalColorName }}"
+              placeholder="内饰"
+            />
+          </view>
+        </view>
+        <view class="weui-dialog__ft">
+          <button class="weui-dialog__btn weui-dialog__btn_default" wx:if="{{ showCancel }}" bindtap="{{ specificationsDialogCancel }}">{{ cancelText }}</button>
+          <button class="weui-dialog__btn weui-dialog__btn_primary" formType="submit">{{ confirmText }}</button>
+        </view>
+      </form>
+    </view>
+  </view>
+</template>

@@ -1,0 +1,179 @@
+<template name="carSourcesTopNavbar">
+	<view class="carSources-topbar weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
+			<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+					<image class="weui-media-box__thumb" src="{{carModelsInfo.lowestPriceSku.skuPic}}" />
+			</view>
+			<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+					<view class="weui-media-box__title">{{carModelsInfo.carModelName}}</view>
+					<view class="weui-media-box__desc">指导价{{carModelsInfo.officialPriceStr}}万</view>
+			</view>
+	</view>
+</template>
+
+<template name="carSourcesBody">
+	<view class="carSources-body">
+		<view class="carSources-navbar">
+			<view 
+				class="navbar cars-facade"
+				bindtap="handlerAmendCarFacade"
+				data-type="0"
+				>
+				<view class="navbar-text">
+					{{selectExternalColorName}}
+					<image 
+						wx:if="{{showRmendCarFacade && selectColorId == '0'}}"
+						class="icon-dropdownarrow" 
+						src="../../images/icons/icon_dropdownarrow_up_gray.png"
+						></image>
+					<image 
+						wx:else
+						class="icon-dropdownarrow" 
+						src="../../images/icons/icon_dropdownarrow_down_gray.png"
+						></image>
+				</view>
+			</view>
+			<view 
+				class="navbar cars-facade"
+				bindtap="handlerAmendCarFacade"
+				data-type="1"
+				>
+				<view class="navbar-text">
+					{{selectInternalColorName}}
+					<image 
+						wx:if="{{showRmendCarFacade && selectColorId == '1'}}"
+						class="icon-dropdownarrow" 
+						src="../../images/icons/icon_dropdownarrow_up_gray.png"
+						></image>
+					<image 
+						wx:else
+						class="icon-dropdownarrow" 
+						src="../../images/icons/icon_dropdownarrow_down_gray.png"
+						></image>
+				</view>
+			</view>
+			<view class="navbar">
+				<botton
+					hover-class="navbar-btn-active" 
+					class="navbar-btn {{carStatus}}" 
+					type="primary"
+					bindtap="handlerSwitchCarStatus"
+					>{{carStatusName}}</botton>
+			</view>
+		</view>
+		<!-- 条件筛选.-->
+		<view wx:if="{{showRmendCarFacade}}" class="rmendCarFacade-popup-wrap">
+			<view 
+				class="rmendCarFacade-popup-mask showMask"
+				bindtap="headlerRemoveRmendCarFacade"
+				></view>
+			<view class="rmendCarFacade-inner topToBottom">
+				<scroll-view scroll-y style="height: 520rpx">
+					<view 
+						class="weui-cell weui-cell_access" 
+						hover="true"
+						hover-class="weui-cell_active"
+						wx:for="{{filtersData}}"
+						wx:key="unique"
+						bindtap="headlerSelectColor"
+						data-color="{{item}}"
+						>
+							<view class="weui-cell__bd weui-cell_primary">
+									<view>{{item.name}}</view>
+							</view>
+							<view
+								wx:if="{{selectExternalColorId == item.id || selectInternalColorId == item.id}}"
+							  class="weui-cell__ft">
+								<image src="../../images/icons/icon_select_red.png"></image>
+							</view>
+					</view>
+				</scroll-view>
+			</view>
+		</view>
+		<view 
+			wx:if="{{carSkuList.length > 0}}"
+			class="carSources-cells"
+			>
+			<view 
+				wx:for="{{carSkuList}}"
+				wx:key="unique"
+				hover="true" 
+				class="carSources-cell"
+				hover-class="active"
+				data-quoteinfo="{{item}}"
+				wx:if="{{carStatus === item.status || carStatusAll === 'all'}}"
+				bindtap="handlerChangeCarColor"
+				>
+				<view class="carSources-cell-list">
+					<view class="carSources-cell-label">
+						<view class="label">配色：</view>
+						<view class="message">{{item.externalColorName}}/{{item.internalColorName}}</view>
+					</view>
+					<view 
+						wx:if="{{item.status === 'no_stock'}}"
+						class="no-stock carSources-cell-price carSources-price"
+						>
+						<view class="label">指导价:</view>
+						<view class="price no-stock">{{item.priceStr}}</view>万	
+					</view>
+					<view 
+						wx:else
+						class="carSources-cell-price carSources-price"
+						>
+						<view class="label">供货价:</view>
+						<view class="price">{{item.priceStr}}</view>万
+					</view>
+				</view>
+				<view class="carSources-cell-list">
+					<view class="carSources-cell-label">
+						<view class="label">状态：</view>
+						<view 
+							class="message no-stock"
+							wx:if="{{item.status === 'no_stock'}}"
+							>无平台供货</view>
+						<view 
+							class="message"
+							wx:else
+							>有货</view>
+					</view>
+					<view 
+						class="carSources-cell-price"
+						wx:if="{{item.count !== 0}}"
+						>
+						<view 
+							wx:if="{{item.discount > 0}}"
+							class="depreciate-icon"
+							>
+							<image src="../../images/icons/icon_price_down.png"></image>
+						</view>
+						<view 
+							wx:else
+							class="depreciate-icon"
+							>
+							<image src="../../images/icons/icon_price_up.png"></image>
+						</view>
+						<view class="depreciate">{{item.count}}万</view>
+					</view>
+				</view>
+				<view 
+					wx:if="{{item.remark !== '无'}}"
+					class="carSources-cell-list"
+					>
+					<view class="carSources-cell-label">
+						<view class="label">备注：</view>
+						<view class="message remark">{{item.remark}}</view>
+					</view>
+				</view>
+				
+				<view
+					wx:if="{{ carSKUInfo.skuId === item.skuId }}"
+					class="carSources-select-icon"
+				>
+					
+				</view>
+			</view>
+		</view>
+		<view wx:else class="nodata">
+			暂无数据
+		</view>
+	</view>
+</template>
