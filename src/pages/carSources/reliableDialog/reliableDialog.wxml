@@ -1,0 +1,50 @@
+<template name="reliableDialog">
+    <view class="reliableDialog">
+        <view
+                class="weui-mask {{ animateCss }}"
+                hidden="{{ !visible }}"
+                bindtap="{{reliableDialogClose}}"
+        >
+        </view>
+        <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
+            <view
+                    class="close"
+                    bindtap="{{reliableDialogClose}}"
+            >
+                <image
+                        src="../../images/icons/icon_close.png"
+                >
+                </image>
+            </view>
+            <view class="content-section">
+                <view class="title-section">
+                    <view class="">此报价是否靠谱</view>
+                </view>
+                <view class="reliable-section">
+                    <view
+                            class="reliable {{carSource.hasBeenReliableByUser === 1? 'selected' : ''}}"
+                            bindtap="{{reliableDialogReliable}}"
+                            data-reliable="1"
+                    >
+                        <image
+                                src="{{carSource.hasBeenReliableByUser === 1? '/images/icons/icon_pop_reliable_on.png': '/images/icons/icon_pop_reliable_off.png'}}"
+                        >
+                        </image>
+                        靠谱({{carSource.hasBeenReliableCount}})
+                    </view>
+                    <view
+                            class="reliable {{carSource.hasBeenReliableByUser === -1? 'selected' : ''}}"
+                            bindtap="{{reliableDialogReliable}}"
+                            data-reliable="-1"
+                    >
+                        <image
+                                src="{{carSource.hasBeenReliableByUser === -1? '/images/icons/icon_pop_unreliable_on.png': '/images/icons/icon_pop_unreliable_off.png'}}"
+                        >
+                        </image>
+                        不靠谱({{carSource.hasBeenUnReliableCount}})
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>

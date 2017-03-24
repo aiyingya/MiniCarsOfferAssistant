@@ -1,0 +1,157 @@
+<!--index.wxml-->
+<view class="container">
+	<!-- 搜索车型.-->
+	<view class="topbar">
+		<view class="topbar-search">
+			<view class="topbar-ad">
+				<image src="../../images/pages/home/home_slogan_pic.png"></image>
+			</view>
+			<view class="search-wrap">
+				<view class="search-inner">
+					<view class="search-icon">
+						<image class="search-img" src="../../images/icons/icon_find.png"></image>
+					</view>
+					<input 
+						class="search-input" 
+						placeholder-class="search-placeholder"
+						disabled 
+						placeholder="输入指导价/车款名" 
+						/>
+					<view 
+						class="bindtap"
+						bindtap="searchCarType"
+						></view>
+				</view>
+			</view>
+		</view>	
+		<image 
+			class="topbar-bg"
+			src="../../images/pages/home/home_bg_pic.png"	
+			></image>
+	</view>
+	
+
+	<!-- 热门品牌.-->
+	<view class="hot-carsbrand-wrap">
+		<view class="title hot-carsbrand-title">
+			<view class="text hot-carsbrand-text">热门品牌</view>
+			<view 
+				bindtap="handleCheckMore"
+				class="more">查看更多
+				<image src="../../images/icons/icon_arrow_more.png" class="icon-more"></image>
+			</view>
+		</view>
+
+		<view class="hot-carsbrand-stand">
+			<view 
+				class="stand-item"
+				wx:for="{{hotCarLists}}"
+				>
+				<image 
+					mode="aspectFit" 
+					class="hot-carslogo" 
+					src="{{item.logoUrl}}"
+					bindtap="handlerSelectCarSeries"
+					data-carSeries="{{item}}"
+					></image>
+			</view>
+		</view>	
+	</view>
+
+	<!-- 热推车型.-->
+	<view class="hot-carstype-wrap">
+		<view class="title hot-carsbrand-title">
+			<view class="text hot-carsbrand-text">热推车型</view>
+<!--
+			<view class="more">查看更多
+				<view class="icon-more"></view>
+			</view>
+-->
+		</view>
+		
+		<view class="hotCarsType-cells">
+			<view 
+				class="hotCarsType-cell"
+				wx:for="{{hotCarsTypes}}"
+				>
+				<view class="hotCarsType-title">
+					<view class="hotCarsType-title-inner">{{item.name}}</view>
+					<view
+					  class="hotCarsType-title-price"
+					  wx:if="{{item.depreciate != 0}}"
+					  >
+					  <block wx:if="{{item.depreciate > 0}}">下</block>
+					  <block wx:else>上</block>
+					  {{item.depreciateSTR}}万
+          </view>
+				</view>
+				<view class="hotCarsType-remark">
+					<view class="hotCarsType-remark-inner">{{item.description}}</view>
+					<view 
+						class="hotCarsType-title-relation"
+						bindtap="handlerMakePhoneCall"
+						>联系</view>
+				</view>
+			</view>
+		</view>
+		
+		
+	</view>
+</view>
+
+<!-- 车系.-->
+<view wx:if="{{showCarSeries !== ''}}" class="carSeries-wrap">
+	<view 
+		class="carSeries-mask {{showMask}}"
+		bindtap="removeCarSeriesInner"
+		>
+	</view>
+	<view class="carSeries-inner {{showCarSeriesInner}}">
+		<scroll-view scroll-y style="height: {{windowHeight}}">
+			<view class="carSeries-logo weui-flex">
+				<image class="" src="{{showCarSeriesImageUrl}}"></image>
+			</view>
+			<block wx:if="{{carManufacturerSeriesList.length > 0}}">
+				<view 
+					wx:for="{{carManufacturerSeriesList}}" 
+					data-id="{{item.id}}"
+					class="viewCarsList-calls"
+					>
+					<view class="viewCarsList-index carSeries-title">{{item.title}}</view>
+					<view class="weui-cells weui-cells_in-small-appmsg">
+						<view 
+							class="weui-media-box weui-media-box_appmsg" 
+							hover="true"
+							hover-class="weui-cell_active"
+							wx:for="{{item.items}}"
+							wx:for-item="cell"
+							wx:for-index="cellIndex" 
+							bindtap="handlerToCarsModels"
+							data-carsInfo="{{cell}}"
+							url="../carModels/carModels?carsInfo={{cell}}"
+							>
+								<view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+									<image class="weui-media-box__thumb" src="{{cell.imgUrl}}"></image>
+								</view>
+								<view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+										<view class="weui-media-box__title">{{cell.name}}</view>
+								</view>
+						</view>
+					</view>
+				</view>
+			</block>
+			<view 
+			  wx:if="{{carManufacturerSeriesList.length === 0 && showNodata}}" 
+			  class="nodata"
+			  >
+				暂无数据
+			</view>
+		</scroll-view>
+	</view>
+	
+</view>
+
+
+
+
+
