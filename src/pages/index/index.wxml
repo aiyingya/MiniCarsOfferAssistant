@@ -11,31 +11,31 @@
 					<view class="search-icon">
 						<image class="search-img" src="../../images/icons/icon_find.png"></image>
 					</view>
-					<input 
-						class="search-input" 
+					<input
+						class="search-input"
 						placeholder-class="search-placeholder"
-						disabled 
-						placeholder="输入指导价/车款名" 
+						disabled
+						placeholder="输入指导价/车款名"
 						/>
-					<view 
+					<view
 						class="bindtap"
 						bindtap="searchCarType"
 						></view>
 				</view>
 			</view>
-		</view>	
-		<image 
+		</view>
+		<image
 			class="topbar-bg"
-			src="../../images/pages/home/home_bg_pic.png"	
+			src="../../images/pages/home/home_bg_pic.png"
 			></image>
 	</view>
-	
+
 
 	<!-- 热门品牌.-->
 	<view class="hot-carsbrand-wrap">
 		<view class="title hot-carsbrand-title">
 			<view class="text hot-carsbrand-text">热门品牌</view>
-			<view 
+			<view
 				bindtap="handleCheckMore"
 				class="more">查看更多
 				<image src="../../images/icons/icon_arrow_more.png" class="icon-more"></image>
@@ -43,19 +43,20 @@
 		</view>
 
 		<view class="hot-carsbrand-stand">
-			<view 
+			<view
 				class="stand-item"
 				wx:for="{{hotCarLists}}"
+        wx:key="*this"
 				>
-				<image 
-					mode="aspectFit" 
-					class="hot-carslogo" 
+				<image
+					mode="aspectFit"
+					class="hot-carslogo"
 					src="{{item.logoUrl}}"
 					bindtap="handlerSelectCarSeries"
 					data-carSeries="{{item}}"
 					></image>
 			</view>
-		</view>	
+		</view>
 	</view>
 
 	<!-- 热推车型.-->
@@ -68,11 +69,12 @@
 			</view>
 -->
 		</view>
-		
+
 		<view class="hotCarsType-cells">
-			<view 
+			<view
 				class="hotCarsType-cell"
 				wx:for="{{hotCarsTypes}}"
+        wx:key="*this"
 				>
 				<view class="hotCarsType-title">
 					<view class="hotCarsType-title-inner">{{item.name}}</view>
@@ -87,21 +89,21 @@
 				</view>
 				<view class="hotCarsType-remark">
 					<view class="hotCarsType-remark-inner">{{item.description}}</view>
-					<view 
+					<view
 						class="hotCarsType-title-relation"
 						bindtap="handlerMakePhoneCall"
 						>联系</view>
 				</view>
 			</view>
 		</view>
-		
-		
+
+
 	</view>
 </view>
 
 <!-- 车系.-->
 <view wx:if="{{showCarSeries !== ''}}" class="carSeries-wrap">
-	<view 
+	<view
 		class="carSeries-mask {{showMask}}"
 		bindtap="removeCarSeriesInner"
 		>
@@ -112,20 +114,22 @@
 				<image class="" src="{{showCarSeriesImageUrl}}"></image>
 			</view>
 			<block wx:if="{{carManufacturerSeriesList.length > 0}}">
-				<view 
-					wx:for="{{carManufacturerSeriesList}}" 
+				<view
+					wx:for="{{carManufacturerSeriesList}}"
+          wx:key="*this"
 					data-id="{{item.id}}"
 					class="viewCarsList-calls"
 					>
 					<view class="viewCarsList-index carSeries-title">{{item.title}}</view>
 					<view class="weui-cells weui-cells_in-small-appmsg">
-						<view 
-							class="weui-media-box weui-media-box_appmsg" 
+						<view
+							class="weui-media-box weui-media-box_appmsg"
 							hover="true"
 							hover-class="weui-cell_active"
 							wx:for="{{item.items}}"
+              wx:key="*this"
 							wx:for-item="cell"
-							wx:for-index="cellIndex" 
+							wx:for-index="cellIndex"
 							bindtap="handlerToCarsModels"
 							data-carsInfo="{{cell}}"
 							url="../carModels/carModels?carsInfo={{cell}}"
@@ -140,15 +144,15 @@
 					</view>
 				</view>
 			</block>
-			<view 
-			  wx:if="{{carManufacturerSeriesList.length === 0 && showNodata}}" 
+			<view
+			  wx:if="{{carManufacturerSeriesList.length === 0 && showNodata}}"
 			  class="nodata"
 			  >
 				暂无数据
 			</view>
 		</scroll-view>
 	</view>
-	
+
 </view>
 
 
