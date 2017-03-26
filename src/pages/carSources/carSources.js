@@ -339,6 +339,15 @@ Page({
     }
     carSourceItem.viewModelTags = tags
 
+    // 内外饰颜色处理
+    const internalColors = carSourceItem.internalColor.split('/')
+    const processedInternalColors = []
+    for (let color of internalColors) {
+      const processedColor = color.replace(/色$/, '')
+      processedInternalColors.push(processedColor)
+    }
+    carSourceItem.viewModelInternalColor = processedInternalColors.join('+')
+
     this.processCarSourcePlaceItem(selectedCarSourcePlace, carSourceItem)
   },
   processCarSourcePlaceItem (carSourcePlaceItem, carSourceItem) {

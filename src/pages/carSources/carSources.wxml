@@ -170,7 +170,7 @@
             <!-- 库存分区列表 -->
             <view class="first-part">
               <view class="title">
-                外:{{skuItem.carSku.externalColorName}} 内:{{skuItem.carSku.internalColorName}}
+                {{skuItem.carSku.externalColorName}}
               </view>
               <view
                 class="button confirm create-quoted"
@@ -458,15 +458,10 @@
                       <view class="second-part">
                         <!-- 车源基本信息 -->
                         <view class="basic-infomation">
+                          <view class="basic-label">{{carSourceItem.externalColor}}/{{carSourceItem.viewModelInternalColor}}</view>
                           <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length}}" class="basic-label">{{carSourceItem.viewModelSelectedCarSourcePlace.name}}</view>
                           <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
                           <view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}</view>
-                          <view
-                            wx:if="{{ !(carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
-                            class="basic-label"
-                          >
-                            车源信息暂无
-                          </view>
                         </view>
 
                         <!-- 供货价格 -->
