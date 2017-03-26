@@ -211,7 +211,7 @@ Page({
     let tags = []
     for (let carSourceItem of carSourcesBySkuInSpuItem.carSourcesList) {
       this.processCarSourceItem(carSourceItem)
-      tags = tags.concat(carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags)
+      tags = tags.concat(carSourceItem.viewModelTags)
     }
     // 合并不同的标签集合
     const tagsSet = new Set(tags)
@@ -224,17 +224,26 @@ Page({
    * @param carSourceItem
    */
   processCarSourceItem (carSourceItem) {
+    let carSourcePlaceArray = []
     // 价格最低
     const carSourcePlaceLowest = carSourceItem.lowest
     if (carSourcePlaceLowest) {
       // FIXME: 初始化状态下，无法得知某一货源地下的最低报价就是从第一个物流方案得来的，很可能压根就没有物流方案
+      carSourcePlaceArray.push(carSourcePlaceLowest)
       this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceLowest, 0)
     }
 
     // 到货快
     const carSourcePlaceFastest = carSourceItem.fastest
     if (carSourcePlaceFastest) {
+      carSourcePlaceArray.push(carSourcePlaceFastest)
       this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceFastest, 0)
+    }
+
+    // 其他
+    const moreArray = carSourceItem.others
+    if (moreArray) {
+      carSourcePlaceArray = carSourcePlaceArray.concat(moreArray)
     }
 
     // 更多项目
@@ -317,6 +326,19 @@ Page({
     const publishDate = util.dateCompatibility(carSourceItem.publishDate)
     carSourceItem.viewModelPublishDateDesc = util.dateDiff(publishDate)
 
+    // 更新分区标签
+    const tags = []
+    if (carSourceItem.supplierSelfSupport) {
+      tags.push('垫款发车')
+    }
+    for (let carSourcePlaceItem of carSourcePlaceArray) {
+      if (carSourcePlaceItem.priceFixed) {
+        tags.push('一口价')
+        break
+      }
+    }
+    carSourceItem.viewModelTags = tags
+
     this.processCarSourcePlaceItem(selectedCarSourcePlace, carSourceItem)
   },
   processCarSourcePlaceItem (carSourcePlaceItem, carSourceItem) {
@@ -385,14 +407,6 @@ Page({
     }
   },
   updateTheCarSourcePlace (carSourcePlaceItem, carSourceItem) {
-    const tags = []
-    if (carSourcePlaceItem.priceFixed) {
-      tags.push('一口价')
-    }
-    if (carSourceItem.supplierSelfSupport) {
-      tags.push('垫款发车')
-    }
-    carSourcePlaceItem.viewModelTags = tags
     this.updateTheLogisticsDestination(carSourcePlaceItem.viewModelSelectedLogisticsDestination, carSourcePlaceItem, carSourceItem)
   },
   /**
@@ -612,7 +626,7 @@ Page({
       })
     }
   },
-  headlerRemoveRmendCarFacade() {
+  headlerRemoveRmendCarFacade () {
     const carSourcesBySkuInSpuList = this.updateSearchResult({color: -1})
     this.selectCarSku(-1, carSourcesBySkuInSpuList)
     this.setData({
