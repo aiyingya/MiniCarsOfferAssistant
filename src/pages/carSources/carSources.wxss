@@ -193,7 +193,6 @@ page {
 	color: #333333;
 }
 .carSources-topbar {
-	height: 104rpx;
 	background-color: #fff;
 	overflow: hidden;
 }
