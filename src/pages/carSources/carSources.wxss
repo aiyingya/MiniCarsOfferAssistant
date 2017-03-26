@@ -128,6 +128,15 @@ page {
 	-webkit-align-items:center;
 	align-items:center;
 	white-space: nowrap;
+  position: relative;
+}
+.filter-scroll-view:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1rpx solid #E4E4E4;
 }
 .filter-scroll-view .scroll-filter {
 	float:left;
@@ -212,14 +221,6 @@ page {
 	letter-spacing: 0rpx;
 	line-height: 26rpx;
 }
-.carSources-body {
-	width: 100%;
-	margin-top: 20rpx;
-	position: relative;
-	min-height: -webkit-calc(100% - 180rpx);
-	min-height: calc(100% - 180rpx);
-	overflow: hidden;
-}
 .carSources-navbar {
 	width: 100%;
 	height: 88rpx;
@@ -232,6 +233,7 @@ page {
 	background-color: #fff;
 	position: relative;
 	z-index: 10;
+  margin-top: 20rpx;
 }
 .carSources-navbar:after  {
 	content: '';
@@ -312,16 +314,6 @@ page {
 	letter-spacing: -0.56rpx;
 	line-height: 28rpx;
 	text-align: center;
-}
-/* 供货 SKU 分区样式 */
-.carSources-sections {
-	position: relative;
-	width: 100%;
-	overflow: hidden;
-}
-.carSources-sections .carSources-nodata {
-	position: absolute;
-	top: 0;
 }
 .carSources-section {
 	background-color: #fff;

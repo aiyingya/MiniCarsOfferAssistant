@@ -33,7 +33,9 @@ Page({
     logisticsList: [],
     cacheCarSourcesBySkuInSpuList: [],
     selectedSectionIndex: -1,
-    app: app
+    selectedSectionId: '0',
+    app: app,
+    showDetailTitle: false
   },
   onLoad (options) {
     const that = this
@@ -128,7 +130,8 @@ Page({
         that.selectCarSku(-1, newCarSourcesBySkuInSpuList)
         that.setData({
           carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
-          selectedSectionIndex: -1
+          selectedSectionIndex: -1,
+          selectedSectionId: '0'
         })
       }
     })
@@ -180,6 +183,31 @@ Page({
       }
     }
   },
+  handlerScroll (e) {
+    const that = this
+    if (e.detail) {
+      console.log(e.detail)
+      if (e.detail.scrollTop > 64) {
+        if (!this.data.showDetailTitle) {
+          wx.setNavigationBarTitle({
+            title: this.data.carModelsInfo.carModelName,
+            success: function () {
+              that.data.showDetailTitle = true
+            }
+          })
+        }
+      } else {
+        if (this.data.showDetailTitle) {
+          wx.setNavigationBarTitle({
+            title: '车源详情',
+            success: function () {
+              that.data.showDetailTitle = false
+            }
+          })
+        }
+      }
+    }
+  },
   showReliableDialog(spuId, skuIndex, carSource, carSourceIndex) {
     // 24 小时以内， 弹框走起
     const that = this
@@ -201,6 +229,26 @@ Page({
           carSourcesBySkuInSpuList: that.data.carSourcesBySkuInSpuList
         })
       },
+    })
+  },
+  showFold (a, b, c) {
+    const that = this
+    this.setData({
+      carSourcesBySkuInSpuList: a,
+      selectedSectionIndex: b
+    })
+
+    setTimeout(function () {
+      that.setData({
+        selectedSectionId: c
+      })
+    }, 100)
+  },
+  hideFold (a, b, c) {
+    const that = this
+    this.setData({
+      carSourcesBySkuInSpuList: a,
+      selectedSectionIndex: -1
     })
   },
   /**
@@ -639,10 +687,9 @@ Page({
     const carSourcesBySkuInSpuList = this.updateSearchResult({color: -1})
     this.selectCarSku(-1, carSourcesBySkuInSpuList)
     this.setData({
-      carSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
-      selectedSectionIndex: -1,
       showRmendCarFacade: false
     })
+    this.hideFold(carSourcesBySkuInSpuList, -1, this.data.selectedSectionId)
   },
   /**
    * 搜索入口方法，收集所有的搜索条件，合并后得出结果
@@ -730,9 +777,8 @@ Page({
 
     this.setData({
       scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes,
-      carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
-      selectedSectionIndex: -1
     })
+    this.hideFold(newCarSourcesBySkuInSpuList, -1, this.data.selectedSectionId)
   },
   /**
    * 选择 SKU 分区
@@ -742,19 +788,18 @@ Page({
     const index = e.currentTarget.dataset.skuItemIndex
     const skuItem = e.currentTarget.dataset.skuItem
 
-    let actualIndex
+    let actualIndex = -1
+    let actualId = this.data.selectedSectionId
 
     if (index === this.data.selectedSectionIndex) {
-      actualIndex = -1
+      this.selectCarSku(actualIndex)
+      this.hideFold(this.data.carSourcesBySkuInSpuList, actualIndex, actualId)
     } else {
       actualIndex = index
+      actualId = actualIndex.toString()
+      this.selectCarSku(actualIndex)
+      this.showFold(this.data.carSourcesBySkuInSpuList, actualIndex, actualId);
     }
-
-    this.selectCarSku(actualIndex)
-    this.setData({
-      carSourcesBySkuInSpuList: this.data.carSourcesBySkuInSpuList,
-      selectedSectionIndex: actualIndex
-    })
   },
   // /**
   //  * 关注一个供应商

@@ -12,7 +12,13 @@
 <template is="dialog" data="{{ ...$wux.dialog }}"/>
 
 <!-- 货源列表 -->
-<view class="car-sources container">
+<scroll-view
+  class="car-sources container"
+  scroll-y="true"
+  bindscroll="handlerScroll"
+  scroll-into-view="x{{selectedSectionId}}"
+  style="height: {{windowHeight}}"
+>
   <!-- SPU 详情展示 -->
   <view class="carSources-topbar weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active">
     <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
@@ -21,12 +27,12 @@
   </view>
 
   <!-- 页面主体 -->
-  <view class="carSources-body">
-    <view
+  <!--<view class="carSources-body">-->
+    <block
       wx:if="{{nodata === 'init'}}"
     >
-    </view>
-    <view
+    </block>
+    <block
       wx:if="{{nodata === 'data'}}"
     >
       <!-- 下拉框筛选 -->
@@ -125,10 +131,6 @@
         </view>
       </view>
       <!-- 标签选择 -->
-      <!--<scroll-view-->
-      <!--scroll-x="true"-->
-      <!--style="height: 96rpx; width: 100%;"-->
-      <!--&gt;-->
       <view class="filter-scroll-view">
         <view
           wx:for="{{scrollFilters}}"
@@ -154,13 +156,14 @@
         </view>
       </view>
       <!-- 货源列表 -->
-      <view class="carSources-sections">
-        <view
+      <!--<view class="carSources-sections" >-->
+      <view
           wx:for="{{carSourcesBySkuInSpuList}}"
           wx:for-item="skuItem"
           wx:for-index="skuItemIndex"
           wx:key="*this"
           class="carSources-section"
+          id="x{{skuItemIndex}}"
         >
           <view class="carSources-section-content"
                 bindtap="handlerSelectCarSku"
@@ -558,8 +561,8 @@
             </view>
           </view>
         </view>
-      </view>
-    </view>
+      <!--</view>-->
+    </block>
     <view
       wx:if="{{nodata === 'none'}}"
       class="nodata"
@@ -567,5 +570,5 @@
       <image class="carSource-sections-nodata-image" src="../../images/icons/orderlist_icon_noorder.png"></image>
       <view class="carSource-sections-nodata-text">暂无货源</view>
     </view>
-  </view>
-</view>
+  <!--</view>-->
+</scroll-view>
