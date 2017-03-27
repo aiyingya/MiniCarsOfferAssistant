@@ -36,8 +36,7 @@ Page({
     selectedSectionId: '0',
     app: app,
     showDetailTitle: false,
-    navbarTop: 219,
-    navbarTop2: 144
+    hasOverLayDropdown: false,
   },
   onLoad (options) {
     const that = this
@@ -209,14 +208,21 @@ Page({
         }
       }
 
-      let diff = 0
       if (e.detail.scrollTop > 71) {
-        diff = e.detail.scrollTop - 71
+        if (!this.data.hasOverLayDropdown) {
+          console.log('fuck')
+          this.setData({
+            hasOverLayDropdown: true
+          })
+        }
+      } else {
+        if (this.data.hasOverLayDropdown) {
+          console.log('fuck you')
+          this.setData({
+            hasOverLayDropdown: false
+          })
+        }
       }
-      this.setData({
-        navbarTop: diff * 2 + 219,
-        navbarTop2: diff * 2 + 144
-      })
     }
   },
   showReliableDialog(spuId, skuIndex, carSource, carSourceIndex) {
@@ -812,32 +818,6 @@ Page({
       this.showFold(this.data.carSourcesBySkuInSpuList, actualIndex, actualId);
     }
   },
-  // /**
-  //  * 关注一个供应商
-  //  * @param e
-  //  */
-  // handlerFollow(e) {
-  //   const that = this
-  //
-  //   const skuIndex = e.currentTarget.dataset.skuIndex
-  //   const carSourceIndex = e.currentTarget.dataset.carSourceIndex
-  //   const carSource = e.currentTarget.dataset.carSource
-  //   const supplier = e.currentTarget.dataset.supplier
-  //
-  //   this.requestFocusOrNotASupplier(supplier.id, !supplier.hasFocused, {
-  //     success: function (res) {
-  //       supplier.hasFocused = !supplier.hasFocused
-  //       carSource.supplier = supplier
-  //       that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-  //     },
-  //     fail: function () {
-  //
-  //     },
-  //     complete: function () {
-  //
-  //     }
-  //   })
-  // },
   /**
    * 评价某一个供应商是否靠谱
    * @param e
