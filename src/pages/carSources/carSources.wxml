@@ -11,11 +11,80 @@
 <import src="../../lib/dialog/dialog.wxml"/>
 <template is="dialog" data="{{ ...$wux.dialog }}"/>
 
+<!-- 条件筛选.-->
+<view
+  wx:if="{{showRmendCarFacade}}"
+  class="rmendCarFacade-popup-wrap"
+  style="top: {{navbarTop}}rpx;"
+>
+  <view
+    class="rmendCarFacade-popup-mask showMask"
+    bindtap="handlerRemoveRmendCarFacade"
+  >
+  </view>
+  <view class="rmendCarFacade-inner topToBottom">
+    <view class="dropdown">
+      <view class="dd dropdown-left">
+        <view
+          hover="true"
+          hover-class="weui-cell_active"
+          wx:for="{{dropDownFiltersData}}"
+          wx:for-item="filterItem"
+          wx:for-index="filterIndex"
+          wx:key="*this"
+          class="weui-cell weui-cell_access"
+          bindtap="handlerSelectItem"
+          data-filter-position="left"
+          data-filter-Index="{{filterIndex}}"
+          data-filter-item="{{filterItem}}"
+          data-super-filter-item="{{}}"
+        >
+          <view class="weui-cell__bd weui-cell_primary">
+            <view>{{filterItem.name}}</view>
+          </view>
+          <view
+            wx:if="{{ selectedExternalCarColorName == filterItem.name }}"
+            class="weui-cell__ft"
+          >
+            <image src="/images/icons/icon_select_red.png"></image>
+          </view>
+        </view>
+      </view>
+      <view class="dd dropdown-right">
+        <view
+          class="weui-cell weui-cell_access"
+          hover="true"
+          hover-class="weui-cell_active"
+          wx:for="{{dropDownSubFiltersData}}"
+          wx:for-item="filterItem"
+          wx:for-index="filterIndex"
+          bindtap="handlerSelectItem"
+          data-filter-position="right"
+          data-filter-Index="{{filterIndex}}"
+          data-filter-item="{{filterItem}}"
+          data-super-filter-item="{{dropDownFiltersData[selectedExternalCarColorIndex]}}"
+        >
+          <view class="weui-cell__bd weui-cell_primary">
+            <view>{{filterItem.name}}</view>
+          </view>
+          <view
+            wx:if="{{ selectedInternalCarColorName == filterItem.name }}"
+            class="weui-cell__ft"
+          >
+            <image src="/images/icons/icon_select_red.png"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
 <!-- 货源列表 -->
 <scroll-view
   class="car-sources container"
   scroll-y="true"
   bindscroll="handlerScroll"
+  bindtouchmove="handlerTouchMove"
   scroll-into-view="x{{selectedSectionId}}"
   style="height: {{windowHeight}}"
 >
@@ -27,7 +96,6 @@
   </view>
 
   <!-- 页面主体 -->
-  <!--<view class="carSources-body">-->
     <block
       wx:if="{{nodata === 'init'}}"
     >
@@ -36,7 +104,10 @@
       wx:if="{{nodata === 'data'}}"
     >
       <!-- 下拉框筛选 -->
-      <view class="carSources-navbar">
+      <view
+        class="carSources-navbar"
+        style="top: {{navbarTop2}}rpx;"
+      >
         <view
           class="navbar cars-facade"
           bindtap="handlerAmendCarFacade"
@@ -67,69 +138,6 @@
         <!--</view>-->
         <!--</view>-->
       </view>
-      <!-- 条件筛选.-->
-      <view wx:if="{{showRmendCarFacade}}" class="rmendCarFacade-popup-wrap">
-        <view
-          class="rmendCarFacade-popup-mask showMask"
-          bindtap="headlerRemoveRmendCarFacade"
-        ></view>
-        <view class="rmendCarFacade-inner topToBottom">
-          <view class="dropdown">
-            <view class="dd dropdown-left">
-              <view
-                hover="true"
-                hover-class="weui-cell_active"
-                wx:for="{{dropDownFiltersData}}"
-                wx:for-item="filterItem"
-                wx:for-index="filterIndex"
-                wx:key="*this"
-                class="weui-cell weui-cell_access"
-                bindtap="handlerSelectItem"
-                data-filter-position="left"
-                data-filter-Index="{{filterIndex}}"
-                data-filter-item="{{filterItem}}"
-                data-super-filter-item="{{}}"
-              >
-                <view class="weui-cell__bd weui-cell_primary">
-                  <view>{{filterItem.name}}</view>
-                </view>
-                <view
-                  wx:if="{{ selectedExternalCarColorName == filterItem.name }}"
-                  class="weui-cell__ft"
-                >
-                  <image src="/images/icons/icon_select_red.png"></image>
-                </view>
-              </view>
-            </view>
-
-            <view class="dd dropdown-right">
-              <view
-                class="weui-cell weui-cell_access"
-                hover="true"
-                hover-class="weui-cell_active"
-                wx:for="{{dropDownSubFiltersData}}"
-                wx:for-item="filterItem"
-                wx:for-index="filterIndex"
-                bindtap="handlerSelectItem"
-                data-filter-position="right"
-                data-filter-Index="{{filterIndex}}"
-                data-filter-item="{{filterItem}}"
-                data-super-filter-item="{{dropDownFiltersData[selectedExternalCarColorIndex]}}"
-              >
-                <view class="weui-cell__bd weui-cell_primary">
-                  <view>{{filterItem.name}}</view>
-                </view>
-                <view
-                  wx:if="{{ selectedInternalCarColorName == filterItem.name }}"
-                  class="weui-cell__ft"
-                >
-                  <image src="/images/icons/icon_select_red.png"></image>
-                </view>
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
       <!-- 标签选择 -->
       <view class="filter-scroll-view">
         <view
@@ -156,7 +164,6 @@
         </view>
       </view>
       <!-- 货源列表 -->
-      <!--<view class="carSources-sections" >-->
       <view
           wx:for="{{carSourcesBySkuInSpuList}}"
           wx:for-item="skuItem"
@@ -561,7 +568,6 @@
             </view>
           </view>
         </view>
-      <!--</view>-->
     </block>
     <view
       wx:if="{{nodata === 'none'}}"
@@ -570,5 +576,4 @@
       <image class="carSource-sections-nodata-image" src="../../images/icons/orderlist_icon_noorder.png"></image>
       <view class="carSource-sections-nodata-text">暂无货源</view>
     </view>
-  <!--</view>-->
 </scroll-view>

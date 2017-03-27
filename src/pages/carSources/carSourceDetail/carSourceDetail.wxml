@@ -1,5 +1,7 @@
 <template name="carSourceDetailDialog">
-  <view class="carSourceDetailDialog">
+  <view
+    class="carSourceDetailDialog"
+  >
     <view
       class="weui-mask {{ animateCss }}"
       hidden="{{ !visible }}"

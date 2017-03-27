@@ -1,5 +1,5 @@
 let app = getApp();
-let util = require('../../utils/util.js')
+import util from '../../utils/util.js'
 
 Page({
   data: {
@@ -35,7 +35,9 @@ Page({
     selectedSectionIndex: -1,
     selectedSectionId: '0',
     app: app,
-    showDetailTitle: false
+    showDetailTitle: false,
+    navbarTop: 219,
+    navbarTop2: 144
   },
   onLoad (options) {
     const that = this
@@ -206,6 +208,15 @@ Page({
           })
         }
       }
+
+      let diff = 0
+      if (e.detail.scrollTop > 71) {
+        diff = e.detail.scrollTop - 71
+      }
+      this.setData({
+        navbarTop: diff * 2 + 219,
+        navbarTop2: diff * 2 + 144
+      })
     }
   },
   showReliableDialog(spuId, skuIndex, carSource, carSourceIndex) {
@@ -683,7 +694,7 @@ Page({
       })
     }
   },
-  headlerRemoveRmendCarFacade () {
+  handlerRemoveRmendCarFacade () {
     const carSourcesBySkuInSpuList = this.updateSearchResult({color: -1})
     this.selectCarSku(-1, carSourcesBySkuInSpuList)
     this.setData({
