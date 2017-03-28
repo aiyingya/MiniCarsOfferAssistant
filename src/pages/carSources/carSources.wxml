@@ -13,8 +13,8 @@
 
 <!-- 下拉框筛选 -->
 <view
-  wx:if="{{hasOverLayDropdown}}"
   class="carSources-navbar"
+  hidden="{{!hasOverLayDropdown}}"
   style="top: -1rpx;"
 >
   <view
@@ -35,8 +35,9 @@
 
 <!-- 条件筛选.-->
 <view
-  wx:if="{{showRmendCarFacade && hasOverLayDropdown}}"
   class="rmendCarFacade-popup-wrap"
+  wx:if="{{showRmendCarFacade}}"
+  hidden="{{!hasOverLayDropdown}}"
   style="top: 86rpx;"
 >
   <view
@@ -104,7 +105,7 @@
 <!-- 标签选择 -->
 <view
   class="filter-scroll-view"
-  wx:if="{{hasOverLayDropdown}}"
+  hidden="{{!hasOverLayDropdown}}"
   style="top: 86rpx;"
 >
   <view
@@ -159,8 +160,8 @@
 
       <!-- 下拉框筛选 -->
       <view
-        wx:if="{{!hasOverLayDropdown}}"
         class="carSources-navbar"
+        hidden="{{hasOverLayDropdown}}"
         style="top: 132rpx;"
       >
         <view
@@ -181,8 +182,9 @@
 
       <!-- 条件筛选.-->
       <view
-        wx:if="{{showRmendCarFacade && !hasOverLayDropdown}}"
         class="rmendCarFacade-popup-wrap"
+        wx:if="{{showRmendCarFacade}}"
+        hidden="{{hasOverLayDropdown}}"
         style="top: 220rpx;"
       >
         <view
@@ -250,7 +252,7 @@
       <!-- 标签选择 -->
       <view
         class="filter-scroll-view"
-        wx:if="{{!hasOverLayDropdown}}"
+        hidden="{{hasOverLayDropdown}}"
         style="top: 220rpx;"
       >
         <view

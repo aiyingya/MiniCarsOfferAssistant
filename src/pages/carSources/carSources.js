@@ -188,7 +188,7 @@ Page({
     const that = this
     if (e.detail) {
       console.log(e.detail)
-      if (e.detail.scrollTop > 64) {
+      if (e.detail.scrollTop > 60) {
         if (!this.data.showDetailTitle) {
           wx.setNavigationBarTitle({
             title: this.data.carModelsInfo.carModelName,
@@ -208,7 +208,7 @@ Page({
         }
       }
 
-      if (e.detail.scrollTop > 71) {
+      if (e.detail.scrollTop > 60) {
         if (!this.data.hasOverLayDropdown) {
           console.log('fuck')
           this.setData({
