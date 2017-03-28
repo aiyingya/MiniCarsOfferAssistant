@@ -338,32 +338,6 @@ class UserService extends Service {
     })
   }
 
-  // /**
-  //  * 对某一个供应商关注/取消操作
-  //  * @param supplierId
-  //  * @param object
-  //  */
-  // requestFocusOrNotASupplier (supplierId, focusOrNot, object) {
-  //   if (supplierId && typeof supplierId === 'string') {
-  //     const method = focusOrNot ? 'POST' : 'DELETE'
-  //     app.modules.request({
-  //       url: app.config.ucServerHTTPSUrl + 'cgi/user/' + app.userInfo().userId + '/focus',
-  //       data: {
-  //         type: 'supplier',
-  //         targetId: supplierId
-  //       },
-  //       loadingType: 'none',
-  //       method: method,
-  //       success: object.success,
-  //       fail: object.fail,
-  //       complete: object.complete
-  //     })
-  //   } else {
-  //     object.fail()
-  //     object.complete()
-  //   }
-  // }
-
   getNewAccessToken () {
     const currentDate = new Date()
     const currentTime = currentDate.getTime()

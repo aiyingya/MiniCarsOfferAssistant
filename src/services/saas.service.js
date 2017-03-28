@@ -275,6 +275,173 @@ class SAASService extends Service {
     }
   }
 
+
+  /**
+   * 获取车源列表
+   * @param carModelId
+   * @param object
+   */
+  requestCarSourcesList(carModelId, object) {
+    // MARK： 目前只取地址列表中的第一个
+    const locations = this.userService.location
+    const data = {
+      userId: this.userService.auth.userId
+    }
+
+    if (locations && locations.length > 0) {
+      const location = locations[0]
+      if (location.provinceId) {
+        data.pid = location.provinceId
+      }
+
+      if (location.cityId) {
+        data.cid = location.cityId
+      }
+
+      if (location.districtId) {
+        data.did = location.districtId
+      }
+    }
+
+    this.sendMessage({
+      path: `product/car/spu/${carModelId}/sources`,
+      method: 'GET',
+      data: data,
+      success: object.success,
+      fail:object.fail,
+      complete:object.complete
+    })
+  }
+
+  /**
+   * 对某一个供应商的某一个货源做靠谱操作
+   * @param supplierId
+   * @param object
+   */
+  requestReliable (spuId, carSourceId, supplierId, hasBeenReliableByUser, updatedHasBeenReliableByUser, object) {
+    console.log(spuId)
+    console.log(carSourceId)
+    console.log(supplierId)
+    console.log(hasBeenReliableByUser)
+    console.log(updatedHasBeenReliableByUser)
+    if (hasBeenReliableByUser === updatedHasBeenReliableByUser) {
+      // 没变化
+    } else {
+      if (hasBeenReliableByUser === -1) {
+        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
+      } else if (hasBeenReliableByUser === 1) {
+        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
+      }
+
+      if (updatedHasBeenReliableByUser === -1) {
+        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
+      } else if (updatedHasBeenReliableByUser === 1) {
+        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
+      }
+    }
+  }
+  requestReliableOrNotASupplier (spuId, carSourceId, supplierId, reliableOrNot, object) {
+    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '靠谱', supplierId, reliableOrNot, object);
+  }
+  requestUnReliableOrNotASupplier (spuId, carSourceId, supplierId, UnReliableOrNot, object) {
+    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '不靠谱', supplierId, UnReliableOrNot, object);
+  }
+  /**
+   * 打标签接口
+   * @param spuId
+   * @param carSourceId
+   * @param tagName
+   * @param supplierId
+   * @param addOrRemove
+   * @param object
+   */
+  requestAddOrRemoveTagnameForASupplier (spuId, carSourceId, tagName, supplierId, addOrRemove, object) {
+    if (spuId && carSourceId  && tagName && supplierId) {
+      const method = addOrRemove ? 'POST' : 'DELETE'
+      this.sendMessage({
+        path: `product/car/spu/${spuId}/source/${carSourceId}/tag`,
+        data: {
+          tagName: tagName,
+          userId: this.userService.auth.userId,
+          supplierId: supplierId
+        },
+        loadingType: 'none',
+        method: method,
+        success: object.success,
+        fail: object.fail,
+        complete: object.complete
+      })
+    } else {
+      object.fail()
+      object.complete()
+    }
+  }
+
+  /**
+   * 获取三方车源信息的原文
+   * @param carSourceId
+   * @param object
+   */
+  requestCarSourceContent (carSourceId, object) {
+    this.sendMessage({
+      path: `product/car/source/${carSourceId}/content`,
+      loadingType: 'none',
+      method: 'GET',
+      success: object.success,
+      fail: object.fail,
+      complete: object.complete
+    })
+  }
+
+  /**
+   * 搜索结果
+   * @param text
+   * @param pageIndex
+   * @param pageSize
+   * @param object
+   */
+  requestSearchCarSpu (text, pageIndex, pageSize, object) {
+    this.sendMessage({
+      path: `search/car/spu`,
+      loadingType: 'none',
+      method: 'GET',
+      data: {
+        text: text,
+        pageIndex: pageIndex,
+        pageSize: pageSize
+      },
+      success: object.success,
+      fail: object.fail,
+      complete: object.complete
+    })
+  }
+
+  /**
+   *
+   */
+  requestSearchSpuBySpuId (spuId, object) {
+    this.sendMessage({
+      path: `supply/car/spu/${spuId}`,
+      method: 'GET',
+      success: object.success,
+      fail: object.fail,
+      complete: object.complete
+    })
+  }
+
+  requestSearchSpuByCarSeriesId (carSeriesId, inStock, object) {
+    this.sendMessage({
+      path: `supply/car/spu`,
+      method: 'GET',
+      data: {
+        carSeriesId: carSeriesId,
+        inStock: inStock
+      },
+      success: object.success,
+      fail: object.fail,
+      complete: object.complete
+    })
+  }
 }
 
 export default SAASService

@@ -105,10 +105,7 @@ class wux {
           options.carSourceItem.viewModelLoading = '原文加载中...'
 
           const app = options.app
-          app.modules.request({
-            url: app.config.ymcServerHTTPSUrl + 'product/car/source/' + options.carSourceItem.id + '/content',
-            loadingType: 'none',
-            method: 'GET',
+          app.saasService.requestCarSourceContent(options.carSourceItem.id, {
             success: function (res) {
               if (res) {
                 /// 原文基本数据

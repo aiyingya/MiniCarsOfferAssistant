@@ -17,7 +17,6 @@ Page({
     searchNodata: false,
     showSearchBtn: false,
     showCharts: true,
-    YMC_HTTPS_URL: app.config.ymcServerHTTPSUrl,
     pageIndex: 1,
     pageInfo: '',
     popCharts: null
@@ -78,48 +77,52 @@ Page({
     let searchNodata = false
     console.log(results)
     if (results.type === 'CAR_SPU') {
-      url = that.data.YMC_HTTPS_URL + 'supply/car/spu/' + results.id
-    } else if (results.type === 'CAR_SERIES') {
-      url = that.data.YMC_HTTPS_URL + 'supply/car/spu'
-      data = {
-        carSeriesId: results.id
-      }
-    }
-    app.modules.request({
-      url: url,
-      method: 'GET',
-      data: data,
-      success: function (res) {
-        carModelsList = res.content
-        searchNodata = carModelsList.length > 0 ? false : true
+      app.saasService.requestSearchSpuBySpuId(results.id, {
+        success: function (res) {
+          carModelsList = res.content
+          searchNodata = carModelsList.length > 0 ? false : true
 
-        if (carModelsList) {
-          that.drawCanvas(carModelsList)
-          that.setData({
-            searchResults: carModelsList,
-            associateResults: [],
-            searchValue: results.content,
-            cacheSearchValue: results.content,
-            showResultsSearch: false,
-            searchNodata: searchNodata
-          })
+          if (carModelsList) {
+            that.drawCanvas(carModelsList)
+            that.setData({
+              searchResults: carModelsList,
+              associateResults: [],
+              searchValue: results.content,
+              cacheSearchValue: results.content,
+              showResultsSearch: false,
+              searchNodata: searchNodata
+            })
+          }
         }
-      }
-    })
+      })
+    } else if (results.type === 'CAR_SERIES') {
+      app.saasService.requestSearchSpuByCarSeriesId(results.id, true, {
+        success: function (res) {
+          carModelsList = res.content
+          searchNodata = carModelsList.length > 0 ? false : true
+
+          if (carModelsList) {
+            that.drawCanvas(carModelsList)
+            that.setData({
+              searchResults: carModelsList,
+              associateResults: [],
+              searchValue: results.content,
+              cacheSearchValue: results.content,
+              showResultsSearch: false,
+              searchNodata: searchNodata
+            })
+          }
+        }
+      })
+    }
   },
   getSearchConfirm(pageIndex) {
     let val = this.data.cacheSearchValue
     let that = this
     let searchNodata = false
     let searchResults = []
-    app.modules.request({
-      url: that.data.YMC_HTTPS_URL + 'search/car/spu',
-      method: 'GET',
-      data: {
-        text: val,
-        pageIndex: pageIndex,
-        pageSize: 10
-      },
+
+    app.saasService.requestSearchCarSpu(val, pageIndex, 10, {
       success: function (res) {
         if (res.first) {
           searchNodata = res.content.length > 0 ? false : true

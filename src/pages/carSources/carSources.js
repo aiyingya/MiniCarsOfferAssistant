@@ -57,35 +57,8 @@ Page({
 
     }
 
-    console.log(app.userService)
-
-    // MARK： 目前只取地址列表中的第一个
-    const locations = app.userService.location
-    const data = {
-      userId: app.userService.auth.userId
-    }
-
-    if (locations && locations.length > 0) {
-      const location = locations[0]
-      if (location.provinceId) {
-        data.pid = location.provinceId
-      }
-
-      if (location.cityId) {
-        data.cid = location.cityId
-      }
-
-      if (location.districtId) {
-        data.did = location.districtId
-      }
-    }
-
-
-    app.modules.request({
-      url: HTTPS_YMCAPI + 'product/car/spu/' + carModelsInfo.carModelId + '/sources',
-      method: 'GET',
-      data: data,
-      success: function (res) {
+    app.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
+      success: function(res) {
         // let carSourcesBySkuInSpuList = []
         // for (let carSourcesBySkuInSpuItem of res.carSourcesBySkuInSpuList) {
         // that.preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem)
@@ -233,7 +206,7 @@ Page({
       spuId: spuId,
       carSource: carSource,
       close: (updatedCarSource) => {
-        that.requestReliable(spuId, carSource.id, updatedCarSource.supplier.id, hasBeenReliableByUser, updatedCarSource.hasBeenReliableByUser, {
+        app.saasService.requestReliable(spuId, carSource.id, updatedCarSource.supplier.id, hasBeenReliableByUser, updatedCarSource.hasBeenReliableByUser, {
           success: function () {
           },
           fail: function () {
@@ -657,6 +630,67 @@ Page({
       return this.data.scrollFilters[index].items[selectedIndex].id
     }
   },
+  actionContact (spuId, skuItemIndex, carSourceItemIndex, carSourceItem, contact) {
+    wx.makePhoneCall({
+      phoneNumber: contact,
+      success: function (res) {
+        if (!carSourceItem.supplierSelfSupport) {
+          // 非自营的供货商才可以评价靠谱与否
+          const now = new Date()
+          const value = {
+            skuIndex: skuItemIndex,
+            carSourceIndex: carSourceItemIndex,
+            spuId: spuId,
+            carSource: carSourceItem,
+            dateString: now.toDateString()
+          }
+          wx.setStorageSync('recent_contact', JSON.stringify(value))
+        }
+      }
+    })
+  },
+  actionBookCar (carModelsInfo, skuItem, carSourceItem) {
+    const that = this
+
+    this.$wuxNormalDialog.open({
+      title: '提示',
+      content: '发起定车后， 将会有工作人员与您联系',
+      confirmText: '发起定车',
+      confirm: function () {
+        const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
+        const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
+
+        app.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
+          success (res){
+            wx.showModal({
+              title: '提示',
+              content: '提交成功，请保持通话畅通',
+              success: function (res) {
+                if (res.confirm) {
+                }
+              }
+            })
+          },
+          fail (err) {
+            wx.showModal({
+              title: '提示',
+              content: err.alertMessage,
+              success: function (res) {
+                if (res.confirm) {
+                }
+              }
+            })
+          },
+          complete () {
+
+          }
+        })
+      },
+      cancel: function () {
+        // 取消
+      }
+    })
+  },
   handlerAmendCarFacade (e) {
     const that = this;
     const selectedFilterIndex = e.currentTarget.dataset.selectedFilterIndex;
@@ -851,67 +885,6 @@ Page({
 
     this.actionContact(carModelsInfo.carModelId, skuIndex, carSourceIndex, carSource, contact)
   },
-  actionContact (spuId, skuItemIndex, carSourceItemIndex, carSourceItem, contact) {
-    wx.makePhoneCall({
-      phoneNumber: contact,
-      success: function (res) {
-        if (!carSourceItem.supplierSelfSupport) {
-          // 非自营的供货商才可以评价靠谱与否
-          const now = new Date()
-          const value = {
-            skuIndex: skuItemIndex,
-            carSourceIndex: carSourceItemIndex,
-            spuId: spuId,
-            carSource: carSourceItem,
-            dateString: now.toDateString()
-          }
-          wx.setStorageSync('recent_contact', JSON.stringify(value))
-        }
-      }
-    })
-  },
-  actionBookCar (carModelsInfo, skuItem, carSourceItem) {
-    const that = this
-
-    this.$wuxNormalDialog.open({
-      title: '提示',
-      content: '发起定车后， 将会有工作人员与您联系',
-      confirmText: '发起定车',
-      confirm: function () {
-        const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
-        const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
-
-        that.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
-          success (res){
-            wx.showModal({
-              title: '提示',
-              content: '提交成功，请保持通话畅通',
-              success: function (res) {
-                if (res.confirm) {
-                }
-              }
-            })
-          },
-          fail (err) {
-            wx.showModal({
-              title: '提示',
-              content: err.alertMessage,
-              success: function (res) {
-                if (res.confirm) {
-                }
-              }
-            })
-          },
-          complete () {
-
-          }
-        })
-      },
-      cancel: function () {
-        // 取消
-      }
-    })
-  },
   handlerCarSourceMore (e) {
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItem = e.currentTarget.dataset.carSource
@@ -1008,92 +981,5 @@ Page({
     wx.navigateTo({
       url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
     })
-  },
-  /**
-   * 发起订车行为
-   *
-   * @param skuIds          [String]
-   * @param quotationId     可选
-   * @param customerMobile  可选
-   * @param object
-   */
-  requestBookCar(itemName, spec, itemPrice, itemCount, object) {
-    app.modules.request({
-      url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
-      data: {
-        userId: app.userService.auth.userId,
-        itemName: itemName,
-        spec: spec,
-        itemPrice: itemPrice,
-        itemCount: itemCount
-      },
-      method: 'POST',
-      success: object.success,
-      fail: object.fail,
-      complete: object.complete
-    })
-  },
-  /**
-   * 对某一个供应商的某一个货源做靠谱操作
-   * @param supplierId
-   * @param object
-   */
-  requestReliable (spuId, carSourceId, supplierId, hasBeenReliableByUser, updatedHasBeenReliableByUser, object) {
-    console.log(spuId)
-    console.log(carSourceId)
-    console.log(supplierId)
-    console.log(hasBeenReliableByUser)
-    console.log(updatedHasBeenReliableByUser)
-    if (hasBeenReliableByUser === updatedHasBeenReliableByUser) {
-      // 没变化
-    } else {
-      if (hasBeenReliableByUser === -1) {
-        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
-      } else if (hasBeenReliableByUser === 1) {
-        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
-      }
-
-      if (updatedHasBeenReliableByUser === -1) {
-        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
-      } else if (updatedHasBeenReliableByUser === 1) {
-        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
-      }
-    }
-  },
-  requestReliableOrNotASupplier (spuId, carSourceId, supplierId, reliableOrNot, object) {
-    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '靠谱', supplierId, reliableOrNot, object);
-  },
-  requestUnReliableOrNotASupplier (spuId, carSourceId, supplierId, UnReliableOrNot, object) {
-    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '不靠谱', supplierId, UnReliableOrNot, object);
-  },
-  /**
-   * 打标签接口
-   * @param spuId
-   * @param carSourceId
-   * @param tagName
-   * @param supplierId
-   * @param addOrRemove
-   * @param object
-   */
-  requestAddOrRemoveTagnameForASupplier (spuId, carSourceId, tagName, supplierId, addOrRemove, object) {
-    if (spuId && carSourceId  && tagName && supplierId) {
-      const method = addOrRemove ? 'POST' : 'DELETE'
-      app.modules.request({
-        url: app.config.ymcServerHTTPSUrl + 'product/car/spu/' + spuId + '/source/' + carSourceId + '/tag',
-        data: {
-          tagName: tagName,
-          userId: app.userService.auth.userId,
-          supplierId: supplierId
-        },
-        loadingType: 'none',
-        method: method,
-        success: object.success,
-        fail: object.fail,
-        complete: object.complete
-      })
-    } else {
-      object.fail()
-      object.complete()
-    }
   }
 })

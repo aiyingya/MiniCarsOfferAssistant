@@ -1,6 +1,5 @@
 //app.js
 import wux from './lib/wux'
-import modules from './lib/modules'
 import wxcharts from './modules/wxcharts'
 import config from './lib/config'
 
@@ -25,12 +24,10 @@ App({
   },
   wux: wux,
   config: config,
-  modules: new modules,
   wxcharts: wxcharts,
   userService: userService,
   tradeService: tradeService,
   saasService: saasService,
-
   // FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据
   fuckingLarryNavigatorTo: {
     quotation: null,

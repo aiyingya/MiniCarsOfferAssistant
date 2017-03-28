@@ -52,19 +52,14 @@ Page({
 			this.pagesloadRequest(carsInfo,true)
 		}
 	},
-  pagesloadRequest(carsInfo,inStock) {
+  pagesloadRequest(carsInfo, inStock) {
     let that = this
     let stock = inStock ? 'in_stock' : 'all'
     let stockText = inStock ? '有货' : '全部'
     let stockSeclect = inStock ? 'selected' : ''
-    app.modules.request({
-      url: app.config.ymcServerHTTPSUrl + 'supply/car/spu',
-      method: 'GET',
-      data: {
-        carSeriesId: carsInfo.id,
-        inStock: inStock // 默认显示有货.
-      },
-      success: function(res) {
+
+    app.saasService.requestSearchSpuByCarSeriesId(carsInfo.id, inStock, {
+      success: function (res) {
         if(res) {
           let carModelsList = res.content
           let filters = res.filters
