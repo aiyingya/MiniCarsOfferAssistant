@@ -47,7 +47,7 @@ page {
 	bottom: 0;
 	height: auto;
 	width: 100%;
-	z-index: 9;
+	z-index: 20;
   position: absolute;
 }
 .rmendCarFacade-popup-mask {
@@ -126,7 +126,8 @@ page {
 	-webkit-align-items:center;
 	align-items:center;
 	white-space: nowrap;
-  position: relative;
+  position: absolute;
+  z-index: 10;
 }
 .filter-scroll-view:after {
   content: '';
@@ -193,7 +194,7 @@ page {
 .carSources-topbar {
 	background-color: #fff;
 	overflow: hidden;
-  margin-bottom: 108rpx;
+  margin-bottom: 204rpx;
 }
 .carSources-topbar .weui-media-box {
 	padding: 0 24rpx;

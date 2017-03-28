@@ -695,9 +695,13 @@ Page({
         dropDownSubFiltersData: dropDownSubFiltersData,
       })
     } else {
-      this.setData({
-        showRmendCarFacade: !this.data.showRmendCarFacade
-      })
+      if (this.data.showRmendCarFacade) {
+        this.handlerRemoveRmendCarFacade()
+      } else {
+        this.setData({
+          showRmendCarFacade: true
+        })
+      }
     }
   },
   handlerRemoveRmendCarFacade () {
