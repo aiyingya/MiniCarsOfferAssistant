@@ -18,7 +18,7 @@ var config = {
     yAxisTitleWidth: 15,
     padding: 12,
     paddingRight: 30,
-    paddingTop: 10,
+    paddingTop: 0,
     columePadding: 0,
     fontSize: 10,
     dataPointShape: ['diamond', 'circle', 'triangle', 'rect'],
@@ -232,7 +232,7 @@ function dataCombine(series) {
 function findCurrentIndex(currentPoints, xAxisPoints, opts, config) {
     var currentIndex = -1;
     if (isInExactChartArea(currentPoints, opts, config)) {
-        xAxisPoints.forEach(function (item, index) {
+        xAxisPoints.xAxisPoints.forEach(function (item, index) {
             if (currentPoints.x > item) {
                 currentIndex = index;
             }
@@ -809,12 +809,12 @@ function drawYAxisCoordLine(series, opts, config, context) {
     context.closePath();
     context.stroke();
     // 标尺
-    context.beginPath();
-    context.setFontSize(config.fontSize)
-    context.setFillStyle(opts.yAxis.fontColor || '#666666');
-    context.fillText(opts.yAxis.unitText, (config.padding + config.yAxisTitleWidth)-8, startY-10 );
-    context.closePath();
-    context.stroke();
+//    context.beginPath();
+//    context.setFontSize(config.fontSize)
+//    context.setFillStyle(opts.yAxis.fontColor || '#666666');
+//    context.fillText(opts.yAxis.unitText, (config.padding + config.yAxisTitleWidth)-8, startY-10 );
+//    context.closePath();
+//    context.stroke();
   
     context.beginPath();
     context.setStrokeStyle(opts.yAxis.gridColor || "#cccccc");
@@ -900,27 +900,27 @@ function drawColumnDataPoints(series, opts, config, context) {
     var minRange = ranges.pop();
     var maxRange = ranges.shift();
     var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    var xWidth , wxData , points;
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
-        var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+        points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
         points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config);
        
         // 绘制柱状数据图
         context.beginPath();
-        context.setStrokeStyle("#5274bc");
         context.setFillStyle(eachSeries.color);
       
         points.forEach(function (item, index) {
             if (item !== null) {
-                var startX = item.x - item.width / 2 + 1;
+                var startX = item.x - item.width / 2 +1;
                 var height = opts.height - item.y - config.padding - config.xAxisHeight - config.legendHeight;
                 context.moveTo(startX, item.y);
                 context.rect(startX, item.y, item.width - 2, height);
+                xWidth = item.width - 2;
             }
         });
         context.closePath();
         context.fill();
-        context.stroke();
     });
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
@@ -930,8 +930,13 @@ function drawColumnDataPoints(series, opts, config, context) {
             drawPointText(points, eachSeries, config, context);
         }
     });
-
-    return xAxisPoints;
+    wxData = {
+      xAxisPoints: xAxisPoints,
+      xWidth: xWidth,
+      points: points
+    }
+    
+    return wxData;
 }
 
 function drawAreaDataPoints(series, opts, config, context) {
@@ -947,7 +952,7 @@ function drawAreaDataPoints(series, opts, config, context) {
     var minRange = ranges.pop();
     var maxRange = ranges.shift();
     var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
-
+    
     series.forEach(function (eachSeries, seriesIndex) {
         var data = eachSeries.data;
         var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
@@ -1084,7 +1089,7 @@ function drawXAxis(categories, opts, config, context) {
         } else {
             xAxisPoints.forEach(function (item, index) {
                 context.moveTo(item, startY);
-                context.lineTo(item, endY);
+                context.lineTo(item, startY + 4);
             });
         }
     }
@@ -1397,13 +1402,16 @@ Animation.prototype.stop = function () {
     this.isStop = true;
 };
 
-function drawCharts(type, opts, config, context) {
+function drawCharts(type, opts, config, context, clickData, callback) {
     var _this = this;
 
     var series = opts.series;
     var categories = opts.categories;
+    var ratio = Math.ceil(categories.length / 5);
+    var newCategories = opts.xScale || categories;
+    
     series = fillSeriesColor(series, config);
-
+    
     var _calLegendData = calLegendData(series, opts, config),
         legendHeight = _calLegendData.legendHeight;
 
@@ -1413,8 +1421,8 @@ function drawCharts(type, opts, config, context) {
         yAxisWidth = _calYAxisData.yAxisWidth;
 
     config.yAxisWidth = yAxisWidth + 20;
-    if (categories && categories.length) {
-        var _calCategoriesData = calCategoriesData(categories, opts, config),
+    if (newCategories && newCategories.length) {
+        var _calCategoriesData = calCategoriesData(newCategories, opts, config),
             xAxisHeight = _calCategoriesData.xAxisHeight,
             angle = _calCategoriesData.angle;
 
@@ -1450,12 +1458,17 @@ function drawCharts(type, opts, config, context) {
                 duration: duration,
                 onProcess: function onProcess(process) {
                     drawYAxis(series, opts, config, context);
-                    drawXAxis(categories, opts, config, context);
+                    drawXAxis(newCategories, opts, config, context);
                     drawYAxisCoordLine(series, opts, config, context);
+                    
                     //drawYAxisDividingLine(opts.extra.area, opts, config, context)
                     _this.chartData.xAxisPoints = drawColumnDataPoints(series, opts, config, context, process);
-                    drawXAxisHint(categories, opts, config, context);
-                    drawLegend(opts.series, opts, config, context);
+                    if(clickData.x) {
+                      _this.changeData = drawAreaShade(clickData,context,opts,config);
+                      callback(_this.changeData);
+                    }
+                    drawXAxisHint(newCategories, opts, config, context);
+                    drawLegend(opts.series, opts, config, context);                   
                     drawCanvas(opts, context);
                 },
                 onAnimationFinish: function onAnimationFinish() {
@@ -1525,7 +1538,58 @@ Event.prototype.trigger = function () {
 		});
 	}
 };
-
+function drawChartShade(index,data,config,opts,context,callback) {
+  
+  var clickData = data.xAxisPoints.points[index];
+  var xWidth = data.xAxisPoints.xWidth;
+  var seriesValue = opts.series[0].data[index]
+  clickData.index = index;
+  clickData.seriesValue = seriesValue;
+  clickData.points = data.xAxisPoints.points;
+  drawCharts.call(this,'column',opts, config, context, clickData, callback)
+}
+function drawAreaShade(clickData,context,opts,config) {
+    var points = clickData.points; 
+    var height = opts.height - 10 - config.padding - config.xAxisHeight - config.legendHeight;
+    
+    var startX = clickData.x - (clickData.width*5) / 2;
+    var xWidth = clickData.width*5;
+    var start = clickData.index - 2;
+    var end = clickData.index + 3;
+    
+    var categories = opts.categories;
+    var series = opts.series[0].data;
+    var newChartX = [];
+    var newChartY = [];
+    var changeChartArea = {};
+    if(points.length < 5) return;
+    if(clickData.index - 2 <= 0) {
+      startX = points[0].x - clickData.width / 2;
+      start = 0;
+      end = 5;
+    }else if(clickData.index-(points.length-1) >= -2) {
+      var i = points.length-5;
+      startX = points[i].x - clickData.width / 2;
+      start = i;
+      end = points.length;
+    }
+    
+    newChartX = categories.slice(start,end);
+    newChartY = series.slice(start,end);
+    context.beginPath();
+    context.setFillStyle('rgba(0,0,0,.1)');
+    context.moveTo(startX, clickData.y);
+    context.rect(startX, 10, xWidth, height);
+    context.closePath();
+    context.fill();
+  
+    changeChartArea = {
+      x: newChartX,
+      y: newChartY
+    };
+  
+    return changeChartArea;
+}
 var Charts = function Charts(opts) {
     opts.title = opts.title || {};
     opts.subtitle = opts.subtitle || {};
@@ -1546,9 +1610,23 @@ var Charts = function Charts(opts) {
     // such as chart point coordinate
     this.chartData = {};
     this.event = new Event();
-    drawCharts.call(this, opts.type, opts, config$$1, this.context);
-};
+    this.getCurrentDataIndex = function (e) {
+        if (e.touches && e.touches.length) {
+            var _e$touches$ = e.touches[0],
+                x = _e$touches$.x,
+                y = _e$touches$.y;
 
+            if (this.opts.type === 'pie' || this.opts.type === 'ring') {
+                return findPieChartCurrentIndex({ x: x, y: y }, this.chartData.pieData);
+            } else {
+                return findCurrentIndex({ x: x, y: y }, this.chartData.xAxisPoints, this.opts, this.config);
+            }
+        }
+        return -1;
+    };
+    this.drawChartShade = drawChartShade;
+    drawCharts.call(this, opts.type, opts, config$$1, this.context, this.getCurrentDataIndex, this.drawChartShade);
+};
 Charts.prototype.updateData = function () {
     var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 

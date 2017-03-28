@@ -18,26 +18,6 @@ Page({
 		userInfo: '',
     showNodata: false
   },
-  //事件处理函数
-  searchCarType() {
-		console.log('To Search')
-		wx.navigateTo({
-			url: '../search/search'
-		})
-	},
-	createSimulationData: function () {
-			var categories = [];
-			var data = [];
-			for (var i = 0; i < 50; i++) {
-					categories.push('2016-' + (i + 1));
-					data.push(Math.random()*(20-10)+10);
-			}
-
-			return {
-					categories: categories,
-					data: data
-			}
-	},
   onLoad() {
     let that = this
 		let HTTPS_URL = app.config.tradeServerHTTPSUrl
@@ -77,22 +57,6 @@ Page({
 				
 			}
 		})
-		
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function(userInfo){
-      //更新数据
-      that.setData({
-        userInfo:userInfo
-      })
-    })
-		
-		/// 初始化自定义组件
-    this.$wuxTrack = app.wux(this).$wuxTrack
-		
-//		const push = this.$wuxTrack.push({
-//			appVersion: '1.0.1'
-//		})
-
   },
 	handlerAlphaTap(e) {
     let {ap} = e.target.dataset
@@ -110,8 +74,8 @@ Page({
       if(0 <= index < brandGroupList.length) {
         let nonwAp = brandGroupList[index]
 				if(nonwAp) {
-					that.setData({alpha: nonwAp.firstLetter})
-					that.setData({alphanetToast: nonwAp.firstLetter})
+					that.setData({alpha: nonwAp.title})
+					that.setData({alphanetToast: nonwAp.title})
 				}
       } 
     }

@@ -3,11 +3,13 @@
 		class="carModels-cell"
 		hover="true"
 		hover-class="carModels-cell_active"
-		data-carmodelsinfo="{{item}}"
-		bindtap="handlerToCarSources"
 		>
 		<!-- title.-->
-		<view class="carModels-message">
+		<view 
+		  class="carModels-message"
+		  data-carmodelsinfo="{{item}}"
+		  bindtap="handlerToCarSources"
+		  >
 			<view class="carModels-message-title">
 				【{{item.officialPriceStr}}】 {{item.carModelName}}
 			</view>
@@ -19,6 +21,7 @@
 			>
 			<!-- cars info.-->
 			<view class="carModels-info">
+<!--
 				<view class="carModels-supplier">{{item.supply.supplierCount}}个人供货</view>
 				<block wx:if="{{item.supply.status === '供货紧张'}}">
 					<view class="carModels-repertory">{{item.supply.status}}</view>
@@ -26,11 +29,24 @@
 				<block wx:else>
 					<view class="carModels-repertory adequate">{{item.supply.status}}</view>
 				</block>
+-->
+        <view 
+          class="carModels-charts-time"
+          bindtap="handleSelectTime"
+          >
+          <view class="carcolor-label label">时间：</view>
+          <view class="chartstime-inner">
+            {{selectTime.selectText}}
+            <image 
+						  src="../../images/icons/icon_dropdownarrow_down_gray.png"
+						  class="icon-arrows"></image>
+          </view>
+        </view>
 				<view
 					class="carModels-carcolor"
 					wx:if="{{item.supply.colors.length > 0}}"
 					>
-					<view class="carcolor-label">外饰：</view>
+					<view class="carcolor-label label">外饰：</view>
 					<view class="carcolor-inner">
 						<view
 							class="carcolor-item"
@@ -41,6 +57,9 @@
 							wx:if="{{cellIndex < 4}}"
 							style="background:{{cell}}"
 							></view>
+						<image 
+						  src="../../images/icons/icon_dropdownarrow_down_gray.png"
+						  class="icon-arrows"></image>
 					</view>
 				</view>
 			</view>
@@ -52,7 +71,7 @@
 				<block wx:if="{{showCharts}}">
 					<view class="charts-tagMessage">
 						<view class="charts-supply-number">
-							供货数量
+							报价数量(条)
 						</view>
 	<!--
 						<view class="charts-tagMessage-inner">
@@ -63,7 +82,9 @@
 					</view>
 					<canvas
 						canvas-id="{{item.carModelId}}"
+						data-id="{{item.carModelId}}"
 						class="canvas"
+						bindtouchstart="handleCharttouch"
 						></canvas>
 				</block>
 			</view>
@@ -74,4 +95,34 @@
 			暂无供货
 		</view>
 	</view>
+</template>
+
+<template name="popupCharts">
+  <view
+    class="popup-charts-wrap"
+    wx:if="{{showPopCharts}}"
+    >
+    <view class="popup-shade" bindtap="handleClosePopup"></view>
+    <view class="popup-charts-main">
+      <view class="popup-charts-hd">
+        <view>报价区间详情</view>
+        <view 
+         class="close-popup"
+         bindtap="handleClosePopup"
+         >
+          <image src="../../images/icons/icon_close.png"></image>
+        </view>
+      </view>
+      <view class="popup-charts-bd">
+        <view class="popup-charts-scale">
+          报价数量(条)
+        </view>
+        <canvas
+          canvas-id="popCharts"
+          data-id="popCharts"
+          class="pop-canvas"
+          ></canvas>
+      </view>
+    </view>
+  </view>
 </template>

@@ -10,6 +10,7 @@ page {
 .carModels-topbar {
 	width: 100%;
 	position: relative;
+  margin-bottom: 10rpx;
 }
 .carModels-navbar {
 	position: relative;
@@ -72,10 +73,27 @@ page {
 	right: 0;
 	margin-top: -20rpx;
 }
+.carModels-label-inner {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+	-webkit-justify-content: space-between;
+	justify-content: space-between;
+	-webkit-align-items: center;
+	align-items: center;
+  background-color: #fff;
+}
+.carModels-label-wells {
+  width: 80%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+}
+.carModels-label-wells::-webkit-scrollbar {
+    display: none;
+}
 .carModels-label {
-	width: 100%;
-	padding: 0 30rpx;
-	height: 96rpx;
+	padding: 20rpx;
 	-webkit-box-sizing: border-box;
   box-sizing: border-box; 
 	background-color: #fff;
@@ -83,8 +101,14 @@ page {
 	justify-content: flex-start;
 	-webkit-align-items: center;
 	align-items: center;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  width: 1000rpx;
 }
-.carModels-label .label {
+.carModels-label .label,
+.carModels-instore .label {
 	height: 48rpx;
 	line-height: 48rpx;
 	padding: 0 27rpx;
@@ -94,7 +118,28 @@ page {
 	color: #333;
 	margin-right: 10rpx;
 }
-
+.carModels-label .label.selected,
+.carModels-instore .label.selected{
+  border: 1rpx solid #ED4149;
+  color: #ED4149;
+}
+.carModels-instore {
+  padding: 20rpx 0 20rpx 20rpx;
+  display: flex;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-align-items: center;
+	align-items: center;
+  position: relative;
+}
+.carModels-instore:after {
+  content: '';
+  position: absolute;
+  top: 25rpx;
+  bottom: 25rpx;
+  left: 0;
+  border-right: 1px solid #CCCCCC;
+}
 .carModels-cells {
 	width: 100%;	
 }
