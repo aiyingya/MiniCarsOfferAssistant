@@ -6,6 +6,12 @@ import config from './lib/config'
 
 import UserService from './services/user.service'
 import TradeService from './services/trade.service'
+import SAASService from './services/saas.service'
+
+const userService = new UserService()
+const tradeService = new TradeService()
+
+const saasService = new SAASService(userService)
 
 App({
   onLaunch () {
@@ -21,8 +27,10 @@ App({
   config: config,
   modules: new modules,
   wxcharts: wxcharts,
-  userService: new UserService(),
-  tradeService: new TradeService(),
+  userService: userService,
+  tradeService: tradeService,
+  saasService: saasService,
+
   // FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据
   fuckingLarryNavigatorTo: {
     quotation: null,

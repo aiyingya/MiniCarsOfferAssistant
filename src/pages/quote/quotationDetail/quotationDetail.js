@@ -137,7 +137,7 @@ Page({
       },
       confirm: (res) => {
         let mobile = res.inputNumber
-        that.requestPublishQuotation(that.data.quotation.draftId, mobile, {
+        app.saasService.requestPublishQuotation(that.data.quotation.draftId, mobile, {
           success: (res) => {
             let quotation = res
 
@@ -180,7 +180,7 @@ Page({
       confirmText: '发起定车',
       confirm: function () {
         const quotationItem = that.data.quotation.quotationItems[0]
-        that.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.sellingPrice, 1, {
+        app.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.sellingPrice, 1, {
           success: (res) => {
             wx.showModal({
               content: '提交成功，请保持通话畅通',
@@ -208,102 +208,6 @@ Page({
       },
       cancel: function () {
         // 取消
-      }
-    })
-  },
-
-  /**
-   * 发起订车当前报价草稿到某个用户
-   *
-   * @param draftId         草稿id
-   * @param customerMobile  客户手机号
-   * @param object          回调对象
-   *
-   {
-    "quotationId":"报价单ID",
-    "draftId":"报价单草稿ID",
-    "quotationName":"报价单名称，没有可以不传",
-    "quotationItems":[{
-        "itemNumber":"商品编号",
-        "itemName":"商品名称",
-        "specifications":"商品规格",
-        "guidePrice":"指导价",
-        "sellingPrice":"售价"
-    }, {
-        "itemNumber":"商品编号",
-        "itemName":"商品名称",
-        "specifications":"商品规格",
-        "guidePrice":"指导价",
-        "sellingPrice":"售价"
-    }],
-    "hasLoan":"必传，true/false，boolean，是否贷款",
-    "paymentRatio":"首付比例（%），decimal，全款时没有，取值范围0~100",
-    "stages":"贷款期数，int，全款时没有",
-    "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
-    "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
-    "advancePayment":"首次支付金额，如果全款则为全款金额",
-    "monthlyPayment":"月供金额，每月还款金额，全款时没有",
-    "remark":"备注",
-    "loginChannel":"必传，登录渠道，目前固定为weixin",
-    "snsId":"必传，由上报微信用户信息的API返回",
-    "customerMobile":"客户手机号"
-   }
-   */
-  requestPublishQuotation(draftId, customerMobile, object) {
-    if (draftId && draftId !== '' && customerMobile && customerMobile !== '') {
-      app.modules.request({
-        url: app.config.ymcServerHTTPSUrl + 'sale/quotation',
-        data: {
-          draftId: draftId,
-          customerMobile: customerMobile
-        },
-        method: 'POST',
-        // header: {}, // 设置请求的 header
-        success: function (res) {
-          object.success(res);
-        },
-        fail: function (err) {
-          object.fail(err);
-        },
-        complete: function () {
-          object.complete();
-        }
-      })
-    } else {
-      object.fail({
-        alertMessage: "参数错误"
-      })
-      object.complete();
-    }
-  },
-
-  /**
-   * 发起订车行为
-   *
-   * @param skuIds          [String]
-   * @param quotationId     可选
-   * @param customerMobile  可选
-   * @param object
-   */
-  requestBookCar(itemName, spec, itemPrice, itemCount, object) {
-    app.modules.request({
-      url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
-      data: {
-        userId: app.userService.auth.userId,
-        itemName: itemName,
-        spec: spec,
-        itemPrice: itemPrice,
-        itemCount: itemCount
-      },
-      method: 'POST',
-      success: function (res) {
-        object.success()
-      },
-      fail: function (err) {
-        object.fail(err)
-      },
-      complete: function () {
-        object.complete()
       }
     })
   }
