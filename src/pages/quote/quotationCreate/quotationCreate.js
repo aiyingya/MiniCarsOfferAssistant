@@ -187,7 +187,7 @@ Page({
     } else {
       this.data.quotation.snsId = app.userService.snsId
     }
-    this.data.quotation.loginChannel = weixinUserInfo.loginChannel
+    this.data.quotation.loginChannel = app.userService.loginChannel
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
@@ -628,7 +628,7 @@ Page({
           monthlyPayment: quotationDraft.monthlyPayment,
           totalPayment: quotationDraft.totalPayment,
           remark: quotationDraft.remark,
-          snsId: quotationDraft.snsId
+          snsId: quotationDraft.snsId,
           loginChannel: quotationDraft.loginChannel
         }
       } else {
