@@ -131,12 +131,13 @@ class wux {
                 }
               } else {
                 options.carSourceItem.viewModelLoading = '加载失败'
+                $scope.setData({
+                  [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem
+                })
               }
             },
             fail: function () {
               options.carSourceItem.viewModelLoading = '加载失败'
-            },
-            complete: function () {
               $scope.setData({
                 [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem
               })
