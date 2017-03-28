@@ -15,7 +15,6 @@ Page({
 		HTTPS_YMCAPI: '',
 		showCarSeriesImageUrl: '',
 		carManufacturerSeriesList:[],
-		userInfo: '',
     showNodata: false
   },
   //事件处理函数
@@ -48,15 +47,15 @@ Page({
       this.offsetTop = 80
       this.setData({windowHeight: res.windowHeight + 'px'})
     } catch (e) {
-      
+
     }
 		that.setData({
 			HTTPS_YMCAPI: HTTPS_URL
 		})
 		// 获取页面数据.
-		
+
 		app.modules.request({
-			url: HTTPS_URL + 'cgi/navigate/brands/query', 
+			url: HTTPS_URL + 'cgi/navigate/brands/query',
 			method: 'POST',
 			data: {
 				"code": "0",
@@ -74,21 +73,13 @@ Page({
 						brandGroupList: res
 					})
 				}
-				
+
 			}
 		})
-		
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function(userInfo){
-      //更新数据
-      that.setData({
-        userInfo:userInfo
-      })
-    })
-		
+
 		/// 初始化自定义组件
     this.$wuxTrack = app.wux(this).$wuxTrack
-		
+
 //		const push = this.$wuxTrack.push({
 //			appVersion: '1.0.1'
 //		})
@@ -113,7 +104,7 @@ Page({
 					that.setData({alpha: nonwAp.firstLetter})
 					that.setData({alphanetToast: nonwAp.firstLetter})
 				}
-      } 
+      }
     }
   },
 	handlerSelectCarSeries(e) {
@@ -121,9 +112,9 @@ Page({
 		console.log(carSeries)
 		let that = this;
 		let {HTTPS_YMCAPI} = this.data;
-		
+
 		app.modules.request({
-			url: HTTPS_YMCAPI + 'cgi/navigate/models/query', 
+			url: HTTPS_YMCAPI + 'cgi/navigate/models/query',
 			method: 'POST',
 			data: {
 				brandId: carSeries.id,
@@ -162,17 +153,16 @@ Page({
       showNodata: false
 		});
 	},
-	handlerToCarsModels(e) {
-		const carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
-		let userInfo = app.userInfo()
-		if(userInfo) {
-			wx.navigateTo({  
-				url: '../carModels/carModels?' + carsInfoKeyValueString
-			}) 
-		}else {
-			wx.navigateTo({  
-				url: '../login/login'
-			}) 
-		}	
-	}
+  handlerToCarsModels(e) {
+    const carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
+    if (app.userService.isLogin()) {
+      wx.navigateTo({
+        url: '../carModels/carModels?' + carsInfoKeyValueString
+      })
+    } else {
+      wx.navigateTo({
+        url: '../login/login'
+      })
+    }
+  }
 })

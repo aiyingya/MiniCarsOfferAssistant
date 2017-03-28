@@ -7,7 +7,7 @@
 //  Copyright (c) 2016年 yaomaiche. All rights reserved.
 //
 
-import modules from './modules'
+import Modules from './modules'
 import config from './config'
 
 ;(function() {
@@ -72,7 +72,8 @@ import config from './config'
         deviceId: deviceId,
         userId: ''
       };
-      modules.request({
+      const module = new Modules()
+      module.request({
         method: 'GET',
         loadingType: 'none',
         contentType: 'application/x-www-form-urlencoded',
@@ -87,9 +88,9 @@ import config from './config'
         fail: function() {
           // 网络请求失败
           typeof cb === 'function' && cb(null)
-        },
+        }
       })
     }
-  };
-  module.exports = new Clientjs();
+  }
+  module.exports = new Clientjs()
 })()

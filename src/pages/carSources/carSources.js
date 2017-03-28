@@ -57,12 +57,12 @@ Page({
 
     }
 
-    console.log(app.globalData)
+    console.log(app.userService)
 
     // MARK： 目前只取地址列表中的第一个
-    const locations = app.globalData.location
+    const locations = app.userService.location
     const data = {
-      userId: app.userInfo().userId
+      userId: app.userService.userInfo.userId
     }
 
     if (locations && locations.length > 0) {
@@ -1017,7 +1017,7 @@ Page({
     app.modules.request({
       url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
       data: {
-        userId: app.userInfo().userId,
+        userId: app.userService.userInfo.userId,
         itemName: itemName,
         spec: spec,
         itemPrice: itemPrice,
@@ -1028,31 +1028,6 @@ Page({
       fail: object.fail,
       complete: object.complete
     })
-  },
-  /**
-   * 对某一个供应商关注/取消操作
-   * @param supplierId
-   * @param object
-   */
-  requestFocusOrNotASupplier (supplierId, focusOrNot, object) {
-    if (supplierId && typeof supplierId === 'string') {
-      const method = focusOrNot ? 'POST' : 'DELETE'
-      app.modules.request({
-        url: app.config.ucServerHTTPSUrl + 'cgi/user/' + app.userInfo().userId + '/focus',
-        data: {
-          type: 'supplier',
-          targetId: supplierId
-        },
-        loadingType: 'none',
-        method: method,
-        success: object.success,
-        fail: object.fail,
-        complete: object.complete
-      })
-    } else {
-      object.fail()
-      object.complete()
-    }
   },
   /**
    * 对某一个供应商的某一个货源做靠谱操作
@@ -1103,7 +1078,7 @@ Page({
         url: app.config.ymcServerHTTPSUrl + 'product/car/spu/' + spuId + '/source/' + carSourceId + '/tag',
         data: {
           tagName: tagName,
-          userId: app.userInfo().userId,
+          userId: app.userService.userInfo.userId,
           supplierId: supplierId
         },
         loadingType: 'none',

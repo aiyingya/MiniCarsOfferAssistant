@@ -289,7 +289,7 @@ Page({
     app.modules.request({
       url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
       data: {
-        userId: app.userInfo().userId,
+        userId: app.userService.userInfo.userId,
         itemName: itemName,
         spec: spec,
         itemPrice: itemPrice,

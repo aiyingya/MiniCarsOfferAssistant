@@ -1,15 +1,19 @@
 let app = getApp()
+
 Page({
 	data: {
-		userInfo: '',
-		weixinPortrait: '../../images/icons/icon_head_default_44.png'
+		isLogin: false,
+    userName: '',
+		userMobile: '',
+    userPortrait: '../../images/icons/icon_head_default_44.png',
+    userTenants: ''
 	},
 	onLoad() {
-		let userinfo = app.userInfo()
-
     this.$wuxToast = app.wux(this).$wuxToast
 	},
 	onShow() {
+    let that = this
+
     /**
      * fucking larry 跳转流程
      * @type {*}
@@ -29,54 +33,43 @@ Page({
       })
     }
 
-		let userinfo = app.userInfo()
-		let that = this
-		let weixinUsersInfo = app.globalData.userInfo
-		if(userinfo) {
-			const _HTTPS = `${app.config.ucServerHTTPSUrl}cgi/tenant/member/${userinfo.userId}/tenant`			
-			app.modules.request({
-				url: _HTTPS, 
-				method: 'GET',
-				loadingType: 'none',
-				data: {},
-				header: {
-					Authorization: userinfo.accessToken
-				},
-				success (res) {
-					let location = []
-          console.log(weixinUsersInfo)
-					userinfo.mobile = res.mobile
-					userinfo.weixinName = weixinUsersInfo.weixinName || res.name
-					userinfo.weixinPortrait = weixinUsersInfo.weixinPortrait
-					userinfo.tenants = res.tenants
-					
-					if(res.tenants) {
-						for(let item of res.tenants) {
-							if(item.address) {							
-								location.push(item.address)
-							}
-						}
-					}
-				
-					if(location) {
-						app.globalData.location = location
-						app.globalData.mobile = res.mobile
-					}	
-					that.setData({
-						userInfo: userinfo,
-						weixinPortrait: weixinUsersInfo.weixinPortrait
-					})
-				},
-				fail(err) {
-					that.$wuxToast.show({
-						type: false,
-						timer: 2000,
-						color: '#fff',
-						text: '服务器错误',
-					})
-				}
-			})
-		}
+    if (app.userService.isLogin()) {
+      const userInfo = app.userService.userInfo
+      const weixinUsersInfo = app.userService.weixinUserInfo
+
+      this.setData({
+        isLogin: true,
+        userName: weixinUsersInfo.weixinName || userInfo.name,
+        userPortrait: weixinUsersInfo.weixinPortrait
+      })
+
+      app.userService.getLocationId({
+        userId: userInfo.userId,
+        accessToken: userInfo.accessToken,
+        success: function (res) {
+          that.setData({
+            userMobile: res.mobile,
+            userTenants: res.tenants
+          })
+        },
+        fail(err) {
+          that.$wuxToast.show({
+            type: false,
+            timer: 2000,
+            color: '#fff',
+            text: '服务器错误'
+          })
+        }
+      })
+    } else {
+      this.setData({
+        isLogin: false,
+        userName: '',
+        userMobile: '',
+        userPortrait: '../../images/icons/icon_head_default_44.png',
+        userTenants: ''
+      })
+    }
 	},
 	handleToLogin() {
 		wx.navigateTo({
@@ -85,35 +78,33 @@ Page({
 	},
 	handleUserLogout() {
 		let that = this
-		try {
-			wx.removeStorageSync('userInfo')
-			that.setData({
-				userInfo: '',
-				weixinPortrait: '../../images/icons/icon_head_default_44.png'
-			})
-		} catch (e) {
-			// Do something when catch error
-		}
+    app.userService.logout({
+      success: function () {
+        that.setData({
+          isLogin: false,
+          userName: '',
+          userMobile: '',
+          userPortrait: '../../images/icons/icon_head_default_44.png',
+          userTenants: ''
+        })
+      },
+      fail: function () {
+        // do nothing
+      }
+    })
 	},
 	handleToQuoteRecord() {
-		let userInfo = this.data.userInfo
-		if(!userInfo) {
-			return
-		}
-		
-		wx.navigateTo({
-			url: '../quote/quotationsList/quotationsList'
-		})
+		if (app.userService.isLogin()) {
+      wx.navigateTo({
+        url: '../quote/quotationsList/quotationsList'
+      })
+    }
 	},
 	handleToSupplier() {
-		let userInfo = this.data.userInfo
-		if(!userInfo) {
-			return
-		}
-		
-		wx.navigateTo({
-			url: '../supplier/supplier'
-		})
+	  if (app.userService.isLogin()) {
+      wx.navigateTo({
+        url: '../supplier/supplier'
+      })
+    }
 	}
-	
 })

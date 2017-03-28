@@ -182,10 +182,10 @@ Page({
      * 公共行为
      */
     // 设置 snsId
-    app.getUserInfo(function (userInfo) {
-      console.log(userInfo)
-      that.data.quotation.snsId = userInfo.snsId
-      that.data.quotation.loginChannel = userInfo.loginChannel
+    app.userService.getWeixinUserInfo(function (weixinUserInfo) {
+      console.log(weixinUserInfo)
+      that.data.quotation.snsId = weixinUserInfo.snsId
+      that.data.quotation.loginChannel = weixinUserInfo.loginChannel
     })
 
     /// 初始化自定义组件

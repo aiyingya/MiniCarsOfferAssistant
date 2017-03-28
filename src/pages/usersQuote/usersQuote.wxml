@@ -2,26 +2,26 @@
 
 	<view class="users-topbar">
 		<view class="users-head">
-			<image src="{{weixinPortrait}}"></image>
+			<image src="{{userPortrait}}"></image>
 		</view>
 
 		<block
-			wx:if="{{userInfo}}"
+			wx:if="{{isLogin}}"
 			>
 			<!-- name.-->
 			<view class="users-name">
-				{{userInfo.weixinName}}
+				{{userName}}
 			</view>
 			<!-- phone-->
 			<view class="users-phone">
-				{{userInfo.mobile}}
+				{{userMobile}}
 			</view>
 
 			<!-- 标签.-->
 			<view class="users-label">
 				<view
 					class="label"
-					wx:for="{{userInfo.tenants}}"
+					wx:for="{{userTenants}}"
 					wx:key="*this"
 					>{{item.tenantName}}</view>
 			</view>
@@ -73,6 +73,6 @@
 		hover="true"
 		hover-class="users-logout_active"
 		bindtap="handleUserLogout"
-		wx:if="{{userInfo}}"
+		wx:if="{{isLogin}}"
 		>退出登录</view>
 </view>

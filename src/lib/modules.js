@@ -1,4 +1,18 @@
-class modules {
+class Modules {
+  newRequest(baseURL, path, method, data, header, object) {
+    url = baseURL + path
+    request({
+      url: url,
+      method: method,
+      data: data,
+      header: header,
+      success: object.success,
+      fail: object.fail,
+      complete: object.success
+    })
+  }
+
+
   /**
    * request
    * @param options
@@ -12,7 +26,7 @@ class modules {
    * complete     完成回调
    */
   request(options) {
-
+    console.log(`===============请求开始 ${options.url}==================`)
     if (!options) return;
 
     let loadingType = options.loadingType
@@ -27,7 +41,7 @@ class modules {
         title: '正在加载',
         icon: 'loading',
         duration: 10000,
-        mask: true,
+        mask: true
       })
     }
 
@@ -52,6 +66,7 @@ class modules {
         data: options.data,
         header: header,
         success (res) {
+          console.log(`===============响应开始 ${options.url} ==================`)
           let result = res.data
           /// MARK: 在早期安卓版本微信中，需要对没有正确序列化的返回对象做去 bom 头的处理
 
@@ -77,8 +92,10 @@ class modules {
             // 返回体中有数据返回
             typeof options.success === 'function' && options.success(result.data)
           }
+          console.log(`===============响应结束 ${options.url} ==================`)
         },
         fail (error) {
+          console.log(`===============响应开始 ${options.url} ==================`)
           if (typeof error === 'object') {
             let alertMessage = error.alertMessage
             if (alertMessage) {
@@ -96,6 +113,7 @@ class modules {
             })
           }
           // 服务端无法处理的错误
+          console.log(`===============响应结束 ${options.url} ==================`)
         },
         complete: function () {
           if (options.loadingType === 'navigation') {
@@ -109,6 +127,7 @@ class modules {
           typeof options.complete === 'function' && options.complete()
         }
       })
+      console.log(`===============请求结束 ${options.url}==================`)
     } catch (e) {
       if (options.loadingType === 'navigation') {
         console.log("隐藏导航栏加载")
@@ -125,4 +144,4 @@ class modules {
   }
 }
 
-export default modules
+export default Modules

@@ -26,9 +26,9 @@ Page({
     let that = this;
 
     // 设置 snsId
-    app.getUserInfo(function (userInfo) {
-      that.data.snsId = userInfo.snsId
-      that.data.loginChannel = userInfo.loginChannel
+    app.userService.getWeixinUserInfo(function (weixinUserInfo) {
+      that.data.snsId = weixinUserInfo.snsId
+      that.data.loginChannel = weixinUserInfo.loginChannel
     })
 
     try {
