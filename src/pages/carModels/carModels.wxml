@@ -80,7 +80,7 @@
 		<block 
 			wx:for="{{carModelsList}}"
 			>
-			<template is="carModel" data="{{item,showCharts,selectTime}}" /> 
+			<template is="carModel" data="{{item,showCharts,selectTime,selectColors,selectColorsId}}" /> 
 		</block>
 	</view>
 	
@@ -96,3 +96,48 @@
 </view>
 <template is="popupCharts" data="{{showPopCharts}}" /> 
 
+<view 
+ class="popup-select-charts"
+ wx:if="{{selectChartsLabel}}"
+ >
+  <view class="popup-shade" bindtap="handleClosePopup"></view>
+  <view class="popupSelect-main">
+    <block wx:if="{{changeSelectColors}}">
+      <view 
+        class="popup-label {{colorAllSelected}}"
+        bindtap="handleChangeColorItem"
+        data-selectitem="全部"
+        >全部</view>
+      <view 
+        wx:for="{{selectColorData}}"
+        wx:key="*this"
+        class="popup-label {{item.selected}}"
+        bindtap="handleChangeColorItem"
+        data-selectitem="{{item}}"
+        data-selectcolors="{{selectColors}}"
+        >
+        <view
+          class="carcolor-item"
+          style="background:{{item.value}}; {{item.style}}"
+          ></view>
+        <view class="text">{{item.key}}</view>
+      </view>
+    </block>
+    <block wx:if="{{changeSelectTimes}}">
+     <view 
+      class="popup-label {{timesAllSelected}}"
+      bindtap="handleChangeTimesItem"
+      data-selectitem="全部"
+      >全部</view>
+      <view 
+        wx:for="{{selectColorTime}}"
+        wx:key="*this"
+        class="popup-label {{item.selected}}"
+        bindtap="handleChangeTimesItem"
+        data-selectitem="{{item}}"
+        >
+        <view class="text">{{item.value}}小时</view>
+      </view>
+    </block>
+  </view>
+</view>

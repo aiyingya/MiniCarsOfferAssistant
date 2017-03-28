@@ -33,10 +33,16 @@
         <view 
           class="carModels-charts-time"
           bindtap="handleSelectTime"
+          data-selecttimesid="{{item.carModelId}}"
           >
           <view class="carcolor-label label">时间：</view>
           <view class="chartstime-inner">
-            {{selectTime.selectText}}
+            <block wx:if="{{item.selectTimes == '全部'}}">
+              {{item.selectTimes}}
+            </block>
+            <block wx:else>
+              {{item.selectTimes}}小时
+            </block>
             <image 
 						  src="../../images/icons/icon_dropdownarrow_down_gray.png"
 						  class="icon-arrows"></image>
@@ -44,19 +50,27 @@
         </view>
 				<view
 					class="carModels-carcolor"
-					wx:if="{{item.supply.colors.length > 0}}"
+					wx:if="{{item.colors.length > 0}}"
+					bindtap="handleSelectColor"
+					data-colors="{{item.colors}}"
+					data-selectColors="{{item.selectColors}}"
+					data-selectcolorsid="{{item.carModelId}}"
 					>
 					<view class="carcolor-label label">外饰：</view>
 					<view class="carcolor-inner">
-						<view
-							class="carcolor-item"
-							wx:for="{{item.supply.colors}}"
-							wx:for-item="cell"
-							wx:for-index="cellIndex"
-							wx:key="*this"
-							wx:if="{{cellIndex < 4}}"
-							style="background:{{cell}}"
-							></view>
+					  <block  wx:if="{{item.selectColors.length > 0 && item.selectColorsId == item.carModelId}}">
+					    <view
+                class="carcolor-item"
+                wx:for="{{item.selectColors}}"
+                wx:for-item="cell"
+                wx:for-index="cellIndex"
+                wx:key="*this"
+                wx:if="{{cellIndex < 4}}"
+                style="background:{{cell.value}}; {cell.style}"
+                ></view>
+					  </block>
+              
+						<view wx:else class="carcolor-all">全部</view>
 						<image 
 						  src="../../images/icons/icon_dropdownarrow_down_gray.png"
 						  class="icon-arrows"></image>

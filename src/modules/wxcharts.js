@@ -839,13 +839,9 @@ function drawYAxisCoordLine(series, opts, config, context) {
     if (opts.yAxis.title) {
         drawYAxisTitle(opts.yAxis.title, opts, config, context);
     }
-  
-    
-  
-    
 }
 function drawXAxisHint(categories, opts, config, context) {
-
+    console.log(opts.extra.index)
     var _getXAxisPoints4 = getXAxisPoints(categories, opts, config),
         xAxisPoints = _getXAxisPoints4.xAxisPoints,
         startX = _getXAxisPoints4.startX,
@@ -895,8 +891,13 @@ function drawColumnDataPoints(series, opts, config, context) {
 
     var _getXAxisPoints = getXAxisPoints(opts.categories, opts, config),
         xAxisPoints = _getXAxisPoints.xAxisPoints,
-        eachSpacing = _getXAxisPoints.eachSpacing;
+        eachSpacing = _getXAxisPoints.eachSpacing,
+        startX = _getXAxisPoints.startX,
+        endX = _getXAxisPoints.endX;
 
+    var startY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    var endY = startY + config.xAxisLineHeight;
+  
     var minRange = ranges.pop();
     var maxRange = ranges.shift();
     var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
@@ -914,6 +915,7 @@ function drawColumnDataPoints(series, opts, config, context) {
             if (item !== null) {
                 var startX = item.x - item.width / 2 +1;
                 var height = opts.height - item.y - config.padding - config.xAxisHeight - config.legendHeight;
+                
                 context.moveTo(startX, item.y);
                 context.rect(startX, item.y, item.width - 2, height);
                 xWidth = item.width - 2;
@@ -1460,14 +1462,14 @@ function drawCharts(type, opts, config, context, clickData, callback) {
                     drawYAxis(series, opts, config, context);
                     drawXAxis(newCategories, opts, config, context);
                     drawYAxisCoordLine(series, opts, config, context);
-                    
+                    drawXAxisHint(categories, opts, config, context);
                     //drawYAxisDividingLine(opts.extra.area, opts, config, context)
                     _this.chartData.xAxisPoints = drawColumnDataPoints(series, opts, config, context, process);
                     if(clickData.x) {
                       _this.changeData = drawAreaShade(clickData,context,opts,config);
                       callback(_this.changeData);
                     }
-                    drawXAxisHint(newCategories, opts, config, context);
+                    
                     drawLegend(opts.series, opts, config, context);                   
                     drawCanvas(opts, context);
                 },

@@ -28,7 +28,16 @@ Page({
       selectId: '0', // 全部.
       selectText: '全部'
     },
-    carsInfo: ''
+    showSelectCharts: '',
+    carsInfo: '',
+    selectChartsLabel: false,
+    selectColorData: [],
+    selectColors: [],
+    colorAllSelected: '',
+    selectColorsId: '',
+    selectColorTime: [{value:12},{value:24}],
+    timesAllSelected: '',
+    selectTimes: ''
 	},
 	onLoad (options) {
 		let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -57,7 +66,7 @@ Page({
   pagesloadRequest(carsInfo, inStock) {
     let that = this
     let stock = inStock ? 'in_stock' : 'all'
-    let stockText = inStock ? '有货' : '全部'
+    
     let stockSeclect = inStock ? 'selected' : ''
 
     app.saasService.requestSearchSpuByCarSeriesId(carsInfo.id, inStock, {
@@ -69,6 +78,27 @@ Page({
           let showNodata = false
           let inStockData = []
           that.drawCanvas(carModelsList)
+          
+          for(let item of carModelsList) {
+            //console.log(item.supply.colors)
+            let colors = []
+            if(item.supply.colors) {
+              let newColorKey = Object.keys(item.supply.colors)
+              
+              for(let color of newColorKey) {
+                let colorItem = {
+                  key: color,
+                  value: item.supply.colors[color]
+                }
+                colors.push(colorItem)
+              }
+            }
+            item.colors = colors
+            item.selectColors = []
+            item.selectTimes = '全部'
+            console.log(item)
+          }
+          
           for(let item of filters) {
             filtersData = item.items
           }
@@ -82,7 +112,6 @@ Page({
             filtersData: filtersData,
             showNodata: showNodata,
             stock: stock,
-            stockText: stockText,
             stockSeclect: stockSeclect
           })
         }
@@ -312,7 +341,7 @@ Page({
       canvasId: 'popCharts',
       type: 'column',
       categories: data.x,
-      animation: true,
+      animation: false,
       color: '#ECF0F7',
       legend: false,
       background: '#ECF0F7',
@@ -359,8 +388,157 @@ Page({
     })
     this.data.popCharts = null
   },
-  handleSelectTime() {
+  handleSelectTime(e) {
+    let that = this
+    let timesAllSelected = ''
+    let carModelsList = that.data.carModelsList
+    let selectTimesId = e.currentTarget.dataset.selecttimesid
+    let selectColorTime = that.data.selectColorTime
+    let selectTimes = that.data.selectTimes
+    for(let item of carModelsList) {
+      if(item.selectTimes === '全部' && item.carModelId === selectTimesId) {
+        timesAllSelected = 'selected'
+      }else {
+        for(let times of selectColorTime) {
+          if(selectTimes === times.value) {
+            times.selected = 'selected'
+          }else {
+            times.selected = ''
+          }  
+          console.log(times.value,item)
+        }
+        console.log(selectColorTime)
+      }
+    }
+    
+    this.setData({
+      selectChartsLabel: true,
+      changeSelectTimes: true,
+      changeSelectColors: false,
+      selectTimesId: selectTimesId,
+      selectColorTime: selectColorTime,
+      timesAllSelected: timesAllSelected
+    })
+  },
+  handleChangeTimesItem(e) {
+    let that = this
+    let selectitem = e.currentTarget.dataset.selectitem
+    let selectTimesId = that.data.selectTimesId
+    let carModelsList = this.data.carModelsList
+    
+    for(let item of carModelsList) {
+      if(item.carModelId === selectTimesId) {
+        if(typeof selectitem === 'object' && selectitem.selected !== 'selected') {
+          item.selectTimes = selectitem.value
+        }else if(selectitem === '全部') { 
+          item.selectTimes = '全部'
+        }
+        that.setData({
+          selectTimes: item.selectTimes
+        })
+        that.getChangeCharts(selectTimesId,carModelsList,item)
+      }
+    }
+  },
+  handleSelectColor(e) {
+    let colors = e.currentTarget.dataset.colors
+    let selectColors = e.currentTarget.dataset.selectcolors
+    let selectColorsId = e.currentTarget.dataset.selectcolorsid
+    let newColors = []
+    let allColorSelect = ''
+    let carModelsList = this.data.carModelsList
+    for(let item of colors) {
+      if(item.value === '#FFFFFF') {
+        item.style = 'border: 1rpx solid #333; width: 21rpx; height:21rpx;'
+      }
+      if(selectColors.length === 0) {
+        allColorSelect = 'selected'
+      }else {
+        for(let select of selectColors) {
+          if(item.key === select.key) {
+            console.log(item)
+            item.selected = 'selected'
+          }
+        }
+      }
+    }
+    
+    for(let item of carModelsList) {
+      if(item.carModelId === selectColorsId) {
+        item.selectColorsId = selectColorsId
+        item.selectColors = selectColors
+        this.setData({
+          selectChartsLabel: true,
+          changeSelectColors: true,
+          changeSelectTimes: false,
+          selectColorData: colors,
+          colorAllSelected: allColorSelect,
+          selectColorsId: selectColorsId,
+          selectColors: selectColors
+        })
+      }
+    }
+  },
+  handleChangeColorItem(e) {
+    let that = this
+    let selectColors = e.currentTarget.dataset.selectcolors
+    let selectItem = e.currentTarget.dataset.selectitem
+    let selectColorsId = that.data.selectColorsId
+    let carModelsList = that.data.carModelsList
+    
+    for(let item of carModelsList) {
+      if(item.carModelId === selectColorsId) {
+        if(typeof selectItem === 'object' && selectItem.selected !== 'selected') {
 
+          selectColors.push(selectItem)
+        }else if(selectItem === '全部') {
+          selectColors = []
+        }
+        item.selectColors = selectColors
+        
+        that.getChangeCharts(selectColorsId,carModelsList,item)
+        
+      }
+    }
+  },
+  getChangeCharts(sid,carModelsList,item) {
+    let requestData 
+    let that = this
+    requestData = {
+      carSeriesId: sid,
+      inStock: true
+    }
+    
+    let keys = []
+    if(item.selectColors.length >0) {
+      for(let items of item.selectColors) {
+        keys.push(items.key)
+      }
+    }
+
+    if(keys.length > 0 &&  item.selectTimes !== '全部') {
+       requestData.hours = item.selectTimes,
+       requestData.colors = keys.join(',')
+    }else if(keys.length > 0) {
+       requestData.colors = keys.join(',')
+    }else if(item.selectTimes !== '全部') {
+       requestData.hours = item.selectTimes
+    }
+    
+    app.modules.request({
+      url: `${app.config.ymcServerHTTPSUrl}/supply/car/spu/${sid}`,
+      method: 'GET',
+      data: requestData,
+      success: function(res) {
+        console.log(res)
+        that.drawCanvas(res.content)
+        that.setData({
+          carModelsList: carModelsList,
+          selectColors: [],
+          selectChartsLabel: false
+        })
+      }
+    })
   }
 
 })
