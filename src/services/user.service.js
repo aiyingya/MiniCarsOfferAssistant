@@ -7,18 +7,24 @@
 //
 import config from '../lib/config'
 import modules from '../lib/modules'
+import clientjs from '../lib/client'
 
 class UserService {
 
   constructor() {
     /**
-     * 要买车用户信息对象
+     * guest | yuntu | weixin
+     * @type {string}
      */
-    this.userInfo = null
+    this.loginChannel = 'guest'
+
+    /**
+     * 要买车用户登录信息对象
+     */
+    this.auth = null
 
     /***
-     * 目前有两种情况，第一种，当用户授权微信信息，则数据结构如下，loginChannel 为 weixin
-     * 第二种，当用户拒绝授权微信信息，则数据结构仅仅为 {loginChannel: 'guest', snsId: '{{clientId}}'}
+     * 微信用户信息，该对象的存在与否用来标示客户端是否获得微信用户信息
      *
      * appKey "wxd5d5bf6b593d886e"
      * city : ""
@@ -27,19 +33,81 @@ class UserService {
      * gender : 1
      * openId : "oJNr60EADGT-ChvW0ValxcGcx29k"
      * province : "Shanghai"
-     * snsId : "2"
      * weixinName : "傅斌"
      * weixinPortrait : "http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eopEuOnnoMv4l2otkB2d209UPSabmhQUzBGPXX3lic2HU3KahDicODEVskez8vzhSZ2qXjGZOibQhTeg/0"
-     * loginChannel: 'weixin' 'weixin'|'guest'
      */
     this.weixinUserInfo = null
+    /**
+     * 当 loginChannel 为 guest, snsId 是一个 {String}, 来自于 clientId
+     * 当 loginChannel 为 yuntu, snsId
+     * 当 loginChannel 为 weixin,
+     *
+     * snsId 用来存在与否服务端对是否获得 用户的微信用户信息
+     * 当为 {Number} 时，意味着服务端知晓其微信用户信息
+     * 当为 {String} 时，意味着服务端不知晓其微信用户信息
+     * @type {String|Number}
+     */
+    this.snsId = null
+
+    /**
+     * 这两个字段不需要持久化，每次进入页面都会获取最新的结果
+     * @type {null}
+     */
     this.location = null
     this.mobile = null
 
-    this.getUserInfo()
+    this.__loadUserInfo()
+
     this.getWeixinUserInfo()
     this.getNewAccessToken()
     this.getLocation()
+  }
+
+  __loadUserInfo () {
+    try {
+      const userInfoString = wx.getStorageSync('__userInfo__')
+      if (userInfoString) {
+        const userInfo = JSON.parse(userInfoString)
+        console.log('读取用户信息')
+        console.log(userInfo)
+        this.loginChannel = userInfo.loginChannel || 'guest'
+        this.snsId = userInfo.snsId || null
+        this.auth = userInfo.auth || null
+        this.weixinUserInfo = userInfo.weixinUserInfo || null
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  __saveUserInfo () {
+    const userInfo = {
+      loginChannel: this.loginChannel,
+      auth: this.auth,
+      weixinUserInfo: this.weixinUserInfo,
+      snsId: this.snsId
+    }
+
+    console.log("保存用户信息")
+    console.log(userInfo)
+    try {
+      const userInfoString = JSON.stringify(userInfo)
+      wx.setStorageSync('__userInfo__', userInfoString)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  __clearUserInfo () {
+    try {
+      wx.removeStorageSync('__userInfo__')
+      this.loginChannel = 'guest'
+      this.snsId = null
+      this.auth = null
+      this.weixinUserInfo = null
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   __sendMessage(opts) {
@@ -113,9 +181,10 @@ class UserService {
           const userInfo = res
           const userInfoString = JSON.stringify(res)
           try {
-            wx.setStorageSync('userInfo', userInfoString)
-            that.userInfo = userInfo
+            that.auth = userInfo
+            that.loginChannel = 'yuntu'
             opts.success(res)
+            that.__saveUserInfo()
           } catch (e) {
             console.log(e)
           }
@@ -126,18 +195,39 @@ class UserService {
   }
 
   logout (opts) {
-    try {
-      wx.removeStorageSync('userInfo')
-      this.userInfo = null
-      opts.success()
-    } catch (e) {
-      console.log(e)
-      opts.fail()
+    this.auth = null
+    if (typeof this.snsId === 'undefined' || !this.snsId) {
+      throw 'snsId 不应该为 空(null) 或者 未定义(undefined) 状态'
+    } else if (typeof this.snsId === 'string') {
+      this.loginChannel = 'guest'
+    } else if (typeof this.snsId === 'number') {
+      this.loginChannel = 'weixin'
     }
+    this.__saveUserInfo()
   }
 
+  /**
+   * 运图账号是否登录
+   * @return {boolean|*|null}
+   */
   isLogin () {
-    if (this.userInfo) {
+    return this.loginChannel === 'yuntu' && this.auth
+  }
+
+  /**
+   *
+   * @return {boolean}
+   */
+  hasWeixinBinding () {
+    return typeof this.snsId === 'number'
+  }
+
+  /**
+   *
+   * @return {boolean}
+   */
+  hasWeixinUserInfo () {
+    if (this.weixinUserInfo) {
       return true
     } else {
       return false
@@ -180,24 +270,18 @@ class UserService {
           let expireIn = that.__getTimestamp(res.expireMillis)
           res.expireIn = expireIn
           const userInfo = res
-          const userInfoString = JSON.stringify(res)
           try {
-            wx.setStorageSync('userInfo', userInfoString)
-            that.userInfo = userInfo
+            that.auth = userInfo
+            that.loginChannel = 'yuntu'
             opts.success(res)
+            that.__saveUserInfo()
           } catch (e) {
             console.log(e)
           }
         }
       },
       fail: function (err) {
-        try {
-          wx.removeStorageSync('userInfo')
-          that.userInfo = null
-          opts.fail(err)
-        } catch (e) {
-          console.log(e)
-        }
+        opts.fail(err)
       }
     })
   }
@@ -206,16 +290,13 @@ class UserService {
    * 绑定微信号
    */
   userBindWeixin(opts) {
-    console.log('****')
-    console.log(this.weixinUserInfo)
-    console.log(this.userInfo)
     const snsId = this.weixinUserInfo.snsId
-    const userId = this.userInfo.userId
+    const userId = this.auth.userId
     this.__sendMessage({
       path: 'cgi/user/weixin/binding',
       method: 'POST',
       header: {
-        Authorization: this.userInfo.accessToken
+        Authorization: this.auth.accessToken
       },
       data: {
         snsId: snsId,
@@ -288,9 +369,9 @@ class UserService {
     const currentDate = new Date()
     const currentTime = currentDate.getTime()
     if (this.isLogin()) {
-      let token = this.userInfo.accessToken
-      let expireTime = this.userInfo.expireIn
-      let refreshToken = this.userInfo.refreshToken
+      let token = this.auth.accessToken
+      let expireTime = this.auth.expireIn
+      let refreshToken = this.auth.refreshToken
       if (currentTime > expireTime) {
         console.log('登录超时，请重新登录')
         this.newAccessToken({
@@ -310,8 +391,8 @@ class UserService {
     let that = this
     if (this.isLogin()) {
       this.getLocationId({
-        userId: this.userInfo.userId,
-        accessToken: this.userInfo.accessToken,
+        userId: this.auth.userId,
+        accessToken: this.auth.accessToken,
         success (res) {
           let location = []
           if (res.tenants) {
@@ -340,61 +421,60 @@ class UserService {
           // 该接口只会在用户第一次进入时使用，并弹出弹框并一直记住当时的选择
           wx.getUserInfo({
             success: function (res) {
+              /**
+               * 客户端本地获得微信用户信息，此时用户被定义为 guest snsId{null}
+               * @type {*}
+               */
+              if (!that.isLogin()) {
+                that.loginChannel = 'guest'
+                that.snsId = null
+              }
+              that.weixinUserInfo = res.auth
+
               that.uploadWeixinUserInfo({
                 authCode: auth.code,
                 encryptedData: res.encryptedData,
                 iv: res.iv,
                 success: function (res2) {
+                  /**
+                   * 服务端获得微信用户信息，此时用户被定义为 weixin snsId{Number}
+                   */
+                  if (!that.isLogin()) {
+                    that.loginChannel = 'weixin'
+                  }
+                  that.snsId = res2.snsId
                   that.weixinUserInfo = res2
-                  that.weixinUserInfo.loginChannel = 'weixin'
+
                   typeof cb == "function" && cb(that.weixinUserInfo)
+                  that.__saveUserInfo()
                 },
                 fail: function () {
                   clientjs.getClientId(function (clientId) {
-                    that.weixinUserInfo = {
-                      loginChannel: 'guest',
-                      snsId: clientId
+
+                    if (!that.isLogin()) {
+                      that.snsId = res2.snsId
                     }
+
                     typeof cb == "function" && cb(that.weixinUserInfo)
+                    that.__saveUserInfo()
                   })
                 }
               })
             },
             fail: function (res) {
               clientjs.getClientId(function (clientId) {
-                that.weixinUserInfo = {
-                  loginChannel: 'guest',
-                  snsId: clientId
+                if (!that.isLogin()) {
+                  that.loginChannel = 'guest'
+                  that.snsId = clientId
                 }
+                that.weixinUserInfo = null
                 typeof cb == "function" && cb(that.weixinUserInfo)
+                that.__saveUserInfo()
               })
             }
           })
         }
       })
-    }
-  }
-
-  getUserInfo () {
-    if (this.userInfo) {
-
-    } else {
-      try {
-        const userInfoString = wx.getStorageSync('userInfo')
-        const userInfo = JSON.parse(userInfoString)
-        if (userInfo) {
-          this.userInfo = userInfo
-        } else {
-          try {
-            wx.removeStorageSync('userInfo')
-            this.userInfo = null
-          } catch (e) {
-            console.log(e)
-          }
-        }
-      } catch (e) {
-        console.log(e)
-      }
     }
   }
 }

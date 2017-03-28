@@ -34,20 +34,19 @@ Page({
     }
 
     if (app.userService.isLogin()) {
-      const userInfo = app.userService.userInfo
+      const userInfo = app.userService.auth
       const weixinUsersInfo = app.userService.weixinUserInfo
 
       this.setData({
         isLogin: true,
-        userName: weixinUsersInfo.weixinName || userInfo.name,
-        userPortrait: weixinUsersInfo.weixinPortrait
       })
-
       app.userService.getLocationId({
         userId: userInfo.userId,
         accessToken: userInfo.accessToken,
         success: function (res) {
           that.setData({
+            userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '',
+            userPortrait: weixinUsersInfo ? weixinUsersInfo.weixinPortrait : '../../images/icons/icon_head_default_44.png',
             userMobile: res.mobile,
             userTenants: res.tenants
           })

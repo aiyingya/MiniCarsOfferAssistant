@@ -182,11 +182,12 @@ Page({
      * 公共行为
      */
     // 设置 snsId
-    app.userService.getWeixinUserInfo(function (weixinUserInfo) {
-      console.log(weixinUserInfo)
-      that.data.quotation.snsId = weixinUserInfo.snsId
-      that.data.quotation.loginChannel = weixinUserInfo.loginChannel
-    })
+    if (app.userService.isLogin()) {
+      this.data.quotation.snsId = app.userService.auth.userId
+    } else {
+      this.data.quotation.snsId = app.userService.snsId
+    }
+    this.data.quotation.loginChannel = weixinUserInfo.loginChannel
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
@@ -627,8 +628,8 @@ Page({
           monthlyPayment: quotationDraft.monthlyPayment,
           totalPayment: quotationDraft.totalPayment,
           remark: quotationDraft.remark,
-          loginChannel: quotationDraft.loginChannel,
           snsId: quotationDraft.snsId
+          loginChannel: quotationDraft.loginChannel
         }
       } else {
         data = {
@@ -647,8 +648,7 @@ Page({
           advancePayment: quotationDraft.advancePayment,
           totalPayment: quotationDraft.totalPayment,
           remark: quotationDraft.remark,
-          loginChannel: quotationDraft.loginChannel,
-          snsId: quotationDraft.snsId
+          loginChannel: quotationDraft.loginChannel
         }
       }
       app.modules.request({

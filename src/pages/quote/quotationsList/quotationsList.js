@@ -26,10 +26,13 @@ Page({
     let that = this;
 
     // 设置 snsId
-    app.userService.getWeixinUserInfo(function (weixinUserInfo) {
-      that.data.snsId = weixinUserInfo.snsId
-      that.data.loginChannel = weixinUserInfo.loginChannel
-    })
+    if (app.userService.isLogin()) {
+      this.data.snsId = app.userService.auth.userId
+    } else {
+      this.data.snsId = app.userService.snsId
+    }
+
+    this.data.loginChannel = app.userService.loginChannel
 
     try {
       var res = wx.getSystemInfoSync();

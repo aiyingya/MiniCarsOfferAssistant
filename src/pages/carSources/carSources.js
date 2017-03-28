@@ -62,7 +62,7 @@ Page({
     // MARK： 目前只取地址列表中的第一个
     const locations = app.userService.location
     const data = {
-      userId: app.userService.userInfo.userId
+      userId: app.userService.auth.userId
     }
 
     if (locations && locations.length > 0) {
@@ -1021,7 +1021,7 @@ Page({
     app.modules.request({
       url: app.config.ymcServerHTTPSUrl + 'sale/quotation/order',
       data: {
-        userId: app.userService.userInfo.userId,
+        userId: app.userService.auth.userId,
         itemName: itemName,
         spec: spec,
         itemPrice: itemPrice,
@@ -1082,7 +1082,7 @@ Page({
         url: app.config.ymcServerHTTPSUrl + 'product/car/spu/' + spuId + '/source/' + carSourceId + '/tag',
         data: {
           tagName: tagName,
-          userId: app.userService.userInfo.userId,
+          userId: app.userService.auth.userId,
           supplierId: supplierId
         },
         loadingType: 'none',

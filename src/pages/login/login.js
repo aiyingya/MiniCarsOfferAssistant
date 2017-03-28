@@ -115,15 +115,18 @@ Page({
       code: that.data.userCodeValue,
       success(res) {
         if (res) {
-          app.userService.userBindWeixin({
-            success(auth) {
-              console.log(auth)
-              wx.navigateBack()
-            },
-            fail() {
-              wx.navigateBack()
-            }
-          })
+          if (app.userService.hasWeixinUserInfo()) {
+            app.userService.userBindWeixin({
+              success(auth) {
+                wx.navigateBack()
+              },
+              fail() {
+                wx.navigateBack()
+              }
+            })
+          } else {
+            wx.navigateBack()
+          }
         }
       },
       fail(err) {

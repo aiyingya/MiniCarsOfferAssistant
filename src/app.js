@@ -1,6 +1,5 @@
 //app.js
 import wux from './lib/wux'
-import clientjs from './lib/client'
 import modules from './lib/modules'
 import wxcharts from './modules/wxcharts'
 import config from './lib/config'
