@@ -12,7 +12,6 @@ Page({
     showCarSeries: '',
     showMask: '',
     showCarSeriesInner: '',
-    imageDomain: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
     showCarSeriesImageUrl: '',
     carManufacturerSeriesList: [],
     showNodata: false
