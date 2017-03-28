@@ -2,7 +2,8 @@
 let app = getApp();
 
 const util = require('../../utils/util.js')
-
+var columnCharts = null
+var columnChartsList = []
 Page({
 	data: {
 		associateResults: [],
@@ -19,7 +20,8 @@ Page({
 		showCharts: true,
     YMC_HTTPS_URL: app.config.ymcServerHTTPSUrl,
     pageIndex: 1,
-    pageInfo: ''
+    pageInfo: '',
+    popCharts: null
   },
 	onLoad() {
 		let that = this
@@ -221,6 +223,40 @@ Page({
 			searchValue: ''
 		})
 	},
+  handleCharttouch(e) {
+    let id =  e.target.dataset.id
+    let that = this
+    console.log(columnChartsList)
+    if(columnChartsList.length > 0) {
+      for(let item of columnChartsList) {
+        if(item.id == id) {
+          let index = item.chart.getCurrentDataIndex(e)
+          let chartData = item.chart.chartData
+          let config = item.chart.config
+          let opts = item.chart.opts
+          let context = item.chart.context
+          let changeData = item.chart.changeData;
+          let callback = function(data) {
+            if(data) {
+              let value = 0
+              for(let item of data.y) {
+                value+=item
+              }
+              console.log(value)
+              if(value <= 0) {return}
+              that.setData({
+                showPopCharts: true,
+                showCharts: false
+              })
+              that.drawPopCharts(data)
+            }
+          }
+          console.log(index)
+          item.chart.drawChartShade(index,chartData,config,opts,context,callback)
+        }
+      }
+    }
+  },
 	drawCanvas(list) {
 		if (!list) {return}
 		let data = list
@@ -236,7 +272,7 @@ Page({
     }
 		for (let item of data) {
 			if(item.supply.chart) {
-				new app.wxcharts({
+				columnCharts = new app.wxcharts({
 					canvasId: item.carModelId,
 					type: 'column',
 					categories: item.supply.chart.x,
@@ -247,10 +283,10 @@ Page({
 					series: [{
             name: '1',
             data: item.supply.chart.y,
-            color: '#d2e1f6'
+            color: '#77A0E9'
           }],
 					xAxis: {
-            disableGrid: true,
+            disableGrid: false,
             fontColor: '#333333',
             gridColor: '#333333',
             unitText: '下(万)'
@@ -259,8 +295,6 @@ Page({
             disabled: true,
             fontColor: '#333333',
             gridColor: '#333333',
-            min: 10,
-            max: 50,
             unitText: '（个）',
             format(val) {
               return val.toFixed(0)
@@ -271,8 +305,9 @@ Page({
           },
           width: that.windowWidth,
           height: 120,
-          dataLabel: true,
+          dataLabel: false,
           dataPointShape: false,
+          xScale: item.supply.chart.scale,
           extra: {
             area: ['风险','适宜2.43~3.73','偏贵'],
             hint: item.supply.chart.hint,
@@ -280,7 +315,75 @@ Page({
             index: item.supply.chart.priceIndex
           }
 				})
+        
+        let chartItem = {
+          id: item.carModelId,
+          chart: columnCharts
+        }
+        columnChartsList.push(chartItem)
 			}
 		}
-	}
+	},
+  drawPopCharts(data) {
+    if(!data) {return}
+    let popWindow = {}
+    
+		try {
+      let res = wx.getSystemInfoSync()
+      
+			popWindow.windowWidth = res.windowWidth 
+    } catch (e) {
+
+    }
+    this.data.popCharts = new app.wxcharts({
+      canvasId: 'popCharts',
+      type: 'column',
+      categories: data.x,
+      animation: true,
+      color: '#ECF0F7',
+      legend: false,
+      background: '#ECF0F7',
+      series: [{
+        name: '1',
+        data: data.y,
+        color: '#77A0E9'
+      }],
+      xAxis: {
+        disableGrid: false,
+        fontColor: '#333333',
+        gridColor: '#333333',
+        unitText: '下(万)'
+      },
+      yAxis: {
+        disabled: true,
+        fontColor: '#333333',
+        gridColor: '#333333',
+        unitText: '（个）',
+        min: 0,
+        format(val) {
+          return val.toFixed(0)
+        }
+      },
+      dataItem: {
+        color: '#ECF0F7'
+      },
+      width: popWindow.windowWidth,
+      height: 120,
+      dataLabel: false,
+      dataPointShape: false,
+      extra: {
+        area: ['风险','适宜2.43~3.73','偏贵']
+      }
+    })
+  },
+  handleClosePopup() {
+    console.log('colse')
+    let carModelsList = this.data.searchResults
+		this.drawCanvas(carModelsList)
+    this.setData({
+      showPopCharts: false,
+      showCharts: true
+    })
+    this.data.popCharts = null
+  }
 })
