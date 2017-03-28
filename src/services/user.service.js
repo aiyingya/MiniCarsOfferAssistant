@@ -11,12 +11,18 @@ import clientjs from '../lib/client'
 
 class UserService {
 
+  static AuthKey = 'auth'
+
+  static GuestLogin = 'guest'
+  static WexinLogin = 'weixin'
+  static YuntuLogin = 'yuntu'
+
   constructor() {
     /**
      * guest | yuntu | weixin
      * @type {string}
      */
-    this.loginChannel = 'guest'
+    this.loginChannel = UserService.GuestLogin
 
     /**
      * 要买车用户登录信息对象
@@ -65,12 +71,12 @@ class UserService {
 
   __loadUserInfo () {
     try {
-      const userInfoString = wx.getStorageSync('__userInfo__')
+      const userInfoString = wx.getStorageSync(UserService.AuthKey)
       if (userInfoString) {
         const userInfo = JSON.parse(userInfoString)
         console.log('读取用户信息')
         console.log(userInfo)
-        this.loginChannel = userInfo.loginChannel || 'guest'
+        this.loginChannel = userInfo.loginChannel || UserService.GuestLogin
         this.snsId = userInfo.snsId || null
         this.auth = userInfo.auth || null
         this.weixinUserInfo = userInfo.weixinUserInfo || null
@@ -92,7 +98,7 @@ class UserService {
     console.log(userInfo)
     try {
       const userInfoString = JSON.stringify(userInfo)
-      wx.setStorageSync('__userInfo__', userInfoString)
+      wx.setStorageSync(UserService.AuthKey, userInfoString)
     } catch (e) {
       console.log(e)
     }
@@ -100,8 +106,8 @@ class UserService {
 
   __clearUserInfo () {
     try {
-      wx.removeStorageSync('__userInfo__')
-      this.loginChannel = 'guest'
+      wx.removeStorageSync(UserService.AuthKey)
+      this.loginChannel = UserService.GuestLogin
       this.snsId = null
       this.auth = null
       this.weixinUserInfo = null
@@ -182,7 +188,7 @@ class UserService {
           const userInfoString = JSON.stringify(res)
           try {
             that.auth = userInfo
-            that.loginChannel = 'yuntu'
+            that.loginChannel = UserService.YuntuLogin
             opts.success(res)
             that.__saveUserInfo()
           } catch (e) {
@@ -199,9 +205,9 @@ class UserService {
     if (typeof this.snsId === 'undefined' || !this.snsId) {
       throw 'snsId 不应该为 空(null) 或者 未定义(undefined) 状态'
     } else if (typeof this.snsId === 'string') {
-      this.loginChannel = 'guest'
+      this.loginChannel = UserService.GuestLogin
     } else if (typeof this.snsId === 'number') {
-      this.loginChannel = 'weixin'
+      this.loginChannel = UserService.WexinLogin
     }
     this.__saveUserInfo()
   }
@@ -211,7 +217,7 @@ class UserService {
    * @return {boolean|*|null}
    */
   isLogin () {
-    return this.loginChannel === 'yuntu' && this.auth
+    return this.loginChannel === UserService.YuntuLogin && this.auth
   }
 
   /**
@@ -272,7 +278,7 @@ class UserService {
           const userInfo = res
           try {
             that.auth = userInfo
-            that.loginChannel = 'yuntu'
+            that.loginChannel = UserService.YuntuLogin
             opts.success(res)
             that.__saveUserInfo()
           } catch (e) {
@@ -425,7 +431,7 @@ class UserService {
                * @type {*}
                */
               if (!that.isLogin()) {
-                that.loginChannel = 'guest'
+                that.loginChannel = UserService.GuestLogin
                 that.snsId = null
               }
               that.weixinUserInfo = res.auth
@@ -439,7 +445,7 @@ class UserService {
                    * 服务端获得微信用户信息，此时用户被定义为 weixin snsId{Number}
                    */
                   if (!that.isLogin()) {
-                    that.loginChannel = 'weixin'
+                    that.loginChannel = UserService.WexinLogin
                   }
                   that.snsId = res2.snsId
                   that.weixinUserInfo = res2
@@ -463,7 +469,7 @@ class UserService {
             fail: function (res) {
               clientjs.getClientId(function (clientId) {
                 if (!that.isLogin()) {
-                  that.loginChannel = 'guest'
+                  that.loginChannel = UserService.GuestLogin
                   that.snsId = clientId
                 }
                 that.weixinUserInfo = null
