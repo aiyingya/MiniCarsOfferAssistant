@@ -6,7 +6,7 @@ import Service from './base.service'
 
 import util from '../utils/util'
 
-class SAASService extends Service {
+export default class SAASService extends Service {
 
   urls = {
     dev: 'https://test.yaomaiche.com/ymcdev/',
@@ -283,11 +283,12 @@ class SAASService extends Service {
    */
   requestCarSourcesList(carModelId, object) {
     // MARK： 目前只取地址列表中的第一个
-    const locations = this.userService.location
+
     const data = {
       userId: this.userService.auth.userId
     }
 
+    const locations = this.userService.location
     if (locations && locations.length > 0) {
       const location = locations[0]
       if (location.provinceId) {
@@ -443,5 +444,3 @@ class SAASService extends Service {
     })
   }
 }
-
-export default SAASService

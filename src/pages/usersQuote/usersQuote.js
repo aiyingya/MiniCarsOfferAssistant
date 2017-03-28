@@ -40,9 +40,7 @@ Page({
       this.setData({
         isLogin: true,
       })
-      app.userService.getLocationId({
-        userId: userInfo.userId,
-        accessToken: userInfo.accessToken,
+      app.userService.getLocation({
         success: function (res) {
           that.setData({
             userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '',

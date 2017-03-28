@@ -5,7 +5,7 @@
 import config from '../lib/config'
 import modules from '../lib/modules'
 
-class Services {
+export default class Services {
 
   constructor () {
 
@@ -27,5 +27,3 @@ class Services {
     })
   }
 }
-
-export default Services

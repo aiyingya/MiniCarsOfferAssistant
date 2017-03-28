@@ -7,42 +7,33 @@
 //  Copyright (c) 2016年 yaomaiche. All rights reserved.
 //
 
-import Modules from './modules'
-import config from './config'
+import Util from '../utils/util'
 
-;(function() {
+export default class Client {
 
-  function generateUUID(){
-    let d = new Date().getTime();
-    let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      let r = (d + Math.random()*16)%16 | 0;
-      d = Math.floor(d/16);
-      return (c=='x' ? r : (r&0x7|0x8)).toString(16);
-    });
-    return uuid;
-  };
-
-  function Clientjs(options) {
-    this.init();
+  constructor (userService) {
+    this.clientId = ''
+    this.userService = userService
+    const that = this;
+    this.getClientId(function(clientId) {
+      console.log('本次的用户的 clientId 为' + clientId)
+    })
   }
-  Clientjs.prototype = {
-    clientId: '',
-    init () {
-      const that = this;
-      this.getClientId(function(clientId) {
-        console.log('本次的用户的 clientId 为' + clientId)
-      })
-    },
-    setClientId (clientId) {
-      this.clientId = clientId
-      try {
-        wx.setStorageSync('clientId', clientId);
-      } catch (e) {
-        console.log('设置删除 clientId 发生错误' + e)
-      }
-    },
-    getClientId (cb) {
-      let that = this
+
+  setClientId (clientId) {
+    this.clientId = clientId
+    try {
+      wx.setStorageSync('clientId', clientId);
+    } catch (e) {
+      console.log('设置删除 clientId 发生错误' + e)
+    }
+  }
+
+  getClientId (cb, forceUpdate=false) {
+    let that = this
+    if (forceUpdate) {
+      that.requestClientId(cb)
+    } else {
       if (this.clientId && this.clientId.length) {
         typeof cb === 'function' && cb(this.clientId)
       } else {
@@ -64,33 +55,25 @@ import config from './config'
           console.log('同步获取 clientId 发生错误' + e);
         }
       }
-    },
-    requestClientId (cb) {
-      let that = this
-      const deviceId = generateUUID();
-      let data = {
-        deviceId: deviceId,
-        userId: ''
-      };
-      const module = new Modules()
-      module.request({
-        method: 'GET',
-        loadingType: 'none',
-        contentType: 'application/x-www-form-urlencoded',
-        url: config.ucServerHTTPSUrl + 'cgi/visitor',
-        data: data,
-        success: function(res) {
-          console.log(res)
-          that.clientId = res.clientId;
-          that.setClientId(that.clientId);
-          typeof cb === 'function' && cb(that.clientId)
-        },
-        fail: function() {
-          // 网络请求失败
-          typeof cb === 'function' && cb(null)
-        }
-      })
     }
   }
-  module.exports = new Clientjs()
-})()
+
+  requestClientId (cb) {
+    let that = this
+    const deviceId = wx.getStorageSync(Util.DeviceIdKey)
+    this.userService.getVisitor({
+      deviceId: deviceId,
+      success: function(res) {
+        console.log(res)
+        that.clientId = res.clientId
+        that.setClientId(that.clientId)
+        typeof cb === 'function' && cb(that.clientId)
+      },
+      fail: function() {
+        // 网络请求失败
+        typeof cb === 'function' && cb(null)
+      }
+    })
+  }
+
+}

@@ -3,7 +3,7 @@
  */
 import Service from './base.service'
 
-class TradeService extends Service {
+export default class TradeService extends Service {
 
   urls = {
     dev: 'https://test.yaomaiche.com/tradedev/',
@@ -96,32 +96,3 @@ class TradeService extends Service {
     })
   }
 }
-
-export default TradeService
-
-// /**
-//  * 关注一个供应商
-//  * @param e
-//  */
-// handlerFollow(e) {
-//   const that = this
-//
-//   const skuIndex = e.currentTarget.dataset.skuIndex
-//   const carSourceIndex = e.currentTarget.dataset.carSourceIndex
-//   const carSource = e.currentTarget.dataset.carSource
-//   const supplier = e.currentTarget.dataset.supplier
-//
-//   this.requestFocusOrNotASupplier(supplier.id, !supplier.hasFocused, {
-//     success: function (res) {
-//       supplier.hasFocused = !supplier.hasFocused
-//       carSource.supplier = supplier
-//       that.updateTheCarSource(skuIndex, carSourceIndex, carSource)
-//     },
-//     fail: function () {
-//
-//     },
-//     complete: function () {
-//
-//     }
-//   })
-// },

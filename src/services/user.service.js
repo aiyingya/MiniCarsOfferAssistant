@@ -8,9 +8,9 @@
 
 import Service from './base.service'
 
-import clientjs from '../lib/client'
+import Client from '../lib/client'
 
-class UserService extends Service {
+export default class UserService extends Service {
 
   static AuthKey = 'auth'
 
@@ -75,6 +75,8 @@ class UserService extends Service {
     this.getWeixinUserInfo()
     this.getNewAccessToken()
     this.getLocation()
+
+    this.client = new Client(this)
   }
 
   __loadUserInfo () {
@@ -181,12 +183,8 @@ class UserService extends Service {
           that.auth = res
           that.loginChannel = UserService.YuntuLogin
           opts.success(res)
-
-          try {
-            that.__saveUserInfo()
-          } catch (e) {
-            console.log(e)
-          }
+          that.client.getClientId(function (clientId) {}, true)
+          that.__saveUserInfo()
         }
       },
       fail: opts.fail
@@ -203,6 +201,9 @@ class UserService extends Service {
       this.loginChannel = UserService.WexinLogin
     }
     this.__saveUserInfo()
+
+    this.client.getClientId(function (clientId) {}, true)
+
     opts.success()
   }
 
@@ -270,14 +271,11 @@ class UserService extends Service {
           let expireIn = that.__getTimestamp(res.expireMillis)
           res.expireIn = expireIn
           const userInfo = res
-          try {
-            that.auth = userInfo
-            that.loginChannel = UserService.YuntuLogin
-            opts.success(res)
-            that.__saveUserInfo()
-          } catch (e) {
-            console.log(e)
-          }
+          that.auth = userInfo
+          that.loginChannel = UserService.YuntuLogin
+          opts.success(res)
+          that.client.getClientId(function (clientId) {}, true)
+          that.__saveUserInfo()
         }
       },
       fail: function (err) {
@@ -419,7 +417,7 @@ class UserService extends Service {
                   that.__saveUserInfo()
                 },
                 fail: function () {
-                  clientjs.getClientId(function (clientId) {
+                  that.client.getClientId(function (clientId) {
 
                     if (!that.isLogin()) {
                       that.snsId = clientId
@@ -432,7 +430,7 @@ class UserService extends Service {
               })
             },
             fail: function (res) {
-              clientjs.getClientId(function (clientId) {
+              that.client.getClientId(function (clientId) {
                 if (!that.isLogin()) {
                   that.loginChannel = UserService.GuestLogin
                   that.snsId = clientId
@@ -447,6 +445,17 @@ class UserService extends Service {
       })
     }
   }
-}
 
-export default UserService
+  getVisitor (opts) {
+    const userId = this.isLogin() ? this.auth.userId : ''
+    this.sendMessage({
+      path: 'cgi/visitor',
+      data: {
+        deviceId: opts.deviceId,
+        userId: userId
+      },
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
+}
