@@ -93,12 +93,6 @@
       <view class="icon-box__desc">抱歉！没有相关车信息</view>
     </view>	
 	</view>
-<<<<<<< HEAD
 </view>
-=======
-	
-</view>
-
 <template is="popupCharts" data="{{showPopCharts}}" /> 
 
->>>>>>> release/1.2.0
