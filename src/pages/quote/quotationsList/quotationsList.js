@@ -1,4 +1,4 @@
-let util = require('../../../utils/util.js');
+import util from '../../../utils/util'
 let app = getApp()
 
 Page({

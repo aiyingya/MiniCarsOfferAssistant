@@ -1,9 +1,11 @@
 /* search.js*/
+import util from '../../utils/util'
+
 let app = getApp();
 
-const util = require('../../utils/util.js')
 var columnCharts = null
 var columnChartsList = []
+
 Page({
   data: {
     associateResults: [],

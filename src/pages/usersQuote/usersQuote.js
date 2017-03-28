@@ -49,7 +49,7 @@ Page({
             userTenants: res.tenants
           })
         },
-        fail(err) {
+        fail: function(err) {
           that.$wuxToast.show({
             type: false,
             timer: 2000,

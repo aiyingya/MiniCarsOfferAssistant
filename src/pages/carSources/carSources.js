@@ -1,5 +1,6 @@
-let app = getApp();
 import util from '../../utils/util.js'
+
+let app = getApp()
 
 Page({
   data: {
@@ -39,6 +40,9 @@ Page({
     hasOverLayDropdown: false,
   },
   onLoad (options) {
+
+    console.log(options)
+
     const that = this
 
     const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options);
@@ -46,7 +50,7 @@ Page({
     this.setData({
       carModelsInfo: carModelsInfo
     })
-    const HTTPS_YMCAPI = app.config.ymcServerHTTPSUrl
+
     try {
       const res = wx.getSystemInfoSync();
       this.pixelRatio = res.pixelRatio;

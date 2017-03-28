@@ -8,11 +8,12 @@
 
 import Service from './base.service'
 
-import Client from '../lib/client'
+import Util from '../utils/util'
 
 export default class UserService extends Service {
 
   static AuthKey = 'auth'
+  static ClientIdKey = 'clientId'
 
   static GuestLogin = 'guest'
   static WexinLogin = 'weixin'
@@ -70,13 +71,19 @@ export default class UserService extends Service {
     this.location = null
     this.mobile = null
 
+    this.clientId = null
+
+    this.__getClientId(function(clientId) {
+      console.log('本次的用户的 clientId 为' + clientId)
+    })
     this.__loadUserInfo()
 
     this.getWeixinUserInfo()
     this.getNewAccessToken()
-    this.getLocation()
-
-    this.client = new Client(this)
+    this.getLocation({
+      success: function () { },
+      fail: function () { }
+    })
   }
 
   __loadUserInfo () {
@@ -135,6 +142,62 @@ export default class UserService extends Service {
     return expirationTime
   }
 
+  __setClientId (clientId) {
+    this.clientId = clientId
+    try {
+      wx.setStorageSync(UserService.ClientIdKey, clientId);
+    } catch (e) {
+      console.log('设置删除 clientId 发生错误' + e)
+    }
+  }
+
+  __getClientId (cb, forceUpdate=false) {
+    let that = this
+    if (forceUpdate) {
+      that.requestClientId(cb)
+    } else {
+      if (this.clientId && this.clientId.length) {
+        typeof cb === 'function' && cb(this.clientId)
+      } else {
+        try {
+          let clientId = wx.getStorageSync(UserService.ClientIdKey)
+
+          if (clientId && clientId.length) {
+            that.clientId = clientId
+            typeof cb === 'function' && cb(this.clientId)
+          } else {
+            try {
+              wx.removeStorageSync(UserService.ClientIdKey)
+            } catch (e) {
+              console.log('同步删除 clientId 发生错误' + e);
+            }
+            that.__requestClientId(cb)
+          }
+        } catch (e) {
+          console.log('同步获取 clientId 发生错误' + e);
+        }
+      }
+    }
+  }
+
+  __requestClientId (cb) {
+    let that = this
+    const deviceId = wx.getStorageSync(Util.DeviceIdKey)
+    this.userService.getVisitor({
+      deviceId: deviceId,
+      success: function(res) {
+        console.log(res)
+        that.clientId = res.clientId
+        that.__setClientId(that.clientId)
+        typeof cb === 'function' && cb(that.clientId)
+      },
+      fail: function() {
+        // 网络请求失败
+        typeof cb === 'function' && cb(null)
+      }
+    })
+  }
+
   /**
    * 获取验证码.
    */
@@ -183,7 +246,7 @@ export default class UserService extends Service {
           that.auth = res
           that.loginChannel = UserService.YuntuLogin
           opts.success(res)
-          that.client.getClientId(function (clientId) {}, true)
+          that.__getClientId(function (clientId) {}, true)
           that.__saveUserInfo()
         }
       },
@@ -202,7 +265,7 @@ export default class UserService extends Service {
     }
     this.__saveUserInfo()
 
-    this.client.getClientId(function (clientId) {}, true)
+    this.__getClientId(function (clientId) {}, true)
 
     opts.success()
   }
@@ -274,7 +337,7 @@ export default class UserService extends Service {
           that.auth = userInfo
           that.loginChannel = UserService.YuntuLogin
           opts.success(res)
-          that.client.getClientId(function (clientId) {}, true)
+          that.__getClientId(function (clientId) {}, true)
           that.__saveUserInfo()
         }
       },
@@ -355,13 +418,13 @@ export default class UserService extends Service {
     }
   }
 
-  getLocation () {
+  getLocation (opts) {
     let that = this
     if (this.isLogin()) {
       this.getLocationId({
         userId: this.auth.userId,
         accessToken: this.auth.accessToken,
-        success (res) {
+        success: function (res) {
           let location = []
           if (res.tenants) {
             for (let item of res.tenants) {
@@ -372,10 +435,15 @@ export default class UserService extends Service {
           }
           that.location = location
           that.mobile = res.mobile
+          opts.success(res)
+        },
+        fail: function () {
+          opts.fail()
         }
       })
     }
   }
+
 
   getWeixinUserInfo (cb) {
     let that = this
@@ -417,7 +485,7 @@ export default class UserService extends Service {
                   that.__saveUserInfo()
                 },
                 fail: function () {
-                  that.client.getClientId(function (clientId) {
+                  that.__getClientId(function (clientId) {
 
                     if (!that.isLogin()) {
                       that.snsId = clientId
@@ -430,7 +498,7 @@ export default class UserService extends Service {
               })
             },
             fail: function (res) {
-              that.client.getClientId(function (clientId) {
+              that.__getClientId(function (clientId) {
                 if (!that.isLogin()) {
                   that.loginChannel = UserService.GuestLogin
                   that.snsId = clientId

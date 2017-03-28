@@ -1,5 +1,5 @@
 //index.js
-const util = require('../../utils/util.js')
+import util from '../../utils/util'
 
 let app = getApp()
 Page({
@@ -55,6 +55,9 @@ Page({
             hotCarLists: res
           })
         }
+      },
+      fail: function () {
+
       }
     })
 

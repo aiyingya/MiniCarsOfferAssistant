@@ -1,7 +1,9 @@
 let app = getApp()
-let util = require('../../utils/util')
+import util from '../../utils/util'
+
 var columnCharts = null
 var columnChartsList = []
+
 Page({
 	data: {
 		carModelsList: [],
@@ -183,7 +185,7 @@ Page({
 			return
 		}
 		wx.navigateTo({
-      url: '../carSources/carSources?' + carModelsInfoKeyValueString
+      url: '/pages/carSources/carSources?' + carModelsInfoKeyValueString
     })
 	},
 	headlerRemoveRmendCarFacade() {
