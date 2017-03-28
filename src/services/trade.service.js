@@ -3,9 +3,6 @@
  */
 import Service from './base.service'
 
-import config from '../lib/config'
-import modules from '../lib/modules'
-
 class TradeService extends Service {
 
   urls = {
