@@ -1,56 +1,12 @@
 <!--index.wxml-->
-<!--<scroll-view scroll-y style="height: {{windowHeight}}" scroll-into-view="{{alpha}}">-->
+<scroll-view scroll-y="true" style="height: {{windowHeight}}" scroll-into-view="{{alpha}}">
 	<view class="container">
 		<!-- 搜索车型.-->
-<!--
-		<view class="search-wrap">
-			<view class="search-inner">
-				<view class="search-icon">
-					<image class="search-img" src="../../images/icons/icon_find.png"></image>
-				</view>
-				<input 
-					class="search-input" 
-					placeholder-class="search-placeholder"
-					disabled 
-					placeholder="输入指导价/车款名" 
-					/>
-				<view 
-				  class="bindtap"
-				  bindtap="searchCarType"
-				  ></view>
-			</view>
-		</view>
--->
-
-		<!-- 热门品牌.-->
-<!--
-		<view class="hot-carsbrand-wrap">
-			<view class="hot-carsbrand-title">
-				<view class="hot-carsbrand-text">热门品牌</view>
-			</view>
-
-			<view class="hot-carsbrand-stand">
-				<view 
-					class="stand-item"
-					wx:for="{{hotCarLists}}"
-					>
-					<image 
-						mode="aspectFit" 
-						class="hot-carslogo" 
-						src="{{item.carBrandLogoUrl}}"
-						bindtap="handlerSelectCarSeries"
-						data-carSeries="{{item}}"
-						></image>
-				</view>
-			</view>	
-		</view>
--->
-
 		<!-- cars list.-->
 		<view class="viewCarsList-wrap">
 			<view 
 				wx:for="{{brandGroupList}}" 
-				id="{{item.firstLetter}}"
+				id="{{item.title}}"
 				class="viewCarsList-calls"
 				>
 				<view class="viewCarsList-index">{{item.title}}</view>
@@ -77,13 +33,13 @@
 			</view>
 		</view>
 	</view>
-<!--</scroll-view>
+</scroll-view>
 <view wx:if="{{alphanetToast === alpha}}" class="alphanet-toast showToast">{{alpha}}</view>
 <view data-id="selector" catchtouchstart="handlerAlphaTap" catchtouchmove="handlerMove" class="alphanet-selector">
-	<view wx:for="{{brandGroupList}}" data-ap="{{item.firstLetter}}" class="selector-one">
-		
+	<view wx:for="{{brandGroupList}}" data-ap="{{item.title}}" class="selector-one">
+		{{item.title}}
 	</view>
-</view>-->
+</view>
 
 <!-- 车系.-->
 <view wx:if="{{showCarSeries !== ''}}" class="carSeries-wrap">

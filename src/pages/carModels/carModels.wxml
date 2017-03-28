@@ -5,6 +5,7 @@
 <view class="car-models container">
 
 	<view class="carModels-topbar">
+<!--
 		<view class="carModels-navbar">
 			<view 
 				class="navbar-item"
@@ -17,16 +18,31 @@
 				</view>
 			</view>
 		</view>
+-->
 		
 		<!-- 标签.-->
-<!--
-		<view class="carModels-label">
-			<view class="label">标签标签</view>
-			<view class="label">标签</view>
-			<view class="label">标签标签</view>
-			<view class="label">标签标签</view>
+		<view class="carModels-label-inner">
+      <view class="carModels-label-wells">
+        <view class="carModels-label">
+          <view 
+            class="label {{item.selected}}"
+            wx:for="{{filtersData}}"
+            wx:key="unique"
+            bindtap="handleSelectCarsModele"
+            data-select="{{item}}"
+            data-id="{{item.name}}"
+            >{{item.name}}</view>
+        </view>
+      </view>
+      <view class="carModels-instore">
+        <view 
+          class="label {{stockSeclect}}"
+          bindtap="handleSelectInstore"
+          >{{stockText}}</view>
+      </view>
 		</view>
--->
+		
+		
 		<view wx:if="{{showRmendCarFacade}}" class="carModels-popup-select rmendCarFacade-popup-wrap">
 			<view 
 				class="rmendCarFacade-popup-mask showMask"
@@ -64,7 +80,7 @@
 		<block 
 			wx:for="{{carModelsList}}"
 			>
-			<template is="carModel" data="{{item,showCharts}}" /> 
+			<template is="carModel" data="{{item,showCharts,selectTime}}" /> 
 		</block>
 	</view>
 	
@@ -79,3 +95,6 @@
 	</view>
 	
 </view>
+
+<template is="popupCharts" data="{{showPopCharts}}" /> 
+

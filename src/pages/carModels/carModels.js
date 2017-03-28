@@ -1,19 +1,33 @@
 let app = getApp()
 let util = require('../../utils/util')
-
+var columnCharts = null
+var columnChartsList = []
 Page({
 	data: {
 		carModelsList: [],
+    inStockData: [],
 		cacheCarModelsList: [],
 		windowHeight: '',
 		windowWidth: '',
 		showRmendCarFacade: false,
 		filtersData: [],
-		CarsModeleText: '全部车款',
+		CarsModeleText: '全部',
 		CarsModeleSelectId: 0,
 		showCharts: true, // 是否展示charts图表，解决弹出层无法点击问题
     HTTPS_YMCAPI: app.config.tradeServerHTTPSUrl,
-    showNodata: false
+    showNodata: false,
+    showPopCharts: false,
+    popCharts: null,
+    active: '',
+    stock: 'in_stock',
+    stockText: '有货',
+    stockSeclect: 'selected',
+    // 图表时间筛选.
+    selectTime: {
+      selectId: '0', // 全部.
+      selectText: '全部'
+    },
+    carsInfo: ''
 	},
 	onLoad (options) {
 		let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -36,36 +50,50 @@ Page({
 			wx.setNavigationBarTitle({
 				title: carsInfo.name
 			})
-			app.modules.request({
-				url: app.config.ymcServerHTTPSUrl + 'supply/car/spu',
-				method: 'GET',
-				data: {
-					carSeriesId: carsInfo.id
-				},
-				success: function(res) {
-          if(res) {
-            let carModelsList = res.content
-            let filters = res.filters
-            let filtersData
-            let showNodata = false
-            that.drawCanvas(carModelsList)
-						for(let item of filters) {
-							filtersData = item.items
-						}
-						if(carModelsList.length === 0) {
-						  showNodata = true
-						}
-						that.setData({
-							carModelsList: carModelsList,
-							cacheCarModelsList: carModelsList,
-							filtersData: filtersData,
-              showNodata: showNodata
-						})
-          }
-				}
-			})
+      this.setData({carsInfo: carsInfo})
+			this.pagesloadRequest(carsInfo,true)
 		}
 	},
+  pagesloadRequest(carsInfo,inStock) {
+    let that = this
+    let stock = inStock ? 'in_stock' : 'all'
+    let stockText = inStock ? '有货' : '全部'
+    let stockSeclect = inStock ? 'selected' : ''
+    app.modules.request({
+      url: app.config.ymcServerHTTPSUrl + 'supply/car/spu',
+      method: 'GET',
+      data: {
+        carSeriesId: carsInfo.id,
+        inStock: inStock // 默认显示有货.
+      },
+      success: function(res) {
+        if(res) {
+          let carModelsList = res.content
+          let filters = res.filters
+          let filtersData
+          let showNodata = false
+          let inStockData = []
+          that.drawCanvas(carModelsList)
+          for(let item of filters) {
+            filtersData = item.items
+          }
+          if(carModelsList.length === 0) {
+            showNodata = true
+          }
+
+          that.setData({
+            carModelsList: carModelsList,
+            cacheCarModelsList: carModelsList,
+            filtersData: filtersData,
+            showNodata: showNodata,
+            stock: stock,
+            stockText: stockText,
+            stockSeclect: stockSeclect
+          })
+        }
+      }
+    })
+  },
 	onShow () {
 
 	},
@@ -88,8 +116,11 @@ Page({
 	handleSelectCarsModele(e) {
 		let selectItem = e.currentTarget.dataset.select
 		let selectId = e.currentTarget.dataset.id
-		let carModelsList = this.data.cacheCarModelsList
 		let newModelsList = []
+    let filtersData = this.data.filtersData
+    let that = this
+    let carModelsList = this.data.cacheCarModelsList
+    let showNodata = false
 		if(selectItem.name === '全部') {
 			newModelsList = carModelsList
 		}else {
@@ -100,15 +131,40 @@ Page({
 				}
 			}
 		}
+    for(let item of filtersData) {
+      if(selectId === item.name) {
+        item.selected = 'selected'
+      }else {
+        item.selected = ''
+      }
+    }
+    if(newModelsList.length == 0) {
+      showNodata = true
+    }
 		this.drawCanvas(newModelsList)
 		this.setData({
 			CarsModeleText: selectItem.name,
 			CarsModeleSelectId: selectId,
 			carModelsList: newModelsList,
 			showRmendCarFacade: false,
-			showCharts: true
+			showCharts: true,
+      filtersData: filtersData,
+      showNodata: showNodata
 		})
 	},
+  handleSelectInstore() {
+    let that = this
+    let carsInfo = that.data.carsInfo
+    let cacheCarModelsList = that.data.cacheCarModelsList
+    let newCarModelsList = []
+    
+    if(that.data.stock === 'in_stock') {
+      that.pagesloadRequest(carsInfo,false)
+    }else {
+      that.pagesloadRequest(carsInfo,true)
+    }
+    
+  },
 	handlerToCarSources (e) {
 		let item = e.currentTarget.dataset.carmodelsinfo
 		let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
@@ -146,6 +202,38 @@ Page({
 			showCharts: true
 		})
 	},
+  handleCharttouch(e) {
+    let id =  e.target.dataset.id
+    let that = this
+    if(columnChartsList.length > 0) {
+      for(let item of columnChartsList) {
+        if(item.id == id) {
+          let index = item.chart.getCurrentDataIndex(e)
+          let chartData = item.chart.chartData
+          let config = item.chart.config
+          let opts = item.chart.opts
+          let context = item.chart.context
+          let changeData = item.chart.changeData;
+          let callback = function(data) {
+            if(data) {
+              let value = 0
+              for(let item of data.y) {
+                value+=item
+              }
+              console.log(value)
+              if(value <= 0) {return}
+              that.setData({
+                showPopCharts: true,
+                showCharts: false
+              })
+              that.drawPopCharts(data)
+            }
+          }
+          item.chart.drawChartShade(index,chartData,config,opts,context,callback)
+        }
+      }
+    }
+  },
 	drawCanvas(list) {
 		if (!list) {return}
 		let data = list
@@ -159,9 +247,11 @@ Page({
     } catch (e) {
 
     }
+    columnCharts = null
 		for (let item of data) {
-			if(item.supply.supplierCount > 0) {
-				new app.wxcharts({
+      
+			if(item.supply.chart) {
+				columnCharts =  new app.wxcharts({
 					canvasId: item.carModelId,
 					type: 'column',
 					categories: item.supply.chart.x,
@@ -172,10 +262,10 @@ Page({
 					series: [{
             name: '1',
             data: item.supply.chart.y,
-            color: '#d2e1f6'
+            color: '#77A0E9'
           }],
 					xAxis: {
-            disableGrid: true,
+            disableGrid: false,
             fontColor: '#333333',
             gridColor: '#333333',
             unitText: '下(万)'
@@ -184,8 +274,6 @@ Page({
             disabled: true,
             fontColor: '#333333',
             gridColor: '#333333',
-            min: 10,
-            max: 50,
             unitText: '（个）',
             format(val) {
               return val.toFixed(0)
@@ -196,8 +284,9 @@ Page({
           },
           width: that.windowWidth,
           height: 120,
-          dataLabel: true,
+          dataLabel: false,
           dataPointShape: false,
+          xScale: item.supply.chart.scale,
           extra: {
             area: ['风险','适宜2.43~3.73','偏贵'],
             hint: item.supply.chart.hint,
@@ -205,8 +294,79 @@ Page({
             index: item.supply.chart.priceIndex
           }
 				})
+        
+        let chartItem = {
+          id: item.carModelId,
+          chart: columnCharts
+        }
+        columnChartsList.push(chartItem)
 			}
 		}
-	}
+	},
+  drawPopCharts(data) {
+    if(!data) {return}
+    let popWindow = {}
+    
+		try {
+      let res = wx.getSystemInfoSync()
+      
+			popWindow.windowWidth = res.windowWidth 
+    } catch (e) {
+
+    }
+    this.data.popCharts = new app.wxcharts({
+      canvasId: 'popCharts',
+      type: 'column',
+      categories: data.x,
+      animation: true,
+      color: '#ECF0F7',
+      legend: false,
+      background: '#ECF0F7',
+      series: [{
+        name: '1',
+        data: data.y,
+        color: '#77A0E9'
+      }],
+      xAxis: {
+        disableGrid: false,
+        fontColor: '#333333',
+        gridColor: '#333333',
+        unitText: '下(万)'
+      },
+      yAxis: {
+        disabled: true,
+        fontColor: '#333333',
+        gridColor: '#333333',
+        unitText: '（个）',
+        min: 0,
+        format(val) {
+          return val.toFixed(0)
+        }
+      },
+      dataItem: {
+        color: '#ECF0F7'
+      },
+      width: popWindow.windowWidth,
+      height: 120,
+      dataLabel: false,
+      dataPointShape: false,
+      extra: {
+        area: ['风险','适宜2.43~3.73','偏贵']
+      }
+    })
+  },
+  handleClosePopup() {
+    console.log('colse')
+    let carModelsList = this.data.carModelsList
+		this.drawCanvas(carModelsList)
+    this.setData({
+      showPopCharts: false,
+      showCharts: true
+    })
+    this.data.popCharts = null
+  },
+  handleSelectTime() {
+    
+  }
 
 })
