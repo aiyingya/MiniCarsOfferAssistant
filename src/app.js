@@ -5,6 +5,7 @@ import wxcharts from './modules/wxcharts'
 import config from './lib/config'
 
 import UserService from './services/user.service'
+import TradeService from './services/trade.service'
 
 App({
   onLaunch () {
@@ -21,6 +22,7 @@ App({
   modules: new modules,
   wxcharts: wxcharts,
   userService: new UserService(),
+  tradeService: new TradeService(),
   // FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据
   fuckingLarryNavigatorTo: {
     quotation: null,

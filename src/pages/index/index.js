@@ -13,7 +13,6 @@ Page({
     showMask: '',
     showCarSeriesInner: '',
     imageDomain: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
-    HTTPS_YMCAPI: '',
     showCarSeriesImageUrl: '',
     carManufacturerSeriesList: [],
     showNodata: false
@@ -38,7 +37,6 @@ Page({
   },
   onLoad() {
     let that = this
-    let HTTPS_URL = app.config.tradeServerHTTPSUrl
     try {
       let res = wx.getSystemInfoSync()
       this.pixelRatio = res.pixelRatio
@@ -48,17 +46,9 @@ Page({
     } catch (e) {
 
     }
-    that.setData({
-      HTTPS_YMCAPI: HTTPS_URL
-    })
-    // 获取页面数据.
-    app.modules.request({
-      url: HTTPS_URL + 'cgi/navigate/brands/hot',
-      method: 'GET',
-      data: {},
-      header: {
-        'content-type': 'application/json'
-      },
+
+    // 获取热推车品牌
+    app.tradeService.getHotPushBrands({
       success: function (res) {
         if (res) {
           console.log(res)
@@ -66,7 +56,6 @@ Page({
             hotCarLists: res
           })
         }
-
       }
     })
 
@@ -89,12 +78,7 @@ Page({
   },
   getHotpushCars () {
     let that = this
-    let HTTPS_URL = this.data.HTTPS_YMCAPI
-
-    app.modules.request({
-      url: HTTPS_URL + 'cgi/navigate/items/hot',
-      method: 'GET',
-      data: {},
+    app.tradeService.getHotPushCars({
       success: function (res) {
         let depreciate
 
@@ -136,16 +120,8 @@ Page({
     let that = this;
     let {HTTPS_YMCAPI} = this.data;
 
-    app.modules.request({
-      url: HTTPS_YMCAPI + 'cgi/navigate/models/query', //仅为示例，并非真实的接口地址
-      method: 'POST',
-      data: {
-        brandId: carSeries.id,
-        deleted: false,
-        group: true,
-        joinOnSaleCount: true,
-        level: 1
-      },
+    app.tradeService.getNavigatorForCarSeries({
+      brandId: carSeries.id,
       success: function (res) {
         if (res) {
           let data = res

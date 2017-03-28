@@ -12,14 +12,12 @@ Page({
 		showMask: '',
 		showCarSeriesInner: '',
 		imageDomain: 'http://produce.oss-cn-hangzhou.aliyuncs.com/ops',
-		HTTPS_YMCAPI: '',
 		showCarSeriesImageUrl: '',
 		carManufacturerSeriesList:[],
     showNodata: false
   },
   onLoad() {
     let that = this
-		let HTTPS_URL = app.config.tradeServerHTTPSUrl
 		try {
       let res = wx.getSystemInfoSync()
       this.pixelRatio = res.pixelRatio
@@ -29,31 +27,14 @@ Page({
     } catch (e) {
 
     }
-		that.setData({
-			HTTPS_YMCAPI: HTTPS_URL
-		})
-		// 获取页面数据.
 
-		app.modules.request({
-			url: HTTPS_URL + 'cgi/navigate/brands/query',
-			method: 'POST',
-			data: {
-				"code": "0",
-        "deleted": false,
-        "group": true,
-        "joinOnSaleCount": true,
-        "level": 1
-			},
-			header: {
-					'content-type': 'application/json'
-			},
+    app.tradeService.getNavigatorForCarBrands({
 			success: function(res) {
 				if(res){
 					that.setData({
 						brandGroupList: res
 					})
 				}
-
 			}
 		})
   },

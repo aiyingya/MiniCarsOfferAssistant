@@ -14,7 +14,6 @@ Page({
 		CarsModeleText: '全部',
 		CarsModeleSelectId: 0,
 		showCharts: true, // 是否展示charts图表，解决弹出层无法点击问题
-    HTTPS_YMCAPI: app.config.tradeServerHTTPSUrl,
     showNodata: false,
     showPopCharts: false,
     popCharts: null,
@@ -31,7 +30,6 @@ Page({
 	},
 	onLoad (options) {
 		let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
-		let HTTPS_YMCAPI =this.data.HTTPS_YMCAPI
 		let that = this
 		try {
       let res = wx.getSystemInfoSync()
@@ -157,13 +155,13 @@ Page({
     let carsInfo = that.data.carsInfo
     let cacheCarModelsList = that.data.cacheCarModelsList
     let newCarModelsList = []
-    
+
     if(that.data.stock === 'in_stock') {
       that.pagesloadRequest(carsInfo,false)
     }else {
       that.pagesloadRequest(carsInfo,true)
     }
-    
+
   },
 	handlerToCarSources (e) {
 		let item = e.currentTarget.dataset.carmodelsinfo
@@ -248,7 +246,7 @@ Page({
     }
     columnCharts = null
 		for (let item of data) {
-      
+
 			if(item.supply.chart) {
 				columnCharts =  new app.wxcharts({
 					canvasId: item.carModelId,
@@ -293,7 +291,7 @@ Page({
             index: item.supply.chart.priceIndex
           }
 				})
-        
+
         let chartItem = {
           id: item.carModelId,
           chart: columnCharts
@@ -305,11 +303,11 @@ Page({
   drawPopCharts(data) {
     if(!data) {return}
     let popWindow = {}
-    
+
 		try {
       let res = wx.getSystemInfoSync()
-      
-			popWindow.windowWidth = res.windowWidth 
+
+			popWindow.windowWidth = res.windowWidth
     } catch (e) {
 
     }
@@ -365,7 +363,7 @@ Page({
     this.data.popCharts = null
   },
   handleSelectTime() {
-    
+
   }
 
 })

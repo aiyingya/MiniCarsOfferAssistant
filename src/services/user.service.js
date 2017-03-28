@@ -5,11 +5,12 @@
 //  Created by pandali on 17-02-23.
 //  Copyright (c) 2016年 yaomaiche. All rights reserved.
 //
-import config from '../lib/config'
-import modules from '../lib/modules'
+
+import Service from './base.service'
+
 import clientjs from '../lib/client'
 
-class UserService {
+class UserService extends Service {
 
   static AuthKey = 'auth'
 
@@ -17,7 +18,14 @@ class UserService {
   static WexinLogin = 'weixin'
   static YuntuLogin = 'yuntu'
 
-  constructor() {
+  urls = {
+    dev: 'https://test.yaomaiche.com/ucdev/',
+    gqc: 'https://test.yaomaiche.com/ucgqc/',
+    prd: 'https://uc.yaomaiche.com/uc/'
+  }
+
+  constructor () {
+    super()
     /**
      * guest | yuntu | weixin
      * @type {string}
@@ -116,20 +124,6 @@ class UserService {
     }
   }
 
-  __sendMessage(opts) {
-    const _HTTPS = `${config.ucServerHTTPSUrl}${opts.path}`
-    const module = new modules
-    module.request({
-      url: _HTTPS,
-      method: opts.method,
-      header: opts.header,
-      data: opts.data,
-      success: opts.success,
-      fail: opts.fail,
-      loadingType: 'none'
-    })
-  }
-
   // 获取时间戳.
   __getTimestamp(ms) {
     let currentDate = new Date()
@@ -146,7 +140,7 @@ class UserService {
     if (!opts) return
 
     console.log('get SMS code')
-    this.__sendMessage({
+    this.sendMessage({
       path: 'cgi/vcode',
       method: 'POST',
       data: {
@@ -168,7 +162,7 @@ class UserService {
     if (!opts) return
 
     console.log('password login')
-    this.__sendMessage({
+    this.sendMessage({
       path: 'cgi/authorization',
       method: 'POST',
       data: {
@@ -184,12 +178,11 @@ class UserService {
         if (res) {
           const expireIn = that.__getTimestamp(res.expireMillis)
           res.expireIn = expireIn
-          const userInfo = res
-          const userInfoString = JSON.stringify(res)
+          that.auth = res
+          that.loginChannel = UserService.YuntuLogin
+          opts.success(res)
+
           try {
-            that.auth = userInfo
-            that.loginChannel = UserService.YuntuLogin
-            opts.success(res)
             that.__saveUserInfo()
           } catch (e) {
             console.log(e)
@@ -210,6 +203,7 @@ class UserService {
       this.loginChannel = UserService.WexinLogin
     }
     this.__saveUserInfo()
+    opts.success()
   }
 
   /**
@@ -247,7 +241,7 @@ class UserService {
   exsitTenanTmember(opts) {
     if (!opts) return
     console.log('exsit tenant tmeber')
-    this.__sendMessage({
+    this.sendMessage({
       path: 'cgi/tenant/member/exist',
       method: 'GET',
       data: {
@@ -264,11 +258,11 @@ class UserService {
   newAccessToken(opts) {
     console.log('get new accessToken')
     let that = this
-    this.__sendMessage({
+    this.sendMessage({
       method: 'PUT',
       path: 'cgi/authorization',
       header: {
-        Authorization: opts.refreshToken
+        Authorization: this.auth.refreshToken
       },
       data: {},
       success: function (res) {
@@ -298,7 +292,7 @@ class UserService {
   userBindWeixin(opts) {
     const snsId = this.weixinUserInfo.snsId
     const userId = this.auth.userId
-    this.__sendMessage({
+    this.sendMessage({
       path: 'cgi/user/weixin/binding',
       method: 'POST',
       header: {
@@ -317,7 +311,7 @@ class UserService {
    * 上传用户微信信息
    */
   uploadWeixinUserInfo(opts) {
-    this.__sendMessage({
+    this.sendMessage({
       path: 'cgi/user/weixin',
       method: 'POST',
       data: {
@@ -332,7 +326,7 @@ class UserService {
 
   getLocationId (opts) {
     const that = this
-    this.__sendMessage({
+    this.sendMessage({
       path: `cgi/tenant/member/${opts.userId}/tenant`,
       method: 'GET',
       data: {},
@@ -374,18 +368,15 @@ class UserService {
     const currentDate = new Date()
     const currentTime = currentDate.getTime()
     if (this.isLogin()) {
-      let token = this.auth.accessToken
       let expireTime = this.auth.expireIn
-      let refreshToken = this.auth.refreshToken
       if (currentTime > expireTime) {
         console.log('登录超时，请重新登录')
         this.newAccessToken({
-          refreshToken: refreshToken,
           success(res) {
             console.log(res)
           },
           fail(err) {
-            console.log(res)
+            console.log(err)
           }
         })
       }
