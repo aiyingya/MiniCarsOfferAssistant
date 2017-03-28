@@ -325,7 +325,6 @@ class UserService {
   }
 
   getLocationId (opts) {
-    console.log(opts)
     const that = this
     this.__sendMessage({
       path: `cgi/tenant/member/${opts.userId}/tenant`,
@@ -452,7 +451,7 @@ class UserService {
                   clientjs.getClientId(function (clientId) {
 
                     if (!that.isLogin()) {
-                      that.snsId = res2.snsId
+                      that.snsId = clientId
                     }
 
                     typeof cb == "function" && cb(that.weixinUserInfo)

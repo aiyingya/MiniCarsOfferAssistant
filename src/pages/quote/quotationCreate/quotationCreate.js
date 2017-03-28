@@ -648,6 +648,7 @@ Page({
           advancePayment: quotationDraft.advancePayment,
           totalPayment: quotationDraft.totalPayment,
           remark: quotationDraft.remark,
+          snsId: quotationDraft.snsId,
           loginChannel: quotationDraft.loginChannel
         }
       }
