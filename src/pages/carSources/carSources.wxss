@@ -194,7 +194,7 @@ page {
 .carSources-topbar {
 	background-color: #fff;
 	overflow: hidden;
-  margin-bottom: 204rpx;
+  margin-bottom: 48rpx;
 }
 .carSources-topbar .weui-media-box {
 	padding: 0 24rpx;
@@ -900,4 +900,8 @@ page {
 	left: 9rpx;
 	top: 50%;
 	margin-top: -3rpx;
+}
+.black-magic {
+  height: 156rpx;
+  width: 100%;
 }

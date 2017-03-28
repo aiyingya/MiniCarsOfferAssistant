@@ -279,6 +279,12 @@
         </view>
       </view>
 
+      <view
+        class="black-magic"
+        id = "x0"
+      >
+      </view>
+
       <!-- 货源列表 -->
       <view
           wx:for="{{carSourcesBySkuInSpuList}}"
@@ -286,7 +292,7 @@
           wx:for-index="skuItemIndex"
           wx:key="*this"
           class="carSources-section"
-          id="x{{skuItemIndex}}"
+          id="x{{skuItemIndex + 1}}"
         >
           <view class="carSources-section-content"
                 bindtap="handlerSelectCarSku"
