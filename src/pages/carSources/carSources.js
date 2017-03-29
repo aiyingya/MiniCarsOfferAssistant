@@ -903,7 +903,7 @@ Page({
 
     carSourceItem.viewModelSelectedTab = -1
 
-    console.log(carSourceItem)
+    this.selectCarSourcePlace(carSourceItem.viewModelTabMore[0], carSourceItem)
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
 
     this.setData({
@@ -919,6 +919,7 @@ Page({
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
     carSourceItem.viewModelSelectedTab = tabItemIndex
+
     this.selectCarSourcePlace(tabItem.value, carSourceItem)
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
 
