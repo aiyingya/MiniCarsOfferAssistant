@@ -38,7 +38,7 @@
         >
           <view class="line-item">
             <view class="line-title">车辆配色:</view>
-            <view class="car-color">{{skuItem.carSku.externalColorName}} / {{skuItem.carSku.internalColorName}} </view>
+            <view class="car-color">{{carSourceItem.externalColor}} / {{carSourceItem.viewModelInternalColor}} </view>
           </view>
           <view class="line-item">
             <view class="line-title">车源信息:</view>
