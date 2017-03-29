@@ -131,16 +131,19 @@ Page({
           if (data.length === 0) {
             showNodata = true
           }
-          that.setData({
-            showCarSeriesImageUrl: carSeries.logoUrl,
-            carManufacturerSeriesList: data,
-            showNodata: showNodata
-          })
+          setTimeout(function () {
+            that.setData({
+              showCarSeriesImageUrl: carSeries.logoUrl,
+              carManufacturerSeriesList: data,
+              showNodata: showNodata
+            })
+          }, 600)
         }
       }
     })
     that.setData({
       showCarSeries: carSeries,
+      showCarSeriesImageUrl: carSeries.logoUrl,
       showMask: 'showMask',
       showCarSeriesInner: 'rightToLeft'
     })
@@ -149,8 +152,8 @@ Page({
     let that = this;
     that.setData({
       showCarSeries: '',
-      carManufacturerSeriesList: [],
       showCarSeriesImageUrl: '',
+      carManufacturerSeriesList: [],
       showNodata: false
     });
   },
