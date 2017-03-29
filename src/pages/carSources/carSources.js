@@ -603,14 +603,41 @@ Page({
       }
     }
 
+    const selectedExternalColorFilter = function (externalColorName,
+                                                  carSourcesBySkuItem) {
+      if (externalColorName === '全部') {
+        return true
+      } else {
+        if (carSourcesBySkuItem.carSku.externalColorName === externalColorName) {
+          return true
+        } else {
+          return false
+        }
+      }
+    }
+
+    const selectedInternalColorFilter = function (internalColorName,
+                                                  carSourceItem) {
+      if (internalColorName === '全部') {
+        return true
+      } else {
+        if (carSourceItem.internalColor === internalColorName) {
+          return true
+        } else {
+          return false
+        }
+      }
+    }
+
     const carSourcesBySkuInSpuList = this.data.cacheCarSourcesBySkuInSpuList
     const newCarSourcesBySkuInSpuList = []
     for (let carSourcesBySkuItem of carSourcesBySkuInSpuList) {
       const newCarSourcesList = []
-      if (selectedColorFilter(selectedExternalCarColorName, selectedInternalCarColorName, carSourcesBySkuItem)) {
+      if (selectedExternalColorFilter(selectedExternalCarColorName, carSourcesBySkuItem)) {
         for (let carSourceItem of carSourcesBySkuItem.carSourcesList) {
           if (selectedLogisticsFilter(selectedLogistics, carSourceItem) &&
-            selectedSourcePublishDateFilter(selectedSourcePublishDate, carSourceItem)) {
+            selectedSourcePublishDateFilter(selectedSourcePublishDate, carSourceItem) &&
+            selectedInternalColorFilter(selectedInternalCarColorName, carSourceItem)) {
             newCarSourcesList.push(carSourceItem)
           }
         }
@@ -805,7 +832,7 @@ Page({
         selectedInternalCarColorName: filterItem.name
       })
 
-      that.headlerRemoveRmendCarFacade()
+      that.handlerRemoveRmendCarFacade()
     }
   },
   /**
