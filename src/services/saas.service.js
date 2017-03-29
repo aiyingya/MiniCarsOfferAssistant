@@ -376,7 +376,7 @@ export default class SAASService extends Service {
         success: object.success,
         fail: object.fail,
         complete: object.complete
-      })
+      }, 'none')
     } else {
       object.fail()
       object.complete()

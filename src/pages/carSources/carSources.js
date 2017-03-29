@@ -212,7 +212,7 @@ Page({
     const hasBeenReliableByUser = carSourceItem.hasBeenReliableByUser
     const hideDialog = this.$wuxReliableDialog.open({
       spuId: spuId,
-      carSource: carSource,
+      carSource: carSourceItem,
       close: (updatedCarSource) => {
         app.saasService.requestReliable(spuId, carSourceItem.id, updatedCarSource.supplier.id, hasBeenReliableByUser, updatedCarSource.hasBeenReliableByUser, {
           success: function () {
@@ -920,29 +920,29 @@ Page({
     console.log("handlerReliable")
     const that = this;
 
-    const skuIndex = e.currentTarget.dataset.skuIndex
-    const carSourceIndex = e.currentTarget.dataset.carSourceIndex
+    const skuItemIndex = e.currentTarget.dataset.skuIndex
+    const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
     const spuId = this.data.carModelsInfo.carModelId
 
     const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
 
-    this.showReliableDialog(spuId, skuIndex, carSourceItem, carSourceIndex)
+    this.showReliableDialog(spuId, skuItemIndex, carSourceItem, carSourceItemIndex)
   },
   /**
    * 联系电话
    * @param e
    */
   handlerContact (e) {
-    const skuIndex = e.currentTarget.dataset.skuIndex
-    const carSourceIndex = e.currentTarget.dataset.carSourceIndex
+    const skuItemIndex = e.currentTarget.dataset.skuIndex
+    const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
     const carModelsInfo = this.data.carModelsInfo
     const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
     const contact = carSourceItem.supplier.contact;
 
-    this.actionContact(carModelsInfo.carModelId, skuIndex, carSourceIndex, carSource, contact)
+    this.actionContact(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, contact)
   },
   handlerCarSourceMore (e) {
     const skuItemIndex = e.currentTarget.dataset.skuIndex
