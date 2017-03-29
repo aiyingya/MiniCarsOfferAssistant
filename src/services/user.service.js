@@ -154,7 +154,7 @@ export default class UserService extends Service {
   __getClientId (cb, forceUpdate=false) {
     let that = this
     if (forceUpdate) {
-      that.requestClientId(cb)
+      that.__requestClientId(cb)
     } else {
       if (this.clientId && this.clientId.length) {
         typeof cb === 'function' && cb(this.clientId)
@@ -183,7 +183,7 @@ export default class UserService extends Service {
   __requestClientId (cb) {
     let that = this
     const deviceId = wx.getStorageSync(Util.DeviceIdKey)
-    this.userService.getVisitor({
+    this.getVisitor({
       deviceId: deviceId,
       success: function(res) {
         console.log(res)
