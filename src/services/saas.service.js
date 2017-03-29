@@ -420,10 +420,11 @@ export default class SAASService extends Service {
   /**
    *
    */
-  requestSearchSpuBySpuId (spuId, object) {
+  requestSearchSpuBySpuId (spuId,data,object) {
     this.sendMessage({
       path: `supply/car/spu/${spuId}`,
       method: 'GET',
+      data: data || {},
       success: object.success,
       fail: object.fail,
       complete: object.complete

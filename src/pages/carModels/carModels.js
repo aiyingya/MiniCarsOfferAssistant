@@ -37,7 +37,9 @@ Page({
     selectColorsId: '',
     selectColorTime: [{value:12},{value:24}],
     timesAllSelected: '',
-    selectTimes: ''
+    selectTimes: '',
+    changeCharts: [],
+    scrollView: 'overflow: auto;'
 	},
 	onLoad (options) {
 		let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -96,7 +98,6 @@ Page({
             item.colors = colors
             item.selectColors = []
             item.selectTimes = '全部'
-            console.log(item)
           }
           
           for(let item of filters) {
@@ -381,7 +382,11 @@ Page({
   handleClosePopup() {
     console.log('colse')
     let carModelsList = this.data.carModelsList
+    let changeCharts = this.data.changeCharts
 		this.drawCanvas(carModelsList)
+    if(changeCharts.length > 0) {
+      this.drawCanvas(changeCharts)
+    }
     this.setData({
       showPopCharts: false,
       showCharts: true
@@ -414,6 +419,7 @@ Page({
     this.setData({
       selectChartsLabel: true,
       changeSelectTimes: true,
+      showCharts: false,
       changeSelectColors: false,
       selectTimesId: selectTimesId,
       selectColorTime: selectColorTime,
@@ -471,6 +477,7 @@ Page({
           selectChartsLabel: true,
           changeSelectColors: true,
           changeSelectTimes: false,
+          showCharts: false,
           selectColorData: colors,
           colorAllSelected: allColorSelect,
           selectColorsId: selectColorsId,
@@ -504,6 +511,7 @@ Page({
   getChangeCharts(sid,carModelsList,item) {
     let requestData 
     let that = this
+    let changeCharts = this.data.changeCharts
     requestData = {
       carSeriesId: sid,
       inStock: true
@@ -525,19 +533,44 @@ Page({
        requestData.hours = item.selectTimes
     }
     
-    app.modules.request({
-      url: `${app.config.ymcServerHTTPSUrl}/supply/car/spu/${sid}`,
-      method: 'GET',
-      data: requestData,
+    app.saasService.requestSearchSpuBySpuId(sid,requestData,{
       success: function(res) {
-        console.log(res)
-        that.drawCanvas(res.content)
+        that.drawCanvas(carModelsList)
+        if(res.content.length > 0) {
+          changeCharts.push(res.content[0])
+          that.drawCanvas(changeCharts)
+        }
         that.setData({
           carModelsList: carModelsList,
           selectColors: [],
-          selectChartsLabel: false
+          selectChartsLabel: false,
+          showCharts: true,
+          changeCharts: res.content
         })
       }
+    })
+  },
+  handleClosePopupChange() {
+    console.log('colse')
+    let carModelsList = this.data.carModelsList
+    let changeCharts = this.data.changeCharts
+		this.drawCanvas(carModelsList)
+    if(changeCharts.length > 0) {
+      this.drawCanvas(changeCharts)
+    }
+    this.setData({
+      selectChartsLabel: false,
+      showCharts: true
+    })
+  },
+  forbidScrollView() {
+    this.setData({
+      scrollView: 'overflow: hidden;'
+    })
+  },
+  allowScrollView() {
+    this.setData({
+      scrollView: 'overflow: auto;'
     })
   }
 

@@ -2,7 +2,7 @@
 <import src="../../components/carModel/carModel.wxml" />
 <import src="../../lib/toast/toast.wxml"/>
 <template is="toast" data="{{ ...$wux.toast }}"/>
-<view class="car-models container">
+<view class="car-models container" style="{{scrollView}}">
 
 	<view class="carModels-topbar">
 <!--
@@ -100,7 +100,7 @@
  class="popup-select-charts"
  wx:if="{{selectChartsLabel}}"
  >
-  <view class="popup-shade" bindtap="handleClosePopup"></view>
+  <view class="popup-shade" bindtap="handleClosePopupChange"></view>
   <view class="popupSelect-main">
     <block wx:if="{{changeSelectColors}}">
       <view 

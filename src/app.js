@@ -2,6 +2,7 @@
 import wux from './lib/wux'
 import wxcharts from './modules/wxcharts'
 import config from './lib/config'
+import modules from './lib/modules'
 
 import Util from './utils/util'
 
@@ -32,6 +33,7 @@ App({
   userService: userService,
   tradeService: tradeService,
   saasService: saasService,
+  modules: modules,
   // FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据
   fuckingLarryNavigatorTo: {
     quotation: null,
