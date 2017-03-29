@@ -96,7 +96,7 @@
             </view>
           </view>
           <view
-            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length && carSourceItem.viewModelSelectedCarSourcePlace.expectedDeliveryDays}}"
+            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length && carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.expectedDeliveryDays}}"
             class="line-item"
           >
             <view class="line-title">物流时间:</view>
