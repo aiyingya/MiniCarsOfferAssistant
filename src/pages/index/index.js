@@ -131,13 +131,11 @@ Page({
           if (data.length === 0) {
             showNodata = true
           }
-          setTimeout(function () {
-            that.setData({
-              showCarSeriesImageUrl: carSeries.logoUrl,
-              carManufacturerSeriesList: data,
-              showNodata: showNodata
-            })
-          }, 600)
+          that.setData({
+            showCarSeriesImageUrl: carSeries.logoUrl,
+            carManufacturerSeriesList: data,
+            showNodata: showNodata
+          })
         }
       }
     })
