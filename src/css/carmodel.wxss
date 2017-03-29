@@ -55,8 +55,6 @@
 .carModels-info {
 	margin: 15rpx 0;
 	padding: 0 40rpx;
-	height: 40rpx;
-	line-height: 40rpx;
 	overflow: hidden;
   display: flex;
   -webkit-justify-content: space-around;
@@ -116,10 +114,24 @@
 	align-items: center;
 	height: 40rpx;
 }
-.carModels-info .chartstime-inner,
+
 .carModels-info .carcolor-inner {
   position: relative;
   padding-right: 35rpx;
+}
+.carModels-info .chartstime-inner {
+  height: 48rpx;
+	line-height: 48rpx;
+	padding: 0 27rpx;
+	border: 1rpx solid #333333;
+	border-radius: 65rpx;
+	font-size: 24rpx;
+	color: #333;
+	margin-right: 10rpx;
+}
+.carModels-info .chartstime-inner.selected {
+  color: #ED4149;
+  border: 1rpx solid #ED4149;
 }
 .carModels-info .icon-arrows {
   width: 24rpx;
@@ -129,6 +141,7 @@
   top: 50%;
   margin-top: -12rpx;
 }
+
 .carcolor-item {
 	width: 24rpx;
 	height: 24rpx;

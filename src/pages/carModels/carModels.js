@@ -98,7 +98,8 @@ Page({
             }
             item.colors = colors
             item.selectColors = []
-            item.selectTimes = '全部'
+            item.selectTimesData = [{value:24, selected: 'selected'},{value:12,selected: ''}]
+            item.selectTimes = 24 // 默认24
           }
           
           for(let item of filters) {
@@ -437,55 +438,23 @@ Page({
     this.data.popCharts = null
     this.data.touchindex  = ''
   },
-  handleSelectTime(e) {
-    let that = this
-    let timesAllSelected = ''
-    let carModelsList = that.data.carModelsList
-    let selectTimesId = e.currentTarget.dataset.selecttimesid
-    let selectColorTime = that.data.selectColorTime
-    let selectTimes = that.data.selectTimes
-    for(let item of carModelsList) {
-      if(item.selectTimes === '全部' && item.carModelId === selectTimesId) {
-        timesAllSelected = 'selected'
-      }else {
-        for(let times of selectColorTime) {
-          if(selectTimes === times.value) {
-            times.selected = 'selected'
-          }else {
-            times.selected = ''
-          }  
-          console.log(times.value,item)
-        }
-        console.log(selectColorTime)
-      }
-    }
-    
-    this.setData({
-      selectChartsLabel: true,
-      changeSelectTimes: true,
-      showCharts: false,
-      changeSelectColors: false,
-      selectTimesId: selectTimesId,
-      selectColorTime: selectColorTime,
-      timesAllSelected: timesAllSelected
-    })
-  },
   handleChangeTimesItem(e) {
     let that = this
     let selectitem = e.currentTarget.dataset.selectitem
-    let selectTimesId = that.data.selectTimesId
+    let selectTimesId = e.currentTarget.dataset.selectid
     let carModelsList = this.data.carModelsList
     
     for(let item of carModelsList) {
       if(item.carModelId === selectTimesId) {
-        if(typeof selectitem === 'object' && selectitem.selected !== 'selected') {
-          item.selectTimes = selectitem.value
-        }else if(selectitem === '全部') { 
-          item.selectTimes = '全部'
+        
+        for(let times of item.selectTimesData) {
+          if(times.value === selectitem) {
+            times.selected = 'selected'
+          }else {
+            times.selected = ''
+          }
         }
-        that.setData({
-          selectTimes: item.selectTimes
-        })
+        item.selectTimes = selectitem     
         that.getChangeCharts(selectTimesId,carModelsList,item)
       }
     }
@@ -567,7 +536,7 @@ Page({
         keys.push(items.key)
       }
     }
-
+    console.log(item)
     if(keys.length > 0 &&  item.selectTimes !== '全部') {
        requestData.hours = item.selectTimes,
        requestData.colors = keys.join(',')
