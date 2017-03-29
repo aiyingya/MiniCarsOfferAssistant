@@ -81,6 +81,9 @@ class wux {
       open(opts = {}) {
         const options = extend(clone(this.defaults), opts)
 
+        console.log('8888888')
+        console.log(options)
+
         if (options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
           for (let logisticsDestination of options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
             if (logisticsDestination.destType === 'store') {
@@ -131,10 +134,10 @@ class wux {
                 }
               } else {
                 options.carSourceItem.viewModelLoading = '加载失败'
-                $scope.setData({
-                  [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem
-                })
               }
+              $scope.setData({
+                [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem
+              })
             },
             fail: function () {
               options.carSourceItem.viewModelLoading = '加载失败'
@@ -147,7 +150,10 @@ class wux {
 
         // 渲染组件
         $scope.setData({
-          [`$wux.carSourceDetailDialog`]: options,
+          [`$wux.carSourceDetailDialog.spuId`]: options.spuId,
+          [`$wux.carSourceDetailDialog.carModel`]: options.carModel,
+          [`$wux.carSourceDetailDialog.skuItem`]: options.skuItem,
+          [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogClose`]: `carSourceDetailDialogClose`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogBookCar`]: `carSourceDetailDialogBookCar`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogContact`]: `carSourceDetailDialogContact`,

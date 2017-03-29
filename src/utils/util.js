@@ -12,7 +12,7 @@ export default class Util {
       if (deviceId && deviceId.length) {
         console.log(`设备 Id 为 ${deviceId} 从本地缓存取出`)
       } else {
-        const newDeviceId = this.generateUUID()
+        const newDeviceId = Util.generateUUID()
         try {
           wx.setStorageSync(Util.DeviceIdKey, newDeviceId)
           console.log(`设备 Id 为 ${newDeviceId} 新建 id`)
@@ -53,7 +53,7 @@ export default class Util {
    * @returns {number}    月供金额, 元
    */
   static monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate, stages) {
-    let loanPayment = loanPaymentByLoan(carPrice, paymentRatio, expenseRate)
+    let loanPayment = Util.loanPaymentByLoan(carPrice, paymentRatio, expenseRate)
     return (loanPayment / stages);
   }
 
@@ -94,8 +94,8 @@ export default class Util {
    * @returns {number}        总费用，元
    */
   static totalPaymentByLoan(carPrice, paymentRatio, expennseRate, stages, requiredExpenses, otherExpenses) {
-    let advancePayment = advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses)
-    let loanPayment = loanPaymentByLoan(carPrice, paymentRatio, expennseRate)
+    let advancePayment = Util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses)
+    let loanPayment = Util.loanPaymentByLoan(carPrice, paymentRatio, expennseRate)
     return (advancePayment + loanPayment)
   }
 

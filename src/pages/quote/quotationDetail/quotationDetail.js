@@ -180,7 +180,7 @@ Page({
       confirmText: '发起定车',
       confirm: function () {
         const quotationItem = that.data.quotation.quotationItems[0]
-        app.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.sellingPrice, 1, {
+        app.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.guidePrice, 1, {
           success: (res) => {
             wx.showModal({
               content: '提交成功，请保持通话畅通',

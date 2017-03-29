@@ -6,6 +6,8 @@ Page({
   data: {
     // 有无数据 init/data/none
     nodata: 'init',
+    // data/none
+    searchnodata: 'none',
     // 全局视图
     windowHeight: '',
     // 头部 SPU 信息视图
@@ -107,6 +109,7 @@ Page({
         const newCarSourcesBySkuInSpuList = that.updateSearchResult({})
         that.selectCarSku(-1, newCarSourcesBySkuInSpuList)
         that.setData({
+          searchnodata: newCarSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
           carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
           selectedSectionIndex: -1,
           selectedSectionId: '0'
@@ -241,6 +244,7 @@ Page({
   hideFold (a, b, c) {
     const that = this
     this.setData({
+      searchnodata: a.length !== 0 ? 'data' : 'none',
       carSourcesBySkuInSpuList: a,
       selectedSectionIndex: -1
     })
@@ -301,7 +305,7 @@ Page({
     let selectedCarSourcePlace = null
     if (carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低和到货快 同时存在
-      if (carSourceItem.others.length > 0) {
+      if (carSourceItem.others && carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
           {name: '价格低', value: carSourcePlaceLowest},
           {name: '到货快', value: carSourcePlaceFastest}
@@ -318,7 +322,7 @@ Page({
       }
     } else if (!carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低和到货快 同时不存在
-      if (carSourceItem.others.length === 1) {
+      if (carSourceItem.others && carSourceItem.others.length === 1) {
         carSourceItem.viewModelTabs = null
         carSourceItem.viewModelTabMore = null
         selectedCarSourcePlace = carSourceItem.others[0]
@@ -331,7 +335,7 @@ Page({
       }
     } else if (carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低不存在， 到货快存在
-      if (carSourceItem.others.length > 0) {
+      if (carSourceItem.others && carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
           {name: '到货快', value: carSourcePlaceFastest}
         ]
@@ -346,7 +350,7 @@ Page({
       }
     } else if (!carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低存在， 到货快不存在
-      if (carSourceItem.others.length > 0) {
+      if (carSourceItem.others && carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
           {name: '价格低', value: carSourcePlaceLowest}
         ]
@@ -566,10 +570,13 @@ Page({
           } else {
             carSourceItem.others = null
           }
+        } else {
+          carSourceItem.others = null
         }
 
-        // FIXME: 这里需不需要来一段 update， 否则无法构建合适的结果
-        return !(!carSourceItem.lowest && !carSourceItem.fastest && !carSourceItem.others)
+        console.log(carSourceItem)
+
+        return (carSourceItem.lowest || carSourceItem.fastest || carSourceItem.others)
       }
       return true
     }
@@ -577,10 +584,6 @@ Page({
     const selectedColorFilter = function (externalColorName,
                                           internalColorName,
                                           carSourcesBySkuItem) {
-      console.log(externalColorName)
-      console.log(internalColorName)
-      console.log(carSourcesBySkuItem)
-
       if (externalColorName === '全部') {
         return true
       } else {
@@ -600,14 +603,41 @@ Page({
       }
     }
 
+    const selectedExternalColorFilter = function (externalColorName,
+                                                  carSourcesBySkuItem) {
+      if (externalColorName === '全部') {
+        return true
+      } else {
+        if (carSourcesBySkuItem.carSku.externalColorName === externalColorName) {
+          return true
+        } else {
+          return false
+        }
+      }
+    }
+
+    const selectedInternalColorFilter = function (internalColorName,
+                                                  carSourceItem) {
+      if (internalColorName === '全部') {
+        return true
+      } else {
+        if (carSourceItem.internalColor === internalColorName) {
+          return true
+        } else {
+          return false
+        }
+      }
+    }
+
     const carSourcesBySkuInSpuList = this.data.cacheCarSourcesBySkuInSpuList
     const newCarSourcesBySkuInSpuList = []
     for (let carSourcesBySkuItem of carSourcesBySkuInSpuList) {
       const newCarSourcesList = []
-      if (selectedColorFilter(selectedExternalCarColorName, selectedInternalCarColorName, carSourcesBySkuItem)) {
+      if (selectedExternalColorFilter(selectedExternalCarColorName, carSourcesBySkuItem)) {
         for (let carSourceItem of carSourcesBySkuItem.carSourcesList) {
           if (selectedLogisticsFilter(selectedLogistics, carSourceItem) &&
-            selectedSourcePublishDateFilter(selectedSourcePublishDate, carSourceItem)) {
+            selectedSourcePublishDateFilter(selectedSourcePublishDate, carSourceItem) &&
+            selectedInternalColorFilter(selectedInternalCarColorName, carSourceItem)) {
             newCarSourcesList.push(carSourceItem)
           }
         }
@@ -802,7 +832,7 @@ Page({
         selectedInternalCarColorName: filterItem.name
       })
 
-      that.headlerRemoveRmendCarFacade()
+      that.handlerRemoveRmendCarFacade()
     }
   },
   /**
@@ -900,7 +930,7 @@ Page({
 
     carSourceItem.viewModelSelectedTab = -1
 
-    console.log(carSourceItem)
+    this.selectCarSourcePlace(carSourceItem.viewModelTabMore[0], carSourceItem)
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
 
     this.setData({
@@ -916,6 +946,7 @@ Page({
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
     carSourceItem.viewModelSelectedTab = tabItemIndex
+
     this.selectCarSourcePlace(tabItem.value, carSourceItem)
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
 
