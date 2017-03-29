@@ -338,8 +338,7 @@ export default class UserService extends Service {
         if (res) {
           let expireIn = that.__getTimestamp(res.expireMillis)
           res.expireIn = expireIn
-          const userInfo = res
-          that.auth = userInfo
+          that.auth = res
           that.loginChannel = UserService.YuntuLogin
           opts.success(res)
           that.__getClientId(function (clientId) {}, true)
@@ -462,6 +461,7 @@ export default class UserService extends Service {
           // 该接口只会在用户第一次进入时使用，并弹出弹框并一直记住当时的选择
           wx.getUserInfo({
             success: function (res) {
+              console.log(res)
               /**
                * 客户端本地获得微信用户信息，此时用户被定义为 guest snsId{null}
                * @type {*}
@@ -470,7 +470,7 @@ export default class UserService extends Service {
                 that.loginChannel = UserService.GuestLogin
                 that.snsId = null
               }
-              that.weixinUserInfo = res.auth
+              that.weixinUserInfo = res.userInfo
 
               that.uploadWeixinUserInfo({
                 authCode: auth.code,
