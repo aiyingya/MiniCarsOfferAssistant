@@ -305,7 +305,7 @@ Page({
     let selectedCarSourcePlace = null
     if (carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低和到货快 同时存在
-      if (carSourceItem.others.length > 0) {
+      if (carSourceItem.others && carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
           {name: '价格低', value: carSourcePlaceLowest},
           {name: '到货快', value: carSourcePlaceFastest}
@@ -322,7 +322,7 @@ Page({
       }
     } else if (!carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低和到货快 同时不存在
-      if (carSourceItem.others.length === 1) {
+      if (carSourceItem.others && carSourceItem.others.length === 1) {
         carSourceItem.viewModelTabs = null
         carSourceItem.viewModelTabMore = null
         selectedCarSourcePlace = carSourceItem.others[0]
@@ -335,7 +335,7 @@ Page({
       }
     } else if (carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低不存在， 到货快存在
-      if (carSourceItem.others.length > 0) {
+      if (carSourceItem.others && carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
           {name: '到货快', value: carSourcePlaceFastest}
         ]
@@ -350,7 +350,7 @@ Page({
       }
     } else if (!carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低存在， 到货快不存在
-      if (carSourceItem.others.length > 0) {
+      if (carSourceItem.others && carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [
           {name: '价格低', value: carSourcePlaceLowest}
         ]
