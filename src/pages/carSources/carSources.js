@@ -7,7 +7,7 @@ Page({
     // 有无数据 init/data/none
     nodata: 'init',
     // data/none
-    searchnodata: 'none',
+    searchnodata: 'data',
     // 全局视图
     windowHeight: '',
     // 头部 SPU 信息视图
