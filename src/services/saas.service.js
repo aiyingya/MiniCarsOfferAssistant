@@ -444,4 +444,28 @@ export default class SAASService extends Service {
       complete: object.complete
     })
   }
+  
+  /**
+   *  获取车款列表(包含搜索)
+   *  sid 车型ID
+   *  type 获取类型
+   *  inStock 是否获取有货 默认true
+   *  object callback
+   */
+  requireCarSpu(sid,data,type,inStock,object){
+    let path = type === 'CAR_SPU' ? `supply/car/spu/${sid}` : 'supply/car/spu/'
+    let resdata = {
+      carSeriesId: sid,
+      inStock: inStock
+    }
+    data = type === 'CAR_SPU' ? data : resdata
+    this.sendMessage({
+      path: path,
+      method: 'GET',
+      data: resdata,
+      success: object.success,
+      fail: object.fail,
+      complete: object.complete
+    })
+  }
 }

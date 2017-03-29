@@ -21,7 +21,24 @@ Page({
     showCharts: true,
     pageIndex: 1,
     pageInfo: '',
-    popCharts: null
+    popCharts: null,
+    selectTime: {
+      selectId: '0', // 全部.
+      selectText: '全部'
+    },
+    showSelectCharts: '',
+    carsInfo: '',
+    selectChartsLabel: false,
+    selectColorData: [],
+    selectColors: [],
+    colorAllSelected: '',
+    selectColorsId: '',
+    selectColorTime: [{value:12},{value:24}],
+    timesAllSelected: '',
+    selectTimes: '',
+    changeCharts: [],
+    carModelsInfo: '',
+    touchindex: ''
   },
   onLoad() {
     let that = this
@@ -77,46 +94,44 @@ Page({
     let data = {}
     let carModelsList = []
     let searchNodata = false
-    console.log(results)
-    if (results.type === 'CAR_SPU') {
-      app.saasService.requestSearchSpuBySpuId(results.id, {
-        success: function (res) {
-          carModelsList = res.content
-          searchNodata = carModelsList.length > 0 ? false : true
+    console.log(results.type)
+    app.saasService.requireCarSpu(results.id, {}, results.type, false, {
+      success(res) {
+        carModelsList = res.content
+        searchNodata = carModelsList.length > 0 ? false : true
+        for(let item of carModelsList) {
+          //console.log(item.supply.colors)
+          let colors = []
+          if(item.supply.colors) {
+            let newColorKey = Object.keys(item.supply.colors)
 
-          if (carModelsList) {
-            that.drawCanvas(carModelsList)
-            that.setData({
-              searchResults: carModelsList,
-              associateResults: [],
-              searchValue: results.content,
-              cacheSearchValue: results.content,
-              showResultsSearch: false,
-              searchNodata: searchNodata
-            })
+            for(let color of newColorKey) {
+              let colorItem = {
+                key: color,
+                value: item.supply.colors[color]
+              }
+              colors.push(colorItem)
+            }
           }
+          item.colors = colors
+          item.selectColors = []
+          item.selectTimes = '全部'
         }
-      })
-    } else if (results.type === 'CAR_SERIES') {
-      app.saasService.requestSearchSpuByCarSeriesId(results.id, true, {
-        success: function (res) {
-          carModelsList = res.content
-          searchNodata = carModelsList.length > 0 ? false : true
+        if (carModelsList) {
+          that.drawCanvas(carModelsList)
+          that.setData({
+            searchResults: carModelsList,
+            associateResults: [],
+            searchValue: results.content,
+            cacheSearchValue: results.content,
+            showResultsSearch: false,
+            searchNodata: searchNodata
+          })
 
-          if (carModelsList) {
-            that.drawCanvas(carModelsList)
-            that.setData({
-              searchResults: carModelsList,
-              associateResults: [],
-              searchValue: results.content,
-              cacheSearchValue: results.content,
-              showResultsSearch: false,
-              searchNodata: searchNodata
-            })
-          }
+          console.log(carModelsList)
         }
-      })
-    }
+      }
+    })
   },
   getSearchConfirm(pageIndex) {
     let val = this.data.cacheSearchValue
@@ -221,37 +236,74 @@ Page({
     })
   },
   handleCharttouch(e) {
-    let id = e.target.dataset.id
+    let id =  e.target.dataset.id
+    let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
-    console.log(columnChartsList)
-    if (columnChartsList.length > 0) {
-      for (let item of columnChartsList) {
-        if (item.id == id) {
+    this.setData({
+      carModelsInfo: carModelsInfo
+    })
+    if(columnChartsList.length > 0) {
+      for(let item of columnChartsList) {
+        if(item.id == id) {
           let index = item.chart.getCurrentDataIndex(e)
           let chartData = item.chart.chartData
           let config = item.chart.config
           let opts = item.chart.opts
           let context = item.chart.context
           let changeData = item.chart.changeData;
-          let callback = function (data) {
-            if (data) {
+          let callback = function(data) {
+            if(data) {
               let value = 0
-              for (let item of data.y) {
-                value += item
+              for(let item of data.y) {
+                value+=item
               }
               console.log(value)
-              if (value <= 0) {
-                return
+              if(value <= 0) {return}
+              that.data.touchindex = index
+            }
+          }
+          item.chart.drawChartShade(index,chartData,config,opts,context,callback)
+        }
+      }
+    }
+  },
+  handletouchmove(e) {
+    this.handleCharttouch(e)
+  },
+  handletouchend(e) {
+    let id =  e.target.dataset.id
+    let carModelsInfo = e.target.dataset.carmodelsinfo
+    let that = this
+    this.setData({
+      carModelsInfo: carModelsInfo
+    })
+    
+    if(columnChartsList.length > 0) {
+      for(let item of columnChartsList) {
+        if(item.id == id) {
+          let index = that.data.touchindex 
+          let chartData = item.chart.chartData
+          let config = item.chart.config
+          let opts = item.chart.opts
+          let context = item.chart.context
+          let changeData = item.chart.changeData;
+          let callback = function(data) {
+            if(data) {
+              let value = 0
+              for(let item of data.y) {
+                value+=item
               }
+              console.log(value)
+              if(value <= 0) {return}
               that.setData({
                 showPopCharts: true,
                 showCharts: false
               })
-              that.drawPopCharts(data)
+              that.drawPopCharts(data)      
             }
           }
           console.log(index)
-          item.chart.drawChartShade(index, chartData, config, opts, context, callback)
+          item.chart.drawChartShade(index,chartData,config,opts,context,callback)
         }
       }
     }
@@ -382,11 +434,185 @@ Page({
   handleClosePopup() {
     console.log('colse')
     let carModelsList = this.data.searchResults
-    this.drawCanvas(carModelsList)
+    let changeCharts = this.data.changeCharts
+		this.drawCanvas(carModelsList)
+    if(changeCharts.length > 0) {
+      this.drawCanvas(changeCharts)
+    }
     this.setData({
       showPopCharts: false,
       showCharts: true
     })
     this.data.popCharts = null
-  }
+  },
+  handleSelectTime(e) {
+    let that = this
+    let timesAllSelected = ''
+    let carModelsList = that.data.searchResults
+    let selectTimesId = e.currentTarget.dataset.selecttimesid
+    let selectColorTime = that.data.selectColorTime
+    let selectTimes = that.data.selectTimes
+    for(let item of carModelsList) {
+      if(item.selectTimes === '全部' && item.carModelId === selectTimesId) {
+        timesAllSelected = 'selected'
+      }else {
+        for(let times of selectColorTime) {
+          if(selectTimes === times.value) {
+            times.selected = 'selected'
+          }else {
+            times.selected = ''
+          }  
+          console.log(times.value,item)
+        }
+        console.log(selectColorTime)
+      }
+    }
+    
+    this.setData({
+      selectChartsLabel: true,
+      changeSelectTimes: true,
+      showCharts: false,
+      changeSelectColors: false,
+      selectTimesId: selectTimesId,
+      selectColorTime: selectColorTime,
+      timesAllSelected: timesAllSelected
+    })
+  },
+  handleChangeTimesItem(e) {
+    let that = this
+    let selectitem = e.currentTarget.dataset.selectitem
+    let selectTimesId = that.data.selectTimesId
+    let carModelsList = this.data.searchResults
+    
+    for(let item of carModelsList) {
+      if(item.carModelId === selectTimesId) {
+        if(typeof selectitem === 'object' && selectitem.selected !== 'selected') {
+          item.selectTimes = selectitem.value
+        }else if(selectitem === '全部') { 
+          item.selectTimes = '全部'
+        }
+        that.setData({
+          selectTimes: item.selectTimes
+        })
+        that.getChangeCharts(selectTimesId,carModelsList,item)
+      }
+    }
+  },
+  handleSelectColor(e) {
+    let colors = e.currentTarget.dataset.colors
+    let selectColors = e.currentTarget.dataset.selectcolors
+    let selectColorsId = e.currentTarget.dataset.selectcolorsid
+    let newColors = []
+    let allColorSelect = ''
+    let carModelsList = this.data.searchResults
+    for(let item of colors) {
+      if(item.value === '#FFFFFF') {
+        item.style = 'border: 1rpx solid #333; width: 21rpx; height:21rpx;'
+      }
+      if(selectColors.length === 0) {
+        allColorSelect = 'selected'
+      }else {
+        for(let select of selectColors) {
+          if(item.key === select.key) {
+            console.log(item)
+            item.selected = 'selected'
+          }
+        }
+      }
+    }
+    
+    for(let item of carModelsList) {
+      if(item.carModelId === selectColorsId) {
+        item.selectColorsId = selectColorsId
+        item.selectColors = selectColors
+        this.setData({
+          selectChartsLabel: true,
+          changeSelectColors: true,
+          changeSelectTimes: false,
+          showCharts: false,
+          selectColorData: colors,
+          colorAllSelected: allColorSelect,
+          selectColorsId: selectColorsId,
+          selectColors: selectColors
+        })
+      }
+    }
+  },
+  handleChangeColorItem(e) {
+    let that = this
+    let selectColors = e.currentTarget.dataset.selectcolors
+    let selectItem = e.currentTarget.dataset.selectitem
+    let selectColorsId = that.data.selectColorsId
+    let carModelsList = that.data.searchResults
+    
+    for(let item of carModelsList) {
+      if(item.carModelId === selectColorsId) {
+        if(typeof selectItem === 'object' && selectItem.selected !== 'selected') {
+
+          selectColors.push(selectItem)
+        }else if(selectItem === '全部') {
+          selectColors = []
+        }
+        item.selectColors = selectColors
+        
+        that.getChangeCharts(selectColorsId,carModelsList,item)
+        
+      }
+    }
+  },
+  getChangeCharts(sid,carModelsList,item) {
+    let requestData 
+    let that = this
+    let changeCharts = this.data.changeCharts
+    requestData = {
+      carSeriesId: sid,
+      inStock: true
+    }
+    
+    let keys = []
+    if(item.selectColors.length >0) {
+      for(let items of item.selectColors) {
+        keys.push(items.key)
+      }
+    }
+
+    if(keys.length > 0 &&  item.selectTimes !== '全部') {
+       requestData.hours = item.selectTimes,
+       requestData.colors = keys.join(',')
+    }else if(keys.length > 0) {
+       requestData.colors = keys.join(',')
+    }else if(item.selectTimes !== '全部') {
+       requestData.hours = item.selectTimes
+    }
+    
+    app.saasService.requestSearchSpuBySpuId(sid,requestData,{
+      success: function(res) {
+        that.drawCanvas(carModelsList)
+        if(res.content.length > 0) {
+          changeCharts.push(res.content[0])
+          that.drawCanvas(changeCharts)
+        }
+        that.setData({
+          searchResults: carModelsList,
+          selectColors: [],
+          selectChartsLabel: false,
+          showCharts: true,
+          changeCharts: res.content
+        })
+      }
+    })
+  },
+  handleClosePopupChange() {
+    console.log('colse')
+    let carModelsList = this.data.searchResults
+    let changeCharts = this.data.changeCharts
+		this.drawCanvas(carModelsList)
+    if(changeCharts.length > 0) {
+      this.drawCanvas(changeCharts)
+    }
+    this.setData({
+      selectChartsLabel: false,
+      showCharts: true
+    })
+  },
 })

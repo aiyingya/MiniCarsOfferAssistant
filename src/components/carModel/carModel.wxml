@@ -13,6 +13,7 @@
 			<view class="carModels-message-title">
 				【{{item.officialPriceStr}}】 {{item.carModelName}}
 			</view>
+			<image class="icon_arrow" src="../../images/icons/icon_arrow.png"></image>
 		</view>
 
 		<view
@@ -97,8 +98,11 @@
 					<canvas
 						canvas-id="{{item.carModelId}}"
 						data-id="{{item.carModelId}}"
+						data-carmodelsinfo="{{item}}"
 						class="canvas"
 						bindtouchstart="handleCharttouch"
+						bindtouchmove="handletouchmove"
+            bindtouchend="handletouchend"
 						></canvas>
 				</block>
 			</view>
@@ -127,7 +131,11 @@
           <image src="../../images/icons/icon_close.png"></image>
         </view>
       </view>
-      <view class="popup-charts-bd">
+      <view 
+        class="popup-charts-bd"
+        data-carmodelsinfo="{{carModelsInfo}}"
+		    bindtap="handlerToCarSources"
+        >
         <view class="popup-charts-scale">
           报价数量(条)
         </view>
@@ -140,3 +148,54 @@
     </view>
   </view>
 </template>
+
+<template name="popupChangeCharts">
+  <view 
+   class="popup-select-charts"
+   wx:if="{{selectChartsLabel}}"
+   >
+    <view class="popup-shade" bindtouchmove="handleClosePopupChange" bindtap="handleClosePopupChange"></view>
+    <view class="popupSelect-main">
+      <block wx:if="{{changeSelectColors}}">
+        <view 
+          class="popup-label {{colorAllSelected}}"
+          bindtap="handleChangeColorItem"
+          data-selectitem="全部"
+          >全部</view>
+        <view 
+          wx:for="{{selectColorData}}"
+          wx:key="*this"
+          class="popup-label {{item.selected}}"
+          bindtap="handleChangeColorItem"
+          data-selectitem="{{item}}"
+          data-selectcolors="{{selectColors}}"
+          >
+          <view
+            class="carcolor-item"
+            style="background:{{item.value}}; {{item.style}}"
+            ></view>
+          <view class="text">{{item.key}}</view>
+        </view>
+      </block>
+      <block wx:if="{{changeSelectTimes}}">
+<!--
+       <view 
+        class="popup-label {{timesAllSelected}}"
+        bindtap="handleChangeTimesItem"
+        data-selectitem="全部"
+        >全部</view>
+-->
+        <view 
+          wx:for="{{selectColorTime}}"
+          wx:key="*this"
+          class="popup-label {{item.selected}}"
+          bindtap="handleChangeTimesItem"
+          data-selectitem="{{item}}"
+          >
+          <view class="text">{{item.value}}小时</view>
+        </view>
+      </block>
+    </view>
+  </view>
+</template> 
+

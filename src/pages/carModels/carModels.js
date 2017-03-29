@@ -39,7 +39,8 @@ Page({
     timesAllSelected: '',
     selectTimes: '',
     changeCharts: [],
-    scrollView: 'overflow: auto;'
+    carModelsInfo: '',
+    touchindex: ''
 	},
 	onLoad (options) {
 		let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -228,7 +229,11 @@ Page({
 	},
   handleCharttouch(e) {
     let id =  e.target.dataset.id
+    let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
+    this.setData({
+      carModelsInfo: carModelsInfo
+    })
     if(columnChartsList.length > 0) {
       for(let item of columnChartsList) {
         if(item.id == id) {
@@ -246,13 +251,50 @@ Page({
               }
               console.log(value)
               if(value <= 0) {return}
+              that.data.touchindex = index
+            }
+          }
+          item.chart.drawChartShade(index,chartData,config,opts,context,callback)
+        }
+      }
+    }
+  },
+  handletouchmove(e) {
+    this.handleCharttouch(e)
+  },
+  handletouchend(e) {
+    let id =  e.target.dataset.id
+    let carModelsInfo = e.target.dataset.carmodelsinfo
+    let that = this
+    this.setData({
+      carModelsInfo: carModelsInfo
+    })
+    
+    if(columnChartsList.length > 0) {
+      for(let item of columnChartsList) {
+        if(item.id == id) {
+          let index = that.data.touchindex 
+          let chartData = item.chart.chartData
+          let config = item.chart.config
+          let opts = item.chart.opts
+          let context = item.chart.context
+          let changeData = item.chart.changeData;
+          let callback = function(data) {
+            if(data) {
+              let value = 0
+              for(let item of data.y) {
+                value+=item
+              }
+              console.log(value)
+              if(value <= 0) {return}
               that.setData({
                 showPopCharts: true,
                 showCharts: false
               })
-              that.drawPopCharts(data)
+              that.drawPopCharts(data)      
             }
           }
+          console.log(index)
           item.chart.drawChartShade(index,chartData,config,opts,context,callback)
         }
       }
@@ -299,6 +341,8 @@ Page({
             fontColor: '#333333',
             gridColor: '#333333',
             unitText: '（个）',
+            min: 0,
+            max: 20,
             format(val) {
               return val.toFixed(0)
             }
@@ -362,7 +406,6 @@ Page({
         fontColor: '#333333',
         gridColor: '#333333',
         unitText: '（个）',
-        min: 0,
         format(val) {
           return val.toFixed(0)
         }
@@ -392,6 +435,7 @@ Page({
       showCharts: true
     })
     this.data.popCharts = null
+    this.data.touchEnd = false
   },
   handleSelectTime(e) {
     let that = this

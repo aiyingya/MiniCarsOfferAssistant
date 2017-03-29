@@ -88,9 +88,17 @@ page{
 	background: rgba(0, 0, 0, 0.6);
 	z-index: 99;
 }
+.icon_arrow {
+  width: 24rpx;
+  height: 24rpx;
+  position: absolute;
+  top: 50%;
+  margin-top: -12rpx;
+  right: 20rpx;
+}
 @-webkit-keyframes Toast {
-    0%,50%,80% { opacity: 1}
-    100% { opacity: 0}
+  0%,50%,80% { opacity: 1}
+  100% { opacity: 0}
 }
 @keyframes Toast {
     0% , 50%,80% { opacity: 1}
