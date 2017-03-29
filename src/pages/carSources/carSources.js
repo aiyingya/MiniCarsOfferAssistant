@@ -512,6 +512,12 @@ Page({
    * @param object
    */
   updateSearchResult (object) {
+    wx.showToast({
+      title: '正在处理',
+      icon: 'loading',
+      mask: true
+    })
+
     const selectedExternalCarColorName = this.data.selectedExternalCarColorName
     const selectedInternalCarColorName = this.data.selectedInternalCarColorName
     const selectedSourcePublishDate = object.sourcePublishDate || this.getIdWithFiltersIndex(0)
@@ -658,6 +664,7 @@ Page({
       }
     }
 
+    wx.hideToast()
     console.log(newCarSourcesBySkuInSpuList)
     return newCarSourcesBySkuInSpuList
   },
@@ -1025,9 +1032,11 @@ Page({
     })
   },
   handlerCreateQuoted (e) {
-    const skuItem = e.currentTarget.dataset.sku
 
-    console.log(skuItem)
+    const skuItemIndex = e.currentTarget.dataset.skuIndex
+
+    const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
+
     const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', this.data.carModelsInfo)
     const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', skuItem.carSku)
 
