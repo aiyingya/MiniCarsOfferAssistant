@@ -298,421 +298,422 @@
     >
       <!-- 货源列表 -->
       <view
-      wx:for="{{carSourcesBySkuInSpuList}}"
-      wx:for-item="skuItem"
-      wx:for-index="skuItemIndex"
-      wx:key="*this"
-      class="carSources-section"
-      id="x{{skuItemIndex + 1}}"
-    >
-      <view class="carSources-section-content"
-            bindtap="handlerSelectCarSku"
-            data-sku-item-index="{{skuItemIndex}}"
-            data-sku-item="{{skuItem}}"
+        wx:for="{{carSourcesBySkuInSpuList}}"
+        wx:for-item="skuItem"
+        wx:for-index="skuItemIndex"
+        wx:key="*this"
+        class="carSources-section"
+        id="x{{skuItemIndex + 1}}"
       >
-        <!-- 库存分区列表 -->
-        <view class="first-part">
-          <view class="title">
-            {{skuItem.carSku.externalColorName}}
+        <view class="carSources-section-content"
+              bindtap="handlerSelectCarSku"
+              data-sku-item-index="{{skuItemIndex}}"
+              data-sku-item="{{skuItem}}"
+        >
+          <!-- 库存分区列表 -->
+          <view class="first-part">
+            <view class="title">
+              {{skuItem.carSku.externalColorName}}
+            </view>
+            <view
+              class="button confirm create-quoted"
+              catchtap="handlerCreateQuoted"
+              data-sku="{{skuItem}}"
+            >
+              生成报价单
+            </view>
           </view>
-          <view
-            class="button confirm create-quoted"
-            catchtap="handlerCreateQuoted"
-            data-sku="{{skuItem}}"
-          >
-            生成报价单
-          </view>
-        </view>
 
-        <view class="second-part">
-          <view class="carSources-section-price">
+          <view class="second-part">
+            <view class="carSources-section-price">
+              <image
+                wx:if="{{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
+                class="discount-icon"
+                src="{{skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
+              >
+              </image>
+              <view
+                wx:if="{{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
+                class="discount"
+              >
+                {{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscountDesc }}元/
+              </view>
+              <view class="price">{{skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelPriceDesc}}</view>
+              <view class="discount">起</view>
+            </view>
+          </view>
+
+          <view
+            wx:if="{{skuItem.carSku.viewModelTags.length > 0}}"
+            class="third-part tag-collection"
+          >
+            <view
+              wx:for="{{skuItem.carSku.viewModelTags}}"
+              wx:key="*this"
+              class="tag"
+            >
+              {{item}}
+            </view>
+          </view>
+          <!-- 货源右侧的展开标记 -->
+          <view class="dropdownarrow">
+            <view
+              wx:if="{{skuItemIndex !== selectedSectionIndex}}"
+              class="carsource-count"
+            >
+              <view class="carsource-count-text">
+                {{skuItem.carSku.viewModelCarSourceCount}}
+              </view>
+            </view>
             <image
-              wx:if="{{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
-              class="discount-icon"
-              src="{{skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
+              class="icon-dropdownarrow"
+              src="{{skuItemIndex === selectedSectionIndex? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
             >
             </image>
-            <view
-              wx:if="{{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
-              class="discount"
-            >
-              {{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscountDesc }}元/
-            </view>
-            <view class="price">{{skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelPriceDesc}}</view>
-            <view class="discount">起</view>
           </view>
         </view>
 
-        <view
-          wx:if="{{skuItem.carSku.viewModelTags.length > 0}}"
-          class="third-part tag-collection"
-        >
+        <view wx:if="{{skuItemIndex === selectedSectionIndex}}">
           <view
-            wx:for="{{skuItem.carSku.viewModelTags}}"
-            wx:key="*this"
-            class="tag"
-          >
-            {{item}}
-          </view>
-        </view>
-        <!-- 货源右侧的展开标记 -->
-        <view class="dropdownarrow">
-          <view
-            wx:if="{{skuItemIndex !== selectedSectionIndex}}"
-            class="carsource-count"
-          >
-            <view class="carsource-count-text">
-              {{skuItem.carSku.viewModelCarSourceCount}}
-            </view>
-          </view>
-          <image
-            class="icon-dropdownarrow"
-            src="{{skuItemIndex === selectedSectionIndex? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
-          >
-          </image>
-        </view>
-      </view>
-
-      <view wx:if="{{skuItemIndex === selectedSectionIndex}}">
-        <view
-          wx:if="{{skuItem.carSourcesList.length > 0}}"
-          class="carSources-cells"
-        >
-          <view
-            wx:for="{{skuItem.carSourcesList}}"
-            wx:for-item="carSourceItem"
-            wx:for-index="carSourceItemIndex"
-            wx:key="*this"
-            class="carSources-cell"
+            wx:if="{{skuItem.carSourcesList.length > 0}}"
+            class="carSources-cells"
           >
             <view
-              class="carSources-cell-content"
+              wx:for="{{skuItem.carSourcesList}}"
+              wx:for-item="carSourceItem"
+              wx:for-index="carSourceItemIndex"
+              wx:key="*this"
+              class="carSources-cell"
             >
-              <!-- 头部选择部分 -->
               <view
-                wx:if="{{carSourceItem.viewModelTabs || carSourceItem.viewModelTabMore}}"
-                class="header"
+                class="carSources-cell-content"
               >
+                <!-- 头部选择部分 -->
                 <view
-                  class="tab {{carSourceItem.viewModelSelectedTab == index ? 'selected' : ''}}"
-                  wx:for="{{carSourceItem.viewModelTabs}}"
-                  wx:key="*this"
-                  bindtap="handlerCarSourceTabClick"
-                  data-tab-item="{{item}}"
-                  data-tab-item-index="{{index}}"
-                  data-sku-index="{{skuItemIndex}}"
-                  data-car-source="{{carSourceItem}}"
-                  data-car-source-index="{{carSourceItemIndex}}"
+                  wx:if="{{carSourceItem.viewModelTabs || carSourceItem.viewModelTabMore}}"
+                  class="header"
                 >
-                  {{item.name}}
-                  <image
-                    src="/images/icons/icon_triangle_nav.png"
-                  ></image>
+                  <view
+                    class="tab {{carSourceItem.viewModelSelectedTab == index ? 'selected' : ''}}"
+                    wx:for="{{carSourceItem.viewModelTabs}}"
+                    wx:key="*this"
+                    bindtap="handlerCarSourceTabClick"
+                    data-tab-item="{{item}}"
+                    data-tab-item-index="{{index}}"
+                    data-sku-index="{{skuItemIndex}}"
+                    data-car-source="{{carSourceItem}}"
+                    data-car-source-index="{{carSourceItemIndex}}"
+                  >
+                    {{item.name}}
+                    <image
+                      src="/images/icons/icon_triangle_nav.png"
+                    ></image>
+                  </view>
+                  <view
+                    wx:if="{{carSourceItem.viewModelTabMore.length}}"
+                    class="tab {{carSourceItem.viewModelSelectedTab == -1 ? 'selected' : ''}}"
+                    bindtap="handlerCarSourceMore"
+                    data-sku-index="{{skuItemIndex}}"
+                    data-car-source="{{carSourceItem}}"
+                    data-car-source-index="{{carSourceItemIndex}}"
+                  >
+                    更多
+                    <image
+                      src="/images/icons/icon_triangle_nav.png"
+                    ></image>
+                  </view>
                 </view>
                 <view
-                  wx:if="{{carSourceItem.viewModelTabMore.length}}"
-                  class="tab {{carSourceItem.viewModelSelectedTab == -1 ? 'selected' : ''}}"
-                  bindtap="handlerCarSourceMore"
-                  data-sku-index="{{skuItemIndex}}"
-                  data-car-source="{{carSourceItem}}"
-                  data-car-source-index="{{carSourceItemIndex}}"
+                  class="body"
                 >
-                  更多
-                  <image
-                    src="/images/icons/icon_triangle_nav.png"
-                  ></image>
-                </view>
-              </view>
-              <view
-                class="body"
-              >
-                <!-- 第一部分 -供应商名称 + 渠道来源-->
-                <view
-                  class="first-part"
-                >
-                  <!-- 供应商名称 -->
-                  <view class="first-first-part">
-                    <view class="supplier-name">
-                      <view class="name">
-                        {{carSourceItem.supplier.name}}
+                  <!-- 第一部分 -供应商名称 + 渠道来源-->
+                  <view
+                    class="first-part"
+                  >
+                    <!-- 供应商名称 -->
+                    <view class="first-first-part">
+                      <view class="supplier-name">
+                        <view class="name">
+                          {{carSourceItem.supplier.name}}
+                          <image
+                            wx:if="{{carSourceItem.supplierSelfSupport}}"
+                            src="/images/icons/icon_label_ymc_certification.png"
+                            class="certification"
+                          >
+                          </image>
+                        </view>
                         <image
-                          wx:if="{{carSourceItem.supplierSelfSupport}}"
-                          src="/images/icons/icon_label_ymc_certification.png"
-                          class="certification"
+                          class="contact"
+                          src="/images/icons/icon_call_line.png"
+                          catchtap="handlerContact"
+                          data-car-source-index="{{carSourceItemIndex}}"
+                          data-car-source="{{carSourceItem}}"
+                          data-sku-index="{{skuItemIndex}}"
                         >
                         </image>
                       </view>
-                      <image
-                        class="contact"
-                        src="/images/icons/icon_call_line.png"
-                        catchtap="handlerContact"
+
+                      <!-- 靠谱 -->
+                      <!--wx:if="{{!carSourceItem.supplierSelfSupport}}"-->
+                      <view
+                        wx:if="{{!carSourceItem.supplierSelfSupport}}"
+                        class="reliable"
+                        catchtap="handlerReliable"
                         data-car-source-index="{{carSourceItemIndex}}"
                         data-car-source="{{carSourceItem}}"
                         data-sku-index="{{skuItemIndex}}"
                       >
-                      </image>
+                        <image
+                          wx:if="{{carSourceItem.hasBeenReliableByUser === 0}}"
+                          src="/images/icons/icon_reliable_line.png"
+                        >
+                        </image>
+                        <image
+                          wx:if="{{carSourceItem.hasBeenReliableByUser === 1}}"
+                          src="/images/icons/icon_reliable_line_up.png"
+                        >
+                        </image>
+                        <image
+                          wx:if="{{carSourceItem.hasBeenReliableByUser === -1}}"
+                          src="/images/icons/icon_reliable_line_down.png"
+                        >
+                        </image>
+                        <view
+                          class="reliable-text"
+                        >
+                          靠谱({{carSourceItem.hasBeenReliableCount}})
+                        </view>
+                      </view>
                     </view>
 
-                    <!-- 靠谱 -->
-                    <!--wx:if="{{!carSourceItem.supplierSelfSupport}}"-->
+                    <!-- 货源渠道信息 -->
                     <view
                       wx:if="{{!carSourceItem.supplierSelfSupport}}"
-                      class="reliable"
-                      catchtap="handlerReliable"
-                      data-car-source-index="{{carSourceItemIndex}}"
-                      data-car-source="{{carSourceItem}}"
-                      data-sku-index="{{skuItemIndex}}"
+                      class="carSource-channel"
                     >
-                      <image
-                        wx:if="{{carSourceItem.hasBeenReliableByUser === 0}}"
-                        src="/images/icons/icon_reliable_line.png"
-                      >
-                      </image>
-                      <image
-                        wx:if="{{carSourceItem.hasBeenReliableByUser === 1}}"
-                        src="/images/icons/icon_reliable_line_up.png"
-                      >
-                      </image>
-                      <image
-                        wx:if="{{carSourceItem.hasBeenReliableByUser === -1}}"
-                        src="/images/icons/icon_reliable_line_down.png"
-                      >
-                      </image>
-                      <view
-                        class="reliable-text"
-                      >
-                        靠谱({{carSourceItem.hasBeenReliableCount}})
+                      <view class="publish-date">
+                        {{carSourceItem.viewModelPublishDateDesc}}
                       </view>
+                      <!--朋友圈信息暂时去掉-->
+                      <!--<image-->
+                      <!--wx:if="{{carSourceItem.publishChannel === '微信朋友圈'}}"-->
+                      <!--src="/images/icons/icon_source_moments.png"-->
+                      <!--&gt;-->
+                      <!--</image>-->
+                      <!--<image-->
+                      <!--wx:if="{{carSourceItem.publishChannel === '微信群'}}"-->
+                      <!--src="/images/icons/icon_source_wechat.png"-->
+                      <!--&gt;-->
+                      <!--</image>-->
                     </view>
                   </view>
 
-                  <!-- 货源渠道信息 -->
                   <view
-                    wx:if="{{!carSourceItem.supplierSelfSupport}}"
-                    class="carSource-channel"
+                    wx:if="{{carSourceItem.viewModelSelectedTab == -1}}"
+                    class="more"
                   >
-                    <view class="publish-date">
-                      {{carSourceItem.viewModelPublishDateDesc}}
-                    </view>
-                    <!--朋友圈信息暂时去掉-->
-                    <!--<image-->
-                    <!--wx:if="{{carSourceItem.publishChannel === '微信朋友圈'}}"-->
-                    <!--src="/images/icons/icon_source_moments.png"-->
-                    <!--&gt;-->
-                    <!--</image>-->
-                    <!--<image-->
-                    <!--wx:if="{{carSourceItem.publishChannel === '微信群'}}"-->
-                    <!--src="/images/icons/icon_source_wechat.png"-->
-                    <!--&gt;-->
-                    <!--</image>-->
-                  </view>
-                </view>
-
-                <view
-                  wx:if="{{carSourceItem.viewModelSelectedTab == -1}}"
-                  class="more"
-                >
-                  <!--更多选项卡-->
-                  <view
-                    wx:for="{{carSourceItem.viewModelTabMore}}"
-                    wx:key="*this"
-                    wx:for-item="carSourcePlaceItem"
-                    wx:for-index="carSourcePlaceItemIndex"
-                    wx:if="{{carSourcePlaceItemIndex % 2 === 0}}"
-                    class="line"
-                  >
-                    <!--左边-->
+                    <!--更多选项卡-->
                     <view
+                      wx:for="{{carSourceItem.viewModelTabMore}}"
+                      wx:key="*this"
+                      wx:for-item="carSourcePlaceItem"
+                      wx:for-index="carSourcePlaceItemIndex"
                       wx:if="{{carSourcePlaceItemIndex % 2 === 0}}"
-                      bindtap="handlerCarSourceDetail"
-                      data-sku="{{skuItem}}"
-                      data-sku-index="{{skuItemIndex}}"
-                      data-car-source="{{carSourceItem}}"
-                      data-car-source-index="{{carSourceItemIndex}}"
-                      data-car-source-place="{{carSourcePlaceItem}}"
-                      data-car-source-place-index="{{carSourcePlaceItemIndex}}"
-                      class="item"
+                      class="line"
                     >
-                      <view class="carSources-place">
-                        {{carSourcePlaceItem.name}}货源
-                      </view>
-                      <!-- 供货价格 -->
-                      <view class="carSources-cell-price">
-                        <image
-                          wx:if="{{ carSourcePlaceItem.viewModelDiscount !== 0 }}"
-                          class="discount-icon"
-                          src="{{ carSourcePlaceItem.viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
-                        >
-                        </image>
-                        <view
-                          wx:if="{{ carSourcePlaceItem.viewModelDiscount !== 0 }}"
-                          class="discount"
-                        >
-                          {{ carSourcePlaceItem.viewModelDiscountDesc }}元/
-                        </view>
-                        <view
-                          class="price"
-                        >
-                          {{ carSourcePlaceItem.viewModelPriceDesc }}
-                        </view>
-                      </view>
-                    </view>
-
-                    <view
-                      wx:if="{{(carSourcePlaceItemIndex % 2 === 0) && carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1]}}"
-                      bindtap="handlerCarSourceDetail"
-                      data-sku="{{skuItem}}"
-                      data-sku-index="{{skuItemIndex}}"
-                      data-car-source="{{carSourceItem}}"
-                      data-car-source-index="{{carSourceItemIndex}}"
-                      data-car-source-place="{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1]}}"
-                      data-car-source-place-index="{{carSourcePlaceItemIndex + 1}}"
-                      class="item"
-                    >
-                      <!--右边-->
-                      <view class="carSources-place">{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex +
-                        1].name}}货源
-                      </view>
-                      <!-- 供货价格 -->
-                      <view class="carSources-cell-price">
-                        <image
-                          wx:if="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount !== 0 }}"
-                          class="discount-icon"
-                          src="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
-                        >
-                        </image>
-                        <view
-                          wx:if="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount !== 0 }}"
-                          class="discount"
-                        >{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscountDesc }}元/
-                        </view>
-                        <view
-                          class="price"
-                        >{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelPriceDesc }}
-                        </view>
-                      </view>
-                    </view>
-                  </view>
-                </view>
-                <view
-                  wx:else
-                  bindtap="handlerCarSourceDetail"
-                  data-sku="{{skuItem}}"
-                  data-sku-index="{{skuItemIndex}}"
-                  data-car-source="{{carSourceItem}}"
-                  data-car-source-index="{{carSourceItemIndex}}"
-                >
-                  <!--最近，最便宜-->
-                  <view class="second-part">
-                    <!-- 车源基本信息 -->
-                    <view class="basic-infomation">
-                      <view class="basic-label">
-                        {{carSourceItem.externalColor}}/{{carSourceItem.viewModelInternalColor}}
-                      </view>
+                      <!--左边-->
                       <view
-                        wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length}}"
-                        class="basic-label">{{carSourceItem.viewModelSelectedCarSourcePlace.name}}
-                      </view>
-                      <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}"
-                            class="basic-label">{{carSourceItem.salableRegionsDesc}}
-                      </view>
-                      <view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}"
-                            class="basic-label">{{carSourceItem.procedureTypeDesc}}
-                      </view>
-                    </view>
-
-                    <!-- 供货价格 -->
-                    <view class="carSources-cell-price">
-                      <image
-                        wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
-                        class="discount-icon"
-                        src="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+                        wx:if="{{carSourcePlaceItemIndex % 2 === 0}}"
+                        bindtap="handlerCarSourceDetail"
+                        data-sku="{{skuItem}}"
+                        data-sku-index="{{skuItemIndex}}"
+                        data-car-source="{{carSourceItem}}"
+                        data-car-source-index="{{carSourceItemIndex}}"
+                        data-car-source-place="{{carSourcePlaceItem}}"
+                        data-car-source-place-index="{{carSourcePlaceItemIndex}}"
+                        class="item"
                       >
-                      </image>
-                      <view
-                        wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
-                        class="discount"
-                      >
-                        {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscountDesc }}元/
-                      </view>
-                      <view
-                        class="price"
-                      >
-                        {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelPriceDesc }}
-                      </view>
-                    </view>
-                  </view>
-
-                  <!-- 第二部分 物流信息 -->
-                  <view
-                    class="third-part"
-                  >
-                    <view
-                      wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination }}"
-                      class="logistics-information"
-                    >
-                      <view class="logistics">
-                        <view
-                          wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
-                          class="logistics-free"
-                        >
-                          <block
-                            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'store'}}">
-                            包邮到门店
-                          </block>
-                          <block
-                            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'station'}}">
-                            包邮到驿站
-                          </block>
-                          <block
-                            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'mainline'}}">
-                            干线自提
-                          </block>
+                        <view class="carSources-place">
+                          {{carSourcePlaceItem.name}}货源
                         </view>
-                        <view wx:else class="logistics-none-free">
-                          <view>
-                            运费约: {{
-                            carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc
-                            }}
+                        <!-- 供货价格 -->
+                        <view class="carSources-cell-price">
+                          <image
+                            wx:if="{{ carSourcePlaceItem.viewModelDiscount !== 0 }}"
+                            class="discount-icon"
+                            src="{{ carSourcePlaceItem.viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+                          >
+                          </image>
+                          <view
+                            wx:if="{{ carSourcePlaceItem.viewModelDiscount !== 0 }}"
+                            class="discount"
+                          >
+                            {{ carSourcePlaceItem.viewModelDiscountDesc }}元/
+                          </view>
+                          <view
+                            class="price"
+                          >
+                            {{ carSourcePlaceItem.viewModelPriceDesc }}
                           </view>
                         </view>
-                        <view class="logistics-date">
-                          {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelExpectedDeliveryDaysDesc }}
+                      </view>
+
+                      <view
+                        wx:if="{{(carSourcePlaceItemIndex % 2 === 0) && carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1]}}"
+                        bindtap="handlerCarSourceDetail"
+                        data-sku="{{skuItem}}"
+                        data-sku-index="{{skuItemIndex}}"
+                        data-car-source="{{carSourceItem}}"
+                        data-car-source-index="{{carSourceItemIndex}}"
+                        data-car-source-place="{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1]}}"
+                        data-car-source-place-index="{{carSourcePlaceItemIndex + 1}}"
+                        class="item"
+                      >
+                        <!--右边-->
+                        <view class="carSources-place">{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex +
+                          1].name}}货源
+                        </view>
+                        <!-- 供货价格 -->
+                        <view class="carSources-cell-price">
+                          <image
+                            wx:if="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount !== 0 }}"
+                            class="discount-icon"
+                            src="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+                          >
+                          </image>
+                          <view
+                            wx:if="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount !== 0 }}"
+                            class="discount"
+                          >{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscountDesc }}元/
+                          </view>
+                          <view
+                            class="price"
+                          >{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelPriceDesc }}
+                          </view>
                         </view>
                       </view>
                     </view>
-                    <view
-                      wx:else
-                    >
-                    </view>
-                    <view
-                      wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
-                      class="logistics-information-tips"
-                    >
-                      (含运费)
-                    </view>
-                    <view
-                      wx:else
-                      class="bare-price"
-                    >
-                      裸车价
-                    </view>
                   </view>
-
-                  <!-- 第三部分 标签 -->
                   <view
-                    wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}"
-                    class="forth-part"
+                    wx:else
+                    bindtap="handlerCarSourceDetail"
+                    data-sku="{{skuItem}}"
+                    data-sku-index="{{skuItemIndex}}"
+                    data-car-source="{{carSourceItem}}"
+                    data-car-source-index="{{carSourceItemIndex}}"
                   >
+                    <!--最近，最便宜-->
+                    <view class="second-part">
+                      <!-- 车源基本信息 -->
+                      <view class="basic-infomation">
+                        <view class="basic-label">
+                          {{carSourceItem.externalColor}}/{{carSourceItem.viewModelInternalColor}}
+                        </view>
+                        <view
+                          wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length}}"
+                          class="basic-label">{{carSourceItem.viewModelSelectedCarSourcePlace.name}}
+                        </view>
+                        <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}"
+                              class="basic-label">{{carSourceItem.salableRegionsDesc}}
+                        </view>
+                        <view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}"
+                              class="basic-label">{{carSourceItem.procedureTypeDesc}}
+                        </view>
+                      </view>
+
+                      <!-- 供货价格 -->
+                      <view class="carSources-cell-price">
+                        <image
+                          wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
+                          class="discount-icon"
+                          src="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
+                        >
+                        </image>
+                        <view
+                          wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
+                          class="discount"
+                        >
+                          {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscountDesc }}元/
+                        </view>
+                        <view
+                          class="price"
+                        >
+                          {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelPriceDesc }}
+                        </view>
+                      </view>
+                    </view>
+
+                    <!-- 第二部分 物流信息 -->
                     <view
-                      class="tag-collection"
+                      class="third-part"
                     >
                       <view
-                        wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags}}"
-                        wx:key="*this"
-                        class="tag"
+                        wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination }}"
+                        class="logistics-information"
                       >
-                        {{item}}
+                        <view class="logistics">
+                          <view
+                            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
+                            class="logistics-free"
+                          >
+                            <block
+                              wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'store'}}">
+                              包邮到门店
+                            </block>
+                            <block
+                              wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'station'}}">
+                              包邮到驿站
+                            </block>
+                            <block
+                              wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.destType === 'mainline'}}">
+                              干线自提
+                            </block>
+                          </view>
+                          <view wx:else class="logistics-none-free">
+                            <view>
+                              运费约: {{
+                              carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc
+                              }}
+                            </view>
+                          </view>
+                          <view class="logistics-date">
+                            {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelExpectedDeliveryDaysDesc }}
+                          </view>
+                        </view>
+                      </view>
+                      <view
+                        wx:else
+                      >
+                      </view>
+                      <view
+                        wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}"
+                        class="logistics-information-tips"
+                      >
+                        (含运费)
+                      </view>
+                      <view
+                        wx:else
+                        class="bare-price"
+                      >
+                        裸车价
+                      </view>
+                    </view>
+
+                    <!-- 第三部分 标签 -->
+                    <view
+                      wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}"
+                      class="forth-part"
+                    >
+                      <view
+                        class="tag-collection"
+                      >
+                        <view
+                          wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags}}"
+                          wx:key="*this"
+                          class="tag"
+                        >
+                          {{item}}
+                        </view>
                       </view>
                     </view>
                   </view>
@@ -720,12 +721,11 @@
               </view>
             </view>
           </view>
-        </view>
-        <view wx:else class="nodata">
-          该 SKU 下供货暂无数据
+          <view wx:else class="nodata">
+            该 SKU 下供货暂无数据
+          </view>
         </view>
       </view>
-    </view>
     </block>
   </block>
   <view
