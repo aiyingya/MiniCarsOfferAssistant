@@ -400,7 +400,6 @@
                     data-tab-item="{{item}}"
                     data-tab-item-index="{{index}}"
                     data-sku-index="{{skuItemIndex}}"
-                    data-car-source="{{carSourceItem}}"
                     data-car-source-index="{{carSourceItemIndex}}"
                   >
                     {{item.name}}
@@ -413,7 +412,6 @@
                     class="tab {{carSourceItem.viewModelSelectedTab == -1 ? 'selected' : ''}}"
                     bindtap="handlerCarSourceMore"
                     data-sku-index="{{skuItemIndex}}"
-                    data-car-source="{{carSourceItem}}"
                     data-car-source-index="{{carSourceItemIndex}}"
                   >
                     更多
@@ -446,7 +444,6 @@
                           src="/images/icons/icon_call_line.png"
                           catchtap="handlerContact"
                           data-car-source-index="{{carSourceItemIndex}}"
-                          data-car-source="{{carSourceItem}}"
                           data-sku-index="{{skuItemIndex}}"
                         >
                         </image>
@@ -459,7 +456,6 @@
                         class="reliable"
                         catchtap="handlerReliable"
                         data-car-source-index="{{carSourceItemIndex}}"
-                        data-car-source="{{carSourceItem}}"
                         data-sku-index="{{skuItemIndex}}"
                       >
                         <image
@@ -560,7 +556,6 @@
                         wx:if="{{(carSourcePlaceItemIndex % 2 === 0) && carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1]}}"
                         bindtap="handlerCarSourceDetail"
                         data-sku-index="{{skuItemIndex}}"
-                        data-car-source="{{carSourceItem}}"
                         data-car-source-index="{{carSourceItemIndex}}"
                         data-car-source-place="{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1]}}"
                         data-car-source-place-index="{{carSourcePlaceItemIndex + 1}}"
@@ -595,7 +590,6 @@
                     wx:else
                     bindtap="handlerCarSourceDetail"
                     data-sku-index="{{skuItemIndex}}"
-                    data-car-source="{{carSourceItem}}"
                     data-car-source-index="{{carSourceItemIndex}}"
                   >
                     <!--最近，最便宜-->
