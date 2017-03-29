@@ -4,6 +4,10 @@
   "build": 1,
   "description": "运图贸易有限公司 要卖车 微信小程序",
   "main": "index.js",
+  "engines": {
+    "node": ">=6.0",
+    "npm": ">3.0"
+  },
   "scripts": {
     "build": "gulp build:clean",
     "watch": "gulp watch:clean"
