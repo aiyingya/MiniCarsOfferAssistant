@@ -886,8 +886,7 @@ Page({
    * @param e
    */
   handlerSelectCarSku (e) {
-    const index = e.currentTarget.dataset.skuItemIndex
-    const skuItem = e.currentTarget.dataset.skuItem
+    const index = e.currentTarget.dataset.skuIndex
 
     let actualIndex = -1
     let actualId = this.data.selectedSectionId

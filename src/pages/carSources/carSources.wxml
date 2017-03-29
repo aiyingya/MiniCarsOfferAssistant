@@ -307,8 +307,7 @@
       >
         <view class="carSources-section-content"
               bindtap="handlerSelectCarSku"
-              data-sku-item-index="{{skuItemIndex}}"
-              data-sku-item="{{skuItem}}"
+              data-sku-index="{{skuItemIndex}}"
         >
           <!-- 库存分区列表 -->
           <view class="first-part">
@@ -318,7 +317,7 @@
             <view
               class="button confirm create-quoted"
               catchtap="handlerCreateQuoted"
-              data-sku="{{skuItem}}"
+              data-sku-index="{{skuItemIndex}}"
             >
               生成报价单
             </view>
@@ -525,7 +524,6 @@
                       <view
                         wx:if="{{carSourcePlaceItemIndex % 2 === 0}}"
                         bindtap="handlerCarSourceDetail"
-                        data-sku="{{skuItem}}"
                         data-sku-index="{{skuItemIndex}}"
                         data-car-source="{{carSourceItem}}"
                         data-car-source-index="{{carSourceItemIndex}}"
@@ -561,7 +559,6 @@
                       <view
                         wx:if="{{(carSourcePlaceItemIndex % 2 === 0) && carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1]}}"
                         bindtap="handlerCarSourceDetail"
-                        data-sku="{{skuItem}}"
                         data-sku-index="{{skuItemIndex}}"
                         data-car-source="{{carSourceItem}}"
                         data-car-source-index="{{carSourceItemIndex}}"
@@ -597,7 +594,6 @@
                   <view
                     wx:else
                     bindtap="handlerCarSourceDetail"
-                    data-sku="{{skuItem}}"
                     data-sku-index="{{skuItemIndex}}"
                     data-car-source="{{carSourceItem}}"
                     data-car-source-index="{{carSourceItemIndex}}"
