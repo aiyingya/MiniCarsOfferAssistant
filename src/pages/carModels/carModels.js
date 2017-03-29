@@ -415,7 +415,7 @@ Page({
       },
       width: popWindow.windowWidth,
       height: 120,
-      dataLabel: false,
+      dataLabel: true,
       dataPointShape: false,
       extra: {
         area: ['风险','适宜2.43~3.73','偏贵']
@@ -435,7 +435,7 @@ Page({
       showCharts: true
     })
     this.data.popCharts = null
-    this.data.touchEnd = false
+    this.data.touchindex  = ''
   },
   handleSelectTime(e) {
     let that = this
