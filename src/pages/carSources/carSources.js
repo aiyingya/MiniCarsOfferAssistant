@@ -6,6 +6,8 @@ Page({
   data: {
     // 有无数据 init/data/none
     nodata: 'init',
+    // data/none
+    searchnodata: 'none',
     // 全局视图
     windowHeight: '',
     // 头部 SPU 信息视图
@@ -107,6 +109,7 @@ Page({
         const newCarSourcesBySkuInSpuList = that.updateSearchResult({})
         that.selectCarSku(-1, newCarSourcesBySkuInSpuList)
         that.setData({
+          searchnodata: newCarSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
           carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
           selectedSectionIndex: -1,
           selectedSectionId: '0'
@@ -241,6 +244,7 @@ Page({
   hideFold (a, b, c) {
     const that = this
     this.setData({
+      searchnodata: a.length !== 0 ? 'data' : 'none',
       carSourcesBySkuInSpuList: a,
       selectedSectionIndex: -1
     })
@@ -566,10 +570,13 @@ Page({
           } else {
             carSourceItem.others = null
           }
+        } else {
+          carSourceItem.others = null
         }
 
-        // FIXME: 这里需不需要来一段 update， 否则无法构建合适的结果
-        return !(!carSourceItem.lowest && !carSourceItem.fastest && !carSourceItem.others)
+        console.log(carSourceItem)
+
+        return (carSourceItem.lowest || carSourceItem.fastest || carSourceItem.others)
       }
       return true
     }
@@ -577,10 +584,6 @@ Page({
     const selectedColorFilter = function (externalColorName,
                                           internalColorName,
                                           carSourcesBySkuItem) {
-      console.log(externalColorName)
-      console.log(internalColorName)
-      console.log(carSourcesBySkuItem)
-
       if (externalColorName === '全部') {
         return true
       } else {
