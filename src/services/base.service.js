@@ -23,7 +23,7 @@ export default class Services {
       data: opts.data,
       success: opts.success,
       fail: opts.fail,
-      loadingType: 'none'
+      loadingType: opts.loadingType
     })
   }
 }

@@ -86,6 +86,11 @@ export default class UserService extends Service {
     })
   }
 
+  sendMessage(opts) {
+    opts.loadingType = 'none'
+    super.sendMessage(opts)
+  }
+
   __loadUserInfo () {
     try {
       const userInfoString = wx.getStorageSync(UserService.AuthKey)
