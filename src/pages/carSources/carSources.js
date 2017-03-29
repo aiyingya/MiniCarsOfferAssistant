@@ -447,7 +447,11 @@ Page({
       carSourcePlaceItem.viewModelPriceDesc = util.priceStringWithUnit(logisticsDestination.totalPrice)
       carSourcePlaceItem.viewModelDiscount = logisticsDestination.discount
       carSourcePlaceItem.viewModelDiscountDesc = util.priceStringWithUnit(logisticsDestination.discount)
-      carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = '约' + logisticsDestination.expectedDeliveryDays + '天'
+      if (logisticsDestination.expectedDeliveryDays) {
+        carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = '约' + logisticsDestination.expectedDeliveryDays + '天'
+      } else {
+        carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = ''
+      }
       carSourcePlaceItem.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc = util.priceStringWithUnit(logisticsDestination.logisticsFee)
     } else {
       carSourcePlaceItem.viewModelPrice = carSourcePlaceItem.totalPrice
