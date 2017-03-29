@@ -19,8 +19,8 @@ export default class SAASService extends Service {
     this.userService = userService
   }
 
-  sendMessage(opts) {
-    opts.loadingType = 'toast'
+  sendMessage(opts, loadingType = 'toast') {
+    opts.loadingType = loadingType
     super.sendMessage(opts)
   }
 
@@ -396,7 +396,7 @@ export default class SAASService extends Service {
       success: object.success,
       fail: object.fail,
       complete: object.complete
-    })
+    }, 'none')
   }
 
   /**

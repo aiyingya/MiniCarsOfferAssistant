@@ -15,8 +15,8 @@ export default class TradeService extends Service {
     super()
   }
 
-  sendMessage(opts) {
-    opts.loadingType = 'toast'
+  sendMessage(opts, loadingType = 'toast') {
+    opts.loadingType = loadingType
     super.sendMessage(opts)
   }
 

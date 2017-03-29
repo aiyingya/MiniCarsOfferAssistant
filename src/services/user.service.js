@@ -86,8 +86,8 @@ export default class UserService extends Service {
     })
   }
 
-  sendMessage(opts) {
-    opts.loadingType = 'none'
+  sendMessage(opts, loadingType = 'none') {
+    opts.loadingType = loadingType
     super.sendMessage(opts)
   }
 
@@ -256,7 +256,7 @@ export default class UserService extends Service {
         }
       },
       fail: opts.fail
-    })
+    }, 'toast')
   }
 
   logout (opts) {
