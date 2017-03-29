@@ -15,7 +15,6 @@
 const gulp = require('gulp')
 const del = require('del')
 const runSequence = require('run-sequence')
-const autoprefixer = require('autoprefixer')
 const $ = require('gulp-load-plugins')()
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -87,15 +86,6 @@ gulp.task('templates:watch', () => {
  */
 gulp.task('styles', () => {
   return gulp.src(['./src/**/*.wxss', '!./src/styles/**'])
-    // .pipe($.less())
-    // .pipe($.postcss([
-    //   autoprefixer([
-    //     'iOS >= 8',
-        // 'Android >= 4.1'
-      // ])
-    // ]))
-    // .pipe($.if(prod, $.cssnano()))
-    // .pipe($.rename((path) => path.extname = '.wxss'))
     .pipe(gulp.dest('./dist'))
 })
 
@@ -108,8 +98,10 @@ gulp.task('styles:watch', () => {
  */
 gulp.task('scripts', ['eslint'], () => {
   return gulp.src('./src/**/*.js')
+    // .pipe($.sourcemaps.init())
     .pipe($.babel())
-    .pipe($.if(prod, $.uglify()))
+    // .pipe($.if(prod, $.uglify()))
+    // .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('./dist'))
 })
 
