@@ -7,7 +7,7 @@ Page({
     // 有无数据 init/data/none
     nodata: 'init',
     // data/none
-    searchnodata: 'none',
+    searchnodata: 'data',
     // 全局视图
     windowHeight: '',
     // 头部 SPU 信息视图
@@ -466,6 +466,14 @@ Page({
     }
   },
   updateTheCarSourcePlace (carSourcePlaceItem, carSourceItem) {
+    const tags = []
+    if (carSourcePlaceItem.priceFixed) {
+      tags.push('一口价')
+    }
+    if (carSourceItem.supplierSelfSupport) {
+      tags.push('垫款发车')
+    }
+    carSourcePlaceItem.viewModelTags = tags
     this.updateTheLogisticsDestination(carSourcePlaceItem.viewModelSelectedLogisticsDestination, carSourcePlaceItem, carSourceItem)
   },
   /**
@@ -878,8 +886,7 @@ Page({
    * @param e
    */
   handlerSelectCarSku (e) {
-    const index = e.currentTarget.dataset.skuItemIndex
-    const skuItem = e.currentTarget.dataset.skuItem
+    const index = e.currentTarget.dataset.skuIndex
 
     let actualIndex = -1
     let actualId = this.data.selectedSectionId

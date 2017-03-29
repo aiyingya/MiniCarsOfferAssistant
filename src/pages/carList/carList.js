@@ -85,6 +85,7 @@ Page({
 
     that.setData({
       showCarSeries: carSeries,
+      showCarSeriesImageUrl: carSeries.logoUrl,
       showMask: 'showMask',
       showCarSeriesInner: 'rightToLeft'
     })
@@ -93,8 +94,8 @@ Page({
     let that = this;
     that.setData({
       showCarSeries: '',
-      carManufacturerSeriesList: [],
       showCarSeriesImageUrl: '',
+      carManufacturerSeriesList: [],
       showNodata: false
     });
   },

@@ -86,6 +86,11 @@ export default class UserService extends Service {
     })
   }
 
+  sendMessage(opts, loadingType = 'none') {
+    opts.loadingType = loadingType
+    super.sendMessage(opts)
+  }
+
   __loadUserInfo () {
     try {
       const userInfoString = wx.getStorageSync(UserService.AuthKey)
@@ -251,7 +256,7 @@ export default class UserService extends Service {
         }
       },
       fail: opts.fail
-    })
+    }, 'toast')
   }
 
   logout (opts) {

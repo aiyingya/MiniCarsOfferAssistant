@@ -15,6 +15,11 @@ export default class TradeService extends Service {
     super()
   }
 
+  sendMessage(opts, loadingType = 'toast') {
+    opts.loadingType = loadingType
+    super.sendMessage(opts)
+  }
+
   /**
    * 搜索联想
    * @param opts

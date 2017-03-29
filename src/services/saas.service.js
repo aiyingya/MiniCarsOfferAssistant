@@ -19,6 +19,11 @@ export default class SAASService extends Service {
     this.userService = userService
   }
 
+  sendMessage(opts, loadingType = 'toast') {
+    opts.loadingType = loadingType
+    super.sendMessage(opts)
+  }
+
   /**
    * 发布当前报价草稿到某个用户
    *
@@ -391,7 +396,7 @@ export default class SAASService extends Service {
       success: object.success,
       fail: object.fail,
       complete: object.complete
-    })
+    }, 'none')
   }
 
   /**
@@ -444,7 +449,7 @@ export default class SAASService extends Service {
       complete: object.complete
     })
   }
-  
+
   /**
    *  获取车款列表(包含搜索)
    *  sid 车型ID
