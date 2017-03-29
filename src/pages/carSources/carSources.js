@@ -664,7 +664,9 @@ Page({
       }
     }
 
-    wx.hideToast()
+    setTimeout(function () {
+      wx.hideToast()
+    }, 300)
     console.log(newCarSourcesBySkuInSpuList)
     return newCarSourcesBySkuInSpuList
   },
@@ -870,6 +872,10 @@ Page({
       scrollFiltersSelectedIndexes[scrollFilterIndex] = filterIndex
     }
 
+    this.setData({
+      scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
+    })
+
     let newCarSourcesBySkuInSpuList
     if (scrollFilterIndex == 0) {
       // 车源发布时间
@@ -881,8 +887,7 @@ Page({
 
     this.setData({
       searchnodata: newCarSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
-      carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
-      scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
+      carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList
     })
     this.selectCarSku(-1)
     this.hideFold(null, -1, this.data.selectedSectionId)
