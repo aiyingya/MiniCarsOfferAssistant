@@ -359,7 +359,6 @@
           <!-- 货源右侧的展开标记 -->
           <view class="dropdownarrow">
             <view
-              wx:if="{{skuItemIndex !== selectedSectionIndex}}"
               class="carsource-count"
             >
               <view class="carsource-count-text">
