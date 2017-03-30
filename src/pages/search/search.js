@@ -371,6 +371,8 @@ Page({
             fontColor: '#333333',
             gridColor: '#333333',
             unitText: '（个）',
+            min: 0,
+            max: 20,
             format(val) {
               return val.toFixed(0)
             }
@@ -558,7 +560,7 @@ Page({
     let times = [{value:24, selected: 'selected'},{value:12,selected: ''}]
     requestData = {
       carSeriesId: sid,
-      inStock: true,
+      inStock: false,
       hours: item.selectTimes
     }
     
@@ -591,10 +593,11 @@ Page({
               requestItem.selectColors = item.selectColors
               requestItem.selectTimesData = times
               requestItem.selectTimes = item.selectTimes 
-              requestItem.selectColorsId = sid           
+              requestItem.selectColorsId = sid,
+              requestItem.supply.status = item.supply.status
+              requestItem.supply.supplierCount = item.supply.supplierCount
+              requestItem.supply.colors = item.supply.colors         
               change = requestItem
-              
-              console.log(times,change)
             }
             
             newCarModelsList.push(change)

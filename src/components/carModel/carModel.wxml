@@ -102,6 +102,15 @@
 						></canvas>
 				</block>
 			</view>
+      <view 
+       class="nodata" 
+       wx:else
+       >
+        <icon type="warn" size="60" color="#cccccc"></icon>
+        <view class="icon-box__ctn">
+          <view class="icon-box__desc">抱歉！没有相关车供货信息</view>
+        </view>	
+      </view>
 		</view>
 
 		<!-- 暂无供货.-->
