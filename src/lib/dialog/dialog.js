@@ -109,8 +109,13 @@ class wux {
           [`$wux.dialog.inputNumberInput`]: `inputNumberInput`,
           [`$wux.dialog.inputNumberConfirm`]: `inputNumberConfirm`,
           [`$wux.dialog.inputNumberFocus`]: `inputNumberFocus`,
-          [`$wux.dialog.inputNumberBlur`]: `inputNumberBlur`
+          [`$wux.dialog.inputNumberBlur`]: `inputNumberBlur`,
+          [`$wux.dialog.onTouchMoveWithCatch`]: `onTouchMoveWithCatch`
         })
+
+        $scope.onTouchMoveWithCatch = () => {
+          // 防止事件透传
+        }
 
         // 绑定tap事件
         $scope.dialogConfirm = (e) => {

@@ -1,6 +1,11 @@
 <template name="dialog">
   <view class="dialog">
-    <view class="weui-mask {{ animateCss }}" hidden="{{ !visible }}"></view>
+    <view
+      class="weui-mask {{ animateCss }}"
+      hidden="{{ !visible }}"
+      catchtouchmove="{{onTouchMoveWithCatch}}"
+    >
+    </view>
     <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
       <view class="weui-dialog__hd" wx:if="{{ title }}">
         <view class="weui-dialog__title">{{ title }}</view>

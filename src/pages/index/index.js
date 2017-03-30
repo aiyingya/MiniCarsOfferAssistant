@@ -173,5 +173,8 @@ Page({
     wx.makePhoneCall({
       phoneNumber: phone
     })
+  },
+  onTouchMoveWithCatch () {
+    // 拦截触摸移动事件， 阻止透传
   }
 })

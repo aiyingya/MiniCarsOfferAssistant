@@ -81,9 +81,6 @@ class wux {
       open(opts = {}) {
         const options = extend(clone(this.defaults), opts)
 
-        console.log('8888888')
-        console.log(options)
-
         if (options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
           for (let logisticsDestination of options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
             if (logisticsDestination.destType === 'store') {
@@ -154,6 +151,8 @@ class wux {
           [`$wux.carSourceDetailDialog.carModel`]: options.carModel,
           [`$wux.carSourceDetailDialog.skuItem`]: options.skuItem,
           [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem,
+          [`$wux.carSourceDetailDialog.hasFoldOriginalText`]: options.hasFoldOriginalText,
+          [`$wux.carSourceDetailDialog.hasFoldTagCollection`]: options.hasFoldTagCollection,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogClose`]: `carSourceDetailDialogClose`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogBookCar`]: `carSourceDetailDialogBookCar`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogContact`]: `carSourceDetailDialogContact`,
@@ -161,8 +160,13 @@ class wux {
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSelectLogisticsBlock`]: `carSourceDetailDialogSelectLogisticsBlock`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSwitchFold`]: `carSourceDetailDialogSwitchFold`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogReportError`]: `carSourceDetailDialogReportError`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogContactStaff`]: `carSourceDetailDialogContactStaff`
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogContactStaff`]: `carSourceDetailDialogContactStaff`,
+          [`$wux.carSourceDetailDialog.onTouchMoveWithCatch`]: `onTouchMoveWithCatch`
         })
+
+        $scope.onTouchMoveWithCatch = (e) => {
+          // 防止滚动页面透传
+        }
 
         // 绑定tap事件
         $scope.carSourceDetailDialogClose = (e) => {

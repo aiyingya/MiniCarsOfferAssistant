@@ -6,6 +6,7 @@
       class="weui-mask {{ animateCss }}"
       hidden="{{ !visible }}"
       bindtap="{{carSourceDetailDialogClose}}"
+      catchtouchmove="{{onTouchMoveWithCatch}}"
     >
     </view>
     <view

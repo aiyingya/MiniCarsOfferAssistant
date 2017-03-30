@@ -212,7 +212,7 @@ Page({
     const hasBeenReliableByUser = carSourceItem.hasBeenReliableByUser
     const hideDialog = this.$wuxReliableDialog.open({
       spuId: spuId,
-      carSource: carSource,
+      carSource: carSourceItem,
       close: (updatedCarSource) => {
         app.saasService.requestReliable(spuId, carSourceItem.id, updatedCarSource.supplier.id, hasBeenReliableByUser, updatedCarSource.hasBeenReliableByUser, {
           success: function () {
@@ -664,7 +664,9 @@ Page({
       }
     }
 
-    wx.hideToast()
+    setTimeout(function () {
+      wx.hideToast()
+    }, 300)
     console.log(newCarSourcesBySkuInSpuList)
     return newCarSourcesBySkuInSpuList
   },
@@ -870,6 +872,10 @@ Page({
       scrollFiltersSelectedIndexes[scrollFilterIndex] = filterIndex
     }
 
+    this.setData({
+      scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
+    })
+
     let newCarSourcesBySkuInSpuList
     if (scrollFilterIndex == 0) {
       // 车源发布时间
@@ -881,8 +887,7 @@ Page({
 
     this.setData({
       searchnodata: newCarSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
-      carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
-      scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
+      carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList
     })
     this.selectCarSku(-1)
     this.hideFold(null, -1, this.data.selectedSectionId)
@@ -915,29 +920,29 @@ Page({
     console.log("handlerReliable")
     const that = this;
 
-    const skuIndex = e.currentTarget.dataset.skuIndex
-    const carSourceIndex = e.currentTarget.dataset.carSourceIndex
+    const skuItemIndex = e.currentTarget.dataset.skuIndex
+    const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
     const spuId = this.data.carModelsInfo.carModelId
 
     const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
 
-    this.showReliableDialog(spuId, skuIndex, carSourceItem, carSourceIndex)
+    this.showReliableDialog(spuId, skuItemIndex, carSourceItem, carSourceItemIndex)
   },
   /**
    * 联系电话
    * @param e
    */
   handlerContact (e) {
-    const skuIndex = e.currentTarget.dataset.skuIndex
-    const carSourceIndex = e.currentTarget.dataset.carSourceIndex
+    const skuItemIndex = e.currentTarget.dataset.skuIndex
+    const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
     const carModelsInfo = this.data.carModelsInfo
     const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
     const contact = carSourceItem.supplier.contact;
 
-    this.actionContact(carModelsInfo.carModelId, skuIndex, carSourceIndex, carSource, contact)
+    this.actionContact(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, contact)
   },
   handlerCarSourceMore (e) {
     const skuItemIndex = e.currentTarget.dataset.skuIndex
@@ -1043,5 +1048,8 @@ Page({
     wx.navigateTo({
       url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
     })
+  },
+  onTouchMoveWithCatch () {
+    // 拦截触摸移动事件， 阻止透传
   }
 })

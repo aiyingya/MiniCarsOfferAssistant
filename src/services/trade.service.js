@@ -48,7 +48,7 @@ export default class TradeService extends Service {
       data: {},
       success: opts.success,
       fail: opts.fail
-    })
+    }, 'none')
   }
 
   /**
@@ -62,7 +62,7 @@ export default class TradeService extends Service {
       data: {},
       success: opts.success,
       fail: opts.fail
-    })
+    }, 'none')
   }
 
   /**
