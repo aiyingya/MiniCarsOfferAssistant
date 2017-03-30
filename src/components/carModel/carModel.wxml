@@ -141,11 +141,7 @@
           <image src="../../images/icons/icon_close.png"></image>
         </view>
       </view>
-      <view 
-        class="popup-charts-bd"
-        data-carmodelsinfo="{{carModelsInfo}}"
-		    bindtap="handlerToCarSources"
-        >
+      <view class="popup-charts-bd">
         <view class="popup-charts-scale">
           <view>报价数量(条)</view>
           <view 

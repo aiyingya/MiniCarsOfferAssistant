@@ -150,6 +150,9 @@ Page({
     let that = this
     let carModelsList = this.data.cacheCarModelsList
     let showNodata = false
+    
+    columnCharts = null
+    columnChartsList = []
 		if(selectItem.name === '全部') {
 			newModelsList = carModelsList
 		}else {
@@ -170,8 +173,7 @@ Page({
     if(newModelsList.length == 0) {
       showNodata = true
     }
-    columnCharts = null
-    columnChartsList = []
+    
 		this.drawCanvas(newModelsList)
 		this.setData({
 			CarsModeleText: selectItem.name,
