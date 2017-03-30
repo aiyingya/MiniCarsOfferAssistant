@@ -110,5 +110,8 @@ Page({
         url: '../login/login'
       })
     }
+  },
+  onTouchMoveWithCatch () {
+    // 拦截触摸移动事件， 阻止透传
   }
 })

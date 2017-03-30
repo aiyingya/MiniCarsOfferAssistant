@@ -160,8 +160,13 @@ class wux {
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSelectLogisticsBlock`]: `carSourceDetailDialogSelectLogisticsBlock`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSwitchFold`]: `carSourceDetailDialogSwitchFold`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogReportError`]: `carSourceDetailDialogReportError`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogContactStaff`]: `carSourceDetailDialogContactStaff`
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogContactStaff`]: `carSourceDetailDialogContactStaff`,
+          [`$wux.carSourceDetailDialog.onTouchMoveWithCatch`]: `onTouchMoveWithCatch`
         })
+
+        $scope.onTouchMoveWithCatch = (e) => {
+          // 防止滚动页面透传
+        }
 
         // 绑定tap事件
         $scope.carSourceDetailDialogClose = (e) => {

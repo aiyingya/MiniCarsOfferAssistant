@@ -43,6 +43,7 @@
   <view
     class="showMask rmendCarFacade-popup-mask"
     bindtap="handlerRemoveRmendCarFacade"
+    catchtouchmove="onTouchMoveWithCatch"
   >
   </view>
   <view class="rmendCarFacade-inner topToBottom">
@@ -191,6 +192,7 @@
       <view
         class="showMask rmendCarFacade-popup-mask"
         bindtap="handlerRemoveRmendCarFacade"
+        catchtouchmove="onTouchMoveWithCatch"
       >
       </view>
       <view class="rmendCarFacade-inner topToBottom">

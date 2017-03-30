@@ -1048,5 +1048,8 @@ Page({
     wx.navigateTo({
       url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
     })
+  },
+  onTouchMoveWithCatch () {
+    // 拦截触摸移动事件， 阻止透传
   }
 })

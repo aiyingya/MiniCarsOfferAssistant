@@ -90,8 +90,13 @@ class wux {
           [`$wux.reliableDialog`]: options,
           [`$wux.reliableDialog.reliableDialogClose`]: `reliableDialogClose`,
           [`$wux.reliableDialog.reliableDialogFollow`]: `reliableDialogFollow`,
-          [`$wux.reliableDialog.reliableDialogReliable`]: `reliableDialogReliable`
+          [`$wux.reliableDialog.reliableDialogReliable`]: `reliableDialogReliable`,
+          [`$wux.reliableDialog.onTouchMoveWithCatch`]: `onTouchMoveWithCatch`
         })
+
+        $scope.onTouchMoveWithCatch = (e) => {
+          // 防止滚动页面透传
+        }
 
         // 绑定tap事件
         $scope.reliableDialogClose = (e) => {

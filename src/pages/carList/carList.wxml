@@ -49,6 +49,7 @@
 	<view
 		class="carSeries-mask {{showMask}}"
 		bindtap="removeCarSeriesInner"
+    catchtouchmove="onTouchMoveWithCatch"
 		>
 	</view>
 	<view class="carSeries-inner {{showCarSeriesInner}}">

@@ -93,8 +93,12 @@ class wux {
           [`$wux.normalDialog`]: options,
           [`$wux.normalDialog.normalDialogConfirm`]: `normalDialogConfirm`,
           [`$wux.normalDialog.normalDialogCancel`]: `normalDialogCancel`,
+          [`$wux.normalDialog.onTouchMoveWithCatch`]: `onTouchMoveWithCatch`
         })
 
+        $scope.onTouchMoveWithCatch = () => {
+          // 防止事件透传
+        }
         // 绑定tap事件
         $scope.normalDialogConfirm = () => hidenormalDialog(options.confirm)
         $scope.normalDialogCancel = () => hidenormalDialog(options.cancel)
