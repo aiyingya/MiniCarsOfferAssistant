@@ -97,8 +97,8 @@
 						data-carmodelsinfo="{{item}}"
 						class="canvas"
 						bindtouchstart="handleCharttouch"
-						bindtouchmove="handletouchmove"
-            bindtouchend="handletouchend"
+						catchtouchmove="handletouchmove"
+            catchtouchend="handletouchend"
 						></canvas>
 				</block>
 			</view>
@@ -147,7 +147,12 @@
 		    bindtap="handlerToCarSources"
         >
         <view class="popup-charts-scale">
-          报价数量(条)
+          <view>报价数量(条)</view>
+          <view 
+            class="tocarsources"
+            data-carmodelsinfo="{{carModelsInfo}}"
+		        bindtap="handlerToCarSources"  
+            >查看详情>></view>
         </view>
         <canvas
           canvas-id="popCharts"

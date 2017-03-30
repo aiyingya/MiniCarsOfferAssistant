@@ -857,9 +857,19 @@ function drawXAxisHint(categories, opts, config, context) {
         if(opts.extra.index === index) {
           var hintStartX = xAxisPoints[index] + offset + 2;
           var itemWidth = measureText(opts.extra.hint);
-          var hintMoveX = (index === categories.length -3 && categories.length > 10) ? hintStartX-10 : hintStartX+10;
-          var hintMoveX2 = (index === categories.length -3 && categories.length > 10) ? hintStartX-20 : hintStartX+20;
-          var hintMoveX3 = (index === categories.length -3 && categories.length > 10) ? hintStartX-25-itemWidth : hintStartX+25;
+          var location = false;
+          if(0 < categories.length <= 3 && categories.length - index <= 0) {
+            location = true
+          }
+          if(3 < categories.length < 8 && categories.length - index < 2) {
+            location = true
+          }else if(8 < categories.length && categories.length - index < 4) {
+            location = true
+          }
+          
+          var hintMoveX = location ? hintStartX-10 : hintStartX+10;
+          var hintMoveX2 = location ? hintStartX-20 : hintStartX+20;
+          var hintMoveX3 = location ? hintStartX-25-itemWidth : hintStartX+25;
           
           context.beginPath();
           context.setStrokeStyle("red");

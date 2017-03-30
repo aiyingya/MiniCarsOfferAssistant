@@ -128,6 +128,8 @@ Page({
 		let weitch = this.data.showRmendCarFacade
 		let carModelsList = this.data.carModelsList
 		if(weitch) {
+      columnCharts = null
+      columnChartsList = []
 			this.drawCanvas(carModelsList)
 			this.setData({
 				showRmendCarFacade: false,
@@ -168,6 +170,8 @@ Page({
     if(newModelsList.length == 0) {
       showNodata = true
     }
+    columnCharts = null
+    columnChartsList = []
 		this.drawCanvas(newModelsList)
 		this.setData({
 			CarsModeleText: selectItem.name,
@@ -239,6 +243,15 @@ Page({
     this.setData({
       carModelsInfo: carModelsInfo
     })
+    
+    this.$wuxToast.show({
+      type: false,
+      timer: 2000,
+      color: '#fff',
+      text: '暂无供货'
+    })
+    return
+    
     if(columnChartsList.length > 0) {
       for(let item of columnChartsList) {
         if(item.id == id) {

@@ -262,6 +262,13 @@
   font-size: 24rpx;
   line-height: 50rpx;
   padding: 0 15rpx;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+.popup-charts-scale .tocarsources {
+  color: #4183c4;
+  text-decoration: underline;
 }
 .popupSelect-main {
   position: fixed;
