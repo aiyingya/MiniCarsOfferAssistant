@@ -97,8 +97,8 @@
 						data-carmodelsinfo="{{item}}"
 						class="canvas"
 						bindtouchstart="handleCharttouch"
-						catchtouchmove="handletouchmove"
-            catchtouchend="handletouchend"
+						bindtouchmove="handletouchmove"
+            bindtouchend="handletouchend"
 						></canvas>
 				</block>
 			</view>

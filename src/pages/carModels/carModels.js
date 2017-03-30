@@ -244,13 +244,11 @@ Page({
       carModelsInfo: carModelsInfo
     })
     
-    this.$wuxToast.show({
-      type: false,
-      timer: 2000,
-      color: '#fff',
-      text: '暂无供货'
-    })
-    return
+    let res = wx.getSystemInfoSync()
+    console.log(res.system.indexOf('Android'))
+    if(res.system.indexOf('Android') >= 0) {
+      return
+    }
     
     if(columnChartsList.length > 0) {
       for(let item of columnChartsList) {

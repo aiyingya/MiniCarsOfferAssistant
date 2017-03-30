@@ -263,6 +263,11 @@ Page({
     this.setData({
       carModelsInfo: carModelsInfo
     })
+    let res = wx.getSystemInfoSync()
+    if(res.system.indexOf('Android') >= 0) {
+      return
+    }
+    
     if(columnChartsList.length > 0) {
       for(let item of columnChartsList) {
         if(item.id == id) {
