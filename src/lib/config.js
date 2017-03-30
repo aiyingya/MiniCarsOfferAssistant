@@ -1,5 +1,5 @@
 /* 配置后台服务器地址 */
-const ENV = 'gqc'
+const ENV = 'prd'
 
 let ymcServerHTTPSUrl = (function () {
   let HTTPS = {

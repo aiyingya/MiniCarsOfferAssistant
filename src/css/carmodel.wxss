@@ -82,7 +82,7 @@
   top: 0rpx;
   bottom: 0rpx;
   right: 0;
-  border: 1rpx solid #cccccc;
+  border-right: 1rpx solid #cccccc;
 }
 
 .carModels-info .carModels-supplier,
