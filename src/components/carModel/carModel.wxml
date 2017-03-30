@@ -96,7 +96,6 @@
 						data-id="{{item.carModelId}}"
 						data-carmodelsinfo="{{item}}"
 						class="canvas"
-						disable-scroll
 						bindtouchstart="handleCharttouch"
 						bindtouchmove="handletouchmove"
             bindtouchend="handletouchend"
