@@ -83,7 +83,7 @@ Page({
           that.drawCanvas(carModelsList)
           
           for(let item of carModelsList) {
-            //console.log(item.supply.colors)
+            
             let colors = []
             if(item.supply.colors) {
               let newColorKey = Object.keys(item.supply.colors)
@@ -209,6 +209,8 @@ Page({
         text: '暂无供货'
 			})
       setTimeout(function() {
+        columnCharts = null
+        columnChartsList = []
         that.drawCanvas(carModelsList)
         that.setData({
           showCharts: true
@@ -222,6 +224,8 @@ Page({
 	},
 	headlerRemoveRmendCarFacade() {
 		let carModelsList = this.data.carModelsList
+    columnCharts = null
+    columnChartsList = []
 		this.drawCanvas(carModelsList)
 		this.setData({
 			showRmendCarFacade: false,
@@ -255,7 +259,9 @@ Page({
               that.data.touchindex = index
             }
           }
-          item.chart.drawChartShade(index,chartData,config,opts,context,callback)
+          
+          that.data.touchindex = index
+          item.chart.drawChartShade(index,chartData,config,opts,context)
         }
       }
     }
@@ -267,6 +273,7 @@ Page({
     let id =  e.target.dataset.id
     let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
+    let index = that.data.touchindex 
     this.setData({
       carModelsInfo: carModelsInfo
     })
@@ -274,7 +281,6 @@ Page({
     if(columnChartsList.length > 0) {
       for(let item of columnChartsList) {
         if(item.id == id) {
-          let index = that.data.touchindex 
           let chartData = item.chart.chartData
           let config = item.chart.config
           let opts = item.chart.opts
@@ -292,7 +298,8 @@ Page({
                 showPopCharts: true,
                 showCharts: false
               })
-              that.drawPopCharts(data)      
+              that.drawPopCharts(data) 
+              that.data.touchindex = ''
             }
           }
           console.log(index)
@@ -300,6 +307,9 @@ Page({
         }
       }
     }
+  },
+  popupChartstouchMove(e) {
+    console.log(e)
   },
 	drawCanvas(list) {
 		if (!list) {return}
@@ -426,11 +436,9 @@ Page({
   handleClosePopup() {
     console.log('colse')
     let carModelsList = this.data.carModelsList
-    let changeCharts = this.data.changeCharts
+    columnCharts = null
+    columnChartsList = []
 		this.drawCanvas(carModelsList)
-    if(changeCharts.length > 0) {
-      this.drawCanvas(changeCharts)
-    }
     this.setData({
       showPopCharts: false,
       showCharts: true
@@ -517,7 +525,6 @@ Page({
         item.selectColors = selectColors
         
         that.getChangeCharts(selectColorsId,carModelsList,item)
-        
       }
     }
   },
@@ -525,9 +532,12 @@ Page({
     let requestData 
     let that = this
     let changeCharts = this.data.changeCharts
+    let newCarModelsList = []
+    let times = [{value:24, selected: 'selected'},{value:12,selected: ''}]
     requestData = {
       carSeriesId: sid,
-      inStock: true
+      inStock: true,
+      hours: item.selectTimes
     }
     
     let keys = []
@@ -536,29 +546,45 @@ Page({
         keys.push(items.key)
       }
     }
-    console.log(item)
-    if(keys.length > 0 &&  item.selectTimes !== '全部') {
-       requestData.hours = item.selectTimes,
+    if(keys.length > 0) {
        requestData.colors = keys.join(',')
-    }else if(keys.length > 0) {
-       requestData.colors = keys.join(',')
-    }else if(item.selectTimes !== '全部') {
-       requestData.hours = item.selectTimes
     }
-    
+    for(let changeTime of times) {
+      if(item.selectTimes === changeTime.value) {
+        changeTime.selected = 'selected'
+      }else {
+        changeTime.selected = ''
+      }
+    }
     app.saasService.requestSearchSpuBySpuId(sid,requestData,{
       success: function(res) {
-        that.drawCanvas(carModelsList)
+        
         if(res.content.length > 0) {
-          changeCharts.push(res.content[0])
-          that.drawCanvas(changeCharts)
+          
+          for(let change of carModelsList) {
+            if(change.carModelId === res.content[0].carModelId) {
+              let requestItem = res.content[0]
+              
+              requestItem.colors = item.colors
+              requestItem.selectColors = item.selectColors
+              requestItem.selectTimesData = times
+              requestItem.selectTimes = item.selectTimes 
+              requestItem.selectColorsId = sid
+              console.log(requestItem.selectColors,requestItem)              
+              change = requestItem
+            }
+            newCarModelsList.push(change)
+          }
         }
+        
+        columnCharts = null
+        columnChartsList = []
+        that.drawCanvas(newCarModelsList)
         that.setData({
-          carModelsList: carModelsList,
+          carModelsList: newCarModelsList,
           selectColors: [],
           selectChartsLabel: false,
-          showCharts: true,
-          changeCharts: res.content
+          showCharts: true
         })
       }
     })
@@ -566,11 +592,9 @@ Page({
   handleClosePopupChange() {
     console.log('colse')
     let carModelsList = this.data.carModelsList
-    let changeCharts = this.data.changeCharts
+    columnCharts = null
+    columnChartsList = []
 		this.drawCanvas(carModelsList)
-    if(changeCharts.length > 0) {
-      this.drawCanvas(changeCharts)
-    }
     this.setData({
       selectChartsLabel: false,
       showCharts: true

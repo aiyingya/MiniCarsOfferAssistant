@@ -280,10 +280,11 @@ Page({
               }
               console.log(value)
               if(value <= 0) {return}
-              that.data.touchindex = index
+              
             }
           }
-          item.chart.drawChartShade(index,chartData,config,opts,context,callback)
+          that.data.touchindex = index
+          item.chart.drawChartShade(index,chartData,config,opts,context)
         }
       }
     }
@@ -455,11 +456,10 @@ Page({
   handleClosePopup() {
     console.log('colse')
     let carModelsList = this.data.searchResults
-    let changeCharts = this.data.changeCharts
+    columnCharts = null
+    columnChartsList = []
+
 		this.drawCanvas(carModelsList)
-    if(changeCharts.length > 0) {
-      this.drawCanvas(changeCharts)
-    }
     this.setData({
       showPopCharts: false,
       showCharts: true
@@ -553,10 +553,12 @@ Page({
   getChangeCharts(sid,carModelsList,item) {
     let requestData 
     let that = this
-    let changeCharts = this.data.changeCharts
+    let newCarModelsList = []
+    let times = [{value:24, selected: 'selected'},{value:12,selected: ''}]
     requestData = {
       carSeriesId: sid,
-      inStock: true
+      inStock: true,
+      hours: item.selectTimes
     }
     
     let keys = []
@@ -565,44 +567,63 @@ Page({
         keys.push(items.key)
       }
     }
-
-    if(keys.length > 0 &&  item.selectTimes !== '全部') {
-       requestData.hours = item.selectTimes,
+    if(keys.length > 0) {
        requestData.colors = keys.join(',')
-    }else if(keys.length > 0) {
-       requestData.colors = keys.join(',')
-    }else if(item.selectTimes !== '全部') {
-       requestData.hours = item.selectTimes
+    }
+    for(let changeTime of times) {
+      if(item.selectTimes === changeTime.value) {
+        changeTime.selected = 'selected'
+      }else {
+        changeTime.selected = ''
+      }
     }
     
     app.saasService.requestSearchSpuBySpuId(sid,requestData,{
       success: function(res) {
-        that.drawCanvas(carModelsList)
+        
         if(res.content.length > 0) {
-          changeCharts.push(res.content[0])
-          that.drawCanvas(changeCharts)
+          for(let change of carModelsList) {
+            if(change.carModelId === res.content[0].carModelId) {
+              let requestItem = res.content[0]
+              
+              requestItem.colors = item.colors
+              requestItem.selectColors = item.selectColors
+              requestItem.selectTimesData = times
+              requestItem.selectTimes = item.selectTimes 
+              requestItem.selectColorsId = sid           
+              change = requestItem
+              
+              console.log(times,change)
+            }
+            
+            newCarModelsList.push(change)
+          }
         }
+        
+        columnCharts = null
+        columnChartsList = []
+        that.drawCanvas(newCarModelsList)
         that.setData({
-          searchResults: carModelsList,
+          searchResults: newCarModelsList,
           selectColors: [],
           selectChartsLabel: false,
-          showCharts: true,
-          changeCharts: res.content
+          showCharts: true
         })
       }
     })
   },
   handleClosePopupChange() {
-    console.log('colse')
+    
     let carModelsList = this.data.searchResults
-    let changeCharts = this.data.changeCharts
+    columnCharts = null
+    columnChartsList = []
 		this.drawCanvas(carModelsList)
-    if(changeCharts.length > 0) {
-      this.drawCanvas(changeCharts)
-    }
     this.setData({
       selectChartsLabel: false,
       showCharts: true
     })
   },
+  popupChartstouchMove(e) {
+    console.log(e)
+  }
 })

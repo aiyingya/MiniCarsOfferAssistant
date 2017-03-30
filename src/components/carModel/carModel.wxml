@@ -96,6 +96,7 @@
 						data-id="{{item.carModelId}}"
 						data-carmodelsinfo="{{item}}"
 						class="canvas"
+						disable-scroll
 						bindtouchstart="handleCharttouch"
 						bindtouchmove="handletouchmove"
             bindtouchend="handletouchend"
@@ -116,7 +117,12 @@
     class="popup-charts-wrap"
     wx:if="{{showPopCharts}}"
     >
-    <view class="popup-shade" bindtap="handleClosePopup"></view>
+    <view 
+      class="popup-shade" 
+      bindtap="handleClosePopup"
+      bindtouchstart="handleClosePopup"
+      bindtouchmove="handleClosePopup"
+      ></view>
     <view class="popup-charts-main">
       <view class="popup-charts-hd">
         <view>报价区间详情</view>
@@ -139,6 +145,9 @@
           canvas-id="popCharts"
           data-id="popCharts"
           class="pop-canvas"
+          disable-scroll
+          disable-scroll="true" 
+          bindtouchmove="popupChartstouchMove"
           ></canvas>
       </view>
     </view>

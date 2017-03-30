@@ -1464,7 +1464,9 @@ function drawCharts(type, opts, config, context, clickData, callback) {
                     _this.chartData.xAxisPoints = drawColumnDataPoints(series, opts, config, context, process);
                     if(clickData.x) {
                       _this.changeData = drawAreaShade(clickData,context,opts,config);
-                      callback(_this.changeData);
+                      if(typeof callback === 'function') {
+                        callback(_this.changeData);
+                      }
                     }
                     drawXAxisHint(categories, opts, config, context);
                     drawLegend(opts.series, opts, config, context);                   
