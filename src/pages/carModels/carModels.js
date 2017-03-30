@@ -417,6 +417,8 @@ Page({
         fontColor: '#333333',
         gridColor: '#333333',
         unitText: '（个）',
+        min: 0,
+        max: 10,
         format(val) {
           return val.toFixed(0)
         }

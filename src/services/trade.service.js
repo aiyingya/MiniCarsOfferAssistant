@@ -34,7 +34,7 @@ export default class TradeService extends Service {
       },
       success: opts.success,
       fail: opts.fail
-    })
+    },'none')
   }
 
   /**
