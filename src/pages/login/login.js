@@ -22,11 +22,12 @@ Page({
   },
   handleGetSMSCode() {
     let that = this
-    let reg = /^1[3|4|5|7|8][0-9]{9}$/
 
     if (!that.data.countDownOver) return
 
-    if (!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11 || !(reg.test(this.data.userPhoneValue))) {
+    console.log(this.data.userPhoneValue)
+
+    if (!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11 ) {
       that.$wuxToast.show({
         type: false,
         timer: 2000,

@@ -1,47 +1,45 @@
 <import src="../../lib/toast/toast.wxml"/>
 <template is="toast" data="{{ ...$wux.toast }}"/>
 <view class="container login">
-	<view class="login-wrap login-cells">
-		<view class="login-cell">
-			<view class="label">手机号</view>
-			<input 
-				class="login-input" 
-				placeholder="请输入手机号"
-				placeholder-class="login-placeholder"
-				maxlength="11"
-				value="{{userPhoneValue}}"
-				bindblur="handleLoginPhone" 
-				type="number"/>
-		</view>
-		<view class="login-cell">
-			<view class="label">验证码</view>
-			<input 
-				class="login-input" 
-				placeholder="请输入验证码"
-				placeholder-class="login-placeholder"
-				value="{{userCodeValue}}"
-				bindblur="handleSMSCode" 
-				type="number"/>
-			<view 
-				class="sms-code {{countDownClass}}"
-				bindtap="handleGetSMSCode"
-				>
-				{{codeText}}
-			</view>
-		</view>
-	</view>
-	
-	<view
-	 class="notUserInYMC"
-	 wx:if="{{notUserInYMC}}"
-	 >
-		很抱歉，当前仅支持加盟商使用
-	</view>
-	
-	<view 
-		class="login-btn"
-		bindtap="userLogin"
-		>登录</view>
-	
-	
+  <view class="login-wrap login-cells">
+    <view class="login-cell">
+      <view class="label">手机号</view>
+      <input
+        class="login-input"
+        placeholder="请输入手机号"
+        placeholder-class="login-placeholder"
+        maxlength="11"
+        bindinput="handleLoginPhone"
+        type="number"/>
+    </view>
+    <view class="login-cell">
+      <view class="label">验证码</view>
+      <input
+        class="login-input"
+        placeholder="请输入验证码"
+        placeholder-class="login-placeholder"
+        bindinput="handleSMSCode"
+        type="number"/>
+      <view
+        class="sms-code {{countDownClass}}"
+        bindtap="handleGetSMSCode"
+      >
+        {{codeText}}
+      </view>
+    </view>
+  </view>
+
+  <view
+    class="notUserInYMC"
+    wx:if="{{notUserInYMC}}"
+  >
+    很抱歉，当前仅支持加盟商使用
+  </view>
+
+  <view
+    class="login-btn"
+    bindtap="userLogin"
+  >
+    登录
+  </view>
 </view>
