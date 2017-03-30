@@ -101,6 +101,9 @@
             bindtouchend="handletouchend"
 						></canvas>
 				</block>
+				<block wx:else>
+				  <canvas></canvas>
+				</block>
 			</view>
       <view 
        class="nodata" 
@@ -114,9 +117,15 @@
 		</view>
 
 		<!-- 暂无供货.-->
-		<view wx:else class="carModels-nodata">
-			暂无供货
-		</view>
+		<view 
+     class="nodata" 
+     wx:else
+     >
+       <view>
+          <icon type="warn" size="60" color="#cccccc"></icon>
+          <view class="icon-box__desc">抱歉！没有相关车供货信息</view>
+       </view>
+    </view>
 	</view>
 </template>
 
