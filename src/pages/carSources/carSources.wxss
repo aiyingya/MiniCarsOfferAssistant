@@ -47,7 +47,7 @@ page {
 	bottom: 0;
 	height: auto;
 	width: 100%;
-	z-index: 9;
+	z-index: 20;
   position: absolute;
 }
 .rmendCarFacade-popup-mask {
@@ -117,7 +117,7 @@ page {
 .filter-scroll-view {
 	padding: 24rpx 30rpx 24rpx 30rpx;
 	height: 96rpx;
-	width: 150%;
+	width: 100%;
 	-webkit-box-sizing:border-box;
 	box-sizing:border-box;
 	background-color:#fff;
@@ -126,7 +126,8 @@ page {
 	-webkit-align-items:center;
 	align-items:center;
 	white-space: nowrap;
-  position: relative;
+  position: absolute;
+  z-index: 10;
 }
 .filter-scroll-view:after {
   content: '';
@@ -193,7 +194,7 @@ page {
 .carSources-topbar {
 	background-color: #fff;
 	overflow: hidden;
-  margin-bottom: 108rpx;
+  margin-bottom: 48rpx;
 }
 .carSources-topbar .weui-media-box {
 	padding: 0 24rpx;
@@ -899,4 +900,8 @@ page {
 	left: 9rpx;
 	top: 50%;
 	margin-top: -3rpx;
+}
+.black-magic {
+  height: 156rpx;
+  width: 100%;
 }

@@ -415,7 +415,7 @@ function getXAxisPoints(categories, opts, config) {
 function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config) {
     var process = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 1;
     var points = [];
-    var validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight - config.paddingTop;
+    var validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
   
     data.forEach(function (item, index) {
         if (item === null) {
@@ -426,9 +426,6 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
             var height = validHeight * (item - minRange) / (maxRange - minRange);
             height *= process;
             point.y = opts.height - config.xAxisHeight - config.legendHeight - Math.round(height) - config.padding;
-            if(point.y < 58) {
-              point.y+=20
-            }
             points.push(point);
         }
     });
@@ -839,13 +836,9 @@ function drawYAxisCoordLine(series, opts, config, context) {
     if (opts.yAxis.title) {
         drawYAxisTitle(opts.yAxis.title, opts, config, context);
     }
-  
-    
-  
-    
 }
 function drawXAxisHint(categories, opts, config, context) {
-
+    console.log(opts.extra.index)
     var _getXAxisPoints4 = getXAxisPoints(categories, opts, config),
         xAxisPoints = _getXAxisPoints4.xAxisPoints,
         startX = _getXAxisPoints4.startX,
@@ -862,11 +855,21 @@ function drawXAxisHint(categories, opts, config, context) {
     categories.forEach(function (item, index) {
         var offset = eachSpacing / 2 - measureText(item) / 2 + 21;
         if(opts.extra.index === index) {
-          var hintStartX = xAxisPoints[index] + offset;
+          var hintStartX = xAxisPoints[index] + offset + 2;
           var itemWidth = measureText(opts.extra.hint);
-          var hintMoveX = index === categories.length -1 ? hintStartX-10 : hintStartX+10;
-          var hintMoveX2 = index === categories.length -1 ? hintStartX-20 : hintStartX+20;
-          var hintMoveX3 = index === categories.length -1 ? hintStartX-25-itemWidth : hintStartX+25;
+          var location = false;
+          if(0 < categories.length <= 3 && categories.length - index <= 0) {
+            location = true
+          }
+          if(3 < categories.length < 8 && categories.length - index < 2) {
+            location = true
+          }else if(8 < categories.length && categories.length - index < 4) {
+            location = true
+          }
+          
+          var hintMoveX = location ? hintStartX-10 : hintStartX+10;
+          var hintMoveX2 = location ? hintStartX-20 : hintStartX+20;
+          var hintMoveX3 = location ? hintStartX-25-itemWidth : hintStartX+25;
           
           context.beginPath();
           context.setStrokeStyle("red");
@@ -895,8 +898,13 @@ function drawColumnDataPoints(series, opts, config, context) {
 
     var _getXAxisPoints = getXAxisPoints(opts.categories, opts, config),
         xAxisPoints = _getXAxisPoints.xAxisPoints,
-        eachSpacing = _getXAxisPoints.eachSpacing;
+        eachSpacing = _getXAxisPoints.eachSpacing,
+        startX = _getXAxisPoints.startX,
+        endX = _getXAxisPoints.endX;
 
+    var startY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
+    var endY = startY + config.xAxisLineHeight;
+  
     var minRange = ranges.pop();
     var maxRange = ranges.shift();
     var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
@@ -914,6 +922,7 @@ function drawColumnDataPoints(series, opts, config, context) {
             if (item !== null) {
                 var startX = item.x - item.width / 2 +1;
                 var height = opts.height - item.y - config.padding - config.xAxisHeight - config.legendHeight;
+                
                 context.moveTo(startX, item.y);
                 context.rect(startX, item.y, item.width - 2, height);
                 xWidth = item.width - 2;
@@ -1465,9 +1474,11 @@ function drawCharts(type, opts, config, context, clickData, callback) {
                     _this.chartData.xAxisPoints = drawColumnDataPoints(series, opts, config, context, process);
                     if(clickData.x) {
                       _this.changeData = drawAreaShade(clickData,context,opts,config);
-                      callback(_this.changeData);
+                      if(typeof callback === 'function') {
+                        callback(_this.changeData);
+                      }
                     }
-                    drawXAxisHint(newCategories, opts, config, context);
+                    drawXAxisHint(categories, opts, config, context);
                     drawLegend(opts.series, opts, config, context);                   
                     drawCanvas(opts, context);
                 },

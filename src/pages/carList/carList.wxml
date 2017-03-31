@@ -4,20 +4,20 @@
 		<!-- 搜索车型.-->
 		<!-- cars list.-->
 		<view class="viewCarsList-wrap">
-			<view 
-				wx:for="{{brandGroupList}}" 
+			<view
+				wx:for="{{brandGroupList}}"
 				id="{{item.title}}"
 				class="viewCarsList-calls"
 				>
 				<view class="viewCarsList-index">{{item.title}}</view>
 				<view class="weui-cells weui-cells_in-small-appmsg">
 					<view
-						class="weui-cell weui-cell_access" 
+						class="weui-cell weui-cell_access"
 						hover="true"
 						hover-class="weui-cell_active"
-						wx:for="{{item.items}}" 
+						wx:for="{{item.items}}"
 						wx:for-item="cell"
-						wx:for-index="cellIndex" 
+						wx:for-index="cellIndex"
 						bindtap="handlerSelectCarSeries"
 						data-carSeries="{{cell}}"
 						>
@@ -42,10 +42,14 @@
 </view>
 
 <!-- 车系.-->
-<view wx:if="{{showCarSeries !== ''}}" class="carSeries-wrap">
-	<view 
+<view
+  hidden="{{showCarSeries == ''}}"
+  class="carSeries-wrap"
+>
+	<view
 		class="carSeries-mask {{showMask}}"
 		bindtap="removeCarSeriesInner"
+    catchtouchmove="onTouchMoveWithCatch"
 		>
 	</view>
 	<view class="carSeries-inner {{showCarSeriesInner}}">
@@ -54,20 +58,20 @@
 				<image class="" src="{{showCarSeriesImageUrl}}"></image>
 			</view>
 			<block wx:if="{{carManufacturerSeriesList.length > 0}}">
-				<view 
-					wx:for="{{carManufacturerSeriesList}}" 
+				<view
+					wx:for="{{carManufacturerSeriesList}}"
 					data-id="{{item.id}}"
 					class="viewCarsList-calls"
 					>
 					<view class="viewCarsList-index carSeries-title">{{item.title}}</view>
 					<view class="weui-cells weui-cells_in-small-appmsg">
-						<view 
-							class="weui-media-box weui-media-box_appmsg" 
+						<view
+							class="weui-media-box weui-media-box_appmsg"
 							hover="true"
 							hover-class="weui-cell_active"
 							wx:for="{{item.items}}"
 							wx:for-item="cell"
-							wx:for-index="cellIndex" 
+							wx:for-index="cellIndex"
 							bindtap="handlerToCarsModels"
 							data-carsInfo="{{cell}}"
 							url="../carModels/carModels?carsInfo={{cell}}"
@@ -82,15 +86,15 @@
 					</view>
 				</view>
 			</block>
-			<view 
-			  wx:if="{{carManufacturerSeriesList.length === 0 && showNodata}}" 
+			<view
+			  wx:if="{{carManufacturerSeriesList.length === 0 && showNodata}}"
 			  class="nodata"
 			  >
 				暂无数据
 			</view>
 		</scroll-view>
 	</view>
-	
+
 </view>
 
 

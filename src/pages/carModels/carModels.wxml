@@ -2,7 +2,7 @@
 <import src="../../components/carModel/carModel.wxml" />
 <import src="../../lib/toast/toast.wxml"/>
 <template is="toast" data="{{ ...$wux.toast }}"/>
-<view class="car-models container">
+<view class="car-models container" style="{{scrollView}}">
 
 	<view class="carModels-topbar">
 <!--
@@ -77,11 +77,12 @@
 	  class="carModels-cells"
 	  wx:if="{{carModelsList.length > 0}}"
 	  >
-		<block 
+		<view 
 			wx:for="{{carModelsList}}"
-			>
-			<template is="carModel" data="{{item,showCharts,selectTime}}" /> 
-		</block>
+      wx:key="{{item.carModelId}}"
+      >
+			<template is="carModel" data="{{item,showCharts,selectTime,selectColors,selectColorsId}}" /> 
+		</view>
 	</view>
 	
 	<view 
@@ -94,5 +95,6 @@
     </view>	
 	</view>
 </view>
-<template is="popupCharts" data="{{showPopCharts}}" /> 
+<template is="popupCharts" data="{{showPopCharts, carModelsInfo}}" /> 
 
+<template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime, carModelsInfo}}" /> 

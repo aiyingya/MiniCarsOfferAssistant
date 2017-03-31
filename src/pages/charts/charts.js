@@ -1,19 +1,18 @@
 let app = getApp()
-let util = require('../../utils/util.js')
 
 Page({
 	data: {
-		
+
 	},
 	onLoad (options) {
-		
+
 		this.drawCanvas()
 	},
 	onShow () {
-		
+
 	},
 	drawCanvas(list) {
-		
+
 		let that = this
 		try {
       let res = wx.getSystemInfoSync()
@@ -22,9 +21,9 @@ Page({
       that.offsetTop = 80
 			that.windowWidth = res.windowWidth
     } catch (e) {
-      
+
     }
-		
+
     new app.wxcharts({
       canvasId: 'canvas',
       type: 'column',
@@ -63,7 +62,7 @@ Page({
         area: ['风险','适宜2.43~3.73','偏贵']
       }
     })
-		
+
 	}
-	
+
 })

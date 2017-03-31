@@ -6,6 +6,7 @@
       class="weui-mask {{ animateCss }}"
       hidden="{{ !visible }}"
       bindtap="{{carSourceDetailDialogClose}}"
+      catchtouchmove="{{onTouchMoveWithCatch}}"
     >
     </view>
     <view
@@ -38,7 +39,7 @@
         >
           <view class="line-item">
             <view class="line-title">车辆配色:</view>
-            <view class="car-color">{{skuItem.carSku.externalColorName}} / {{skuItem.carSku.internalColorName}} </view>
+            <view class="car-color">{{carSourceItem.externalColor}} / {{carSourceItem.viewModelInternalColor}} </view>
           </view>
           <view class="line-item">
             <view class="line-title">车源信息:</view>
@@ -96,7 +97,7 @@
             </view>
           </view>
           <view
-            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
+            wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length && carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.expectedDeliveryDays}}"
             class="line-item"
           >
             <view class="line-title">物流时间:</view>

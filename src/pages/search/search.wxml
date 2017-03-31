@@ -84,3 +84,4 @@
 	</view>
 </view>
 <template is="popupCharts" data="{{showPopCharts}}" /> 
+<template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime}}" /> 

@@ -1,4 +1,4 @@
-let util = require('../../../utils/util.js')
+import util from '../../../utils/util'
 const app = getApp()
 
 Page({
@@ -32,8 +32,6 @@ Page({
       monthlyPayment: 0,      // 月供金额，每月还款金额，全款时不传",
       totalPayment: 0,        // 总落地价格
       remark: '',             // "无"
-      loginChannel: '', // 登录渠道
-      snsId: '',
       read: false,
     },
     priceChange: {
@@ -177,16 +175,6 @@ Page({
         })
       }
     }
-
-    /**
-     * 公共行为
-     */
-    // 设置 snsId
-    app.getUserInfo(function (userInfo) {
-      console.log(userInfo)
-      that.data.quotation.snsId = userInfo.snsId
-      that.data.quotation.loginChannel = userInfo.loginChannel
-    })
 
     /// 初始化自定义组件
     this.$wuxDialog = app.wux(this).$wuxDialog
@@ -403,7 +391,7 @@ Page({
 
     let quotation = this.data.quotation
 
-    this.requestSaveQuotationDraft(quotation, {
+    app.saasService.requestSaveQuotationDraft(quotation, {
       success: function (res) {
         let quotationDraft = res
         // 请求成功后弹出对话框
@@ -419,7 +407,7 @@ Page({
           },
           confirm: (res) => {
             let mobile = res.inputNumber
-            that.requestPublishQuotation(quotationDraft.draftId, mobile, {
+            app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, {
               success: (res) => {
                 /// 立即发送报价单
                 let quotation = res
@@ -468,7 +456,7 @@ Page({
           },
           cancel: () => {
             /// 暂不发送, 不带电话号码发送
-            that.requestPublishQuotation(quotationDraft.draftId, null, {
+            app.saasService.requestPublishQuotation(quotationDraft.draftId, null, {
               success: (res) => {
                 let quotation = res
 
@@ -522,155 +510,6 @@ Page({
 
       }
     })
-  },
-  /**
-   * 发布当前报价草稿到某个用户
-   *
-   * @param draftId         草稿id
-   * @param customerMobile  客户手机号，选项
-   * @param object          回调对象
-   *
-   {
-    "quotationId":"报价单ID",
-    "draftId":"报价单草稿ID",
-    "quotationName":"报价单名称，没有可以不传",
-    "quotationItems":[{
-        "itemName":"商品名称",
-        "specifications":"商品规格",
-        "guidePrice":"指导价",
-        "sellingPrice":"售价"
-    }
-    ],
-    "hasLoan":"必传，true/false，boolean，是否贷款",
-    "paymentRatio":"首付比例（%），decimal，全款时没有，取值范围0~100",
-    "stages":"贷款期数，int，全款时没有",
-    "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
-    "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
-    "advancePayment":"首次支付金额，如果全款则为全款金额",
-    "monthlyPayment":"月供金额，每月还款金额，全款时没有",
-    "remark":"备注",
-    "loginChannel":"必传，登录渠道，目前固定为weixin",
-    "snsId":"必传，由上报微信用户信息的API返回",
-    "customerMobile":"客户手机号"
-   }
-   */
-  requestPublishQuotation (draftId, customerMobile, object) {
-    if (draftId && draftId !== '') {
-      app.modules.request({
-        url: app.config.ymcServerHTTPSUrl + 'sale/quotation',
-        data: {
-          draftId: draftId,
-          customerMobile: customerMobile
-        },
-        method: 'POST',
-        // header: {}, // 设置请求的 header
-        success: function (res) {
-          object.success(res);
-        },
-        fail: function () {
-          object.fail();
-        },
-        complete: function () {
-          object.complete();
-        }
-      })
-    } else {
-      object.fail();
-      object.complete();
-    }
-  },
-  /**
-   * 生成报价草稿
-   *
-   * @param quotationDraft 编辑的报价草稿数据
-   * @param object          回调对象
-   *
-   {
-   "quotationName":"报价单名称，没有可以不传",
-   "quotationItems":[
-      {
-        sellingPrice: ''
-      }
-   ],
-   "hasLoan":"必传，true/false，boolean，是否贷款",
-   "paymentRatio":"首付比例（%），decimal，全款时不传，取值范围0~100",
-   "stages":"贷款期数，int，全款时不传",
-   "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
-   "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
-   "advancePayment":"必传，首次支付金额，如果全款则为全款金额",
-   "monthlyPayment":"月供金额，每月还款金额，全款时不传",
-   "remark":"备注"
-   }
-   */
-  requestSaveQuotationDraft(quotationDraft, object) {
-    if (quotationDraft && typeof quotationDraft === 'object') {
-      // FIXME: 直接将提交对象转换为正常的提交对象
-      let data = {}
-      if (quotationDraft.hasLoan) {
-        data = {
-          quotationName: quotationDraft.quotationName,
-          quotationItems: [{
-            itemType: quotationDraft.quotationItems[0].itemType,
-            itemName: quotationDraft.quotationItems[0].itemName,
-            itemPic: quotationDraft.quotationItems[0].itemPic,
-            specifications: quotationDraft.quotationItems[0].specifications,
-            guidePrice: quotationDraft.quotationItems[0].guidePrice,
-            sellingPrice: quotationDraft.quotationItems[0].sellingPrice
-          }],
-          hasLoan: quotationDraft.hasLoan,
-          paymentRatio: quotationDraft.paymentRatio,
-          stages: quotationDraft.stages,
-          expenseRate: quotationDraft.expenseRate,
-          requiredExpenses: quotationDraft.requiredExpenses,
-          otherExpenses: quotationDraft.otherExpenses,
-          advancePayment: quotationDraft.advancePayment,
-          monthlyPayment: quotationDraft.monthlyPayment,
-          totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark,
-          loginChannel: quotationDraft.loginChannel,
-          snsId: quotationDraft.snsId
-        }
-      } else {
-        data = {
-          quotationName: quotationDraft.quotationName,
-          quotationItems: [{
-            itemType: quotationDraft.quotationItems[0].itemType,
-            itemName: quotationDraft.quotationItems[0].itemName,
-            itemPic: quotationDraft.quotationItems[0].itemPic,
-            specifications: quotationDraft.quotationItems[0].specifications,
-            guidePrice: quotationDraft.quotationItems[0].guidePrice,
-            sellingPrice: quotationDraft.quotationItems[0].sellingPrice
-          }],
-          hasLoan: quotationDraft.hasLoan,
-          requiredExpenses: quotationDraft.requiredExpenses,
-          otherExpenses: quotationDraft.otherExpenses,
-          advancePayment: quotationDraft.advancePayment,
-          totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark,
-          loginChannel: quotationDraft.loginChannel,
-          snsId: quotationDraft.snsId
-        }
-      }
-      app.modules.request({
-        url: app.config.ymcServerHTTPSUrl + 'sale/quotation/draft',
-        data: data,
-        method: 'POST',
-        success: function (res) {
-          object.success(res);
-        },
-        fail: function (err) {
-          object.fail(err);
-        },
-        complete: function () {
-          object.complete();
-        }
-      })
-    } else {
-      object.fail({
-        alertMessage: '参数验证错误'
-      })
-      object.complete()
-    }
   },
   headlerChangeColor (e) {
     const that = this
