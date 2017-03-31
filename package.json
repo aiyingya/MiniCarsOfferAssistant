@@ -4,6 +4,10 @@
   "build": 1,
   "description": "运图贸易有限公司 要卖车 微信小程序",
   "main": "index.js",
+  "engines": {
+    "node": ">=6.0",
+    "npm": ">3.0"
+  },
   "scripts": {
     "build": "gulp build:clean",
     "watch": "gulp watch:clean"
@@ -16,6 +20,7 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
+    "babel-preset-stage-0": "^6.16.0",
     "autoprefixer": "^6.6.0",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.1",
@@ -40,7 +45,6 @@
     "gulp-load-plugins": "^1.4.0",
     "gulp-postcss": "^6.2.0",
     "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "^2.2.1",
     "gulp-uglify": "^2.0.0",
     "run-sequence": "^1.2.2"
   }

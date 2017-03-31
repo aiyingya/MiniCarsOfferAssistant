@@ -1,35 +1,4 @@
 /* 配置后台服务器地址 */
-let evn = 'prd'
+const ENV = 'prd'
+export default { ENV }
 
-let ucServerHTTPSUrl = (function () {
-  let HTTPS = {
-    dev: 'https://test.yaomaiche.com/ucdev/',
-    gqc: 'https://test.yaomaiche.com/ucgqc/',
-    prd: 'https://uc.yaomaiche.com/uc/'
-  }
-  return HTTPS[evn]
-}())
-
-let ymcServerHTTPSUrl = (function () {
-  let HTTPS = {
-    dev: 'https://test.yaomaiche.com/ymcdev/',
-    gqc: 'https://test.yaomaiche.com/ymcgqc/',
-    prd: 'https://ymcapi.yaomaiche.com/ymc/'
-  }
-  return HTTPS[evn]
-}())
-
-let tradeServerHTTPSUrl = (function () {
-  let HTTPS = {
-    dev: 'https://test.yaomaiche.com/tradedev/',
-    gqc: 'https://test.yaomaiche.com/tradegqc/',
-    prd: 'https://trade.yaomaiche.com/trade/'
-  }
-  return HTTPS[evn]
-}())
-
-module.exports = {
-  ucServerHTTPSUrl: ucServerHTTPSUrl,
-  ymcServerHTTPSUrl: ymcServerHTTPSUrl,
-  tradeServerHTTPSUrl: tradeServerHTTPSUrl
-}

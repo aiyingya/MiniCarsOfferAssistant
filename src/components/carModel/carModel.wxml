@@ -3,14 +3,17 @@
 		class="carModels-cell"
 		hover="true"
 		hover-class="carModels-cell_active"
-		data-carmodelsinfo="{{item}}"
-		bindtap="handlerToCarSources"
 		>
 		<!-- title.-->
-		<view class="carModels-message">
+		<view 
+		  class="carModels-message"
+		  data-carmodelsinfo="{{item}}"
+		  bindtap="handlerToCarSources"
+		  >
 			<view class="carModels-message-title">
 				【{{item.officialPriceStr}}】 {{item.carModelName}}
 			</view>
+			<image class="icon_arrow" src="../../images/icons/icon_arrow.png"></image>
 		</view>
 
 		<view
@@ -19,6 +22,7 @@
 			>
 			<!-- cars info.-->
 			<view class="carModels-info">
+<!--
 				<view class="carModels-supplier">{{item.supply.supplierCount}}个人供货</view>
 				<block wx:if="{{item.supply.status === '供货紧张'}}">
 					<view class="carModels-repertory">{{item.supply.status}}</view>
@@ -26,21 +30,47 @@
 				<block wx:else>
 					<view class="carModels-repertory adequate">{{item.supply.status}}</view>
 				</block>
+-->
+        <view class="carModels-charts-time">
+          <view 
+            class="chartstime-inner {{times.selected}}"
+            wx:for="{{item.selectTimesData}}"
+            wx:key="*this"
+            wx:for-item="times"
+            wx:for-index="timesIndex"
+            bindtap="handleChangeTimesItem"
+            data-selectitem="{{times.value}}"
+            data-selectid="{{item.carModelId}}"
+            >
+           {{times.value}}小时
+          </view>
+        </view>
 				<view
 					class="carModels-carcolor"
-					wx:if="{{item.supply.colors.length > 0}}"
+					wx:if="{{item.colors.length > 0}}"
+					bindtap="handleSelectColor"
+					data-colors="{{item.colors}}"
+					data-selectColors="{{item.selectColors}}"
+					data-selectcolorsid="{{item.carModelId}}"
 					>
-					<view class="carcolor-label">外饰：</view>
+					<view class="carcolor-label label">外饰：</view>
 					<view class="carcolor-inner">
-						<view
-							class="carcolor-item"
-							wx:for="{{item.supply.colors}}"
-							wx:for-item="cell"
-							wx:for-index="cellIndex"
-							wx:key="*this"
-							wx:if="{{cellIndex < 4}}"
-							style="background:{{cell}}"
-							></view>
+					  <block  wx:if="{{item.selectColors.length > 0 && item.selectColorsId == item.carModelId}}">
+					    <view
+                class="carcolor-item"
+                wx:for="{{item.selectColors}}"
+                wx:for-item="cell"
+                wx:for-index="cellIndex"
+                wx:key="*this"
+                wx:if="{{cellIndex < 4}}"
+                style="background:{{cell.value}}; {cell.style}"
+                ></view>
+					  </block>
+              
+						<view wx:else class="carcolor-all">全部</view>
+						<image 
+						  src="../../images/icons/icon_dropdownarrow_down_gray.png"
+						  class="icon-arrows"></image>
 					</view>
 				</view>
 			</view>
@@ -52,7 +82,7 @@
 				<block wx:if="{{showCharts}}">
 					<view class="charts-tagMessage">
 						<view class="charts-supply-number">
-							供货数量
+							报价数量(条)
 						</view>
 	<!--
 						<view class="charts-tagMessage-inner">
@@ -63,15 +93,112 @@
 					</view>
 					<canvas
 						canvas-id="{{item.carModelId}}"
+						data-id="{{item.carModelId}}"
+						data-carmodelsinfo="{{item}}"
 						class="canvas"
+						bindtouchstart="handleCharttouch"
+						bindtouchmove="handletouchmove"
+            bindtouchend="handletouchend"
 						></canvas>
 				</block>
+				<block wx:else>
+				  <canvas></canvas>
+				</block>
 			</view>
+      <view 
+       class="nodata" 
+       wx:else
+       >
+        <icon type="warn" size="60" color="#cccccc"></icon>
+        <view class="icon-box__ctn">
+          <view class="icon-box__desc">抱歉！没有相关车供货信息</view>
+        </view>	
+      </view>
 		</view>
 
 		<!-- 暂无供货.-->
-		<view wx:else class="carModels-nodata">
-			暂无供货
-		</view>
+		<view 
+     class="nodata" 
+     wx:else
+     >
+       <view>
+          <icon type="warn" size="50" color="#cccccc"></icon>
+          <view class="icon-box__desc">抱歉！没有相关车供货信息</view>
+       </view>
+    </view>
 	</view>
 </template>
+
+<template name="popupCharts">
+  <view
+    class="popup-charts-wrap"
+    wx:if="{{showPopCharts}}"
+    >
+    <view 
+      class="popup-shade" 
+      bindtap="handleClosePopup"
+      bindtouchstart="handleClosePopup"
+      bindtouchmove="handleClosePopup"
+      ></view>
+    <view class="popup-charts-main">
+      <view class="popup-charts-hd">
+        <view>报价区间详情</view>
+        <view 
+         class="close-popup"
+         bindtap="handleClosePopup"
+         >
+          <image src="../../images/icons/icon_close.png"></image>
+        </view>
+      </view>
+      <view class="popup-charts-bd">
+        <view class="popup-charts-scale">
+          <view>报价数量(条)</view>
+          <view 
+            class="tocarsources"
+            data-carmodelsinfo="{{carModelsInfo}}"
+		        bindtap="handlerToCarSources"  
+            >查看详情>></view>
+        </view>
+        <canvas
+          canvas-id="popCharts"
+          data-id="popCharts"
+          class="pop-canvas"
+          disable-scroll
+          disable-scroll="true" 
+          bindtouchmove="popupChartstouchMove"
+          ></canvas>
+      </view>
+    </view>
+  </view>
+</template>
+
+<template name="popupChangeCharts">
+  <view 
+   class="popup-select-charts"
+   wx:if="{{selectChartsLabel}}"
+   >
+    <view class="popup-shade" bindtouchmove="handleClosePopupChange" bindtap="handleClosePopupChange"></view>
+    <view class="popupSelect-main">
+      <view 
+        class="popup-label {{colorAllSelected}}"
+        bindtap="handleChangeColorItem"
+        data-selectitem="全部"
+        >全部</view>
+      <view 
+        wx:for="{{selectColorData}}"
+        wx:key="*this"
+        class="popup-label {{item.selected}}"
+        bindtap="handleChangeColorItem"
+        data-selectitem="{{item}}"
+        data-selectcolors="{{selectColors}}"
+        >
+        <view
+          class="carcolor-item"
+          style="background:{{item.value}}; {{item.style}}"
+          ></view>
+        <view class="text">{{item.key}}</view>
+      </view>
+    </view>
+  </view>
+</template> 
+

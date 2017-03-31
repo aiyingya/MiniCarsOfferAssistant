@@ -2,9 +2,10 @@
 <import src="../../components/carModel/carModel.wxml" />
 <import src="../../lib/toast/toast.wxml"/>
 <template is="toast" data="{{ ...$wux.toast }}"/>
-<view class="car-models container">
+<view class="car-models container" style="{{scrollView}}">
 
 	<view class="carModels-topbar">
+<!--
 		<view class="carModels-navbar">
 			<view 
 				class="navbar-item"
@@ -17,16 +18,31 @@
 				</view>
 			</view>
 		</view>
+-->
 		
 		<!-- 标签.-->
-<!--
-		<view class="carModels-label">
-			<view class="label">标签标签</view>
-			<view class="label">标签</view>
-			<view class="label">标签标签</view>
-			<view class="label">标签标签</view>
+		<view class="carModels-label-inner">
+      <view class="carModels-label-wells">
+        <view class="carModels-label">
+          <view 
+            class="label {{item.selected}}"
+            wx:for="{{filtersData}}"
+            wx:key="unique"
+            bindtap="handleSelectCarsModele"
+            data-select="{{item}}"
+            data-id="{{item.name}}"
+            >{{item.name}}</view>
+        </view>
+      </view>
+      <view class="carModels-instore">
+        <view 
+          class="label {{stockSeclect}}"
+          bindtap="handleSelectInstore"
+          >{{stockText}}</view>
+      </view>
 		</view>
--->
+		
+		
 		<view wx:if="{{showRmendCarFacade}}" class="carModels-popup-select rmendCarFacade-popup-wrap">
 			<view 
 				class="rmendCarFacade-popup-mask showMask"
@@ -61,11 +77,12 @@
 	  class="carModels-cells"
 	  wx:if="{{carModelsList.length > 0}}"
 	  >
-		<block 
+		<view 
 			wx:for="{{carModelsList}}"
-			>
-			<template is="carModel" data="{{item,showCharts}}" /> 
-		</block>
+      wx:key="{{item.carModelId}}"
+      >
+			<template is="carModel" data="{{item,showCharts,selectTime,selectColors,selectColorsId}}" /> 
+		</view>
 	</view>
 	
 	<view 
@@ -77,5 +94,7 @@
       <view class="icon-box__desc">抱歉！没有相关车信息</view>
     </view>	
 	</view>
-	
 </view>
+<template is="popupCharts" data="{{showPopCharts, carModelsInfo}}" /> 
+
+<template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime, carModelsInfo}}" /> 

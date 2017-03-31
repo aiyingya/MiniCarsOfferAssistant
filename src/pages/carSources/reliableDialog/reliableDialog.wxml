@@ -4,6 +4,7 @@
                 class="weui-mask {{ animateCss }}"
                 hidden="{{ !visible }}"
                 bindtap="{{reliableDialogClose}}"
+                catchtouchmove="{{onTouchMoveWithCatch}}"
         >
         </view>
         <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">

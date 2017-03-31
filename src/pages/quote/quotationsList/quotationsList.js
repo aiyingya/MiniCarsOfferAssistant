@@ -1,4 +1,4 @@
-let util = require('../../../utils/util.js');
+import util from '../../../utils/util'
 let app = getApp()
 
 Page({
@@ -18,18 +18,10 @@ Page({
     //    },
     // }
     empty: false,
-    windowHeight: '',
-    loginChannel: '',
-    snsId: ''
+    windowHeight: ''
   },
   onLoad() {
     let that = this;
-
-    // 设置 snsId
-    app.getUserInfo(function (userInfo) {
-      that.data.snsId = userInfo.snsId
-      that.data.loginChannel = userInfo.loginChannel
-    })
 
     try {
       var res = wx.getSystemInfoSync();
@@ -41,7 +33,8 @@ Page({
 
     }
   },
-  onReady() { },
+  onReady() {
+  },
   onShow() {
     let that = this
     let quotation = app.fuckingLarryNavigatorTo.quotation
@@ -97,8 +90,10 @@ Page({
       this.getData({})
     }
   },
-  onHide() { },
-  onUnload() { },
+  onHide() {
+  },
+  onUnload() {
+  },
   onReachBottom() {
     // 上拉加载更多
     let that = this
@@ -106,9 +101,9 @@ Page({
     let originPageIndex = this.data.pageIndex
     let newPageIndex = this.data.pageIndex + 1
 
-    this.requestQuotationsList(newPageIndex, this.data.pageSize, {
+    app.saasService.requestQuotationsList(newPageIndex, this.data.pageSize, {
       loadingType: 'none',
-      success: function(res) {
+      success: function (res) {
         if (res.content.length !== 0) {
           that.data.pageIndex = newPageIndex
           that.setData({
@@ -118,10 +113,10 @@ Page({
           that.data.pageIndex = originPageIndex
         }
       },
-      fail: function() {
+      fail: function () {
         that.data.pageIndex = originPageIndex
       },
-      complete: function() {
+      complete: function () {
 
       }
     });
@@ -130,7 +125,7 @@ Page({
     // 下拉刷新
     let that = this
     this.getData({
-      complete: function() {
+      complete: function () {
         wx.stopPullDownRefresh()
       }
     })
@@ -147,96 +142,36 @@ Page({
   },
   getData(object) {
     let that = this
-    this.data.pageIndex = 1,
-      this.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
-        loadingType: 'none',
-        success: function(res) {
-          let empty = res.content.length === 0
-          that.setData({
-            empty: empty,
-            quotationsList: res.content
-          })
-        },
-        fail: function() {
-
-        },
-        complete: function() {
-          typeof object.complete === 'function' && object.complete()
-        }
-      })
+    this.data.pageIndex = 1
+    app.saasService.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
+      loadingType: 'none',
+      success: function (res) {
+        let empty = res.content.length === 0
+        that.setData({
+          empty: empty,
+          quotationsList: res.content
+        })
+        typeof object.complete === 'function' && object.complete()
+      },
+      fail: function () {
+      },
+      complete: function () {
+      }
+    })
   },
   handlerSelectQuotation(e) {
     let quotationKeyValueString = util.urlEncodeValueForKey('quotation', e.currentTarget.dataset.quotation)
     wx.navigateTo({
-      url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString ,
-      success: function(res) {
+      url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
+      success: function (res) {
         console.log('quotationDetail 页面跳转成功');
       },
-      fail: function() {
+      fail: function () {
         console.log('quotationDetail 页面跳转失败');
       },
-      complete: function() {
+      complete: function () {
 
       }
-    });
-  },
-  /**
-   * 获取报价列表
-   *
-   * @param pageIndex 页面索引号
-   * @param pageSize  页面大小
-   */
-  requestQuotationsList(pageIndex, pageSize, object) {
-    if (pageIndex > 0 && pageSize > 0) {
-      app.modules.request({
-        url: app.config.ymcServerHTTPSUrl + 'sale/quotation',
-        loadingType: object.loadingType,
-        data: {
-          channel: this.data.loginChannel,
-          snsId: this.data.snsId,
-          pageIndex: pageIndex,
-          pageSize: pageSize
-        },
-        method: 'GET',
-        success: function(res){
-          let content = res.content
-          for (var i = 0; i < content.length; i++) {
-            var item = content[i]
-            let totalPayment = util.priceStringWithUnit(item.totalPayment);
-            let sellingPrice = util.priceStringWithUnit(item.quotationItems[0].sellingPrice);
-            let guidePrice = util.priceStringWithUnit(item.quotationItems[0].guidePrice);
-
-            /// 实时计算优惠点数
-            let downPrice = util.downPrice(item.quotationItems[0].sellingPrice, item.quotationItems[0].guidePrice)
-            let downPriceFlag = util.downPriceFlag(downPrice);
-            let downPriceString = ''
-            if (downPriceFlag !== 0) {
-              downPriceString = util.priceStringWithUnit(downPrice)
-            }
-
-            item.viewModel = {
-              totalPayment: totalPayment,
-              sellingPrice: sellingPrice,
-              guidePrice: guidePrice,
-              priceChange: {
-                flag: downPriceFlag,
-                price: downPriceString
-              }
-            }
-            item.priceChange
-          }
-          object.success(res);
-        },
-        fail: function() {
-          object.fail();
-        },
-        complete: function() {
-          object.complete();
-        }
-      })
-    } else {
-      object.fail();
-      object.complete();
-    }
+    })
   }
-});
+})

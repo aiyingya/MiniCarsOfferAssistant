@@ -105,10 +105,7 @@ class wux {
           options.carSourceItem.viewModelLoading = '原文加载中...'
 
           const app = options.app
-          app.modules.request({
-            url: app.config.ymcServerHTTPSUrl + 'product/car/source/' + options.carSourceItem.id + '/content',
-            loadingType: 'none',
-            method: 'GET',
+          app.saasService.requestCarSourceContent(options.carSourceItem.id, {
             success: function (res) {
               if (res) {
                 /// 原文基本数据
@@ -135,11 +132,12 @@ class wux {
               } else {
                 options.carSourceItem.viewModelLoading = '加载失败'
               }
+              $scope.setData({
+                [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem
+              })
             },
             fail: function () {
               options.carSourceItem.viewModelLoading = '加载失败'
-            },
-            complete: function () {
               $scope.setData({
                 [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem
               })
@@ -149,7 +147,12 @@ class wux {
 
         // 渲染组件
         $scope.setData({
-          [`$wux.carSourceDetailDialog`]: options,
+          [`$wux.carSourceDetailDialog.spuId`]: options.spuId,
+          [`$wux.carSourceDetailDialog.carModel`]: options.carModel,
+          [`$wux.carSourceDetailDialog.skuItem`]: options.skuItem,
+          [`$wux.carSourceDetailDialog.carSourceItem`]: options.carSourceItem,
+          [`$wux.carSourceDetailDialog.hasFoldOriginalText`]: options.hasFoldOriginalText,
+          [`$wux.carSourceDetailDialog.hasFoldTagCollection`]: options.hasFoldTagCollection,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogClose`]: `carSourceDetailDialogClose`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogBookCar`]: `carSourceDetailDialogBookCar`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogContact`]: `carSourceDetailDialogContact`,
@@ -157,8 +160,13 @@ class wux {
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSelectLogisticsBlock`]: `carSourceDetailDialogSelectLogisticsBlock`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogSwitchFold`]: `carSourceDetailDialogSwitchFold`,
           [`$wux.carSourceDetailDialog.carSourceDetailDialogReportError`]: `carSourceDetailDialogReportError`,
-          [`$wux.carSourceDetailDialog.carSourceDetailDialogContactStaff`]: `carSourceDetailDialogContactStaff`
+          [`$wux.carSourceDetailDialog.carSourceDetailDialogContactStaff`]: `carSourceDetailDialogContactStaff`,
+          [`$wux.carSourceDetailDialog.onTouchMoveWithCatch`]: `onTouchMoveWithCatch`
         })
+
+        $scope.onTouchMoveWithCatch = (e) => {
+          // 防止滚动页面透传
+        }
 
         // 绑定tap事件
         $scope.carSourceDetailDialogClose = (e) => {

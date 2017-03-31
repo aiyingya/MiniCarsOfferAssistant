@@ -15,7 +15,6 @@
 const gulp = require('gulp')
 const del = require('del')
 const runSequence = require('run-sequence')
-const autoprefixer = require('autoprefixer')
 const $ = require('gulp-load-plugins')()
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -24,16 +23,26 @@ let ENV = 'DEV'
 let prod = false
 
 /**
- * 清空 dist 目录
+ * lint 流程
  */
-gulp.task('clean', () => {
-  return del(['./dist/**'])
+gulp.task('eslint', () => {
+  return gulp.src(['./src/**/*.js'])
+    .pipe($.eslint())
+    .pipe($.eslint.format())
+    .pipe($.eslint.failAfterError())
+})
+
+gulp.task('jsonlint', () => {
+  return gulp.src(['./src/**/*.json'])
+    .pipe($.jsonlint())
+    .pipe($.jsonlint.reporter())
+    .pipe($.jsonlint.failAfterError())
 })
 
 /**
  * json 文件处理
  */
-gulp.task('json', () => {
+gulp.task('json', ['jsonlint'], () => {
   return gulp.src('./src/**/*.json')
     .pipe($.if(prod, $.jsonminify()))
     .pipe(gulp.dest('./dist'))
@@ -77,15 +86,6 @@ gulp.task('templates:watch', () => {
  */
 gulp.task('styles', () => {
   return gulp.src(['./src/**/*.wxss', '!./src/styles/**'])
-    // .pipe($.less())
-    // .pipe($.postcss([
-    //   autoprefixer([
-    //     'iOS >= 8',
-        // 'Android >= 4.1'
-      // ])
-    // ]))
-    // .pipe($.if(prod, $.cssnano()))
-    // .pipe($.rename((path) => path.extname = '.wxss'))
     .pipe(gulp.dest('./dist'))
 })
 
@@ -96,15 +96,24 @@ gulp.task('styles:watch', () => {
 /**
  * js 文件处理
  */
-gulp.task('scripts', () => {
+gulp.task('scripts', ['eslint'], () => {
   return gulp.src('./src/**/*.js')
+    // .pipe($.sourcemaps.init())
     .pipe($.babel())
-    .pipe($.if(prod, $.uglify()))
+    // .pipe($.if(prod, $.uglify()))
+    // .pipe($.sourcemaps.write('.'))
     .pipe(gulp.dest('./dist'))
 })
 
 gulp.task('scripts:watch', () => {
   gulp.watch('./src/**/*.js', ['scripts'])
+})
+
+/**
+ * 清空 dist 目录
+ */
+gulp.task('clean', () => {
+  return del(['./dist/**'])
 })
 
 /**

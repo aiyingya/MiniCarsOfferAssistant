@@ -1,30 +1,43 @@
 <template name="dialog">
-    <view class="weui-mask {{ animateCss }}" hidden="{{ !visible }}"></view>
-    <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
-        <view class="weui-dialog__hd" wx:if="{{ title }}">
-            <view class="weui-dialog__title">{{ title }}</view>
-        </view>
-        <view class="weui-dialog__bd" wx:if="{{ content }}"><view class="weui-dialog__bd__centent">{{ content }}</view></view>
-        <form bindsubmit="{{ dialogConfirm }}">
-            <view class="weui-dialog__input" >
-                <input
-                        type="{{ inputType }}"
-                        name="inputNumber"
-                        placeholder="{{ inputNumberPlaceholder }}"
-                        placeholder-class=""
-                        focus="{{ visible }}"
-                        value="{{ inputNumber }}"
-                        bindinput="{{ inputNumberInput }}"
-                        bindconfirm="{{ inputNumberConfirm }}"
-                        bindfocus="{{ inputNumberFocus }}"
-                        bindblur="{{ inputNumberBlur }}"
-                        maxlength="{{ inputNumberMaxLength }}"
-                />
-            </view>
-            <view class="weui-dialog__ft">
-                <button class="weui-dialog__btn weui-dialog__btn_default" wx:if="{{ showCancel }}" bindtap="{{ dialogCancel }}">{{ cancelText }}</button>
-                <button class="weui-dialog__btn weui-dialog__btn_primary" formType="submit" disabled="{{ confirmDisabled }}">{{ confirmText }}</button>
-            </view>
-        </form>
+  <view class="dialog">
+    <view
+      class="weui-mask {{ animateCss }}"
+      hidden="{{ !visible }}"
+      catchtouchmove="{{onTouchMoveWithCatch}}"
+    >
     </view>
+    <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
+      <view class="weui-dialog__hd" wx:if="{{ title }}">
+        <view class="weui-dialog__title">{{ title }}</view>
+      </view>
+      <view class="weui-dialog__bd" wx:if="{{ content }}">
+        <view class="weui-dialog__bd__centent">{{ content }}</view>
+      </view>
+      <form bindsubmit="{{ dialogConfirm }}">
+        <view class="weui-dialog__input">
+          <input
+            type="{{ inputType }}"
+            name="inputNumber"
+            placeholder="{{ inputNumberPlaceholder }}"
+            placeholder-class=""
+            focus="{{ visible }}"
+            value="{{ inputNumber }}"
+            bindinput="{{ inputNumberInput }}"
+            bindconfirm="{{ inputNumberConfirm }}"
+            bindfocus="{{ inputNumberFocus }}"
+            bindblur="{{ inputNumberBlur }}"
+            maxlength="{{ inputNumberMaxLength }}"
+          />
+        </view>
+        <view class="weui-dialog__ft">
+          <button class="weui-dialog__btn weui-dialog__btn_default" wx:if="{{ showCancel }}"
+                  bindtap="{{ dialogCancel }}">{{ cancelText }}
+          </button>
+          <button class="weui-dialog__btn weui-dialog__btn_primary" formType="submit" disabled="{{ confirmDisabled }}">
+            {{ confirmText }}
+          </button>
+        </view>
+      </form>
+    </view>
+  </view>
 </template>
