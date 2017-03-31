@@ -5,17 +5,17 @@ var columnCharts = null
 var columnChartsList = []
 
 Page({
-	data: {
-		carModelsList: [],
+  data: {
+    carModelsList: [],
     inStockData: [],
-		cacheCarModelsList: [],
-		windowHeight: '',
-		windowWidth: '',
-		showRmendCarFacade: false,
-		filtersData: [],
-		CarsModeleText: '全部',
-		CarsModeleSelectId: 0,
-		showCharts: true, // 是否展示charts图表，解决弹出层无法点击问题
+    cacheCarModelsList: [],
+    windowHeight: '',
+    windowWidth: '',
+    showRmendCarFacade: false,
+    filtersData: [],
+    CarsModeleText: '全部',
+    CarsModeleSelectId: 0,
+    showCharts: true, // 是否展示charts图表，解决弹出层无法点击问题
     showNodata: false,
     showPopCharts: false,
     popCharts: null,
@@ -35,60 +35,60 @@ Page({
     selectColors: [],
     colorAllSelected: '',
     selectColorsId: '',
-    selectColorTime: [{value:12},{value:24}],
+    selectColorTime: [{value: 12}, {value: 24}],
     timesAllSelected: '',
     selectTimes: '',
     changeCharts: [],
     carModelsInfo: '',
     touchindex: ''
-	},
-	onLoad (options) {
-		let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
-		let that = this
-		try {
+  },
+  onLoad (options) {
+    let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
+    let that = this
+    try {
       let res = wx.getSystemInfoSync()
       this.pixelRatio = res.pixelRatio
       this.apHeight = 16
       this.offsetTop = 80
-			this.windowWidth = res.windowWidth - 30
-      this.setData({windowHeight: (res.windowHeight-44) + 'px'})
+      this.windowWidth = res.windowWidth - 30
+      this.setData({windowHeight: (res.windowHeight - 44) + 'px'})
     } catch (e) {
 
     }
-		this.$wuxToast = app.wux(this).$wuxToast
-		if (carsInfo) {
+    this.$wuxToast = app.wux(this).$wuxToast
+    if (carsInfo) {
       console.log(carsInfo)
-			// 设置NavigationBarTitle.
-			wx.setNavigationBarTitle({
-				title: carsInfo.name
-			})
+      // 设置NavigationBarTitle.
+      wx.setNavigationBarTitle({
+        title: carsInfo.name
+      })
       this.setData({carsInfo: carsInfo})
-			this.pagesloadRequest(carsInfo,true)
-		}
-	},
+      this.pagesloadRequest(carsInfo, true)
+    }
+  },
   pagesloadRequest(carsInfo, inStock) {
     let that = this
     let stock = inStock ? 'in_stock' : 'all'
-    
+
     let stockSeclect = inStock ? 'selected' : ''
 
     app.saasService.requestSearchSpuByCarSeriesId(carsInfo.id, inStock, {
       success: function (res) {
-        if(res) {
+        if (res) {
           let carModelsList = res.content
           let filters = res.filters
           let filtersData
           let showNodata = false
           let inStockData = []
           that.drawCanvas(carModelsList)
-          
-          for(let item of carModelsList) {
-            
+
+          for (let item of carModelsList) {
+
             let colors = []
-            if(item.supply.colors) {
+            if (item.supply.colors) {
               let newColorKey = Object.keys(item.supply.colors)
-              
-              for(let color of newColorKey) {
+
+              for (let color of newColorKey) {
                 let colorItem = {
                   key: color,
                   value: item.supply.colors[color]
@@ -98,14 +98,14 @@ Page({
             }
             item.colors = colors
             item.selectColors = []
-            item.selectTimesData = [{value:24, selected: 'selected'},{value:12,selected: ''}]
+            item.selectTimesData = [{value: 24, selected: 'selected'}, {value: 12, selected: ''}]
             item.selectTimes = 24 // 默认24
           }
-          
-          for(let item of filters) {
+
+          for (let item of filters) {
             filtersData = item.items
           }
-          if(carModelsList.length === 0) {
+          if (carModelsList.length === 0) {
             showNodata = true
           }
 
@@ -121,157 +121,159 @@ Page({
       }
     })
   },
-	onShow () {
+  onShow () {
 
-	},
-	handleCheckCarsModele() {
-		let weitch = this.data.showRmendCarFacade
-		let carModelsList = this.data.carModelsList
-		if(weitch) {
+  },
+  handleCheckCarsModele() {
+    let weitch = this.data.showRmendCarFacade
+    let carModelsList = this.data.carModelsList
+    if (weitch) {
       columnCharts = null
       columnChartsList = []
-			this.drawCanvas(carModelsList)
-			this.setData({
-				showRmendCarFacade: false,
-				showCharts: true
-			})
-		}else {
-			this.setData({
-				showRmendCarFacade: true,
-				showCharts: false
-			})
-		}
-	},
-	handleSelectCarsModele(e) {
-		let selectItem = e.currentTarget.dataset.select
-		let selectId = e.currentTarget.dataset.id
-		let newModelsList = []
+      this.drawCanvas(carModelsList)
+      this.setData({
+        showRmendCarFacade: false,
+        showCharts: true
+      })
+    } else {
+      this.setData({
+        showRmendCarFacade: true,
+        showCharts: false
+      })
+    }
+  },
+  handleSelectCarsModele(e) {
+    let selectItem = e.currentTarget.dataset.select
+    let selectId = e.currentTarget.dataset.id
+    let newModelsList = []
     let filtersData = this.data.filtersData
     let that = this
     let carModelsList = this.data.cacheCarModelsList
     let showNodata = false
-    
-		if(selectItem.name === '全部') {
-			newModelsList = carModelsList
-		}else {
-			for(let item of carModelsList) {
-				if(item.yearStyle === selectItem.name) {
 
-					newModelsList.push(item)
-				}
-			}
-		}
-    for(let item of filtersData) {
-      if(selectId === item.name) {
+    if (selectItem.name === '全部') {
+      newModelsList = carModelsList
+    } else {
+      for (let item of carModelsList) {
+        if (item.yearStyle === selectItem.name) {
+
+          newModelsList.push(item)
+        }
+      }
+    }
+    for (let item of filtersData) {
+      if (selectId === item.name) {
         item.selected = 'selected'
-      }else {
+      } else {
         item.selected = ''
       }
     }
-    if(newModelsList.length == 0) {
+    if (newModelsList.length == 0) {
       showNodata = true
     }
     that.drawCanvas(newModelsList)
-		this.setData({
-			CarsModeleText: selectItem.name,
-			CarsModeleSelectId: selectId,
-			carModelsList: newModelsList,
-			showRmendCarFacade: false,
-			showCharts: true,
+    this.setData({
+      CarsModeleText: selectItem.name,
+      CarsModeleSelectId: selectId,
+      carModelsList: newModelsList,
+      showRmendCarFacade: false,
+      showCharts: true,
       filtersData: filtersData,
       showNodata: showNodata
-		})
-	},
+    })
+  },
   handleSelectInstore() {
     let that = this
     let carsInfo = that.data.carsInfo
     let cacheCarModelsList = that.data.cacheCarModelsList
     let newCarModelsList = []
 
-    if(that.data.stock === 'in_stock') {
-      that.pagesloadRequest(carsInfo,false)
-    }else {
-      that.pagesloadRequest(carsInfo,true)
+    if (that.data.stock === 'in_stock') {
+      that.pagesloadRequest(carsInfo, false)
+    } else {
+      that.pagesloadRequest(carsInfo, true)
     }
 
   },
-	handlerToCarSources (e) {
-		let item = e.currentTarget.dataset.carmodelsinfo
-		let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
-		let status = item.supply.status
-		let that = this
+  handlerToCarSources (e) {
+    let item = e.currentTarget.dataset.carmodelsinfo
+    let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
+    let status = item.supply.status
+    let that = this
     let carModelsList = this.data.carModelsList
-		if(status === '暂无供货') {
+    if (status === '暂无供货') {
       this.setData({
         showCharts: false
       })
-			this.$wuxToast.show({
-				type: false,
+      this.$wuxToast.show({
+        type: false,
         timer: 2000,
         color: '#fff',
         text: '暂无供货'
-			})
-      setTimeout(function() {
+      })
+      setTimeout(function () {
         columnCharts = null
         columnChartsList = []
         that.drawCanvas(carModelsList)
         that.setData({
           showCharts: true
         })
-      },2000)
-			return
-		}
-		wx.navigateTo({
+      }, 2000)
+      return
+    }
+    wx.navigateTo({
       url: '/pages/carSources/carSources?' + carModelsInfoKeyValueString
     })
-	},
-	headlerRemoveRmendCarFacade() {
-		let carModelsList = this.data.carModelsList
+  },
+  headlerRemoveRmendCarFacade() {
+    let carModelsList = this.data.carModelsList
     columnCharts = null
     columnChartsList = []
-		this.drawCanvas(carModelsList)
-		this.setData({
-			showRmendCarFacade: false,
-			showCharts: true
-		})
-	},
+    this.drawCanvas(carModelsList)
+    this.setData({
+      showRmendCarFacade: false,
+      showCharts: true
+    })
+  },
   handleCharttouch(e) {
-    let id =  e.target.dataset.id
+    let id = e.target.dataset.id
     let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
     this.setData({
       carModelsInfo: carModelsInfo
     })
-    
+
     let res = wx.getSystemInfoSync()
     console.log(res.system.indexOf('Android'))
-    if(res.system.indexOf('Android') >= 0) {
+    if (res.system.indexOf('Android') >= 0) {
       return
     }
-    
-    if(columnChartsList.length > 0) {
-      for(let item of columnChartsList) {
-        if(item.id == id) {
+
+    if (columnChartsList.length > 0) {
+      for (let item of columnChartsList) {
+        if (item.id == id) {
           let index = item.chart.getCurrentDataIndex(e)
           let chartData = item.chart.chartData
           let config = item.chart.config
           let opts = item.chart.opts
           let context = item.chart.context
           let changeData = item.chart.changeData;
-          let callback = function(data) {
-            if(data) {
+          let callback = function (data) {
+            if (data) {
               let value = 0
-              for(let item of data.y) {
-                value+=item
+              for (let item of data.y) {
+                value += item
               }
               console.log(value)
-              if(value <= 0) {return}
+              if (value <= 0) {
+                return
+              }
               that.data.touchindex = index
             }
           }
-          
+
           that.data.touchindex = index
-          item.chart.drawChartShade(index,chartData,config,opts,context)
+          item.chart.drawChartShade(index, chartData, config, opts, context)
         }
       }
     }
@@ -280,40 +282,42 @@ Page({
     this.handleCharttouch(e)
   },
   handletouchend(e) {
-    let id =  e.target.dataset.id
+    let id = e.target.dataset.id
     let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
-    let index = that.data.touchindex 
+    let index = that.data.touchindex
     this.setData({
       carModelsInfo: carModelsInfo
     })
-    
-    if(columnChartsList.length > 0) {
-      for(let item of columnChartsList) {
-        if(item.id == id) {
+
+    if (columnChartsList.length > 0) {
+      for (let item of columnChartsList) {
+        if (item.id == id) {
           let chartData = item.chart.chartData
           let config = item.chart.config
           let opts = item.chart.opts
           let context = item.chart.context
           let changeData = item.chart.changeData;
-          let callback = function(data) {
-            if(data) {
+          let callback = function (data) {
+            if (data) {
               let value = 0
-              for(let item of data.y) {
-                value+=item
+              for (let item of data.y) {
+                value += item
               }
               console.log(value)
-              if(value <= 0) {return}
+              if (value <= 0) {
+                return
+              }
               that.setData({
                 showPopCharts: true,
                 showCharts: false
               })
-              that.drawPopCharts(data) 
+              that.drawPopCharts(data)
               that.data.touchindex = ''
             }
           }
           console.log(index)
-          item.chart.drawChartShade(index,chartData,config,opts,context,callback)
+          item.chart.drawChartShade(index, chartData, config, opts, context, callback)
         }
       }
     }
@@ -321,38 +325,40 @@ Page({
   popupChartstouchMove(e) {
     console.log(e)
   },
-	drawCanvas(list) {
-		if (!list) {return}
-		let data = list
-		let that = this
-		try {
+  drawCanvas(list) {
+    if (!list) {
+      return
+    }
+    let data = list
+    let that = this
+    try {
       let res = wx.getSystemInfoSync()
       that.pixelRatio = res.pixelRatio
       that.apHeight = 16
       that.offsetTop = 80
-			that.windowWidth = res.windowWidth
+      that.windowWidth = res.windowWidth
     } catch (e) {
 
     }
     columnCharts = null
     columnChartsList = []
-		for (let item of data) {
+    for (let item of data) {
 
-			if(item.supply.chart) {
-				columnCharts =  new app.wxcharts({
-					canvasId: item.carModelId,
-					type: 'column',
-					categories: item.supply.chart.x,
-					animation: false,
-					color: '#ECF0F7',
-					legend: false,
-					background: '#ECF0F7',
-					series: [{
+      if (item.supply.chart) {
+        columnCharts = new app.wxcharts({
+          canvasId: item.carModelId,
+          type: 'column',
+          categories: item.supply.chart.x,
+          animation: false,
+          color: '#ECF0F7',
+          legend: false,
+          background: '#ECF0F7',
+          series: [{
             name: '1',
             data: item.supply.chart.y,
             color: '#77A0E9'
           }],
-					xAxis: {
+          xAxis: {
             disableGrid: false,
             fontColor: '#333333',
             gridColor: '#333333',
@@ -378,29 +384,31 @@ Page({
           dataPointShape: false,
           xScale: item.supply.chart.scale,
           extra: {
-            area: ['风险','适宜2.43~3.73','偏贵'],
+            area: ['风险', '适宜2.43~3.73', '偏贵'],
             hint: item.supply.chart.hint,
             ratio: '0.4',
             index: item.supply.chart.priceIndex
           }
-				})
+        })
 
         let chartItem = {
           id: item.carModelId,
           chart: columnCharts
         }
         columnChartsList.push(chartItem)
-			}
-		}
-	},
+      }
+    }
+  },
   drawPopCharts(data) {
-    if(!data) {return}
+    if (!data) {
+      return
+    }
     let popWindow = {}
 
-		try {
+    try {
       let res = wx.getSystemInfoSync()
 
-			popWindow.windowWidth = res.windowWidth
+      popWindow.windowWidth = res.windowWidth
     } catch (e) {
 
     }
@@ -442,7 +450,7 @@ Page({
       dataLabel: true,
       dataPointShape: false,
       extra: {
-        area: ['风险','适宜2.43~3.73','偏贵']
+        area: ['风险', '适宜2.43~3.73', '偏贵']
       }
     })
   },
@@ -451,32 +459,32 @@ Page({
     let carModelsList = this.data.carModelsList
     columnCharts = null
     columnChartsList = []
-		this.drawCanvas(carModelsList)
+    this.drawCanvas(carModelsList)
     this.setData({
       showPopCharts: false,
       showCharts: true
     })
     this.data.popCharts = null
-    this.data.touchindex  = ''
+    this.data.touchindex = ''
   },
   handleChangeTimesItem(e) {
     let that = this
     let selectitem = e.currentTarget.dataset.selectitem
     let selectTimesId = e.currentTarget.dataset.selectid
     let carModelsList = this.data.carModelsList
-    
-    for(let item of carModelsList) {
-      if(item.carModelId === selectTimesId) {
-        
-        for(let times of item.selectTimesData) {
-          if(times.value === selectitem) {
+
+    for (let item of carModelsList) {
+      if (item.carModelId === selectTimesId) {
+
+        for (let times of item.selectTimesData) {
+          if (times.value === selectitem) {
             times.selected = 'selected'
-          }else {
+          } else {
             times.selected = ''
           }
         }
-        item.selectTimes = selectitem     
-        that.getChangeCharts(selectTimesId,carModelsList,item)
+        item.selectTimes = selectitem
+        that.getChangeCharts(selectTimesId, carModelsList, item)
       }
     }
   },
@@ -487,24 +495,24 @@ Page({
     let newColors = []
     let allColorSelect = ''
     let carModelsList = this.data.carModelsList
-    for(let item of colors) {
-      if(item.value === '#FFFFFF') {
+    for (let item of colors) {
+      if (item.value === '#FFFFFF') {
         item.style = 'border: 1rpx solid #333; width: 21rpx; height:21rpx;'
       }
-      if(selectColors.length === 0) {
+      if (selectColors.length === 0) {
         allColorSelect = 'selected'
-      }else {
-        for(let select of selectColors) {
-          if(item.key === select.key) {
+      } else {
+        for (let select of selectColors) {
+          if (item.key === select.key) {
             console.log(item)
             item.selected = 'selected'
           }
         }
       }
     }
-    
-    for(let item of carModelsList) {
-      if(item.carModelId === selectColorsId) {
+
+    for (let item of carModelsList) {
+      if (item.carModelId === selectColorsId) {
         item.selectColorsId = selectColorsId
         item.selectColors = selectColors
         this.setData({
@@ -526,74 +534,74 @@ Page({
     let selectItem = e.currentTarget.dataset.selectitem
     let selectColorsId = that.data.selectColorsId
     let carModelsList = that.data.carModelsList
-    
-    for(let item of carModelsList) {
-      if(item.carModelId === selectColorsId) {
-        if(typeof selectItem === 'object' && selectItem.selected !== 'selected') {
+
+    for (let item of carModelsList) {
+      if (item.carModelId === selectColorsId) {
+        if (typeof selectItem === 'object' && selectItem.selected !== 'selected') {
 
           selectColors.push(selectItem)
-        }else if(selectItem === '全部') {
+        } else if (selectItem === '全部') {
           selectColors = []
         }
         item.selectColors = selectColors
-        
-        that.getChangeCharts(selectColorsId,carModelsList,item)
+
+        that.getChangeCharts(selectColorsId, carModelsList, item)
       }
     }
   },
-  getChangeCharts(sid,carModelsList,item) {
-    let requestData 
+  getChangeCharts(sid, carModelsList, item) {
+    let requestData
     let that = this
     let changeCharts = this.data.changeCharts
     let newCarModelsList = []
-    let times = [{value:24, selected: 'selected'},{value:12,selected: ''}]
+    let times = [{value: 24, selected: 'selected'}, {value: 12, selected: ''}]
     requestData = {
       carSeriesId: sid,
       inStock: false,
       hours: item.selectTimes
     }
-    
+
     let keys = []
-    if(item.selectColors.length >0) {
-      for(let items of item.selectColors) {
+    if (item.selectColors.length > 0) {
+      for (let items of item.selectColors) {
         keys.push(items.key)
       }
     }
-    if(keys.length > 0) {
-       requestData.colors = keys.join(',')
+    if (keys.length > 0) {
+      requestData.colors = keys.join(',')
     }
-    for(let changeTime of times) {
-      if(item.selectTimes === changeTime.value) {
+    for (let changeTime of times) {
+      if (item.selectTimes === changeTime.value) {
         changeTime.selected = 'selected'
-      }else {
+      } else {
         changeTime.selected = ''
       }
     }
-    app.saasService.requestSearchSpuBySpuId(sid,requestData,{
-      success: function(res) {
-        
-        if(res.content.length > 0) {
-          
-          for(let change of carModelsList) {
-            if(change.carModelId === res.content[0].carModelId) {
+    app.saasService.requestSearchSpuBySpuId(sid, requestData, {
+      success: function (res) {
+
+        if (res.content.length > 0) {
+
+          for (let change of carModelsList) {
+            if (change.carModelId === res.content[0].carModelId) {
               let requestItem = res.content[0]
-              
+
               requestItem.colors = item.colors
               requestItem.selectColors = item.selectColors
               requestItem.selectTimesData = times
-              requestItem.selectTimes = item.selectTimes 
+              requestItem.selectTimes = item.selectTimes
               requestItem.selectColorsId = sid,
-              requestItem.supply.status = item.supply.status
+                requestItem.supply.status = item.supply.status
               requestItem.supply.supplierCount = item.supply.supplierCount
               requestItem.supply.colors = item.supply.colors
-              
-              console.log(requestItem.supply,item.supply)              
+
+              console.log(requestItem.supply, item.supply)
               change = requestItem
             }
             newCarModelsList.push(change)
           }
         }
-        
+
         columnCharts = null
         columnChartsList = []
         that.drawCanvas(newCarModelsList)
@@ -611,7 +619,7 @@ Page({
     let carModelsList = this.data.carModelsList
     columnCharts = null
     columnChartsList = []
-		this.drawCanvas(carModelsList)
+    this.drawCanvas(carModelsList)
     this.setData({
       selectChartsLabel: false,
       showCharts: true
