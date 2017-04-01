@@ -282,6 +282,7 @@
       </view>
     </view>
 
+    <!--为了实现展开悬停到头部-->
     <view
       class="black-magic"
       id="x0"
@@ -328,18 +329,18 @@
           <view class="second-part">
             <view class="carSources-section-price">
               <image
-                wx:if="{{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
+                wx:if="{{ skuItem.carSku.viewModelLowestCarSourceDiscount !== 0 }}"
                 class="discount-icon"
-                src="{{skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
+                src="{{skuItem.carSku.viewModelLowestCarSourceDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
               >
               </image>
               <view
-                wx:if="{{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
+                wx:if="{{ skuItem.carSku.viewModelLowestCarSourceDiscount !== 0 }}"
                 class="discount"
               >
-                {{ skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelDiscountDesc }}元/
+                {{skuItem.carSku.viewModelLowestCarSourceDiscountDesc }}元/
               </view>
-              <view class="price">{{skuItem.carSourcesList[0].viewModelSelectedCarSourcePlace.viewModelPriceDesc}}</view>
+              <view class="price">{{skuItem.carSku.viewModelLowestCarSourcePriceDesc}}</view>
               <view class="discount">起</view>
             </view>
           </view>
