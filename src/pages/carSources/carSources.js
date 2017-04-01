@@ -260,9 +260,45 @@ Page({
     }
     // 合并不同的标签集合
     const tagsSet = new Set(tags)
+
+    // 分别获取自营和三方货源中的第一个
+    let lowestSelfPlatformCarSourceItem = null
+    let lowestThirdCarSourceItem = null
+    for (let carSourceItem of carSourcesBySkuInSpuItem.carSourcesList) {
+      if (carSourceItem.supplierSelfSupport) {
+        if (lowestSelfPlatformCarSourceItem) {
+          continue
+        } else {
+          lowestSelfPlatformCarSourceItem = carSourceItem
+          lowestSelfPlatformCarSourceItem.lowestPrice = lowestSelfPlatformCarSourceItem.lowestPrice || this.data.carModelsInfo.officialPrice
+        }
+      } else {
+        if (lowestThirdCarSourceItem) {
+          break
+        } else {
+          lowestThirdCarSourceItem = carSourceItem
+          lowestThirdCarSourceItem.lowestPrice = lowestThirdCarSourceItem.lowestPrice || this.data.carModelsInfo.officialPrice
+        }
+      }
+    }
+
+    if (lowestThirdCarSourceItem && lowestSelfPlatformCarSourceItem) {
+      carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestSelfPlatformCarSourceItem.lowestPrice > lowestThirdCarSourceItem.lowestPrice ? lowestThirdCarSourceItem : lowestSelfPlatformCarSourceItem
+    } else if (lowestThirdCarSourceItem) {
+      carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestThirdCarSourceItem
+    } else if (lowestSelfPlatformCarSourceItem) {
+      carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestSelfPlatformCarSourceItem
+    }
+
     carSourcesBySkuInSpuItem.carSku.viewModelTags = [...tagsSet]
     carSourcesBySkuInSpuItem.carSku.viewModelCarSourceCount = carSourcesBySkuInSpuItem.carSourcesList.length
-    carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSourcesList[0].supplierSelfSupport
+
+    carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.supplierSelfSupport
+    carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice
+    carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePriceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice)
+    carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscount = util.downPrice(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice, this.data.carModelsInfo.officialPrice)
+    carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscountDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscount)
+
   },
   /**
    * 处理车源对象
@@ -456,6 +492,14 @@ Page({
       carSourcePlaceItem.viewModelDiscount = carSourcePlaceItem.discount
       carSourcePlaceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourcePlaceItem.discount)
       carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = null
+    }
+
+    // 如果货源不是一口价
+    if (!carSourceItem.supplierSelfSupport && !carSourcePlaceItem.priceFixed && carSourcePlaceItem.viewModelPrice === this.data.carModelsInfo.officialPrice) {
+      carSourcePlaceItem.viewModelPriceDesc = '价格电议'
+      carSourcePlaceItem.viewModelEquelWithOfficialPrice = true
+    } else {
+      carSourcePlaceItem.viewModelEquelWithOfficialPrice = false
     }
   },
   updateTheCarSourcePlace (carSourcePlaceItem, carSourceItem) {
