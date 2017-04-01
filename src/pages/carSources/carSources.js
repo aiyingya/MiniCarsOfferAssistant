@@ -293,7 +293,7 @@ Page({
     carSourcesBySkuInSpuItem.carSku.viewModelTags = [...tagsSet]
     carSourcesBySkuInSpuItem.carSku.viewModelCarSourceCount = carSourcesBySkuInSpuItem.carSourcesList.length
 
-    carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.viewModelLowestCarSource.supplierSelfSupport
+    carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.supplierSelfSupport
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePriceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice)
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscount = util.downPrice(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice, this.data.carModelsInfo.officialPrice)
@@ -492,6 +492,14 @@ Page({
       carSourcePlaceItem.viewModelDiscount = carSourcePlaceItem.discount
       carSourcePlaceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourcePlaceItem.discount)
       carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = null
+    }
+
+    // 如果货源不是一口价
+    if (!carSourceItem.supplierSelfSupport && !carSourcePlaceItem.priceFixed && carSourcePlaceItem.viewModelPrice === this.data.carModelsInfo.officialPrice) {
+      carSourcePlaceItem.viewModelPriceDesc = '价格电议'
+      carSourcePlaceItem.viewModelEquelWithOfficialPrice = true
+    } else {
+      carSourcePlaceItem.viewModelEquelWithOfficialPrice = false
     }
   },
   updateTheCarSourcePlace (carSourcePlaceItem, carSourceItem) {

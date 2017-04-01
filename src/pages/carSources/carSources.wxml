@@ -628,7 +628,7 @@
                           {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscountDesc }}元/
                         </view>
                         <view
-                          class="price"
+                          class="price {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice ? 'price-small' : ''}}"
                         >
                           {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelPriceDesc }}
                         </view>
@@ -685,9 +685,18 @@
                       </view>
                       <view
                         wx:else
-                        class="bare-price"
                       >
-                        裸车价
+                        <view
+                          wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice}}"
+                        >
+                          <!--为空-->
+                        </view>
+                        <view
+                          wx:else
+                          class="bare-price"
+                        >
+                          裸车价
+                        </view>
                       </view>
                     </view>
 
