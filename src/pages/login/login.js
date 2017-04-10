@@ -96,7 +96,7 @@ Page({
         type: false,
         timer: 2000,
         color: '#fff',
-        text: '手机号输入不正确',
+        text: '手机号输入不正确'
       })
       return
     }
@@ -106,7 +106,7 @@ Page({
         type: false,
         timer: 2000,
         color: '#fff',
-        text: '验证码输入不正确',
+        text: '验证码输入不正确'
       })
       return
     }

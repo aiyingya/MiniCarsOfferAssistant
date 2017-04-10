@@ -38,7 +38,7 @@ Page({
       const weixinUsersInfo = app.userService.weixinUserInfo
 
       this.setData({
-        isLogin: true,
+        isLogin: true
       })
       app.userService.getLocation({
         success: function (res) {

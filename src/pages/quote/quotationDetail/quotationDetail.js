@@ -19,7 +19,7 @@ Page({
           itemPic: '',
           specifications: '',
           guidePrice: '',
-          sellingPrice: '',
+          sellingPrice: ''
         }
       ],
       hasLoan: true,          // 必传，true/false，boolean，是否贷款

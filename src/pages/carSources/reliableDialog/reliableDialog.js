@@ -28,7 +28,7 @@ class wux {
     this.$wux = {
       reliableDialog: {
         visible: !1
-      },
+      }
     }
 
     this.$scope.setData({
@@ -148,7 +148,7 @@ class wux {
         that.setVisible('reliableDialog')
 
         return $scope.reliableDialogClose
-      },
+      }
     }
   }
 

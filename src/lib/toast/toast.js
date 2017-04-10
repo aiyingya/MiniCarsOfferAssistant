@@ -5,9 +5,9 @@ import tools from '../tools'
  * @param {Object} $scope 作用域对象
  */
 class wux {
-  constructor($scope) {
+  constructor ($scope) {
     Object.assign(this, {
-      $scope,
+      $scope
     })
     this.__init()
   }
@@ -15,7 +15,7 @@ class wux {
   /**
    * 初始化类方法
    */
-  __init() {
+  __init () {
     this.__initDefaults()
     this.__initTools()
     this.__initComponents()
@@ -24,11 +24,11 @@ class wux {
   /**
    * 默认参数
    */
-  __initDefaults() {
+  __initDefaults () {
     this.$wux = {
       toast: {
-        visible: !1,
-      },
+        visible: !1
+      }
     }
 
     this.$scope.setData({
@@ -39,46 +39,45 @@ class wux {
   /**
    * 工具方法
    */
-  __initTools() {
-    this.tools = new tools
+  __initTools () {
+    this.tools = new tools()
   }
 
   /**
    * 初始化所有组件
    */
-  __initComponents() {
+  __initComponents () {
     this.__initToast()
   }
 
   /**
    * 弹出式提示组件
    */
-  __initToast() {
+  __initToast () {
     const that = this
     const extend = that.tools.extend
     const clone = that.tools.clone
     const $scope = that.$scope
-    const TOAST_TYPES = [
-      {
-        type: 'success',
-        icon: 'success_no_circle',
-        className: 'weui-toast-success',
-      },
-      {
-        type: 'cancel',
-        icon: 'cancel',
-        className: 'weui-toast-cancel',
-      },
-      {
-        type: 'forbidden',
-        icon: 'warn',
-        className: 'weui-toast-forbidden',
-      },
-      {
-        type: 'text',
-        icon: '',
-        className: 'weui-toast-text',
-      },
+    const TOAST_TYPES = [{
+      type: 'success',
+      icon: 'success_no_circle',
+      className: 'weui-toast-success'
+    },
+    {
+      type: 'cancel',
+      icon: 'cancel',
+      className: 'weui-toast-cancel'
+    },
+    {
+      type: 'forbidden',
+      icon: 'warn',
+      className: 'weui-toast-forbidden'
+    },
+    {
+      type: 'text',
+      icon: '',
+      className: 'weui-toast-text'
+    }
     ]
 
     that.$wuxToast = {
@@ -90,7 +89,7 @@ class wux {
         timer: 1500,
         color: '#fff',
         text: '已完成',
-        success: function() {},
+        success: function () {}
       },
       /**
        * 显示toast组件
@@ -101,7 +100,7 @@ class wux {
        * @param {String} opts.text 提示文本
        * @param {Function} opts.success 关闭后的回调函数
        */
-      show(opts = {}) {
+      show (opts = {}) {
         const options = extend(clone(this.defaults), opts)
         const remove = (cb) => {
           setTimeout(() => {
@@ -119,37 +118,37 @@ class wux {
         })
 
         $scope.setData({
-          [`$wux.toast`]: options,
+          [`$wux.toast`]: options
         })
 
         that.setVisible('toast')
 
         remove(options.success)
-      },
+      }
     }
   }
 
   /**
    * 设置元素显示
    */
-  setVisible(key, className = 'weui-animate-fade-in') {
+  setVisible (key, className = 'weui-animate-fade-in') {
     this.$scope.setData({
       [`$wux.${key}.visible`]: !0,
-      [`$wux.${key}.animateCss`]: className,
+      [`$wux.${key}.animateCss`]: className
     })
   }
 
   /**
    * 设置元素隐藏
    */
-  setHidden(key, className = 'weui-animate-fade-out', timer = 300) {
+  setHidden (key, className = 'weui-animate-fade-out', timer = 300) {
     this.$scope.setData({
-      [`$wux.${key}.animateCss`]: className,
+      [`$wux.${key}.animateCss`]: className
     })
 
     setTimeout(() => {
       this.$scope.setData({
-        [`$wux.${key}.visible`]: !1,
+        [`$wux.${key}.visible`]: !1
       })
     }, timer)
   }

@@ -1,4 +1,4 @@
-/*jslint forin: true, plusplus: true, sloppy: true, vars: true*/
+/*jslint forin: true, plusplus: true, sloppy: true, vars: true */
 //
 //  track.js 基于微信小程序页面埋点.
 //  Version 1.0.0
@@ -11,26 +11,26 @@ import tools from './tools'
 import modules from './modules'
 
 class Track {
-  constructor($scope) {
+  constructor ($scope) {
     Object.assign(this, {
-      $scope,
+      $scope
     })
     this.__init()
   }
 
-  __HTTPS(evn) {
+  __HTTPS (evn) {
     let HTTPS = {
       dev: 'https://ubt.yaomaiche.com/acquire/report/',
       gqc: 'https://ubt.yaomaiche.com/acquire/report/',
       prd: 'https://ubt.yaomaiche.com/acquire/report/'
-    };
-    return HTTPS[evn];
+    }
+    return HTTPS[evn]
   }
 
   /**
    * 初始化类方法
    */
-  __init() {
+  __init () {
     this.__initDefaults()
     this.__initTools()
     this.__initPush()
@@ -39,18 +39,18 @@ class Track {
   /**
    * 工具方法
    */
-  __initTools() {
-    this.tools = new tools
+  __initTools () {
+    this.tools = new tools()
   }
 
   /**
    * 默认参数
    */
-  __initDefaults() {
+  __initDefaults () {
     this.Track = {
       push: {
-        version: '1.0.0',
-      },
+        version: '1.0.0'
+      }
     }
 
     this.$scope.setData({
@@ -58,7 +58,7 @@ class Track {
     })
   }
 
-  __initPush() {
+  __initPush () {
     const that = this
     const extend = that.tools.extend
     const clone = that.tools.clone
@@ -82,7 +82,7 @@ class Track {
         eventAction: 'pageShow'
       },
 
-      push(opts = {}){
+      push (opts = {}) {
         const options = extend(clone(this.defaults), opts)
         /**
          * 获取地理位置
@@ -101,7 +101,7 @@ class Track {
               url: that.__HTTPS('dev'),
               data: options,
               loadingType: 'none',
-              success(res) {
+              success (res) {
                 console.log(options, system, res)
               }
             })
@@ -114,7 +114,7 @@ class Track {
   /**
    * 获取页面信息.
    */
-  __getPagesInfo() {
+  __getPagesInfo () {
 
   }
 }

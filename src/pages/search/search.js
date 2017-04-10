@@ -51,7 +51,7 @@ Page({
       carModelsHeight = res.windowHeight - 55
       this.setData({
         windowHeight: res.windowHeight + 'px',
-        carModelsHeight: carModelsHeight + 'px',
+        carModelsHeight: carModelsHeight + 'px'
       })
     } catch (e) {
 
@@ -100,7 +100,7 @@ Page({
         carModelsList = res.content
         searchNodata = carModelsList.length > 0 ? false : true
         for(let item of carModelsList) {
-          
+
           let colors = []
           if(item.supply.colors) {
             let newColorKey = Object.keys(item.supply.colors)
@@ -151,9 +151,9 @@ Page({
             searchResults.push(item)
           }
         }
-        
+
         for(let item of searchResults) {
-          
+
           let colors = []
           if(item.supply.colors) {
             let newColorKey = Object.keys(item.supply.colors)
@@ -171,7 +171,7 @@ Page({
           item.selectTimesData = [{value:24, selected: 'selected'},{value:12, selected: ''}]
           item.selectTimes = 24 // 默认24
         }
-        
+
         that.data.pageInfo = {
           first: res.first,
           hasNext: res.hasNext,
@@ -266,7 +266,7 @@ Page({
     if(res.system.indexOf('Android') >= 0) {
       return
     }
-    
+
     if(columnChartsList.length > 0) {
       for(let item of columnChartsList) {
         if(item.id == id) {
@@ -284,7 +284,7 @@ Page({
               }
               console.log(value)
               if(value <= 0) {return}
-              
+
             }
           }
           that.data.touchindex = index
@@ -303,11 +303,11 @@ Page({
     this.setData({
       carModelsInfo: carModelsInfo
     })
-    
+
     if(columnChartsList.length > 0) {
       for(let item of columnChartsList) {
         if(item.id == id) {
-          let index = that.data.touchindex 
+          let index = that.data.touchindex
           let chartData = item.chart.chartData
           let config = item.chart.config
           let opts = item.chart.opts
@@ -325,7 +325,7 @@ Page({
                 showPopCharts: true,
                 showCharts: false
               })
-              that.drawPopCharts(data)      
+              that.drawPopCharts(data)
             }
           }
           console.log(index)
@@ -479,10 +479,10 @@ Page({
     let selectitem = e.currentTarget.dataset.selectitem
     let selectTimesId = e.currentTarget.dataset.selectid
     let carModelsList = this.data.searchResults
-    
+
     for(let item of carModelsList) {
       if(item.carModelId === selectTimesId) {
-        
+
         for(let times of item.selectTimesData) {
           if(times.value === selectitem) {
             times.selected = 'selected'
@@ -490,7 +490,7 @@ Page({
             times.selected = ''
           }
         }
-        item.selectTimes = selectitem     
+        item.selectTimes = selectitem
         that.getChangeCharts(selectTimesId,carModelsList,item)
       }
     }
@@ -517,7 +517,7 @@ Page({
         }
       }
     }
-    
+
     for(let item of carModelsList) {
       if(item.carModelId === selectColorsId) {
         item.selectColorsId = selectColorsId
@@ -541,7 +541,7 @@ Page({
     let selectItem = e.currentTarget.dataset.selectitem
     let selectColorsId = that.data.selectColorsId
     let carModelsList = that.data.searchResults
-    
+
     for(let item of carModelsList) {
       if(item.carModelId === selectColorsId) {
         if(typeof selectItem === 'object' && selectItem.selected !== 'selected') {
@@ -551,14 +551,14 @@ Page({
           selectColors = []
         }
         item.selectColors = selectColors
-        
+
         that.getChangeCharts(selectColorsId,carModelsList,item)
-        
+
       }
     }
   },
   getChangeCharts(sid,carModelsList,item) {
-    let requestData 
+    let requestData
     let that = this
     let newCarModelsList = []
     let times = [{value:24, selected: 'selected'},{value:12,selected: ''}]
@@ -567,7 +567,7 @@ Page({
       inStock: false,
       hours: item.selectTimes
     }
-    
+
     let keys = []
     if(item.selectColors.length >0) {
       for(let items of item.selectColors) {
@@ -584,30 +584,30 @@ Page({
         changeTime.selected = ''
       }
     }
-    
+
     app.saasService.requestSearchSpuBySpuId(sid,requestData,{
       success: function(res) {
-        
+
         if(res.content.length > 0) {
           for(let change of carModelsList) {
             if(change.carModelId === res.content[0].carModelId) {
               let requestItem = res.content[0]
-              
+
               requestItem.colors = item.colors
               requestItem.selectColors = item.selectColors
               requestItem.selectTimesData = times
-              requestItem.selectTimes = item.selectTimes 
+              requestItem.selectTimes = item.selectTimes
               requestItem.selectColorsId = sid,
               requestItem.supply.status = item.supply.status
               requestItem.supply.supplierCount = item.supply.supplierCount
-              requestItem.supply.colors = item.supply.colors         
+              requestItem.supply.colors = item.supply.colors
               change = requestItem
             }
-            
+
             newCarModelsList.push(change)
           }
         }
-        
+
         columnCharts = null
         columnChartsList = []
         that.drawCanvas(newCarModelsList)
@@ -621,7 +621,7 @@ Page({
     })
   },
   handleClosePopupChange() {
-    
+
     let carModelsList = this.data.searchResults
     columnCharts = null
     columnChartsList = []

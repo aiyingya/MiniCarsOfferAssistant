@@ -7,7 +7,7 @@ import tools from '../tools'
 class wux {
   constructor($scope) {
     Object.assign(this, {
-      $scope,
+      $scope
     })
     this.__init()
   }
@@ -27,8 +27,8 @@ class wux {
   __initDefaults() {
     this.$wux = {
       dialog: {
-        visible: !1,
-      },
+        visible: !1
+      }
     }
 
     this.$scope.setData({
@@ -77,7 +77,7 @@ class wux {
         confirm: function (res) {
         },
         cancel: function () {
-        },
+        }
       },
       /**
        * 显示dialog组件
@@ -150,7 +150,7 @@ class wux {
         $scope.inputNumberInput({detail: {value: options.inputNumber}})
 
         return $scope.dialogCancel
-      },
+      }
     }
   }
 
@@ -160,7 +160,7 @@ class wux {
   setVisible(key, className = 'weui-animate-fade-in') {
     this.$scope.setData({
       [`$wux.${key}.visible`]: !0,
-      [`$wux.${key}.animateCss`]: className,
+      [`$wux.${key}.animateCss`]: className
     })
   }
 
@@ -169,12 +169,12 @@ class wux {
    */
   setHidden(key, className = 'weui-animate-fade-out', timer = 300) {
     this.$scope.setData({
-      [`$wux.${key}.animateCss`]: className,
+      [`$wux.${key}.animateCss`]: className
     })
 
     setTimeout(() => {
       this.$scope.setData({
-        [`$wux.${key}.visible`]: !1,
+        [`$wux.${key}.visible`]: !1
       })
     }, timer)
   }

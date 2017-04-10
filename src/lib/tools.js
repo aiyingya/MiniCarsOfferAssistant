@@ -4,7 +4,7 @@ class Tools {
    * @param  {Object} file
    * @return {String}
    */
-  getFilenameExt(file) {
+  getFilenameExt (file) {
     const types = file.name.split('.')
     return types[types.length - 1]
   }
@@ -15,7 +15,7 @@ class Tools {
    * @param  {Number} max
    * @return {String}
    */
-  rand(min, max) {
+  rand (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
@@ -24,8 +24,8 @@ class Tools {
    * @param  {Number} size
    * @return {String}
    */
-  randString(size) {
-    let result  = ''
+  randString (size) {
+    let result = ''
     let allChar = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     size = size || 1
@@ -42,7 +42,7 @@ class Tools {
    * @param  {Object} file
    * @return {String}
    */
-  randFilename(file) {
+  randFilename (file) {
     return this.randString(this.rand(10, 100)) + Date.parse(new Date()) + '.' + this.getFilenameExt(file)
   }
 
@@ -51,7 +51,7 @@ class Tools {
    * @param  {String}  value
    * @return {Boolean}
    */
-  isString(value) {
+  isString (value) {
     return typeof value === 'string'
   }
 
@@ -60,7 +60,7 @@ class Tools {
    * @param  {Function}  value
    * @return {Boolean}
    */
-  isFunction(value) {
+  isFunction (value) {
     return this.type(value) === 'function'
   }
 
@@ -69,7 +69,7 @@ class Tools {
    * @param  {Array}  value
    * @return {Boolean}
    */
-  isArray(value) {
+  isArray (value) {
     return Array.isArray(value)
   }
 
@@ -78,7 +78,7 @@ class Tools {
    * @param  {Obejct}  value
    * @return {Boolean}
    */
-  isObject(value) {
+  isObject (value) {
     return value !== null && typeof value === 'object'
   }
 
@@ -87,7 +87,7 @@ class Tools {
    * @param  {Number}  value
    * @return {Boolean}
    */
-  isNumber(value) {
+  isNumber (value) {
     return typeof value === 'number'
   }
 
@@ -96,7 +96,7 @@ class Tools {
    * @param  {Date}  value
    * @return {Boolean}
    */
-  isDate(value) {
+  isDate (value) {
     return this.type(value) === '[object Date]'
   }
 
@@ -105,7 +105,7 @@ class Tools {
    * @param  {RegExp}  value
    * @return {Boolean}
    */
-  isRegExp(value) {
+  isRegExp (value) {
     return this.type(value) === '[object RegExp]'
   }
 
@@ -114,7 +114,7 @@ class Tools {
    * @param  {Object}  obj
    * @return {Boolean}
    */
-  isFile(obj) {
+  isFile (obj) {
     return this.type(obj) === '[object File]'
   }
 
@@ -123,7 +123,7 @@ class Tools {
    * @param  {Object}  obj
    * @return {Boolean}
    */
-  isFormData(obj) {
+  isFormData (obj) {
     return this.type(obj) === '[object FormData]'
   }
 
@@ -132,7 +132,7 @@ class Tools {
    * @param  {Object}  obj
    * @return {Boolean}
    */
-  isBlob(obj) {
+  isBlob (obj) {
     return this.type(obj) === '[object Blob]'
   }
 
@@ -141,7 +141,7 @@ class Tools {
    * @param  {boolean}  value
    * @return {Boolean}
    */
-  isBoolean(value) {
+  isBoolean (value) {
     return typeof value === 'boolean'
   }
 
@@ -150,7 +150,7 @@ class Tools {
    * @param  {Function}  obj
    * @return {Boolean}
    */
-  isPromiseLike(obj) {
+  isPromiseLike (obj) {
     return obj && this.isFunction(obj.then)
   }
 
@@ -159,7 +159,7 @@ class Tools {
    * @param  {Array}  value
    * @return {Boolean}
    */
-  isTypedArray(value) {
+  isTypedArray (value) {
     const TYPED_ARRAY_REGEXP = /^\[object (?:Uint8|Uint8Clamped|Uint16|Uint32|Int8|Int16|Int32|Float32|Float64)Array\]$/
     return value && this.isNumber(value.length) && TYPED_ARRAY_REGEXP.test(this.type(value))
   }
@@ -169,7 +169,7 @@ class Tools {
    * @param  {Object}  obj
    * @return {Boolean}
    */
-  isArrayBuffer(obj) {
+  isArrayBuffer (obj) {
     return this.type(obj) === '[object ArrayBuffer]'
   }
 
@@ -178,7 +178,7 @@ class Tools {
    * @param  {undefined}  value
    * @return {Boolean}
    */
-  isDefined(value) {
+  isDefined (value) {
     return typeof value !== 'undefined'
   }
 
@@ -187,7 +187,7 @@ class Tools {
    * @param  {undefined}  value
    * @return {Boolean}
    */
-  isUndefined(value) {
+  isUndefined (value) {
     return typeof value === 'undefined'
   }
 
@@ -196,7 +196,7 @@ class Tools {
    * @param  {Null}  value
    * @return {Boolean}
    */
-  isNull(value) {
+  isNull (value) {
     return value === null
   }
 
@@ -205,8 +205,8 @@ class Tools {
    * @param  {Number}  value
    * @return {Boolean}
    */
-  isFinite(value) {
-    return typeof value == 'number' && isFinite(value)
+  isFinite (value) {
+    return typeof value === 'number' && isFinite(value)
   }
 
   /**
@@ -214,7 +214,7 @@ class Tools {
    * @param  {Number}  value
    * @return {Boolean}
    */
-  isNaN(value) {
+  isNaN (value) {
     return this.isNumber(value) && value != +value
   }
 
@@ -223,7 +223,7 @@ class Tools {
    * @param  {Object}  value
    * @return {Boolean}
    */
-  isError(value) {
+  isError (value) {
     return this.type(value) === '[object Error]'
   }
 
@@ -232,7 +232,7 @@ class Tools {
    * @param  {String} str
    * @return {String}
    */
-  trim(str) {
+  trim (str) {
     return this.isString(str) ? str.trim() : str
   }
 
@@ -241,7 +241,7 @@ class Tools {
    * @param  {String} str
    * @return {String}
    */
-  escapeForRegexp(str) {
+  escapeForRegexp (str) {
     return str.replace(/([-()\[\]{}+?*.$\^|,:#<!\\])/g, '\\$1').replace(/\x08/g, '\\x08')
   }
 
@@ -250,7 +250,7 @@ class Tools {
    * @param  {String} str 'key1,key2,...'
    * @return {Object} in the form of {key1:true, key2:true, ...}
    */
-  makeMap(str) {
+  makeMap (str) {
     let obj = {}, items = str.split(',')
     for (let i = 0; i < items.length; i++) {
       obj[items[i]] = !0
@@ -264,7 +264,7 @@ class Tools {
    * @param  {Objext} obj
    * @return {Array}
    */
-  includes(arr, obj) {
+  includes (arr, obj) {
     return Array.prototype.indexOf.call(arr, obj) != -1
   }
 
@@ -274,7 +274,7 @@ class Tools {
    * @param  {String} value
    * @return {Number}
    */
-  arrayRemove(array, value) {
+  arrayRemove (array, value) {
     let index = array.indexOf(value)
     if (index >= 0) {
       array.splice(index, 1)
@@ -288,7 +288,7 @@ class Tools {
    * @param  {Number} minutes
    * @return {Date}
    */
-  addDateMinutes(date, minutes) {
+  addDateMinutes (date, minutes) {
     date = new Date(date.getTime())
     date.setMinutes(date.getMinutes() + minutes || 0)
     return date
@@ -300,7 +300,7 @@ class Tools {
    * @param  {Number} pretty
    * @return {Object}
    */
-  toJson(obj, pretty) {
+  toJson (obj, pretty) {
     if (this.isUndefined(obj)) return undefined
     if (!this.isNumber(pretty)) {
       pretty = pretty ? 2 : null
@@ -313,7 +313,7 @@ class Tools {
    * @param  {String} json
    * @return {Object}
    */
-  fromJson(json) {
+  fromJson (json) {
     return this.isString(json) ? JSON.parse(json) : json
   }
 
@@ -321,12 +321,12 @@ class Tools {
    * 扩展对象
    * @return {Object}
    */
-  extend() {
+  extend () {
     let src, copyIsArray, copy, name, options, clone,
       target = arguments[0] || {},
       i = 1,
       length = arguments.length,
-      deep = !1;
+      deep = !1
 
     if (typeof target === 'boolean') {
       deep = target
@@ -344,7 +344,7 @@ class Tools {
     }
 
     for (; i < length; i++) {
-      if ( (options = arguments[ i ]) != null ) {
+      if ((options = arguments[ i ]) != null) {
         for (name in options) {
           src = target[name]
           copy = options[name]
@@ -375,7 +375,7 @@ class Tools {
    * @param  {[type]}  obj [description]
    * @return {Boolean}     [description]
    */
-  isPlainObject(obj) {
+  isPlainObject (obj) {
     let getProto = Object.getPrototypeOf
     let class2type = {}
     let toString = class2type.toString
@@ -386,8 +386,8 @@ class Tools {
     if (!obj || this.type(obj) !== '[object Object]') {
       return !1
     }
-    proto = getProto( obj )
-    if ( !proto ) {
+    proto = getProto(obj)
+    if (!proto) {
       return !0
     }
     Ctor = hasOwn.call(proto, 'constructor') && proto.constructor
@@ -399,9 +399,9 @@ class Tools {
    * @param  {Object}  obj
    * @return {Boolean}
    */
-  isEmptyObject(obj) {
+  isEmptyObject (obj) {
     for (let i in obj)
-      return !1
+      {return !1}
     return !0
   }
 
@@ -410,10 +410,10 @@ class Tools {
    * @param  {Object} obj
    * @return {String}
    */
-  type(obj) {
+  type (obj) {
     const toString = Object.prototype.toString
 
-    if ( obj == null ) {
+    if (obj == null) {
       return obj + ''
     }
 
@@ -425,7 +425,7 @@ class Tools {
    * @param  {Array} args
    * @return {Object}
    */
-  merge(...args) {
+  merge (...args) {
     return Object.assign(...args)
   }
 
@@ -434,7 +434,7 @@ class Tools {
    * @param  {Object} obj
    * @return {Object}
    */
-  clone(obj) {
+  clone (obj) {
     if (typeof obj !== 'object' || !obj) {
       return obj
     }
@@ -453,7 +453,7 @@ class Tools {
    * @param  {Array} keys
    * @return {[type]}
    */
-  omit(obj, keys) {
+  omit (obj, keys) {
     let o = this.clone(obj)
     keys.forEach(key => {
       delete o[key]
@@ -467,7 +467,7 @@ class Tools {
    * @param  {String} key
    * @return {Array}
    */
-  pluck(arr, key) {
+  pluck (arr, key) {
     if (typeof arr !== 'object' || arr.length === 0) {
       return []
     }
@@ -482,7 +482,7 @@ class Tools {
    * @param  {String} value
    * @return {String}
    */
-  serializeValue(value) {
+  serializeValue (value) {
     if (this.isObject(value)) return this.isDate(value) ? value.toISOString() : this.toJson(value)
     return value
   }
@@ -493,7 +493,7 @@ class Tools {
    * @param  {String} pctEncodeSpaces
    * @return {String}
    */
-  encodeUriQuery(value, pctEncodeSpaces) {
+  encodeUriQuery (value, pctEncodeSpaces) {
     return encodeURIComponent(value)
       .replace(/%40/gi, '@')
       .replace(/%3A/gi, ':')
@@ -508,16 +508,16 @@ class Tools {
    * @param  {Object} obj
    * @return {String}
    */
-  paramSerializer(obj) {
+  paramSerializer (obj) {
     if (!obj) return ''
     let that = this
     let parts = []
-    for(let key in obj) {
+    for (let key in obj) {
       const value = obj[key]
       if (value === null || that.isUndefined(value)) return
       if (that.isArray(value)) {
-        value.forEach(function(v) {
-          parts.push(that.encodeUriQuery(key)  + '=' + that.encodeUriQuery(that.serializeValue(v)))
+        value.forEach(function (v) {
+          parts.push(that.encodeUriQuery(key) + '=' + that.encodeUriQuery(that.serializeValue(v)))
         })
       } else {
         parts.push(that.encodeUriQuery(key) + '=' + that.encodeUriQuery(that.serializeValue(value)))
@@ -532,7 +532,7 @@ class Tools {
    * @param  {Object} obj
    * @return {String}
    */
-  buildUrl(url, obj) {
+  buildUrl (url, obj) {
     const serializedParams = this.paramSerializer(obj)
     if (serializedParams.length > 0) {
       url += ((url.indexOf('?') == -1) ? '?' : '&') + serializedParams

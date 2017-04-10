@@ -1,6 +1,6 @@
 class Modules {
-  newRequest(baseURL, path, method, data, header, object) {
-    url = baseURL + path
+  newRequest (baseURL, path, method, data, header, object) {
+    const url = baseURL + path
     request({
       url: url,
       method: method,
@@ -11,7 +11,6 @@ class Modules {
       complete: object.success
     })
   }
-
 
   /**
    * request
@@ -25,14 +24,14 @@ class Modules {
    * fail         失败回调
    * complete     完成回调
    */
-  request(options) {
+  request (options) {
     console.log(`===============请求开始 ${options.url}==================`)
-    if (!options) return;
+    if (!options) return
 
     let loadingType = options.loadingType
 
     if (options.loadingType === 'navigation') {
-      console.log("显示导航栏加载")
+      console.log('显示导航栏加载')
       wx.showNavigationBarLoading()
     } else if (options.loadingType === 'none') {
       // 不使用任何加载
@@ -57,7 +56,7 @@ class Modules {
       }
 
       for (var attrname in options.header) {
-        header[attrname] = options.header[attrname];
+        header[attrname] = options.header[attrname]
       }
 
       wx.request({
@@ -117,7 +116,7 @@ class Modules {
         },
         complete: function () {
           if (options.loadingType === 'navigation') {
-            console.log("隐藏导航栏加载")
+            console.log('隐藏导航栏加载')
             wx.hideNavigationBarLoading()
           } else if (options.loadingType === 'none') {
             // 不使用任何加载
@@ -130,7 +129,7 @@ class Modules {
       console.log(`===============请求结束 ${options.url}==================`)
     } catch (e) {
       if (options.loadingType === 'navigation') {
-        console.log("隐藏导航栏加载")
+        console.log('隐藏导航栏加载')
         wx.hideNavigationBarLoading()
       } else if (options.loadingType === 'none') {
         // 不使用任何加载

@@ -11,7 +11,7 @@ page{
 .container {
   width: 100%;
 	height: auto;
-} 
+}
 /* search.*/
 .search-wrap {
 	width: 86.67%;
@@ -70,7 +70,7 @@ page{
 .nodata-text {
 	margin: 0;
 	line-height: 30rpx;
-} 
+}
 .showToast {
 	-webkit-animation: Toast 3500ms ease 1 forwards ;
 	animation: Toast 3500ms ease 1 forwards ;

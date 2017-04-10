@@ -39,32 +39,31 @@ Page({
     selectedSectionId: '0',
     app: app,
     showDetailTitle: false,
-    hasOverLayDropdown: false,
+    hasOverLayDropdown: false
   },
   onLoad (options) {
-
     console.log(options)
 
     const that = this
 
-    const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options);
+    const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
 
     this.setData({
       carModelsInfo: carModelsInfo
     })
 
     try {
-      const res = wx.getSystemInfoSync();
-      this.pixelRatio = res.pixelRatio;
-      this.apHeight = 16;
-      this.offsetTop = 80;
+      const res = wx.getSystemInfoSync()
+      this.pixelRatio = res.pixelRatio
+      this.apHeight = 16
+      this.offsetTop = 80
       this.setData({windowHeight: res.windowHeight + 'px'})
     } catch (e) {
 
     }
 
     app.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
-      success: function(res) {
+      success: function (res) {
         // let carSourcesBySkuInSpuList = []
         // for (let carSourcesBySkuInSpuItem of res.carSourcesBySkuInSpuList) {
         // that.preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem)
@@ -82,7 +81,7 @@ Page({
           // FIXME: 这里的问题是使用了不严谨的方法获取数据
           if (i === 0) {
             dropDownFilters.push(filter)
-          } else if (i == 1) {
+          } else if (i === 1) {
             // 车源发布信息， 默认为 24小时
             scrollFilters.push(filter)
             scrollFiltersSelectedIndexes.push(-1)
@@ -128,14 +127,12 @@ Page({
     const valueString = wx.getStorageSync('recent_contact')
     if (valueString && typeof valueString === 'string') {
       const value = JSON.parse(valueString)
-      console.log(value)
 
       const spuId = value.spuId
       const carSource = value.carSource
-      const supplier = carSource.supplier
       const skuIndex = value.skuIndex
       const carSourceIndex = value.carSourceIndex
-      console.log(spuId)
+
       if (typeof value === 'object') {
         const now = new Date()
         const contactDate = new Date(value.dateString)
@@ -205,12 +202,12 @@ Page({
       }
     }
   },
-  showReliableDialog(spuId, skuItemIndex, carSourceItem, carSourceItemIndex) {
+  showReliableDialog (spuId, skuItemIndex, carSourceItem, carSourceItemIndex) {
     // 24 小时以内， 弹框走起
 
     const that = this
     const hasBeenReliableByUser = carSourceItem.hasBeenReliableByUser
-    const hideDialog = this.$wuxReliableDialog.open({
+    this.$wuxReliableDialog.open({
       spuId: spuId,
       carSource: carSourceItem,
       close: (updatedCarSource) => {
@@ -226,7 +223,7 @@ Page({
         that.setData({
           [`carSourcesBySkuInSpuList[${skuItemIndex}].carSourcesList[${carSourceItemIndex}]`]: updatedCarSource
         })
-      },
+      }
     })
   },
   showFold (a, b, c) {
@@ -243,7 +240,6 @@ Page({
     }, 100)
   },
   hideFold (a, b, c) {
-    const that = this
     this.setData({
       selectedSectionIndex: -1
     })
@@ -298,7 +294,6 @@ Page({
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePriceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice)
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscount = util.downPrice(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice, this.data.carModelsInfo.officialPrice)
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscountDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscount)
-
   },
   /**
    * 处理车源对象
@@ -572,7 +567,7 @@ Page({
     console.log('selected logistics:' + selectedLogistics)
 
     const selectedSourcePublishDateFilter = function (filterId, carSourceItem) {
-      const now = new Date().getTime();
+      const now = new Date().getTime()
       const publishDate = util.dateCompatibility(carSourceItem.publishDate)
       const diff = now - publishDate
 
@@ -590,7 +585,7 @@ Page({
       } else if (filterId === '2') {
         return _hour > 24
       }
-      return true;
+      return true
     }
 
     const selectedLogisticsFilter = function (filterId, carSourceItem) {
@@ -753,7 +748,7 @@ Page({
         const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
 
         app.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
-          success (res){
+          success (res) {
             wx.showModal({
               title: '提示',
               content: '提交成功，请保持通话畅通',
@@ -784,18 +779,18 @@ Page({
     })
   },
   handlerAmendCarFacade (e) {
-    const that = this;
-    const selectedFilterIndex = e.currentTarget.dataset.selectedFilterIndex;
+    const that = this
+    const selectedFilterIndex = e.currentTarget.dataset.selectedFilterIndex
     if (selectedFilterIndex !== this.data.selectedFilterIndex) {
       // 父级
       let firstFilters = []
       if (selectedFilterIndex == 0) {
         firstFilters.push({
           id: '-1',
-          name: "全部"
+          name: '全部'
         })
       }
-      const dropDownFiltersData = firstFilters.concat(this.data.dropDownFilters[selectedFilterIndex].items);
+      const dropDownFiltersData = firstFilters.concat(this.data.dropDownFilters[selectedFilterIndex].items)
 
       // 子级
       let subFirstFilters = []
@@ -804,7 +799,7 @@ Page({
         name: '全部'
       })
 
-      let dropDownSubFiltersData;
+      let dropDownSubFiltersData
       if (this.data.selectedExternalCarColorIndex != -1) {
         const filter = this.data.dropDownFilters[selectedFilterIndex].items[this.data.selectedExternalCarColorIndex]
         if (filter.items) {
@@ -818,7 +813,7 @@ Page({
         showRmendCarFacade: true,
         selectedFilterIndex: selectedFilterIndex,
         dropDownFiltersData: dropDownFiltersData,
-        dropDownSubFiltersData: dropDownSubFiltersData,
+        dropDownSubFiltersData: dropDownSubFiltersData
       })
     } else {
       if (this.data.showRmendCarFacade) {
@@ -854,7 +849,6 @@ Page({
 
     const that = this
     if (filterPosition === 'left') {
-
       // 子级
       let subFirstFilters = []
       subFirstFilters.push({
@@ -862,7 +856,7 @@ Page({
         name: '全部'
       })
 
-      let dropDownSubFiltersData;
+      let dropDownSubFiltersData
       if (filterIndex != -1) {
         if (filterItem.items) {
           dropDownSubFiltersData = subFirstFilters.concat(filterItem.items)
@@ -953,16 +947,16 @@ Page({
       actualIndex = index
       actualId = actualIndex.toString()
       const section = this.selectCarSku(actualIndex)
-      this.showFold(section, actualIndex, actualId);
+      this.showFold(section, actualIndex, actualId)
     }
   },
   /**
    * 评价某一个供应商是否靠谱
    * @param e
    */
-  handlerReliable(e) {
-    console.log("handlerReliable")
-    const that = this;
+  handlerReliable (e) {
+    console.log('handlerReliable')
+    const that = this
 
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
@@ -984,7 +978,7 @@ Page({
     const carModelsInfo = this.data.carModelsInfo
     const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
-    const contact = carSourceItem.supplier.contact;
+    const contact = carSourceItem.supplier.contact
 
     this.actionContact(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, contact)
   },
@@ -1001,7 +995,7 @@ Page({
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
 
     this.setData({
-      [`carSourcesBySkuInSpuList[${skuItemIndex}].carSourcesList[${carSourceItemIndex}]`]: carSourceItem,
+      [`carSourcesBySkuInSpuList[${skuItemIndex}].carSourcesList[${carSourceItemIndex}]`]: carSourceItem
     })
   },
   handlerCarSourceTabClick (e) {
@@ -1081,7 +1075,6 @@ Page({
     })
   },
   handlerCreateQuoted (e) {
-
     const skuItemIndex = e.currentTarget.dataset.skuIndex
 
     const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]

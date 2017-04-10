@@ -314,7 +314,7 @@ export default class UserService extends Service {
       path: 'cgi/tenant/member/exist',
       method: 'GET',
       data: {
-        "mobile": opts.mobile,
+        "mobile": opts.mobile
       },
       success: opts.success,
       fail: opts.fail

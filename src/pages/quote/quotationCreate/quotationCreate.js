@@ -32,7 +32,7 @@ Page({
       monthlyPayment: 0,      // 月供金额，每月还款金额，全款时不传",
       totalPayment: 0,        // 总落地价格
       remark: '',             // "无"
-      read: false,
+      read: false
     },
     priceChange: {
       flag: 0,             // 1 为上， 0 为未增加, -1 为下
@@ -56,7 +56,7 @@ Page({
       priceStr: '',           // "23.26"
       discount: 0,            // 73440 元
       status: '',             // "in_stock"
-      remark: '',             // "无"
+      remark: ''             // "无"
     },
     // SPU 数据
     carModelInfo: {
@@ -258,7 +258,7 @@ Page({
   handlerTabClick (e) {
     this.setData({
       sliderOffset: e.currentTarget.offsetLeft,
-      activeIndex: e.currentTarget.id,
+      activeIndex: e.currentTarget.id
     });
     this.updateForSomeReason()
   },

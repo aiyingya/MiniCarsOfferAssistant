@@ -6,16 +6,11 @@ import config from '../lib/config'
 import modules from '../lib/modules'
 
 export default class Services {
-
-  constructor () {
-
-  }
-
   urls = {}
 
-  sendMessage(opts) {
+  sendMessage (opts) {
     const _HTTPS = `${this.urls[config.ENV]}${opts.path}`
-    const module = new modules
+    const module = new modules()
     module.request({
       url: _HTTPS,
       method: opts.method,
