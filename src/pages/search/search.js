@@ -214,7 +214,6 @@ Page({
     let status = item.supply.status
     let that = this
     let carModelsList = this.data.searchResults
-
     if (status === '暂无供货') {
       this.setData({
         showCharts: false

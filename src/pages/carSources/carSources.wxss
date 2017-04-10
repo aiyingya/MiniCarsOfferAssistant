@@ -566,7 +566,6 @@ page {
 	letter-spacing: 0rpx;
 	line-height: 22rpx;
 }
-
 /* 车源基本信息 和 价格 */
 .carSources-cell .carSources-cell-content .second-part {
 	display: flex;
@@ -658,6 +657,9 @@ page {
 	color: #ED4149;
 	letter-spacing: 0rpx;
 	line-height: 32rpx;
+}
+.carSources-cell .carSources-cell-content .second-part .carSources-cell-price .price-small {
+  font-size: 26rpx;
 }
 .carSources-cell .carSources-cell-content .bare-price {
 	font-family: "PingFangSC-Regular";

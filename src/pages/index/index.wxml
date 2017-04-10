@@ -77,7 +77,7 @@
         wx:key="*this"
       >
         <view class="hotCarsType-title">
-          <view class="hotCarsType-title-inner">{{item.name}}</view>
+          <view class="hotCarsType-title-inner">【{{item.guidePriceSTR}}】{{item.name}}</view>
           <view
             class="hotCarsType-title-price"
             wx:if="{{item.depreciate != 0}}"
