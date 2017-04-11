@@ -1,6 +1,9 @@
-let app = getApp()
+import {
+  $wuxToast
+} from '../../components/wux'
 import util from '../../utils/util'
 
+let app = getApp()
 var columnCharts = null
 var columnChartsList = []
 
@@ -55,7 +58,6 @@ Page({
     } catch (e) {
 
     }
-    this.$wuxToast = app.wux(this).$wuxToast
     if (carsInfo) {
       console.log(carsInfo)
       // 设置NavigationBarTitle.
@@ -205,7 +207,7 @@ Page({
       this.setData({
         showCharts: false
       })
-      this.$wuxToast.show({
+      $wuxToast.show({
         type: false,
         timer: 2000,
         color: '#fff',

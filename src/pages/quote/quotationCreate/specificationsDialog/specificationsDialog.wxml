@@ -6,7 +6,7 @@
         <view class="weui-dialog__title">{{ title }}</view>
       </view>
       <view class="weui-dialog__bd" wx:if="{{ content }}"><view class="weui-dialog__bd__centent">{{ content }}</view></view>
-      <form bindsubmit="{{ specificationsDialogConfirm }}">
+      <form bindsubmit="{{ confirm }}">
         <view style="display:flex;">
           <view class="weui-dialog__input" >
             <input
@@ -27,7 +27,7 @@
           </view>
         </view>
         <view class="weui-dialog__ft">
-          <button class="weui-dialog__btn weui-dialog__btn_default" wx:if="{{ showCancel }}" bindtap="{{ specificationsDialogCancel }}">{{ cancelText }}</button>
+          <button class="weui-dialog__btn weui-dialog__btn_default" wx:if="{{ showCancel }}" bindtap="{{ cancel }}">{{ cancelText }}</button>
           <button class="weui-dialog__btn weui-dialog__btn_primary" formType="submit">{{ confirmText }}</button>
         </view>
       </form>

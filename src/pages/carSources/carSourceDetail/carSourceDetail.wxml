@@ -4,14 +4,14 @@
   >
     <view
       class="weui-mask {{ animateCss }}"
-      hidden="{{ !visible }}"
-      bindtap="{{carSourceDetailDialogClose}}"
+      wx:if="{{ visible }}"
+      bindtap="{{close}}"
       catchtouchmove="{{onTouchMoveWithCatch}}"
     >
     </view>
     <view
       class="weui-dialog {{ animateCss }}"
-      hidden="{{ !visible }}"
+      wx:if="{{ visible }}"
     >
       <view
         class="header"
@@ -23,7 +23,7 @@
         </view>
         <view
           class="close"
-          bindtap="{{carSourceDetailDialogClose}}"
+          bindtap="{{close}}"
         >
           <image
             src="/images/icons/icon_close.png"
@@ -82,7 +82,7 @@
                 wx:for-index="logisticsItemIndex"
                 wx:key="*this"
                 class="logistics-block {{logisticsItemIndex == carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex ? 'selected' : ''}}"
-                bindtap="{{carSourceDetailDialogSelectLogisticsBlock}}"
+                bindtap="{{selectLogisticsBlock}}"
                 data-car-source="{{carSourceItem}}"
                 data-logistics-index="{{logisticsItemIndex}}"
                 data-logistics="{{logisticsItem}}"
@@ -149,7 +149,7 @@
                 <view>1-在途融资：车辆到驿站/门店，回款放车，单证回款当天邮寄</view>
                 <view>2-展车融资：车辆到店，先放车再回款，单证回款当天邮寄</view>
                 <view>3-利息：运输周期万四利息，到目的地后1-5天万四，6-15天万六；回款结息！</view>
-                <view>4-具体方案请联系： <view catchtap="{{carSourceDetailDialogContactStaff}}" data-contact="18501707827" class="contact" > 金洲锋 </view> </view>
+                <view>4-具体方案请联系： <view catchtap="{{contactStaff}}" data-contact="18501707827" class="contact" > 金洲锋 </view> </view>
               </view>
             </view>
 
@@ -166,7 +166,7 @@
         >
           <view
             class="line-item"
-            bindtap="{{carSourceDetailDialogSwitchFold}}"
+            bindtap="{{switchFold}}"
           >
             <view
               class="line-title"
@@ -263,7 +263,7 @@
         <view
           wx:if="{{carSourceItem.supplierSelfSupport}}"
           class="button confirm"
-          bindtap="{{carSourceDetailDialogBookCar}}"
+          bindtap="{{bookCar}}"
           data-sku-item="{{skuItem}}"
           data-car-source="{{carSourceItem}}"
         >
@@ -272,7 +272,7 @@
         <view
           wx:else
           class="button confirm"
-          bindtap="{{carSourceDetailDialogContact}}"
+          bindtap="{{contact}}"
           data-sku-item="{{skuItem}}"
           data-car-source="{{carSourceItem}}"
         >

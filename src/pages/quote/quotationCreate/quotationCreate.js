@@ -1,4 +1,9 @@
+import {
+  $wuxInputNumberDialog
+} from "../../../components/wux"
+import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialog'
 import util from '../../../utils/util'
+
 const app = getApp()
 
 Page({
@@ -21,22 +26,22 @@ Page({
         specifications: '',
         guidePrice: 0,
         sellingPrice: 0
-      }],     // skuId
-      hasLoan: true,          // 必传，true/false，boolean，是否贷款
-      paymentRatio: 30,       // 首付比例（%），decimal，全款时不传，取值范围0~100
-      stages: 3,              // 贷款期数，int，全款时不传
-      expenseRate: 4,         // 贷款费率（%），decimal，全款时不传，取值范围0~100
-      requiredExpenses: 0,    // 必需费用（元），deciaml，取值范围0~999999999,
-      otherExpenses: 0,       // 其他费用（元），deciaml，取值范围0~999999999",
-      advancePayment: 0,      // 必传，首次支付金额，如果全款则为全款金额",
-      monthlyPayment: 0,      // 月供金额，每月还款金额，全款时不传",
-      totalPayment: 0,        // 总落地价格
-      remark: '',             // "无"
+      }], // skuId
+      hasLoan: true, // 必传，true/false，boolean，是否贷款
+      paymentRatio: 30, // 首付比例（%），decimal，全款时不传，取值范围0~100
+      stages: 3, // 贷款期数，int，全款时不传
+      expenseRate: 4, // 贷款费率（%），decimal，全款时不传，取值范围0~100
+      requiredExpenses: 0, // 必需费用（元），deciaml，取值范围0~999999999,
+      otherExpenses: 0, // 其他费用（元），deciaml，取值范围0~999999999",
+      advancePayment: 0, // 必传，首次支付金额，如果全款则为全款金额",
+      monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
+      totalPayment: 0, // 总落地价格
+      remark: '', // "无"
       read: false
     },
     priceChange: {
-      flag: 0,             // 1 为上， 0 为未增加, -1 为下
-      price: '',              // 1.9 万
+      flag: 0, // 1 为上， 0 为未增加, -1 为下
+      price: '', // 1.9 万
       point: ''
     },
     /// 表单相关
@@ -46,42 +51,42 @@ Page({
     stagesIndex: 2,
     /// SKU 数据
     carSKUInfo: {
-      skuId: '',              // "1D71D878-4CBB-4DE7-AEC0-A59A00BEDBE3"
-      skuPic: '',             // "/upload/image/original/201512/021043092970.jpg"
-      externalColorId: '',    // "013211E6-57FC-43DA-889D-782E69BEA5BF"
-      externalColorName: '',  // "星光棕"
-      internalColorId: '',    // "1B2AA0C6-F698-4CBC-89A5-B51F3498E28F"
-      internalColorName: '',  // "黑色"
-      price: 0,               // 232560
-      priceStr: '',           // "23.26"
-      discount: 0,            // 73440 元
-      status: '',             // "in_stock"
-      remark: ''             // "无"
+      skuId: '', // "1D71D878-4CBB-4DE7-AEC0-A59A00BEDBE3"
+      skuPic: '', // "/upload/image/original/201512/021043092970.jpg"
+      externalColorId: '', // "013211E6-57FC-43DA-889D-782E69BEA5BF"
+      externalColorName: '', // "星光棕"
+      internalColorId: '', // "1B2AA0C6-F698-4CBC-89A5-B51F3498E28F"
+      internalColorName: '', // "黑色"
+      price: 0, // 232560
+      priceStr: '', // "23.26"
+      discount: 0, // 73440 元
+      status: '', // "in_stock"
+      remark: '' // "无"
     },
     // SPU 数据
     carModelInfo: {
-      carModelId: '',         // "C5997556-CAB7-47F8-A2E6-21026C2EF082",
-      carModelName: '',       // "宝马1系 2015款 120i 运动设计套装 欧V（符合国V标准）",
-      officialPrice: 0,       // 306000,
-      officialPriceStr: '',   // "30.60",
+      carModelId: '', // "C5997556-CAB7-47F8-A2E6-21026C2EF082",
+      carModelName: '', // "宝马1系 2015款 120i 运动设计套装 欧V（符合国V标准）",
+      officialPrice: 0, // 306000,
+      officialPriceStr: '', // "30.60",
       lowestPriceSku: {
-        skuId: '',            // "023010CE-65CC-47B6-A7A2-A59A00BEDC79",
-        skuPic: '',           // "/upload/image/original/201512/021043356647.jpg",
-        externalColorId: '',  // "C869C59C-E619-47FB-8A7C-F5BB24932F6E",
-        externalColorName: '',// "绯红色",
-        internalColorId: '',  // "1B2AA0C6-F698-4CBC-89A5-B51F3498E28F",
-        internalColorName: '',// "黑色",
-        price: 0,             // 232560,
-        priceStr: '',         // "23.26",
-        discount: 0,          // 73440,
-        status: '',           // "no_stock",
-        remark: ''            // "无"
+        skuId: '', // "023010CE-65CC-47B6-A7A2-A59A00BEDC79",
+        skuPic: '', // "/upload/image/original/201512/021043356647.jpg",
+        externalColorId: '', // "C869C59C-E619-47FB-8A7C-F5BB24932F6E",
+        externalColorName: '', // "绯红色",
+        internalColorId: '', // "1B2AA0C6-F698-4CBC-89A5-B51F3498E28F",
+        internalColorName: '', // "黑色",
+        price: 0, // 232560,
+        priceStr: '', // "23.26",
+        discount: 0, // 73440,
+        status: '', // "no_stock",
+        remark: '' // "无"
       },
-      count: ''               // "7.34"
+      count: '' // "7.34"
     },
-    source: ''                // carModels/carSources/quotationDetail/
+    source: '' // carModels/carSources/quotationDetail/
   },
-  onLoad (options) {
+  onLoad(options) {
     let that = this
     try {
       let res = wx.getSystemInfoSync();
@@ -156,17 +161,15 @@ Page({
         const sellingPrice = carSkuInfo.price || carModelInfo.officialPrice
 
         // 设置报价表单数据
-        let quotationItems = [
-          {
-            itemNumber: itemNumber,
-            itemType: itemType,
-            itemName: carModelInfo.carModelName,
-            itemPic: itemPic,
-            specifications: specifications,
-            guidePrice: guidePrice,
-            sellingPrice: sellingPrice
-          }
-        ]
+        let quotationItems = [{
+          itemNumber: itemNumber,
+          itemType: itemType,
+          itemName: carModelInfo.carModelName,
+          itemPic: itemPic,
+          specifications: specifications,
+          guidePrice: guidePrice,
+          sellingPrice: sellingPrice
+        }]
 
         this.setData({
           'quotation.quotationItems': quotationItems,
@@ -175,10 +178,6 @@ Page({
         })
       }
     }
-
-    /// 初始化自定义组件
-    this.$wuxDialog = app.wux(this).$wuxDialog
-    this.$wuxSpecificationsDialog = app.wux(this).$wuxSpecificationsDialog
 
     this.updateForSomeReason()
 
@@ -191,23 +190,13 @@ Page({
       }
     });
   },
-  onReady () {
-
-  },
-  onShow () {
-  },
-  onHide () {
-
-  },
-  onUnload () {
-  },
-  onReachBottom () {
-
-  },
-  onPullDownRefresh () {
-
-  },
-  updateForSomeReason () {
+  onReady() {},
+  onShow() {},
+  onHide() {},
+  onUnload() {},
+  onReachBottom() {},
+  onPullDownRefresh() {},
+  updateForSomeReason() {
 
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let officialPrice = this.data.quotation.quotationItems[0].guidePrice
@@ -251,35 +240,35 @@ Page({
       }
     });
   },
-  isLoanTabActive (e) {
+  isLoanTabActive(e) {
     return this.data.activeIndex == 0
   },
   // event handler
-  handlerTabClick (e) {
+  handlerTabClick(e) {
     this.setData({
       sliderOffset: e.currentTarget.offsetLeft,
       activeIndex: e.currentTarget.id
     });
     this.updateForSomeReason()
   },
-  handlerPaymentRatioChange (e) {
+  handlerPaymentRatioChange(e) {
     this.setData({
       'paymentRatiosIndex': e.detail.value,
       'quotation.paymentRatio': this.data.paymentRatiosArray[e.detail.value]
     })
     this.updateForSomeReason()
   },
-  handlerStagesChange (e) {
+  handlerStagesChange(e) {
     this.setData({
       'stagesIndex': e.detail.value,
       'quotation.stages': this.data.stagesArray[e.detail.value]
     })
     this.updateForSomeReason()
   },
-  handlerExpenseRateChange (e) {
+  handlerExpenseRateChange(e) {
     let that = this
 
-    this.$wuxDialog.open({
+    $wuxInputNumberDialog.open({
       title: '贷款费率',
       content: '费率(%)',
       inputNumber: this.data.quotation.expenseRate,
@@ -301,16 +290,15 @@ Page({
         })
         that.updateForSomeReason()
       },
-      cancel: () => {
-      }
+      cancel: () => {}
     })
   },
-  handlerSellingPriceChange (e) {
+  handlerSellingPriceChange(e) {
     let that = this
 
     let sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
 
-    this.$wuxDialog.open({
+    $wuxInputNumberDialog.open({
       title: '裸车价',
       inputNumber: sellingPrice,
       inputNumberPlaceholder: '输入裸车价',
@@ -324,16 +312,15 @@ Page({
         })
         that.updateForSomeReason()
       },
-      cancel: () => {
-      }
+      cancel: () => {}
     })
   },
-  handlerRequiredExpensesChange (e) {
+  handlerRequiredExpensesChange(e) {
     let that = this
 
     let requiredExpenses = this.data.quotation.requiredExpenses
 
-    this.$wuxDialog.open({
+    $wuxInputNumberDialog.open({
       title: '必要花费',
       content: '购置税、上牌费、车船税、保险等',
       inputNumber: requiredExpenses,
@@ -350,16 +337,15 @@ Page({
 
         that.updateForSomeReason()
       },
-      cancel: () => {
-      }
+      cancel: () => {}
     })
   },
-  handlerOtherExpensesChange (e) {
+  handlerOtherExpensesChange(e) {
     let that = this
 
     let otherExpenses = this.data.quotation.otherExpenses
 
-    this.$wuxDialog.open({
+    $wuxInputNumberDialog.open({
       title: '其他花费',
       content: '精品费、安装费等',
       inputNumber: otherExpenses,
@@ -376,11 +362,10 @@ Page({
 
         that.updateForSomeReason()
       },
-      cancel: () => {
-      }
+      cancel: () => {}
     })
   },
-  handlerRemarkChange (e) {
+  handlerRemarkChange(e) {
     let remark = e.detail.value
     this.setData({
       'quotation.remark': remark
@@ -395,7 +380,7 @@ Page({
       success: function (res) {
         let quotationDraft = res
         // 请求成功后弹出对话框
-        const hideDialog = that.$wuxDialog.open({
+        $wuxInputNumberDialog.open({
           title: '保存成功',
           content: '发送给客户',
           inputNumberPlaceholder: '输入对方手机号码',
@@ -511,7 +496,7 @@ Page({
       }
     })
   },
-  headlerChangeColor (e) {
+  headlerChangeColor(e) {
     const that = this
     const specifications = this.data.quotation.quotationItems[0].specifications
     const array = specifications.split('/')
@@ -519,7 +504,7 @@ Page({
     const externalColorName = array[0]
     const internalColorName = array[1]
     // 输入车源
-    const hide = this.$wuxSpecificationsDialog.open({
+    $wuxSpecificationsDialog.open({
       title: '配色',
       content: '填写 外饰/内饰 颜色',
       externalColorName: externalColorName,

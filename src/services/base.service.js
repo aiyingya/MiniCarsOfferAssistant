@@ -2,8 +2,8 @@
  * Created by David on 28/03/2017.
  */
 
-import config from '../lib/config'
-import modules from '../lib/modules'
+import config from './config'
+import modules from './modules'
 
 export default class Services {
   urls = {}

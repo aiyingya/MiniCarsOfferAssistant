@@ -1,6 +1,6 @@
 /**app.wxss**/
-@import 'css/weui.wxss';
-@import 'lib/wux.wxss';
+@import 'components/weui.wxss';
+@import 'components/wux.wxss';
 
 page{
     min-height: 100%;

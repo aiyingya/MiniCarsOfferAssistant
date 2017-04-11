@@ -1,181 +1,118 @@
-import tools from '../../../lib/tools'
+import Component from '../../../components/component'
 
-/**
- * 自定义 reliableDialog 组件
- * @param {Object} $scope 作用域对象
- */
-class wux {
-  constructor($scope) {
-    Object.assign(this, {
-      $scope
-    })
-    this.__init()
-  }
-
-  /**
-   * 初始化类方法
-   */
-  __init() {
-    this.__initDefaults()
-    this.__initTools()
-    this.__initComponents()
-  }
-
+export default {
   /**
    * 默认参数
    */
-  __initDefaults() {
-    this.$wux = {
-      reliableDialog: {
-        visible: !1
-      }
+  setDefaults() {
+    return {
+      spuId: '',
+      carSource: {}
     }
-
-    this.$scope.setData({
-      [`$wux`]: this.$wux
-    })
-  }
-
+  },
   /**
-   * 工具方法
+   * 默认数据
    */
-  __initTools() {
-    this.tools = new tools
-  }
-
+  data() {
+    return {}
+  },
   /**
-   * 初始化所有组件
+   * 显示dialog组件
+   * @param {Object} opts 配置项
+   * @param {String} opts.spuId 提示标题
+   * @param {Object} opts.carSource 验证函数
+   * @param {Object} opts.close 验证函数
+   * @param {Object} opts.follow 验证函数
+   * @param {Object} opts.reliable 验证函数
    */
-  __initComponents() {
-    this.__initreliableDialog()
-  }
+  open(opts = {}) {
+    const options = Object.assign({
+      animateCss: undefined,
+      visible: !1
+    }, this.setDefaults(), opts)
 
-  /**
-   * 对话框组件
-   */
-  __initreliableDialog() {
-    const that = this
-    const extend = that.tools.extend
-    const clone = that.tools.clone
-    const $scope = that.$scope
-
-    that.$wuxReliableDialog = {
-      /**
-       * 默认参数
-       */
-      defaults: {
-        showCancel: !0,
-        spuId: '',
-        carSource: {}
-      },
-      /**
-       * 显示reliableDialog组件
-       * @param {Object} opts 参数对象
-       * @param {Function} opts.supplier 供应商对象
-       * @param {Function} opts.close 点击按钮按钮的回调函数
-       */
-      open(opts = {}) {
-        const options = extend(clone(this.defaults), opts)
-        const hideReliableDialog = (cb) => {
-          that.setHidden('reliableDialog')
-          typeof cb === 'function' && cb()
-        }
-        const noHideReliableDialog = (cb) => {
-          typeof cb === 'function' && cb()
-        }
-
-        // 渲染组件
-
-        $scope.setData({
-          [`$wux.reliableDialog`]: options,
-          [`$wux.reliableDialog.reliableDialogClose`]: `reliableDialogClose`,
-          [`$wux.reliableDialog.reliableDialogFollow`]: `reliableDialogFollow`,
-          [`$wux.reliableDialog.reliableDialogReliable`]: `reliableDialogReliable`,
-          [`$wux.reliableDialog.onTouchMoveWithCatch`]: `onTouchMoveWithCatch`
-        })
-
-        $scope.onTouchMoveWithCatch = (e) => {
-          // 防止滚动页面透传
-        }
-
-        // 绑定tap事件
-        $scope.reliableDialogClose = (e) => {
-          hideReliableDialog(options.close(options.carSource))
-        }
-        $scope.reliableDialogFollow = (e) => {
-          // 关注
-        }
-        $scope.reliableDialogReliable = (e) => {
+    // 实例化组件
+    const component = new Component({
+      scope: `$wux.reliableDialog`,
+      data: options,
+      methods: {
+        /**
+         * 隐藏
+         */
+        hide(cb) {
+          if (this.removed) return !1
+          this.removed = !0
+          this.setHidden()
+          setTimeout(() => typeof cb === `function` && cb(), 300)
+        },
+        /**
+         * 显示
+         */
+        show() {
+          if (this.removed) return !1
+          this.setVisible()
+        },
+        /**
+         * 防止事件透传
+         *
+         * @param {any} e
+         */
+        onTouchMoveWithCatch(e) {},
+        /**
+         * 关闭
+         *
+         * @param {any} e
+         */
+        close(e) {
+          this.hide(options.close(options.carSource))
+        },
+        /**
+         * 可靠
+         *
+         * @param {any} e
+         */
+        reliable(e) {
           const reliable = e.currentTarget.dataset.reliable
           if (reliable === '1') {
             if (options.carSource.hasBeenReliableByUser === 1) {
               if (options.carSource.hasBeenReliableCount) {
-                options.carSource.hasBeenReliableCount --
+                options.carSource.hasBeenReliableCount--
               }
               options.carSource.hasBeenReliableByUser = 0
             } else {
-              if (options.carSource.hasBeenReliableByUser === 0) {
-              } else {
+              if (options.carSource.hasBeenReliableByUser === 0) {} else {
                 if (options.carSource.hasBeenUnReliableCount) {
-                  options.carSource.hasBeenUnReliableCount --
+                  options.carSource.hasBeenUnReliableCount--
                 }
               }
-              options.carSource.hasBeenReliableCount ++
-              options.carSource.hasBeenReliableByUser = 1
+              options.carSource.hasBeenReliableCount++
+                options.carSource.hasBeenReliableByUser = 1
             }
           } else if (reliable === '-1') {
             if (options.carSource.hasBeenReliableByUser === -1) {
               if (options.carSource.hasBeenUnReliableCount) {
-                options.carSource.hasBeenUnReliableCount --
+                options.carSource.hasBeenUnReliableCount--
               }
               options.carSource.hasBeenReliableByUser = 0
             } else {
-              if (options.carSource.hasBeenReliableByUser === 0) {
-              } else {
+              if (options.carSource.hasBeenReliableByUser === 0) {} else {
                 if (options.carSource.hasBeenReliableCount) {
-                  options.carSource.hasBeenReliableCount --
+                  options.carSource.hasBeenReliableCount--
                 }
               }
-              options.carSource.hasBeenUnReliableCount ++
-              options.carSource.hasBeenReliableByUser = -1
+              options.carSource.hasBeenUnReliableCount++
+                options.carSource.hasBeenReliableByUser = -1
             }
           }
-          $scope.setData({
-            [`$wux.reliableDialog.carSource`]: options.carSource
+          this.setData({
+            [`${this.options.scope}.carSource`]: options.carSource
           })
         }
-
-        that.setVisible('reliableDialog')
-
-        return $scope.reliableDialogClose
       }
-    }
-  }
-
-  /**
-   * 设置元素显示
-   */
-  setVisible(key, className = 'weui-animate-fade-in') {
-    this.$scope.setData({
-      [`$wux.${key}.visible`]: !0,
-      [`$wux.${key}.animateCss`]: className
-    })
-  }
-
-  /**
-   * 设置元素隐藏
-   */
-  setHidden(key, className = 'weui-animate-fade-out', timer = 300) {
-    this.$scope.setData({
-      [`$wux.${key}.animateCss`]: className
     })
 
-    setTimeout(() => {
-      this.$scope.setData({
-        [`$wux.${key}.visible`]: !1
-      })
-    }, timer)
+    component.show()
+
+    return component.hide
   }
 }
-
-export default wux

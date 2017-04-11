@@ -1,4 +1,6 @@
-//index.js
+import {
+  $wuxTrack
+} from '../../components/wux'
 import util from '../../utils/util'
 
 let app = getApp()
@@ -41,7 +43,9 @@ Page({
       this.pixelRatio = res.pixelRatio
       this.apHeight = 16
       this.offsetTop = 80
-      this.setData({windowHeight: res.windowHeight + 'px'})
+      this.setData({
+        windowHeight: res.windowHeight + 'px'
+      })
     } catch (e) {
 
     }
@@ -65,20 +69,19 @@ Page({
     that.getHotpushCars()
 
     /// 初始化自定义组件
-    this.$wuxTrack = app.wux(this).$wuxTrack
+    // this.$wuxTrack = app.wux(this).$wuxTrack
 
-//		const push = this.$wuxTrack.push({
-//			appVersion: '1.0.1'
-//		})
+    //		const push = this.$wuxTrack.push({
+    //			appVersion: '1.0.1'
+    //		})
   },
-  onShow() {
-  },
+  onShow() {},
   onPullDownRefresh() {
     // 下拉刷新
     wx.stopPullDownRefresh()
     this.onLoad()
   },
-  getHotpushCars () {
+  getHotpushCars() {
     let that = this
     app.tradeService.getHotPushCars({
       success: function (res) {
@@ -96,13 +99,21 @@ Page({
     })
   },
   handlerAlphaTap(e) {
-    let {ap} = e.target.dataset
+    let {
+      ap
+    } = e.target.dataset
     let that = this
-    that.setData({alpha: ap})
-    that.setData({alphanetToast: ap})
+    that.setData({
+      alpha: ap
+    })
+    that.setData({
+      alphanetToast: ap
+    })
   },
   handlerMove(e) {
-    let {brandGroupList} = this.data
+    let {
+      brandGroupList
+    } = this.data
     let moveY = e.touches[0].clientY
     let rY = moveY - this.offsetTop
     let that = this
@@ -111,8 +122,12 @@ Page({
       if (0 <= index < brandGroupList.length) {
         let nonwAp = brandGroupList[index]
         if (nonwAp) {
-          that.setData({alpha: nonwAp.firstLetter})
-          that.setData({alphanetToast: nonwAp.firstLetter})
+          that.setData({
+            alpha: nonwAp.firstLetter
+          })
+          that.setData({
+            alphanetToast: nonwAp.firstLetter
+          })
         }
       }
     }
@@ -121,7 +136,9 @@ Page({
     let carSeries = e.currentTarget.dataset.carseries;
     console.log(carSeries)
     let that = this;
-    let {HTTPS_YMCAPI} = this.data;
+    let {
+      HTTPS_YMCAPI
+    } = this.data;
 
     app.tradeService.getNavigatorForCarSeries({
       brandId: carSeries.id,
@@ -175,7 +192,7 @@ Page({
       phoneNumber: phone
     })
   },
-  onTouchMoveWithCatch () {
+  onTouchMoveWithCatch() {
     // 拦截触摸移动事件， 阻止透传
   }
 })

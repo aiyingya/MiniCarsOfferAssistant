@@ -1,3 +1,10 @@
+import {
+  $wuxDialog,
+  $wuxInputNumberDialog
+} from '../../components/wux'
+import $wuxCarSourceDetailDialog from './carSourceDetail/carSourceDetail'
+import $wuxReliableDialog from './reliableDialog/reliableDialog'
+
 import util from '../../utils/util.js'
 
 let app = getApp()
@@ -64,11 +71,6 @@ Page({
 
     app.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
       success: function (res) {
-        // let carSourcesBySkuInSpuList = []
-        // for (let carSourcesBySkuInSpuItem of res.carSourcesBySkuInSpuList) {
-        // that.preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem)
-        // carSourcesBySkuInSpuList.push(carSourcesBySkuInSpuItem)
-        // }
 
         let filters = res.filters
         let dropDownFilters = []
@@ -115,12 +117,6 @@ Page({
         })
       }
     })
-
-    /// 初始化自定义组件
-    this.$wuxDialog = app.wux(this).$wuxDialog
-    this.$wuxReliableDialog = app.wux(this).$wuxReliableDialog
-    this.$wuxNormalDialog = app.wux(this).$wuxNormalDialog
-    this.$wuxCarSourceDetailDialog = app.wux(this).$wuxCarSourceDetailDialog
   },
   onShow () {
     const that = this
@@ -181,7 +177,7 @@ Page({
             success: function () {
               that.data.showDetailTitle = false
             }
-          })
+        })
         }
       }
 
@@ -207,7 +203,7 @@ Page({
 
     const that = this
     const hasBeenReliableByUser = carSourceItem.hasBeenReliableByUser
-    this.$wuxReliableDialog.open({
+    $wuxReliableDialog.open({
       spuId: spuId,
       carSource: carSourceItem,
       close: (updatedCarSource) => {
@@ -739,7 +735,7 @@ Page({
   actionBookCar (carModelsInfo, skuItem, carSourceItem) {
     const that = this
 
-    this.$wuxNormalDialog.open({
+    $wuxDialog.open({
       title: '提示',
       content: '发起定车后， 将会有工作人员与您联系',
       confirmText: '发起定车',
@@ -1039,8 +1035,7 @@ Page({
       this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
     }
 
-    this.$wuxCarSourceDetailDialog.open({
-      app: app,
+    $wuxCarSourceDetailDialog.open({
       carModel: this.data.carModelsInfo,
       skuItem: skuItem,
       carSourceItem: carSourceItem,

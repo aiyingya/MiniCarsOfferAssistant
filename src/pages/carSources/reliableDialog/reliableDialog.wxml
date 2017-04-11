@@ -2,15 +2,15 @@
     <view class="reliableDialog">
         <view
                 class="weui-mask {{ animateCss }}"
-                hidden="{{ !visible }}"
-                bindtap="{{reliableDialogClose}}"
+                wx:if="{{ visible }}"
+                bindtap="{{close}}"
                 catchtouchmove="{{onTouchMoveWithCatch}}"
         >
         </view>
-        <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
+        <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
             <view
                     class="close"
-                    bindtap="{{reliableDialogClose}}"
+                    bindtap="{{close}}"
             >
                 <image
                         src="../../images/icons/icon_close.png"
@@ -24,7 +24,7 @@
                 <view class="reliable-section">
                     <view
                             class="reliable {{carSource.hasBeenReliableByUser === 1? 'selected' : ''}}"
-                            bindtap="{{reliableDialogReliable}}"
+                            bindtap="{{reliable}}"
                             data-reliable="1"
                     >
                         <image
@@ -35,7 +35,7 @@
                     </view>
                     <view
                             class="reliable {{carSource.hasBeenReliableByUser === -1? 'selected' : ''}}"
-                            bindtap="{{reliableDialogReliable}}"
+                            bindtap="{{reliable}}"
                             data-reliable="-1"
                     >
                         <image

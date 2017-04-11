@@ -1,5 +1,4 @@
 //app.js
-import wux from './lib/wux'
 import wxcharts from './modules/wxcharts'
 
 import Util from './utils/util'
@@ -29,7 +28,6 @@ App({
   },
   globalData: {
   },
-  wux: wux,
   wxcharts: wxcharts,
   userService: userService,
   tradeService: tradeService,

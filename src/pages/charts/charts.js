@@ -5,7 +5,6 @@ Page({
 
 	},
 	onLoad (options) {
-
 		this.drawCanvas()
 	},
 	onShow () {
@@ -62,7 +61,5 @@ Page({
         area: ['风险','适宜2.43~3.73','偏贵']
       }
     })
-
 	}
-
 })
