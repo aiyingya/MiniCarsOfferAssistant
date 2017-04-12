@@ -9,6 +9,10 @@
 
 import UBTService from '../../services/ubt.service.js'
 
+import config from '../../config'
+
+import Component from '../component'
+
 export default {
 
   UBTService: new UBTService(),
@@ -16,18 +20,22 @@ export default {
    * 默认参数
    */
   setDefaults() {
-    const system = wx.getSystemInfoSync()
+    const system = config.system
     return {
-      deviceType: 'wx_miniapps',
-      appVersion: 'WXMA:1.0.0',
-      tk_cityIp: '',
-      tk_cardCity: '',
+      deviceType: system.platform,
+      appVersion: `${config.name}:${config.version}`,
       pageId: '',
-      referPageId: '',
-      os: system.model,
+      pageName: '',
+      os: `${system.system}|wechat ${system.version}|sdk ${system.SDKVersion}`,
       screen: `${system.windowWidth}x${system.windowHeight}`,
       language: system.language,
-      eventAction: 'pageShow'
+      phoneModel: system.model,
+      deviceId: config.device.deviceId,
+      eventAction: '',
+      eventLabel: '',
+      eventSource: '',
+      eventValue: 1,
+      eventCategory: ''
     }
   },
   /**
@@ -36,8 +44,30 @@ export default {
   data() {
     return {}
   },
+  /**
+   *
+   * @param {Object} [opts={}]
+   * @param {String} [opts.eventAction]
+   * @param {String} [opts.eventLabel]
+   * @param {String} [opts.eventCategory]
+   * @param {Number} [opts.eventValue]
+   */
   push(opts = {}) {
-    const options = Object.assign({}, this.setDefaults, opts)
+    const that = this
+    const data = Object.assign({}, this.setDefaults(), opts)
+
+    const component = new Component({
+      scope: `$wux.track`,
+      data: {},
+      methods: {
+
+      }
+    })
+
+    data.pageId = component.page.data.pageId
+    data.pageName = component.page.data.pageName
+    data.parameters = component.page.data.pageParameters
+
     /**
      * 获取地理位置
      */
@@ -47,18 +77,10 @@ export default {
         let latitude = res.latitude
         let longitude = res.longitude
 
-        options.latitude = latitude
-        options.longitude = longitude
+        data.lat = latitude
+        data.lng = longitude
 
-        this.UBTService.report({
-          options: options,
-          success: function () {
-            // 成功
-          },
-          fail: function () {
-            // 失败
-          }
-        })
+        that.UBTService.report({ data })
       }
     })
   }

@@ -6,8 +6,8 @@ import Service from './base.service'
 export default class UBTService extends Service {
 
   urls = {
-    dev: 'https://ubt.yaomaiche.com/',
-    gqc: 'https://ubt.yaomaiche.com/',
+    dev: 'https://test.yaomaiche.com/ubtdev/',
+    gqc: 'https://test.yaomaiche.com/ubtgqc/',
     prd: 'https://ubt.yaomaiche.com/'
   }
 
@@ -15,22 +15,24 @@ export default class UBTService extends Service {
     super()
   }
 
-  sendMessage(opts, loadingType = 'none') {
-    opts.loadingType = loadingType
-    super.sendMessage(opts)
+  sendMessageByPromise(opts) {
+    return super.sendMessageByPromise(opts)
   }
 
   /**
    * 上报信息
-   * @param opts
+   *
+   * @param {Object} opts
+   * @param {Object} opts.data 上报数据集合
+   * @returns {Promise}
+   *
+   * @memberOf UBTService
    */
   report(opts) {
-    this.sendMessage({
+    return this.sendMessageByPromise({
       path: 'acquire/report',
       method: 'GET',
-      data: opts.options,
-      success: opts.success,
-      fail: opts.fail
+      data: opts.data
     })
   }
 }

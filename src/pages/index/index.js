@@ -51,7 +51,18 @@ Page({
 
     }
 
-    that.reloadIndexData()
+    const promise = that.reloadIndexData()
+    wx.showToast({
+      title: '正在加载',
+      icon: 'loading',
+      duration: 10000,
+      mask: true
+    })
+    promise.then(res => {
+      wx.hideToast()
+    }, err => {
+    })
+
   },
   onShow() { },
   onPullDownRefresh() {

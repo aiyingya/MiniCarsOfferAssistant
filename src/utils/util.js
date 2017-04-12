@@ -1,30 +1,6 @@
 
 export default class Util {
 
-  static DeviceIdKey = 'deviceId'
-
-  constructor () {
-  }
-
-  static generateDeviceId () {
-    try {
-      const deviceId = wx.getStorageSync(Util.DeviceIdKey)
-      if (deviceId && deviceId.length) {
-        console.log(`设备 Id 为 ${deviceId} 从本地缓存取出`)
-      } else {
-        const newDeviceId = Util.generateUUID()
-        try {
-          wx.setStorageSync(Util.DeviceIdKey, newDeviceId)
-          console.log(`设备 Id 为 ${newDeviceId} 新建 id`)
-        } catch (e) {
-          console.log(e)
-        }
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
   static formatTime(date) {
     var year = date.getFullYear()
     var month = date.getMonth() + 1

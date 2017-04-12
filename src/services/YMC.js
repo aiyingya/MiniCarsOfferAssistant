@@ -1,4 +1,4 @@
-import { ENV, version, versionCode, build } from './config'
+import config from '../config'
 
 export default class YMC {
   /**
@@ -23,8 +23,8 @@ export default class YMC {
 
       const defaultHeader = {
         'ClientId': clientId,
-        'ClientVersion': versionCode,
-        'SystemCode': '6'
+        'ClientVersion': config.versionCode,
+        'SystemCode': '60'
       }
       const header = options.header || {}
 
@@ -139,7 +139,7 @@ export default class YMC {
 
       let header = {
         'ClientId': clientId,
-        'ClientVersion': '10000',
+        'ClientVersion': config.versionCod,
         'SystemCode': '60',
         'content-type': options.contentType || 'application/json'
       }

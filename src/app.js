@@ -1,13 +1,11 @@
-//app.js
-import wxcharts from './modules/wxcharts'
+// config 接口需要在应用开始执行
+import config from './config'
 
-import Util from './utils/util'
+import wxcharts from './modules/wxcharts'
 
 import UserService from './services/user.service'
 import TradeService from './services/trade.service'
 import SAASService from './services/saas.service'
-
-Util.generateDeviceId()
 
 const userService = new UserService()
 const tradeService = new TradeService()
