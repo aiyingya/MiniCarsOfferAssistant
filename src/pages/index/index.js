@@ -2,6 +2,7 @@ import {
   $wuxTrack
 } from '../../components/wux'
 import util from '../../utils/util'
+import YMC from '../../services/YMC'
 
 let app = getApp()
 Page({
@@ -50,52 +51,63 @@ Page({
 
     }
 
-    // 获取热推车品牌
-    app.tradeService.getHotPushBrands({
-      success: function (res) {
-        if (res) {
-          console.log(res)
-          that.setData({
-            hotCarLists: res
-          })
-        }
-      },
-      fail: function () {
-
-      }
-    })
-
-    // 获取热推车型.
-    that.getHotpushCars()
-
-    /// 初始化自定义组件
-    // this.$wuxTrack = app.wux(this).$wuxTrack
-
-    //		const push = this.$wuxTrack.push({
-    //			appVersion: '1.0.1'
-    //		})
+    that.reloadIndexData()
   },
-  onShow() {},
+  onShow() { },
   onPullDownRefresh() {
     // 下拉刷新
-    wx.stopPullDownRefresh()
-    this.onLoad()
+    const promise = this.reloadIndexData()
+    promise.then(res => {
+      wx.stopPullDownRefresh()
+    })
   },
-  getHotpushCars() {
-    let that = this
-    app.tradeService.getHotPushCars({
-      success: function (res) {
-        let depreciate
-
-        for (let item of res) {
-          item.depreciate = (item.guidePrice - item.salePrice)
-          item.depreciateSTR = (Math.abs(item.guidePrice - item.salePrice) / 10000).toFixed(2)
-          item.guidePriceSTR = (item.guidePrice / 100).toFixed(0)
-        }
+  /**
+   * 首页所有数据加载方法
+   *
+   * @returns {Promise}
+   */
+  reloadIndexData() {
+    const promise1 = this.getHotPushBrands()
+    const promise2 = this.getHotPushCarModels()
+    const promise = Promise.race([promise1, promise2])
+    return promise
+  },
+  /**
+   * 获取热推车牌
+   *
+   * @returns {Promise}
+   */
+  getHotPushBrands() {
+    const that = this
+    return app.tradeService.getHotPushBrands().then((res) => {
+      if (res) {
         that.setData({
-          hotCarsTypes: res
+          hotCarLists: res
         })
       }
+    }, (err) => {
+
+    })
+  },
+  /**
+   * 获取热推车型
+   *
+   * @returns {Promise}
+   */
+  getHotPushCarModels() {
+    const that = this
+    return app.tradeService.getHotPushCarModels().then((res) => {
+      let depreciate
+      for (let item of res) {
+        item.depreciate = (item.guidePrice - item.salePrice)
+        item.depreciateSTR = (Math.abs(item.guidePrice - item.salePrice) / 10000).toFixed(2)
+        item.guidePriceSTR = (item.guidePrice / 100).toFixed(0)
+      }
+      that.setData({
+        hotCarsTypes: res
+      })
+    }, (err) => {
+
     })
   },
   handlerAlphaTap(e) {
@@ -140,9 +152,8 @@ Page({
       HTTPS_YMCAPI
     } = this.data;
 
-    app.tradeService.getNavigatorForCarSeries({
-      brandId: carSeries.id,
-      success: function (res) {
+    app.tradeService.getNavigatorForCarSeries({ brandId: carSeries.id })
+      .then(function (res) {
         if (res) {
           let data = res
           let showNodata = false
@@ -155,8 +166,10 @@ Page({
             showNodata: showNodata
           })
         }
-      }
-    })
+      }, function (err) {
+
+      })
+
     that.setData({
       showCarSeries: carSeries,
       showCarSeriesImageUrl: carSeries.logoUrl,

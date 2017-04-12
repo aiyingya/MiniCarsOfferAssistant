@@ -1,14 +1,104 @@
-class Modules {
-  newRequest (baseURL, path, method, data, header, object) {
-    const url = baseURL + path
-    request({
-      url: url,
-      method: method,
-      data: data,
-      header: header,
-      success: object.success,
-      fail: object.fail,
-      complete: object.success
+import { ENV, version, versionCode, build } from './config'
+
+export default class YMC {
+  /**
+   *
+   *
+   * @param {any} options
+   * @returns
+   *
+   * @memberOf YMC
+   */
+  requestByPromise(options) {
+    if (!options) return null
+
+    return new Promise((resolve, reject) => {
+      let clientId = ''
+      try {
+        // FIXME: 处理 clientId 使用同步获取相对较重
+        clientId = wx.getStorageSync('clientId')
+      } catch (e) {
+        console.error(e)
+      }
+
+      const defaultHeader = {
+        'ClientId': clientId,
+        'ClientVersion': versionCode,
+        'SystemCode': '6'
+      }
+      const header = options.header || {}
+
+      wx.request({
+        url: options.url,
+        data: options.data,
+        header: Object.assign(defaultHeader, header),
+        method: options.method || 'GET',
+        dataType: 'json',
+        /**
+         * 微信成功回调
+         *
+         * @param {Object} res
+         * @param {String} res.errMsg
+         * @param {Number} res.statusCode
+         * @param {Object} res.data
+         */
+        success (res) {
+          console.log('success')
+          console.log(res)
+          const result = res.data
+          const statusCode = res.statusCode
+
+          // 新版 uc 接口使用 behavior 来处理额外行为，
+          const behavior = result.behavior || null
+          if (behavior) {
+            if (behavior.type === 'TOAST') {
+              let content = behavior.content
+              if (content && content.length) {
+                // 暂不实现
+              }
+            } else if (behavior.type === 'Alert') {
+              // 暂不实现
+            } else if (behavior.type === 'Notice') {
+              // 暂不实现
+            }
+          }
+
+          if (statusCode < 399) {
+            // 2XX, 3XX 成功
+            const data = result.data || null
+            resolve(data)
+          } else {
+            // 4XX, 5XX 失败
+            console.error(res)
+            let err
+            if (typeof result === 'object') {
+              // 旧版 ymcapi 接口中只能使用 error 中的 alertMessage 来处理额外行为
+              // 服务端可以处理的错误
+              const error = result.error || null
+              const errorMessage = error.message || error.alertMessage
+              err = new Error(errorMessage)
+              reject(err)
+            } else {
+              err = new Error(result)
+              reject(err)
+            }
+          }
+        },
+        /**
+         * 微信失败回调
+         *
+         * @param {Object} err
+         * @param {String} err.errMsg
+         */
+        fail (err) {
+          console.log('fail')
+          console.error(err)
+          const error = new Error('网络请求错误')
+          reject(error)
+        },
+        complete () {
+        }
+      })
     })
   }
 
@@ -136,5 +226,3 @@ class Modules {
     }
   }
 }
-
-export default Modules

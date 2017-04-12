@@ -27,15 +27,15 @@ Page({
 
     }
 
-    app.tradeService.getNavigatorForCarBrands({
-      success: function (res) {
+    app.tradeService.getNavigatorForCarBrands()
+      .then(function (res) {
         if (res) {
           that.setData({
             brandGroupList: res
           })
         }
-      }
-    })
+      }, function (err) {
+      })
   },
   handlerAlphaTap(e) {
     let {ap} = e.target.dataset
@@ -65,9 +65,8 @@ Page({
     let that = this;
     let {HTTPS_YMCAPI} = this.data;
 
-    app.tradeService.getNavigatorForCarSeries({
-      brandId: carSeries.id,
-      success: function (res) {
+    app.tradeService.getNavigatorForCarSeries({ brandId: carSeries.id })
+      .then(function (res) {
         if (res) {
           let data = res
           let showNodata = false
@@ -80,8 +79,8 @@ Page({
             showNodata: showNodata
           })
         }
-      }
-    })
+      }, function (err) {
+      })
 
     that.setData({
       showCarSeries: carSeries,

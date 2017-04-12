@@ -14,8 +14,6 @@ const tradeService = new TradeService()
 
 const saasService = new SAASService(userService)
 
-console.log(Promise)
-
 App({
   onLaunch (options) {
     console.log('onLaunch:')

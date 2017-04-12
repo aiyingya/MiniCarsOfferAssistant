@@ -73,10 +73,8 @@ Page({
     let that = this;
     let searchResults = [];
     if (val) {
-      app.tradeService.searchInput({
-        text: val,
-        n: 12,
-        success: function (res) {
+      app.tradeService.searchInput({ text: val, n: 12 })
+        .then(function (res) {
           that.setData({
             associateResults: res,
             searchResults: [],
@@ -85,8 +83,9 @@ Page({
             showSearchBtn: true,
             cacheSearchValue: val
           })
-        }
-      })
+        }, function (err) {
+
+        })
     } else {
       that.setData({
         associateResults: [],
