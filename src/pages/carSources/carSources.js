@@ -11,7 +11,9 @@ import util from '../../utils/util.js'
 let app = getApp()
 
 Page({
+
   data: {
+    // ubt 相关
     pageId: 'carSources',
     pageName: '车源列表',
     pageParameters: {},
@@ -103,7 +105,7 @@ Page({
           }
         }
 
-        const carSourcesBySkuInSpuList = res.carSourcesBySkuInSpuList
+        const carSourcesBySkuInSpuList = that.bakeTheRawCarSourcesBySkuInSpuList(res.carSourcesBySkuInSpuList)
 
         that.setData({
           nodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
@@ -263,15 +265,19 @@ Page({
    * @param carSourcesBySkuInSpuItem
    */
   preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem) {
+    // 获取全部车源中,合并不同的标签集合
     let tags = []
     for (let carSourceItem of carSourcesBySkuInSpuItem.carSourcesList) {
       this.processCarSourceItem(carSourceItem)
       tags = tags.concat(carSourceItem.viewModelTags)
     }
-    // 合并不同的标签集合
     const tagsSet = new Set(tags)
+    carSourcesBySkuInSpuItem.carSku.viewModelTags = [...tagsSet]
 
-    // 分别获取自营和三方货源中的第一个
+    // 分页数据
+    this.actionPullRefresh(carSourcesBySkuInSpuItem)
+
+    // 获取全部车源中,分别获取自营和三方货源中的第一个
     let lowestSelfPlatformCarSourceItem = null
     let lowestThirdCarSourceItem = null
     for (let carSourceItem of carSourcesBySkuInSpuItem.carSourcesList) {
@@ -291,23 +297,89 @@ Page({
         }
       }
     }
-
+    let lowestCarSource
     if (lowestThirdCarSourceItem && lowestSelfPlatformCarSourceItem) {
-      carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestSelfPlatformCarSourceItem.lowestPrice > lowestThirdCarSourceItem.lowestPrice ? lowestThirdCarSourceItem : lowestSelfPlatformCarSourceItem
+      lowestCarSource = lowestSelfPlatformCarSourceItem.lowestPrice > lowestThirdCarSourceItem.lowestPrice ? lowestThirdCarSourceItem : lowestSelfPlatformCarSourceItem
     } else if (lowestThirdCarSourceItem) {
-      carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestThirdCarSourceItem
+      lowestCarSource = lowestThirdCarSourceItem
     } else if (lowestSelfPlatformCarSourceItem) {
-      carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestSelfPlatformCarSourceItem
+      lowestCarSource = lowestSelfPlatformCarSourceItem
     }
-
-    carSourcesBySkuInSpuItem.carSku.viewModelTags = [...tagsSet]
-    carSourcesBySkuInSpuItem.carSku.viewModelCarSourceCount = carSourcesBySkuInSpuItem.carSourcesList.length
-
-    carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.supplierSelfSupport
+    carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestCarSource
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePriceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice)
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscount = util.downPrice(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice, this.data.carModelsInfo.officialPrice)
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscountDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscount)
+
+    // 自营与否
+    carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.supplierSelfSupport
+
+    carSourcesBySkuInSpuItem.carSku.viewModelCarSourceCount = carSourcesBySkuInSpuItem.carSourcesList.length
+ },
+ /**
+  *
+  *
+  * @param {any} carSourcesBySkuInSpuItem
+  * @param {any} number
+  * @param {any} size
+  */
+ pageData(carSourcesBySkuInSpuItem, number, size) {
+    const totalElements = carSourcesBySkuInSpuItem.carSourcesList.length
+    const totalPages = Math.ceil(carSourcesBySkuInSpuItem.carSourcesList.length / size)
+
+    let last
+    let content
+    let fixedNumber
+    if (number + 1 > totalPages) {
+      content = carSourcesBySkuInSpuItem.carSourcesList.slice((totalPages - 1) * size, (totalPages - 1) * size + size)
+      fixedNumber = totalPages - 1
+      last = true
+    } else {
+      content = carSourcesBySkuInSpuItem.carSourcesList.slice(number * size, number * size + size)
+      fixedNumber = number
+      if (number + 1 === totalPages) {
+        last = true
+      } else {
+        last = false
+      }
+    }
+
+    return {
+      number: fixedNumber,
+      size,
+      totalElements,
+      totalPages,
+      content,
+      last
+    }
+  },
+  handlerPullReresh(e) {
+    const skuItemIndex = e.currentTarget.dataset.skuIndex
+    const carSourcesBySkuInSpuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
+
+    this.actionPullRefresh(carSourcesBySkuInSpuItem)
+    this.setData({
+      [`carSourcesBySkuInSpuList[${skuItemIndex}]`]: carSourcesBySkuInSpuItem
+    })
+  },
+  handlerLoadMore(e) {
+    const skuItemIndex = e.currentTarget.dataset.skuIndex
+    const carSourcesBySkuInSpuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
+
+    this.actionLoadMore(carSourcesBySkuInSpuItem)
+    this.setData({
+      [`carSourcesBySkuInSpuList[${skuItemIndex}]`]: carSourcesBySkuInSpuItem
+    })
+  },
+  actionPullRefresh(carSourcesBySkuInSpuItem) {
+    const pageData = this.pageData(carSourcesBySkuInSpuItem, 0, 10)
+    carSourcesBySkuInSpuItem.viewModelCarSourcesList = pageData.content
+    carSourcesBySkuInSpuItem.viewModelPageData = pageData
+  },
+  actionLoadMore(carSourcesBySkuInSpuItem) {
+    const pageData = this.pageData(carSourcesBySkuInSpuItem, carSourcesBySkuInSpuItem.viewModelPageData.number + 1, 10)
+    carSourcesBySkuInSpuItem.viewModelCarSourcesList = carSourcesBySkuInSpuItem.viewModelCarSourcesList.concat(pageData.content)
+    carSourcesBySkuInSpuItem.viewModelPageData = pageData
   },
   /**
    * 处理车源对象
@@ -736,6 +808,15 @@ Page({
     }, 300)
     console.log(newCarSourcesBySkuInSpuList)
     return newCarSourcesBySkuInSpuList
+  },
+  /**
+   * 预留方法
+   *
+   * @param {any} carSourcesBySkuInSpuList
+   * @returns
+   */
+  bakeTheRawCarSourcesBySkuInSpuList(carSourcesBySkuInSpuList) {
+    return carSourcesBySkuInSpuList
   },
   getIdWithFiltersIndex(index) {
     const selectedIndex = this.data.scrollFiltersSelectedIndexes[index]

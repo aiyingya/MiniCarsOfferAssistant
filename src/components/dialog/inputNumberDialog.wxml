@@ -1,8 +1,8 @@
 <template name="inputNumberDialog">
   <view class="inputNumberDialog">
-    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} ">
+    <view class="weui-mask {{ animateCss }}" hidden="{{ !visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} ">
     </view>
-    <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
+    <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
       <view class="weui-dialog__hd" wx:if="{{ title }}">
         <view class="weui-dialog__title">{{ title }}</view>
       </view>

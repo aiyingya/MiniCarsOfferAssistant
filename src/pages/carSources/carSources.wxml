@@ -363,7 +363,7 @@
               class="carsource-count"
             >
               <view class="carsource-count-text">
-                {{skuItem.carSku.viewModelCarSourceCount}}
+                {{skuItem.viewModelPageData.totalElements}}
               </view>
             </view>
             <image
@@ -376,11 +376,11 @@
 
         <view wx:if="{{skuItemIndex === selectedSectionIndex}}">
           <view
-            wx:if="{{skuItem.carSourcesList.length > 0}}"
+            wx:if="{{skuItem.viewModelCarSourcesList.length > 0}}"
             class="carSources-cells"
           >
             <view
-              wx:for="{{skuItem.carSourcesList}}"
+              wx:for="{{skuItem.viewModelCarSourcesList}}"
               wx:for-item="carSourceItem"
               wx:for-index="carSourceItemIndex"
               wx:key="*this"
@@ -720,6 +720,14 @@
                   </view>
                 </view>
               </view>
+            </view>
+            <view
+              wx:if="{{!skuItem.viewModelPageData.last}}"
+              data-sku-index="{{skuItemIndex}}"
+              bindtap="handlerLoadMore"
+              class="load-more"
+            >
+            点击更多
             </view>
           </view>
           <view wx:else class="nodata">
