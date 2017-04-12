@@ -8,8 +8,6 @@
 
 import Service from './base.service'
 
-import Util from '../utils/util'
-
 export default class UserService extends Service {
 
   static AuthKey = 'auth'
@@ -187,7 +185,7 @@ export default class UserService extends Service {
 
   __requestClientId (cb) {
     let that = this
-    const deviceId = wx.getStorageSync(Util.DeviceIdKey)
+    const deviceId = wx.getStorageSync('deviceId')
     this.getVisitor({
       deviceId: deviceId,
       success: function(res) {
