@@ -42,7 +42,7 @@ export default class YMC {
          * @param {Number} res.statusCode
          * @param {Object} res.data
          */
-        success (res) {
+        success(res) {
           console.log('success')
           console.log(res)
           const result = res.data
@@ -90,14 +90,13 @@ export default class YMC {
          * @param {Object} err
          * @param {String} err.errMsg
          */
-        fail (err) {
+        fail(err) {
           console.log('fail')
           console.error(err)
           const error = new Error('网络请求错误')
           reject(error)
         },
-        complete () {
-        }
+        complete() {}
       })
     })
   }
@@ -114,7 +113,7 @@ export default class YMC {
    * fail         失败回调
    * complete     完成回调
    */
-  request (options) {
+  request(options) {
     if (!options) return
 
     let loadingType = options.loadingType
@@ -153,51 +152,54 @@ export default class YMC {
         method: options.method,
         data: options.data,
         header: header,
-        success (res) {
-          let result = res.data
-          /// MARK: 在早期安卓版本微信中，需要对没有正确序列化的返回对象做去 bom 头的处理
+        success(res) {
 
-          if (result.behavior) {
-            // 新版 uc 接口使用 behavior 来处理额外行为
-            if (result.behavior.type === 'TOAST') {
-              let content = result.behavior.content
+          console.log('success')
+          console.log(res)
+          const result = res.data
+          const statusCode = res.statusCode
+
+          // 新版 uc 接口使用 behavior 来处理额外行为，
+          const behavior = result.behavior || null
+          if (behavior) {
+            if (behavior.type === 'TOAST') {
+              let content = behavior.content
               if (content && content.length) {
-                console.log(content)
+                // 暂不实现
               }
-            } else if (result.behavior.type === 'Alert') {
+            } else if (behavior.type === 'Alert') {
               // 暂不实现
-            } else if (result.behavior.type === 'Notice') {
+            } else if (behavior.type === 'Notice') {
               // 暂不实现
             }
           }
 
-          if (result.error) {
-            // 旧版 ymcapi 接口中只能使用 error 中的 alertMessage 来处理额外行为
-            // 服务端可以处理的错误
-            typeof options.fail === 'function' && options.fail(result.error)
+          if (statusCode < 399) {
+            // 2XX, 3XX 成功
+            const data = result.data || null
+            typeof options.success === 'function' && options.success(data)
           } else {
-            // 返回体中有数据返回
-            typeof options.success === 'function' && options.success(result.data)
+            // 4XX, 5XX 失败
+            console.error(res)
+            let err
+            if (typeof result === 'object') {
+              // 旧版 ymcapi 接口中只能使用 error 中的 alertMessage 来处理额外行为
+              // 服务端可以处理的错误
+              const error = result.error || null
+              const errorMessage = error.message || error.alertMessage
+              err = new Error(errorMessage)
+              typeof options.fail === 'function' && options.fail(err)
+            } else {
+              err = new Error(result)
+              typeof options.fail === 'function' && options.fail(err)
+            }
           }
         },
-        fail (error) {
-          if (typeof error === 'object') {
-            let alertMessage = error.alertMessage
-            if (alertMessage) {
-              typeof options.fail === 'function' && options.fail(error)
-            } else {
-              typeof options.fail === 'function' && options.fail({
-                alertMessage: '网络请求错误， 请稍后再试',
-                error: error
-              })
-            }
-          } else {
-            typeof options.fail === 'function' && options.fail({
-              alertMessage: '网络请求错误， 请稍后再试',
-              error: error
-            })
-          }
-          // 服务端无法处理的错误
+        fail(err) {
+          console.log('fail')
+          console.error(err)
+          const error = new Error('网络请求错误')
+          typeof options.fail === 'function' && options.fail(error)
         },
         complete: function () {
           if (options.loadingType === 'navigation') {
@@ -221,6 +223,7 @@ export default class YMC {
         wx.hideToast()
       }
 
+      const error = new Error('网络请求错误')
       typeof options.fail === 'function' && options.fail(error)
       typeof options.complete === 'function' && options.complete()
     }

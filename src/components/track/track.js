@@ -24,18 +24,18 @@ export default {
     return {
       deviceType: system.platform,
       appVersion: `${config.name}:${config.version}`,
-      pageId: '',
-      pageName: '',
+      pageId: null,
+      pageName: null,
       os: `${system.system}|wechat ${system.version}|sdk ${system.SDKVersion}`,
       screen: `${system.windowWidth}x${system.windowHeight}`,
       language: system.language,
       phoneModel: system.model,
       deviceId: config.device.deviceId,
-      eventAction: '',
-      eventLabel: '',
-      eventSource: '',
-      eventValue: 1,
-      eventCategory: ''
+      eventAction: null,
+      eventLabel: null,
+      eventSource: null,
+      eventValue: null,
+      eventCategory: null
     }
   },
   /**
@@ -54,7 +54,7 @@ export default {
    */
   push(opts = {}) {
     const that = this
-    const data = Object.assign({}, this.setDefaults(), opts)
+    const data = Object.assign({}, this.setDefaults())
 
     const component = new Component({
       scope: `$wux.track`,
@@ -68,20 +68,21 @@ export default {
     data.pageName = component.page.data.pageName
     data.parameters = component.page.data.pageParameters
 
-    /**
-     * 获取地理位置
-     */
-    wx.getLocation({
-      type: 'wgs84',
-      success: function (res) {
-        let latitude = res.latitude
-        let longitude = res.longitude
-
-        data.lat = latitude
-        data.lng = longitude
-
-        that.UBTService.report({ data })
+    if (opts.eventAction === 'click') {
+      const clickData = {
+        [opts.eventLabel] : 1
       }
+      data.clickData = JSON.stringify(clickData)
+      data.eventAction = 'click'
+    } else {
+      Object.assign(data, opts)
+    }
+
+    data.lat = config.location.latitude
+    data.lng = config.location.longitude
+
+    this.UBTService.report({
+      data
     })
   }
 }

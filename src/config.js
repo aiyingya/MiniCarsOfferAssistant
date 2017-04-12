@@ -60,6 +60,15 @@ try {
 }
 console.info(device)
 
+const location = {}
+wx.getLocation({
+  type: 'wgs84',
+  success: function(res) {
+    Object.assign(location, res)
+    console.log(location)
+  }
+})
+
 export default {
   /**
    * 环境变量
@@ -100,5 +109,12 @@ export default {
   /**
    * deviceId : ''
    */
-  device
+  device,
+  /**
+   * latitude :
+   * longitude :
+   * speed :
+   * accuracy :
+   */
+  location
 }

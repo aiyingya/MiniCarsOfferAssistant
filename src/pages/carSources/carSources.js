@@ -126,6 +126,7 @@ Page({
     })
   },
   onShow() {
+    console.log('onshow')
     /**
      * 1.4.0 埋点
      * 用户选择外饰分区颜色
@@ -181,7 +182,6 @@ Page({
   handlerScroll(e) {
     const that = this
     if (e.detail) {
-      console.log(e.detail)
       if (e.detail.scrollTop > 60) {
         if (!this.data.showDetailTitle) {
           wx.setNavigationBarTitle({
@@ -754,7 +754,12 @@ Page({
          * 1.4.0 埋点
          * davidfu
          */
-        that.data.pageParameters.carSourceId = carSourceItem.id
+        if (carSourceItem.supplierSelfSupport) {
+          that.data.pageParameters.carSourceId = carSourceItem.itemId
+        } else {
+          that.data.pageParameters.carSourceId = carSourceItem.id
+        }
+        that.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSuppor
         that.data.pageParameters.supplierId = carSourceItem.supplier.id
         const event = {
           eventAction: 'click',
@@ -1001,7 +1006,7 @@ Page({
        */
       this.data.pageParameters = {
         spuId: this.data.carModelsInfo.carModelId,
-        externalColorName: section.externalColorName
+        externalColorName: section.carSku.externalColorName
       }
       const event = {
         eventAction: 'click',
@@ -1104,7 +1109,12 @@ Page({
      * 用户选择外饰分区颜色
      * davidfu
      */
-    this.data.pageParameters.carSourceId = carSourceItem.id
+    if (carSourceItem.supplierSelfSupport) {
+      this.data.pageParameters.carSourceId = carSourceItem.itemId
+    } else {
+      this.data.pageParameters.carSourceId = carSourceItem.id
+    }
+    this.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSupport
     const event = {
       eventAction: 'click',
       eventLabel: `车源详情`
