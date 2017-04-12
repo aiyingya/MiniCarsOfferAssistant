@@ -41,9 +41,11 @@ Page({
     selectColorTime: [{value: 12}, {value: 24}],
     timesAllSelected: '',
     selectTimes: '',
+    selectTimesId: '',
     changeCharts: [],
     carModelsInfo: '',
-    touchindex: ''
+    touchindex: '',
+    selectTimesData: []
   },
   onLoad (options) {
     let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -82,11 +84,16 @@ Page({
           let filtersData
           let showNodata = false
           let inStockData = []
+          
           that.drawCanvas(carModelsList)
 
           for (let item of carModelsList) {
 
             let colors = []
+            let hours = [{
+              value: '全部',
+              selected: 'selected'
+            }]
             if (item.supply.colors) {
               let newColorKey = Object.keys(item.supply.colors)
 
@@ -98,10 +105,22 @@ Page({
                 colors.push(colorItem)
               }
             }
+            if(item.supply.hours.length > 0) {
+              
+              for(let hour of item.supply.hours) {
+                let time = {
+                  value: hour,
+                  selected: ''
+                }
+                
+                hours.push(time)
+              }
+            }
             item.colors = colors
             item.selectColors = []
-            item.selectTimesData = [{value: 24, selected: 'selected'}, {value: 12, selected: ''}]
-            item.selectTimes = 24 // 默认24
+            item.selectTimes = '全部' // 默认24
+            item.hours = hours // 默认24
+           
           }
 
           for (let item of filters) {
@@ -110,7 +129,7 @@ Page({
           if (carModelsList.length === 0) {
             showNodata = true
           }
-
+          console.log(carModelsList)
           that.setData({
             carModelsList: carModelsList,
             cacheCarModelsList: carModelsList,
@@ -469,23 +488,54 @@ Page({
     this.data.popCharts = null
     this.data.touchindex = ''
   },
-  handleChangeTimesItem(e) {
+  handleSelectTimes(e) {
     let that = this
-    let selectitem = e.currentTarget.dataset.selectitem
+    let hours = e.currentTarget.dataset.hours
+    let selecttime = e.currentTarget.dataset.selecttime
     let selectTimesId = e.currentTarget.dataset.selectid
     let carModelsList = this.data.carModelsList
 
     for (let item of carModelsList) {
       if (item.carModelId === selectTimesId) {
 
-        for (let times of item.selectTimesData) {
+        for (let times of hours) {
+          if (times.value === selecttime) {
+            times.selected = 'selected'
+          } else {
+            times.selected = ''
+          }
+        }
+      }
+    }
+    
+    this.setData({
+      selectChartsLabel: true,
+      changeSelectColors: false,
+      changeSelectTimes: true,
+      showCharts: false,
+      selectTimesData: hours,
+      selectTimesId: selectTimesId,
+      selectTimes: selecttime
+    })
+    
+  },
+  handleChangeTimesItem(e) {
+    let that = this
+    let selectitem = e.currentTarget.dataset.selectitem
+    let selectTimesId = that.data.selectTimesId
+    let carModelsList = this.data.carModelsList
+
+    for (let item of carModelsList) {
+      if (item.carModelId === selectTimesId) {
+
+        for (let times of item.hours) {
           if (times.value === selectitem) {
             times.selected = 'selected'
           } else {
             times.selected = ''
           }
         }
-        item.selectTimes = selectitem
+        item.selectTimes = selectitem.value
         that.getChangeCharts(selectTimesId, carModelsList, item)
       }
     }
@@ -506,7 +556,6 @@ Page({
       } else {
         for (let select of selectColors) {
           if (item.key === select.key) {
-            console.log(item)
             item.selected = 'selected'
           }
         }
@@ -560,7 +609,6 @@ Page({
     requestData = {
       carSeriesId: sid,
       inStock: false,
-      hours: item.selectTimes
     }
 
     let keys = []
@@ -571,6 +619,9 @@ Page({
     }
     if (keys.length > 0) {
       requestData.colors = keys.join(',')
+    }
+    if(item.selectTimes !== '全部') {
+      requestData.hours = item.selectTimes
     }
     for (let changeTime of times) {
       if (item.selectTimes === changeTime.value) {
@@ -590,10 +641,10 @@ Page({
 
               requestItem.colors = item.colors
               requestItem.selectColors = item.selectColors
-              requestItem.selectTimesData = times
+              requestItem.hours = item.hours
               requestItem.selectTimes = item.selectTimes
               requestItem.selectColorsId = sid,
-                requestItem.supply.status = item.supply.status
+              requestItem.supply.status = item.supply.status
               requestItem.supply.supplierCount = item.supply.supplierCount
               requestItem.supply.colors = item.supply.colors
 

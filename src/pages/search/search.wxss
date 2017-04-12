@@ -2,6 +2,7 @@
 
 page {
 	height: 100%;
+  background-color: #fff;
 }
 .search-wrapper {
 	position: relative;
@@ -16,6 +17,15 @@ page {
 	display: flex;
 	align-items: center;
 	z-index: 999;
+  position: relative;
+}
+.searchbar:after {
+  content: '';
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: 0;
+  border-bottom: 1rpx solid #dfdfdf;
 }
 .searchbar-inner {
 	width: 93.6%;
@@ -57,7 +67,7 @@ page {
 	width: 100%;
 	height: 70rpx;
 	line-height: 70rpx;
-	border-radius: 8rpx;
+	border-radius: 40rpx;
 }
 .search-placeholder {
 	text-align: left;
@@ -66,7 +76,7 @@ page {
 
 .search-cancel-btn {
 	width: 100rpx;
-	height: 66rpx;
+	height: 62rpx;
 	position: absolute;
 	top: 50%;
 	right: 0;
@@ -76,7 +86,7 @@ page {
 	line-height: 66rpx;
 	text-align: center;
 	z-index: 9;
-	margin-top: -34rpx;
+	margin-top: -31rpx;
 	border: 1rpx solid #ccc;
 	background-color: #f1f1f1;
 	border-radius: 10rpx;
@@ -177,4 +187,38 @@ page {
 }
 .weui-toast__content {
 	margin: 0;
+}
+
+.search-history {
+  width: 100%;
+  margin-top: 15rpx;
+}
+.searchistory-title {
+  padding: 0 30rpx;
+  font-size: 30rpx;
+}
+.searchistory-inner {
+  margin-top: 15rpx;
+  box-sizing: border-box;
+  padding: 0 30rpx;
+  display: flex;
+  display: -webkit-flex;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.searchistory-item {
+  padding: 8rpx 24rpx;
+  background-color: #e9e8ee;
+  border-radius: 10rpx;
+  margin-right: 15rpx;
+  margin-bottom: 15rpx;
+  max-width: 300rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.searchistory-item_active {
+  background-color: #cbcacc;
 }

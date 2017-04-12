@@ -64,7 +64,34 @@ export default class TradeService extends Service {
       fail: opts.fail
     }, 'none')
   }
-
+  
+  /**
+   *  获取用户搜索记录
+   *  clientId 用户ID
+   */
+  getUserSearchHistory(opts) {
+    this.sendMessage({
+      path: 'cgi/search/history/text',
+      method: 'GET',
+      data: opts.data,
+      success: opts.success,
+      fail: opts.fail
+    }, 'none')
+  }
+  
+  /**
+   *  上传用户搜索记录
+   *  clientId 用户ID
+   */
+  postUserSearchHistory(opts) {
+    this.sendMessage({
+      path: 'cgi/search/history/text',
+      method: 'POST',
+      data: opts.data,
+      success: opts.success,
+      fail: opts.fail
+    }, 'none')
+  }
   /**
    * 品牌选车系
    * @param opts

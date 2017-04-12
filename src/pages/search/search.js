@@ -42,9 +42,12 @@ Page({
     }],
     timesAllSelected: '',
     selectTimes: '',
+    selectTimesId: '',
     changeCharts: [],
     carModelsInfo: '',
-    touchindex: ''
+    touchindex: '',
+    searchHistory: [],
+    showSearchHistory: true
   },
   onLoad() {
     let that = this
@@ -62,6 +65,8 @@ Page({
     } catch (e) {
 
     }
+    
+    this.getSearchHistory()
   },
   handleSearchInput(e) {
     let val = e.detail.value;
@@ -88,7 +93,8 @@ Page({
         searchResults: [],
         searchNodata: false,
         showSearchBtn: false,
-        cacheSearchValue: val
+        cacheSearchValue: val,
+        showSearchHistory: true
       })
     }
   },
@@ -99,7 +105,7 @@ Page({
     let data = {}
     let carModelsList = []
     let searchNodata = false
-    console.log(results.type)
+    console.log(results)
     app.saasService.requireCarSpu(results.id, {}, results.type, false, {
       success(res) {
         carModelsList = res.content
@@ -107,6 +113,10 @@ Page({
         for (let item of carModelsList) {
 
           let colors = []
+          let hours = [{
+            value: '全部',
+            selected: 'selected'
+          }]
           if (item.supply.colors) {
             let newColorKey = Object.keys(item.supply.colors)
 
@@ -118,16 +128,21 @@ Page({
               colors.push(colorItem)
             }
           }
+          if(item.supply.hours.length > 0) {
+
+            for(let hour of item.supply.hours) {
+              let time = {
+                value: hour,
+                selected: ''
+              }
+
+              hours.push(time)
+            }
+          }
           item.colors = colors
           item.selectColors = []
-          item.selectTimesData = [{
-            value: 24,
-            selected: 'selected'
-          }, {
-            value: 12,
-            selected: ''
-          }]
-          item.selectTimes = 24 // 默认24
+          item.selectTimes = '全部' // 默认24
+          item.hours = hours // 默认24
         }
         if (carModelsList) {
           that.drawCanvas(carModelsList)
@@ -137,10 +152,12 @@ Page({
             searchValue: results.content,
             cacheSearchValue: results.content,
             showResultsSearch: false,
-            searchNodata: searchNodata
+            searchNodata: searchNodata,
+            showSearchHistory: false
           })
 
           console.log(carModelsList)
+          that.postUserSearchHistory(results.content)
         }
       }
     })
@@ -166,6 +183,10 @@ Page({
         for (let item of searchResults) {
 
           let colors = []
+          let hours = [{
+            value: '全部',
+            selected: 'selected'
+          }]
           if (item.supply.colors) {
             let newColorKey = Object.keys(item.supply.colors)
 
@@ -177,16 +198,21 @@ Page({
               colors.push(colorItem)
             }
           }
+          if(item.supply.hours.length > 0) {
+
+            for(let hour of item.supply.hours) {
+              let time = {
+                value: hour,
+                selected: ''
+              }
+
+              hours.push(time)
+            }
+          }
           item.colors = colors
           item.selectColors = []
-          item.selectTimesData = [{
-            value: 24,
-            selected: 'selected'
-          }, {
-            value: 12,
-            selected: ''
-          }]
-          item.selectTimes = 24 // 默认24
+          item.selectTimes = '全部' // 默认24
+          item.hours = hours // 默认24
         }
 
         that.data.pageInfo = {
@@ -205,8 +231,10 @@ Page({
           searchResults: searchResults,
           associateResults: [],
           showResultsSearch: false,
-          searchNodata: searchNodata
+          searchNodata: searchNodata,
+          showSearchHistory: false
         })
+        that.postUserSearchHistory(val)
       }
     })
   },
@@ -222,8 +250,14 @@ Page({
     if (!searchPageInfo.hasNext) return
 
     this.data.pageIndex++
-      this.getSearchConfirm(this.data.pageIndex)
+    this.getSearchConfirm(this.data.pageIndex)
     console.log(searchPageInfo)
+  },
+  handleSearchHistory(e) {
+    let val = e.currentTarget.dataset.text
+    this.data.cacheSearchValue = val
+    this.data.pageIndex = 1
+    this.getSearchConfirm(this.data.pageIndex)
   },
   handlerToCarSources(e) {
     let item = e.currentTarget.dataset.carmodelsinfo
@@ -269,7 +303,8 @@ Page({
       showResultsSearch: false,
       searchNodata: false,
       showSearchBtn: false,
-      searchValue: ''
+      searchValue: '',
+      showSearchHistory: true
     })
   },
   handleCharttouch(e) {
@@ -495,23 +530,54 @@ Page({
     this.data.popCharts = null
     this.data.touchindex = ''
   },
-  handleChangeTimesItem(e) {
+  handleSelectTimes(e) {
     let that = this
-    let selectitem = e.currentTarget.dataset.selectitem
+    let hours = e.currentTarget.dataset.hours
+    let selecttime = e.currentTarget.dataset.selecttime
     let selectTimesId = e.currentTarget.dataset.selectid
     let carModelsList = this.data.searchResults
 
     for (let item of carModelsList) {
       if (item.carModelId === selectTimesId) {
 
-        for (let times of item.selectTimesData) {
+        for (let times of hours) {
+          if (times.value === selecttime) {
+            times.selected = 'selected'
+          } else {
+            times.selected = ''
+          }
+        }
+      }
+    }
+    
+    this.setData({
+      selectChartsLabel: true,
+      changeSelectColors: false,
+      changeSelectTimes: true,
+      showCharts: false,
+      selectTimesData: hours,
+      selectTimesId: selectTimesId,
+      selectTimes: selecttime
+    })
+    
+  },
+  handleChangeTimesItem(e) {
+    let that = this
+    let selectitem = e.currentTarget.dataset.selectitem
+    let selectTimesId = that.data.selectTimesId
+    let carModelsList = this.data.searchResults
+
+    for (let item of carModelsList) {
+      if (item.carModelId === selectTimesId) {
+
+        for (let times of item.hours) {
           if (times.value === selectitem) {
             times.selected = 'selected'
           } else {
             times.selected = ''
           }
         }
-        item.selectTimes = selectitem
+        item.selectTimes = selectitem.value
         that.getChangeCharts(selectTimesId, carModelsList, item)
       }
     }
@@ -591,8 +657,7 @@ Page({
     }]
     requestData = {
       carSeriesId: sid,
-      inStock: false,
-      hours: item.selectTimes
+      inStock: false
     }
 
     let keys = []
@@ -603,6 +668,9 @@ Page({
     }
     if (keys.length > 0) {
       requestData.colors = keys.join(',')
+    }
+    if(item.selectTimes !== '全部') {
+      requestData.hours = item.selectTimes
     }
     for (let changeTime of times) {
       if (item.selectTimes === changeTime.value) {
@@ -622,10 +690,10 @@ Page({
 
               requestItem.colors = item.colors
               requestItem.selectColors = item.selectColors
-              requestItem.selectTimesData = times
+              requestItem.hours = item.hours
               requestItem.selectTimes = item.selectTimes
               requestItem.selectColorsId = sid,
-                requestItem.supply.status = item.supply.status
+              requestItem.supply.status = item.supply.status
               requestItem.supply.supplierCount = item.supply.supplierCount
               requestItem.supply.colors = item.supply.colors
               change = requestItem
@@ -660,5 +728,49 @@ Page({
   },
   popupChartstouchMove(e) {
     console.log(e)
+  },
+  getSearchHistory() {
+    let user = app.userService
+    let clientId = user.clientId
+    let that = this
+    
+    app.tradeService.getUserSearchHistory({
+       data: {
+         ClientId: clientId
+       },
+       success(xhr) {
+         console.log(xhr)
+         that.setData({
+           searchHistory: xhr
+         })
+       },
+       fail(err) {
+         
+       }
+    })
+  },
+  postUserSearchHistory(text) {
+    let user = app.userService
+    let searchHistory = this.data.searchHistory
+    let that = this
+    app.tradeService.postUserSearchHistory({
+       data: {
+          "channel": "wxapp",
+          "text": text,
+          "userId": user.auth.userId
+       },
+       success(xhr) {
+         if(searchHistory.indexOf(text) < 0) {
+           searchHistory.unshift(text)
+           
+           that.setData({
+             searchHistory: searchHistory
+           })
+         }
+       },
+       fail(err) {
+         
+       }
+    })
   }
 })

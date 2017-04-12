@@ -42,7 +42,24 @@
 				>取消</view>	
 		</view>
 	</view>
-		
+  <!-- 历史搜索记录.-->
+  <view 
+   class="search-history"
+   wx:if="{{searchHistory.length > 0 && showSearchHistory}}"
+   >
+    <div class="searchistory-title">历史记录</div>
+    <div class="searchistory-inner">
+      <view 
+        hover
+        hover-class="searchistory-item_active"
+        class="searchistory-item"
+        wx:for="{{searchHistory}}"
+        wx:if="{{index < 10}}"
+        bindtap="handleSearchHistory"
+        data-text="{{item}}"
+        >{{item}}</view>
+    </div>
+  </view>
 	<!-- 联想搜索 search results.-->
 	<view 
 		class="search-results-wrap"
@@ -84,4 +101,4 @@
 	</view>
 </view>
 <template is="popupCharts" data="{{showPopCharts, carModelsInfo}}" /> 
-<template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime}}" /> 
+<template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime,selectTimesData}}" /> 
