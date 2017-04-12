@@ -47,7 +47,7 @@
    class="search-history"
    wx:if="{{searchHistory.length > 0 && showSearchHistory}}"
    >
-    <div class="searchistory-title">历史记录</div>
+    <div class="searchistory-title">历史搜索</div>
     <div class="searchistory-inner">
       <view 
         hover
