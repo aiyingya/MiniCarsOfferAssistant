@@ -697,12 +697,8 @@ Page({
 
       if (filterId === '-1') {
         return true
-      } else if (filterId === '0') {
-        return _hour <= 12
-      } else if (filterId === '1') {
-        return _hour <= 24
-      } else if (filterId === '2') {
-        return _hour > 24
+      } else {
+        return _hour <= parseInt(filterId)
       }
       return true
     }
