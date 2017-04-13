@@ -255,6 +255,9 @@ Page({
   handleSearchHistory(e) {
     let val = e.currentTarget.dataset.text
     this.data.cacheSearchValue = val
+    this.setData({
+      searchValue : val
+    })
     this.data.pageIndex = 1
     this.getSearchConfirm(this.data.pageIndex)
   },
