@@ -176,37 +176,44 @@ Page({
     $wuxDialog.open({
       title: '提示',
       content: '发起定车后， 将会有工作人员与您联系',
-      confirmText: '发起定车',
-      confirm: function () {
-        const quotationItem = that.data.quotation.quotationItems[0]
-        app.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.guidePrice, 1, {
-          success: (res) => {
-            wx.showModal({
-              content: '提交成功，请保持通话畅通',
-              success: function (res) {
-                if (res.confirm) {}
-              }
-            })
-          },
-          fail: (err) => {
-            wx.showModal({
-              title: '提示',
-              content: err.alertMessage,
-              success: function (res) {
-                if (res.confirm) {
-                  console.log('用户点击确定')
-                }
-              }
-            })
-          },
-          complete: () => {
+      buttons: [{
+          text: '发起订车',
+          type: 'weui-dialog__btn_primary',
+          onTap: function () {
+            const quotationItem = that.data.quotation.quotationItems[0]
+            app.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.guidePrice, 1, {
+              success: (res) => {
+                wx.showModal({
+                  content: '提交成功，请保持通话畅通',
+                  success: function (res) {
+                    if (res.confirm) {}
+                  }
+                })
+              },
+              fail: (err) => {
+                wx.showModal({
+                  title: '提示',
+                  content: err.alertMessage,
+                  success: function (res) {
+                    if (res.confirm) {
+                      console.log('用户点击确定')
+                    }
+                  }
+                })
+              },
+              complete: () => {
 
+              }
+            })
           }
-        })
-      },
-      cancel: function () {
-        // 取消
-      }
+        },
+        {
+          text: '取消',
+          onTap: function () {
+            // 取消
+          }
+        }
+      ]
     })
   }
 })

@@ -321,15 +321,15 @@ Page({
     carSourcesBySkuInSpuItem.carSku.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice)
     // 自营与否
     carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.supplierSelfSupport
- },
- /**
-  *
-  *
-  * @param {any} carSourcesBySkuInSpuItem
-  * @param {any} number
-  * @param {any} size
-  */
- pageData(carSourcesBySkuInSpuItem, number, size) {
+  },
+  /**
+   *
+   *
+   * @param {any} carSourcesBySkuInSpuItem
+   * @param {any} number
+   * @param {any} size
+   */
+  pageData(carSourcesBySkuInSpuItem, number, size) {
     const totalElements = carSourcesBySkuInSpuItem.carSourcesList.length
     const totalPages = Math.ceil(carSourcesBySkuInSpuItem.carSourcesList.length / size)
 
@@ -888,38 +888,45 @@ Page({
     $wuxDialog.open({
       title: '提示',
       content: '发起定车后， 将会有工作人员与您联系',
-      confirmText: '发起定车',
-      confirm: function () {
-        const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
-        const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
+      buttons: [{
+          text: '发起订车',
+          type: 'weui-dialog__btn_primary',
+          onTap: function () {
+            const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
+            const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
 
-        app.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
-          success(res) {
-            wx.showModal({
-              title: '提示',
-              content: '提交成功，请保持通话畅通',
-              success: function (res) {
-                if (res.confirm) {}
+            app.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
+              success(res) {
+                wx.showModal({
+                  title: '提示',
+                  content: '提交成功，请保持通话畅通',
+                  success: function (res) {
+                    if (res.confirm) {}
+                  }
+                })
+              },
+              fail(err) {
+                wx.showModal({
+                  title: '提示',
+                  content: err.alertMessage,
+                  success: function (res) {
+                    if (res.confirm) {}
+                  }
+                })
+              },
+              complete() {
+
               }
             })
-          },
-          fail(err) {
-            wx.showModal({
-              title: '提示',
-              content: err.alertMessage,
-              success: function (res) {
-                if (res.confirm) {}
-              }
-            })
-          },
-          complete() {
+          }
+        },
+        {
+          text: '取消',
+          onTap: function () {
 
           }
-        })
-      },
-      cancel: function () {
-        // 取消
-      }
+        }
+      ]
     })
   },
   handlerAmendCarFacade(e) {
