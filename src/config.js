@@ -77,14 +77,13 @@ try {
 }
 console.info(device)
 
-const location = {}
-wx.getLocation({
-  type: 'wgs84',
-  success: function (res) {
-    Object.assign(location, res)
-    console.log(location)
-  }
-})
+// wx.getLocation({
+//   type: 'wgs84',
+//   success: function (res) {
+//     Object.assign(location, res)
+//     console.log(location)
+//   }
+// })
 
 export default {
   /**
@@ -133,7 +132,7 @@ export default {
    * speed :
    * accuracy :
    */
-  location,
+  // location,
   getNamespaceKey,
   generateUUID
 }

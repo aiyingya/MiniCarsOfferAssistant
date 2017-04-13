@@ -78,8 +78,8 @@ export default {
       Object.assign(data, opts)
     }
 
-    data.lat = config.location.latitude
-    data.lng = config.location.longitude
+    // data.lat = config.location.latitude
+    // data.lng = config.location.longitude
 
     this.UBTService.report({
       data
