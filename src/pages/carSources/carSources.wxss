@@ -494,7 +494,6 @@ page {
 }
 .carSources-cell .carSources-cell-content .body {
   background: #F6F7F8;
-	padding:20rpx;
 }
 /* 供应商信息 和 报价降价信息 */
 .carSources-cell .carSources-cell-content .first-part {
@@ -502,8 +501,7 @@ page {
 	display: flex;
 	justify-content: space-between;
 	height: 40rpx;
-	margin-bottom: 16rpx;
-	padding-bottom: 20rpx;
+  padding: 20rpx;
 }
 .carSources-cell .carSources-cell-content .first-part:after {
 	content: '';
@@ -572,6 +570,9 @@ page {
 	color: #ED4149;
 	letter-spacing: 0rpx;
 	line-height: 22rpx;
+}
+.carSources-cell .carSources-cell-content .normal-part {
+  padding: 20rpx;
 }
 /* 车源基本信息 和 价格 */
 .carSources-cell .carSources-cell-content .second-part {

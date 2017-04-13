@@ -541,6 +541,7 @@
                     bindtap="handlerCarSourceDetail"
                     data-sku-index="{{skuItemIndex}}"
                     data-car-source-index="{{carSourceItemIndex}}"
+                    class="normal-part"
                   >
                     <!--最近，最便宜-->
                     <view class="second-part">
