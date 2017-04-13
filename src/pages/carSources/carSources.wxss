@@ -439,8 +439,9 @@ page {
 	top: 0;
 }
 .carSources-cells .load-more {
+  height: 42rpx;
   font-family: "PingFangSC-Regular";
-  font-size: 20rpx;
+  font-size: 24rpx;
 	text-align: center;
 }
 .carSources-cell {

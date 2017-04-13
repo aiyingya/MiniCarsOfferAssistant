@@ -150,11 +150,11 @@
           </view>
         </view>
         <!--立即订车-->
-        <view wx:if="{{carSourceItem.supplierSelfSupport}}" class="button confirm" bindtap="{{bookCar}}" data-sku-item="{{skuItem}}"
+        <view wx:if="{{carSourceItem.supplierSelfSupport}}" class="button confirm" bindtap="{{bookCar}}"
           data-car-source="{{carSourceItem}}">
           立即定车
         </view>
-        <view wx:else class="button confirm" bindtap="{{contact}}" data-sku-item="{{skuItem}}" data-car-source="{{carSourceItem}}">
+        <view wx:else class="button confirm" bindtap="{{contact}}" data-car-source="{{carSourceItem}}">
           电话联系
         </view>
       </view>

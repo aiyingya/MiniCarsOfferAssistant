@@ -1228,7 +1228,6 @@ Page({
 
     $wuxCarSourceDetailDialog.open({
       carModel: this.data.carModelsInfo,
-      skuItem: skuItem,
       carSourceItem: carSourceItem,
       bookCar: function (updateCarSourceItem) {
         that.actionBookCar(carModelsInfo, skuItem, updateCarSourceItem)
