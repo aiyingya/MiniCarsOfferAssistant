@@ -10,7 +10,6 @@ export default {
       hasFoldTagCollection: true,
       spuId: '',
       carModel: {},
-      skuItem: {},
       carSourceItem: {}
     }
   },
@@ -19,7 +18,6 @@ export default {
    * @param {Object} opts 配置项
    * @param {String} opts.spuId
    * @param {String} opts.carModel
-   * @param {String} opts.skuItem
    * @param {String} opts.carSourceItem
    * @param {Function} opts.close
    * @param {Function} opts.bookCar

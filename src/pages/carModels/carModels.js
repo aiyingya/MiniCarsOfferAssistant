@@ -84,7 +84,7 @@ Page({
           let filtersData
           let showNodata = false
           let inStockData = []
-          
+
           that.drawCanvas(carModelsList)
 
           for (let item of carModelsList) {
@@ -106,13 +106,13 @@ Page({
               }
             }
             if(item.supply.hours.length > 0) {
-              
+
               for(let hour of item.supply.hours) {
                 let time = {
                   value: hour,
                   selected: ''
                 }
-                
+
                 hours.push(time)
               }
             }
@@ -120,7 +120,7 @@ Page({
             item.selectColors = []
             item.selectTimes = '全部' // 默认24
             item.hours = hours // 默认24
-           
+
           }
 
           for (let item of filters) {
@@ -507,7 +507,7 @@ Page({
         }
       }
     }
-    
+
     this.setData({
       selectChartsLabel: true,
       changeSelectColors: false,
@@ -517,7 +517,7 @@ Page({
       selectTimesId: selectTimesId,
       selectTimes: selecttime
     })
-    
+
   },
   handleChangeTimesItem(e) {
     let that = this
@@ -608,7 +608,7 @@ Page({
     let times = [{value: 24, selected: 'selected'}, {value: 12, selected: ''}]
     requestData = {
       carSeriesId: sid,
-      inStock: false,
+      inStock: false
     }
 
     let keys = []

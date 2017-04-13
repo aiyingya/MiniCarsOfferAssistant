@@ -301,32 +301,35 @@
   padding: 42rpx 30rpx;
   border-top: 1rpx solid #E4E4E4;
 }
-.carSourceDetailDialog .footer .carSources-section-price {
+.carSourceDetailDialog .footer .quoted-price {
   display: flex;
   justify-content: flex-start;
   align-items: baseline;
-  margin-right: 20rpx;
 }
-.carSourceDetailDialog .footer .carSources-section-price .discount-icon {
+.carSourceDetailDialog .footer .quoted-price .discount-icon {
   width: 20rpx;
   height: 24rpx;
   position: relative;
 }
-.carSourceDetailDialog .footer .carSources-section-price .discount {
+.carSourceDetailDialog .footer .quoted-price .discount {
   font-family: "PingFangSC-Regular";
   font-size: 26rpx;
   color: #333333;
   line-height: 26rpx;
 }
-.carSourceDetailDialog .footer .carSources-section-price .price {
+.carSourceDetailDialog .footer .quoted-price .price {
   font-family: "SFUIDisplay-Regular";
   font-size: 34rpx;
   color: #ED4149;
   letter-spacing: 0rpx;
   line-height: 32rpx;
 }
-.carSourceDetailDialog .footer .carSources-section-price .price {
+.carSourceDetailDialog .footer .price-tips-small {
   font-size: 26rpx;
+  font-family: "SFUIDisplay-Regular";
+  color: #ED4149;
+  letter-spacing: 0rpx;
+  line-height: 32rpx
 }
 .carSourceDetailDialog .footer .logistics-information-tips {
   font-family: "PingFangSC-Regular";
@@ -355,4 +358,9 @@
 .carSourceDetailDialog .footer .confirm {
   background: #ED4149;
   color: #FFFFFF;
+}
+.carSourceDetailDialog .footer .footer1 {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
 }

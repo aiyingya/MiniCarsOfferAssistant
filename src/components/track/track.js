@@ -9,6 +9,10 @@
 
 import UBTService from '../../services/ubt.service.js'
 
+import config from '../../config'
+
+import Component from '../component'
+
 export default {
 
   UBTService: new UBTService(),
@@ -16,18 +20,22 @@ export default {
    * 默认参数
    */
   setDefaults() {
-    const system = wx.getSystemInfoSync()
+    const system = config.system
     return {
-      deviceType: 'wx_miniapps',
-      appVersion: 'WXMA:1.0.0',
-      tk_cityIp: '',
-      tk_cardCity: '',
-      pageId: '',
-      referPageId: '',
-      os: system.model,
+      deviceType: system.platform,
+      appVersion: `${config.name}:${config.version}`,
+      pageId: null,
+      pageName: null,
+      os: `${system.system}|wechat ${system.version}|sdk ${system.SDKVersion}`,
       screen: `${system.windowWidth}x${system.windowHeight}`,
       language: system.language,
-      eventAction: 'pageShow'
+      phoneModel: system.model,
+      deviceId: config.device.deviceId,
+      eventAction: null,
+      eventLabel: null,
+      eventSource: null,
+      eventValue: null,
+      eventCategory: null
     }
   },
   /**
@@ -36,30 +44,45 @@ export default {
   data() {
     return {}
   },
+  /**
+   *
+   * @param {Object} [opts={}]
+   * @param {String} [opts.eventAction]
+   * @param {String} [opts.eventLabel]
+   * @param {String} [opts.eventCategory]
+   * @param {Number} [opts.eventValue]
+   */
   push(opts = {}) {
-    const options = Object.assign({}, this.setDefaults, opts)
-    /**
-     * 获取地理位置
-     */
-    wx.getLocation({
-      type: 'wgs84',
-      success: function (res) {
-        let latitude = res.latitude
-        let longitude = res.longitude
+    const that = this
+    const data = Object.assign({}, this.setDefaults())
 
-        options.latitude = latitude
-        options.longitude = longitude
+    const component = new Component({
+      scope: `$wux.track`,
+      data: {},
+      methods: {
 
-        this.UBTService.report({
-          options: options,
-          success: function () {
-            // 成功
-          },
-          fail: function () {
-            // 失败
-          }
-        })
       }
+    })
+
+    data.pageId = component.page.data.pageId
+    data.pageName = component.page.data.pageName
+    data.parameters = component.page.data.pageParameters
+
+    if (opts.eventAction === 'click') {
+      const clickData = {
+        [opts.eventLabel] : 1
+      }
+      data.clickData = JSON.stringify(clickData)
+      data.eventAction = 'click'
+    } else {
+      Object.assign(data, opts)
+    }
+
+    // data.lat = config.location.latitude
+    // data.lng = config.location.longitude
+
+    this.UBTService.report({
+      data
     })
   }
 }

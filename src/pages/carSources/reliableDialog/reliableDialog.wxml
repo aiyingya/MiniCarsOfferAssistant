@@ -2,12 +2,12 @@
     <view class="reliableDialog">
         <view
                 class="weui-mask {{ animateCss }}"
-                wx:if="{{ visible }}"
+                hidden="{{ !visible }}"
                 bindtap="{{close}}"
                 catchtouchmove="{{onTouchMoveWithCatch}}"
         >
         </view>
-        <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
+        <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
             <view
                     class="close"
                     bindtap="{{close}}"

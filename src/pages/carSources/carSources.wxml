@@ -11,6 +11,8 @@
 <import src="../../components/dialog/inputNumberDialog.wxml"/>
 <template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}"/>
 
+<import src="../../components/price/quotedPrice.wxml"/>
+
 <!-- 下拉框筛选 -->
 <view
   class="carSources-navbar"
@@ -327,22 +329,8 @@
           </view>
 
           <view class="second-part">
-            <view class="carSources-section-price">
-              <image
-                wx:if="{{ skuItem.carSku.viewModelLowestCarSourceDiscount !== 0 }}"
-                class="discount-icon"
-                src="{{skuItem.carSku.viewModelLowestCarSourceDiscount > 0? '/images/icons/icon_price_down.png': '/images/icons/icon_price_up.png'}}"
-              >
-              </image>
-              <view
-                wx:if="{{ skuItem.carSku.viewModelLowestCarSourceDiscount !== 0 }}"
-                class="discount"
-              >
-                {{skuItem.carSku.viewModelLowestCarSourceDiscountDesc }}元/
-              </view>
-              <view class="price">{{skuItem.carSku.viewModelLowestCarSourcePriceDesc}}</view>
-              <view class="discount">起</view>
-            </view>
+            <template is="quotedPrice" data="{{ ...skuItem.carSku.viewModelQuoted }}"/>
+            <view>起</view>
           </view>
 
           <view
@@ -363,7 +351,7 @@
               class="carsource-count"
             >
               <view class="carsource-count-text">
-                {{skuItem.carSku.viewModelCarSourceCount}}
+                {{skuItem.viewModelPageData.totalElements}}
               </view>
             </view>
             <image
@@ -376,11 +364,11 @@
 
         <view wx:if="{{skuItemIndex === selectedSectionIndex}}">
           <view
-            wx:if="{{skuItem.carSourcesList.length > 0}}"
+            wx:if="{{skuItem.viewModelCarSourcesList.length > 0}}"
             class="carSources-cells"
           >
             <view
-              wx:for="{{skuItem.carSourcesList}}"
+              wx:for="{{skuItem.viewModelCarSourcesList}}"
               wx:for-item="carSourceItem"
               wx:for-index="carSourceItemIndex"
               wx:key="*this"
@@ -529,29 +517,8 @@
                         data-car-source-place-index="{{carSourcePlaceItemIndex}}"
                         class="item"
                       >
-                        <view class="carSources-place">
-                          {{carSourcePlaceItem.name}}货源
-                        </view>
-                        <!-- 供货价格 -->
-                        <view class="carSources-cell-price">
-                          <image
-                            wx:if="{{ carSourcePlaceItem.viewModelDiscount !== 0 }}"
-                            class="discount-icon"
-                            src="{{ carSourcePlaceItem.viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
-                          >
-                          </image>
-                          <view
-                            wx:if="{{ carSourcePlaceItem.viewModelDiscount !== 0 }}"
-                            class="discount"
-                          >
-                            {{ carSourcePlaceItem.viewModelDiscountDesc }}元/
-                          </view>
-                          <view
-                            class="price"
-                          >
-                            {{ carSourcePlaceItem.viewModelPriceDesc }}
-                          </view>
-                        </view>
+                        <view class="carSources-place"> {{carSourcePlaceItem.name}}货源 </view>
+                        <template is="quotedPrice" data="{{ ...carSourcePlaceItem.viewModelQuoted }}"/>
                       </view>
 
                       <view
@@ -564,27 +531,8 @@
                         class="item"
                       >
                         <!--右边-->
-                        <view class="carSources-place">{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex +
-                          1].name}}货源
-                        </view>
-                        <!-- 供货价格 -->
-                        <view class="carSources-cell-price">
-                          <image
-                            wx:if="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount !== 0 }}"
-                            class="discount-icon"
-                            src="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
-                          >
-                          </image>
-                          <view
-                            wx:if="{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscount !== 0 }}"
-                            class="discount"
-                          >{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelDiscountDesc }}元/
-                          </view>
-                          <view
-                            class="price"
-                          >{{ carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelPriceDesc }}
-                          </view>
-                        </view>
+                        <view class="carSources-place">{{carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].name}}货源 </view>
+                        <template is="quotedPrice" data="{{ ...carSourceItem.viewModelTabMore[carSourcePlaceItemIndex + 1].viewModelQuoted }}"/>
                       </view>
                     </view>
                   </view>
@@ -593,6 +541,7 @@
                     bindtap="handlerCarSourceDetail"
                     data-sku-index="{{skuItemIndex}}"
                     data-car-source-index="{{carSourceItemIndex}}"
+                    class="normal-part"
                   >
                     <!--最近，最便宜-->
                     <view class="second-part">
@@ -614,25 +563,16 @@
                       </view>
 
                       <!-- 供货价格 -->
-                      <view class="carSources-cell-price">
-                        <image
-                          wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
-                          class="discount-icon"
-                          src="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount > 0 ? '../../images/icons/icon_price_down.png': '../../images/icons/icon_price_up.png'}}"
-                        >
-                        </image>
-                        <view
-                          wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscount !== 0 }}"
-                          class="discount"
-                        >
-                          {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelDiscountDesc }}元/
-                        </view>
-                        <view
-                          class="price {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice ? 'price-small' : ''}}"
-                        >
-                          {{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelPriceDesc }}
-                        </view>
-                      </view>
+                      <block
+                        wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice}}"
+                      >
+                        <view class='price-tips-small'>价格电议</view>
+                      </block>
+                      <block
+                        wx:else
+                      >
+                        <template is="quotedPrice" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}"/>
+                      </block>
                     </view>
 
                     <!-- 第二部分 物流信息 -->
@@ -720,6 +660,14 @@
                   </view>
                 </view>
               </view>
+            </view>
+            <view
+              wx:if="{{!skuItem.viewModelPageData.last}}"
+              data-sku-index="{{skuItemIndex}}"
+              bindtap="handlerLoadMore"
+              class="load-more"
+            >
+            点击更多
             </view>
           </view>
           <view wx:else class="nodata">
