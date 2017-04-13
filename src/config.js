@@ -7,7 +7,7 @@ const version = '1.4.0'
 const build = 1
 const versionCode = '010400'
 
-String.getNamespaceKey = function (key) {
+const getNamespaceKey = function (key) {
   if (ENV === 'PRD') {
     return key;
   } else {
@@ -15,7 +15,7 @@ String.getNamespaceKey = function (key) {
   }
 }
 
-String.generateUUID = function () {
+const generateUUID = function () {
   let d = new Date().getTime()
   let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     let r = (d + Math.random() * 16) % 16 | 0
@@ -56,14 +56,14 @@ try {
 console.info(system)
 
 const device = {}
-const DeviceKey = String.getNamespaceKey('deviceId')
+const DeviceKey = getNamespaceKey('deviceId')
 try {
   const deviceId = wx.getStorageSync(DeviceKey)
   if (deviceId && deviceId.length) {
     device.deviceId = deviceId
     console.info(`设备 Id 为 ${deviceId} 从本地缓存取出`)
   } else {
-    const newDeviceId = String.generateUUID()
+    const newDeviceId = generateUUID()
     try {
       wx.setStorageSync(DeviceKey, newDeviceId)
       device.deviceId = newDeviceId
@@ -133,5 +133,7 @@ export default {
    * speed :
    * accuracy :
    */
-  location
+  location,
+  getNamespaceKey,
+  generateUUID
 }

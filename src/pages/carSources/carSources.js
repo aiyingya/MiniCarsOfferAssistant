@@ -6,11 +6,12 @@ import {
 import $wuxCarSourceDetailDialog from './carSourceDetail/carSourceDetail'
 import $wuxReliableDialog from './reliableDialog/reliableDialog'
 
-import util from '../../utils/util.js'
+import util from '../../utils/util'
+import config from '../../config'
 
 let app = getApp()
 
-const RecentContactKey = String.getNamespaceKey('recent_contact')
+const RecentContactKey = config.getNamespaceKey('recent_contact')
 
 Page({
   data: {
