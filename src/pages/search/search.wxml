@@ -15,7 +15,7 @@
 					placeholder-class="search-placeholder"
 					type="text"
 					focus="true"
-					placeholder="输入指导价/车款名"
+					placeholder="输入指导价/车款名 如朗逸1099"
 					value="{{searchValue}}"
 					bindinput="handleSearchInput" 
 					bindfocus="handleSearchInput"
