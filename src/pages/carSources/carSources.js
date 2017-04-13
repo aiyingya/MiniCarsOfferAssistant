@@ -14,6 +14,9 @@ let app = getApp()
 const RecentContactKey = config.getNamespaceKey('recent_contact')
 
 Page({
+
+  cacheCarSourcesBySkuInSpuList: [],
+
   data: {
     // ubt 相关
     pageId: 'carSources',
@@ -51,10 +54,8 @@ Page({
     scrollFiltersSelectedIndexes: [],
     carSourcesBySkuInSpuList: [],
     logisticsList: [],
-    cacheCarSourcesBySkuInSpuList: [],
     selectedSectionIndex: -1,
     selectedSectionId: '0',
-    app: app,
     showDetailTitle: false,
     hasOverLayDropdown: false
   },
@@ -115,12 +116,12 @@ Page({
 
         that.setData({
           nodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
-          cacheCarSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
           filters: filters,
           dropDownFilters: dropDownFilters,
           scrollFilters: scrollFilters,
           scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
         })
+        that.cacheCarSourcesBySkuInSpuList = carSourcesBySkuInSpuList
 
         const newCarSourcesBySkuInSpuList = that.updateSearchResult({})
         that.selectCarSku(-1, newCarSourcesBySkuInSpuList)
@@ -251,7 +252,8 @@ Page({
   showFold(a, b, c) {
     const that = this
     this.setData({
-      [`carSourcesBySkuInSpuList[${b}]`]: a,
+      [`carSourcesBySkuInSpuList[${b}].viewModelPageData`]: a.viewModelPageData,
+      [`carSourcesBySkuInSpuList[${b}].viewModelCarSourcesList`]: a.viewModelCarSourcesList,
       selectedSectionIndex: b
     })
 
@@ -271,6 +273,7 @@ Page({
    * @param carSourcesBySkuInSpuItem
    */
   preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem) {
+    console.log('preprocessCarSourcesBySkuInSpuItem')
     // 获取全部车源中,合并不同的标签集合
     let tags = []
     for (let carSourceItem of carSourcesBySkuInSpuItem.carSourcesList) {
@@ -553,7 +556,7 @@ Page({
     let section = null
     if (selectedCarSkuIndex === -1) {} else {
       section = this.data.carSourcesBySkuInSpuList[selectedCarSkuIndex]
-      this.updateTheCarSku(selectedCarSkuIndex, section)
+      //this.updateTheCarSku(selectedCarSkuIndex, section)
     }
     return section
   },
@@ -791,7 +794,7 @@ Page({
       }
     }
 
-    const carSourcesBySkuInSpuList = this.data.cacheCarSourcesBySkuInSpuList
+    const carSourcesBySkuInSpuList = this.cacheCarSourcesBySkuInSpuList
     const newCarSourcesBySkuInSpuList = []
     for (let carSourcesBySkuItem of carSourcesBySkuInSpuList) {
       const newCarSourcesList = []
@@ -970,6 +973,8 @@ Page({
     const carSourcesBySkuInSpuList = this.updateSearchResult({
       color: -1
     })
+    this.carSourcesBySkuInSpuList = carSourcesBySkuInSpuList
+
     this.setData({
       searchnodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
       carSourcesBySkuInSpuList: carSourcesBySkuInSpuList,
