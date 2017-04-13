@@ -243,7 +243,7 @@ Page({
         })
         that.updateTheCarSource(skuItemIndex, carSourceItemIndex, updatedCarSource)
         that.setData({
-          [`carSourcesBySkuInSpuList[${skuItemIndex}].carSourcesList[${carSourceItemIndex}]`]: updatedCarSource
+          [`carSourcesBySkuInSpuList[${skuItemIndex}].viewModelCarSourcesList[${carSourceItemIndex}]`]: updatedCarSource
         })
       }
     })
@@ -318,8 +318,6 @@ Page({
     carSourcesBySkuInSpuItem.carSku.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice)
     // 自营与否
     carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.supplierSelfSupport
-
-    carSourcesBySkuInSpuItem.carSku.viewModelCarSourceCount = carSourcesBySkuInSpuItem.carSourcesList.length
  },
  /**
   *
@@ -1147,6 +1145,7 @@ Page({
     this.actionContact(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, contact)
   },
   handlerCarSourceMore(e) {
+    console.log('more')
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
@@ -1159,10 +1158,12 @@ Page({
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
 
     this.setData({
-      [`carSourcesBySkuInSpuList[${skuItemIndex}].carSourcesList[${carSourceItemIndex}]`]: carSourceItem
+      [`carSourcesBySkuInSpuList[${skuItemIndex}].viewModelCarSourcesList[${carSourceItemIndex}]`]: carSourceItem
     })
   },
   handlerCarSourceTabClick(e) {
+    console.log('tab')
+    console.log(e)
     const tabItem = e.currentTarget.dataset.tabItem
     const tabItemIndex = e.currentTarget.dataset.tabItemIndex
 
@@ -1178,7 +1179,7 @@ Page({
     this.updateTheCarSource(skuItemIndex, carSourceItemIndex, carSourceItem)
 
     this.setData({
-      [`carSourcesBySkuInSpuList[${skuItemIndex}].carSourcesList[${carSourceItemIndex}]`]: carSourceItem
+      [`carSourcesBySkuInSpuList[${skuItemIndex}].viewModelCarSourcesList[${carSourceItemIndex}]`]: carSourceItem
     })
   },
   /**
@@ -1246,7 +1247,7 @@ Page({
       },
       close: function () {
         that.setData({
-          [`carSourcesBySkuInSpuList[${skuItemIndex}].carSourcesList[${carSourceItemIndex}]`]: carSourceItem
+          [`carSourcesBySkuInSpuList[${skuItemIndex}].viewMdoelCarSourcesList[${carSourceItemIndex}]`]: carSourceItem
         })
       },
       reportError: function (e) {
