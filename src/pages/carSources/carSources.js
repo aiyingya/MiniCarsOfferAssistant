@@ -16,14 +16,13 @@ const RecentContactKey = config.getNamespaceKey('recent_contact')
 Page({
 
   cacheCarSourcesBySkuInSpuList: [],
-
+  // 是否需要展示下点，目前仅限于 宝马/奥迪/MINI
+  isShowDownPrice: true,
   data: {
     // ubt 相关
     pageId: 'carSources',
     pageName: '车源列表',
     pageParameters: {},
-    // 是否需要展示下点，目前仅限于 宝马/奥迪
-    isShowDownPrice: true,
     // 有无数据 init/data/none
     nodata: 'init',
     // data/none
@@ -66,11 +65,10 @@ Page({
 
     const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
 
-    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪'))
-
+    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.includes('MINI'))
+    this.isShowDownPrice = isShowDownPrice
     this.setData({
       carModelsInfo: carModelsInfo,
-      isShowDownPrice: isShowDownPrice
     })
 
     try {
@@ -316,7 +314,7 @@ Page({
     }
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestCarSource
 
-    carSourcesBySkuInSpuItem.carSku.viewModelQuoted = util.quotedPriceByFlag(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice, this.data.carModelsInfo.officialPrice, this.data.isShowDownPoint)
+    carSourcesBySkuInSpuItem.carSku.viewModelQuoted = util.quotedPriceByFlag(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice, this.data.carModelsInfo.officialPrice, this.isShowDownPrice)
     carSourcesBySkuInSpuItem.carSku.viewModelQuoted.price = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice
     carSourcesBySkuInSpuItem.carSku.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice)
     // 自营与否
@@ -593,7 +591,7 @@ Page({
   },
   updateTheLogisticsDestination(logisticsDestination, carSourcePlaceItem, carSourceItem) {
     if (logisticsDestination) {
-      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(logisticsDestination.discount, this.data.carModelsInfo.officialPrice, this.data.isShowDownPoint)
+      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(logisticsDestination.discount, this.data.carModelsInfo.officialPrice, this.isShowDownPrice)
       carSourcePlaceItem.viewModelQuoted.price = logisticsDestination.totalPrice
       carSourcePlaceItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(logisticsDestination.totalPrice)
       if (logisticsDestination.expectedDeliveryDays) {
@@ -603,7 +601,7 @@ Page({
       }
       carSourcePlaceItem.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc = util.priceStringWithUnit(logisticsDestination.logisticsFee)
     } else {
-      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(carSourcePlaceItem.discount, this.data.carModelsInfo.officialPrice, this.data.isShowDownPoint)
+      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(carSourcePlaceItem.discount, this.data.carModelsInfo.officialPrice, this.isShowDownPrice)
       carSourcePlaceItem.viewModelQuoted.price = carSourcePlaceItem.totalPrice
       carSourcePlaceItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcePlaceItem.totalPrice)
       carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = null

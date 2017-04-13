@@ -177,7 +177,7 @@ export default class Util {
     let quotedRangeUnit
     let quotedRange
     if (abs_price > 10000) {
-      quotedRange = abs_price / 10000
+      quotedRange = (abs_price / 10000).toFixed(2)
       quotedRangeUnit = '万元'
     } else {
       quotedRange = abs_price
