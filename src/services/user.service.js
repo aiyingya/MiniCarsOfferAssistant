@@ -7,11 +7,12 @@
 //
 
 import Service from './base.service'
+import Util from '../utils/util'
 
 export default class UserService extends Service {
 
-  static AuthKey = 'auth'
-  static ClientIdKey = 'clientId'
+  static AuthKey = String.getNamespaceKey('auth')
+  static ClientIdKey = String.getNamespaceKey('clientId')
 
   static GuestLogin = 'guest'
   static WexinLogin = 'weixin'

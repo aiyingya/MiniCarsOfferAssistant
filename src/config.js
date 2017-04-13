@@ -1,5 +1,3 @@
-import Util from './utils/util'
-
 /**
  * 基础配置文件
  */
@@ -8,6 +6,24 @@ const name = 'yaomaiche-miniprogram'
 const version = '1.4.0'
 const build = 1
 const versionCode = '010400'
+
+String.getNamespaceKey = function (key) {
+  if (ENV === 'PRD') {
+    return key;
+  } else {
+    return `${ENV}_${key}`
+  }
+}
+
+String.generateUUID = function () {
+  let d = new Date().getTime()
+  let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    let r = (d + Math.random() * 16) % 16 | 0
+    d = Math.floor(d / 16)
+    return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16)
+  })
+  return uuid
+}
 
 const system = {}
 try {
@@ -40,15 +56,16 @@ try {
 console.info(system)
 
 const device = {}
+const DeviceKey = String.getNamespaceKey('deviceId')
 try {
-  const deviceId = wx.getStorageSync('deviceId')
+  const deviceId = wx.getStorageSync(DeviceKey)
   if (deviceId && deviceId.length) {
     device.deviceId = deviceId
     console.info(`设备 Id 为 ${deviceId} 从本地缓存取出`)
   } else {
-    const newDeviceId = Util.generateUUID()
+    const newDeviceId = String.generateUUID()
     try {
-      wx.setStorageSync('deviceId', newDeviceId)
+      wx.setStorageSync(DeviceKey, newDeviceId)
       device.deviceId = newDeviceId
       console.info(`设备 Id 为 ${newDeviceId} 新建 id`)
     } catch (e) {
@@ -63,7 +80,7 @@ console.info(device)
 const location = {}
 wx.getLocation({
   type: 'wgs84',
-  success: function(res) {
+  success: function (res) {
     Object.assign(location, res)
     console.log(location)
   }

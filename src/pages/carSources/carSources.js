@@ -10,6 +10,8 @@ import util from '../../utils/util.js'
 
 let app = getApp()
 
+const RecentContactKey = String.getNamespaceKey('recent_contact')
+
 Page({
   data: {
     // ubt 相关
@@ -147,7 +149,7 @@ Page({
     $wuxTrack.push(event)
 
     const that = this
-    const valueString = wx.getStorageSync('recent_contact')
+    const valueString = wx.getStorageSync(RecentContactKey)
     if (valueString && typeof valueString === 'string') {
       const value = JSON.parse(valueString)
 
@@ -166,10 +168,10 @@ Page({
         }
 
         try {
-          wx.removeStorageSync('recent_contact')
+          wx.removeStorageSync(RecentContactKey)
         } catch (e) {
           wx.removeStorage({
-            key: 'recent_contact',
+            key: RecentContactKey,
             success: function (res) {
               // success
             },
@@ -857,7 +859,7 @@ Page({
             carSource: carSourceItem,
             dateString: now.toDateString()
           }
-          wx.setStorageSync('recent_contact', JSON.stringify(value))
+          wx.setStorageSync(RecentContactKey, JSON.stringify(value))
         }
       }
     })
