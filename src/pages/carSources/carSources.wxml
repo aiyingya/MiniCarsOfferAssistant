@@ -565,7 +565,7 @@
                       <block
                         wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice}}"
                       >
-                        <view class='price-tips-small'>价格电仪</view>
+                        <view class='price-tips-small'>价格电议</view>
                       </block>
                       <block
                         wx:else

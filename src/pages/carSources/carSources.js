@@ -274,7 +274,7 @@ Page({
     // 获取全部车源中,合并不同的标签集合
     let tags = []
     for (let carSourceItem of carSourcesBySkuInSpuItem.carSourcesList) {
-      this.processCarSourceItem(carSourceItem)
+      this.processCarSourceItemOnlyOnce(carSourceItem)
       tags = tags.concat(carSourceItem.viewModelTags)
     }
     const tagsSet = new Set(tags)
@@ -349,6 +349,10 @@ Page({
       }
     }
 
+    for (let carSourceItem of content) {
+      this.processCarSourceItem(carSourceItem)
+    }
+
     return {
       number: fixedNumber,
       size,
@@ -386,31 +390,56 @@ Page({
     carSourcesBySkuInSpuItem.viewModelCarSourcesList = carSourcesBySkuInSpuItem.viewModelCarSourcesList.concat(pageData.content)
     carSourcesBySkuInSpuItem.viewModelPageData = pageData
   },
-  /**
-   * 处理车源对象
-   * @param carSourceItem
-   */
-  processCarSourceItem(carSourceItem) {
+  processCarSourceItemOnlyOnce(carSourceItem) {
     let carSourcePlaceArray = []
-    // 价格最低
+
     const carSourcePlaceLowest = carSourceItem.lowest
     if (carSourcePlaceLowest) {
       // FIXME: 初始化状态下，无法得知某一货源地下的最低报价就是从第一个物流方案得来的，很可能压根就没有物流方案
       carSourcePlaceArray.push(carSourcePlaceLowest)
-      this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceLowest, 0)
     }
 
     // 到货快
     const carSourcePlaceFastest = carSourceItem.fastest
     if (carSourcePlaceFastest) {
       carSourcePlaceArray.push(carSourcePlaceFastest)
-      this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceFastest, 0)
     }
 
     // 其他
     const moreArray = carSourceItem.others
     if (moreArray) {
       carSourcePlaceArray = carSourcePlaceArray.concat(moreArray)
+    }
+
+    // 更新分区标签
+    const tags = []
+    if (carSourceItem.supplierSelfSupport) {
+      tags.push('垫款发车')
+    }
+    for (let carSourcePlaceItem of carSourcePlaceArray) {
+      if (carSourcePlaceItem.priceFixed) {
+        tags.push('一口价')
+        break
+      }
+    }
+    carSourceItem.viewModelTags = tags
+  },
+  /**
+   * 处理车源对象
+   * @param carSourceItem
+   */
+  processCarSourceItem(carSourceItem) {
+    // 价格最低
+    const carSourcePlaceLowest = carSourceItem.lowest
+    if (carSourcePlaceLowest) {
+      // FIXME: 初始化状态下，无法得知某一货源地下的最低报价就是从第一个物流方案得来的，很可能压根就没有物流方案
+      this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceLowest, 0)
+    }
+
+    // 到货快
+    const carSourcePlaceFastest = carSourceItem.fastest
+    if (carSourcePlaceFastest) {
+      this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceFastest, 0)
     }
 
     // 更多项目
@@ -507,19 +536,6 @@ Page({
     // 更新发布时间
     const publishDate = util.dateCompatibility(carSourceItem.publishDate)
     carSourceItem.viewModelPublishDateDesc = util.dateDiff(publishDate)
-
-    // 更新分区标签
-    const tags = []
-    if (carSourceItem.supplierSelfSupport) {
-      tags.push('垫款发车')
-    }
-    for (let carSourcePlaceItem of carSourcePlaceArray) {
-      if (carSourcePlaceItem.priceFixed) {
-        tags.push('一口价')
-        break
-      }
-    }
-    carSourceItem.viewModelTags = tags
 
     // 内外饰颜色处理
     const internalColors = carSourceItem.internalColor.split('/')
