@@ -355,26 +355,27 @@ page {
 	padding:13rpx 15rpx;
 }
 .carSources-section .carSources-section-content .second-part {
+  display: flex;
+	justify-content: flex-start;
+  align-items: baseline
 }
-.carSources-section .carSources-section-content .carSources-section-price {
+.carSources-section .carSources-section-content .quoted-price {
 	display: flex;
 	justify-content: flex-start;
 	align-items: baseline;
-	margin-right: 20rpx;
-	flex-basis: 50%;
 }
-.carSources-section .carSources-section-content .carSources-section-price .discount-icon {
+.carSources-section .carSources-section-content .quoted-price .discount-icon {
 	width: 20rpx;
 	height: 24rpx;
 	position: relative;
 }
-.carSources-section .carSources-section-content .carSources-section-price .discount {
+.carSources-section .carSources-section-content .quoted-price .discount {
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
 	line-height: 26rpx;
 }
-.carSources-section .carSources-section-content .carSources-section-price .price {
+.carSources-section .carSources-section-content .quoted-price .price {
 	font-family: "SFUIDisplay-Regular";
 	font-size: 34rpx;
 	color: #ED4149;
@@ -548,23 +549,23 @@ page {
   overflow: hidden;
 }
 
-.carSources-cell .carSources-cell-content .more .carSources-cell-price {
+.carSources-cell .carSources-cell-content .more .quoted-price {
 	display: flex;
 	justify-content: flex-end;
 	align-items: baseline;
 }
-.carSources-cell .carSources-cell-content .more .carSources-cell-price .discount-icon {
+.carSources-cell .carSources-cell-content .more .quoted-price .discount-icon {
 	width: 20rpx;
 	height: 24rpx;
 	position: relative;
 }
-.carSources-cell .carSources-cell-content .more .carSources-cell-price .discount {
+.carSources-cell .carSources-cell-content .more .quoted-price .discount {
 	font-family: "PingFangSC-Regular";
 	font-size: 22rpx;
 	color: #333333;
 	line-height: 22rpx;
 }
-.carSources-cell .carSources-cell-content .more .carSources-cell-price .price {
+.carSources-cell .carSources-cell-content .more .quoted-price .price {
 	font-family: "SFUIDisplay-Regular";
 	font-size: 22rpx;
 	color: #ED4149;
@@ -639,32 +640,36 @@ page {
 	height: 40rpx;
 }
 
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price {
+.carSources-cell .carSources-cell-content .second-part .quoted-price {
 	display: flex;
 	justify-content: flex-end;
 	align-items: baseline;
 	min-width: 300rpx;
 }
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price .discount-icon {
+.carSources-cell .carSources-cell-content .second-part .quoted-price .discount-icon {
 	width: 20rpx;
 	height: 24rpx;
 	position: relative;
 }
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price .discount {
+.carSources-cell .carSources-cell-content .second-part .quoted-price .discount {
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
 	line-height: 26rpx;
 }
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price .price {
+.carSources-cell .carSources-cell-content .second-part .quoted-price .price {
 	font-family: "SFUIDisplay-Regular";
 	font-size: 34rpx;
 	color: #ED4149;
 	letter-spacing: 0rpx;
 	line-height: 32rpx;
 }
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price .price-small {
-  font-size: 26rpx;
+.carSources-cell .carSources-cell-content .second-part .price-tips-small {
+	font-family: "SFUIDisplay-Regular";
+	font-size: 26rpx;
+	color: #ED4149;
+	letter-spacing: 0rpx;
+	line-height: 32rpx
 }
 .carSources-cell .carSources-cell-content .bare-price {
 	font-family: "PingFangSC-Regular";

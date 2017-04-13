@@ -1,4 +1,3 @@
-
 export default class Util {
 
   static formatTime(date) {
@@ -75,6 +74,119 @@ export default class Util {
     return (advancePayment + loanPayment)
   }
 
+  /**
+   * 降价数据
+   *
+   * @static
+   * @param {Number} price
+   * @param {Number} originPrice
+   * @param {STRING} quotedMethod DIRECT|PRICE|POINTS
+   * @returns {Object} object.quotedMethod DIRECT|PRICE|POINTS
+   *          {String} object.quotedSymbol DOWN|PLUS|NONE
+   *          {Number} object.quotedValue 降点值
+   *          {Number} object.quotedRange 降价范围
+   *          {String} object.quotedRangeUnit 降价单位
+   *
+   * @memberOf Util
+   */
+  static quotedPriceByMethod(price, originPrice, quotedMethod = 'PRICE') {
+    let quotedSymbol
+    const priceDiff = Util.downPrice(price, originPrice)
+
+    if (quotedMethod === 'DIRECT') {
+      if (priceDiff === 0) {
+        quotedSymbol = 'NONE'
+        return {
+          quotedMethod,
+          quotedSymbol
+        }
+      } else if (priceDiff > 0) {
+        quotedSymbol = 'DOWN'
+      } else {
+        quotedSymbol = 'PLUS'
+      }
+
+      const abs_diff = Math.abs(priceDiff)
+
+      const range = Util.quotedPriceUnit(price)
+      const quotedRange = range.quotedRange
+      const quotedRangeUnit = range.quotedRangeUnit
+
+      return {
+        quotedMethod,
+        quotedSymbol,
+        quotedRange,
+        quotedRangeUnit
+      }
+    } else {
+      return Util.quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod)
+    }
+  }
+
+  static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE') {
+    let quotedSymbol
+    let quotedValue
+    let quotedRange
+    let quotedRangeUnit
+    if (priceDiff === 0) {
+      quotedSymbol = 'NONE'
+      return {
+        quotedMethod,
+        quotedSymbol
+      }
+    } else if (priceDiff > 0) {
+      quotedSymbol = 'DOWN'
+    } else {
+      quotedSymbol = 'PLUS'
+    }
+    const abs_diff = Math.abs(priceDiff)
+
+    if (quotedMethod === 'PRICE') {
+      const range = Util.quotedPriceUnit(abs_diff)
+      quotedRange = range.quotedRange
+      quotedRangeUnit = range.quotedRangeUnit
+    } else if (quotedMethod === 'POINTS') {
+      quotedValue = ((abs_diff / originPrice) * 100).toFixed(2)
+    } else {
+      return null
+    }
+
+    return {
+      quotedMethod,
+      quotedSymbol,
+      quotedValue,
+      quotedRange,
+      quotedRangeUnit
+    }
+  }
+
+  static quotedPriceWithDownPriceByFlag(priceDiff, originPrice, priceOrPoints = true) {
+    const quotedMethod = priceOrPoints ? 'PRICE' : 'POINTS'
+    return Util.quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod)
+  }
+
+  static quotedPriceByFlag(price, originPrice, priceOrPoints = true) {
+    const quotedMethod = priceOrPoints ? 'PRICE' : 'POINTS'
+    return Util.quotedPriceByMethod(price, originPrice, quotedMethod)
+  }
+
+  static quotedPriceUnit(price) {
+    const abs_price = Math.abs(price)
+    let quotedRangeUnit
+    let quotedRange
+    if (abs_price > 10000) {
+      quotedRange = abs_price / 10000
+      quotedRangeUnit = '万元'
+    } else {
+      quotedRange = abs_price
+      quotedRangeUnit = '元'
+    }
+    return {
+      quotedRange,
+      quotedRangeUnit
+    }
+  }
+
   /***
    * 优惠价格公式
    *
@@ -91,7 +203,7 @@ export default class Util {
    * @param downPrice
    * @return {string}
    */
-  static priceStringWithUnit (downPrice) {
+  static priceStringWithUnit(downPrice) {
     downPrice = Math.abs(downPrice)
     if (downPrice > 10000) {
       return (downPrice / 10000).toFixed(2) + '万'
@@ -100,7 +212,7 @@ export default class Util {
     }
   }
 
-  static downPriceFlag (downPrice) {
+  static downPriceFlag(downPrice) {
     console.log(downPrice)
     if (downPrice === 0) {
       return 0;
@@ -117,12 +229,12 @@ export default class Util {
    * @param originPrice 原价格
    * @return {number}
    */
-  static downPoint (price, originPrice) {
+  static downPoint(price, originPrice) {
     return (Math.abs(originPrice - price) * 100 / originPrice)
   }
 
-  static dateCompatibility (dateString) {
-    if (dateString && dateString.length ) {
+  static dateCompatibility(dateString) {
+    if (dateString && dateString.length) {
       const dateCompatibilityString = dateString.replace(/-/g, '/')
       const dateCompatibility = new Date(dateCompatibilityString)
       return dateCompatibility
@@ -137,8 +249,8 @@ export default class Util {
    * @param  {[type=Number]} nowTime [当前时间戳，不传将获取当前时间戳]
    * @return {[string]}         [string]
    */
-  static dateDiff (date, nowDate){
-    const now = nowDate ? nowDate: new Date().getTime()
+  static dateDiff(date, nowDate) {
+    const now = nowDate ? nowDate : new Date().getTime()
     const diffValue = now - date
     let result = ""
 
@@ -149,24 +261,24 @@ export default class Util {
     const month = day * 30
     const year = month * 12
 
-    const _year = diffValue/year
-    const _month = diffValue/month
-    const _week = diffValue/(7 * day)
-    const _day = diffValue/day
-    const _hour = diffValue/hour
-    const _min = diffValue/minute
+    const _year = diffValue / year
+    const _month = diffValue / month
+    const _week = diffValue / (7 * day)
+    const _day = diffValue / day
+    const _hour = diffValue / hour
+    const _min = diffValue / minute
 
-    if (_year>=1) {
+    if (_year >= 1) {
       result = parseInt(_year) + "年前"
-    } else if (_month>=1) {
+    } else if (_month >= 1) {
       result = parseInt(_month) + "个月前"
-    } else if(_week>=1) {
+    } else if (_week >= 1) {
       result = parseInt(_week) + "周前"
-    } else if(_day>=1) {
+    } else if (_day >= 1) {
       result = parseInt(_day) + "天前"
-    } else if(_hour>=1) {
+    } else if (_hour >= 1) {
       result = parseInt(_hour) + "小时前"
-    } else if(_min>=1) {
+    } else if (_min >= 1) {
       result = parseInt(_min) + "分钟前"
     } else {
       result = "刚刚"
@@ -174,7 +286,7 @@ export default class Util {
     return result;
   }
 
-  static urlEncodeValueForKey (key, value) {
+  static urlEncodeValueForKey(key, value) {
     if (value && typeof value === 'object') {
       const valueString = JSON.stringify(value)
       return key + '=' + encodeURIComponent(valueString)
@@ -183,18 +295,18 @@ export default class Util {
     }
   }
 
-  static urlDecodeValueForKeyFromOptions (key, options) {
+  static urlDecodeValueForKeyFromOptions(key, options) {
     const valueString = decodeURIComponent(options[key])
     const value = JSON.parse(valueString)
     return value
   }
 
-  static generateUUID () {
+  static generateUUID() {
     let d = new Date().getTime()
-    let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      let r = (d + Math.random()*16)%16 | 0
-      d = Math.floor(d/16)
-      return (c=='x' ? r : (r&0x7|0x8)).toString(16)
+    let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      let r = (d + Math.random() * 16) % 16 | 0
+      d = Math.floor(d / 16)
+      return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16)
     })
     return uuid
   }

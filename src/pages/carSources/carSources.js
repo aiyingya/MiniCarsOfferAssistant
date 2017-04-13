@@ -11,13 +11,13 @@ import util from '../../utils/util.js'
 let app = getApp()
 
 Page({
-
   data: {
     // ubt 相关
     pageId: 'carSources',
     pageName: '车源列表',
     pageParameters: {},
-
+    // 是否需要展示下点，目前仅限于 宝马/奥迪
+    isShowDownPrice: true,
     // 有无数据 init/data/none
     nodata: 'init',
     // data/none
@@ -62,8 +62,11 @@ Page({
 
     const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
 
+    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪'))
+
     this.setData({
-      carModelsInfo: carModelsInfo
+      carModelsInfo: carModelsInfo,
+      isShowDownPrice: isShowDownPrice
     })
 
     try {
@@ -306,11 +309,10 @@ Page({
       lowestCarSource = lowestSelfPlatformCarSourceItem
     }
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestCarSource
-    carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice
-    carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePriceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice)
-    carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscount = util.downPrice(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourcePrice, this.data.carModelsInfo.officialPrice)
-    carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscountDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSourceDiscount)
 
+    carSourcesBySkuInSpuItem.carSku.viewModelQuoted = util.quotedPriceByFlag(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice, this.data.carModelsInfo.officialPrice, this.data.isShowDownPoint)
+    carSourcesBySkuInSpuItem.carSku.viewModelQuoted.price = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice
+    carSourcesBySkuInSpuItem.carSku.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice)
     // 自营与否
     carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.supplierSelfSupport
 
@@ -571,10 +573,9 @@ Page({
   },
   updateTheLogisticsDestination(logisticsDestination, carSourcePlaceItem, carSourceItem) {
     if (logisticsDestination) {
-      carSourcePlaceItem.viewModelPrice = logisticsDestination.totalPrice
-      carSourcePlaceItem.viewModelPriceDesc = util.priceStringWithUnit(logisticsDestination.totalPrice)
-      carSourcePlaceItem.viewModelDiscount = logisticsDestination.discount
-      carSourcePlaceItem.viewModelDiscountDesc = util.priceStringWithUnit(logisticsDestination.discount)
+      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(logisticsDestination.discount, this.data.carModelsInfo.officialPrice, this.data.isShowDownPoint)
+      carSourcePlaceItem.viewModelQuoted.price = logisticsDestination.totalPrice
+      carSourcePlaceItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(logisticsDestination.totalPrice)
       if (logisticsDestination.expectedDeliveryDays) {
         carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = '约' + logisticsDestination.expectedDeliveryDays + '天'
       } else {
@@ -582,16 +583,14 @@ Page({
       }
       carSourcePlaceItem.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc = util.priceStringWithUnit(logisticsDestination.logisticsFee)
     } else {
-      carSourcePlaceItem.viewModelPrice = carSourcePlaceItem.totalPrice
-      carSourcePlaceItem.viewModelPriceDesc = util.priceStringWithUnit(carSourcePlaceItem.totalPrice)
-      carSourcePlaceItem.viewModelDiscount = carSourcePlaceItem.discount
-      carSourcePlaceItem.viewModelDiscountDesc = util.priceStringWithUnit(carSourcePlaceItem.discount)
+      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(carSourcePlaceItem.discount, this.data.carModelsInfo.officialPrice, this.data.isShowDownPoint)
+      carSourcePlaceItem.viewModelQuoted.price = carSourcePlaceItem.totalPrice
+      carSourcePlaceItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcePlaceItem.totalPrice)
       carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = null
     }
 
     // 如果货源不是一口价
-    if (!carSourceItem.supplierSelfSupport && !carSourcePlaceItem.priceFixed && carSourcePlaceItem.viewModelPrice === this.data.carModelsInfo.officialPrice) {
-      carSourcePlaceItem.viewModelPriceDesc = '价格电议'
+    if (!carSourceItem.supplierSelfSupport && !carSourcePlaceItem.priceFixed && carSourcePlaceItem.viewModelQuoted.price === this.data.carModelsInfo.officialPrice) {
       carSourcePlaceItem.viewModelEquelWithOfficialPrice = true
     } else {
       carSourcePlaceItem.viewModelEquelWithOfficialPrice = false
