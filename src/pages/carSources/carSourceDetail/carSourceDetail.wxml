@@ -3,9 +3,9 @@
   <import src="../../../components/price/quotedPrice.wxml" />
 
   <view class="carSourceDetailDialog">
-    <view class="weui-mask {{ animateCss }}" hidden="{{ !visible }}" bindtap="{{close}}" catchtouchmove="{{onTouchMoveWithCatch}}">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" bindtap="{{close}}" catchtouchmove="{{onTouchMoveWithCatch}}">
     </view>
-    <view class="weui-dialog {{ animateCss }}" hidden="{{ !visible }}">
+    <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
       <view class="header">
         <view class="title">
           【{{carModel.officialPriceStr}}】 {{carModel.carModelName}}
