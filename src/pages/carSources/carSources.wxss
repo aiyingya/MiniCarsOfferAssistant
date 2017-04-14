@@ -170,15 +170,16 @@ page {
 	border-right: 1rpx solid #FFFFFF;
 }
 .filter-scroll-view .scroll-filter .filter {
-	padding: 12rpx 27rpx 12rpx 27rpx;
+	padding: 0 27rpx;
 	border:1rpx solid #333333;
 	border-radius:65rpx;
 	font-size:24rpx;
+	height:48rpx;
 	margin-right:10rpx;
 	display:inline-block;
 	font-family: "PingFangSC-Regular";
 	letter-spacing: 0;
-	line-height: 24rpx;
+	line-height: 48rpx;
 }
 .filter-scroll-view .scroll-filter .filter:last-child {
 	margin-right: 0rpx;
