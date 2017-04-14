@@ -16,14 +16,13 @@ const RecentContactKey = config.getNamespaceKey('recent_contact')
 Page({
 
   cacheCarSourcesBySkuInSpuList: [],
-
+  // 是否需要展示下点，目前仅限于 宝马/奥迪/MINI
+  isShowDownPrice: true,
   data: {
     // ubt 相关
     pageId: 'carSources',
     pageName: '车源列表',
     pageParameters: {},
-    // 是否需要展示下点，目前仅限于 宝马/奥迪
-    isShowDownPrice: true,
     // 有无数据 init/data/none
     nodata: 'init',
     // data/none
@@ -66,11 +65,10 @@ Page({
 
     const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
 
-    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪'))
-
+    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.includes('MINI'))
+    this.isShowDownPrice = isShowDownPrice
     this.setData({
       carModelsInfo: carModelsInfo,
-      isShowDownPrice: isShowDownPrice
     })
 
     try {
@@ -316,20 +314,20 @@ Page({
     }
     carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource = lowestCarSource
 
-    carSourcesBySkuInSpuItem.carSku.viewModelQuoted = util.quotedPriceByFlag(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice, this.data.carModelsInfo.officialPrice, this.data.isShowDownPoint)
+    carSourcesBySkuInSpuItem.carSku.viewModelQuoted = util.quotedPriceByFlag(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice, this.data.carModelsInfo.officialPrice, this.isShowDownPrice)
     carSourcesBySkuInSpuItem.carSku.viewModelQuoted.price = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice
     carSourcesBySkuInSpuItem.carSku.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.lowestPrice)
     // 自营与否
     carSourcesBySkuInSpuItem.carSku.viewModelSupplierSelfSupport = carSourcesBySkuInSpuItem.carSku.viewModelLowestCarSource.supplierSelfSupport
- },
- /**
-  *
-  *
-  * @param {any} carSourcesBySkuInSpuItem
-  * @param {any} number
-  * @param {any} size
-  */
- pageData(carSourcesBySkuInSpuItem, number, size) {
+  },
+  /**
+   *
+   *
+   * @param {any} carSourcesBySkuInSpuItem
+   * @param {any} number
+   * @param {any} size
+   */
+  pageData(carSourcesBySkuInSpuItem, number, size) {
     const totalElements = carSourcesBySkuInSpuItem.carSourcesList.length
     const totalPages = Math.ceil(carSourcesBySkuInSpuItem.carSourcesList.length / size)
 
@@ -593,7 +591,7 @@ Page({
   },
   updateTheLogisticsDestination(logisticsDestination, carSourcePlaceItem, carSourceItem) {
     if (logisticsDestination) {
-      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(logisticsDestination.discount, this.data.carModelsInfo.officialPrice, this.data.isShowDownPoint)
+      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(logisticsDestination.discount, this.data.carModelsInfo.officialPrice, this.isShowDownPrice)
       carSourcePlaceItem.viewModelQuoted.price = logisticsDestination.totalPrice
       carSourcePlaceItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(logisticsDestination.totalPrice)
       if (logisticsDestination.expectedDeliveryDays) {
@@ -603,7 +601,7 @@ Page({
       }
       carSourcePlaceItem.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc = util.priceStringWithUnit(logisticsDestination.logisticsFee)
     } else {
-      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(carSourcePlaceItem.discount, this.data.carModelsInfo.officialPrice, this.data.isShowDownPoint)
+      carSourcePlaceItem.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(carSourcePlaceItem.discount, this.data.carModelsInfo.officialPrice, this.isShowDownPrice)
       carSourcePlaceItem.viewModelQuoted.price = carSourcePlaceItem.totalPrice
       carSourcePlaceItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcePlaceItem.totalPrice)
       carSourcePlaceItem.viewModelExpectedDeliveryDaysDesc = null
@@ -697,12 +695,8 @@ Page({
 
       if (filterId === '-1') {
         return true
-      } else if (filterId === '0') {
-        return _hour <= 12
-      } else if (filterId === '1') {
-        return _hour <= 24
-      } else if (filterId === '2') {
-        return _hour > 24
+      } else {
+        return _hour <= parseInt(filterId)
       }
       return true
     }
@@ -888,38 +882,45 @@ Page({
     $wuxDialog.open({
       title: '提示',
       content: '发起定车后， 将会有工作人员与您联系',
-      confirmText: '发起定车',
-      confirm: function () {
-        const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
-        const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
+      buttons: [{
+          text: '发起订车',
+          type: 'weui-dialog__btn_primary',
+          onTap: function () {
+            const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
+            const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
 
-        app.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
-          success(res) {
-            wx.showModal({
-              title: '提示',
-              content: '提交成功，请保持通话畅通',
-              success: function (res) {
-                if (res.confirm) {}
+            app.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
+              success(res) {
+                wx.showModal({
+                  title: '提示',
+                  content: '提交成功，请保持通话畅通',
+                  success: function (res) {
+                    if (res.confirm) {}
+                  }
+                })
+              },
+              fail(err) {
+                wx.showModal({
+                  title: '提示',
+                  content: err.alertMessage,
+                  success: function (res) {
+                    if (res.confirm) {}
+                  }
+                })
+              },
+              complete() {
+
               }
             })
-          },
-          fail(err) {
-            wx.showModal({
-              title: '提示',
-              content: err.alertMessage,
-              success: function (res) {
-                if (res.confirm) {}
-              }
-            })
-          },
-          complete() {
+          }
+        },
+        {
+          text: '取消',
+          onTap: function () {
 
           }
-        })
-      },
-      cancel: function () {
-        // 取消
-      }
+        }
+      ]
     })
   },
   handlerAmendCarFacade(e) {

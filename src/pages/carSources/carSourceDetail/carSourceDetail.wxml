@@ -71,7 +71,7 @@
             </view>
           </view>
         </view>
-        <view class="second-part" bindtap="{{carSourceDetailDialogJumpTo}}" wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}">
+        <view class="second-part" bindtap="{{switchFoldTag}}" wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}">
           <view class="line-item vertical">
             <view class="line-content {{hasFoldTagCollection ? 'line-content-min' : ''}}" wx:if="{{carSourceItem.supplierSelfSupport && carSourceItem.viewModelSelectedCarSourcePlace.priceFixed}}">
               <view class="tag-title">

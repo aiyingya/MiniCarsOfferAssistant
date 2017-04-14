@@ -97,7 +97,7 @@ export default {
          *
          * @param {any} e
          */
-        jumpTo(e) {
+        switchFoldTag(e) {
           options.hasFoldTagCollection = !options.hasFoldTagCollection
           this.setData({
             [`${this.options.scope}.hasFoldTagCollection`]: options.hasFoldTagCollection
@@ -133,7 +133,6 @@ export default {
           this.setData({
             [`${this.options.scope}.hasFoldOriginalText`]: options.hasFoldOriginalText
           })
-
         },
         reportError(e) {
           typeof options.reportError === `function` && options.reportError(e)

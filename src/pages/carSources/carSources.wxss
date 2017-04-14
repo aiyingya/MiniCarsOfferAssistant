@@ -534,6 +534,7 @@ page {
 	justify-content: space-around;
 	align-items: baseline;
 	width: 50%;
+  padding: 20rpx 0rpx;
 }
 .carSources-cell .carSources-cell-content .more .carSources-place {
 	background: #EFEFEF;
