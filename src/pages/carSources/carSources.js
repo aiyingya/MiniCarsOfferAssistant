@@ -68,7 +68,7 @@ Page({
     const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.includes('MINI'))
     this.isShowDownPrice = isShowDownPrice
     this.setData({
-      carModelsInfo: carModelsInfo,
+      carModelsInfo: carModelsInfo
     })
 
     try {
@@ -887,7 +887,7 @@ Page({
           type: 'weui-dialog__btn_primary',
           onTap: function () {
             const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
-            const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelPrice
+            const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
 
             app.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
               success(res) {
