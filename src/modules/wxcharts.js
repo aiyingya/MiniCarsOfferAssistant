@@ -1573,7 +1573,13 @@ function drawAreaShade(clickData,context,opts,config) {
     var newChartX = [];
     var newChartY = [];
     var changeChartArea = {};
-    if(points.length < 5) return;
+    if(points.length < 5) {
+      return {
+        x: [],
+        y: [],
+        xAxisName: ''
+      }
+    }
     if(clickData.index - 2 <= 0) {
       startX = points[0].x - clickData.width / 2;
       start = 0;
@@ -1596,7 +1602,8 @@ function drawAreaShade(clickData,context,opts,config) {
   
     changeChartArea = {
       x: newChartX,
-      y: newChartY
+      y: newChartY,
+      xAxisName: opts.xAxis.unitText
     };
   
     return changeChartArea;
