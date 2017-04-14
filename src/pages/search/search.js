@@ -330,19 +330,6 @@ Page({
           let opts = item.chart.opts
           let context = item.chart.context
           let changeData = item.chart.changeData;
-          let callback = function (data) {
-            if (data) {
-              let value = 0
-              for (let item of data.y) {
-                value += item
-              }
-              console.log(value)
-              if (value <= 0) {
-                return
-              }
-
-            }
-          }
           that.data.touchindex = index
           item.chart.drawChartShade(index, chartData, config, opts, context)
         }
@@ -355,6 +342,7 @@ Page({
   handletouchend(e) {
     let id = e.target.dataset.id
     let carModelsInfo = e.target.dataset.carmodelsinfo
+    let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
     let that = this
     this.setData({
       carModelsInfo: carModelsInfo
@@ -370,12 +358,12 @@ Page({
           let context = item.chart.context
           let changeData = item.chart.changeData;
           let callback = function (data) {
-            if (data) {
+            if (data.y.length > 0) {
               let value = 0
               for (let item of data.y) {
                 value += item
               }
-              console.log(value)
+              
               if (value <= 0) {
                 return
               }
@@ -384,9 +372,13 @@ Page({
                 showCharts: false
               })
               that.drawPopCharts(data)
+              that.data.touchindex = ''
+            }else {
+              wx.navigateTo({
+                url: '/pages/carSources/carSources?' + carModelsInfoKeyValueString
+              })
             }
           }
-          console.log(index)
           item.chart.drawChartShade(index, chartData, config, opts, context, callback)
         }
       }
@@ -426,7 +418,7 @@ Page({
             disableGrid: false,
             fontColor: '#333333',
             gridColor: '#333333',
-            unitText: '下(万)'
+            unitText: item.supply.chart.xAxisName
           },
           yAxis: {
             disabled: true,
@@ -499,7 +491,7 @@ Page({
         disabled: true,
         fontColor: '#333333',
         gridColor: '#333333',
-        unitText: '（个）',
+        unitText: data.xAxisName,
         min: 0,
         max: 10,
         format(val) {
