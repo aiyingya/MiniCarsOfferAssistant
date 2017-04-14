@@ -70,33 +70,37 @@ export default class TradeService extends Service {
       data: {}
     })
   }
-  
+
   /**
    *  获取用户搜索记录
    *  clientId 用户ID
    */
+  // TODO: davidfu 需要 promise 改造
   getUserSearchHistory(opts) {
     this.sendMessage({
       path: 'cgi/search/history/text',
       method: 'GET',
       data: opts.data,
       success: opts.success,
-      fail: opts.fail
-    }, 'none')
+      fail: opts.fail,
+      loadingType: 'none'
+    })
   }
-  
+
   /**
    *  上传用户搜索记录
    *  clientId 用户ID
    */
+  // TODO: davidfu 需要 promise 改造
   postUserSearchHistory(opts) {
     this.sendMessage({
       path: 'cgi/search/history/text',
       method: 'POST',
       data: opts.data,
       success: opts.success,
-      fail: opts.fail
-    }, 'none')
+      fail: opts.fail,
+      loadingType: 'none'
+    })
   }
   /**
    *  获取导航路径中的 车辆系列(serial) 列表
