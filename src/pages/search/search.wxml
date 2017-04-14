@@ -1,5 +1,5 @@
 <import src="../../components/carModel/carModel.wxml" />
-<import src="../../lib/toast/toast.wxml"/>
+<import src="../../components/toast/toast.wxml"/>
 <template is="toast" data="{{ ...$wux.toast }}"/>
 <!-- search.-->
 <view class="container search-wrapper">
@@ -10,18 +10,18 @@
 				<view class="search-icon">
 					<image class="search-img" src="../../images/icons/icon_find.png"></image>
 				</view>
-				<input 
-					class="search-input" 
+				<input
+					class="search-input"
 					placeholder-class="search-placeholder"
 					type="text"
 					focus="true"
 					placeholder="输入指导价/车款名 如朗逸1099"
 					value="{{searchValue}}"
-					bindinput="handleSearchInput" 
+					bindinput="handleSearchInput"
 					bindfocus="handleSearchInput"
 					bindconfirm="handleSearchConfirm"
 					/>
-				<view 
+				<view
 					wx:if="{{showSearchBtn}}"
 					class="search-icon-cancel"
 					bindtap="handleCancelSearchValue"
@@ -29,27 +29,27 @@
 					<image class="search-img" src="../../images/icons/icon_search_close.png"></image>
 				</view>
 			</view>
-			<view 
+			<view
 				wx:if="{{showSearchBtn}}"
 				class="search-cancel-btn search-btn"
 				bindtap="handleSearchConfirm"
 				>
 				搜索</view>
-			<view 
+			<view
 				wx:else
 				class="search-cancel-btn"
 				bindtap="handleCancelSearch"
-				>取消</view>	
+				>取消</view>
 		</view>
 	</view>
   <!-- 历史搜索记录.-->
-  <view 
+  <view
    class="search-history"
    wx:if="{{searchHistory.length > 0 && showSearchHistory}}"
    >
     <div class="searchistory-title">历史搜索</div>
     <div class="searchistory-inner">
-      <view 
+      <view
         hover
         hover-class="searchistory-item_active"
         class="searchistory-item"
@@ -61,12 +61,12 @@
     </div>
   </view>
 	<!-- 联想搜索 search results.-->
-	<view 
+	<view
 		class="search-results-wrap"
 		wx:if="{{associateResults.length > 0 && showResultsSearch}}"
 		>
 		<view class="search-results-inner">
-			<view 
+			<view
 				hover="true"
 				hover-class="active"
 				class="searchResults-cell"
@@ -78,27 +78,27 @@
 			</view>
 		</view>
 	</view>
-	<view 
+	<view
 		wx:if="{{searchResults.length > 0}}"
 		class="carModels-cells">
-		<block 
+		<block
 			wx:for="{{searchResults}}"
 			>
-			<template is="carModel" data="{{item,showCharts}}" /> 
+			<template is="carModel" data="{{item,showCharts}}" />
 		</block>
-	</view>	
-	
+	</view>
+
 	<!-- no search data.-->
-	<view 
+	<view
 		wx:if="{{searchNodata}}"
 		class="search-nodata">
 		<view class="searchNodata-inner">
 			<icon type="warn" size="60" color="#cccccc"></icon>
 			<view class="icon-box__ctn">
 				<view class="icon-box__desc">抱歉！没有相关车信息</view>
-			</view>	
-		</view>	
+			</view>
+		</view>
 	</view>
 </view>
-<template is="popupCharts" data="{{showPopCharts, carModelsInfo}}" /> 
-<template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime,selectTimesData}}" /> 
+<template is="popupCharts" data="{{showPopCharts, carModelsInfo}}" />
+<template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime,selectTimesData}}" />
