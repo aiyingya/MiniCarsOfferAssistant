@@ -15,7 +15,7 @@
             class="search-input"
             placeholder-class="search-placeholder"
             disabled
-            placeholder="输入指导价/车款名"
+            placeholder="输入指导价/车款名 如朗逸1099"
           />
           <view
             class="bindtap"
