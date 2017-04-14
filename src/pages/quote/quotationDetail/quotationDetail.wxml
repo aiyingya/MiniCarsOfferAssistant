@@ -1,8 +1,8 @@
-<import src="../../../lib/dialog/dialog.wxml"/>
-<template is="dialog" data="{{ ...$wux.dialog }}"/>
+<import src="../../../components/dialog/inputNumberDialog.wxml"/>
+<template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}"/>
 
-<import src="../../../lib/dialog/normalDialog.wxml"/>
-<template is="normalDialog" data="{{ ...$wux.normalDialog }}"/>
+<import src="../../../components/dialog/dialog.wxml"/>
+<template is="dialog" data="{{ ...$wux.dialog }}"/>
 
 <view class="page pad-bt">
     <view class="page__bd">
