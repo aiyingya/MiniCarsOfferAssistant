@@ -65,7 +65,7 @@ Page({
 
     const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
 
-    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.includes('MINI'))
+    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.toLowerCase().includes('mini'))
     this.isShowDownPrice = isShowDownPrice
     this.setData({
       carModelsInfo: carModelsInfo
