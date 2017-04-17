@@ -1,7 +1,7 @@
 /**
  * 基础配置文件
  */
-const ENV = 'prd'
+const ENV = 'gqc'
 const name = 'yaomaiche-miniprogram'
 const version = '1.4.1'
 const build = 1
