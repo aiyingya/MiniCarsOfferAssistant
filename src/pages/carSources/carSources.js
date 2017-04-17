@@ -98,12 +98,10 @@ Page({
           if (i === 0) {
             dropDownFilters.push(filter)
           } else if (i === 1) {
-            // 车源发布信息， 默认为 24小时
             scrollFilters.push(filter)
             scrollFiltersSelectedIndexes.push(-1)
-            if (filter.items && filter.items.length) {
-              sourcePublishDateFilterId = filter.items[1].id
-            }
+            // 车源发布信息， 默认为 全部
+            sourcePublishDateFilterId = '-1'
           } else {
             scrollFilters.push(filter)
             scrollFiltersSelectedIndexes.push(-1)
