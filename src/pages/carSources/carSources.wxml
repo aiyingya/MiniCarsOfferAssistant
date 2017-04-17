@@ -297,7 +297,7 @@
 
                       <!-- 供货价格 -->
                       <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice}}">
-                        <view class='price-tips-small'>价格电议</view>
+                        <view class="price-tips-small">价格电议</view>
                       </block>
                       <block wx:else>
                         <template is="quotedPrice" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />
