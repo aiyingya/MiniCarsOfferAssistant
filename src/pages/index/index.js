@@ -210,7 +210,7 @@ Page({
     }
   },
   handlerMakePhoneCall() {
-    let phone = '021-52559255,8902'
+    let phone = '18621016627'
 
     wx.makePhoneCall({
       phoneNumber: phone
