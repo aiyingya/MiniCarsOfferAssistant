@@ -7,13 +7,13 @@
 //
 
 import Service from './base.service'
-
 import Util from '../utils/util'
+import config from '../config'
 
 export default class UserService extends Service {
 
-  static AuthKey = 'auth'
-  static ClientIdKey = 'clientId'
+  static AuthKey = config.getNamespaceKey('auth')
+  static ClientIdKey = config.getNamespaceKey('clientId')
 
   static GuestLogin = 'guest'
   static WexinLogin = 'weixin'
@@ -27,6 +27,9 @@ export default class UserService extends Service {
 
   constructor () {
     super()
+
+
+
     /**
      * guest | yuntu | weixin
      * @type {string}
@@ -187,7 +190,9 @@ export default class UserService extends Service {
 
   __requestClientId (cb) {
     let that = this
-    const deviceId = wx.getStorageSync(Util.DeviceIdKey)
+
+    const DeviceKey = config.getNamespaceKey('deviceId')
+    const deviceId = wx.getStorageSync(DeviceKey)
     this.getVisitor({
       deviceId: deviceId,
       success: function(res) {
@@ -314,7 +319,7 @@ export default class UserService extends Service {
       path: 'cgi/tenant/member/exist',
       method: 'GET',
       data: {
-        "mobile": opts.mobile,
+        "mobile": opts.mobile
       },
       success: opts.success,
       fail: opts.fail

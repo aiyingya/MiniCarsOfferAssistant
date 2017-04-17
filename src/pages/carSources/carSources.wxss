@@ -170,15 +170,16 @@ page {
 	border-right: 1rpx solid #FFFFFF;
 }
 .filter-scroll-view .scroll-filter .filter {
-	padding: 12rpx 27rpx 12rpx 27rpx;
+	padding: 0 27rpx;
 	border:1rpx solid #333333;
 	border-radius:65rpx;
 	font-size:24rpx;
+	height:48rpx;
 	margin-right:10rpx;
 	display:inline-block;
 	font-family: "PingFangSC-Regular";
 	letter-spacing: 0;
-	line-height: 24rpx;
+	line-height: 48rpx;
 }
 .filter-scroll-view .scroll-filter .filter:last-child {
 	margin-right: 0rpx;
@@ -355,26 +356,27 @@ page {
 	padding:13rpx 15rpx;
 }
 .carSources-section .carSources-section-content .second-part {
+  display: flex;
+	justify-content: flex-start;
+  align-items: baseline
 }
-.carSources-section .carSources-section-content .carSources-section-price {
+.carSources-section .carSources-section-content .quoted-price {
 	display: flex;
 	justify-content: flex-start;
 	align-items: baseline;
-	margin-right: 20rpx;
-	flex-basis: 50%;
 }
-.carSources-section .carSources-section-content .carSources-section-price .discount-icon {
+.carSources-section .carSources-section-content .quoted-price .discount-icon {
 	width: 20rpx;
 	height: 24rpx;
 	position: relative;
 }
-.carSources-section .carSources-section-content .carSources-section-price .discount {
+.carSources-section .carSources-section-content .quoted-price .discount {
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
 	line-height: 26rpx;
 }
-.carSources-section .carSources-section-content .carSources-section-price .price {
+.carSources-section .carSources-section-content .quoted-price .price {
 	font-family: "SFUIDisplay-Regular";
 	font-size: 34rpx;
 	color: #ED4149;
@@ -406,10 +408,10 @@ page {
   bottom: 20rpx;
 }
 .carSources-section .carSources-section-content .carsource-count {
-  width: 32rpx;
   height: 32rpx;
+  min-width: 32rpx;
   background: rgba(241, 124, 124, 0.1);
-  border-radius: 100%;
+	border-radius: 16rpx;
   margin-right: 15rpx;
 }
 .carSources-section .carSources-section-content .carsource-count-text {
@@ -436,6 +438,12 @@ page {
 .carSources-cells .carSources-nodata {
 	position: absolute;
 	top: 0;
+}
+.carSources-cells .load-more {
+  height: 42rpx;
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+	text-align: center;
 }
 .carSources-cell {
 	position: relative;
@@ -487,7 +495,6 @@ page {
 }
 .carSources-cell .carSources-cell-content .body {
   background: #F6F7F8;
-	padding:20rpx;
 }
 /* 供应商信息 和 报价降价信息 */
 .carSources-cell .carSources-cell-content .first-part {
@@ -495,8 +502,7 @@ page {
 	display: flex;
 	justify-content: space-between;
 	height: 40rpx;
-	margin-bottom: 16rpx;
-	padding-bottom: 20rpx;
+  padding: 20rpx;
 }
 .carSources-cell .carSources-cell-content .first-part:after {
 	content: '';
@@ -529,6 +535,7 @@ page {
 	justify-content: space-around;
 	align-items: baseline;
 	width: 50%;
+  padding: 20rpx 0rpx;
 }
 .carSources-cell .carSources-cell-content .more .carSources-place {
 	background: #EFEFEF;
@@ -543,28 +550,31 @@ page {
   overflow: hidden;
 }
 
-.carSources-cell .carSources-cell-content .more .carSources-cell-price {
+.carSources-cell .carSources-cell-content .more .quoted-price {
 	display: flex;
 	justify-content: flex-end;
 	align-items: baseline;
 }
-.carSources-cell .carSources-cell-content .more .carSources-cell-price .discount-icon {
+.carSources-cell .carSources-cell-content .more .quoted-price .discount-icon {
 	width: 20rpx;
 	height: 24rpx;
 	position: relative;
 }
-.carSources-cell .carSources-cell-content .more .carSources-cell-price .discount {
+.carSources-cell .carSources-cell-content .more .quoted-price .discount {
 	font-family: "PingFangSC-Regular";
 	font-size: 22rpx;
 	color: #333333;
 	line-height: 22rpx;
 }
-.carSources-cell .carSources-cell-content .more .carSources-cell-price .price {
+.carSources-cell .carSources-cell-content .more .quoted-price .price {
 	font-family: "SFUIDisplay-Regular";
 	font-size: 22rpx;
 	color: #ED4149;
 	letter-spacing: 0rpx;
 	line-height: 22rpx;
+}
+.carSources-cell .carSources-cell-content .normal-part {
+  padding: 20rpx;
 }
 /* 车源基本信息 和 价格 */
 .carSources-cell .carSources-cell-content .second-part {
@@ -634,32 +644,36 @@ page {
 	height: 40rpx;
 }
 
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price {
+.carSources-cell .carSources-cell-content .second-part .quoted-price {
 	display: flex;
 	justify-content: flex-end;
 	align-items: baseline;
 	min-width: 300rpx;
 }
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price .discount-icon {
+.carSources-cell .carSources-cell-content .second-part .quoted-price .discount-icon {
 	width: 20rpx;
 	height: 24rpx;
 	position: relative;
 }
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price .discount {
+.carSources-cell .carSources-cell-content .second-part .quoted-price .discount {
 	font-family: "PingFangSC-Regular";
 	font-size: 26rpx;
 	color: #333333;
 	line-height: 26rpx;
 }
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price .price {
+.carSources-cell .carSources-cell-content .second-part .quoted-price .price {
 	font-family: "SFUIDisplay-Regular";
 	font-size: 34rpx;
 	color: #ED4149;
 	letter-spacing: 0rpx;
 	line-height: 32rpx;
 }
-.carSources-cell .carSources-cell-content .second-part .carSources-cell-price .price-small {
-  font-size: 26rpx;
+.carSources-cell .carSources-cell-content .second-part .price-tips-small {
+	font-family: "SFUIDisplay-Regular";
+	font-size: 26rpx;
+	color: #ED4149;
+	letter-spacing: 0rpx;
+	line-height: 32rpx
 }
 .carSources-cell .carSources-cell-content .bare-price {
 	font-family: "PingFangSC-Regular";

@@ -15,62 +15,108 @@ export default class TradeService extends Service {
     super()
   }
 
-  sendMessage(opts, loadingType = 'toast') {
-    opts.loadingType = loadingType
-    super.sendMessage(opts)
+  sendMessageByPromise(opts) {
+    console.log('sendMessageByPromise')
+    return super.sendMessageByPromise(opts)
   }
 
   /**
-   * 搜索联想
-   * @param opts
+   * 搜索联想接口
+   *
+   * @param {any} opts
+   * @param {String} opts.text 不详
+   * @param {String} opts.n 不详
+   * @returns {Promise}
+   *
+   * @memberOf TradeService
    */
   searchInput (opts) {
-    this.sendMessage({
+    return this.sendMessageByPromise({
       path: 'cgi/search/car/index',
       method: 'GET',
       data: {
         text: opts.text,
         n: opts.n
-      },
-      success: opts.success,
-      fail: opts.fail
-    },'none')
+      }
+    })
   }
 
   /**
-   * 热推车型
-   * @param opts
+   * 热推 车辆型号(spu)
+   *
+   * @returns {Promise}
+   *
+   * @memberOf TradeService
    */
-  getHotPushCars (opts) {
-    this.sendMessage({
+  getHotPushCarModels () {
+    return this.sendMessageByPromise({
       path: 'cgi/navigate/items/hot',
       method: 'GET',
-      data: {},
-      success: opts.success,
-      fail: opts.fail
-    }, 'none')
+      data: {}
+    })
   }
 
   /**
-   * 热推车品牌
-   * @param opts
+   * 热推 车辆品牌(brand)
+   *
+   * @returns {Promise}
+   *
+   * @memberOf TradeService
    */
-  getHotPushBrands (opts) {
-    this.sendMessage({
+  getHotPushBrands () {
+    return this.sendMessageByPromise({
       path: 'cgi/navigate/brands/hot',
       method: 'GET',
-      data: {},
-      success: opts.success,
-      fail: opts.fail
-    }, 'none')
+      data: {}
+    })
   }
 
   /**
-   * 品牌选车系
-   * @param opts
+   *  获取用户搜索记录
+   *  clientId 用户ID
+   */
+  // TODO: davidfu 需要 promise 改造
+  getUserSearchHistory(opts) {
+    this.sendMessage({
+      path: 'cgi/search/history/text',
+      method: 'GET',
+      data: opts.data,
+      success: opts.success,
+      fail: opts.fail,
+      loadingType: 'none'
+    })
+  }
+
+  /**
+   *  上传用户搜索记录
+   *  clientId 用户ID
+   */
+  // TODO: davidfu 需要 promise 改造
+  postUserSearchHistory(opts) {
+    this.sendMessage({
+      path: 'cgi/search/history/text',
+      method: 'POST',
+      data: opts.data,
+      success: opts.success,
+      fail: opts.fail,
+      loadingType: 'none'
+    })
+  }
+  /**
+   *  获取导航路径中的 车辆系列(serial) 列表
+   *
+   * @param {Object} opts
+   * @param {String} opts.brandId
+   * @param {Boolean} opts.deleted
+   * @param {Boolean} opts.group
+   * @param {Boolean} opts.joinOnSaleCount
+   * @param {Number} opts.level
+   * @returns {Promise}
+   *
+   * @memberOf TradeService
    */
   getNavigatorForCarSeries (opts) {
-    this.sendMessage({
+    return this.sendMessageByPromise({
       path: 'cgi/navigate/models/query',
       method: 'POST',
       data: {
@@ -79,14 +125,25 @@ export default class TradeService extends Service {
         group: true,
         joinOnSaleCount: true,
         level: 1
-      },
-      success: opts.success,
-      fail: opts.fail
+      }
     })
   }
 
+  /**
+   *  获取导航路径中的 车辆品牌(brand) 列表
+   *
+   * @param {Object} opts
+   * @param {String} opts.code
+   * @param {Boolean} opts.deleted
+   * @param {Boolean} opts.group
+   * @param {Boolean} opts.joinOnSaleCount
+   * @param {Number} opts.level
+   * @returns {Promise}
+   *
+   * @memberOf TradeService
+   */
   getNavigatorForCarBrands (opts) {
-    this.sendMessage({
+    return this.sendMessageByPromise({
       path: 'cgi/navigate/brands/query',
       method: 'POST',
       data: {
@@ -95,9 +152,7 @@ export default class TradeService extends Service {
         group: true,
         joinOnSaleCount: true,
         level: 1
-      },
-      success: opts.success,
-      fail: opts.fail
+      }
     })
   }
 }

@@ -1,5 +1,5 @@
-<import src="../../../lib/dialog/dialog.wxml"/>
-<template is="dialog" data="{{ ...$wux.dialog }}"/>
+<import src="../../../components/dialog/inputNumberDialog.wxml"/>
+<template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}"/>
 
 <import src="../quotationCreate/specificationsDialog/specificationsDialog.wxml"/>
 <template is="specificationsDialog" data="{{ ...$wux.specificationsDialog }}"/>

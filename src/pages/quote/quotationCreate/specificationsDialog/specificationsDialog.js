@@ -1,147 +1,87 @@
-import tools from '../../../../lib/tools'
+import Component from '../../../../components/component'
 
-/**
- * 自定义 specificationsDialog 组件
- * @param {Object} $scope 作用域对象
- */
-class wux {
-  constructor($scope) {
-    Object.assign(this, {
-      $scope,
-    })
-    this.__init()
-  }
-
-  /**
-   * 初始化类方法
-   */
-  __init() {
-    this.__initDefaults()
-    this.__initTools()
-    this.__initComponents()
-  }
-
+export default {
   /**
    * 默认参数
    */
-  __initDefaults() {
-    this.$wux = {
-      specificationsDialog: {
-        visible: !1,
-      },
+  setDefaults() {
+    return {
+      spuId: '',
+      carSource: {},
+      cancel() {},
+      cancelText: `取消`,
+      confirm() {},
+      confirmText: `确定`
     }
-
-    this.$scope.setData({
-      [`$wux`]: this.$wux
-    })
-  }
-
+  },
   /**
-   * 工具方法
+   * 默认数据
    */
-  __initTools() {
-    this.tools = new tools
-  }
-
+  data() {
+    return {}
+  },
   /**
-   * 初始化所有组件
+   * 显示dialog组件
+   * @param {Object} opts 配置项
+   * @param {String} opts.spuId 提示标题
+   * @param {Object} opts.carSource 验证函数
+   * @param {Object} opts.confirm 验证函数
+   * @param {Object} opts.cancel 验证函数
    */
-  __initComponents() {
-    this.__initDialog()
-  }
+  open(opts = {}) {
+    const options = Object.assign({
+      animateCss: undefined,
+      visible: !1
+    }, this.setDefaults(), opts)
 
-  /**
-   * 对话框组件
-   */
-  __initDialog() {
-    const that = this
-    const extend = that.tools.extend
-    const clone = that.tools.clone
-    const $scope = that.$scope
-
-    that.$wuxSpecificationsDialog = {
-      /**
-       * 默认参数
-       */
-      defaults: {
-        showCancel: !0,
-        title: '',
-        content: '',
-        confirmText: '确定',
-        cancelText: '取消',
-        confirm: function (res) {
+    // 实例化组件
+    const component = new Component({
+      scope: `$wux.specificationsDialog`,
+      data: options,
+      methods: {
+        /**
+         * 隐藏
+         */
+        hide(cb) {
+          if (this.removed) return !1
+          this.removed = !0
+          this.setHidden()
+          setTimeout(() => typeof cb === `function` && cb(), 300)
         },
-        cancel: function () {
+        /**
+         * 显示
+         */
+        show() {
+          if (this.removed) return !1
+          this.setVisible()
         },
-      },
-      /**
-       * 显示specificationsDialog组件
-       * @param {Object} opts 参数对象
-       * @param {Boolean} opts.showCancel 是否显示取消按钮
-       * @param {String} opts.title 提示标题
-       * @param {String} opts.content 提示文本
-       * @param {String} opts.confirmText 确定按钮的文字
-       * @param {String} opts.cancelText 取消按钮的文字
-       * @param {Function} opts.confirm 点击确定按钮的回调函数
-       * @param {Function} opts.cancel 点击按钮按钮的回调函数
-       */
-      open(opts = {}) {
-        const options = extend(clone(this.defaults), opts)
-        const hideDialog = (cb) => {
-          that.setHidden('specificationsDialog')
-          typeof cb === 'function' && cb()
-        }
-
-        // 渲染组件
-
-        console.log(options)
-        $scope.setData({
-          [`$wux.specificationsDialog`]: options,
-          [`$wux.specificationsDialog.specificationsDialogConfirm`]: `specificationsDialogConfirm`,
-          [`$wux.specificationsDialog.specificationsDialogCancel`]: `specificationsDialogCancel`,
-        })
-
-        // 绑定tap事件
-        $scope.specificationsDialogConfirm = (e) => {
+        /**
+         * 防止事件透传
+         *
+         * @param {any} e
+         */
+        onTouchMoveWithCatch(e) {},
+        /**
+         * 关闭
+         *
+         * @param {any} e
+         */
+        close(e) {
+          this.hide(options.close(options.carSource))
+        },
+        cancel(e) {
+          this.hide(options.cancel)
+        },
+        confirm(e) {
           const externalColorName = e.detail.value.externalColorName || '未知'
           const internalColorName = e.detail.value.internalColorName || '未知'
-          hideDialog(options.confirm(externalColorName, internalColorName))
+          this.hide(options.confirm(externalColorName, internalColorName))
         }
-        $scope.specificationsDialogCancel = (e) => {
-          hideDialog(options.cancel)
-        }
-
-        that.setVisible('specificationsDialog')
-
-        return $scope.specificationsDialogCancel
-      },
-    }
-  }
-
-  /**
-   * 设置元素显示
-   */
-  setVisible(key, className = 'weui-animate-fade-in') {
-    this.$scope.setData({
-      [`$wux.${key}.visible`]: !0,
-      [`$wux.${key}.animateCss`]: className,
-    })
-  }
-
-  /**
-   * 设置元素隐藏
-   */
-  setHidden(key, className = 'weui-animate-fade-out', timer = 300) {
-    this.$scope.setData({
-      [`$wux.${key}.animateCss`]: className,
+      }
     })
 
-    setTimeout(() => {
-      this.$scope.setData({
-        [`$wux.${key}.visible`]: !1,
-      })
-    }, timer)
+    component.show()
+
+    return component.hide
   }
 }
-
-export default wux

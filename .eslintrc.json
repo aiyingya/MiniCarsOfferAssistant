@@ -1,4 +1,5 @@
 {
+  "extend": "standard",
   "parser": "babel-eslint",
   "rules": {
     ////////// Possible Errors //////////

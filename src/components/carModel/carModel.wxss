@@ -6,7 +6,7 @@
 	margin-bottom: 20rpx;
 }
 .carModels-cell_active {
-	
+
 }
 .carModels-message {
 	position: relative;
@@ -44,7 +44,7 @@
 	background: rgba(237,65,73,.8);
 }
 .carModels-message-title {
-	
+
 	font-family: "PingFangSC-Medium";
 	font-size: 30rpx;
 	color: #333333;
@@ -146,7 +146,7 @@
 	width: 24rpx;
 	height: 24rpx;
 	background: #FFFFFF;
-	border: 1px solid #878787; 
+	border: 1px solid #878787;
 	border-radius: 50%;
 	margin-left: 10rpx;
 }
@@ -302,6 +302,7 @@
   justify-content: center;
   -webkit-align-items: center;
   align-items: center;
+  margin-bottom: 10rpx;
 }
 .popup-label.selected {
   color: #ED4149;
@@ -310,7 +311,7 @@
 .popup-label .text {
   margin-left: 15rpx;
 }
-.popup-label .carcolor-item { 
+.popup-label .carcolor-item {
   width: 22rpx;
   height: 22rpx;
   border: none;
@@ -334,4 +335,15 @@
 }
 .carModels-cell .nodata .icon-box__desc {
   margin-top: 20px;
+}
+.button {
+  width: 150rpx;
+	background: #ED4149;
+	border-radius: 8rpx;
+	font-family: "PingFangSC-Regular";
+	font-size: 24rpx;
+	color: #FFFFFF;
+	line-height: 30rpx;
+	text-align: center;
+	padding:16rpx 15rpx;
 }

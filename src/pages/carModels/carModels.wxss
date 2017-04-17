@@ -1,4 +1,5 @@
-@import '../../css/carmodel.wxss';
+@import '../../components/carModel/carModel.wxss';
+
 page {
 	min-height: 100%;
 	background-color: #EFEFEF;
@@ -95,7 +96,7 @@ page {
 .carModels-label {
 	padding: 20rpx;
 	-webkit-box-sizing: border-box;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 	background-color: #fff;
 	display: flex;
 	justify-content: flex-start;
@@ -141,7 +142,7 @@ page {
   border-right: 1px solid #CCCCCC;
 }
 .carModels-cells {
-	width: 100%;	
+	width: 100%;
 }
 
 .carModels-popup-select {
@@ -170,7 +171,7 @@ page {
 	z-index: 10;
 	-webkit-transform: translate3d(0, 100rpx, 0);
   transform: translate3d(0, 100rpx, 0) ;
-} 
+}
 .rmendCarFacade-inner .weui-cell {
 	height: 104rpx;
 	line-height: 104rpx;

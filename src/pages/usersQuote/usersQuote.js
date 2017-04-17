@@ -1,17 +1,19 @@
+import {
+  $wuxToast
+} from "../../components/wux"
+
 let app = getApp()
 
 Page({
-	data: {
-		isLogin: false,
+  data: {
+    isLogin: false,
     userName: '',
-		userMobile: '',
+    userMobile: '',
     userPortrait: '../../images/icons/icon_head_default_44.png',
     userTenants: ''
-	},
-	onLoad() {
-    this.$wuxToast = app.wux(this).$wuxToast
-	},
-	onShow() {
+  },
+  onLoad() {},
+  onShow() {
     let that = this
 
     /**
@@ -24,12 +26,9 @@ Page({
     if (quotation && typeof quotation === 'object') {
       wx.navigateTo({
         url: '/pages/quote/quotationsList/quotationsList',
-        success: function (res) {
-        },
-        fail: function () {
-        },
-        complete: function () {
-        }
+        success: function (res) {},
+        fail: function () {},
+        complete: function () {}
       })
     }
 
@@ -38,7 +37,7 @@ Page({
       const weixinUsersInfo = app.userService.weixinUserInfo
 
       this.setData({
-        isLogin: true,
+        isLogin: true
       })
       app.userService.getLocation({
         success: function (res) {
@@ -49,8 +48,8 @@ Page({
             userTenants: res.tenants
           })
         },
-        fail: function(err) {
-          that.$wuxToast.show({
+        fail: function (err) {
+          $wuxToast.show({
             type: false,
             timer: 2000,
             color: '#fff',
@@ -67,14 +66,14 @@ Page({
         userTenants: ''
       })
     }
-	},
-	handleToLogin() {
-		wx.navigateTo({
-			url: '../login/login'
-		})
-	},
-	handleUserLogout() {
-		let that = this
+  },
+  handleToLogin() {
+    wx.navigateTo({
+      url: '../login/login'
+    })
+  },
+  handleUserLogout() {
+    let that = this
     app.userService.logout({
       success: function () {
         that.setData({
@@ -89,19 +88,19 @@ Page({
         // do nothing
       }
     })
-	},
-	handleToQuoteRecord() {
-		if (app.userService.isLogin()) {
+  },
+  handleToQuoteRecord() {
+    if (app.userService.isLogin()) {
       wx.navigateTo({
         url: '../quote/quotationsList/quotationsList'
       })
     }
-	},
-	handleToSupplier() {
-	  if (app.userService.isLogin()) {
+  },
+  handleToSupplier() {
+    if (app.userService.isLogin()) {
       wx.navigateTo({
         url: '../supplier/supplier'
       })
     }
-	}
+  }
 })

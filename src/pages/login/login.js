@@ -1,3 +1,6 @@
+import {
+  $wuxToast
+} from "../../components/wux"
 const app = getApp()
 
 Page({
@@ -9,9 +12,7 @@ Page({
     countDownClass: '',
     notUserInYMC: false
   },
-  onLoad() {
-    this.$wuxToast = app.wux(this).$wuxToast
-  },
+  onLoad() {},
   handleLoginPhone(e) {
     let val = e.detail.value
     this.data.userPhoneValue = val
@@ -27,8 +28,8 @@ Page({
 
     console.log(this.data.userPhoneValue)
 
-    if (!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11 ) {
-      that.$wuxToast.show({
+    if (!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11) {
+      $wuxToast.show({
         type: false,
         timer: 2000,
         color: '#fff',
@@ -58,7 +59,7 @@ Page({
         }
       },
       fail(err) {
-        that.$wuxToast.show({
+        $wuxToast.show({
           type: false,
           timer: 2000,
           color: '#fff',
@@ -92,21 +93,21 @@ Page({
   userLogin() {
     let that = this
     if (!that.data.userPhoneValue) {
-      that.$wuxToast.show({
+      $wuxToast.show({
         type: false,
         timer: 2000,
         color: '#fff',
-        text: '手机号输入不正确',
+        text: '手机号输入不正确'
       })
       return
     }
 
     if (!that.data.userCodeValue) {
-      that.$wuxToast.show({
+      $wuxToast.show({
         type: false,
         timer: 2000,
         color: '#fff',
-        text: '验证码输入不正确',
+        text: '验证码输入不正确'
       })
       return
     }
@@ -131,7 +132,7 @@ Page({
         }
       },
       fail(err) {
-        that.$wuxToast.show({
+        $wuxToast.show({
           type: false,
           timer: 2000,
           color: '#fff',

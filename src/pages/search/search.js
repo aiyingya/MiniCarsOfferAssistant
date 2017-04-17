@@ -1,4 +1,6 @@
-/* search.js*/
+import {
+  $wuxToast
+} from "../../components/wux"
 import util from '../../utils/util'
 
 let app = getApp();
@@ -33,12 +35,19 @@ Page({
     selectColors: [],
     colorAllSelected: '',
     selectColorsId: '',
-    selectColorTime: [{value:12},{value:24}],
+    selectColorTime: [{
+      value: 12
+    }, {
+      value: 24
+    }],
     timesAllSelected: '',
     selectTimes: '',
+    selectTimesId: '',
     changeCharts: [],
     carModelsInfo: '',
-    touchindex: ''
+    touchindex: '',
+    searchHistory: [],
+    showSearchHistory: true
   },
   onLoad() {
     let that = this
@@ -51,22 +60,21 @@ Page({
       carModelsHeight = res.windowHeight - 55
       this.setData({
         windowHeight: res.windowHeight + 'px',
-        carModelsHeight: carModelsHeight + 'px',
+        carModelsHeight: carModelsHeight + 'px'
       })
     } catch (e) {
 
     }
-    this.$wuxToast = app.wux(this).$wuxToast
+    
+    this.getSearchHistory()
   },
   handleSearchInput(e) {
     let val = e.detail.value;
     let that = this;
     let searchResults = [];
     if (val) {
-      app.tradeService.searchInput({
-        text: val,
-        n: 12,
-        success: function (res) {
+      app.tradeService.searchInput({ text: val, n: 12 })
+        .then(function (res) {
           that.setData({
             associateResults: res,
             searchResults: [],
@@ -75,37 +83,43 @@ Page({
             showSearchBtn: true,
             cacheSearchValue: val
           })
-        }
-      })
+        }, function (err) {
+
+        })
     } else {
       that.setData({
         associateResults: [],
         searchResults: [],
         searchNodata: false,
         showSearchBtn: false,
-        cacheSearchValue: val
+        cacheSearchValue: val,
+        showSearchHistory: true
       })
     }
   },
-  handlerChooseResults (e) {
+  handlerChooseResults(e) {
     let that = this
     let results = e.currentTarget.dataset.results
     let url
     let data = {}
     let carModelsList = []
     let searchNodata = false
-    console.log(results.type)
+    console.log(results)
     app.saasService.requireCarSpu(results.id, {}, results.type, false, {
       success(res) {
         carModelsList = res.content
         searchNodata = carModelsList.length > 0 ? false : true
-        for(let item of carModelsList) {
-          
+        for (let item of carModelsList) {
+
           let colors = []
-          if(item.supply.colors) {
+          let hours = [{
+            value: '全部',
+            selected: 'selected'
+          }]
+          if (item.supply.colors) {
             let newColorKey = Object.keys(item.supply.colors)
 
-            for(let color of newColorKey) {
+            for (let color of newColorKey) {
               let colorItem = {
                 key: color,
                 value: item.supply.colors[color]
@@ -113,10 +127,21 @@ Page({
               colors.push(colorItem)
             }
           }
+          if(item.supply.hours.length > 0) {
+
+            for(let hour of item.supply.hours) {
+              let time = {
+                value: hour,
+                selected: ''
+              }
+
+              hours.push(time)
+            }
+          }
           item.colors = colors
           item.selectColors = []
-          item.selectTimesData = [{value:24, selected: 'selected'},{value:12,selected: ''}]
-          item.selectTimes = 24 // 默认24
+          item.selectTimes = '全部' // 默认24
+          item.hours = hours // 默认24
         }
         if (carModelsList) {
           that.drawCanvas(carModelsList)
@@ -126,10 +151,12 @@ Page({
             searchValue: results.content,
             cacheSearchValue: results.content,
             showResultsSearch: false,
-            searchNodata: searchNodata
+            searchNodata: searchNodata,
+            showSearchHistory: false
           })
 
           console.log(carModelsList)
+          that.postUserSearchHistory(results.content)
         }
       }
     })
@@ -151,14 +178,18 @@ Page({
             searchResults.push(item)
           }
         }
-        
-        for(let item of searchResults) {
-          
+
+        for (let item of searchResults) {
+
           let colors = []
-          if(item.supply.colors) {
+          let hours = [{
+            value: '全部',
+            selected: 'selected'
+          }]
+          if (item.supply.colors) {
             let newColorKey = Object.keys(item.supply.colors)
 
-            for(let color of newColorKey) {
+            for (let color of newColorKey) {
               let colorItem = {
                 key: color,
                 value: item.supply.colors[color]
@@ -166,12 +197,23 @@ Page({
               colors.push(colorItem)
             }
           }
+          if(item.supply.hours.length > 0) {
+
+            for(let hour of item.supply.hours) {
+              let time = {
+                value: hour,
+                selected: ''
+              }
+
+              hours.push(time)
+            }
+          }
           item.colors = colors
           item.selectColors = []
-          item.selectTimesData = [{value:24, selected: 'selected'},{value:12, selected: ''}]
-          item.selectTimes = 24 // 默认24
+          item.selectTimes = '全部' // 默认24
+          item.hours = hours // 默认24
         }
-        
+
         that.data.pageInfo = {
           first: res.first,
           hasNext: res.hasNext,
@@ -188,8 +230,10 @@ Page({
           searchResults: searchResults,
           associateResults: [],
           showResultsSearch: false,
-          searchNodata: searchNodata
+          searchNodata: searchNodata,
+          showSearchHistory: false
         })
+        that.postUserSearchHistory(val)
       }
     })
   },
@@ -208,7 +252,16 @@ Page({
     this.getSearchConfirm(this.data.pageIndex)
     console.log(searchPageInfo)
   },
-  handlerToCarSources (e) {
+  handleSearchHistory(e) {
+    let val = e.currentTarget.dataset.text
+    this.data.cacheSearchValue = val
+    this.setData({
+      searchValue : val
+    })
+    this.data.pageIndex = 1
+    this.getSearchConfirm(this.data.pageIndex)
+  },
+  handlerToCarSources(e) {
     let item = e.currentTarget.dataset.carmodelsinfo
     let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
     let status = item.supply.status
@@ -218,7 +271,7 @@ Page({
       this.setData({
         showCharts: false
       })
-      this.$wuxToast.show({
+      $wuxToast.show({
         type: false,
         timer: 2000,
         color: '#fff',
@@ -236,59 +289,49 @@ Page({
       url: '../carSources/carSources?' + carModelsInfoKeyValueString
     })
   },
-  handlerPromptly (e) {
+  handlerPromptly(e) {
     const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
     wx.navigateTo({
       url: '../quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString
     })
   },
-  handleCancelSearch () {
+  handleCancelSearch() {
     wx.navigateBack()
   },
-  handleCancelSearchValue () {
+  handleCancelSearchValue() {
     this.setData({
       associateResults: [],
       searchResults: [],
       showResultsSearch: false,
       searchNodata: false,
       showSearchBtn: false,
-      searchValue: ''
+      searchValue: '',
+      showSearchHistory: true
     })
   },
   handleCharttouch(e) {
-    let id =  e.target.dataset.id
+    let id = e.target.dataset.id
     let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
     this.setData({
       carModelsInfo: carModelsInfo
     })
     let res = wx.getSystemInfoSync()
-    if(res.system.indexOf('Android') >= 0) {
+    if (res.system.indexOf('Android') >= 0) {
       return
     }
-    
-    if(columnChartsList.length > 0) {
-      for(let item of columnChartsList) {
-        if(item.id == id) {
+
+    if (columnChartsList.length > 0) {
+      for (let item of columnChartsList) {
+        if (item.id == id) {
           let index = item.chart.getCurrentDataIndex(e)
           let chartData = item.chart.chartData
           let config = item.chart.config
           let opts = item.chart.opts
           let context = item.chart.context
           let changeData = item.chart.changeData;
-          let callback = function(data) {
-            if(data) {
-              let value = 0
-              for(let item of data.y) {
-                value+=item
-              }
-              console.log(value)
-              if(value <= 0) {return}
-              
-            }
-          }
           that.data.touchindex = index
-          item.chart.drawChartShade(index,chartData,config,opts,context)
+          item.chart.drawChartShade(index, chartData, config, opts, context)
         }
       }
     }
@@ -297,39 +340,46 @@ Page({
     this.handleCharttouch(e)
   },
   handletouchend(e) {
-    let id =  e.target.dataset.id
+    let id = e.target.dataset.id
     let carModelsInfo = e.target.dataset.carmodelsinfo
+    let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
     let that = this
     this.setData({
       carModelsInfo: carModelsInfo
     })
-    
-    if(columnChartsList.length > 0) {
-      for(let item of columnChartsList) {
-        if(item.id == id) {
-          let index = that.data.touchindex 
+
+    if (columnChartsList.length > 0) {
+      for (let item of columnChartsList) {
+        if (item.id == id) {
+          let index = that.data.touchindex
           let chartData = item.chart.chartData
           let config = item.chart.config
           let opts = item.chart.opts
           let context = item.chart.context
           let changeData = item.chart.changeData;
-          let callback = function(data) {
-            if(data) {
+          let callback = function (data) {
+            if (data.y.length > 0) {
               let value = 0
-              for(let item of data.y) {
-                value+=item
+              for (let item of data.y) {
+                value += item
               }
-              console.log(value)
-              if(value <= 0) {return}
+              
+              if (value <= 0) {
+                return
+              }
               that.setData({
                 showPopCharts: true,
                 showCharts: false
               })
-              that.drawPopCharts(data)      
+              that.drawPopCharts(data)
+              that.data.touchindex = ''
+            }else {
+              wx.navigateTo({
+                url: '/pages/carSources/carSources?' + carModelsInfoKeyValueString
+              })
             }
           }
-          console.log(index)
-          item.chart.drawChartShade(index,chartData,config,opts,context,callback)
+          item.chart.drawChartShade(index, chartData, config, opts, context, callback)
         }
       }
     }
@@ -368,7 +418,7 @@ Page({
             disableGrid: false,
             fontColor: '#333333',
             gridColor: '#333333',
-            unitText: '下(万)'
+            unitText: item.supply.chart.xAxisName
           },
           yAxis: {
             disabled: true,
@@ -441,7 +491,7 @@ Page({
         disabled: true,
         fontColor: '#333333',
         gridColor: '#333333',
-        unitText: '（个）',
+        unitText: data.xAxisName,
         min: 0,
         max: 10,
         format(val) {
@@ -466,7 +516,7 @@ Page({
     columnCharts = null
     columnChartsList = []
 
-		this.drawCanvas(carModelsList)
+    this.drawCanvas(carModelsList)
     this.setData({
       showPopCharts: false,
       showCharts: true
@@ -474,24 +524,55 @@ Page({
     this.data.popCharts = null
     this.data.touchindex = ''
   },
-  handleChangeTimesItem(e) {
+  handleSelectTimes(e) {
     let that = this
-    let selectitem = e.currentTarget.dataset.selectitem
+    let hours = e.currentTarget.dataset.hours
+    let selecttime = e.currentTarget.dataset.selecttime
     let selectTimesId = e.currentTarget.dataset.selectid
     let carModelsList = this.data.searchResults
-    
-    for(let item of carModelsList) {
-      if(item.carModelId === selectTimesId) {
-        
-        for(let times of item.selectTimesData) {
-          if(times.value === selectitem) {
+
+    for (let item of carModelsList) {
+      if (item.carModelId === selectTimesId) {
+
+        for (let times of hours) {
+          if (times.value === selecttime) {
             times.selected = 'selected'
-          }else {
+          } else {
             times.selected = ''
           }
         }
-        item.selectTimes = selectitem     
-        that.getChangeCharts(selectTimesId,carModelsList,item)
+      }
+    }
+    
+    this.setData({
+      selectChartsLabel: true,
+      changeSelectColors: false,
+      changeSelectTimes: true,
+      showCharts: false,
+      selectTimesData: hours,
+      selectTimesId: selectTimesId,
+      selectTimes: selecttime
+    })
+    
+  },
+  handleChangeTimesItem(e) {
+    let that = this
+    let selectitem = e.currentTarget.dataset.selectitem
+    let selectTimesId = that.data.selectTimesId
+    let carModelsList = this.data.searchResults
+
+    for (let item of carModelsList) {
+      if (item.carModelId === selectTimesId) {
+
+        for (let times of item.hours) {
+          if (times.value === selectitem) {
+            times.selected = 'selected'
+          } else {
+            times.selected = ''
+          }
+        }
+        item.selectTimes = selectitem.value
+        that.getChangeCharts(selectTimesId, carModelsList, item)
       }
     }
   },
@@ -502,24 +583,24 @@ Page({
     let newColors = []
     let allColorSelect = ''
     let carModelsList = this.data.searchResults
-    for(let item of colors) {
-      if(item.value === '#FFFFFF') {
+    for (let item of colors) {
+      if (item.value === '#FFFFFF') {
         item.style = 'border: 1rpx solid #333; width: 21rpx; height:21rpx;'
       }
-      if(selectColors.length === 0) {
+      if (selectColors.length === 0) {
         allColorSelect = 'selected'
-      }else {
-        for(let select of selectColors) {
-          if(item.key === select.key) {
+      } else {
+        for (let select of selectColors) {
+          if (item.key === select.key) {
             console.log(item)
             item.selected = 'selected'
           }
         }
       }
     }
-    
-    for(let item of carModelsList) {
-      if(item.carModelId === selectColorsId) {
+
+    for (let item of carModelsList) {
+      if (item.carModelId === selectColorsId) {
         item.selectColorsId = selectColorsId
         item.selectColors = selectColors
         this.setData({
@@ -541,73 +622,81 @@ Page({
     let selectItem = e.currentTarget.dataset.selectitem
     let selectColorsId = that.data.selectColorsId
     let carModelsList = that.data.searchResults
-    
-    for(let item of carModelsList) {
-      if(item.carModelId === selectColorsId) {
-        if(typeof selectItem === 'object' && selectItem.selected !== 'selected') {
+
+    for (let item of carModelsList) {
+      if (item.carModelId === selectColorsId) {
+        if (typeof selectItem === 'object' && selectItem.selected !== 'selected') {
 
           selectColors.push(selectItem)
-        }else if(selectItem === '全部') {
+        } else if (selectItem === '全部') {
           selectColors = []
         }
         item.selectColors = selectColors
-        
-        that.getChangeCharts(selectColorsId,carModelsList,item)
-        
+
+        that.getChangeCharts(selectColorsId, carModelsList, item)
+
       }
     }
   },
-  getChangeCharts(sid,carModelsList,item) {
-    let requestData 
+  getChangeCharts(sid, carModelsList, item) {
+    let requestData
     let that = this
     let newCarModelsList = []
-    let times = [{value:24, selected: 'selected'},{value:12,selected: ''}]
+    let times = [{
+      value: 24,
+      selected: 'selected'
+    }, {
+      value: 12,
+      selected: ''
+    }]
     requestData = {
       carSeriesId: sid,
-      inStock: false,
-      hours: item.selectTimes
+      inStock: false
     }
-    
+
     let keys = []
-    if(item.selectColors.length >0) {
-      for(let items of item.selectColors) {
+    if (item.selectColors.length > 0) {
+      for (let items of item.selectColors) {
         keys.push(items.key)
       }
     }
-    if(keys.length > 0) {
-       requestData.colors = keys.join(',')
+    if (keys.length > 0) {
+      requestData.colors = keys.join(',')
     }
-    for(let changeTime of times) {
-      if(item.selectTimes === changeTime.value) {
+    if(item.selectTimes !== '全部') {
+      requestData.hours = item.selectTimes
+    }
+    for (let changeTime of times) {
+      if (item.selectTimes === changeTime.value) {
         changeTime.selected = 'selected'
-      }else {
+      } else {
         changeTime.selected = ''
       }
     }
-    
-    app.saasService.requestSearchSpuBySpuId(sid,requestData,{
-      success: function(res) {
-        
-        if(res.content.length > 0) {
-          for(let change of carModelsList) {
-            if(change.carModelId === res.content[0].carModelId) {
+
+    app.saasService.requestSearchSpuBySpuId(sid, requestData, {
+      success: function (res) {
+
+        if (res.content.length > 0) {
+          for (let change of carModelsList) {
+            if (change.carModelId === res.content[0].carModelId) {
               let requestItem = res.content[0]
-              
+
               requestItem.colors = item.colors
               requestItem.selectColors = item.selectColors
-              requestItem.selectTimesData = times
-              requestItem.selectTimes = item.selectTimes 
+              requestItem.hours = item.hours
+              requestItem.selectTimes = item.selectTimes
               requestItem.selectColorsId = sid,
               requestItem.supply.status = item.supply.status
               requestItem.supply.supplierCount = item.supply.supplierCount
-              requestItem.supply.colors = item.supply.colors         
+              requestItem.supply.colors = item.supply.colors
               change = requestItem
             }
-            
+
             newCarModelsList.push(change)
           }
         }
-        
+
         columnCharts = null
         columnChartsList = []
         that.drawCanvas(newCarModelsList)
@@ -621,11 +710,11 @@ Page({
     })
   },
   handleClosePopupChange() {
-    
+
     let carModelsList = this.data.searchResults
     columnCharts = null
     columnChartsList = []
-		this.drawCanvas(carModelsList)
+    this.drawCanvas(carModelsList)
     this.setData({
       selectChartsLabel: false,
       showCharts: true
@@ -633,5 +722,49 @@ Page({
   },
   popupChartstouchMove(e) {
     console.log(e)
+  },
+  getSearchHistory() {
+    let user = app.userService
+    let clientId = user.clientId
+    let that = this
+    
+    app.tradeService.getUserSearchHistory({
+       data: {
+         ClientId: clientId
+       },
+       success(xhr) {
+         console.log(xhr)
+         that.setData({
+           searchHistory: xhr
+         })
+       },
+       fail(err) {
+         
+       }
+    })
+  },
+  postUserSearchHistory(text) {
+    let user = app.userService
+    let searchHistory = this.data.searchHistory
+    let that = this
+    app.tradeService.postUserSearchHistory({
+       data: {
+          "channel": "wxapp",
+          "text": text,
+          "userId": user.auth.userId
+       },
+       success(xhr) {
+         if(searchHistory.indexOf(text) < 0) {
+           searchHistory.unshift(text)
+           
+           that.setData({
+             searchHistory: searchHistory
+           })
+         }
+       },
+       fail(err) {
+         
+       }
+    })
   }
 })
