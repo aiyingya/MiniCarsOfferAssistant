@@ -1,4 +1,5 @@
 import config from '../config'
+import Promise from '../modules/es6-promise'
 
 export default class YMC {
   /**
