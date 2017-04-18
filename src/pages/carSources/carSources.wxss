@@ -192,6 +192,12 @@ page {
 	border: 1rpx solid #333333;
 	color: #333333;
 }
+.car-sources-prompt {
+  padding: 8rpx;
+  font-size: 20rpx;
+	color: #999999;
+  text-align: center;
+}
 .carSources-topbar {
 	background-color: #fff;
 	overflow: hidden;

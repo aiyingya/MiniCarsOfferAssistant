@@ -65,7 +65,7 @@ Page({
 
     const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
 
-    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.includes('MINI'))
+    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.toLowerCase().includes('mini'))
     this.isShowDownPrice = isShowDownPrice
     this.setData({
       carModelsInfo: carModelsInfo
@@ -98,12 +98,10 @@ Page({
           if (i === 0) {
             dropDownFilters.push(filter)
           } else if (i === 1) {
-            // 车源发布信息， 默认为 24小时
             scrollFilters.push(filter)
             scrollFiltersSelectedIndexes.push(-1)
-            if (filter.items && filter.items.length) {
-              sourcePublishDateFilterId = filter.items[1].id
-            }
+            // 车源发布信息， 默认为 全部
+            sourcePublishDateFilterId = '-1'
           } else {
             scrollFilters.push(filter)
             scrollFiltersSelectedIndexes.push(-1)
@@ -392,20 +390,20 @@ Page({
   processCarSourceItemOnlyOnce(carSourceItem) {
     let carSourcePlaceArray = []
 
-    const carSourcePlaceLowest = carSourceItem.lowest
+    const carSourcePlaceLowest = carSourceItem.viewModelLowest
     if (carSourcePlaceLowest) {
       // FIXME: 初始化状态下，无法得知某一货源地下的最低报价就是从第一个物流方案得来的，很可能压根就没有物流方案
       carSourcePlaceArray.push(carSourcePlaceLowest)
     }
 
     // 到货快
-    const carSourcePlaceFastest = carSourceItem.fastest
+    const carSourcePlaceFastest = carSourceItem.viewModelFastest
     if (carSourcePlaceFastest) {
       carSourcePlaceArray.push(carSourcePlaceFastest)
     }
 
     // 其他
-    const moreArray = carSourceItem.others
+    const moreArray = carSourceItem.viewModelOthers
     if (moreArray) {
       carSourcePlaceArray = carSourcePlaceArray.concat(moreArray)
     }
@@ -429,21 +427,21 @@ Page({
    */
   processCarSourceItem(carSourceItem) {
     // 价格最低
-    const carSourcePlaceLowest = carSourceItem.lowest
+    const carSourcePlaceLowest = carSourceItem.viewModelLowest
     if (carSourcePlaceLowest) {
       // FIXME: 初始化状态下，无法得知某一货源地下的最低报价就是从第一个物流方案得来的，很可能压根就没有物流方案
       this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceLowest, 0)
     }
 
     // 到货快
-    const carSourcePlaceFastest = carSourceItem.fastest
+    const carSourcePlaceFastest = carSourceItem.viewModelFastest
     if (carSourcePlaceFastest) {
       this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceFastest, 0)
     }
 
     // 更多项目
-    if (carSourceItem.others && carSourceItem.others.length > 0) {
-      for (let carSourcePlaceItem of carSourceItem.others) {
+    if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length > 0) {
+      for (let carSourcePlaceItem of carSourceItem.viewModelOthers) {
         this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceItem, 0)
       }
     }
@@ -454,7 +452,7 @@ Page({
     let selectedCarSourcePlace = null
     if (carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低和到货快 同时存在
-      if (carSourceItem.others && carSourceItem.others.length > 0) {
+      if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length > 0) {
         carSourceItem.viewModelTabs = [{
             name: '价格低',
             value: carSourcePlaceLowest
@@ -464,7 +462,7 @@ Page({
             value: carSourcePlaceFastest
           }
         ]
-        carSourceItem.viewModelTabMore = carSourceItem.others
+        carSourceItem.viewModelTabMore = carSourceItem.viewModelOthers
         selectedCarSourcePlace = carSourcePlaceLowest
       } else {
         carSourceItem.viewModelTabs = [{
@@ -481,26 +479,26 @@ Page({
       }
     } else if (!carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低和到货快 同时不存在
-      if (carSourceItem.others && carSourceItem.others.length === 1) {
+      if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length === 1) {
         carSourceItem.viewModelTabs = null
         carSourceItem.viewModelTabMore = null
-        selectedCarSourcePlace = carSourceItem.others[0]
+        selectedCarSourcePlace = carSourceItem.viewModelOthers[0]
       } else {
         carSourceItem.viewModelTabs = [{
           name: '推荐',
-          value: carSourceItem.others[0]
+          value: carSourceItem.viewModelOthers[0]
         }]
-        carSourceItem.viewModelTabMore = carSourceItem.others.shift()
-        selectedCarSourcePlace = carSourceItem.others[0]
+        carSourceItem.viewModelTabMore = carSourceItem.viewModelOthers.shift()
+        selectedCarSourcePlace = carSourceItem.viewModelOthers[0]
       }
     } else if (carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低不存在， 到货快存在
-      if (carSourceItem.others && carSourceItem.others.length > 0) {
+      if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length > 0) {
         carSourceItem.viewModelTabs = [{
           name: '到货快',
           value: carSourcePlaceFastest
         }]
-        carSourceItem.viewModelTabMore = carSourceItem.others
+        carSourceItem.viewModelTabMore = carSourceItem.viewModelOthers
         selectedCarSourcePlace = carSourcePlaceFastest
       } else {
         carSourceItem.viewModelTabs = [{
@@ -512,12 +510,12 @@ Page({
       }
     } else if (!carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低存在， 到货快不存在
-      if (carSourceItem.others && carSourceItem.others.length > 0) {
+      if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length > 0) {
         carSourceItem.viewModelTabs = [{
           name: '价格低',
           value: carSourcePlaceLowest
         }]
-        carSourceItem.viewModelTabMore = carSourceItem.others
+        carSourceItem.viewModelTabMore = carSourceItem.viewModelOthers
         selectedCarSourcePlace = carSourcePlaceLowest
       } else {
         carSourceItem.viewModelTabs = [{
@@ -703,18 +701,21 @@ Page({
 
     const selectedLogisticsFilter = function (filterId, carSourceItem) {
       if (filterId === '-1') {
+        carSourceItem.viewModelLowest = carSourceItem.lowest
+        carSourceItem.viewModelFastest = carSourceItem.fastest
+        carSourceItem.viewModelOthers = carSourceItem.others
         return true
       } else if (filterId === '0') {
         if (carSourceItem.lowest && carSourceItem.lowest.logisticsFree) {
-
+          carSourceItem.viewModelLowest = carSourceItem.lowest
         } else {
-          carSourceItem.lowest = null
+          carSourceItem.viewModelLowest = null
         }
 
         if (carSourceItem.fastest && carSourceItem.fastest.logisticsFree) {
-
+          carSourceItem.viewModelFastest = carSourceItem.fastest
         } else {
-          carSourceItem.fastest = null
+          carSourceItem.viewModelFastest = null
         }
 
         if (carSourceItem.others && carSourceItem.others.length > 0) {
@@ -725,17 +726,14 @@ Page({
             }
           }
           if (othersWithLogisticsFree.length > 0) {
-            carSourceItem.others = othersWithLogisticsFree
+            carSourceItem.viewModelOthers = othersWithLogisticsFree
           } else {
-            carSourceItem.others = null
+            carSourceItem.viewModelOthers = null
           }
         } else {
-          carSourceItem.others = null
+          carSourceItem.viewModelOthers = null
         }
-
-        console.log(carSourceItem)
-
-        return (carSourceItem.lowest || carSourceItem.fastest || carSourceItem.others)
+        return (carSourceItem.viewModelLowest || carSourceItem.viewModelfastest || carSourceItem.viewModelOthers)
       }
       return true
     }
@@ -788,7 +786,9 @@ Page({
       }
     }
 
-    const carSourcesBySkuInSpuList = this.cacheCarSourcesBySkuInSpuList
+    const carSourcesBySkuInSpuList = []
+    Object.assign(carSourcesBySkuInSpuList, this.cacheCarSourcesBySkuInSpuList)
+    console.log(carSourcesBySkuInSpuList)
     const newCarSourcesBySkuInSpuList = []
     for (let carSourcesBySkuItem of carSourcesBySkuInSpuList) {
       const newCarSourcesList = []
