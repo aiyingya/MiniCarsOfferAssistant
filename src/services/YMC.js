@@ -25,7 +25,8 @@ export default class YMC {
       const defaultHeader = {
         'ClientId': clientId,
         'ClientVersion': config.versionCode,
-        'SystemCode': '60'
+        'SystemCode': '60',
+        'content-type': options.contentType || 'application/json'
       }
       const header = options.header || {}
 
@@ -34,7 +35,6 @@ export default class YMC {
         data: options.data,
         header: Object.assign(defaultHeader, header),
         method: options.method || 'GET',
-        dataType: 'json',
         /**
          * 微信成功回调
          *
@@ -137,22 +137,19 @@ export default class YMC {
       // FIXME: 处理 clientId 使用同步获取相对较重
       let clientId = wx.getStorageSync('clientId')
 
-      let header = {
+      const defaultHeader = {
         'ClientId': clientId,
         'ClientVersion': config.versionCod,
         'SystemCode': '60',
         'content-type': options.contentType || 'application/json'
       }
-
-      for (var attrname in options.header) {
-        header[attrname] = options.header[attrname]
-      }
+      const header = options.header || {}
 
       wx.request({
         url: options.url,
         method: options.method,
         data: options.data,
-        header: header,
+        header: Object.assign(defaultHeader, header),
         success(res) {
 
           console.log('success')
