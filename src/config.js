@@ -3,9 +3,9 @@
  */
 const ENV = 'prd'
 const name = 'yaomaiche-miniprogram'
-const version = '1.4.2'
+const version = '1.4.3'
 const build = 1
-const versionCode = '010402'
+const versionCode = '010403'
 
 const getNamespaceKey = function (key) {
   if (ENV === 'PRD') {

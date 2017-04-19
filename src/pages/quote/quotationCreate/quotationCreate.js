@@ -323,7 +323,7 @@ Page({
     $wuxInputNumberDialog.open({
       title: '必要花费',
       content: '购置税、上牌费、车船税、保险等',
-      inputNumber: requiredExpenses,
+      inputNumber: requiredExpenses ? requiredExpenses : "",
       inputNumberPlaceholder: '输入必要花费',
       inputNumberMaxLength: 9,
       confirmText: '确定',
@@ -348,9 +348,9 @@ Page({
     $wuxInputNumberDialog.open({
       title: '其他花费',
       content: '精品费、安装费等',
-      inputNumber: otherExpenses,
+      inputNumber: otherExpenses ? otherExpenses : "",
       inputNumberPlaceholder: '输入其他花费',
-      inputNumberMaxLength: 9,
+   inputNumberMaxLength: 9,
       confirmText: '确定',
       cancelText: '取消',
       confirm: (res) => {
