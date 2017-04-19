@@ -151,6 +151,7 @@ export default {
       const app = getApp()
       app.saasService.requestCarSourceContent(options.carSourceItem.id, {
         success: function (res) {
+          console.log(res)
           if (res) {
             /// 原文基本数据
             const contentItems = []
@@ -159,7 +160,7 @@ export default {
               const indexOf = res.indexOf
               for (let i = 0; i < content.length; i++) {
                 const contentItem = content[i]
-                if (indexOf.includes(i)) {
+                if (indexOf.indexOf(i) !== -1) {
                   contentItems.push({
                     a: contentItem,
                     b: true

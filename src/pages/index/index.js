@@ -1,3 +1,5 @@
+// FIXME: 需要处理不同环境下的 promise
+import Promise from '../../modules/es6-promise'
 import {
   $wuxTrack
 } from '../../components/wux'
@@ -51,24 +53,26 @@ Page({
 
     }
 
-    const promise = that.reloadIndexData()
     wx.showToast({
       title: '正在加载',
       icon: 'loading',
       duration: 10000,
       mask: true
     })
+    const promise = that.reloadIndexData()
     promise.then(res => {
       wx.hideToast()
     }, err => {
+      wx.hideToast()
     })
-
   },
   onShow() { },
   onPullDownRefresh() {
     // 下拉刷新
     const promise = this.reloadIndexData()
     promise.then(res => {
+      wx.stopPullDownRefresh()
+    }, err => {
       wx.stopPullDownRefresh()
     })
   },
