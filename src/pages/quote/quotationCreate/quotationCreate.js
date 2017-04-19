@@ -348,7 +348,7 @@ Page({
     $wuxInputNumberDialog.open({
       title: '其他花费',
       content: '精品费、安装费等',
-      inputNumber: otherExpense ? otherExpense : "",
+      inputNumber: otherExpenses ? otherExpenses : "",
       inputNumberPlaceholder: '输入其他花费',
    inputNumberMaxLength: 9,
       confirmText: '确定',
