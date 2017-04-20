@@ -111,7 +111,8 @@
             <scroll-view scroll-y style="height: 270rpx">
               <view class="line-content">
                 <view wx:if="{{carSourceItem.viewModelContentItems}}">
-                  <view wx:for="{{carSourceItem.viewModelContentItems}}" wx:key="*this" class="{{item.b ? 'content-highlight' : 'content-text'}}">{{item.a}}</view>
+                  <!--<view wx:for="{{carSourceItem.viewModelContentItems}}" wx:key="*this" class="{{item.b ? 'content-highlight' : 'content-text'}}" >{{item.a}}</view>-->
+                  <text wx:for="{{carSourceItem.viewModelContentItems}}" wx:key="*this" class="{{item.b ? 'content-highlight' : 'content-text'}}" >{{item.a}}</text>
                   <!--<view-->
                   <!--class="report-error"-->
                   <!--bindtap="{{carSourceDetailDialogReportError}}"-->
@@ -119,6 +120,7 @@
                   <!--信息有误-->
                   <!--</view>-->
                 </view>
+
                 <view wx:else class="content-text">
                   {{carSourceItem.viewModelLoading}}
                 </view>
