@@ -1,11 +1,11 @@
 /**
  * 基础配置文件
  */
-const ENV = 'prd'
+const ENV = 'gqc'
 const name = 'yaomaiche-miniprogram'
-const version = '1.4.4'
+const version = '1.4.5'
 const build = 1
-const versionCode = '010404'
+const versionCode = '010405'
 
 const getNamespaceKey = function (key) {
   if (ENV === 'PRD') {
