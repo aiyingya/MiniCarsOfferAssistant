@@ -8,15 +8,19 @@ import util from '../utils/util'
 
 export default class SAASService extends Service {
 
+
   urls = {
     dev: 'https://test.yaomaiche.com/ymcdev/',
     gqc: 'https://test.yaomaiche.com/ymcgqc/',
     prd: 'https://ymcapi.yaomaiche.com/ymc/'
   }
 
+
+
   constructor(userService) {
     super()
-    this.userService = userService
+    this.userService = userService;
+
   }
 
   sendMessage(opts, loadingType = 'toast') {

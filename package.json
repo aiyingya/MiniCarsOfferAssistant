@@ -9,6 +9,9 @@
     "npm": ">3.0"
   },
   "scripts": {
+    "B_DEV": "export NODE_ENV=dev && gulp build:clean",
+    "B_GQC": "export NODE_ENV=gqc && gulp build:clean",
+    "B_PRD": "export NODE_ENV=prd && gulp build:clean",
     "build": "gulp build:clean",
     "watch": "gulp watch:clean"
   },
@@ -46,6 +49,14 @@
     "gulp-postcss": "^6.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^2.0.0",
-    "run-sequence": "^1.2.2"
+    "run-sequence": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "cross-env": "^3.1.3"
+  },
+  "config":{
+    "env":"dev",
+    "version" : "1.4.8",
+    "build" : 1,
+    "versionCode" : "010408"
   }
 }

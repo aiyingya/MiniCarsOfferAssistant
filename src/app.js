@@ -1,6 +1,6 @@
 // config 接口需要在应用开始执行
 import config from './config'
-
+import global from './global'
 import wxcharts from './modules/wxcharts'
 
 import UserService from './services/user.service'
@@ -11,7 +11,6 @@ const userService = new UserService()
 const tradeService = new TradeService()
 
 const saasService = new SAASService(userService)
-
 App({
   onLaunch (options) {
     console.log('onLaunch:')
@@ -24,6 +23,7 @@ App({
   },
   globalData: {
   },
+  apiUrl:global.default.apiUrl,
   wxcharts: wxcharts,
   userService: userService,
   tradeService: tradeService,

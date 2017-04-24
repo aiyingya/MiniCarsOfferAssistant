@@ -16,9 +16,23 @@ const gulp = require('gulp')
 const del = require('del')
 const runSequence = require('run-sequence')
 const $ = require('gulp-load-plugins')()
+const replace = require('gulp-replace');
 
-const isProduction = process.env.NODE_ENV === 'production'
-let ENV = 'DEV'
+
+
+let env = process.env.NODE_ENV || process.env.npm_package_config_env || "prd";
+var myConfig = {
+  apiUrl:{}
+};
+
+myConfig.apiUrl.webapi = require('./src/config/config.json')[env] ;
+myConfig.env = env || process.env.npm_package_config_env || "prd";
+myConfig.versionCode = process.env.npm_package_config_versionCode;
+myConfig.version = process.env.npm_package_config_version;
+myConfig.build = process.env.npm_package_config_build;
+
+
+
 
 let prod = false
 
@@ -97,7 +111,12 @@ gulp.task('styles:watch', () => {
  * js 文件处理
  */
 gulp.task('scripts', ['eslint'], () => {
-  return gulp.src('./src/**/*.js')
+  gulp.src(['./src/**/global.js'])
+  //开始替换
+    .pipe(replace('来啊互相伤害', JSON.stringify(myConfig)))
+    .pipe(gulp.dest('./dist'));
+
+  return gulp.src(['./src/**/*.js','!./src/global.js'])
     // .pipe($.sourcemaps.init())
     .pipe($.babel())
     // .pipe($.if(prod, $.uglify()))
@@ -140,7 +159,7 @@ gulp.task('build:clean', (callback) => {
 })
 
 gulp.task('watch:clean', (callback) => {
-  runSequence('build:clean', 'watch', callback)
+  runSequence('build:clean', 'watch', callback);
 })
 
 gulp.task('default', ['watch:clean'])
