@@ -227,8 +227,8 @@ Page({
       })
     }
   },
-  handlerMakePhoneCall() {
-    let phone = '18621016627'
+  handlerMakePhoneCall(e) {
+    let phone = '18621016627' // e.currentTarget.dataset.phone
 
     wx.makePhoneCall({
       phoneNumber: phone
