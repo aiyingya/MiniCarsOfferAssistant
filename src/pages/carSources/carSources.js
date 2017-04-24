@@ -68,19 +68,21 @@ Page({
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
     if (!app.userService.isLogin()) {
-      setTimeout(function(){
+      setTimeout(function () {
         that.setData({
           pageShare: true
         })
-      },1000)
-      this.setData({options: options})
+      }, 1000)
+      this.setData({
+        options: options
+      })
       wx.navigateTo({
         url: '../login/login'
       })
-    }else { 
+    } else {
       const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.toLowerCase().includes('mini'))
       this.isShowDownPrice = isShowDownPrice
-      
+
       this.setData({
         carModelsInfo: carModelsInfo,
         pageShare: false //  避免分享页面二次加载.
@@ -202,18 +204,18 @@ Page({
     }
     /**
      * 登陆后刷新页面.
-     */ 
+     */
     console.log(`pageShare:${this.data.pageShare}`)
-    if(this.data.pageShare === true) {
+    if (this.data.pageShare === true) {
       console.log('页面刷新')
       let options = this.data.options
       this.onLoad(options)
     }
   },
-  /** 
+  /**
    * 页面分享.
    */
-  onShareAppMessage () {
+  onShareAppMessage() {
     let carModelsInfo = this.data.carModelsInfo
     let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
     return {
@@ -221,7 +223,7 @@ Page({
       path: `pages/carSources/carSources?${carModelsInfoKeyValueString}`,
       success(res) {
         // 分享成功
-        
+
       },
       fail(res) {
         // 分享失败
@@ -884,9 +886,11 @@ Page({
     }
   },
   actionContact(spuId, skuItemIndex, carSourceItemIndex, carSourceItem, contact) {
+    // MARK: 注意区分呢 supplier.contact 和 carSource.contact 两个概念
+    const phoneNumber = carSourceItem.contact || contact
     const that = this
     wx.makePhoneCall({
-      phoneNumber: contact,
+      phoneNumber: phoneNumber,
       success: function (res) {
         /**
          * 1.4.0 埋点
