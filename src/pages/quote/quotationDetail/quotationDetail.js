@@ -73,8 +73,6 @@ Page({
         url: '../../login/login'
       })
     }else { 
-    
-      wx.showShareMenu()
       this.setData({
         quotation: quotation,
         pageShare: false,
@@ -84,6 +82,7 @@ Page({
           point: downPoint
         }
       })
+      wx.showShareMenu()
     }
   },
   onReady() {

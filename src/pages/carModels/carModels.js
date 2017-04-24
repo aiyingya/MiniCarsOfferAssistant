@@ -79,7 +79,8 @@ Page({
         })
         this.setData({carsInfo: carsInfo, options: options})
         this.pagesloadRequest(carsInfo, true)
-        wx.showShareMenu()
+        
+        wx.showShareMenu()      
       }
     }
   },

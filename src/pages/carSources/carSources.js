@@ -98,7 +98,6 @@ Page({
 
       }
 
-      wx.showShareMenu()
       app.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
         success: function (res) {
 
@@ -145,6 +144,8 @@ Page({
           })
         }
       })
+      
+      wx.showShareMenu()
     }
   },
   onShow() {
