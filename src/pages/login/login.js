@@ -40,9 +40,7 @@ Page({
     app.userService.exsitTenanTmember({
       mobile: that.data.userPhoneValue,
       success(res) {
-        console.log(res)
         if (res) {
-          console.log(res)
           app.userService.getSMSCode({
             mobile: that.data.userPhoneValue,
             success(res) {

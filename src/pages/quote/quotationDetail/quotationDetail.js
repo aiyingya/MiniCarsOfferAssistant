@@ -38,7 +38,8 @@ Page({
       snsId: '',
       customerMobile: '',
       read: false,
-      source: 'quotationDetail'
+      source: 'quotationDetail',
+      pageShare: false
     },
     priceChange: {
       flag: '', // true 为上， false 为下
@@ -48,11 +49,7 @@ Page({
   },
   onLoad(options) {
     let that = this;
-
-
     let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
-
-    console.log(quotation)
     let carPrice = quotation.quotationItems[0].sellingPrice
     let officialPrice = quotation.quotationItems[0].guidePrice
 
@@ -61,21 +58,64 @@ Page({
     let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
-
-    this.setData({
-      quotation: quotation,
-      priceChange: {
-        flag: downPriceFlag,
-        price: downPriceString,
-        point: downPoint
-      }
-    })
+    
+    /**
+     * 分享进入页面，在未登录的情况下 跳转到登录页
+     */
+    if (!app.userService.isLogin()) {
+      setTimeout(function(){
+        that.setData({
+          pageShare: true
+        })
+      },1000)
+      this.setData({options: options})
+      wx.navigateTo({
+        url: '../../login/login'
+      })
+    }else { 
+    
+      wx.showShareMenu()
+      this.setData({
+        quotation: quotation,
+        pageShare: false,
+        priceChange: {
+          flag: downPriceFlag,
+          price: downPriceString,
+          point: downPoint
+        }
+      })
+    }
   },
   onReady() {
 
   },
   onShow() {
-
+    /**
+     * 登陆后刷新页面.
+     */
+    let options = this.data.options
+    console.log(`pageShare:${this.data.pageShare}`)
+    if(this.data.pageShare === true) {
+      this.onLoad(options)
+    }
+  },
+  /** 
+   * 页面分享.
+   */
+  onShareAppMessage () {
+    let quotation = this.data.quotation
+    let quotationInfoKeyValueString = util.urlEncodeValueForKey('quotation', quotation)
+    return {
+      title: '要卖车，更好用的卖车助手',
+      path: `pages/quote/quotationDetail/quotationDetail?${quotationInfoKeyValueString}`,
+      success(res) {
+        // 分享成功
+        
+      },
+      fail(res) {
+        // 分享失败
+      }
+    }
   },
   onHide() {
 

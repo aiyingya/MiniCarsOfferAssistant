@@ -45,7 +45,9 @@ Page({
     changeCharts: [],
     carModelsInfo: '',
     touchindex: '',
-    selectTimesData: []
+    selectTimesData: [],
+    pageShare: false,
+    options: ''
   },
   onLoad (options) {
     let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -60,14 +62,50 @@ Page({
     } catch (e) {
 
     }
-    if (carsInfo) {
-      console.log(carsInfo)
-      // 设置NavigationBarTitle.
-      wx.setNavigationBarTitle({
-        title: carsInfo.name
+    
+    if (!app.userService.isLogin()) {
+      setTimeout(function(){
+        that.data.pageShare = true
+      },1000)
+      this.setData({carsInfo: carsInfo, options: options})
+      wx.navigateTo({
+        url: '../login/login'
       })
-      this.setData({carsInfo: carsInfo})
-      this.pagesloadRequest(carsInfo, true)
+    }else {
+      if (carsInfo) {
+        // 设置NavigationBarTitle.
+        wx.setNavigationBarTitle({
+          title: carsInfo.name
+        })
+        this.setData({carsInfo: carsInfo, options: options})
+        this.pagesloadRequest(carsInfo, true)
+        wx.showShareMenu()
+      }
+    }
+  },
+  onShow () {
+    let options = this.data.options
+    let pageShare = this.data.pageShare
+    if(pageShare) {
+      this.onLoad(options)
+    }
+  },
+  /** 
+   * 页面分享.
+   */
+  onShareAppMessage () {
+    let carsInfo = this.data.carsInfo
+    let carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', carsInfo)
+    return {
+      title: '要卖车，更好用的卖车助手',
+      path: `pages/carModels/carModels?${carsInfoKeyValueString}`,
+      success(res) {
+        // 分享成功
+        
+      },
+      fail(res) {
+        // 分享失败
+      }
     }
   },
   pagesloadRequest(carsInfo, inStock) {
@@ -141,9 +179,6 @@ Page({
         }
       }
     })
-  },
-  onShow () {
-
   },
   handleCheckCarsModele() {
     let weitch = this.data.showRmendCarFacade
