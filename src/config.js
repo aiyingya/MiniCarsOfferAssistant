@@ -7,7 +7,7 @@ const name = 'yaomaiche-miniprogram'
 const version = _global.default.version; //'1.4.3'
 const build = _global.default.build;
 const versionCode = _global.default.versionCode;
-console.log("获取的配置文件参数",version,build,versionCode,_global.default.apiUrl);
+// console.log("获取的配置文件参数",version,build,versionCode,_global.default.apiUrl,JSON.stringify(_global,null,4));
 
 const getNamespaceKey = function (key) {
   if (ENV === 'PRD') {

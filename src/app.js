@@ -23,7 +23,7 @@ App({
   },
   globalData: {
   },
-  apiUrl:global.default.apiUrl,
+  apiUrl:global.apiUrl,
   wxcharts: wxcharts,
   userService: userService,
   tradeService: tradeService,
