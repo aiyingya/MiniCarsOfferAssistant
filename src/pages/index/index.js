@@ -65,6 +65,8 @@ Page({
     }, err => {
       wx.hideToast()
     })
+    
+    wx.showShareMenu()
   },
   onShow() { },
   onPullDownRefresh() {
@@ -75,6 +77,18 @@ Page({
     }, err => {
       wx.stopPullDownRefresh()
     })
+  },
+  onShareAppMessage () {
+    return {
+      title: '要卖车，更好用的卖车助手',
+      path: 'pages/index/index',
+      success(res) {
+        // 分享成功
+      },
+      fail(res) {
+        // 分享失败
+      }
+    }
   },
   /**
    * 首页所有数据加载方法
@@ -213,8 +227,8 @@ Page({
       })
     }
   },
-  handlerMakePhoneCall() {
-    let phone = '18621016627'
+  handlerMakePhoneCall(e) {
+    let phone = '18621016627' // e.currentTarget.dataset.phone
 
     wx.makePhoneCall({
       phoneNumber: phone

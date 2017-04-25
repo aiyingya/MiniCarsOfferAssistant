@@ -158,8 +158,8 @@ export default {
             const content = res.content
             if (content && content.length) {
               const indexOf = res.indexOf
-              for (let i = 0; i < content.length; i++) {
-                const contentItem = content[i]
+              let i = 0;
+              for (let contentItem of content) {
                 if (indexOf.indexOf(i) !== -1) {
                   contentItems.push({
                     a: contentItem,
@@ -171,7 +171,9 @@ export default {
                     b: false
                   })
                 }
+                i = i + 1
               }
+
               component.setData({
                 [`${component.options.scope}.carSourceItem.viewModelContentItems`]: contentItems
               })

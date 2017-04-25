@@ -92,6 +92,7 @@
           <view
             class="hotCarsType-title-relation"
             bindtap="handlerMakePhoneCall"
+            data-phone="{{item.phoneNumber}}"
           >联系</view>
         </view>
       </view>
