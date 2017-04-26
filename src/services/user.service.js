@@ -9,6 +9,8 @@
 import Service from './base.service'
 import Util from '../utils/util'
 import config from '../config'
+import * as wxapi from 'wxapp-promise'
+
 
 export default class UserService extends Service {
 
@@ -99,8 +101,7 @@ export default class UserService extends Service {
       const userInfoString = wx.getStorageSync(UserService.AuthKey)
       if (userInfoString) {
         const userInfo = JSON.parse(userInfoString)
-        console.log('读取用户信息')
-        console.log(userInfo)
+        console.log('读取用户信息',userInfo)
         this.loginChannel = userInfo.loginChannel || UserService.GuestLogin
         this.snsId = userInfo.snsId || null
         this.auth = userInfo.auth || null
@@ -119,8 +120,7 @@ export default class UserService extends Service {
       snsId: this.snsId
     }
 
-    console.log("保存用户信息")
-    console.log(userInfo)
+    console.log("保存用户信息",userInfo)
     try {
       const userInfoString = JSON.stringify(userInfo)
       wx.setStorageSync(UserService.AuthKey, userInfoString)
@@ -196,7 +196,7 @@ export default class UserService extends Service {
     this.getVisitor({
       deviceId: deviceId,
       success: function(res) {
-        console.log(res)
+        console.log("__requestClientId",res)
         that.clientId = res.clientId
         that.__setClientId(that.clientId)
         typeof cb === 'function' && cb(that.clientId)
@@ -249,7 +249,7 @@ export default class UserService extends Service {
         }
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         if (res) {
           const expireIn = that.__getTimestamp(res.expireMillis)
           res.expireIn = expireIn
@@ -461,66 +461,66 @@ export default class UserService extends Service {
       typeof cb == "function" && cb(this.weixinUserInfo)
     } else {
       //调用登录接口
-      wx.login({
-        success: function (auth) {
-          // 该接口只会在用户第一次进入时使用，并弹出弹框并一直记住当时的选择
-          wx.getUserInfo({
-            success: function (res) {
-              console.log(res)
+      wxapi.login().then(auth=>{
+        return auth
+      },e =>{
+        console.log("error",JSON.stringify(e))
+      }).then(auth=>{
+        //这里需要引用auth的值，所以在回调内写then
+        wxapi.getUserInfo().then(res=>{
+          /**
+           * 客户端本地获得微信用户信息，此时用户被定义为 guest snsId{null}
+           * @type {*}
+           */
+          if (!that.isLogin()) {
+            that.loginChannel = UserService.GuestLogin
+            that.snsId = null
+          }
+          that.weixinUserInfo = res.userInfo
+
+          that.uploadWeixinUserInfo({
+            authCode: auth.code,
+            encryptedData: res.encryptedData,
+            iv: res.iv,
+            success: function (res2) {
               /**
-               * 客户端本地获得微信用户信息，此时用户被定义为 guest snsId{null}
-               * @type {*}
+               * 服务端获得微信用户信息，此时用户被定义为 weixin snsId{Number}
                */
               if (!that.isLogin()) {
-                that.loginChannel = UserService.GuestLogin
-                that.snsId = null
+                that.loginChannel = UserService.WexinLogin
               }
-              that.weixinUserInfo = res.userInfo
+              that.snsId = res2.snsId
+              that.weixinUserInfo = res2
 
-              that.uploadWeixinUserInfo({
-                authCode: auth.code,
-                encryptedData: res.encryptedData,
-                iv: res.iv,
-                success: function (res2) {
-                  /**
-                   * 服务端获得微信用户信息，此时用户被定义为 weixin snsId{Number}
-                   */
-                  if (!that.isLogin()) {
-                    that.loginChannel = UserService.WexinLogin
-                  }
-                  that.snsId = res2.snsId
-                  that.weixinUserInfo = res2
-
-                  typeof cb == "function" && cb(that.weixinUserInfo)
-                  that.__saveUserInfo()
-                },
-                fail: function () {
-                  that.__getClientId(function (clientId) {
-
-                    if (!that.isLogin()) {
-                      that.snsId = clientId
-                    }
-
-                    typeof cb == "function" && cb(that.weixinUserInfo)
-                    that.__saveUserInfo()
-                  })
-                }
-              })
+              typeof cb == "function" && cb(that.weixinUserInfo)
+              that.__saveUserInfo()
             },
-            fail: function (res) {
+            fail: function () {
               that.__getClientId(function (clientId) {
+
                 if (!that.isLogin()) {
-                  that.loginChannel = UserService.GuestLogin
                   that.snsId = clientId
                 }
-                that.weixinUserInfo = null
+
                 typeof cb == "function" && cb(that.weixinUserInfo)
                 that.__saveUserInfo()
               })
             }
           })
-        }
+
+        },e=>{
+          that.__getClientId(function (clientId) {
+            if (!that.isLogin()) {
+              that.loginChannel = UserService.GuestLogin
+              that.snsId = clientId
+            }
+            that.weixinUserInfo = null
+            typeof cb == "function" && cb(that.weixinUserInfo)
+            that.__saveUserInfo()
+          })
+        })
       })
+
     }
   }
 

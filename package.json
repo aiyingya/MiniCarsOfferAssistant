@@ -56,7 +56,8 @@
     "gulp-wxa-copy-npm": "^0.1.3",
     "minimist": "^1.2.0",
     "moment": "^2.18.1",
-    "run-sequence": "^1.2.2"
+    "run-sequence": "^1.2.2",
+    "wxapp-promise": "0.0.3"
   },
   "config": {
     "env": "gqc",
