@@ -473,4 +473,22 @@ export default class SAASService extends Service {
       complete: object.complete
     })
   }
+
+  /**
+   * 车源上报
+   * @param opts
+   */
+  pushCallRecord(opts){
+    this.sendMessage({
+      path: "api/user/addCallRecord",
+      method: 'POST',
+      data: opts.data || {},
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
+
+
+
+
 }

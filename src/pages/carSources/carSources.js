@@ -146,7 +146,7 @@ Page({
           })
         }
       })
-      
+
       wx.showShareMenu()
     }
   },
@@ -894,6 +894,11 @@ Page({
       phoneNumber: phoneNumber,
       success: function (res) {
         /**
+         * 上报
+         */
+        that.pushCallRecord(carSourceItem);
+
+        /**
          * 1.4.0 埋点
          * davidfu
          */
@@ -1323,5 +1328,18 @@ Page({
   },
   onTouchMoveWithCatch() {
     // 拦截触摸移动事件， 阻止透传
+  },
+  pushCallRecord(curItem) {
+    //拨打电话时,用户信息，行情上报
+    let updata= {
+      "userId":app.userService.auth.userId,
+      "userPhone":app.userService.mobile,
+      "supplierId":curItem.supplier.id,
+      "supplierPhone":curItem.supplier.contact,
+      "messageResultId":curItem.id
+    }
+    debugger
+    app.saasService.pushCallRecord({data:updata});
+
   }
 })
