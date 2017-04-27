@@ -1336,9 +1336,9 @@ Page({
       "userPhone":app.userService.mobile,
       "supplierId":curItem.supplier.id,
       "supplierPhone":curItem.supplier.contact,
-      "messageResultId":curItem.id
+      "messageResultId":curItem.id,
+      "contactPhone":curItem.contact && curItem.supplier.contact
     }
-    debugger
     app.saasService.pushCallRecord({data:updata});
 
   }
