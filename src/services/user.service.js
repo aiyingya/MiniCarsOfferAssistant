@@ -91,9 +91,13 @@ export default class UserService extends Service {
     })
   }
 
-  sendMessage(opts, loadingType = 'none') {
-    opts.loadingType = loadingType
-    super.sendMessage(opts)
+  // sendMessage(opts, loadingType = 'none') {
+  //   opts.loadingType = loadingType
+  //   super.sendMessage(opts)
+  // }
+
+  sendMessagePromise(opts) {
+    super.sendMessagePromise(opts)
   }
 
   __loadUserInfo () {
@@ -190,7 +194,6 @@ export default class UserService extends Service {
 
   __requestClientId (cb) {
     let that = this
-
     const DeviceKey = config.getNamespaceKey('deviceId')
     const deviceId = wx.getStorageSync(DeviceKey)
     this.getVisitor({
@@ -215,7 +218,8 @@ export default class UserService extends Service {
     if (!opts) return
 
     console.log('get SMS code')
-    this.sendMessage({
+
+    this.sendMessagePromise({
       path: 'cgi/vcode',
       method: 'POST',
       data: {
@@ -225,7 +229,8 @@ export default class UserService extends Service {
         "strictlyCheck": true // 是否校验手机号，如果校验，则注册时用户已存在会抛出异常；登录/修改密码时，用户不存在会抛出异常"
       },
       success: opts.success,
-      fail: opts.fail
+      fail: opts.fail,
+      complete:opts.complete
     })
   }
 
@@ -237,7 +242,7 @@ export default class UserService extends Service {
     if (!opts) return
 
     console.log('password login')
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/authorization',
       method: 'POST',
       data: {
@@ -315,7 +320,7 @@ export default class UserService extends Service {
   exsitTenanTmember(opts) {
     if (!opts) return
     console.log('exsit tenant tmeber')
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/tenant/member/exist',
       method: 'GET',
       data: {
@@ -332,7 +337,7 @@ export default class UserService extends Service {
   newAccessToken(opts) {
     console.log('get new accessToken')
     let that = this
-    this.sendMessage({
+    this.sendMessagePromise({
       method: 'PUT',
       path: 'cgi/authorization',
       header: {
@@ -362,7 +367,7 @@ export default class UserService extends Service {
   userBindWeixin(opts) {
     const snsId = this.weixinUserInfo.snsId
     const userId = this.auth.userId
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/user/weixin/binding',
       method: 'POST',
       header: {
@@ -381,7 +386,7 @@ export default class UserService extends Service {
    * 上传用户微信信息
    */
   uploadWeixinUserInfo(opts) {
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/user/weixin',
       method: 'POST',
       data: {
@@ -396,7 +401,7 @@ export default class UserService extends Service {
 
   getLocationId (opts) {
     const that = this
-    this.sendMessage({
+    this.sendMessagePromise({
       path: `cgi/tenant/member/${opts.userId}/tenant`,
       method: 'GET',
       data: {},
@@ -526,7 +531,7 @@ export default class UserService extends Service {
 
   getVisitor (opts) {
     const userId = this.isLogin() ? this.auth.userId : ''
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/visitor',
       data: {
         deviceId: opts.deviceId,

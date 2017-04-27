@@ -23,11 +23,14 @@ export default class SAASService extends Service {
 
   }
 
-  sendMessage(opts, loadingType = 'toast') {
-    opts.loadingType = loadingType
-    super.sendMessage(opts)
-  }
+  // sendMessage(opts, loadingType = 'toast') {
+  //   opts.loadingType = loadingType
+  //   super.sendMessage(opts)
+  // }
 
+  sendMessagePromise(opts) {
+    super.sendMessagePromise(opts)
+  }
   /**
    * 发布当前报价草稿到某个用户
    *
@@ -61,7 +64,7 @@ export default class SAASService extends Service {
    */
   requestPublishQuotation (draftId, customerMobile, object) {
     if (draftId && draftId !== '') {
-      this.sendMessage({
+      this.sendMessagePromise({
         path: 'sale/quotation',
         data: {
           draftId: draftId,
@@ -164,7 +167,7 @@ export default class SAASService extends Service {
       data.snsId = snsId
       data.loginChannel = this.userService.loginChannel
 
-      this.sendMessage({
+      this.sendMessagePromise({
         path: 'sale/quotation/draft',
         data: data,
         method: 'POST',
@@ -195,7 +198,7 @@ export default class SAASService extends Service {
    * @param object
    */
   requestBookCar(itemName, spec, itemPrice, itemCount, object) {
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'sale/quotation/order',
       data: {
         userId: this.userService.auth.userId,
@@ -232,7 +235,7 @@ export default class SAASService extends Service {
         snsId = this.userService.snsId
       }
 
-      this.sendMessage({
+      this.sendMessagePromise({
         path: 'sale/quotation',
         loadingType: object.loadingType,
         data: {
@@ -313,7 +316,7 @@ export default class SAASService extends Service {
       }
     }
 
-    this.sendMessage({
+    this.sendMessagePromise({
       path: `product/car/spu/${carModelId}/sources`,
       method: 'GET',
       data: data,
@@ -368,7 +371,7 @@ export default class SAASService extends Service {
   requestAddOrRemoveTagnameForASupplier (spuId, carSourceId, tagName, supplierId, addOrRemove, object) {
     if (spuId && carSourceId  && tagName && supplierId) {
       const method = addOrRemove ? 'POST' : 'DELETE'
-      this.sendMessage({
+      this.sendMessagePromise({
         path: `product/car/spu/${spuId}/source/${carSourceId}/tag`,
         data: {
           tagName: tagName,
@@ -393,7 +396,7 @@ export default class SAASService extends Service {
    * @param object
    */
   requestCarSourceContent (carSourceId, object) {
-    this.sendMessage({
+    this.sendMessagePromise({
       path: `product/car/source/${carSourceId}/content`,
       loadingType: 'none',
       method: 'GET',
@@ -411,7 +414,7 @@ export default class SAASService extends Service {
    * @param object
    */
   requestSearchCarSpu (text, pageIndex, pageSize, object) {
-    this.sendMessage({
+    this.sendMessagePromise({
       path: `search/car/spu`,
       loadingType: 'none',
       method: 'GET',
@@ -430,7 +433,7 @@ export default class SAASService extends Service {
    *
    */
   requestSearchSpuBySpuId (spuId,data,object) {
-    this.sendMessage({
+    this.sendMessagePromise({
       path: `supply/car/spu/${spuId}`,
       method: 'GET',
       data: data || {},
@@ -441,7 +444,7 @@ export default class SAASService extends Service {
   }
 
   requestSearchSpuByCarSeriesId (carSeriesId, inStock, object) {
-    this.sendMessage({
+    this.sendMessagePromise({
       path: `supply/car/spu`,
       method: 'GET',
       data: {
@@ -468,7 +471,7 @@ export default class SAASService extends Service {
       inStock: inStock
     }
     data = type === 'CAR_SPU' ? data : resdata
-    this.sendMessage({
+    this.sendMessagePromise({
       path: path,
       method: 'GET',
       data: resdata,

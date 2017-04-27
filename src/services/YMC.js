@@ -14,9 +14,6 @@ export default class YMC {
   requestByPromise(options) {
     if (!options) return null
 
-
-
-
     return new Promise((resolve, reject) => {
       let clientId = ''
       try {
@@ -232,7 +229,18 @@ export default class YMC {
   }
 
 
-  promiseRequest(options) {
+  /**
+   * request
+   * @param options
+   * url          加载的 url
+   * method       加载的 http 方法
+   * data         加载的数据体
+   * header       加载请求所使用的 header
+   * success      成功回调
+   * fail         失败回调
+   * complete     完成回调
+   */
+  requestPromise(options) {
     if (!options) return null
 
     let clientId = ''
@@ -280,13 +288,13 @@ export default class YMC {
       if (statusCode < 399) {
         // 2XX, 3XX 成功
         const data = result.data || null
-        if(options.success && $.isFunction(options.success)){
+        if(options.success && typeof(options.success) ==='function'){
           options.success(data)
         }
 
       } else {
         // 4XX, 5XX 失败
-        console.error(res)
+        // console.error(res)
         let err
         if (typeof result === 'object') {
           // 旧版 ymcapi 接口中只能使用 error 中的 alertMessage 来处理额外行为
@@ -294,33 +302,29 @@ export default class YMC {
           const error = result.error || null
           const errorMessage = error.message || error.alertMessage
           err = new Error(errorMessage)
-          if(options.error && $.isFunction(options.error)){
-            options.error(err)
+          if(options.fail && typeof(options.fail) ==='function'){
+            options.fail(err)
           }
         } else {
           err = new Error(result)
-          if(options.error && $.isFunction(options.error)){
-            options.error(err)
+          if(options.fail && typeof(options.fail) ==='function'){
+            options.fail(err)
           }
         }
       }
-    },err=>{
-      console.log('fail',err)
+    },fail=>{
+      console.log('fail',fail)
       const error = new Error('网络请求错误');
-      if(options.error && $.isFunction(options.error)){
-        options.error(error)
+      if(options.fail && typeof(options.fail) ==='function'){
+        options.fail(error)
       }
     }).catch(function (reason) {
       // 抛出一个全局错误
-      if(options.error && $.isFunction(options.error)){
-        options.error(reason)
+      console.log('catch',reason)
+      if(options.fail && typeof(options.fail) ==='function'){
+        options.fail(reason)
       }
-    }).finally(()=>{
-      //始终执行
-      if(options.complete && $.isFunction(options.complete)){
-        options.complete()
-      }
-    });
+    }).finally(options.complete || function () {});
 
   }
 
