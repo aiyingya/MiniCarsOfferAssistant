@@ -1,5 +1,6 @@
 import config from '../config'
 import Promise from '../modules/es6-promise'
+import * as wxapi from 'wxapp-promise'
 
 export default class YMC {
   /**
@@ -12,6 +13,9 @@ export default class YMC {
    */
   requestByPromise(options) {
     if (!options) return null
+
+
+
 
     return new Promise((resolve, reject) => {
       let clientId = ''
@@ -226,4 +230,99 @@ export default class YMC {
       typeof options.complete === 'function' && options.complete()
     }
   }
+
+
+  promiseRequest(options) {
+    if (!options) return null
+
+    let clientId = ''
+    try {
+      // FIXME: 处理 clientId 使用同步获取相对较重
+      clientId = wx.getStorageSync('clientId')
+    } catch (e) {
+      console.error(e)
+    }
+
+    const defaultHeader = {
+      'ClientId': clientId,
+      'ClientVersion': config.versionCode,
+      'SystemCode': '60',
+      'content-type': options.contentType || 'application/json'
+    }
+    const header = options.header || {};
+
+    wxapi.request({
+      url: options.url,
+      data: options.data,
+      header: Object.assign(defaultHeader, header),
+      method: options.method || 'GET'
+    }).then(res=>{
+
+      console.log('success',res)
+      const result = res.data
+      const statusCode = res.statusCode
+
+      // 新版 uc 接口使用 behavior 来处理额外行为，
+      const behavior = result.behavior || null
+      if (behavior) {
+        if (behavior.type === 'TOAST') {
+          let content = behavior.content
+          if (content && content.length) {
+            // 暂不实现
+          }
+        } else if (behavior.type === 'Alert') {
+          // 暂不实现
+        } else if (behavior.type === 'Notice') {
+          // 暂不实现
+        }
+      }
+
+      if (statusCode < 399) {
+        // 2XX, 3XX 成功
+        const data = result.data || null
+        if(options.success && $.isFunction(options.success)){
+          options.success(data)
+        }
+
+      } else {
+        // 4XX, 5XX 失败
+        console.error(res)
+        let err
+        if (typeof result === 'object') {
+          // 旧版 ymcapi 接口中只能使用 error 中的 alertMessage 来处理额外行为
+          // 服务端可以处理的错误
+          const error = result.error || null
+          const errorMessage = error.message || error.alertMessage
+          err = new Error(errorMessage)
+          if(options.error && $.isFunction(options.error)){
+            options.error(err)
+          }
+        } else {
+          err = new Error(result)
+          if(options.error && $.isFunction(options.error)){
+            options.error(err)
+          }
+        }
+      }
+    },err=>{
+      console.log('fail',err)
+      const error = new Error('网络请求错误');
+      if(options.error && $.isFunction(options.error)){
+        options.error(error)
+      }
+    }).catch(function (reason) {
+      // 抛出一个全局错误
+      if(options.error && $.isFunction(options.error)){
+        options.error(reason)
+      }
+    }).finally(()=>{
+      //始终执行
+      if(options.complete && $.isFunction(options.complete)){
+        options.complete()
+      }
+    });
+
+  }
+
+
 }
