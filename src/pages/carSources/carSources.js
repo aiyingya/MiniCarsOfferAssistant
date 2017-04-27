@@ -890,13 +890,15 @@ Page({
     // MARK: 注意区分呢 supplier.contact 和 carSource.contact 两个概念
     const phoneNumber = carSourceItem.contact || contact
     const that = this
+
+    /**
+     * 上报
+     */
+    that.pushCallRecord(carSourceItem);
+
     wx.makePhoneCall({
       phoneNumber: phoneNumber,
       success: function (res) {
-        /**
-         * 上报
-         */
-        that.pushCallRecord(carSourceItem);
 
         /**
          * 1.4.0 埋点
