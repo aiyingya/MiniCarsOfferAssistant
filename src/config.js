@@ -1,13 +1,6 @@
 /**
  * 基础配置文件
  */
-<<<<<<< HEAD
-const ENV = 'dev'
-const name = 'yaomaiche-miniprogram'
-const version = '1.4.5'
-const build = 1
-const versionCode = '010405'
-=======
 var _global =require('./global')
 const ENV = _global.default.env; //'prd'
 const name = 'yaomaiche-miniprogram'
@@ -15,7 +8,6 @@ const version = _global.default.version; //'1.4.3'
 const build = _global.default.build;
 const versionCode = _global.default.versionCode;
 // console.log("获取的配置文件参数",version,build,versionCode,_global.default.apiUrl,JSON.stringify(_global,null,4));
->>>>>>> 562902a130af0428ca4b4995574239f43a335d67
 
 const getNamespaceKey = function (key) {
   if (ENV === 'PRD') {
