@@ -1337,8 +1337,9 @@ Page({
       "supplierId":curItem.supplier.id,
       "supplierPhone":curItem.supplier.contact,
       "messageResultId":curItem.id,
-      "contactPhone":curItem.contact && curItem.supplier.contact
+      "contactPhone": curItem.contact || curItem.supplier.contact
     }
+
     app.saasService.pushCallRecord({data:updata});
 
   }
