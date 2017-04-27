@@ -909,7 +909,7 @@ Page({
         } else {
           that.data.pageParameters.carSourceId = carSourceItem.id
         }
-        that.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSuppor
+        that.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSupport
         that.data.pageParameters.supplierId = carSourceItem.supplier.id
         const event = {
           eventAction: 'click',
