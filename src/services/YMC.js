@@ -1,5 +1,4 @@
 import config from '../config'
-import Promise from '../modules/es6-promise'
 import * as wxapi from 'wxapp-promise'
 
 export default class YMC {

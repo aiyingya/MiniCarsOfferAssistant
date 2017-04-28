@@ -1,5 +1,4 @@
-// FIXME: 需要处理不同环境下的 promise
-import Promise from '../../modules/es6-promise'
+
 import {
   $wuxTrack
 } from '../../components/wux'
@@ -72,7 +71,7 @@ Page({
     }, err => {
       wx.hideToast()
     })
-    
+
     wx.showShareMenu()
   },
   onShow() { },
@@ -235,7 +234,7 @@ Page({
     }
   },
   handlerMakePhoneCall(e) {
-    let phone =  e.currentTarget.dataset.phone //'18621016627' 
+    let phone =  e.currentTarget.dataset.phone //'18621016627'
 
     wx.makePhoneCall({
       phoneNumber: phone
