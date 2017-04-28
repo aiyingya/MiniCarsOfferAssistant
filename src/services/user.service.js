@@ -263,11 +263,18 @@ export default class UserService extends Service {
           opts.success(res)
           that.__getClientId(function (clientId) {}, true)
           that.__saveUserInfo()
+          //登录时记录用户信息
+          that.getLocation({
+            success: function () { },
+            fail: function () { }
+          })
         }
       },
       fail: opts.fail
     }, 'toast')
   }
+
+
 
   logout (opts) {
     this.auth = null

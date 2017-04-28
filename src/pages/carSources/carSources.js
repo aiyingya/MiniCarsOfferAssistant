@@ -146,7 +146,7 @@ Page({
           })
         }
       })
-      
+
       wx.showShareMenu()
     }
   },
@@ -890,9 +890,16 @@ Page({
     // MARK: 注意区分呢 supplier.contact 和 carSource.contact 两个概念
     const phoneNumber = carSourceItem.contact || contact
     const that = this
+
+    /**
+     * 上报
+     */
+    that.pushCallRecord(carSourceItem);
+
     wx.makePhoneCall({
       phoneNumber: phoneNumber,
       success: function (res) {
+
         /**
          * 1.4.0 埋点
          * davidfu
@@ -902,7 +909,7 @@ Page({
         } else {
           that.data.pageParameters.carSourceId = carSourceItem.id
         }
-        that.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSuppor
+        that.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSupport
         that.data.pageParameters.supplierId = carSourceItem.supplier.id
         const event = {
           eventAction: 'click',
@@ -1323,5 +1330,19 @@ Page({
   },
   onTouchMoveWithCatch() {
     // 拦截触摸移动事件， 阻止透传
+  },
+  pushCallRecord(curItem) {
+    //拨打电话时,用户信息，行情上报
+    let updata= {
+      "userId":app.userService.auth.userId,
+      "userPhone":app.userService.mobile,
+      "supplierId":curItem.supplier.id,
+      "supplierPhone":curItem.supplier.contact,
+      "messageResultId":curItem.id,
+      "contactPhone": curItem.contact || curItem.supplier.contact
+    }
+
+    app.saasService.pushCallRecord({data:updata});
+
   }
 })
