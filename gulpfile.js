@@ -27,11 +27,12 @@ let env = process.env.NODE_ENV || process.env.npm_package_config_env || "prd";
 var myConfig = {
   apiUrl:{}
 };
-myConfig.apiUrl.webapi = require('./src/config/config.json')[env] ;
+myConfig.apiUrl.webapi = require('./src/config/config.json')[env];
 myConfig.env = env || process.env.npm_package_config_env || "prd";
-myConfig.versionCode = process.env.npm_package_config_versionCode;
-myConfig.version = process.env.npm_package_config_version;
-myConfig.build = process.env.npm_package_config_build;
+myConfig.name = process.env.npm_package_name;
+myConfig.version = process.env.npm_package_version;
+myConfig.versionCode = process.env.npm_package_versionCode;
+myConfig.build = process.env.npm_package_build;
 
 let prod = false
 
