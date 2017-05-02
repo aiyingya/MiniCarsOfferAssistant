@@ -10,7 +10,8 @@
     "pages/login/login",
     "pages/carList/carList",
     "pages/usersQuote/usersQuote",
-    "pages/supplier/supplier"
+    "pages/supplier/supplier",
+    "pages/setCost/setCost"
   ],
   "window": {
     "backgroundTextStyle": "dark",
