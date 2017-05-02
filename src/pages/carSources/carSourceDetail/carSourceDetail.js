@@ -151,15 +151,16 @@ export default {
       const app = getApp()
       app.saasService.requestCarSourceContent(options.carSourceItem.id, {
         success: function (res) {
+          console.log(res)
           if (res) {
             /// 原文基本数据
             const contentItems = []
             const content = res.content
             if (content && content.length) {
               const indexOf = res.indexOf
-              for (let i = 0; i < content.length; i++) {
-                const contentItem = content[i]
-                if (indexOf.includes(i)) {
+              let i = 0;
+              for (let contentItem of content) {
+                if (indexOf.indexOf(i) !== -1) {
                   contentItems.push({
                     a: contentItem,
                     b: true
@@ -170,7 +171,9 @@ export default {
                     b: false
                   })
                 }
+                i = i + 1
               }
+
               component.setData({
                 [`${component.options.scope}.carSourceItem.viewModelContentItems`]: contentItems
               })

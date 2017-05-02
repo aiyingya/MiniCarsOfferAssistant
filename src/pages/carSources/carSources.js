@@ -56,79 +56,99 @@ Page({
     selectedSectionIndex: -1,
     selectedSectionId: '0',
     showDetailTitle: false,
-    hasOverLayDropdown: false
+    hasOverLayDropdown: false,
+    pageShare: false,
+    options: ''
   },
   onLoad(options) {
     console.log(options)
-
     const that = this
-
     const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
-
-    const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.toLowerCase().includes('mini'))
-    this.isShowDownPrice = isShowDownPrice
-    this.setData({
-      carModelsInfo: carModelsInfo
-    })
-
-    try {
-      const res = wx.getSystemInfoSync()
-      this.pixelRatio = res.pixelRatio
-      this.apHeight = 16
-      this.offsetTop = 80
+    /**
+     * 分享进入页面，在未登录的情况下 跳转到登录页
+     */
+    if (!app.userService.isLogin()) {
+      setTimeout(function () {
+        that.setData({
+          pageShare: true
+        })
+      }, 1000)
       this.setData({
-        windowHeight: res.windowHeight + 'px'
+        options: options
       })
-    } catch (e) {
+      wx.navigateTo({
+        url: '../login/login'
+      })
+    } else {
+      const isShowDownPrice = !(carModelsInfo.brandName.includes('宝马') || carModelsInfo.brandName.includes('奥迪') || carModelsInfo.brandName.toLowerCase().includes('mini'))
+      this.isShowDownPrice = isShowDownPrice
 
-    }
+      this.setData({
+        carModelsInfo: carModelsInfo,
+        pageShare: false //  避免分享页面二次加载.
+      })
 
-    app.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
-      success: function (res) {
-
-        let filters = res.filters
-        let dropDownFilters = []
-        let scrollFilters = []
-        let scrollFiltersSelectedIndexes = []
-
-        let sourcePublishDateFilterId
-        for (let i = 0; i < filters.length; i++) {
-          let filter = filters[i]
-          // FIXME: 这里的问题是使用了不严谨的方法获取数据
-          if (i === 0) {
-            dropDownFilters.push(filter)
-          } else if (i === 1) {
-            scrollFilters.push(filter)
-            scrollFiltersSelectedIndexes.push(-1)
-            // 车源发布信息， 默认为 全部
-            sourcePublishDateFilterId = '-1'
-          } else {
-            scrollFilters.push(filter)
-            scrollFiltersSelectedIndexes.push(-1)
-          }
-        }
-
-        const carSourcesBySkuInSpuList = that.bakeTheRawCarSourcesBySkuInSpuList(res.carSourcesBySkuInSpuList)
-
-        that.setData({
-          nodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
-          filters: filters,
-          dropDownFilters: dropDownFilters,
-          scrollFilters: scrollFilters,
-          scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
+      try {
+        const res = wx.getSystemInfoSync()
+        this.pixelRatio = res.pixelRatio
+        this.apHeight = 16
+        this.offsetTop = 80
+        this.setData({
+          windowHeight: res.windowHeight + 'px'
         })
-        that.cacheCarSourcesBySkuInSpuList = carSourcesBySkuInSpuList
+      } catch (e) {
 
-        const newCarSourcesBySkuInSpuList = that.updateSearchResult({})
-        that.selectCarSku(-1, newCarSourcesBySkuInSpuList)
-        that.setData({
-          searchnodata: newCarSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
-          carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
-          selectedSectionIndex: -1,
-          selectedSectionId: '0'
-        })
       }
-    })
+
+      app.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
+        success: function (res) {
+
+          let filters = res.filters
+          let dropDownFilters = []
+          let scrollFilters = []
+          let scrollFiltersSelectedIndexes = []
+
+          let sourcePublishDateFilterId
+          for (let i = 0; i < filters.length; i++) {
+            let filter = filters[i]
+            // FIXME: 这里的问题是使用了不严谨的方法获取数据
+            if (i === 0) {
+              dropDownFilters.push(filter)
+            } else if (i === 1) {
+              scrollFilters.push(filter)
+              scrollFiltersSelectedIndexes.push(-1)
+              // 车源发布信息， 默认为 全部
+              sourcePublishDateFilterId = '-1'
+            } else {
+              scrollFilters.push(filter)
+              scrollFiltersSelectedIndexes.push(-1)
+            }
+          }
+
+          const carSourcesBySkuInSpuList = that.bakeTheRawCarSourcesBySkuInSpuList(res.carSourcesBySkuInSpuList)
+
+          that.setData({
+            nodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
+            filters: filters,
+            dropDownFilters: dropDownFilters,
+            scrollFilters: scrollFilters,
+            scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
+          })
+          that.cacheCarSourcesBySkuInSpuList = carSourcesBySkuInSpuList
+
+          const newCarSourcesBySkuInSpuList = that.updateSearchResult({})
+          that.selectCarSku(-1, newCarSourcesBySkuInSpuList)
+          that.setData({
+            searchnodata: newCarSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
+            carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
+            selectedSectionIndex: -1,
+            selectedSectionId: '0'
+          })
+        }
+      })
+
+      wx.showShareMenu()
+    }
   },
   onShow() {
     console.log('onshow')
@@ -181,6 +201,33 @@ Page({
             }
           })
         }
+      }
+    }
+    /**
+     * 登陆后刷新页面.
+     */
+    console.log(`pageShare:${this.data.pageShare}`)
+    if (this.data.pageShare === true) {
+      console.log('页面刷新')
+      let options = this.data.options
+      this.onLoad(options)
+    }
+  },
+  /**
+   * 页面分享.
+   */
+  onShareAppMessage() {
+    let carModelsInfo = this.data.carModelsInfo
+    let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+    return {
+      title: '要卖车，更好用的卖车助手',
+      path: `pages/carSources/carSources?${carModelsInfoKeyValueString}`,
+      success(res) {
+        // 分享成功
+
+      },
+      fail(res) {
+        // 分享失败
       }
     }
   },
@@ -840,10 +887,19 @@ Page({
     }
   },
   actionContact(spuId, skuItemIndex, carSourceItemIndex, carSourceItem, contact) {
+    // MARK: 注意区分呢 supplier.contact 和 carSource.contact 两个概念
+    const phoneNumber = carSourceItem.contact || contact
     const that = this
+
+    /**
+     * 上报
+     */
+    that.pushCallRecord(carSourceItem);
+
     wx.makePhoneCall({
-      phoneNumber: contact,
+      phoneNumber: phoneNumber,
       success: function (res) {
+
         /**
          * 1.4.0 埋点
          * davidfu
@@ -1274,5 +1330,19 @@ Page({
   },
   onTouchMoveWithCatch() {
     // 拦截触摸移动事件， 阻止透传
+  },
+  pushCallRecord(curItem) {
+    //拨打电话时,用户信息，行情上报
+    let updata= {
+      "userId":app.userService.auth.userId,
+      "userPhone":app.userService.mobile,
+      "supplierId":curItem.supplier.id,
+      "supplierPhone":curItem.supplier.contact,
+      "messageResultId":curItem.id,
+      "contactPhone": curItem.contact || curItem.supplier.contact
+    }
+
+    app.saasService.pushCallRecord({data:updata});
+
   }
 })

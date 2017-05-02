@@ -1,3 +1,5 @@
+// FIXME: 需要处理不同环境下的 promise
+import Promise from '../../modules/es6-promise'
 import {
   $wuxTrack
 } from '../../components/wux'
@@ -51,18 +53,20 @@ Page({
 
     }
 
-    const promise = that.reloadIndexData()
     wx.showToast({
       title: '正在加载',
       icon: 'loading',
       duration: 10000,
       mask: true
     })
+    const promise = that.reloadIndexData()
     promise.then(res => {
       wx.hideToast()
     }, err => {
+      wx.hideToast()
     })
-
+    
+    wx.showShareMenu()
   },
   onShow() { },
   onPullDownRefresh() {
@@ -70,7 +74,21 @@ Page({
     const promise = this.reloadIndexData()
     promise.then(res => {
       wx.stopPullDownRefresh()
+    }, err => {
+      wx.stopPullDownRefresh()
     })
+  },
+  onShareAppMessage () {
+    return {
+      title: '要卖车，更好用的卖车助手',
+      path: 'pages/index/index',
+      success(res) {
+        // 分享成功
+      },
+      fail(res) {
+        // 分享失败
+      }
+    }
   },
   /**
    * 首页所有数据加载方法
@@ -209,8 +227,8 @@ Page({
       })
     }
   },
-  handlerMakePhoneCall() {
-    let phone = '18621016627'
+  handlerMakePhoneCall(e) {
+    let phone =  e.currentTarget.dataset.phone //'18621016627' 
 
     wx.makePhoneCall({
       phoneNumber: phone

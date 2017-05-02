@@ -11,7 +11,7 @@
     "pages/carList/carList",
     "pages/usersQuote/usersQuote",
     "pages/supplier/supplier",
-    "pages/charts/charts"
+    "pages/setCost/setCost"
   ],
   "window": {
     "backgroundTextStyle": "dark",
