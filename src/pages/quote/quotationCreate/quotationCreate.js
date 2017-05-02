@@ -84,7 +84,8 @@ Page({
       },
       count: '' // "7.34"
     },
-    source: '' // carModels/carSources/quotationDetail/
+    source: '', // carModels/carSources/quotationDetail/
+    showpreferenceSetting:false
   },
   onLoad(options) {
     let that = this
@@ -100,6 +101,15 @@ Page({
     } catch (e) {
 
     }
+
+    //TODO:aiyingya 判断是否需要显示报价偏好设置
+
+    this.setData({
+      showpreferenceSetting: true
+    })
+    console.log("判断是否需要显示报价偏好设置")
+
+
 
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
@@ -189,6 +199,9 @@ Page({
         });
       }
     });
+
+
+
   },
   onReady() {},
   onShow() {},
@@ -520,5 +533,11 @@ Page({
 
       }
     })
-  }
+  },
+  goPreferenceSetting(e) {
+    //TODO:aiyingya 跳转到报价偏好设置
+    this.setData({
+      showpreferenceSetting: false
+    })
+  },
 });

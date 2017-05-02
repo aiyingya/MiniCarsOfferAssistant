@@ -2,7 +2,7 @@ page {
 	background-color: #fff;
 }
 .container {
-	
+
 }
 .pad-bt{
     padding-bottom: 40px;
@@ -29,8 +29,8 @@ page {
 }
 .white-box{
     background: #fff;
-    padding: 15rpx 0; 
-    display: -webkit-box;   
+    padding: 15rpx 0;
+    display: -webkit-box;
 }
 .white-box textarea{
 	width: 93%;
@@ -42,7 +42,7 @@ page {
 	font-size: 30rpx;
 	color: #999;
 	-webkit-box-sizing: border-box;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 .ymc-cell-box .weui-cell__bd{
   color: #666;
@@ -79,7 +79,7 @@ page {
     width: 150rpx;
 }
 .fix-bt{
-    
+
 }
 .btn-group{
      display: flex;
@@ -115,7 +115,7 @@ page {
 .red-btn{
    border: none;
     background: #ED4149;
-    color: #fff; 
+    color: #fff;
     font-size: 32rpx;
     text-align: center;
     padding: 33rpx 0;
@@ -136,7 +136,7 @@ page {
     height:216rpx;
     color: #f7b1b4;
     text-align: center;
-    font-size: 24rpx;    
+    font-size: 24rpx;
 }
 .payment-price{
     color: #fff;
@@ -229,4 +229,43 @@ page {
 .weui-tab__content .weui-cells:after,
 .weui-tab__content .weui-cells:before {
 	display: none;
+}
+
+.can-preferenceSetting-display{
+  //top:50rpx;
+  display:-webkit-box;
+  display:-webkit-flex;
+  display:flex;
+}
+
+.preferenceSetting-navbar{
+  display: block;
+}
+.can-preferenceSetting-height{
+  height:188rpx;
+}
+
+.preferenceSetting{
+  position:relative;
+  height: 100rpx;
+  background-color:#FFFFFF ;
+  text-align: center;
+}
+.preferenceSetting-con{
+  height:28px;
+  line-height: 28px;
+  width: 40%;
+  margin-left:30%;
+  background: rgba(51,119,238,0.07);
+  border: 1px solid rgba(51,119,238,0.20);
+  border-radius: 100px;
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  color: #3377EE;
+  letter-spacing: 0;
+  position:absolute;
+  top:7px;
+}
+.can-preferenceSetting-top{
+  top:188rpx;
 }

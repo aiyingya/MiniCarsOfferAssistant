@@ -5,17 +5,28 @@
 <template is="specificationsDialog" data="{{ ...$wux.specificationsDialog }}"/>
 
 <view class="container page">
-	<view class="tab-navbar weui-navbar">
-		<view id="0" class="weui-navbar__item tab-item {{activeIndex == 0 ? 'weui-bar__item_on' : ''}}" bindtap="handlerTabClick">
-			贷款
-		</view>
-		<view id="1" class="weui-navbar__item tab-item {{activeIndex == 1 ? 'weui-bar__item_on' : ''}}" bindtap="handlerTabClick">
-			全款
-		</view>
-		<view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+
+
+
+	<view class="tab-navbar weui-navbar  preferenceSetting-navbar {{showpreferenceSetting ? 'can-preferenceSetting-height' : ''}}">
+
+    <view wx:if="{{showpreferenceSetting}}" class="preferenceSetting" bindtap="goPreferenceSetting" >
+      <view class="preferenceSetting-con">报价偏好设置</view>
+    </view>
+
+    <view class="can-preferenceSetting-display">
+      <view id="0" class="weui-navbar__item tab-item {{activeIndex == 0 ? 'weui-bar__item_on' : ''}}" bindtap="handlerTabClick">
+        贷款
+      </view>
+      <view id="1" class="weui-navbar__item tab-item {{activeIndex == 1 ? 'weui-bar__item_on' : ''}}" bindtap="handlerTabClick">
+        全款
+      </view>
+      <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+    </view>
 	</view>
+
 	<!--导航栏分区-->
-	<view class="tab-content weui-tab__panel">
+	<view class="tab-content weui-tab__panel {{showpreferenceSetting ? 'can-preferenceSetting-top' : ''}}">
 
 		<!--按揭内容-->
 		<view
