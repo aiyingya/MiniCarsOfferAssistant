@@ -206,8 +206,9 @@ page {
 	color: #FFFFFF;
 	line-height: 98rpx;
 	text-align: center;
-	margin: 80rpx auto;
-	border-radius: 8rpx;
+	//margin: 80rpx auto;
+  margin:40rpx auto 80rpx auto;
+  border-radius: 8rpx;
 }
 .weui-cell_picker {
 	position: relative;
@@ -230,7 +231,7 @@ page {
 .weui-tab__content .weui-cells:before {
 	display: none;
 }
-
+/*****编辑报价****/
 .can-preferenceSetting-display{
   //top:50rpx;
   display:-webkit-box;
@@ -246,16 +247,16 @@ page {
 }
 
 .preferenceSetting{
-  position:relative;
-  height: 100rpx;
+  height: 90rpx;
   background-color:#FFFFFF ;
   text-align: center;
+  padding-top:10px;
 }
 .preferenceSetting-con{
   height:28px;
   line-height: 28px;
   width: 40%;
-  margin-left:30%;
+  margin:0 auto;
   background: rgba(51,119,238,0.07);
   border: 1px solid rgba(51,119,238,0.20);
   border-radius: 100px;
@@ -263,9 +264,33 @@ page {
   font-size: 14px;
   color: #3377EE;
   letter-spacing: 0;
-  position:absolute;
-  top:7px;
 }
 .can-preferenceSetting-top{
   top:188rpx;
+}
+
+.income-btn {
+  position:relative;
+  margin:40rpx auto;
+  border:1px solid #E4E4E4;
+  width:66px;
+  height:48rpx;
+  line-height:48rpx;
+  font-family:"PingFangSC-Regular";
+  background:#FAFAFA;
+  border-radius:100px;
+  font-size:14px;
+  color:#ED4149;
+  text-align:left;
+  letter-spacing:0;
+  padding-left:35px;
+}
+.money-icon {
+  left:12px;
+  top:50%;
+  margin-top:-9px;
+  display:block;
+  width:18px;
+  height:18px;
+  position:absolute;
 }

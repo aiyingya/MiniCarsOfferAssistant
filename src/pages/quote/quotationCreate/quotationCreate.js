@@ -31,14 +31,74 @@ Page({
       paymentRatio: 30, // 首付比例（%），decimal，全款时不传，取值范围0~100
       stages: 3, // 贷款期数，int，全款时不传
       expenseRate: 4, // 贷款费率（%），decimal，全款时不传，取值范围0~100
-      requiredExpenses: 0, // 必需费用（元），deciaml，取值范围0~999999999,
-      otherExpenses: 0, // 其他费用（元），deciaml，取值范围0~999999999",
+      requiredExpensesAll: {//必需费用（元），deciaml，取值范围0~999999999,
+        purchaseTax:0,//购置
+        licenseFee:0,//上牌
+        vehicleAndVesselTax:0,//车船
+        insuranceAmount:0//保险金额
+      },
+      otherExpensesAll:{// 其他费用（元），deciaml，取值范围0~999999999",
+        boutiqueCost:0,//精品费用
+        installationFee:0,//安装费
+        otherFee:0
+      },
       advancePayment: 0, // 必传，首次支付金额，如果全款则为全款金额",
       monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
       totalPayment: 0, // 总落地价格
       remark: '', // "无"
       read: false
     },
+    expensesAllInfo:[
+      {
+        type:'requiredfee',
+        target:'purchaseTax',//expensesAllEnum上一一对应
+        title:'购置税',
+        protoname: 'quotation.requiredExpensesAll.purchaseTax',
+        price:0//这里需要引用quotation.requiredExpensesAll.purchaseTax的值
+      },//购置
+      {
+        type:'requiredfee',
+        target:'licenseFee',
+        title:'上牌费用',
+        protoname:'quotation.requiredExpensesAll.licenseFee',
+        price:0//同上
+      },//上牌
+      {
+        type:'requiredfee',
+        target:'vehicleAndVesselTax',
+        title:'车船税',
+        protoname:'quotation.requiredExpensesAll.vehicleAndVesselTax',
+        price:0//同上
+      },//车船
+      {
+        type:'requiredfee',
+        target:'insuranceAmount',
+        title:'保险金额',
+        protoname:'quotation.requiredExpensesAll.insuranceAmount',
+        price:0//同上
+      },//保险金额
+      {
+        type:'otherfee',
+        target:'boutiqueCost',
+        title:'精品费用',
+        protoname:'quotation.otherExpensesAll.boutiqueCost',
+        price:0//同上
+      },//精品费用 其它
+      {
+        type:'otherfee',
+        target:'installationFee',
+        title:'安装费',
+        protoname:'quotation.otherExpensesAll.installationFee',
+        price:0//同上
+      },//安装费 其它
+      {
+        type:'otherfee',
+        target:'otherFee',
+        title:'其它',
+        protoname:'quotation.otherExpensesAll.otherFee',
+        price:0//同上
+      }//其它
+    ],
     priceChange: {
       flag: 0, // 1 为上， 0 为未增加, -1 为下
       price: '', // 1.9 万
@@ -88,6 +148,8 @@ Page({
     showpreferenceSetting:false
   },
   onLoad(options) {
+
+
     let that = this
     try {
       let res = wx.getSystemInfoSync();
@@ -110,12 +172,13 @@ Page({
     console.log("判断是否需要显示报价偏好设置")
 
 
+    this.utilsExpensesAllInfo()
+
 
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
     let carModelInfoJSONString = options.carModelsInfo
 
-    console.log(options)
 
     if (quotationJSONString && quotationJSONString.length) {
       /***
@@ -211,10 +274,22 @@ Page({
   onPullDownRefresh() {},
   updateForSomeReason() {
 
+    this.utilsExpensesAllInfo()
+
+    let requiredExpenses = 0
+    var _temp1 = this.data.quotation.requiredExpensesAll
+    for(let key of Object.keys(_temp1)){
+      requiredExpenses += _temp1[key]
+    }
+
+    let otherExpenses = 0
+    var _temp2 = this.data.quotation.otherExpensesAll
+    for(let key of Object.keys(_temp2)){
+      otherExpenses += _temp2[key]
+    }
+
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let officialPrice = this.data.quotation.quotationItems[0].guidePrice
-    let requiredExpenses = this.data.quotation.requiredExpenses
-    let otherExpenses = this.data.quotation.otherExpenses
 
     let paymentRatio = this.data.quotation.paymentRatio
     let expenseRate = this.data.quotation.expenseRate
@@ -252,6 +327,7 @@ Page({
         point: downPoint
       }
     });
+
   },
   isLoanTabActive(e) {
     return this.data.activeIndex == 0
@@ -328,52 +404,25 @@ Page({
       cancel: () => {}
     })
   },
-  handlerRequiredExpensesChange(e) {
+  handlerExpensesChange(e) {
     let that = this
-
-    let requiredExpenses = this.data.quotation.requiredExpenses
-
+    var expensesInfo = e.currentTarget.dataset.feetype
     $wuxInputNumberDialog.open({
-      title: '必要花费',
-      content: '购置税、上牌费、车船税、保险等',
-      inputNumber: requiredExpenses ? requiredExpenses : "",
-      inputNumberPlaceholder: '输入必要花费',
+      title: expensesInfo.title,
+      content: expensesInfo.title,
+      inputNumber: that.data[expensesInfo.protoname] ? that.data[expensesInfo.protoname] : "",
+      inputNumberPlaceholder: '输入'+expensesInfo.title,
       inputNumberMaxLength: 9,
       confirmText: '确定',
       cancelText: '取消',
       confirm: (res) => {
-        let requiredExpenses = Number(res.inputNumber)
-
+        let price = Number(res.inputNumber)
+        //这里如何写入插值变量
         that.setData({
-          'quotation.requiredExpenses': requiredExpenses
+          [expensesInfo.protoname] : price
         })
-
         that.updateForSomeReason()
-      },
-      cancel: () => {}
-    })
-  },
-  handlerOtherExpensesChange(e) {
-    let that = this
 
-    let otherExpenses = this.data.quotation.otherExpenses
-
-    $wuxInputNumberDialog.open({
-      title: '其他花费',
-      content: '精品费、安装费等',
-      inputNumber: otherExpenses ? otherExpenses : "",
-      inputNumberPlaceholder: '输入其他花费',
-   inputNumberMaxLength: 9,
-      confirmText: '确定',
-      cancelText: '取消',
-      confirm: (res) => {
-        let otherExpenses = Number(res.inputNumber)
-
-        that.setData({
-          'quotation.otherExpenses': otherExpenses
-        })
-
-        that.updateForSomeReason()
       },
       cancel: () => {}
     })
@@ -537,7 +586,37 @@ Page({
   goPreferenceSetting(e) {
     //TODO:aiyingya 跳转到报价偏好设置
     this.setData({
-      showpreferenceSetting: false
+      'showpreferenceSetting': false
     })
   },
+  utilsExpensesAllInfo(){
+    //把必须其它金额，赋值给expensesAllInfo对象，用于页面显示金额
+    const that = this
+    const _requiredExpensesAll = that.data.quotation.requiredExpensesAll
+    const _otherExpensesAll = that.data.quotation.otherExpensesAll
+
+    that.data.expensesAllInfo.forEach(({target},index) =>{
+      let flag = false
+      for(let key of Object.keys(_requiredExpensesAll)){
+
+        if(target == key){
+          that.setData({
+            ['expensesAllInfo['+index+'].price'] : _requiredExpensesAll[key]
+          })
+          flag = true
+        }
+      }
+      if(flag){
+        return
+      }
+      for(let key of Object.keys(_otherExpensesAll)){
+        if(target == key){
+          that.setData({
+            ['expensesAllInfo['+index+'].price'] : _otherExpensesAll[key]
+          })
+        }
+      }
+    })
+
+  }
 });
