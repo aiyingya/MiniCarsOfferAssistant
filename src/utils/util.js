@@ -207,7 +207,7 @@ export default class Util {
    */
   static priceStringWithUnit(downPrice) {
     downPrice = Math.abs(downPrice)
-    if (downPrice > 10000) {
+    if (downPrice >= 10000) {
       return (downPrice / 10000).toFixed(2) + '万'
     } else {
       return downPrice.toFixed()

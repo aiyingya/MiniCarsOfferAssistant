@@ -402,7 +402,8 @@
 
 .weui-dialog__input {
 	color: #000000;
-	margin-left: 50rpx;
+  margin-top:10px;
+  margin-left: 50rpx;
 	margin-bottom: 40rpx;
 	width: calc(100% - 100rpx);
 	background:#EFEFEF;
@@ -415,8 +416,62 @@
 	line-height: 36rpx;
 	padding: 24rpx 0;
 	text-align: center;
-
 }
+
+.weui-dialog__input_price {
+  color: #000000;
+  margin-left: 50rpx;
+  margin-bottom: 40rpx;
+  width: calc(100% - 100rpx);
+  background:#EFEFEF;
+  border: 1px solid #CCCCCC;
+  border-radius: 8rpx;
+  position: relative;
+}
+.weui-dialog__input_price input{
+  font-size: 36rpx;
+  color: #333;
+  line-height: 36rpx;
+  padding:24rpx 100rpx 24rpx 170rpx;
+  text-align: center;
+}
+.weui-dialog__xia{
+   position:absolute;
+   left:22rpx;
+   top:23rpx;
+   width:23rpx;
+   height:25rpx;
+   color:#666666;
+   font-size:36rpx;
+ }
+
+.weui-dialog__minus{
+  position:absolute;
+  left:110rpx;
+  top:14rpx;
+  width:71rpx;
+  height:70rpx;
+  color:#666666;
+  font-size:36rpx;
+}
+.weui-dialog__plus{
+  position:absolute;
+  right:20px;
+  top:14rpx;
+  width:71rpx;
+  height:70rpx;
+  color:#666666;
+  font-size:36rpx;
+}
+.weui-dialog__line{
+  height:1px;
+  margin:0px auto;
+  padding:0px;
+  background-color:#D5D5D5;
+  overflow:hidden;
+  width:50px;
+}
+
 
 .wux-number-input {
 	float: left;

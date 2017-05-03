@@ -6,13 +6,30 @@
       <view class="weui-dialog__hd" wx:if="{{ title }}">
         <view class="weui-dialog__title">{{ title }}</view>
       </view>
+
+
       <view class="weui-dialog__bd" wx:if="{{ content }}">
         <view class="weui-dialog__bd__centent">{{ content }}</view>
       </view>
+
+      <view wx:if="{{ priceStyle }}" class="flex-wrp" style="flex-direction:row;display:flex">
+        <view class="flex-item bc_green weui-dialog__line"></view>
+        <view class="flex-item" style="color:#999999">（已涵盖运费与收益）</view>
+        <view class="flex-item bc_blue weui-dialog__line"></view>
+      </view>
+
       <form bindsubmit="{{ confirm }}">
-        <view class="weui-dialog__input">
-          <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class="" focus="{{ visible }}"
+        <view wx:if="{{ priceStyle }}" class="weui-dialog__input_price">
+          <view class="weui-dialog__xia">下</view>
+          <image class="weui-dialog__minus" src="../../../images/icons/icon_minus.png" bindtap="{{ buttonMinus }}"></image>
+          <input type="{{ inputType }}" name="inputNumber" placeholder="0" placeholder-class="" focus="{{ visible }}"
             value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
+          <image class="weui-dialog__plus" src="../../../images/icons/icon_plus.png" bindtap="{{ buttonPlus }}" ></image>
+        </view>
+
+        <view wx:else class="weui-dialog__input">
+          <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class="" focus="{{ visible }}"
+                 value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
         </view>
         <view class="weui-dialog__ft">
           <button class="weui-dialog__btn weui-dialog__btn_default" bindtap="{{ cancel }}">{{ cancelText }}
@@ -21,6 +38,7 @@
           </button>
         </view>
       </form>
+
     </view>
   </view>
 </template>

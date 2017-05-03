@@ -25,7 +25,8 @@ Page({
         itemPic: '',
         specifications: '',
         guidePrice: 0,
-        sellingPrice: 0
+        sellingPrice: 0,
+        originalPrice: 0
       }], // skuId
       hasLoan: true, // 必传，true/false，boolean，是否贷款
       paymentRatio: 30, // 首付比例（%），decimal，全款时不传，取值范围0~100
@@ -241,7 +242,8 @@ Page({
           itemPic: itemPic,
           specifications: specifications,
           guidePrice: guidePrice,
-          sellingPrice: sellingPrice
+          sellingPrice: sellingPrice,
+          originalPrice: sellingPrice
         }]
 
         this.setData({
@@ -385,19 +387,24 @@ Page({
   handlerSellingPriceChange(e) {
     let that = this
 
-    let sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
-
+    let originalPrice = this.data.quotation.quotationItems[0].originalPrice
+    let _sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
+    var _downPrice = Number(originalPrice - _sellingPrice)
     $wuxInputNumberDialog.open({
       title: '裸车价',
-      inputNumber: sellingPrice,
+      inputNumber: _downPrice,
+      content: "￥" + originalPrice,
       inputNumberPlaceholder: '输入裸车价',
       inputNumberMaxLength: 9,
       confirmText: '确定',
       cancelText: '取消',
+      priceStyle: true,
       confirm: (res) => {
-        let sellingPrice = Number(res.inputNumber)
+
+        let downPrice = Number(res.inputNumber)
+
         that.setData({
-          'quotation.quotationItems[0].sellingPrice': sellingPrice
+          'quotation.quotationItems[0].sellingPrice': Number(originalPrice - downPrice)
         })
         that.updateForSomeReason()
       },
@@ -410,7 +417,7 @@ Page({
     $wuxInputNumberDialog.open({
       title: expensesInfo.title,
       content: expensesInfo.title,
-      inputNumber: that.data[expensesInfo.protoname] ? that.data[expensesInfo.protoname] : "",
+      inputNumber: expensesInfo.price ? expensesInfo.price : "",
       inputNumberPlaceholder: '输入'+expensesInfo.title,
       inputNumberMaxLength: 9,
       confirmText: '确定',
