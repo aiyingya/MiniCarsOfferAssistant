@@ -34,6 +34,7 @@
 .weui-dialog__title {
 	font-weight: 400;
 	font-size: 36rpx;
+  position: relative;
 }
 .weui-dialog__bd {
 	padding: 0 1.6em 0;
@@ -621,4 +622,13 @@
 .weui-animate-fade-out {
 	-webkit-animation: fadeOut ease .3s forwards;
 	animation: fadeOut ease .3s forwards
+}
+
+.icon-close {
+  width: 24rpx;
+  height: 24rpx;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -12rpx;
 }

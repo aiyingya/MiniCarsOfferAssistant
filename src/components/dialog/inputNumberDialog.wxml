@@ -12,10 +12,10 @@
         <view class="weui-dialog__bd__centent">{{ content }}</view>
       </view>
 
-      <view wx:if="{{ priceStyle }}" class="flex-wrp" style="flex-direction:row;display:flex">
-        <view class="flex-item bc_green weui-dialog__line"></view>
-        <view class="flex-item" style="color:#999999">（已涵盖运费与收益）</view>
-        <view class="flex-item bc_blue weui-dialog__line"></view>
+      <view wx:if="{{ priceStyle }}" class="weui-flex-wrp" >
+        <view class="flex-item  weui-dialog__line"></view>
+        <view class="flex-item weui-bc_grey">（已涵盖运费与收益）</view>
+        <view class="flex-item weui-dialog__line"></view>
       </view>
 
       <form bindsubmit="{{ confirm }}">

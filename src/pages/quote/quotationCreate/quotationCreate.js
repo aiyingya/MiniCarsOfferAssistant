@@ -1,8 +1,11 @@
 import {
-  $wuxInputNumberDialog
+  $wuxInputNumberDialog,
+  $wuxDialog,
+  $wuxContentDialog
 } from "../../../components/wux"
 import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialog'
 import util from '../../../utils/util'
+
 
 const app = getApp()
 
@@ -624,6 +627,17 @@ Page({
         }
       }
     })
-
+  },
+  lookIncome(){
+    //TODO:计算弹层信息
+    $wuxContentDialog.open({
+      title: '收益详情',
+      totleContent: {name:'总利润约',value:'￥100'},
+      detailContent: [
+        {name:'裸车价收益约',value:'￥100'},
+        {name:'保险收益约',value:'￥200'},
+        {name:'贷款收益约',value:'￥2178'}
+        ]
+    })
   }
 });

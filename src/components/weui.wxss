@@ -1038,3 +1038,24 @@ icon {
   color: #ED4149;
   white-space: nowrap;
 }
+
+.weui-content_totle{
+  width:80%;
+  height:60rpx;margin:0 auto;  margin-top:40rpx; margin-bottom:20rpx; color:#333333; font-family:PingFangSC-Medium
+}
+.weui-content_detail{
+  width:80%;height:30rpx;margin:0 auto; margin-top:20rpx; color:#666666;font-family:PingFangSC-Regular
+}
+
+.weui-float_L{
+  float: left;
+}
+.weui-float_R{
+  float: right;
+}
+.weui-flex-wrp{
+  flex-direction:row;display:flex;margin-bottom:10rpx;
+}
+.weui-bc_grey{
+  color:#999999
+}

@@ -1,3 +1,6 @@
+<import src="../../../components/dialog/contentDialog.wxml"/>
+<template is="contentDialog" data="{{ ...$wux.contentDialog }}"/>
+
 <import src="../../../components/dialog/inputNumberDialog.wxml"/>
 <template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}"/>
 
@@ -5,8 +8,6 @@
 <template is="specificationsDialog" data="{{ ...$wux.specificationsDialog }}"/>
 
 <view class="container page">
-
-
 
 	<view class="tab-navbar weui-navbar  preferenceSetting-navbar {{showpreferenceSetting ? 'can-preferenceSetting-height' : ''}}">
 
@@ -202,8 +203,7 @@
 			</view>
 		</view>
 		<!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/发送报价/联系客户/立即定车-->
-    <view class="income-btn" >查看收益<image class="money-icon" src="../../../images/icons/icon_price.png"></image></view>
-
+    <view class="income-btn" bindtap="lookIncome">查看收益<image class="money-icon" src="../../../images/icons/icon_price.png"></image></view>
 		<view class="quote-btn" bindtap='handlerSaveQuotationDraft'>保存并分享</view>
 	</view>
 </view>
