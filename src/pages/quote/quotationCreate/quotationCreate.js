@@ -192,30 +192,22 @@ Page({
     //TODO:aiyingya 获取报价单接口
 
 
-    // app.saasService.getCreatCarRecordInfo({
-    //   success: (res) => {},
-    //   fail: () => {},
-    //   complete: () => {}
-    // });
-
-    var res = {
-      "carPrice":"161600",//显示裸车价= 裸车价+运费+利润
-      "oneInterest":5,//"一年期月息",
-      "twoInterest": 6,//"二年期月息",
-      "threeInterest":7, //"三年期月息",
-      "oneWYXS":0.5,//"一年期万元系数",
-      "twoWYXS":0.5,//"二年期万元系数",
-      "threeWYXS": 0.5,//"三年期万元系数",
-      "interestType":1,//"默认选中的贷款方式 1 月息 2 万元系数"
-      "carNumberFee":'200'//"上牌服务费"
-    }
-
     let sellingPrice = 0
-    this.setData({
-      'quotation.requestResult': res
-    })
-    sellingPrice = res.carPrice;
-
+    var user = app.userService;
+    app.saasService.getCreatCarRecordInfo({
+      data:{
+        "userId": user.auth.userId,
+        "carPrice":that.data.quotation.quotationItems[0].originalPrice
+      },
+      success: (res) => {
+        this.setData({
+          'quotation.requestResult': res
+        })
+        sellingPrice = res.carPrice;
+      },
+      fail: () => {},
+      complete: () => {}
+    });
 
 
     let quotationJSONString = options.quotation
@@ -348,7 +340,7 @@ Page({
       let isMonth = (that.data.quotation.requestResult.interestType===1);
       const wRate = isMonth ? (10000/(stages*12) + expenseRate * 10) : expenseRate//万元系数
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
-      monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate);
+      monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
     } else {
       totalPayment = carPrice + otherExpenses + requiredExpenses
       advancePayment = carPrice
@@ -399,6 +391,15 @@ Page({
       'stagesIndex': e.detail.value,
       'quotation.stages': this.data.stagesArray[e.detail.value]
     })
+    const isMonth = that.data.quotation.requestResult.interestType;
+
+    let year = this.data.stagesArray[e.detail.value];
+    var expenseRate = this.data.quotation.expenseRate;
+    // switch (year){
+    //   case 1:
+    //
+    // }
+
     this.updateForSomeReason()
   },
   handlerExpenseRateChange(e) {

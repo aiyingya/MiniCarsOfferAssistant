@@ -501,7 +501,7 @@ export default class SAASService extends Service {
    */
   getCreatCarRecordInfo(opts){
     this.sendMessage({
-      path: "xxxxx",
+      path: "/sale/quotation/initQuotation",
       method: 'POST',
       data: opts.data || {},
       success: opts.success,
