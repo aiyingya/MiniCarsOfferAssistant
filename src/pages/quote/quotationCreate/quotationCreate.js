@@ -337,7 +337,7 @@ Page({
     let totalPayment
     let advancePayment
     if (this.isLoanTabActive()) {
-      let isMonth = (that.data.quotation.requestResult.interestType===1);
+      let isMonth = (this.data.quotation.requestResult.interestType===1);
       const wRate = isMonth ? (10000/(stages*12) + expenseRate * 10) : expenseRate//万元系数
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
       monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
@@ -462,25 +462,34 @@ Page({
   handlerExpensesChange(e) {
     let that = this
     var expensesInfo = e.currentTarget.dataset.feetype
-    $wuxInputNumberDialog.open({
-      title: expensesInfo.title,
-      content: expensesInfo.title,
-      inputNumber: expensesInfo.price ? expensesInfo.price : "",
-      inputNumberPlaceholder: '输入'+expensesInfo.title,
-      inputNumberMaxLength: 9,
-      confirmText: '确定',
-      cancelText: '取消',
-      confirm: (res) => {
-        let price = Number(res.inputNumber)
-        //这里如何写入插值变量
-        that.setData({
-          [expensesInfo.protoname] : price
-        })
-        that.updateForSomeReason()
+    
+    let requiredExpenses = this.data.quotation.requiredExpenses
+    const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
+    if(expensesInfo.title === '保险金额') {
+      wx.navigateTo({
+        url: `../../insurance/insurance?${carModelsInfoKeyValueString}`
+      })
+    }else {
+      $wuxInputNumberDialog.open({
+        title: expensesInfo.title,
+        content: expensesInfo.title,
+        inputNumber: expensesInfo.price ? expensesInfo.price : "",
+        inputNumberPlaceholder: '输入'+expensesInfo.title,
+        inputNumberMaxLength: 9,
+        confirmText: '确定',
+        cancelText: '取消',
+        confirm: (res) => {
+          let price = Number(res.inputNumber)
+          //这里如何写入插值变量
+          that.setData({
+            [expensesInfo.protoname] : price
+          })
+          that.updateForSomeReason()
 
-      },
-      cancel: () => {}
-    })
+        },
+        cancel: () => {}
+      })
+    }  
   },
   handlerRemarkChange(e) {
     let remark = e.detail.value
