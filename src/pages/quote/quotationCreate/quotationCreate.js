@@ -45,24 +45,46 @@ Page({
       otherExpensesAll:{// 其他费用（元），deciaml，取值范围0~999999999",
         boutiqueCost:0,//精品费用
         installationFee:0,//安装费
+        serverFee:0,//
         otherFee:0
+      },
+      insuranceDetail:{
+        "iTotal":0,//"保险总额",
+        "iJQX":0,//"交强险",
+        "iDSZZRX":0,//"第三者责任险",
+        "iCLSSX":0,//"车辆损失险",
+        "iQCDQX":0,//"全车盗抢险",
+        "iBLDDPSX":0,//"玻璃单独破碎险",
+        "iZRSSX":0,//"自燃损失险",
+        "iBJMPTYX":0,//"不计免赔特约险",
+        "iWGZRX":0,//"无过责任险",
+        "iCSRYZRX":0,//"车上人员责任险",
+        "iCSHHX":0,//"车身划痕险"
       },
       advancePayment: 0, // 必传，首次支付金额，如果全款则为全款金额",
       monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
       totalPayment: 0, // 总落地价格
       remark: '', // "无"
       read: false,
-      requestResult:{
-        "carPrice":"161600",//显示裸车价= 裸车价+运费+利润
-        "oneInterest":5,//"一年期月息",
-        "twoInterest": 6,//"二年期月息",
-        "threeInterest":7, //"三年期月息",
-        "oneWYXS":0.5,//"一年期万元系数",
-        "twoWYXS":0.5,//"二年期万元系数",
-        "threeWYXS": 0.5,//"三年期万元系数",
-        "interestType":1,//"默认选中的贷款方式 1 月息 2 万元系数"
-        "carNumberFee":'200'//"上牌服务费"
-      }
+      carPrice:0,//"裸车价",
+      purchaseTax:0,//"购置税",
+      carTax:0,//"车船税",
+      carNumFee:0,//"上牌费",
+      boutiqueFee:0,//"精品费",
+      serviceFee:0,//"服务费",
+      installFee:0,//"安装费",
+      otherFee:0//"其他费"
+    },
+    requestResult:{
+      "carPrice":"161600",//显示裸车价= 裸车价+运费+利润
+      "oneInterest":5,//"一年期月息",
+      "twoInterest": 6,//"二年期月息",
+      "threeInterest":7, //"三年期月息",
+      "oneWYXS":0.5,//"一年期万元系数",
+      "twoWYXS":0.5,//"二年期万元系数",
+      "threeWYXS": 0.5,//"三年期万元系数",
+      "interestType":1,//"默认选中的贷款方式 1 月息 2 万元系数"
+      "carNumberFee":'200'//"上牌服务费"
     },
     expensesAllInfo:[
       {
@@ -105,6 +127,13 @@ Page({
         target:'installationFee',
         title:'安装费',
         protoname:'quotation.otherExpensesAll.installationFee',
+        price:0//同上
+      },//安装费 其它
+      {
+        type:'otherfee',
+        target:'serverFee',
+        title:'服务费',
+        protoname:'quotation.otherExpensesAll.serverFee',
         price:0//同上
       },//安装费 其它
       {
@@ -192,22 +221,7 @@ Page({
     //TODO:aiyingya 获取报价单接口
 
 
-    let sellingPrice = 0
-    var user = app.userService;
-    app.saasService.getCreatCarRecordInfo({
-      data:{
-        "userId": user.auth.userId,
-        "carPrice":that.data.quotation.quotationItems[0].originalPrice
-      },
-      success: (res) => {
-        this.setData({
-          'quotation.requestResult': res
-        })
-        sellingPrice = res.carPrice;
-      },
-      fail: () => {},
-      complete: () => {}
-    });
+
 
 
     let quotationJSONString = options.quotation
@@ -269,39 +283,56 @@ Page({
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
         const originalPrice = carSkuInfo.price || carModelInfo.officialPrice
 
-        // 设置报价表单数据
-        let quotationItems = [{
-          itemNumber: itemNumber,
-          itemType: itemType,
-          itemName: carModelInfo.carModelName,
-          itemPic: itemPic,
-          specifications: specifications,
-          guidePrice: guidePrice,
-          sellingPrice: sellingPrice,
-          originalPrice: originalPrice,
-          baseSellingPrice: sellingPrice
-        }]
+        var user = app.userService;
+        app.saasService.getCreatCarRecordInfo({
+          data:{
+            "userId": user.auth.userId,
+            "carPrice":originalPrice
+          },
+          success: (res) => {
+            this.setData({
+              'requestResult': res
+            })
+            let sellingPrice = res.carPrice;
+            this.setData({
+              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee
+            })
 
-        this.setData({
-          'quotation.quotationItems': quotationItems,
-          carSKUInfo: carSkuInfo,
-          carModelInfo: carModelInfo
-        })
-      }
-    }
+            // 设置报价表单数据
+            let quotationItems = [{
+              itemNumber: itemNumber,
+              itemType: itemType,
+              itemName: carModelInfo.carModelName,
+              itemPic: itemPic,
+              specifications: specifications,
+              guidePrice: guidePrice,
+              sellingPrice: sellingPrice,
+              originalPrice: originalPrice,
+              baseSellingPrice: sellingPrice
+            }]
+            this.setData({
+              'quotation.quotationItems': quotationItems,
+              carSKUInfo: carSkuInfo,
+              carModelInfo: carModelInfo
+            })
 
-    this.updateForSomeReason()
+            this.updateForSomeReason()
 
-    wx.getSystemInfo({
-      success: function (res) {
-        that.setData({
-          sliderLeft: 0,
-          sliderOffset: res.windowWidth / 2 * that.data.activeIndex
+            wx.getSystemInfo({
+              success: function (res) {
+                that.setData({
+                  sliderLeft: 0,
+                  sliderOffset: res.windowWidth / 2 * that.data.activeIndex
+                });
+              }
+            });
+
+          },
+          fail: () => {},
+          complete: () => {}
         });
       }
-    });
-
-
+    }
 
   },
   onReady() {},
@@ -311,7 +342,7 @@ Page({
   onReachBottom() {},
   onPullDownRefresh() {},
   updateForSomeReason() {
-
+    let that = this
     this.utilsExpensesAllInfo()
 
     let requiredExpenses = 0
@@ -337,10 +368,11 @@ Page({
     let totalPayment
     let advancePayment
     if (this.isLoanTabActive()) {
-      let isMonth = (this.data.quotation.requestResult.interestType===1);
+      let isMonth = (that.data.requestResult.interestType===1);
       const wRate = isMonth ? (10000/(stages*12) + expenseRate * 10) : expenseRate//万元系数
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
       monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
+
     } else {
       totalPayment = carPrice + otherExpenses + requiredExpenses
       advancePayment = carPrice
@@ -391,20 +423,30 @@ Page({
       'stagesIndex': e.detail.value,
       'quotation.stages': this.data.stagesArray[e.detail.value]
     })
-    const isMonth = that.data.quotation.requestResult.interestType;
+    const isMonth = this.data.requestResult.interestType;
 
     let year = this.data.stagesArray[e.detail.value];
     var expenseRate = this.data.quotation.expenseRate;
-    // switch (year){
-    //   case 1:
-    //
-    // }
-
+    const rateObj= this.data.requestResult;
+    switch (year){
+      case 1:
+        expenseRate = isMonth ? rateObj.oneInterest : rateObj.oneWYXS
+        break;
+      case 2:
+        expenseRate = isMonth ? rateObj.twoInterest : rateObj.twoWYXS
+        break;
+      case 3:
+        expenseRate = isMonth ? rateObj.threeInterest : rateObj.threeWYXS
+        break;
+    }
+    that.setData({
+      'quotation.expenseRate': Number(expenseRate)
+    })
     this.updateForSomeReason()
   },
   handlerExpenseRateChange(e) {
     let that = this
-   let con = that.data.quotation.requestResult.interestType===1 ? '月息（厘）':'万元系数（元）';
+   let con = that.data.requestResult.interestType===1 ? '月息（厘）':'万元系数（元）';
     $wuxInputNumberDialog.open({
       title: '贷款月息或万元系',
       content: con,
@@ -462,7 +504,7 @@ Page({
   handlerExpensesChange(e) {
     let that = this
     var expensesInfo = e.currentTarget.dataset.feetype
-    
+
     let requiredExpenses = this.data.quotation.requiredExpenses
     const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
     if(expensesInfo.title === '保险金额') {
@@ -489,7 +531,7 @@ Page({
         },
         cancel: () => {}
       })
-    }  
+    }
   },
   handlerRemarkChange(e) {
     let remark = e.detail.value
@@ -497,143 +539,28 @@ Page({
       'quotation.remark': remark
     })
   },
-  // handlerSaveQuotationDraft_old(e) {
-  //   let that = this;
-  //
-  //   let quotation = this.data.quotation
-  //
-  //   app.saasService.requestSaveQuotationDraft(quotation, {
-  //     success: function (res) {
-  //       let quotationDraft = res
-  //       // 请求成功后弹出对话框
-  //       $wuxInputNumberDialog.open({
-  //         title: '保存成功',
-  //         content: '发送给客户',
-  //         inputNumberPlaceholder: '输入对方手机号码',
-  //         confirmText: '发送报价单',
-  //         cancelText: '暂不发送',
-  //         validate: function (e) {
-  //           let mobile = e.detail.value
-  //           return mobile.length === 11
-  //         },
-  //         confirm: (res) => {
-  //           let mobile = res.inputNumber
-  //           app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, {
-  //             success: (res) => {
-  //               /// 立即发送报价单
-  //               let quotation = res
-  //
-  //               app.fuckingLarryNavigatorTo.quotation = quotation
-  //               app.fuckingLarryNavigatorTo.source = that.data.source
-  //
-  //               if (that.data.source === 'quotationDetail') {
-  //                 wx.navigateBack({
-  //                   delta: 2, // 回退前 delta(默认为1) 页面
-  //                   success: function (res) {
-  //                     // success
-  //                   },
-  //                   fail: function () {
-  //                     app.fuckingLarryNavigatorTo.source = null
-  //                     app.fuckingLarryNavigatorTo.quotation = null
-  //                   },
-  //                   complete: function () {
-  //                     // complete
-  //                   }
-  //                 })
-  //
-  //               } else {
-  //                 wx.switchTab({
-  //                   url: '/pages/usersQuote/usersQuote',
-  //                   success: (res) => {
-  //
-  //                   },
-  //                   fail: () => {
-  //                     app.fuckingLarryNavigatorTo.source = null
-  //                     app.fuckingLarryNavigatorTo.quotation = null
-  //                   },
-  //                   complete: () => {
-  //
-  //                   }
-  //                 })
-  //               }
-  //             },
-  //             fail: () => {
-  //               //
-  //             },
-  //             complete: () => {
-  //
-  //             }
-  //           })
-  //         },
-  //         cancel: () => {
-  //           /// 暂不发送, 不带电话号码发送
-  //           app.saasService.requestPublishQuotation(quotationDraft.draftId, null, {
-  //             success: (res) => {
-  //               let quotation = res
-  //
-  //               app.fuckingLarryNavigatorTo.quotation = quotation
-  //               app.fuckingLarryNavigatorTo.source = that.data.source
-  //
-  //               if (that.data.source === 'quotationDetail') {
-  //                 wx.navigateBack({
-  //                   delta: 2, // 回退前 delta(默认为1) 页面
-  //                   success: function (res) {
-  //                     // success
-  //                   },
-  //                   fail: function () {
-  //                     // fail
-  //                   },
-  //                   complete: function () {
-  //                     // complete
-  //                   }
-  //                 })
-  //               } else {
-  //                 wx.switchTab({
-  //                   url: '/pages/usersQuote/usersQuote',
-  //                   success: (res) => {
-  //
-  //                   },
-  //                   fail: () => {
-  //                     app.fuckingLarryNavigatorTo.source = null
-  //                     app.fuckingLarryNavigatorTo.quotation = null
-  //                   },
-  //                   complete: () => {
-  //
-  //                   }
-  //                 })
-  //               }
-  //             },
-  //             fail: () => {
-  //               //
-  //             },
-  //             complete: () => {
-  //
-  //             }
-  //           })
-  //         }
-  //       })
-  //
-  //     },
-  //     fail: function () {
-  //
-  //     },
-  //     complete: function () {
-  //
-  //     }
-  //   })
-  // },
   handlerSaveQuotationDraft(e) {
     let that = this;
+    let quotation ={}
+    quotation = Object.assign({}, quotation, that.data.quotation)
 
-    let quotation = this.data.quotation
+    //增加数据
+    quotation.carPrice = quotation.quotationItems[0].sellingPrice;
+    quotation.purchaseTax=quotation.requiredExpensesAll.purchaseTax;
+    quotation.carTax=quotation.requiredExpensesAll.vehicleAndVesselTax;
+    quotation.carNumFee=quotation.requiredExpensesAll.licenseFee;
+    quotation.boutiqueFee=quotation.otherExpensesAll.boutiqueCost;
+    quotation.serviceFee=quotation.otherExpensesAll.serverFee;
+    quotation.installFee=quotation.otherExpensesAll.installationFee;
+    quotation.otherFee=quotation.otherExpensesAll.otherFee;
 
-    function isSendRequest (quotationDraft,mobile) {
+    function isSendRequest (quotationDraft,mobile,name,sex) {
 
-      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, {
+      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile,name,sex ,{
         success: (res) => {
-          let quotation = res
+          let quotation1 = res
 
-          app.fuckingLarryNavigatorTo.quotation = quotation
+          app.fuckingLarryNavigatorTo.quotation = quotation1
           app.fuckingLarryNavigatorTo.source = that.data.source
 
           if (that.data.source === 'quotationDetail') {
@@ -695,34 +622,32 @@ Page({
       },
       confirm: (res) => {
         let mobile = res.inputNumber
+        let customerName =res.inputName
+        let customerSex = res.inputSex
         //保存报价单
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
             let quotationDraft = res
             //发送报价单
-            isSendRequest(quotationDraft,mobile)
+            isSendRequest(quotationDraft,mobile,customerName,customerSex)
           },
           fail: function () {},
           complete: function () {}
         })
       },
       cancel: () => {
-
         //保存报价单
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
             let quotationDraft = res
             /// 暂不发送, 不带电话号码发送（发布当前报价草稿到某个用户） 保留1.5以前的逻辑
-            isSendRequest(quotationDraft,null)
+            isSendRequest(quotationDraft,null,null,null)
           },
           fail: function () {},
           complete: function () {}
         })
       }
-
     })
-
-
   },
   headlerChangeColor(e) {
     const that = this
@@ -785,15 +710,30 @@ Page({
     })
   },
   lookIncome(){
-    //TODO:计算弹层信息
-    $wuxContentDialog.open({
-      title: '收益详情',
-      totleContent: {name:'总利润约',value:'￥100'},
-      detailContent: [
-        {name:'裸车价收益约',value:'￥100'},
-        {name:'保险收益约',value:'￥200'},
-        {name:'贷款收益约',value:'￥2178'}
-        ]
-    })
+    let carPrice = this.data.quotation.quotationItems[0].sellingPrice
+    let paymentRatio = this.data.quotation.paymentRatio
+    var user = app.userService;
+    app.saasService.getProfit({
+      "userId": user.auth.userId,
+      "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
+      "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount
+    },
+     {
+       success: (res) => {
+         $wuxContentDialog.open({
+           title: '收益详情',
+           totleContent: {name:'总利润约',value:'￥'+res.totalProfit},
+           detailContent: [
+             {name:'裸车价收益约',value:'￥'+ res.profit},
+             {name:'保险收益约',value:'￥'+res.insuranceProfit},
+             {name:'贷款收益约',value:'￥'+res.loanProfit}
+           ]
+         })
+       },
+       fail:() => {},
+       complete: () => {},
+      }
+    );
+
   }
 });

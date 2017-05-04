@@ -67,13 +67,15 @@ export default class SAASService extends Service {
     "customerMobile":"客户手机号"
    }
    */
-  requestPublishQuotation (draftId, customerMobile, object) {
+  requestPublishQuotation (draftId, customerMobile,customerName,customerSex, object) {
     if (draftId && draftId !== '') {
       this.sendMessagePromise({
         path: 'sale/quotation',
         data: {
           draftId: draftId,
-          customerMobile: customerMobile
+          customerMobile: customerMobile,
+          customerName:customerName,
+          customerSex:customerSex
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
@@ -140,7 +142,15 @@ export default class SAASService extends Service {
           advancePayment: quotationDraft.advancePayment,
           monthlyPayment: quotationDraft.monthlyPayment,
           totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark
+          remark: quotationDraft.remark,
+          carPrice : quotationDraft.quotationItems[0].sellingPrice,
+          purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
+          carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
+          carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
+          boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
+          serviceFee:quotationDraft.otherExpensesAll.serverFee,
+          installFee:quotationDraft.otherExpensesAll.installationFee,
+          otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       } else {
         data = {
@@ -158,7 +168,15 @@ export default class SAASService extends Service {
           otherExpenses: quotationDraft.otherExpenses,
           advancePayment: quotationDraft.advancePayment,
           totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark
+          remark: quotationDraft.remark,
+          carPrice : quotationDraft.quotationItems[0].sellingPrice,
+          purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
+          carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
+          carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
+          boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
+          serviceFee:quotationDraft.otherExpensesAll.serverFee,
+          installFee:quotationDraft.otherExpensesAll.installationFee,
+          otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       }
 
@@ -506,9 +524,8 @@ export default class SAASService extends Service {
    */
   getCreatCarRecordInfo(opts){
     this.sendMessage({
-      path: "sale/quotation/initQuotation",
+      path: "sale/quotation/initQuotation?userId="+opts.data.userId+"&carPrice="+opts.data.carPrice ,
       method: 'GET',
-      data: opts.data || {},
       success: opts.success,
       fail: opts.fail
     })
@@ -542,6 +559,25 @@ export default class SAASService extends Service {
       fail: opts.fail
     })
   }
+
+  /*
+   * 查询收益
+   * @param opts
+   * {
+    "totalProfit":"总收益",
+    "profit":"裸车收益",
+    "insuranceProfit": "保险收益",
+    "loanProfit": "贷款收益",
+    }
+   */
+  getProfit(data,opts){
+    this.sendMessage({
+      path: '/sale/quotation/queryProfit?userId='+data.userId+'&loanNum='+data.loanNum+'&insuranceNum='+data.insuranceNum,
+      method: 'GET',
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
   /**
    * 获取保险信息.
    * @param opts
@@ -554,4 +590,5 @@ export default class SAASService extends Service {
       data: {}
     })
   }
+
 }

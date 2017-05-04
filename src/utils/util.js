@@ -61,6 +61,17 @@ export default class Util {
     return (carPrice * (100 - paymentRatio) * 0.01 * (expenseRate * 0.01 + 1))
   }
 
+  /***
+   * 贷款+利息总额计算公式
+   *
+   * @param carPrice      裸车价, 元
+   * @param paymentRatio  首付比例，%
+   * @returns {number}    贷款总额，元
+   */
+  static loanPaymentByLoan1(carPrice, paymentRatio) {
+    return (carPrice * (100 - paymentRatio) * 0.01)
+  }
+
   /**
    * 首付计算公式
    *
