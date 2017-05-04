@@ -523,6 +523,7 @@ export default class SAASService extends Service {
    * @param opts
    */
   getCreatCarRecordInfo(opts){
+
     this.sendMessage({
       path: "sale/quotation/initQuotation?userId="+opts.data.userId+"&carPrice="+opts.data.carPrice ,
       method: 'GET',
@@ -560,7 +561,7 @@ export default class SAASService extends Service {
     })
   }
 
-  /*
+  /**
    * 查询收益
    * @param opts
    * {
@@ -590,5 +591,4 @@ export default class SAASService extends Service {
       data: {}
     })
   }
-
 }
