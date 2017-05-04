@@ -3,10 +3,12 @@ import $wuxInputNumberDialog from './dialog/inputNumberDialog'
 import $wuxToast from './toast/toast'
 import $wuxTrack from './track/track'
 import $wuxContentDialog from './dialog/contentDialog'
+import $wuxSpecialUploadDialog from './dialog/specialUploadDialog'
 export {
   $wuxDialog,
   $wuxInputNumberDialog,
   $wuxToast,
   $wuxTrack,
-  $wuxContentDialog
+  $wuxContentDialog,
+  $wuxSpecialUploadDialog
 }

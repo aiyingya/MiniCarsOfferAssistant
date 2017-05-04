@@ -36,6 +36,13 @@ export default {
         show() {
           if (this.removed) return !1
           this.setVisible()
+        },
+        /**
+         * 防止事件透传
+         *
+         * @param {any} e
+         */
+        onTouchMoveWithCatch(e) {
         }
       }
     })

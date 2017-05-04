@@ -10,11 +10,15 @@ export default {
       title: undefined,
       content: undefined,
       inputNumber: undefined,
+      inputNumber1: undefined,
       inputNumberPlaceHolder: undefined,
+      inputNumberPlaceholder1: undefined,
       inputNumberMaxLength: -1,
+      inputNumberMaxLength1: -1,
       inputType: 'number',
       confirmDisabled: true,
-      priceStyle: false
+      radioNames:[],
+      defaultRadio:undefined
     }
   },
   /**
@@ -26,7 +30,8 @@ export default {
       cancelText: `取消`,
       confirm() {},
       confirmText: `确定`,
-      validate() { return true }
+      validate() { return true },
+      validate1() { return true }
     }
   },
   /**
@@ -41,7 +46,6 @@ export default {
    * @param {Function} opts.confirm 点击确认的回调函数
    * @param {Function} opts.cancel 点击确认的取消函数
    * @param {Function} opts.validate 验证函数
-   * @param {String} opts.priceStyle 是否使用价格样式
    *
    */
   open(opts = {}) {
@@ -52,7 +56,7 @@ export default {
 
     // 实例化组件
     const component = new Component({
-      scope: `$wux.inputNumberDialog`,
+      scope: `$wux.specialUploadDialog`,
       data: options,
       methods: {
         /**
@@ -95,6 +99,23 @@ export default {
           })
         },
         /**
+         * 处理输入事件1
+         *
+         * @param {any} e
+         */
+        inputNumberInput1(e) {
+          options.inputNumber1 = (typeof(e) === 'object') ? e.detail.value :e
+
+        },
+        /**
+         * 处理单选事件
+         *
+         * @param {any} e
+         */
+        radioChange(e) {
+          options.defaultRadio = e.detail.name
+        },
+        /**
          * 确认行为
          *
          * @param {any} e
@@ -110,32 +131,6 @@ export default {
          */
         cancel(e) {
           this.hide(options.cancel())
-        },
-        /**
-         * 减金额行为
-         *
-         * @param {any} e
-         */
-        buttonMinus(e){
-          options.inputNumber = options.inputNumber ? Math.floor(options.inputNumber - 1)  : 0
-          let price = options.inputNumber && Math.floor(options.inputNumber)
-          this.setData({
-            [`${this.options.scope}.inputNumber`]: price
-          })
-          this.inputNumberInput(options.inputNumber)
-        },
-        /**
-         * 加金额行为
-         *
-         * @param {any} e
-         */
-        buttonPlus(e){
-          options.inputNumber = options.inputNumber ? Math.floor(options.inputNumber + 1)  : 1
-          let price = Math.floor(options.inputNumber)
-          this.setData({
-            [`${this.options.scope}.inputNumber`]: price
-          })
-          this.inputNumberInput(options.inputNumber)
         }
       }
     })

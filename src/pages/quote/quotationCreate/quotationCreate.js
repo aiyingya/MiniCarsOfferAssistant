@@ -1,7 +1,7 @@
 import {
   $wuxInputNumberDialog,
-  $wuxDialog,
-  $wuxContentDialog
+  $wuxContentDialog,
+  $wuxSpecialUploadDialog
 } from "../../../components/wux"
 import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialog'
 import util from '../../../utils/util'
@@ -152,7 +152,6 @@ Page({
     showpreferenceSetting:false
   },
   onLoad(options) {
-
 
     let that = this
     try {
@@ -418,7 +417,7 @@ Page({
     let that = this
     var expensesInfo = e.currentTarget.dataset.feetype
     $wuxInputNumberDialog.open({
-      title: expensesInfo.title,
+      title: expensesInfo.title +"llllllll",
       content: expensesInfo.title,
       inputNumber: expensesInfo.price ? expensesInfo.price : "",
       inputNumberPlaceholder: '输入'+expensesInfo.title,
@@ -443,130 +442,232 @@ Page({
       'quotation.remark': remark
     })
   },
+  // handlerSaveQuotationDraft_old(e) {
+  //   let that = this;
+  //
+  //   let quotation = this.data.quotation
+  //
+  //   app.saasService.requestSaveQuotationDraft(quotation, {
+  //     success: function (res) {
+  //       let quotationDraft = res
+  //       // 请求成功后弹出对话框
+  //       $wuxInputNumberDialog.open({
+  //         title: '保存成功',
+  //         content: '发送给客户',
+  //         inputNumberPlaceholder: '输入对方手机号码',
+  //         confirmText: '发送报价单',
+  //         cancelText: '暂不发送',
+  //         validate: function (e) {
+  //           let mobile = e.detail.value
+  //           return mobile.length === 11
+  //         },
+  //         confirm: (res) => {
+  //           let mobile = res.inputNumber
+  //           app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, {
+  //             success: (res) => {
+  //               /// 立即发送报价单
+  //               let quotation = res
+  //
+  //               app.fuckingLarryNavigatorTo.quotation = quotation
+  //               app.fuckingLarryNavigatorTo.source = that.data.source
+  //
+  //               if (that.data.source === 'quotationDetail') {
+  //                 wx.navigateBack({
+  //                   delta: 2, // 回退前 delta(默认为1) 页面
+  //                   success: function (res) {
+  //                     // success
+  //                   },
+  //                   fail: function () {
+  //                     app.fuckingLarryNavigatorTo.source = null
+  //                     app.fuckingLarryNavigatorTo.quotation = null
+  //                   },
+  //                   complete: function () {
+  //                     // complete
+  //                   }
+  //                 })
+  //
+  //               } else {
+  //                 wx.switchTab({
+  //                   url: '/pages/usersQuote/usersQuote',
+  //                   success: (res) => {
+  //
+  //                   },
+  //                   fail: () => {
+  //                     app.fuckingLarryNavigatorTo.source = null
+  //                     app.fuckingLarryNavigatorTo.quotation = null
+  //                   },
+  //                   complete: () => {
+  //
+  //                   }
+  //                 })
+  //               }
+  //             },
+  //             fail: () => {
+  //               //
+  //             },
+  //             complete: () => {
+  //
+  //             }
+  //           })
+  //         },
+  //         cancel: () => {
+  //           /// 暂不发送, 不带电话号码发送
+  //           app.saasService.requestPublishQuotation(quotationDraft.draftId, null, {
+  //             success: (res) => {
+  //               let quotation = res
+  //
+  //               app.fuckingLarryNavigatorTo.quotation = quotation
+  //               app.fuckingLarryNavigatorTo.source = that.data.source
+  //
+  //               if (that.data.source === 'quotationDetail') {
+  //                 wx.navigateBack({
+  //                   delta: 2, // 回退前 delta(默认为1) 页面
+  //                   success: function (res) {
+  //                     // success
+  //                   },
+  //                   fail: function () {
+  //                     // fail
+  //                   },
+  //                   complete: function () {
+  //                     // complete
+  //                   }
+  //                 })
+  //               } else {
+  //                 wx.switchTab({
+  //                   url: '/pages/usersQuote/usersQuote',
+  //                   success: (res) => {
+  //
+  //                   },
+  //                   fail: () => {
+  //                     app.fuckingLarryNavigatorTo.source = null
+  //                     app.fuckingLarryNavigatorTo.quotation = null
+  //                   },
+  //                   complete: () => {
+  //
+  //                   }
+  //                 })
+  //               }
+  //             },
+  //             fail: () => {
+  //               //
+  //             },
+  //             complete: () => {
+  //
+  //             }
+  //           })
+  //         }
+  //       })
+  //
+  //     },
+  //     fail: function () {
+  //
+  //     },
+  //     complete: function () {
+  //
+  //     }
+  //   })
+  // },
   handlerSaveQuotationDraft(e) {
     let that = this;
 
     let quotation = this.data.quotation
 
-    app.saasService.requestSaveQuotationDraft(quotation, {
-      success: function (res) {
-        let quotationDraft = res
-        // 请求成功后弹出对话框
-        $wuxInputNumberDialog.open({
-          title: '保存成功',
-          content: '发送给客户',
-          inputNumberPlaceholder: '输入对方手机号码',
-          confirmText: '发送报价单',
-          cancelText: '暂不发送',
-          validate: function (e) {
-            let mobile = e.detail.value
-            return mobile.length === 11
-          },
-          confirm: (res) => {
-            let mobile = res.inputNumber
-            app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, {
-              success: (res) => {
-                /// 立即发送报价单
-                let quotation = res
+    function isSendRequest (quotationDraft,mobile) {
 
-                app.fuckingLarryNavigatorTo.quotation = quotation
-                app.fuckingLarryNavigatorTo.source = that.data.source
+      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, {
+        success: (res) => {
+          let quotation = res
 
-                if (that.data.source === 'quotationDetail') {
-                  wx.navigateBack({
-                    delta: 2, // 回退前 delta(默认为1) 页面
-                    success: function (res) {
-                      // success
-                    },
-                    fail: function () {
-                      app.fuckingLarryNavigatorTo.source = null
-                      app.fuckingLarryNavigatorTo.quotation = null
-                    },
-                    complete: function () {
-                      // complete
-                    }
-                  })
+          app.fuckingLarryNavigatorTo.quotation = quotation
+          app.fuckingLarryNavigatorTo.source = that.data.source
 
-                } else {
-                  wx.switchTab({
-                    url: '/pages/usersQuote/usersQuote',
-                    success: (res) => {
-
-                    },
-                    fail: () => {
-                      app.fuckingLarryNavigatorTo.source = null
-                      app.fuckingLarryNavigatorTo.quotation = null
-                    },
-                    complete: () => {
-
-                    }
-                  })
+          if (that.data.source === 'quotationDetail') {
+            wx.navigateBack({
+              delta: 2, // 回退前 delta(默认为1) 页面
+              success: function (res) {
+                // success
+              },
+              fail: function () {
+                // fail
+                if(mobile){
+                  app.fuckingLarryNavigatorTo.source = null
+                  app.fuckingLarryNavigatorTo.quotation = null
                 }
               },
-              fail: () => {
-                //
-              },
-              complete: () => {
-
+              complete: function () {
+                // complete
               }
             })
-          },
-          cancel: () => {
-            /// 暂不发送, 不带电话号码发送
-            app.saasService.requestPublishQuotation(quotationDraft.draftId, null, {
+          } else {
+            wx.switchTab({
+              url: '/pages/usersQuote/usersQuote',
               success: (res) => {
-                let quotation = res
 
-                app.fuckingLarryNavigatorTo.quotation = quotation
-                app.fuckingLarryNavigatorTo.source = that.data.source
-
-                if (that.data.source === 'quotationDetail') {
-                  wx.navigateBack({
-                    delta: 2, // 回退前 delta(默认为1) 页面
-                    success: function (res) {
-                      // success
-                    },
-                    fail: function () {
-                      // fail
-                    },
-                    complete: function () {
-                      // complete
-                    }
-                  })
-                } else {
-                  wx.switchTab({
-                    url: '/pages/usersQuote/usersQuote',
-                    success: (res) => {
-
-                    },
-                    fail: () => {
-                      app.fuckingLarryNavigatorTo.source = null
-                      app.fuckingLarryNavigatorTo.quotation = null
-                    },
-                    complete: () => {
-
-                    }
-                  })
-                }
               },
               fail: () => {
-                //
+                app.fuckingLarryNavigatorTo.source = null
+                app.fuckingLarryNavigatorTo.quotation = null
               },
               complete: () => {
 
               }
             })
           }
+        },
+        fail: () => {
+          console.log("fail 保存报价单失败")
+        },
+        complete: () => {}
+      })
+    }
+
+    // 请求成功后弹出对话框
+    $wuxSpecialUploadDialog.open({
+      title: '保存并分享！',
+      content: '分享给客户',
+      inputNumberPlaceholder: '输入对方的手机号码',
+      inputNumberPlaceholder1: '姓名（选填）',
+      radioNames: [
+        {name: 1, value: '先生', checked: 'true'},
+        {name: 0, value: '女士'}
+      ],
+      defaultRadio:1,
+      confirmText: '发送报价单',
+      cancelText: '仅保存',
+      validate: function (e) {
+        let mobile = e.detail.value
+        return mobile.length === 11
+      },
+      confirm: (res) => {
+        let mobile = res.inputNumber
+        //保存报价单
+        app.saasService.requestSaveQuotationDraft(quotation, {
+          success: function (res) {
+            let quotationDraft = res
+            //发送报价单
+            isSendRequest(quotationDraft,mobile)
+          },
+          fail: function () {},
+          complete: function () {}
         })
-
       },
-      fail: function () {
+      cancel: () => {
 
-      },
-      complete: function () {
-
+        //保存报价单
+        app.saasService.requestSaveQuotationDraft(quotation, {
+          success: function (res) {
+            let quotationDraft = res
+            /// 暂不发送, 不带电话号码发送（发布当前报价草稿到某个用户） 保留1.5以前的逻辑
+            isSendRequest(quotationDraft,null)
+          },
+          fail: function () {},
+          complete: function () {}
+        })
       }
+
     })
+
+
   },
   headlerChangeColor(e) {
     const that = this

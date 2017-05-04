@@ -7,6 +7,11 @@
 <import src="../quotationCreate/specificationsDialog/specificationsDialog.wxml"/>
 <template is="specificationsDialog" data="{{ ...$wux.specificationsDialog }}"/>
 
+<import src="../../../components/dialog/specialUploadDialog.wxml"/>
+<template is="specialUploadDialog" data="{{ ...$wux.specialUploadDialog }}"/>
+
+
+
 <view class="container page">
 
 	<view class="tab-navbar weui-navbar  preferenceSetting-navbar {{showpreferenceSetting ? 'can-preferenceSetting-height' : ''}}">

@@ -1055,7 +1055,12 @@ icon {
 }
 .weui-flex-wrp{
   flex-direction:row;display:flex;margin-bottom:10rpx;
+  width:calc(100% - 50px);
+  margin-left:25px;
 }
 .weui-bc_grey{
   color:#999999
+}
+.weui-bc_font24{
+  font-size:24rpx;
 }

@@ -37,8 +37,9 @@
   position: relative;
 }
 .weui-dialog__bd {
-	padding: 0 1.6em 0;
-	min-height: 30px;
+  width:calc(100% - 50px);
+  margin-left:50rpx;
+  min-height: 30px;
 	font-size: 26rpx;
 	word-wrap: break-word;
 	word-break: break-all;
@@ -51,7 +52,9 @@
 	/*position: relative;*/
 	top:-30rpx;
 	padding: 10rpx 0;
+  width: 40%;
 }
+
 .weui-dialog__bd:first-child {
 	padding: 2.7em 20px 1.7em;
 	color: #353535;
@@ -465,12 +468,12 @@
   font-size:36rpx;
 }
 .weui-dialog__line{
+  margin:0 auto;
   height:1px;
-  margin:0px auto;
   padding:0px;
   background-color:#D5D5D5;
   overflow:hidden;
-  width:50px;
+  width:30%;
 }
 
 
@@ -631,4 +634,54 @@
   right: 0;
   top: 50%;
   margin-top: -12rpx;
+}
+
+.weui-special-wrp{
+  color: #000000;
+  margin-top:10px;
+  margin-left: 50rpx;
+  margin-bottom: 40rpx;
+  width: calc(100% - 100rpx);
+}
+
+.weui-special__input{
+  color: #000000;
+  margin-left: 0;
+  margin-right:20rpx;
+  width:45%;
+  background:#EFEFEF;
+  border: 1px solid #CCCCCC;
+  border-radius: 8rpx;
+}
+
+.weui-special__input input{
+  font-size: 36rpx;
+  color: #333;
+  line-height: 36rpx;
+  padding: 24rpx 0;
+  text-align: center;
+}
+.weui-radio-group{
+  padding: 24rpx 0;
+}
+
+.weui-special-dialog__bd {
+  width:calc(100% - 50px);
+  margin-left:50rpx;
+  min-height: 30px;
+  word-wrap: break-word;
+  word-break: break-all;
+  color: #999999;
+  text-align: center;
+  font-size:26rpx;
+}
+.weui-special-dialog__bd__centent{
+  display: inline-block;
+  background: #fff;
+  /*position: relative;*/
+  top:-30rpx;
+  padding: 10rpx 0;
+  width: 40%;
+  color:#999999;
+  font-size:24rpx;
 }

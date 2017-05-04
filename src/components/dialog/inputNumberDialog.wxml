@@ -13,9 +13,9 @@
       </view>
 
       <view wx:if="{{ priceStyle }}" class="weui-flex-wrp" >
-        <view class="flex-item  weui-dialog__line"></view>
-        <view class="flex-item weui-bc_grey">（已涵盖运费与收益）</view>
-        <view class="flex-item weui-dialog__line"></view>
+        <view class="flex-item  weui-dialog__line" style="width:20%"></view>
+        <view class="flex-item weui-bc_grey weui-bc_font24" style="width:60%">（已涵盖运费与收益）</view>
+        <view class="flex-item weui-dialog__line" style="width:20%"></view>
       </view>
 
       <form bindsubmit="{{ confirm }}">
