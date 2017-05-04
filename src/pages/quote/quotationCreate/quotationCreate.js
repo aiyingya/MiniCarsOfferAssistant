@@ -208,21 +208,12 @@ Page({
 
     }
 
-    //TODO:aiyingya 判断是否需要显示报价偏好设置
-
+    //判断是否需要显示报价偏好设置
     this.setData({
-      showpreferenceSetting: true
+      showpreferenceSetting: app.userService.isSetPreference
     })
-    console.log("判断是否需要显示报价偏好设置")
-
 
     this.utilsExpensesAllInfo()
-
-    //TODO:aiyingya 获取报价单接口
-
-
-
-
 
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
@@ -284,6 +275,7 @@ Page({
         const originalPrice = carSkuInfo.price || carModelInfo.officialPrice
 
         var user = app.userService;
+        //获取报价单接口
         app.saasService.getCreatCarRecordInfo({
           data:{
             "userId": user.auth.userId,
@@ -419,6 +411,7 @@ Page({
     this.updateForSomeReason()
   },
   handlerStagesChange(e) {
+    let that = this
     this.setData({
       'stagesIndex': e.detail.value,
       'quotation.stages': this.data.stagesArray[e.detail.value]
