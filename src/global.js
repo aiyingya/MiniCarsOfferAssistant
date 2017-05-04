@@ -1,4 +1,4 @@
-let ymcConfig = 来啊互相伤害;
+let ymcConfig = 来啊互相伤害
 
 
-export default ymcConfig;
+export default ymcConfig

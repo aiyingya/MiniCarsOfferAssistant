@@ -2,9 +2,6 @@
 <import src="../carSources/carSourceDetail/carSourceDetail.wxml" />
 <template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />
 
-<import src="../carSources/reliableDialog/reliableDialog.wxml" />
-<template is="reliableDialog" data="{{ ...$wux.reliableDialog }}" />
-
 <import src="../../components/dialog/dialog.wxml" />
 <template is="dialog" data="{{ ...$wux.dialog }}" />
 
@@ -219,21 +216,6 @@
                         <image class="contact" src="/images/icons/icon_call_line.png" catchtap="handlerContact" data-car-source-index="{{carSourceItemIndex}}"
                           data-sku-index="{{skuItemIndex}}">
                         </image>
-                      </view>
-
-                      <!-- 靠谱 -->
-                      <!--wx:if="{{!carSourceItem.supplierSelfSupport}}"-->
-                      <view wx:if="{{!carSourceItem.supplierSelfSupport}}" class="reliable" catchtap="handlerReliable" data-car-source-index="{{carSourceItemIndex}}"
-                        data-sku-index="{{skuItemIndex}}">
-                        <image wx:if="{{carSourceItem.hasBeenReliableByUser === 0}}" src="/images/icons/icon_reliable_line.png">
-                        </image>
-                        <image wx:if="{{carSourceItem.hasBeenReliableByUser === 1}}" src="/images/icons/icon_reliable_line_up.png">
-                        </image>
-                        <image wx:if="{{carSourceItem.hasBeenReliableByUser === -1}}" src="/images/icons/icon_reliable_line_down.png">
-                        </image>
-                        <view class="reliable-text">
-                          靠谱({{carSourceItem.hasBeenReliableCount}})
-                        </view>
                       </view>
                     </view>
 

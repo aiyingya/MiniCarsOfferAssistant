@@ -1,4 +1,3 @@
-@import '../carSources/reliableDialog/reliableDialog.wxss';
 @import '../carSources/carSourceDetail/carSourceDetail.wxss';
 /* 供货详情.*/
 page {
@@ -632,24 +631,6 @@ page {
 	width: 40rpx;
 	height: 40rpx;
 }
-.carSources-cell .carSources-cell-content .reliable{
-	display: flex;
-	align-items: center;
-	font-size: 22rpx;
-	margin-left: 30rpx;
-}
-.carSources-cell .carSources-cell-content .reliable .reliable-text {
-	font-family: "PingFangSC-Regular";
-	color: #3377EE;
-	letter-spacing: 0;
-	line-height: 22rpx;
-	margin-left: 16rpx;
-}
-.carSources-cell .carSources-cell-content .reliable image {
-	width: 40rpx;
-	height: 40rpx;
-}
-
 .carSources-cell .carSources-cell-content .second-part .quoted-price {
 	display: flex;
 	justify-content: flex-end;

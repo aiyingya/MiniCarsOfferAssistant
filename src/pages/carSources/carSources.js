@@ -4,14 +4,11 @@ import {
   $wuxTrack
 } from '../../components/wux'
 import $wuxCarSourceDetailDialog from './carSourceDetail/carSourceDetail'
-import $wuxReliableDialog from './reliableDialog/reliableDialog'
 
 import util from '../../utils/util'
 import config from '../../config'
 
 let app = getApp()
-
-const RecentContactKey = config.getNamespaceKey('recent_contact')
 
 Page({
 
@@ -167,42 +164,6 @@ Page({
     $wuxTrack.push(event)
 
     const that = this
-    const valueString = wx.getStorageSync(RecentContactKey)
-    if (valueString && typeof valueString === 'string') {
-      const value = JSON.parse(valueString)
-
-      const spuId = value.spuId
-      const carSource = value.carSource
-      const skuIndex = value.skuIndex
-      const carSourceIndex = value.carSourceIndex
-
-      if (typeof value === 'object') {
-        const now = new Date()
-        const contactDate = new Date(value.dateString)
-        if (now - contactDate < 60 * 60 * 1000 * 24) {
-          this.showReliableDialog(spuId, skuIndex, carSource, carSourceIndex)
-        } else {
-          // 24 小时以外
-        }
-
-        try {
-          wx.removeStorageSync(RecentContactKey)
-        } catch (e) {
-          wx.removeStorage({
-            key: RecentContactKey,
-            success: function (res) {
-              // success
-            },
-            fail: function () {
-              // fail
-            },
-            complete: function () {
-              // complete
-            }
-          })
-        }
-      }
-    }
     /**
      * 登陆后刷新页面.
      */
@@ -270,27 +231,6 @@ Page({
         }
       }
     }
-  },
-  showReliableDialog(spuId, skuItemIndex, carSourceItem, carSourceItemIndex) {
-    // 24 小时以内， 弹框走起
-
-    const that = this
-    const hasBeenReliableByUser = carSourceItem.hasBeenReliableByUser
-    $wuxReliableDialog.open({
-      spuId: spuId,
-      carSource: carSourceItem,
-      close: (updatedCarSource) => {
-        app.saasService.requestReliable(spuId, carSourceItem.id, updatedCarSource.supplier.id, hasBeenReliableByUser, updatedCarSource.hasBeenReliableByUser, {
-          success: function () {},
-          fail: function () {},
-          complete: function () {}
-        })
-        that.updateTheCarSource(skuItemIndex, carSourceItemIndex, updatedCarSource)
-        that.setData({
-          [`carSourcesBySkuInSpuList[${skuItemIndex}].viewModelCarSourcesList[${carSourceItemIndex}]`]: updatedCarSource
-        })
-      }
-    })
   },
   showFold(a, b, c) {
     const that = this
@@ -916,19 +856,6 @@ Page({
           eventLabel: '拨打供货方电话'
         }
         $wuxTrack.push(event)
-
-        if (!carSourceItem.supplierSelfSupport) {
-          // 非自营的供货商才可以评价靠谱与否
-          const now = new Date()
-          const value = {
-            skuIndex: skuItemIndex,
-            carSourceIndex: carSourceItemIndex,
-            spuId: spuId,
-            carSource: carSourceItem,
-            dateString: now.toDateString()
-          }
-          wx.setStorageSync(RecentContactKey, JSON.stringify(value))
-        }
       }
     })
   },
@@ -1173,23 +1100,6 @@ Page({
       }
       $wuxTrack.push(event)
     }
-  },
-  /**
-   * 评价某一个供应商是否靠谱
-   * @param e
-   */
-  handlerReliable(e) {
-    console.log('handlerReliable')
-    const that = this
-
-    const skuItemIndex = e.currentTarget.dataset.skuIndex
-    const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
-    const spuId = this.data.carModelsInfo.carModelId
-
-    const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
-    const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
-
-    this.showReliableDialog(spuId, skuItemIndex, carSourceItem, carSourceItemIndex)
   },
   /**
    * 联系电话

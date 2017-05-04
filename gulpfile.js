@@ -126,18 +126,6 @@ gulp.task('scripts', ['eslint'], () => {
   return gulp.src(['./src/**/*.js','!./src/global.js'])
     .pipe($.babel())
     .pipe(sourcemaps.init())
-    // .pipe(log('Babeling'))
-    .pipe(babel({
-      "presets": [
-        "es2015",
-        "stage-0"
-      ],
-      "plugins": [
-        "transform-export-extensions",
-        "syntax-export-extensions",
-        "transform-runtime"
-      ]
-    }))
     .pipe(gwcn(options))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist'))
@@ -147,7 +135,7 @@ gulp.task('scripts', ['eslint'], () => {
 gulp.task('scriptsconfig', ['eslint'], () => {
   console.log("来啊互相伤害",JSON.stringify(myConfig,null,4))
   return gulp.src(['./src/**/global.js'])
-  //开始替换
+    .pipe($.babel())
     .pipe(replace('来啊互相伤害', JSON.stringify(myConfig,null,4)))
     .pipe(gulp.dest('./dist'));
 })
