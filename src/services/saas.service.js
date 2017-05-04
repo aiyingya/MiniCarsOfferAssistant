@@ -23,6 +23,11 @@ export default class SAASService extends Service {
 
   }
 
+  sendMessageByPromise(opts) {
+    console.log('sendMessageByPromise')
+    return super.sendMessageByPromise(opts)
+  }
+
   // sendMessage(opts, loadingType = 'toast') {
   //   opts.loadingType = loadingType
   //   super.sendMessage(opts)
@@ -509,6 +514,44 @@ export default class SAASService extends Service {
     })
   }
 
+  /**
+   * 查询报价偏好设置.
+   * @param opts
+   */
+  gettingPreference(opts) {
+    let userId = this.userService.auth.userId
+    return this.sendMessageByPromise({
+      path:`api/config/getQuotaSet/${userId}`,
+      method: 'GET',
+      data: {}
+    })
+  }
 
-
+  /**
+   * 报价偏好设置.
+   * @param opts
+   */
+  settingPreference(opts) {
+    let userId = this.userService.auth.userId
+    opts.data.userId = userId
+    this.sendMessage({
+      path: "api/config/saveQuota",
+      method: 'POST',
+      data: opts.data || {},
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
+  /**
+   * 获取保险信息.
+   * @param opts
+   */
+  gettingInsurance() {
+    let userId = this.userService.auth.userId
+    return this.sendMessageByPromise({
+      path: `api/config/getInsurance/${userId}`,
+      method: 'GET',
+      data: {}
+    })
+  }
 }

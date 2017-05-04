@@ -77,6 +77,10 @@ export default class UserService extends Service {
     this.mobile = null
 
     this.clientId = null
+    /**
+     * 用户是否设置过报价设置.
+     */
+    this.isSetPreference = null
 
     this.__getClientId(function(clientId) {
       console.log('本次的用户的 clientId 为' + clientId)
@@ -89,6 +93,7 @@ export default class UserService extends Service {
       success: function () { },
       fail: function () { }
     })
+    this.getSetPreference()
   }
 
   // sendMessage(opts, loadingType = 'none') {
@@ -547,5 +552,14 @@ export default class UserService extends Service {
       success: opts.success,
       fail: opts.fail
     })
+  }
+  
+  getSetPreference() {
+    try {
+      const setPreference = wx.getStorageSync('isSetPreference') || 'false'
+      this.isSetPreference = setPreference
+    } catch (e) {
+      console.log(e)
+    }
   }
 }

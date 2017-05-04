@@ -102,5 +102,19 @@ Page({
         url: '../supplier/supplier'
       })
     }
+  },
+  handleToSetcost() {
+    if (app.userService.isLogin()) {
+      wx.navigateTo({
+        url: '../setCost/setCost'
+      })
+    }
+  },
+  handleToInsurance() {
+    if (app.userService.isLogin()) {
+      wx.navigateTo({
+        url: '../insurance/insurance'
+      })
+    }
   }
 })
