@@ -58,7 +58,7 @@ Page({
     let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
-    
+
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
@@ -72,7 +72,7 @@ Page({
       wx.navigateTo({
         url: '../../login/login'
       })
-    }else { 
+    }else {
       this.setData({
         quotation: quotation,
         pageShare: false,
@@ -98,7 +98,7 @@ Page({
       this.onLoad(options)
     }
   },
-  /** 
+  /**
    * 页面分享.
    */
   onShareAppMessage () {
@@ -109,7 +109,7 @@ Page({
       path: `pages/quote/quotationDetail/quotationDetail?${quotationInfoKeyValueString}`,
       success(res) {
         // 分享成功
-        
+
       },
       fail(res) {
         // 分享失败

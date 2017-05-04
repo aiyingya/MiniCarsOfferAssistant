@@ -495,6 +495,19 @@ export default class SAASService extends Service {
     })
   }
 
+  /**
+   * 获取创建报价单的信息
+   * @param opts
+   */
+  getCreatCarRecordInfo(opts){
+    this.sendMessage({
+      path: "xxxxx",
+      method: 'POST',
+      data: opts.data || {},
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
 
 
 

@@ -27,14 +27,15 @@ Page({
         itemName: '',
         itemPic: '',
         specifications: '',
-        guidePrice: 0,
-        sellingPrice: 0,
-        originalPrice: 0
+        guidePrice: 0,//指导价
+        sellingPrice: 0,//卖➕
+        originalPrice: 0,//原始➕
+        baseSellingPrice: 0//加了利润的原始➕
       }], // skuId
       hasLoan: true, // 必传，true/false，boolean，是否贷款
       paymentRatio: 30, // 首付比例（%），decimal，全款时不传，取值范围0~100
       stages: 3, // 贷款期数，int，全款时不传
-      expenseRate: 4, // 贷款费率（%），decimal，全款时不传，取值范围0~100
+      expenseRate: 4, //  贷款的万元系数和月息. 原：贷款费率（%），decimal，全款时不传，取值范围0~100
       requiredExpensesAll: {//必需费用（元），deciaml，取值范围0~999999999,
         purchaseTax:0,//购置
         licenseFee:0,//上牌
@@ -50,7 +51,18 @@ Page({
       monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
       totalPayment: 0, // 总落地价格
       remark: '', // "无"
-      read: false
+      read: false,
+      requestResult:{
+        "carPrice":"161600",//显示裸车价= 裸车价+运费+利润
+        "oneInterest":5,//"一年期月息",
+        "twoInterest": 6,//"二年期月息",
+        "threeInterest":7, //"三年期月息",
+        "oneWYXS":0.5,//"一年期万元系数",
+        "twoWYXS":0.5,//"二年期万元系数",
+        "threeWYXS": 0.5,//"三年期万元系数",
+        "interestType":1,//"默认选中的贷款方式 1 月息 2 万元系数"
+        "carNumberFee":'200'//"上牌服务费"
+      }
     },
     expensesAllInfo:[
       {
@@ -177,6 +189,34 @@ Page({
 
     this.utilsExpensesAllInfo()
 
+    //TODO:aiyingya 获取报价单接口
+
+
+    // app.saasService.getCreatCarRecordInfo({
+    //   success: (res) => {},
+    //   fail: () => {},
+    //   complete: () => {}
+    // });
+
+    var res = {
+      "carPrice":"161600",//显示裸车价= 裸车价+运费+利润
+      "oneInterest":5,//"一年期月息",
+      "twoInterest": 6,//"二年期月息",
+      "threeInterest":7, //"三年期月息",
+      "oneWYXS":0.5,//"一年期万元系数",
+      "twoWYXS":0.5,//"二年期万元系数",
+      "threeWYXS": 0.5,//"三年期万元系数",
+      "interestType":1,//"默认选中的贷款方式 1 月息 2 万元系数"
+      "carNumberFee":'200'//"上牌服务费"
+    }
+
+    let sellingPrice = 0
+    this.setData({
+      'quotation.requestResult': res
+    })
+    sellingPrice = res.carPrice;
+
+
 
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
@@ -204,7 +244,8 @@ Page({
         // 对于是全款的情况， 需要手动设置贷款的相应参数数据
         quotation.paymentRatio = 30
         quotation.stages = 3
-        quotation.expenseRate = 4
+        quotation.expenseRate = res.interestType === 1 ? res.threeInterest : res.threeWYXS
+
         this.setData({
           activeIndex: quotation.hasLoan ? 0 : 1,
           'quotation': quotation
@@ -234,7 +275,7 @@ Page({
         const itemPic = carSkuInfo.skuPic || carModelInfo.pic || ''
         const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
-        const sellingPrice = carSkuInfo.price || carModelInfo.officialPrice
+        const originalPrice = carSkuInfo.price || carModelInfo.officialPrice
 
         // 设置报价表单数据
         let quotationItems = [{
@@ -245,7 +286,8 @@ Page({
           specifications: specifications,
           guidePrice: guidePrice,
           sellingPrice: sellingPrice,
-          originalPrice: sellingPrice
+          originalPrice: originalPrice,
+          baseSellingPrice: sellingPrice
         }]
 
         this.setData({
@@ -303,9 +345,10 @@ Page({
     let totalPayment
     let advancePayment
     if (this.isLoanTabActive()) {
-      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
+      let isMonth = (that.data.quotation.requestResult.interestType===1);
+      const wRate = isMonth ? (10000/(stages*12) + expenseRate * 10) : expenseRate//万元系数
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
-      monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12);
+      monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate);
     } else {
       totalPayment = carPrice + otherExpenses + requiredExpenses
       advancePayment = carPrice
@@ -360,10 +403,10 @@ Page({
   },
   handlerExpenseRateChange(e) {
     let that = this
-
+   let con = that.data.quotation.requestResult.interestType===1 ? '月息（厘）':'万元系数（元）';
     $wuxInputNumberDialog.open({
-      title: '贷款费率',
-      content: '费率(%)',
+      title: '贷款月息或万元系',
+      content: con,
       inputNumber: this.data.quotation.expenseRate,
       inputNumberPlaceholder: '输入贷款年利率',
       inputType: 'digit',
@@ -389,13 +432,15 @@ Page({
   handlerSellingPriceChange(e) {
     let that = this
 
-    let originalPrice = this.data.quotation.quotationItems[0].originalPrice
-    let _sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
-    var _downPrice = Number(originalPrice - _sellingPrice)
+    const _guidePrice = this.data.quotation.quotationItems[0].guidePrice
+    const _sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
+    const _baseSellingPrice = this.data.quotation.quotationItems[0].baseSellingPrice
+
+    var _downPrice = Number(_guidePrice - _sellingPrice)
     $wuxInputNumberDialog.open({
       title: '裸车价',
       inputNumber: _downPrice,
-      content: "￥" + originalPrice,
+      content: "￥" + _baseSellingPrice,
       inputNumberPlaceholder: '输入裸车价',
       inputNumberMaxLength: 9,
       confirmText: '确定',
@@ -406,7 +451,7 @@ Page({
         let downPrice = Number(res.inputNumber)
 
         that.setData({
-          'quotation.quotationItems[0].sellingPrice': Number(originalPrice - downPrice)
+          'quotation.quotationItems[0].sellingPrice': Number(_guidePrice - downPrice)
         })
         that.updateForSomeReason()
       },
@@ -417,7 +462,7 @@ Page({
     let that = this
     var expensesInfo = e.currentTarget.dataset.feetype
     $wuxInputNumberDialog.open({
-      title: expensesInfo.title +"llllllll",
+      title: expensesInfo.title,
       content: expensesInfo.title,
       inputNumber: expensesInfo.price ? expensesInfo.price : "",
       inputNumberPlaceholder: '输入'+expensesInfo.title,

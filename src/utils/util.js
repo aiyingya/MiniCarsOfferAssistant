@@ -20,8 +20,23 @@ export default class Util {
     return n[1] ? n : '0' + n
   }
 
+
   /**
-   * 贷款月供计算公式
+   * 贷款月供计算公式 方式1
+   *
+   * @param carPrice      裸车价, 元
+   * @param paymentRatio  首付比例, %
+   * @param expenseRate   万元系数, 元
+   * @param stages        期数, 月数
+   * @returns {number}    月供金额, 元
+   */
+  static monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate) {
+    let loanPayment = ((carPrice * (100 - paymentRatio) * 0.01)/10000 * expenseRate)
+    return loanPayment;
+  }
+
+  /**
+   * 贷款月供计算公式 方式2 1.5以后没有费率了
    *
    * @param carPrice      裸车价, 元
    * @param paymentRatio  首付比例, %
@@ -29,13 +44,13 @@ export default class Util {
    * @param stages        期数, 月数
    * @returns {number}    月供金额, 元
    */
-  static monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate, stages) {
+  static monthlyLoanPaymentByLoan2(carPrice, paymentRatio, expenseRate, stages) {
     let loanPayment = Util.loanPaymentByLoan(carPrice, paymentRatio, expenseRate)
     return (loanPayment / stages);
   }
 
   /***
-   * 贷款总额计算公式
+   * 贷款+利息总额计算公式
    *
    * @param carPrice      裸车价, 元
    * @param paymentRatio  首付比例，%
@@ -60,7 +75,7 @@ export default class Util {
   }
 
   /***
-   * 总费用计算公式
+   * 总费用（贷款首付+贷款+利息）计算公式 --1.5已经
    *
    * @param carPrice          裸车价，元
    * @param paymentRatio      首付比例，%
