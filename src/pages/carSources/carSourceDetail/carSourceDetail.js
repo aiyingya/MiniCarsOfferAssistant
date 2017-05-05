@@ -1,4 +1,5 @@
 import Component from '../../../components/component'
+import * as wxapi from 'wxapp-promise'
 
 export default {
   /**
@@ -149,8 +150,12 @@ export default {
          */
         copyOrignalText(e) {
           const originalText = options.originalText
-          wx.setClipboardData({data: originalText}).then((res) => {
-
+          wxapi.setClipboardData({data: originalText}).then((res) => {
+            wxapi.showToast({
+              title: '复制成功',
+              icon: 'success',
+              duration: 2000
+            })
           }, (err) => {
 
           })
