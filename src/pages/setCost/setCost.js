@@ -44,9 +44,7 @@ Page({
     }
   },
   onLoad() {
-    
-    console.log(app.userService.isSetPreference)
-    
+  
     wx.showToast({
       title: '正在加载',
       icon: 'loading',

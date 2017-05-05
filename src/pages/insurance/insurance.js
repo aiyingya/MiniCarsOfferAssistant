@@ -6,11 +6,11 @@ Page({
       /**
        * 保险总额.
        */
-      insuranceTotal: '',
+      insuranceTotal: '0',
       /**
        * 商业险总额.
        */
-      businessTatal: '',
+      businessTatal: '0',
       /**
        * 交强险.
        */
@@ -89,10 +89,11 @@ Page({
         /**
          * 玻璃单独破碎险
          */
-        glassBroken: {
-          domestic: 0.002,
-          import: 0.0033
-        }
+        glassBroken: [0.002,0.0033],
+        /**
+         * 车上人员责任险
+         */
+        personnelCarRate: 0.0069
       },
       /**
        * 6座以上.
@@ -122,12 +123,40 @@ Page({
         /**
          * 玻璃单独破碎险
          */
-        glassBroken: {
-          domestic: 0.002,
-          import: 0.0033
-        }
+        glassBroken: [0.002,0.0033],
+        /**
+         * 车上人员责任险
+         */
+        personnelCarRate: 0.0069
       }
     },
+    /**
+     * 根据裸车价算车身划痕险.
+     */
+    scratches: {
+      '2000': {
+        one: 400,
+        two: 585,
+        three: 850
+      },
+      '5000': {
+        one: 570,
+        two: 900,
+        three: 1100
+      },
+      '10000': {
+        one: 760,
+        two: 1170,
+        three: 1500
+      },
+      '20000': {
+        one: 1140,
+        two: 1780,
+        three: 2250
+      }
+    },
+    scratchesTypes: [2000,5000,10000,20000],
+    scratchesTypesIndex: 1,
     /**
      * 商业险类型.
      */
@@ -143,9 +172,23 @@ Page({
       {name: '车身划痕险', id: '8'}
     ],
     /**
+     * 第三方责任险赔付额度.
+     */
+    liabilityTypes: [5,10,20,50,100],
+    liabilityTypesIndex: 1,
+    /**
+     * 玻璃单独破碎险选择进口、国产.
+     */
+    glassBrokenTypes: ["国产","进口"],
+    glassBrokenTypesIndex: 0,
+    /**
      * 裸车价.
      */
-    officialPrice: 0
+    officialPrice: 0,
+    /**
+     * 设置保险明细字体颜色.
+     */
+    ChangeInsuranceTotalStyle: ''
   },
   onLoad(options) {
     let carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelInfo', options)
@@ -163,7 +206,7 @@ Page({
       wx.hideToast()
     })
     
-    
+    console.log(carModelInfo)
     this.data.officialPrice = carModelInfo.officialPrice
 
   },
@@ -191,11 +234,13 @@ Page({
    */
   handleChangeStandard: function(e) {
     let trafficInsurance = e.detail.value == 0 ? 950 : 1100
-    console.log(trafficInsurance,e.detail.value)
+    // all Insurance.
+    let businessRisks = this.data.businessRisks
     this.setData({
       standardIndex: e.detail.value,
       'InsuranceDetail.trafficInsurance': trafficInsurance
     })
+    this.insuranceCostCount(businessRisks)
   },
   bindChangeBusinessRisks(e) {  
     let businessRisks = this.data.businessRisks
@@ -211,6 +256,45 @@ Page({
     }
     this.setData({
       businessRisks: businessRisks
+    })
+    this.insuranceCostCount(businessRisks)
+  },
+  /**
+   * 修改保险总额.
+   */
+  handleChangeInsuranceTotal(e) {
+    // 当保险总额手动改变时，保险明细字体变灰.
+    this.setData({
+      ChangeInsuranceTotalStyle: 'color-gray'
+    })
+  },
+  /**
+   * 修改第三方责任险赔付额度.
+   */
+  handleChangeLiabilityTypes(e) {
+    let businessRisks = this.data.businessRisks
+    this.setData({
+      liabilityTypesIndex: e.detail.value
+    })
+    this.insuranceCostCount(businessRisks)
+  },
+  /**
+   * 修改玻璃破碎险类型.
+   */
+  handleChangeGlassBrokenTypes(e) {
+    let businessRisks = this.data.businessRisks
+    this.setData({
+      glassBrokenTypesIndex: e.detail.value
+    })
+    this.insuranceCostCount(businessRisks)
+  },
+  /**
+   * 修改车身划痕险保额.
+   */
+  handleChangeScratchesTypes(e) {
+    let businessRisks = this.data.businessRisks
+    this.setData({
+      scratchesTypesIndex: e.detail.value
     })
     this.insuranceCostCount(businessRisks)
   },
@@ -238,12 +322,23 @@ Page({
     let vehicleDQInsurance = 0
     // 玻璃单独破碎险
     let glassBrokenInsurance = 0
+    // 自然损失险
+    let gcombustionLossInsurance = 0
+    // 不计免赔特约险
+    let franchiseInsurance = 0
+    // 无过责任险
+    let responsibilityInsurance = 0
+    // 车上人员责任险
+    let personnelCarInsurance = 0
+    // 车身划痕险
+    let scratchesInsurance = 0
     for(let item of businessRisks) { 
       if(item.checked) {
         switch (item.name) {
           case '第三方责任险':
-            liabilityInsurance = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.liability[10]
-                                                    : this.data.spuStandard.spuAboveSix.liability[10]
+            let liabilityTypesIndex = this.data.liabilityTypes[this.data.liabilityTypesIndex]
+            liabilityInsurance = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.liability[liabilityTypesIndex]
+                                                    : this.data.spuStandard.spuAboveSix.liability[liabilityTypesIndex]
             businessTatal += liabilityInsurance
             break
           case '车辆损失险':
@@ -261,10 +356,47 @@ Page({
             businessTatal += vehicleDQInsurance
             break
           case '玻璃单独破碎险':
-            let glassBrokenRate = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.glassBroken.domestic
-                                                     : this.data.spuStandard.spuAboveSix.glassBroken.domestic
+            let glassBrokenIndex = this.data.glassBrokenTypesIndex
+            let glassBrokenRate = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.glassBroken[glassBrokenIndex]
+                                                     : this.data.spuStandard.spuAboveSix.glassBroken[glassBrokenIndex]
             glassBrokenInsurance = officialPrice*glassBrokenRate
             businessTatal += glassBrokenInsurance
+            break
+          case '自燃损失险':
+            gcombustionLossInsurance = officialPrice*0.0015
+            businessTatal += gcombustionLossInsurance
+            break
+          case '不计免赔特约险':
+            if(liabilityInsurance > 0 && vehicleLossInsurance > 0) {
+              franchiseInsurance = liabilityInsurance*0.2 + vehicleLossInsurance*0.2
+              
+              businessTatal += franchiseInsurance
+            }
+            
+            break
+          case '无过责任险':
+ 
+            responsibilityInsurance = liabilityInsurance*0.2 
+            businessTatal += responsibilityInsurance
+            break
+          case '车上人员责任险':
+            let personnelCarRate = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.personnelCarRate
+                                                      : this.data.spuStandard.spuAboveSix.personnelCarRate
+            personnelCarInsurance = officialPrice*personnelCarRate 
+            businessTatal += personnelCarInsurance
+            break
+          case '车身划痕险':
+            let scratches = 0
+            let scratchesTypesIndex = this.data.scratchesTypes[this.data.scratchesTypesIndex]
+            if(officialPrice/10000 < 30) {
+              scratches = this.data.scratches[scratchesTypesIndex].one
+            }else if(30<= officialPrice/10000 <= 50) {
+              scratches = this.data.scratches[scratchesTypesIndex].two
+            }else {
+              scratches = this.data.scratches[scratchesTypesIndex].three
+            }
+            scratchesInsurance = scratches 
+            businessTatal += scratchesInsurance
             break
           default:
 
@@ -273,16 +405,76 @@ Page({
       }    
     }
     
-    that.setData({
-      'InsuranceDetail.businessTatal': businessTatal.toFixed(2),
-      'InsuranceDetail.liabilityInsurance': liabilityInsurance,
-      'InsuranceDetail.vehicleLossInsurance': vehicleLossInsurance,
-      'InsuranceDetail.vehicleDQInsurance': vehicleDQInsurance,
-      'InsuranceDetail.glassBrokenInsurance': glassBrokenInsurance
-      
-    })
+    totalAmount = businessTatal+trafficInsurance
     
-    console.log(businessTatal)
+    that.setData({
+      'InsuranceDetail.businessTatal': businessTatal.toFixed(0),
+      'InsuranceDetail.liabilityInsurance': liabilityInsurance.toFixed(0),
+      'InsuranceDetail.vehicleLossInsurance': vehicleLossInsurance.toFixed(0),
+      'InsuranceDetail.vehicleDQInsurance': vehicleDQInsurance.toFixed(0),
+      'InsuranceDetail.glassBrokenInsurance': glassBrokenInsurance.toFixed(0),
+      'InsuranceDetail.gcombustionLossInsurance': gcombustionLossInsurance.toFixed(0),
+      'InsuranceDetail.franchiseInsurance': franchiseInsurance.toFixed(0),
+      'InsuranceDetail.responsibilityInsurance': responsibilityInsurance.toFixed(0),
+      'InsuranceDetail.personnelCarInsurance': personnelCarInsurance.toFixed(0),
+      'InsuranceDetail.scratchesInsurance': scratchesInsurance.toFixed(0),
+      'InsuranceDetail.insuranceTotal': totalAmount.toFixed(0),
+      ChangeInsuranceTotalStyle: ''
+    })
+  },
+  handleChangeSubmit() {
+    
+    let businessRisks = this.data.businessRisks
+    let InsuranceDetail = this.data.InsuranceDetail
+    let insurancesAll = {}
+    for(let item of businessRisks) {
+      if(item.checked) {
+        switch (item.name) {
+          case '第三方责任险':
+            item.amount = InsuranceDetail.liabilityInsurance
+            break
+          case '车辆损失险':
+            item.amount = InsuranceDetail.vehicleLossInsurance
+            break
+          case '全车盗抢险': 
+            item.amount = InsuranceDetail.vehicleDQInsurance
+            break
+          case '玻璃单独破碎险': 
+            item.amount = InsuranceDetail.glassBrokenInsurance
+            break
+          case '自燃损失险':
+            item.amount = InsuranceDetail.gcombustionLossInsurance
+            break
+          case '不计免赔特约险':
+            item.amount = InsuranceDetail.franchiseInsurance
+            break
+          case '无过责任险': 
+            item.amount = InsuranceDetail.responsibilityInsurance
+            break
+          case '车上人员责任险': 
+            item.amount = InsuranceDetail.personnelCarInsurance
+            break
+          case '车身划痕险': 
+            item.amount = InsuranceDetail.scratchesInsurance
+            break
+          default:
+
+            break
+        } 
+      }
+    }
+    insurancesAll.businessInsurances = businessRisks
+    insurancesAll.trafficInsurance = InsuranceDetail.trafficInsurance
+    insurancesAll.insuranceTotal = InsuranceDetail.insuranceTotal
+    console.log(insurancesAll)
+    /**
+     * 保存设置.
+     */
+    try {
+      wx.setStorageSync('insurancesAll', JSON.stringify(insurancesAll))
+      wx.navigateBack()
+    } catch (e) { 
+
+    }
   }
-  
 })
