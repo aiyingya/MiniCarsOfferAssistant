@@ -16,7 +16,7 @@
 
 	<view class="tab-navbar weui-navbar  preferenceSetting-navbar {{showpreferenceSetting ? 'can-preferenceSetting-height' : ''}}">
 
-    <view wx:if="{{showpreferenceSetting}}" class="preferenceSetting" bindtap="goPreferenceSetting" >
+    <view wx:if="{{showPreferenceSetting}}" class="preferenceSetting" bindtap="goPreferenceSetting" >
       <view class="preferenceSetting-con">报价偏好设置</view>
     </view>
 
@@ -106,8 +106,8 @@
 				<view url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
 					<view class="weui-cell__bd">裸车价</view>
 					<view class="weui-cell__ft weui-cell__ft_in-access">
-						<view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}/{{priceChange.point}}点)</view>
-						<view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}/{{priceChange.point}}点)</view>￥{{quotation.quotationItems[0].sellingPrice}}
+            <view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>
+						<view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>￥{{quotation.quotationItems[0].sellingPrice}}
 					</view>
 				</view>
 			</view>
@@ -179,8 +179,8 @@
 				<view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
 					<view class="weui-cell__bd">裸车价</view>
 					<view class="weui-cell__ft weui-cell__ft_in-access">
-						<view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}/{{priceChange.point}}点)</view>
-						<view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}/{{priceChange.point}}点)</view>￥{{quotation.quotationItems[0].sellingPrice}}
+						<view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>
+						<view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>￥{{quotation.quotationItems[0].sellingPrice}}
 					</view>
 				</view>
 			</view>

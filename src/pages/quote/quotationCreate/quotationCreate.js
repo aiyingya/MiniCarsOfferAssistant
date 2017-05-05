@@ -190,7 +190,8 @@ Page({
       count: '' // "7.34"
     },
     source: '', // carModels/carSources/quotationDetail/
-    showpreferenceSetting:false
+    showPreferenceSetting:false,
+    isSpecialBranch:false //宝马、奥迪、MINI展示下xx点
   },
   onLoad(options) {
 
@@ -208,10 +209,6 @@ Page({
 
     }
 
-    //判断是否需要显示报价偏好设置
-    this.setData({
-      showpreferenceSetting: app.userService.isSetPreference
-    })
 
     this.utilsExpensesAllInfo()
 
@@ -274,6 +271,11 @@ Page({
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
         const originalPrice = carSkuInfo.price || carModelInfo.officialPrice
 
+        const  isShow = that.isShowDownDot(carModelInfo.carModelName)
+        this.setData({
+          'isSpecialBranch': isShow
+        })
+
         var user = app.userService;
         //获取报价单接口
         app.saasService.getCreatCarRecordInfo({
@@ -328,11 +330,22 @@ Page({
 
   },
   onReady() {},
-  onShow() {},
+  onShow() {
+    //判断是否需要显示报价偏好设置
+    this.setData({
+      showPreferenceSetting: !app.userService.isSetPreference
+    })
+  },
   onHide() {},
   onUnload() {},
   onReachBottom() {},
   onPullDownRefresh() {},
+  isShowDownDot(name){
+    if(name.indexOf('宝马') >-1 || name.indexOf('奥迪')>-1 || name.indexOf('MINI')>-1){
+      return true;
+    }
+    return false;
+  },
   updateForSomeReason() {
     let that = this
     this.utilsExpensesAllInfo()
@@ -668,9 +681,8 @@ Page({
     })
   },
   goPreferenceSetting(e) {
-    //TODO:aiyingya 跳转到报价偏好设置
-    this.setData({
-      'showpreferenceSetting': false
+    wx.navigateTo({
+      url: `../../setCost/setCost`
     })
   },
   utilsExpensesAllInfo(){

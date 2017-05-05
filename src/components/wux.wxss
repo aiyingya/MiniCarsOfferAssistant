@@ -655,7 +655,6 @@
 }
 
 .weui-special__input input{
-  font-size: 36rpx;
   color: #333;
   line-height: 36rpx;
   padding: 24rpx 0;
