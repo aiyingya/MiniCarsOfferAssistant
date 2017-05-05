@@ -362,40 +362,6 @@ export default class SAASService extends Service {
       complete:object.complete
     })
   }
-
-  /**
-   * 对某一个供应商的某一个货源做靠谱操作
-   * @param supplierId
-   * @param object
-   */
-  requestReliable (spuId, carSourceId, supplierId, hasBeenReliableByUser, updatedHasBeenReliableByUser, object) {
-    console.log(spuId)
-    console.log(carSourceId)
-    console.log(supplierId)
-    console.log(hasBeenReliableByUser)
-    console.log(updatedHasBeenReliableByUser)
-    if (hasBeenReliableByUser === updatedHasBeenReliableByUser) {
-      // 没变化
-    } else {
-      if (hasBeenReliableByUser === -1) {
-        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
-      } else if (hasBeenReliableByUser === 1) {
-        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
-      }
-
-      if (updatedHasBeenReliableByUser === -1) {
-        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
-      } else if (updatedHasBeenReliableByUser === 1) {
-        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
-      }
-    }
-  }
-  requestReliableOrNotASupplier (spuId, carSourceId, supplierId, reliableOrNot, object) {
-    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '靠谱', supplierId, reliableOrNot, object);
-  }
-  requestUnReliableOrNotASupplier (spuId, carSourceId, supplierId, UnReliableOrNot, object) {
-    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '不靠谱', supplierId, UnReliableOrNot, object);
-  }
   /**
    * 打标签接口
    * @param spuId
