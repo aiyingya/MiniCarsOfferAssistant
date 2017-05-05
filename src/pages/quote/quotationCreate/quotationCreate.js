@@ -184,7 +184,8 @@ Page({
     source: '', // carModels/carSources/quotationDetail/
     showPreferenceSetting:false,
     isSpecialBranch:false, //宝马、奥迪、MINI展示下xx点
-    isOnLoad:true
+    isOnLoad:true,
+    diffPrice:0//是否加价卖
   },
   onLoad(options) {
 
@@ -264,6 +265,9 @@ Page({
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
         const originalPrice = carSkuInfo.price || carModelInfo.officialPrice
 
+
+
+
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
         this.setData({
           'isSpecialBranch': isShow
@@ -281,8 +285,10 @@ Page({
               'requestResult': res
             })
             let sellingPrice = res.carPrice;
+            var diffPrice = Number(sellingPrice - guidePrice);
             this.setData({
-              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee
+              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
+              diffPrice:diffPrice
             })
 
             // 设置报价表单数据
@@ -313,6 +319,9 @@ Page({
                 });
               }
             });
+
+
+
 
           },
           fail: () => {},
@@ -556,25 +565,29 @@ Page({
     let that = this
 
     const _guidePrice = this.data.quotation.quotationItems[0].guidePrice
-    const _sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
     const _baseSellingPrice = this.data.quotation.quotationItems[0].baseSellingPrice
 
-    var _downPrice = Number(_guidePrice - _sellingPrice)
     $wuxInputNumberDialog.open({
       title: '裸车价',
-      inputNumber: _downPrice,
+      inputNumber: Math.abs(that.data.diffPrice),
       content: "￥" + _baseSellingPrice,
       inputNumberPlaceholder: '输入裸车价',
       inputNumberMaxLength: 9,
       confirmText: '确定',
       cancelText: '取消',
       priceStyle: true,
+      upText: (that.data.diffPrice > 0) ? '上':'下',
       confirm: (res) => {
-
-        let downPrice = Number(res.inputNumber)
+        let downUpPrice = Number(res.inputNumber)
+        let price
+        if(that.data.diffPrice > 0){
+          price =Number(_guidePrice + downUpPrice)
+        }else{
+          price =Number(_guidePrice - downUpPrice)
+        }
 
         that.setData({
-          'quotation.quotationItems[0].sellingPrice': Number(_guidePrice - downPrice)
+          'quotation.quotationItems[0].sellingPrice': price
         })
         that.updateForSomeReason()
       },

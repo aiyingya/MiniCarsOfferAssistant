@@ -20,7 +20,7 @@
 
       <form bindsubmit="{{ confirm }}">
         <view wx:if="{{ priceStyle }}" class="weui-dialog__input_price">
-          <view class="weui-dialog__xia">下</view>
+          <view class="weui-dialog__xia">{{upText}}</view>
           <image class="weui-dialog__minus" src="../../../images/icons/icon_minus.png" bindtap="{{ buttonMinus }}"></image>
           <input type="{{ inputType }}" name="inputNumber" placeholder="0" placeholder-class="" focus="{{ visible }}"
             value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />

@@ -14,7 +14,8 @@ export default {
       inputNumberMaxLength: -1,
       inputType: 'number',
       confirmDisabled: true,
-      priceStyle: false
+      priceStyle: false,
+      upText:"下"//是否是加价
     }
   },
   /**
