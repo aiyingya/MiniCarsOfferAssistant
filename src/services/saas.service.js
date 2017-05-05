@@ -67,13 +67,15 @@ export default class SAASService extends Service {
     "customerMobile":"客户手机号"
    }
    */
-  requestPublishQuotation (draftId, customerMobile, object) {
+  requestPublishQuotation (draftId, customerMobile,customerName,customerSex, object) {
     if (draftId && draftId !== '') {
       this.sendMessagePromise({
         path: 'sale/quotation',
         data: {
           draftId: draftId,
-          customerMobile: customerMobile
+          customerMobile: customerMobile,
+          customerName:customerName,
+          customerSex:customerSex
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
@@ -140,7 +142,29 @@ export default class SAASService extends Service {
           advancePayment: quotationDraft.advancePayment,
           monthlyPayment: quotationDraft.monthlyPayment,
           totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark
+          remark: quotationDraft.remark,
+          carPrice : quotationDraft.quotationItems[0].sellingPrice,
+          purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
+          carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
+          carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
+          boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
+          serviceFee:quotationDraft.otherExpensesAll.serverFee,
+          installFee:quotationDraft.otherExpensesAll.installationFee,
+          otherFee:quotationDraft.otherExpensesAll.otherFee,
+          insuranceDetail:{
+            "iTotal":quotationDraft.insuranceDetail.iTotal,//"保险总额",
+            "iJQX":quotationDraft.insuranceDetail.iCSHHX,//"交强险",
+            "iDSZZRX":quotationDraft.insuranceDetail.iCSHHX,//"第三者责任险",
+            "iCLSSX":quotationDraft.insuranceDetail.iCSHHX,//"车辆损失险",
+            "iQCDQX":quotationDraft.insuranceDetail.iCSHHX,//"全车盗抢险",
+            "iBLDDPSX":quotationDraft.insuranceDetail.iCSHHX,//"玻璃单独破碎险",
+            "iZRSSX":quotationDraft.insuranceDetail.iCSHHX,//"自燃损失险",
+            "iBJMPTYX":quotationDraft.insuranceDetail.iCSHHX,//"不计免赔特约险",
+            "iWGZRX":quotationDraft.insuranceDetail.iCSHHX,//"无过责任险",
+            "iCSRYZRX":quotationDraft.insuranceDetail.iCSHHX,//"车上人员责任险",
+            "iCSHHX":quotationDraft.insuranceDetail.iCSHHX//"车身划痕险"
+          }
+
         }
       } else {
         data = {
@@ -158,7 +182,15 @@ export default class SAASService extends Service {
           otherExpenses: quotationDraft.otherExpenses,
           advancePayment: quotationDraft.advancePayment,
           totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark
+          remark: quotationDraft.remark,
+          carPrice : quotationDraft.quotationItems[0].sellingPrice,
+          purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
+          carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
+          carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
+          boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
+          serviceFee:quotationDraft.otherExpensesAll.serverFee,
+          installFee:quotationDraft.otherExpensesAll.installationFee,
+          otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       }
 
@@ -505,10 +537,10 @@ export default class SAASService extends Service {
    * @param opts
    */
   getCreatCarRecordInfo(opts){
+
     this.sendMessage({
-      path: "sale/quotation/initQuotation",
+      path: `sale/quotation/initQuotation?userId=${opts.data.userId}&carPrice=${opts.data.carPrice}`,
       method: 'GET',
-      data: opts.data || {},
       success: opts.success,
       fail: opts.fail
     })
@@ -538,6 +570,25 @@ export default class SAASService extends Service {
       path: "api/config/saveQuota",
       method: 'POST',
       data: opts.data || {},
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
+
+  /**
+   * 查询收益
+   * @param opts
+   * {
+    "totalProfit":"总收益",
+    "profit":"裸车收益",
+    "insuranceProfit": "保险收益",
+    "loanProfit": "贷款收益",
+    }
+   */
+  getProfit(data,opts){
+    this.sendMessage({
+      path: `/sale/quotation/queryProfit?userId=${data.userId}&loanNum=${data.loanNum}&insuranceNum=${data.insuranceNum}`,
+      method: 'GET',
       success: opts.success,
       fail: opts.fail
     })
