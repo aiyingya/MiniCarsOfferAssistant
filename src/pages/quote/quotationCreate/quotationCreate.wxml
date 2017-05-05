@@ -14,7 +14,7 @@
 
 <view class="container page">
 
-	<view class="tab-navbar weui-navbar  preferenceSetting-navbar {{showpreferenceSetting ? 'can-preferenceSetting-height' : ''}}">
+	<view class="tab-navbar weui-navbar  preferenceSetting-navbar {{showPreferenceSetting ? 'can-preferenceSetting-height' : ''}}">
 
     <view wx:if="{{showPreferenceSetting}}" class="preferenceSetting" bindtap="goPreferenceSetting" >
       <view class="preferenceSetting-con">报价偏好设置</view>
@@ -32,7 +32,7 @@
 	</view>
 
 	<!--导航栏分区-->
-	<view class="tab-content weui-tab__panel {{showpreferenceSetting ? 'can-preferenceSetting-top' : ''}}">
+	<view class="tab-content weui-tab__panel {{showPreferenceSetting ? 'can-preferenceSetting-top' : ''}}">
 
 		<!--按揭内容-->
 		<view
