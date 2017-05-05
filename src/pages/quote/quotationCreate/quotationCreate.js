@@ -59,21 +59,13 @@ Page({
         "iBJMPTYX":0,//"不计免赔特约险",
         "iWGZRX":0,//"无过责任险",
         "iCSRYZRX":0,//"车上人员责任险",
-        "iCSHHX":0,//"车身划痕险"
+        "iCSHHX":0//"车身划痕险"
       },
       advancePayment: 0, // 必传，首次支付金额，如果全款则为全款金额",
       monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
       totalPayment: 0, // 总落地价格
       remark: '', // "无"
-      read: false,
-      carPrice:0,//"裸车价",
-      purchaseTax:0,//"购置税",
-      carTax:0,//"车船税",
-      carNumFee:0,//"上牌费",
-      boutiqueFee:0,//"精品费",
-      serviceFee:0,//"服务费",
-      installFee:0,//"安装费",
-      otherFee:0//"其他费"
+      read: false
     },
     requestResult:{
       "carPrice":"161600",//显示裸车价= 裸车价+运费+利润
@@ -335,6 +327,29 @@ Page({
     this.setData({
       showPreferenceSetting: !app.userService.isSetPreference
     })
+
+    //TODO:aiyingya 初始化盼盼的保险总额与保存保险明细
+
+    this.setData({
+      'quotation.requiredExpensesAll.insuranceAmount': 10000
+    })
+    let insuranceDetail = {
+      "iTotal":0,//"保险总额",
+      "iJQX":0,//"交强险",
+      "iDSZZRX":0,//"第三者责任险",
+      "iCLSSX":0,//"车辆损失险",
+      "iQCDQX":0,//"全车盗抢险",
+      "iBLDDPSX":0,//"玻璃单独破碎险",
+      "iZRSSX":0,//"自燃损失险",
+      "iBJMPTYX":0,//"不计免赔特约险",
+      "iWGZRX":0,//"无过责任险",
+      "iCSRYZRX":0,//"车上人员责任险",
+      "iCSHHX":0//"车身划痕险"
+    }
+    this.setData({
+      'quotation.insuranceDetail': insuranceDetail
+    })
+
   },
   onHide() {},
   onUnload() {},
@@ -549,16 +564,6 @@ Page({
     let that = this;
     let quotation ={}
     quotation = Object.assign({}, quotation, that.data.quotation)
-
-    //增加数据
-    quotation.carPrice = quotation.quotationItems[0].sellingPrice;
-    quotation.purchaseTax=quotation.requiredExpensesAll.purchaseTax;
-    quotation.carTax=quotation.requiredExpensesAll.vehicleAndVesselTax;
-    quotation.carNumFee=quotation.requiredExpensesAll.licenseFee;
-    quotation.boutiqueFee=quotation.otherExpensesAll.boutiqueCost;
-    quotation.serviceFee=quotation.otherExpensesAll.serverFee;
-    quotation.installFee=quotation.otherExpensesAll.installationFee;
-    quotation.otherFee=quotation.otherExpensesAll.otherFee;
 
     function isSendRequest (quotationDraft,mobile,name,sex) {
 
