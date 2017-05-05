@@ -1,0 +1,11 @@
+{
+	"dev": {
+		"apiUrl": "https://test.yaomaiche.com/ymcdev/"
+	},
+	"gqc": {
+		"apiUrl": "https://test.yaomaiche.com/ymcgqc/"
+	},
+	"prd":{
+		"apiUrl": "https://ymcapi.yaomaiche.com/ymc/"
+	}
+}

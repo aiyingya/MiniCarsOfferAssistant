@@ -1,10 +1,12 @@
-// FIXME: 需要处理不同环境下的 promise
-import Promise from '../../modules/es6-promise'
+
 import {
   $wuxTrack
 } from '../../components/wux'
 import util from '../../utils/util'
 import YMC from '../../services/YMC'
+
+// import moment from 'moment'
+
 
 let app = getApp()
 Page({
@@ -40,8 +42,12 @@ Page({
     })
   },
   onLoad() {
+
     let that = this
     try {
+      //测试代码
+      // let beginTime = moment("2017-04-19 09:02:04").format("MM/DD HH:mm")
+      // console.log("LLLLLLL",beginTime)
       let res = wx.getSystemInfoSync()
       this.pixelRatio = res.pixelRatio
       this.apHeight = 16
@@ -65,7 +71,7 @@ Page({
     }, err => {
       wx.hideToast()
     })
-    
+
     wx.showShareMenu()
   },
   onShow() { },
@@ -228,7 +234,7 @@ Page({
     }
   },
   handlerMakePhoneCall(e) {
-    let phone =  e.currentTarget.dataset.phone //'18621016627' 
+    let phone =  e.currentTarget.dataset.phone //'18621016627'
 
     wx.makePhoneCall({
       phoneNumber: phone

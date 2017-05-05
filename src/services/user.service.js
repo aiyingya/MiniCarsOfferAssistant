@@ -9,6 +9,8 @@
 import Service from './base.service'
 import Util from '../utils/util'
 import config from '../config'
+import * as wxapi from 'wxapp-promise'
+
 
 export default class UserService extends Service {
 
@@ -75,6 +77,13 @@ export default class UserService extends Service {
     this.mobile = null
 
     this.clientId = null
+    /**
+     * 用户是否设置过报价设置.
+     */
+    this.isSetPreference = function() {
+      const setPreference = wx.getStorageSync('isSetPreference') || 'false'
+      return setPreference
+    }
 
     this.__getClientId(function(clientId) {
       console.log('本次的用户的 clientId 为' + clientId)
@@ -89,9 +98,13 @@ export default class UserService extends Service {
     })
   }
 
-  sendMessage(opts, loadingType = 'none') {
-    opts.loadingType = loadingType
-    super.sendMessage(opts)
+  // sendMessage(opts, loadingType = 'none') {
+  //   opts.loadingType = loadingType
+  //   super.sendMessage(opts)
+  // }
+
+  sendMessagePromise(opts) {
+    super.sendMessagePromise(opts)
   }
 
   __loadUserInfo () {
@@ -99,8 +112,7 @@ export default class UserService extends Service {
       const userInfoString = wx.getStorageSync(UserService.AuthKey)
       if (userInfoString) {
         const userInfo = JSON.parse(userInfoString)
-        console.log('读取用户信息')
-        console.log(userInfo)
+        console.log('读取用户信息',userInfo)
         this.loginChannel = userInfo.loginChannel || UserService.GuestLogin
         this.snsId = userInfo.snsId || null
         this.auth = userInfo.auth || null
@@ -119,8 +131,7 @@ export default class UserService extends Service {
       snsId: this.snsId
     }
 
-    console.log("保存用户信息")
-    console.log(userInfo)
+    console.log("保存用户信息",userInfo)
     try {
       const userInfoString = JSON.stringify(userInfo)
       wx.setStorageSync(UserService.AuthKey, userInfoString)
@@ -190,13 +201,12 @@ export default class UserService extends Service {
 
   __requestClientId (cb) {
     let that = this
-
     const DeviceKey = config.getNamespaceKey('deviceId')
     const deviceId = wx.getStorageSync(DeviceKey)
     this.getVisitor({
       deviceId: deviceId,
       success: function(res) {
-        console.log(res)
+        console.log("__requestClientId",res)
         that.clientId = res.clientId
         that.__setClientId(that.clientId)
         typeof cb === 'function' && cb(that.clientId)
@@ -215,7 +225,8 @@ export default class UserService extends Service {
     if (!opts) return
 
     console.log('get SMS code')
-    this.sendMessage({
+
+    this.sendMessagePromise({
       path: 'cgi/vcode',
       method: 'POST',
       data: {
@@ -225,7 +236,8 @@ export default class UserService extends Service {
         "strictlyCheck": true // 是否校验手机号，如果校验，则注册时用户已存在会抛出异常；登录/修改密码时，用户不存在会抛出异常"
       },
       success: opts.success,
-      fail: opts.fail
+      fail: opts.fail,
+      complete:opts.complete
     })
   }
 
@@ -237,7 +249,7 @@ export default class UserService extends Service {
     if (!opts) return
 
     console.log('password login')
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/authorization',
       method: 'POST',
       data: {
@@ -249,7 +261,7 @@ export default class UserService extends Service {
         }
       },
       success: function (res) {
-        console.log(res)
+        // console.log(res)
         if (res) {
           const expireIn = that.__getTimestamp(res.expireMillis)
           res.expireIn = expireIn
@@ -322,7 +334,7 @@ export default class UserService extends Service {
   exsitTenanTmember(opts) {
     if (!opts) return
     console.log('exsit tenant tmeber')
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/tenant/member/exist',
       method: 'GET',
       data: {
@@ -339,7 +351,7 @@ export default class UserService extends Service {
   newAccessToken(opts) {
     console.log('get new accessToken')
     let that = this
-    this.sendMessage({
+    this.sendMessagePromise({
       method: 'PUT',
       path: 'cgi/authorization',
       header: {
@@ -369,7 +381,7 @@ export default class UserService extends Service {
   userBindWeixin(opts) {
     const snsId = this.weixinUserInfo.snsId
     const userId = this.auth.userId
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/user/weixin/binding',
       method: 'POST',
       header: {
@@ -388,7 +400,7 @@ export default class UserService extends Service {
    * 上传用户微信信息
    */
   uploadWeixinUserInfo(opts) {
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/user/weixin',
       method: 'POST',
       data: {
@@ -403,7 +415,7 @@ export default class UserService extends Service {
 
   getLocationId (opts) {
     const that = this
-    this.sendMessage({
+    this.sendMessagePromise({
       path: `cgi/tenant/member/${opts.userId}/tenant`,
       method: 'GET',
       data: {},
@@ -468,72 +480,72 @@ export default class UserService extends Service {
       typeof cb == "function" && cb(this.weixinUserInfo)
     } else {
       //调用登录接口
-      wx.login({
-        success: function (auth) {
-          // 该接口只会在用户第一次进入时使用，并弹出弹框并一直记住当时的选择
-          wx.getUserInfo({
-            success: function (res) {
-              console.log(res)
+      wxapi.login().then(auth=>{
+        return auth
+      },e =>{
+        console.log("error",JSON.stringify(e))
+      }).then(auth=>{
+        //这里需要引用auth的值，所以在回调内写then
+        wxapi.getUserInfo().then(res=>{
+          /**
+           * 客户端本地获得微信用户信息，此时用户被定义为 guest snsId{null}
+           * @type {*}
+           */
+          if (!that.isLogin()) {
+            that.loginChannel = UserService.GuestLogin
+            that.snsId = null
+          }
+          that.weixinUserInfo = res.userInfo
+
+          that.uploadWeixinUserInfo({
+            authCode: auth.code,
+            encryptedData: res.encryptedData,
+            iv: res.iv,
+            success: function (res2) {
               /**
-               * 客户端本地获得微信用户信息，此时用户被定义为 guest snsId{null}
-               * @type {*}
+               * 服务端获得微信用户信息，此时用户被定义为 weixin snsId{Number}
                */
               if (!that.isLogin()) {
-                that.loginChannel = UserService.GuestLogin
-                that.snsId = null
+                that.loginChannel = UserService.WexinLogin
               }
-              that.weixinUserInfo = res.userInfo
+              that.snsId = res2.snsId
+              that.weixinUserInfo = res2
 
-              that.uploadWeixinUserInfo({
-                authCode: auth.code,
-                encryptedData: res.encryptedData,
-                iv: res.iv,
-                success: function (res2) {
-                  /**
-                   * 服务端获得微信用户信息，此时用户被定义为 weixin snsId{Number}
-                   */
-                  if (!that.isLogin()) {
-                    that.loginChannel = UserService.WexinLogin
-                  }
-                  that.snsId = res2.snsId
-                  that.weixinUserInfo = res2
-
-                  typeof cb == "function" && cb(that.weixinUserInfo)
-                  that.__saveUserInfo()
-                },
-                fail: function () {
-                  that.__getClientId(function (clientId) {
-
-                    if (!that.isLogin()) {
-                      that.snsId = clientId
-                    }
-
-                    typeof cb == "function" && cb(that.weixinUserInfo)
-                    that.__saveUserInfo()
-                  })
-                }
-              })
+              typeof cb == "function" && cb(that.weixinUserInfo)
+              that.__saveUserInfo()
             },
-            fail: function (res) {
+            fail: function () {
               that.__getClientId(function (clientId) {
+
                 if (!that.isLogin()) {
-                  that.loginChannel = UserService.GuestLogin
                   that.snsId = clientId
                 }
-                that.weixinUserInfo = null
+
                 typeof cb == "function" && cb(that.weixinUserInfo)
                 that.__saveUserInfo()
               })
             }
           })
-        }
+
+        },e=>{
+          that.__getClientId(function (clientId) {
+            if (!that.isLogin()) {
+              that.loginChannel = UserService.GuestLogin
+              that.snsId = clientId
+            }
+            that.weixinUserInfo = null
+            typeof cb == "function" && cb(that.weixinUserInfo)
+            that.__saveUserInfo()
+          })
+        })
       })
+
     }
   }
 
   getVisitor (opts) {
     const userId = this.isLogin() ? this.auth.userId : ''
-    this.sendMessage({
+    this.sendMessagePromise({
       path: 'cgi/visitor',
       data: {
         deviceId: opts.deviceId,

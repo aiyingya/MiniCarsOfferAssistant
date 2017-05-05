@@ -1,0 +1,54 @@
+<template name="checkboxDialog">
+  <view class="checkboxDialog">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} "></view>
+    <view 
+      class="weui-dialog {{ animateCss }}" 
+      wx:if="{{ visible }}"
+      >
+      <view 
+        class="weui-dialog__hd" 
+        wx:if="{{ title }}"
+        >
+        <view class="weui-dialog__title">{{ title }}</view>
+      </view>
+      <view 
+        class="weui-dialog__bd" 
+        wx:if="{{ content }}"
+        >
+        <view class="weui-dialog__bd__centent">{{ content }}</view>
+      </view>
+      <form bindsubmit="{{ confirm }}">
+        <view class="weui-dialog__input">
+          <checkbox-group bindchange="{{ checkboxChange }}">
+            <label 
+              class="weui-cell weui-check__label" 
+              wx:for="{{ checkboxItems }}" 
+              wx:key="id"
+              >
+              <checkbox class="weui-check" name="{{item.name}}" value="{{item.id}}" checked="{{item.checked}}"/>
+              <view class="weui-cell__bd">{{item.name}}</view>
+              <view class="weui-cell__hd weui-check__hd_in-checkbox">
+                <view class="checkbox_circle" wx:if="{{!item.checked}}"></view>
+                <image 
+                  src="../../images/icons/bt_select_on.png" 
+                  class="checkbox_circle checkbox_success" 
+                  wx:if="{{item.checked}}"></image>
+              </view>
+            </label>
+          </checkbox-group>
+        </view>
+        <view class="weui-dialog__ft">
+          <button 
+            class="weui-dialog__btn weui-dialog__btn_default" 
+            bindtap="{{ cancel }}"
+            >{{ cancelText }}</button>
+          <button 
+            class="weui-dialog__btn weui-dialog__btn_primary" 
+            formType="submit" 
+            disabled="{{ confirmDisabled }}"
+            >{{ confirmText }}</button>
+        </view>
+      </form>
+    </view>
+  </view>
+</template>

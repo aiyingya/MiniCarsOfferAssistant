@@ -49,7 +49,6 @@
 						<view>报价记录</view>
 				</view>
 			</view>
-<!--
 			<view
 				class="weui-cell weui-cell_access"
 				hover="true"
@@ -60,12 +59,11 @@
 				</view>
 				<view
 					class="weui-cell__bd weui-cell_primary"
-					bindtap="handleToSupplier"
+					bindtap="handleToSetcost"
 					>
-						<view>关注的供货商</view>
+						<view>报价偏好设置</view>
 				</view>
 			</view>
--->
 	</view>
 
 	<view
