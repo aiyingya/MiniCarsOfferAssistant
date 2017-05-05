@@ -183,7 +183,8 @@ Page({
     },
     source: '', // carModels/carSources/quotationDetail/
     showPreferenceSetting:false,
-    isSpecialBranch:false //宝马、奥迪、MINI展示下xx点
+    isSpecialBranch:false, //宝马、奥迪、MINI展示下xx点
+    isOnLoad:true
   },
   onLoad(options) {
 
@@ -328,11 +329,15 @@ Page({
       showPreferenceSetting: !app.userService.isSetPreference
     })
 
-    //TODO:aiyingya 初始化盼盼的保险总额与保存保险明细
+    if(this.data.isOnLoad){
+      this.setData({
+        isOnLoad: false
+      })
+      return;
+    }
 
-    this.setData({
-      'quotation.requiredExpensesAll.insuranceAmount': 10000
-    })
+    const _insurances = wx.getStorageSync("insurancesAll")? JSON.parse(wx.getStorageSync("insurancesAll")):null
+
     let insuranceDetail = {
       "iTotal":0,//"保险总额",
       "iJQX":0,//"交强险",
@@ -346,9 +351,63 @@ Page({
       "iCSRYZRX":0,//"车上人员责任险",
       "iCSHHX":0//"车身划痕险"
     }
+
+    if(!_insurances){
+      return
+    }
+
+    _insurances.businessInsurances.forEach((item,index)=> {
+      if(!item.checked){
+        return
+      }
+      if(item.name === '第三方责任险'){
+        insuranceDetail.iDSZZRX = item.amount
+        return
+      }
+      if(item.name === '车辆损失险'){
+        insuranceDetail.iCLSSX = item.amount
+        return
+      }
+      if(item.name === '全车盗抢险'){
+        insuranceDetail.iQCDQX = item.amount
+        return
+      }
+      if(item.name === '玻璃单独破碎险'){
+        insuranceDetail.iBLDDPSX = item.amount
+        return
+      }
+      if(item.name === '自燃损失险'){
+        insuranceDetail.iZRSSX = item.amount
+        return
+      }
+      if(item.name === '不计免赔特约险'){
+        insuranceDetail.iBJMPTYX = item.amount
+        return
+      }
+      if(item.name === '无过责任险'){
+        insuranceDetail.iWGZRX = item.amount
+        return
+      }
+      if(item.name === '车上人员责任险'){
+        insuranceDetail.iCSRYZRX = item.amount
+        return
+      }
+      if(item.name === '车身划痕险'){
+        insuranceDetail.iCSHHX = item.amount
+        return
+      }
+    })
+    insuranceDetail.iTotal = _insurances.insuranceTotal
+    insuranceDetail.iJQX = _insurances.trafficInsurance
+
     this.setData({
       'quotation.insuranceDetail': insuranceDetail
     })
+
+    this.setData({
+      'quotation.requiredExpensesAll.insuranceAmount': _insurances.insuranceTotal
+    })
+    this.insuranceUpdate()//保险金额修改
 
   },
   onHide() {},
@@ -716,6 +775,17 @@ Page({
             ['expensesAllInfo['+index+'].price'] : _otherExpensesAll[key]
           })
         }
+      }
+    })
+  },
+  insuranceUpdate(mount){
+    const that = this
+    let flag = false
+    that.data.expensesAllInfo.forEach(({target},index) =>{
+      if(!flag && target == 'insuranceAmount'){
+        that.setData({
+          ['expensesAllInfo['+index+'].price'] : mount
+        })
       }
     })
   },
