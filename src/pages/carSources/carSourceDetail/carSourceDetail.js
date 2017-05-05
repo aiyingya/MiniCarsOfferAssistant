@@ -9,6 +9,8 @@ export default {
       hasFoldOriginalText: true,
       hasFoldTagCollection: true,
       spuId: '',
+      showCopyOriginalText: true,
+      originalText: '',
       carModel: {},
       carSourceItem: {}
     }
@@ -44,6 +46,9 @@ export default {
         }
       }
     }
+
+    // 判断是否该显示 复制原文 按钮
+    options.showCopyOrignalText = wx.canIUse('setClipboardData')
 
     // 实例化组件
     const component = new Component({
@@ -134,8 +139,21 @@ export default {
             [`${this.options.scope}.hasFoldOriginalText`]: options.hasFoldOriginalText
           })
         },
+
         reportError(e) {
           typeof options.reportError === `function` && options.reportError(e)
+        },
+        /**
+         * 复制原文到剪切板
+         * @param e
+         */
+        copyOrignalText(e) {
+          const originalText = options.originalText
+          wx.setClipboardData({data: originalText}).then((res) => {
+
+          }, (err) => {
+
+          })
         }
       }
     })
