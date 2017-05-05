@@ -407,7 +407,7 @@ Page({
     this.setData({
       'quotation.requiredExpensesAll.insuranceAmount': _insurances.insuranceTotal
     })
-    this.insuranceUpdate()//保险金额修改
+    this.insuranceUpdate(_insurances.insuranceTotal)//保险金额修改
 
   },
   onHide() {},
