@@ -1,0 +1,33 @@
+<template name="contentDialog">
+  <view class="contentDialog">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }}"></view>
+
+	  <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}" style="margin-bottom:30rpx">
+
+      <view wx:if="{{totleContent}}" class="weui-dialog__hd" wx:if="{{ title }}">
+        <view class="weui-dialog__title">{{ title }}
+          <image class="icon-close" src="../../../images/icons/icon_close.png" bindtap="{{ hide }}" ></image>
+        </view>
+      </view>
+
+      <view wx:if="{{totleContent}}" class="flex-item bc_green weui-dialog__line" style="width:90%"></view>
+
+      <view style="margin-bottom:40px">
+
+        <view class="weui-content_totle">
+            <view class="weui-float_L"> {{totleContent.name}}</view>
+            <view class="weui-float_R">{{totleContent.value}}</view>
+        </view>
+
+        <view class="flex-item bc_green weui-dialog__line" style="width:80%"></view>
+
+        <view wx:for="{{detailContent}}" class="weui-content_detail">
+          <view class="weui-float_L">{{item.name}}</view>
+          <view class="weui-float_R">{{item.value}}</view>
+        </view>
+
+      </view>
+
+    </view>
+  </view>
+</template>

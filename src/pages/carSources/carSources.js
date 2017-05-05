@@ -109,6 +109,9 @@ Page({
           let scrollFiltersSelectedIndexes = []
 
           let sourcePublishDateFilterId
+          let seatNum = res.seatNum
+  
+          that.data.carModelsInfo.seatNum = seatNum
           for (let i = 0; i < filters.length; i++) {
             let filter = filters[i]
             // FIXME: 这里的问题是使用了不严谨的方法获取数据
@@ -144,6 +147,7 @@ Page({
             selectedSectionIndex: -1,
             selectedSectionId: '0'
           })
+          
         }
       })
 
@@ -1320,7 +1324,7 @@ Page({
     const skuItemIndex = e.currentTarget.dataset.skuIndex
 
     const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
-
+    console.log(this.data.carModelsInfo)
     const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', this.data.carModelsInfo)
     const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', skuItem.carSku)
 

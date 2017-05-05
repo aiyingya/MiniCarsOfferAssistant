@@ -9,12 +9,9 @@ export default {
     return {
       title: undefined,
       content: undefined,
-      inputNumber: undefined,
-      inputNumberPlaceHolder: undefined,
-      inputNumberMaxLength: -1,
-      inputType: 'number',
+      checkboxItems: undefined,
       confirmDisabled: true,
-      priceStyle: false
+      checkedValues: []
     }
   },
   /**
@@ -41,18 +38,17 @@ export default {
    * @param {Function} opts.confirm 点击确认的回调函数
    * @param {Function} opts.cancel 点击确认的取消函数
    * @param {Function} opts.validate 验证函数
-   * @param {String} opts.priceStyle 是否使用价格样式
-   *
    */
   open(opts = {}) {
+    
+   
     const options = Object.assign({
       animateCss: undefined,
       visible: !1
     }, this.setDefaults(), opts)
-
     // 实例化组件
     const component = new Component({
-      scope: `$wux.inputNumberDialog`,
+      scope: `$wux.checkboxDialog`,
       data: options,
       methods: {
         /**
@@ -83,15 +79,27 @@ export default {
          *
          * @param {any} e
          */
-        inputNumberInput(e) {
-          options.inputNumber = (typeof(e) === 'object') ? e.detail.value :e
-
-          let disabled = false
-          if (typeof options.validate === 'function') {
-            disabled = !options.validate(e)
+        checkboxChange: function (e) {
+          
+          let checkboxItems = options.checkboxItems
+          let values = e.detail.value
+          let disabled = !options.validate(e)
+          let checkedValues = []
+          for (let item of checkboxItems) {
+            item.checked = false
+            for (let value of values) {
+              if(item.id == value){
+                item.checked = true
+                checkedValues.push(item.id)
+                break
+              }
+            }
           }
+          options.checkedValues = checkedValues
           this.setData({
-            [`${this.options.scope}.confirmDisabled`]: disabled
+            [`${this.options.scope}.confirmDisabled`]: false,
+            [`${this.options.scope}.checkboxItems`]: checkboxItems,
+            [`${this.options.scope}.checkedValues`]: checkedValues
           })
         },
         /**
@@ -101,7 +109,9 @@ export default {
          */
         confirm(e) {
           const res = e.detail.value
-          this.hide(options.confirm(res))
+          const value = options.checkboxItems
+          const checkedValues = options.checkedValues
+          this.hide(options.confirm(value,checkedValues))
         },
         /**
          * 取消行为
@@ -110,32 +120,6 @@ export default {
          */
         cancel(e) {
           this.hide(options.cancel())
-        },
-        /**
-         * 减金额行为
-         *
-         * @param {any} e
-         */
-        buttonMinus(e){
-          options.inputNumber = options.inputNumber ? Math.floor(options.inputNumber - 1)  : 0
-          let price = options.inputNumber && Math.floor(options.inputNumber)
-          this.setData({
-            [`${this.options.scope}.inputNumber`]: price
-          })
-          this.inputNumberInput(options.inputNumber)
-        },
-        /**
-         * 加金额行为
-         *
-         * @param {any} e
-         */
-        buttonPlus(e){
-          options.inputNumber = options.inputNumber ? Math.floor(options.inputNumber + 1)  : 1
-          let price = Math.floor(options.inputNumber)
-          this.setData({
-            [`${this.options.scope}.inputNumber`]: price
-          })
-          this.inputNumberInput(options.inputNumber)
         }
       }
     })
