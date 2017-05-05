@@ -326,7 +326,7 @@ Page({
   onShow() {
     //判断是否需要显示报价偏好设置
     this.setData({
-      showPreferenceSetting: !app.userService.isSetPreference
+      showPreferenceSetting: (app.userService.isSetPreference==="false")
     })
 
     if(this.data.isOnLoad){

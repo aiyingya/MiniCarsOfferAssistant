@@ -237,6 +237,7 @@ page {
   display:-webkit-box;
   display:-webkit-flex;
   display:flex;
+  background: #FAFAFA;
 }
 
 .preferenceSetting-navbar{
