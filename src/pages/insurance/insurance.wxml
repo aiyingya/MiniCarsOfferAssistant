@@ -9,6 +9,7 @@
         placeholder="保险总额" 
         confirm-type="done"
         bindinput="handleChangeInsuranceTotal"
+        bindconfirm="handleChangeInsuranceTotal"
         />
     </view>
   </view>
@@ -73,7 +74,7 @@
           data-name="{{item.name}}"
           >
           <block wx:if="{{item.name == '第三方责任险'}}">
-            <picker bindchange="handleChangeLiabilityTypes" value="{{liabilityTypesIndex}}" range="{{liabilityTypes}}">
+            <picker bindchange="handleChangeLiabilityTypes" value="{{liabilityTypesIndex}}" range="{{liabilityTypesValue}}">
               <view class="weui-cell__ft_in-access">￥{{InsuranceDetail.liabilityInsurance}}</view>
             </picker>
           </block>
@@ -101,7 +102,7 @@
             ￥{{InsuranceDetail.personnelCarInsurance}}
           </block>
           <block wx:if="{{item.name == '车身划痕险'}}">
-            <picker bindchange="handleChangeScratchesTypes" value="{{scratchesTypesIndex}}" range="{{scratchesTypes}}">
+            <picker bindchange="handleChangeScratchesTypes" value="{{scratchesTypesIndex}}" range="{{scratchesTypesValue}}">
               <view class="weui-cell__ft_in-access">￥{{InsuranceDetail.scratchesInsurance}}</view>
             </picker>
           </block>

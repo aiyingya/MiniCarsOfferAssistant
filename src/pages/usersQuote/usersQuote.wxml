@@ -64,21 +64,6 @@
 						<view>报价偏好设置</view>
 				</view>
 			</view>
-			<view
-				class="weui-cell weui-cell_access"
-				hover="true"
-				hover-class="active"
-				>
-				<view class="weui-cell__hd">
-					<image src="../../images/icons/icon_collection.png" />
-				</view>
-				<view
-					class="weui-cell__bd weui-cell_primary"
-					bindtap="handleToInsurance"
-					>
-						<view>保险金额明细</view>
-				</view>
-			</view>
 	</view>
 
 	<view

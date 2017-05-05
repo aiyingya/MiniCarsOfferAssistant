@@ -109,12 +109,5 @@ Page({
         url: '../setCost/setCost'
       })
     }
-  },
-  handleToInsurance() {
-    if (app.userService.isLogin()) {
-      wx.navigateTo({
-        url: '../insurance/insurance'
-      })
-    }
   }
 })

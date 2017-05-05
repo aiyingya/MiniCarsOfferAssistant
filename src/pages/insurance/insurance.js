@@ -156,25 +156,17 @@ Page({
       }
     },
     scratchesTypes: [2000,5000,10000,20000],
+    scratchesTypesValue: ["保额2000元","保额5000元","保额10000元","保额20000元"],
     scratchesTypesIndex: 1,
     /**
      * 商业险类型.
      */
-    businessRisks: [
-      {name: '第三方责任险', id: '0', checked: true},
-      {name: '车辆损失险', id: '1'},
-      {name: '全车盗抢险', id: '2'},
-      {name: '玻璃单独破碎险', id: '3'},
-      {name: '自然损失险', id: '4'},
-      {name: '不计免赔特约险', id: '5'},
-      {name: '无过责任险', id: '6'},
-      {name: '车上人员责任险', id: '7'},
-      {name: '车身划痕险', id: '8'}
-    ],
+    businessRisks: [],
     /**
      * 第三方责任险赔付额度.
      */
     liabilityTypes: [5,10,20,50,100],
+    liabilityTypesValue: ["赔付额度5万","赔付额度10万","赔付额度20万","赔付额度50万","赔付额度100万"],
     liabilityTypesIndex: 1,
     /**
      * 玻璃单独破碎险选择进口、国产.
@@ -206,7 +198,6 @@ Page({
       wx.hideToast()
     })
     
-    console.log(carModelInfo)
     this.data.officialPrice = carModelInfo.officialPrice
 
   },
@@ -263,9 +254,11 @@ Page({
    * 修改保险总额.
    */
   handleChangeInsuranceTotal(e) {
+    let value = e.detail.value
     // 当保险总额手动改变时，保险明细字体变灰.
     this.setData({
-      ChangeInsuranceTotalStyle: 'color-gray'
+      ChangeInsuranceTotalStyle: 'color-gray',
+      'InsuranceDetail.insuranceTotal': value
     })
   },
   /**
