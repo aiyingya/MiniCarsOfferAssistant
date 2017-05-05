@@ -231,7 +231,7 @@ Page({
   handleChangeService() {
     let that = this
     this.popupInputNumberDialog({
-      title: '贷款服务费(%)',
+      title: '贷款服务费',
       inputNumber: this.data.loan.service,
       inputNumberPlaceholder: '输入贷款服务费',
       dataparameter: 'loan.service'

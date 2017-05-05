@@ -72,7 +72,7 @@
       bindtap="handleChangeService"
       >
       <view class="weui-cell__bd">贷款服务费</view>
-      <view class="weui-cell__ft weui-cell__ft_in-access">{{loan.service}}%</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">{{loan.service}}</view>
     </view>
   </view>
   
