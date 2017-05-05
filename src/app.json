@@ -11,12 +11,8 @@
     "pages/carList/carList",
     "pages/usersQuote/usersQuote",
     "pages/supplier/supplier",
-<<<<<<< HEAD
-    "pages/setCost/setCost"
-=======
     "pages/setCost/setCost",
     "pages/insurance/insurance"
->>>>>>> 4449b6e9d8b66ca8f955d008d3178c22475d51d7
   ],
   "window": {
     "backgroundTextStyle": "dark",

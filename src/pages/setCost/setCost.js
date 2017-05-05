@@ -1,28 +1,13 @@
-<<<<<<< HEAD
-import {
-  $wuxToast
-} from "../../components/wux"
-=======
 import { $wuxToast } from "../../components/wux"
 import { $wuxInputNumberDialog } from "../../components/wux"
 import { $flexInputDialog } from "../../components/wux"
 import { $checkboxDialog } from "../../components/wux"
->>>>>>> 4449b6e9d8b66ca8f955d008d3178c22475d51d7
 import util from '../../utils/util'
 
 let app = getApp()
 
 Page({
   data: {
-<<<<<<< HEAD
-    
-  },
-  onLoad() {
-    
-    
-  }
-  
-=======
     /**
      * 自动加价.
      */
@@ -342,5 +327,4 @@ Page({
     })
     
   }
->>>>>>> 4449b6e9d8b66ca8f955d008d3178c22475d51d7
 })

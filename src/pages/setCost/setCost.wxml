@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-<view class="container setcost-wrapper">
-  <view>set cost</view>
-  
-=======
 <import src="../../components/dialog/inputNumberDialog.wxml"/>
 <template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}"/>
 
@@ -119,5 +114,4 @@
   </view>
   
   <view class="setbtn" bindtap="handlePushSet">确认</view>
->>>>>>> 4449b6e9d8b66ca8f955d008d3178c22475d51d7
 </view>  
