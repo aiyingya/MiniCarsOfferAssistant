@@ -426,7 +426,7 @@
   color: #000000;
   margin-left: 50rpx;
   margin-bottom: 40rpx;
-  width: calc(100% - 100rpx);
+  width: calc(100% - 150rpx);
   background:#EFEFEF;
   border: 1px solid #CCCCCC;
   border-radius: 8rpx;
@@ -451,7 +451,7 @@
 
 .weui-dialog__minus{
   position:absolute;
-  left:110rpx;
+  left:100rpx;
   top:14rpx;
   width:71rpx;
   height:70rpx;
@@ -460,7 +460,7 @@
 }
 .weui-dialog__plus{
   position:absolute;
-  right:20px;
+  right:40rpx;
   top:14rpx;
   width:71rpx;
   height:70rpx;
@@ -475,7 +475,15 @@
   overflow:hidden;
   width:30%;
 }
-
+.weui-dialog__input_text{
+  position:absolute;
+  right:-50rpx;
+  top:23rpx;
+  width:23rpx;
+  height:25rpx;
+  color:#666666;
+  font-size:36rpx;
+}
 
 .wux-number-input {
 	float: left;

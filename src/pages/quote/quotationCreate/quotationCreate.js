@@ -263,10 +263,8 @@ Page({
         const itemPic = carSkuInfo.skuPic || carModelInfo.pic || ''
         const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
-        const originalPrice = carSkuInfo.price || carModelInfo.officialPrice
 
-
-
+        const originalPrice = carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
 
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
         this.setData({
@@ -471,7 +469,9 @@ Page({
     let downPrice = util.downPrice(carPrice, officialPrice)
     let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
-    let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
+    let _diffPrice = Number(that.data.diffPrice)
+    let downPoint = Number(Math.abs(_diffPrice)/officialPrice*100).toFixed(2)
+    // let downPoint = util.downPoint(carPrice, officialPrice).toFixed(2)
 
     console.log(downPriceFlag)
 
@@ -564,26 +564,46 @@ Page({
   handlerSellingPriceChange(e) {
     let that = this
 
-    const _guidePrice = this.data.quotation.quotationItems[0].guidePrice
-    const _baseSellingPrice = this.data.quotation.quotationItems[0].baseSellingPrice
+    const _guidePrice = Number(this.data.quotation.quotationItems[0].guidePrice)
+    const _baseSellingPrice = Number(this.data.quotation.quotationItems[0].baseSellingPrice)
+    const _sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
+    const _originalPrice = this.data.quotation.quotationItems[0].originalPrice
+    const _diffPrice = Number(that.data.diffPrice) //指导价差价
+    let _inputT
+    if(that.data.isSpecialBranch){
+      //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
+      _inputT = Number(Math.abs(_diffPrice)/_guidePrice*100).toFixed(2)
+    }else{
+      _inputT = Math.abs(that.data.diffPrice)
+    }
+
 
     $wuxInputNumberDialog.open({
       title: '裸车价',
-      inputNumber: Math.abs(that.data.diffPrice),
+      inputNumber: _inputT,
       content: "￥" + _baseSellingPrice,
       inputNumberPlaceholder: '输入裸车价',
       inputNumberMaxLength: 9,
       confirmText: '确定',
       cancelText: '取消',
       priceStyle: true,
-      upText: (that.data.diffPrice > 0) ? '上':'下',
+      upText: (_diffPrice > 0) ? '上':'下',
+      isDot:that.data.isSpecialBranch,
       confirm: (res) => {
-        let downUpPrice = Number(res.inputNumber)
+        let _p =  (_diffPrice > 0) ? Number(res.inputNumber) : Number(-Number(res.inputNumber))
+        // originalPrice: originalPrice,
+        //   baseSellingPrice: sellingPrice
         let price
-        if(that.data.diffPrice > 0){
-          price =Number(_guidePrice + downUpPrice)
+        if(that.data.isSpecialBranch){
+          let chaPrice = Number(_baseSellingPrice) - Number(_originalPrice)   //加/减价后的裸车价-裸车价 原始价差价 自定义价格
+          //行情价=指导价*（1-下的点数*0.001） 行情价=指导价*（1+上的点数*0.001）
+          //客户裸车价=行情价+自定义金额
+          price = Math.floor(_guidePrice*(1+Number(_p)*0.001+chaPrice/_guidePrice))
+          that.setData({
+            'priceChange.point':Math.abs(_p)
+        })
         }else{
-          price =Number(_guidePrice - downUpPrice)
+          price = Math.floor(_guidePrice + _p)
         }
 
         that.setData({
