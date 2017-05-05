@@ -197,7 +197,7 @@ Page({
     }, err => {
       wx.hideToast()
     })
-    
+    console.log(carModelInfo.officialPrice)
     this.data.officialPrice = carModelInfo.officialPrice
 
   },
@@ -328,7 +328,7 @@ Page({
     for(let item of businessRisks) { 
       if(item.checked) {
         switch (item.name) {
-          case '第三方责任险':
+          case '第三者责任险':
             let liabilityTypesIndex = this.data.liabilityTypes[this.data.liabilityTypesIndex]
             liabilityInsurance = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.liability[liabilityTypesIndex]
                                                     : this.data.spuStandard.spuAboveSix.liability[liabilityTypesIndex]
@@ -337,7 +337,7 @@ Page({
           case '车辆损失险':
             let basis = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.vehicleBasis
                                            : this.data.spuStandard.spuAboveSix.vehicleBasis
-            vehicleLossInsurance = basis + officialPrice*0.128
+            vehicleLossInsurance = basis + officialPrice*0.0128
             businessTatal += vehicleLossInsurance
             break
           case '全车盗抢险':
@@ -423,7 +423,7 @@ Page({
     for(let item of businessRisks) {
       if(item.checked) {
         switch (item.name) {
-          case '第三方责任险':
+          case '第三者责任险':
             item.amount = InsuranceDetail.liabilityInsurance
             break
           case '车辆损失险':

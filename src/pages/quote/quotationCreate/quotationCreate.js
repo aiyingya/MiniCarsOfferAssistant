@@ -418,7 +418,14 @@ Page({
 
   },
   onHide() {},
-  onUnload() {},
+  onUnload() {
+    // 页面卸载，清楚保险金额.
+    try {
+      wx.removeStorageSync('insurancesAll')
+    } catch (e) { 
+
+    }
+  },
   onReachBottom() {},
   onPullDownRefresh() {},
   isShowDownDot(name){

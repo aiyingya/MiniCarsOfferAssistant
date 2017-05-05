@@ -73,7 +73,7 @@
           wx:if="{{item.checked}}"
           data-name="{{item.name}}"
           >
-          <block wx:if="{{item.name == '第三方责任险'}}">
+          <block wx:if="{{item.name == '第三者责任险'}}">
             <picker bindchange="handleChangeLiabilityTypes" value="{{liabilityTypesIndex}}" range="{{liabilityTypesValue}}">
               <view class="weui-cell__ft_in-access">￥{{InsuranceDetail.liabilityInsurance}}</view>
             </picker>
