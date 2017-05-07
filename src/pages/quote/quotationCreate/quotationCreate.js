@@ -28,9 +28,9 @@ Page({
         itemPic: '',
         specifications: '',
         guidePrice: 0,//指导价
-        sellingPrice: 0,//卖➕
-        originalPrice: 0,//原始➕
-        baseSellingPrice: 0//加了利润的原始➕
+        sellingPrice: 0,//卖的价格
+        originalPrice: 0,//原始最低价格（据说是行情价）
+        baseSellingPrice: 0//加了利润的原始最低价格
       }], // skuId
       hasLoan: true, // 必传，true/false，boolean，是否贷款
       paymentRatio: 30, // 首付比例（%），decimal，全款时不传，取值范围0~100
@@ -127,7 +127,7 @@ Page({
         title:'服务费',
         protoname:'quotation.otherExpensesAll.serverFee',
         price:0//同上
-      },//安装费 其它
+      },//安装费 其它 临时脑补的费用
       {
         type:'otherfee',
         target:'otherFee',
@@ -422,7 +422,7 @@ Page({
     // 页面卸载，清楚保险金额.
     try {
       wx.removeStorageSync('insurancesAll')
-    } catch (e) { 
+    } catch (e) {
 
     }
   },
@@ -441,13 +441,13 @@ Page({
     let requiredExpenses = 0
     var _temp1 = this.data.quotation.requiredExpensesAll
     for(let key of Object.keys(_temp1)){
-      requiredExpenses += _temp1[key]
+      requiredExpenses += Number(_temp1[key])
     }
 
     let otherExpenses = 0
     var _temp2 = this.data.quotation.otherExpensesAll
     for(let key of Object.keys(_temp2)){
-      otherExpenses += _temp2[key]
+      otherExpenses += Number(_temp2[key])
     }
 
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
@@ -830,6 +830,7 @@ Page({
     })
   },
   lookIncome(){
+    console.log("查看收益")
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
     var user = app.userService;
@@ -840,17 +841,34 @@ Page({
     },
      {
        success: (res) => {
+         console.log("已经有收益结果")
+         //设计搞与原型搞上无全款显示效果，临时脑补判断条件与显示画面...
+         if(this.isLoanTabActive()){
+           //贷款
+           $wuxContentDialog.open({
+             title: '收益详情',
+             totleContent: {name:'总利润约',value:'￥'+res.totalProfit},
+             detailContent: [
+               {name:'裸车价收益约',value:'￥'+ res.profit},
+               {name:'保险收益约',value:'￥'+res.insuranceProfit},
+               {name:'贷款收益约',value:'￥'+res.loanProfit}
+             ]
+           })
+           return
+         }
+          //贷款
          $wuxContentDialog.open({
            title: '收益详情',
-           totleContent: {name:'总利润约',value:'￥'+res.totalProfit},
+           totleContent: {name:'总利润约',value:'￥'+(Number(res.totalProfit) - Number(res.loanProfit))},
            detailContent: [
              {name:'裸车价收益约',value:'￥'+ res.profit},
              {name:'保险收益约',value:'￥'+res.insuranceProfit},
-             {name:'贷款收益约',value:'￥'+res.loanProfit}
+             {name:'贷款收益约',value:'￥0'}
            ]
          })
+
        },
-       fail:() => {},
+       fail:() => {console.log("查看收益失败")},
        complete: () => {},
       }
     );
