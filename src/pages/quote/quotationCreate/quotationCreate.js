@@ -142,6 +142,8 @@ Page({
       price: '', // 1.9 万
       point: ''
     },
+    initPoint:'',
+    initSellingPrice:0,
     /// 表单相关
     paymentRatiosArray: [10, 20, 30, 40, 50, 60, 70, 80, 90],
     paymentRatiosIndex: 2,
@@ -479,11 +481,17 @@ Page({
     let downPrice = util.downPrice(carPrice, officialPrice)
     let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
-    let _diffPrice = Number(that.data.diffPrice)
-    let downPoint = Number(Math.abs(_diffPrice)/officialPrice*100).toFixed(2)
-    // let downPoint = util.downPoint(carPrice, officialPrice).toFixed(2)
+    let downPoint = util.downPoint(carPrice, officialPrice).toFixed(2)
 
     console.log(downPriceFlag)
+
+
+    if(!that.data.initPoint){
+      this.setData({
+        initPoint:downPoint,
+        initSellingPrice:carPrice
+      });
+    }
 
     this.setData({
       'quotation.totalPayment': Math.floor(totalPayment),
@@ -576,13 +584,11 @@ Page({
 
     const _guidePrice = Number(this.data.quotation.quotationItems[0].guidePrice)
     const _baseSellingPrice = Number(this.data.quotation.quotationItems[0].baseSellingPrice)
-    const _sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
-    const _originalPrice = this.data.quotation.quotationItems[0].originalPrice
     const _diffPrice = Number(that.data.diffPrice) //指导价差价
     let _inputT
     if(that.data.isSpecialBranch){
       //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
-      _inputT = Number(Math.abs(_diffPrice)/_guidePrice*100).toFixed(2)
+      _inputT = that.data.priceChange.point
     }else{
       _inputT = Math.abs(that.data.diffPrice)
     }
@@ -600,24 +606,22 @@ Page({
       upText: (_diffPrice > 0) ? '上':'下',
       isDot:that.data.isSpecialBranch,
       confirm: (res) => {
-        let _p =  (_diffPrice > 0) ? Number(res.inputNumber) : Number(-Number(res.inputNumber))
-        // originalPrice: originalPrice,
-        //   baseSellingPrice: sellingPrice
+        let _inputNumber =  (_diffPrice > 0) ? Number(res.inputNumber) : Number(-Number(res.inputNumber))
         let price
+
         if(that.data.isSpecialBranch){
-          let chaPrice = Number(_baseSellingPrice) - Number(_originalPrice)   //加/减价后的裸车价-裸车价 原始价差价 自定义价格
-          //行情价=指导价*（1-下的点数*0.001） 行情价=指导价*（1+上的点数*0.001）
-          //客户裸车价=行情价+自定义金额
-          price = Math.floor(_guidePrice*(1+Number(_p)*0.001+chaPrice/_guidePrice))
-          that.setData({
-            'priceChange.point':Math.abs(_p)
-        })
+          if(Number(that.data.initPoint) === Math.abs(_inputNumber)){
+            price = that.data.initSellingPrice
+          }else{
+            price = util.carPrice(_inputNumber,_guidePrice)
+          }
+
         }else{
-          price = Math.floor(_guidePrice + _p)
+          price = Math.floor(_guidePrice + _inputNumber)
         }
 
         that.setData({
-          'quotation.quotationItems[0].sellingPrice': price
+          'quotation.quotationItems[0].sellingPrice': Math.floor(price)
         })
         that.updateForSomeReason()
       },

@@ -252,13 +252,23 @@ export default class Util {
   }
 
   /***
-   * 优惠点数公式
+   * 优惠点数公式 （以下关联）
    * @param price       修改价格
-   * @param originPrice 原价格
+   * @param originPrice 原价格／指导价
    * @return {number}
    */
   static downPoint(price, originPrice) {
     return (Math.abs(originPrice - price) * 100 / originPrice)
+  }
+
+  /***
+   * 获取价格公式 （以上关联）
+   * @param point       优惠点数 可以是正数 也可以是负数
+   * @param originPrice 原价格／指导价
+   * @return {number}
+   */
+  static carPrice(point, originPrice) {
+    return  originPrice * (1 + point*0.01)
   }
 
   static dateCompatibility(dateString) {
