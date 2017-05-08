@@ -135,8 +135,9 @@
 
 			<!--备   注-->
 			<view class="h-cell-gray">备注</view>
-			<view class="white-box">
-						<textarea
+			<view class="white-box" >
+
+						<textarea wx:if="{{isShowTextarea}}"
 								placeholder="请输入内容"
 								cursor-spacing="40px"
 								value="{{quotation.remark}}"
@@ -205,8 +206,8 @@
 			</view>
 			<!--备   注-->
 			<view class="h-cell-gray">备注</view>
-			<view class="white-box">
-						<textarea
+			<view class="white-box" >
+						<textarea wx:if="{{isShowTextarea}}"
 								placeholder="请输入内容"
 								cursor-spacing="40px"
 								value="{{quotation.remark}}"
