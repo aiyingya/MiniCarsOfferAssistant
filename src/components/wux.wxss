@@ -636,12 +636,12 @@
 }
 
 .icon-close {
-  width: 24rpx;
-  height: 24rpx;
+  width: 30rpx;
+  height: 30rpx;
   position: absolute;
   right: 0;
   top: 50%;
-  margin-top: -12rpx;
+  margin-top: -15rpx;
 }
 
 .weui-special-wrp{
