@@ -33,9 +33,10 @@ export default class SAASService extends Service {
     super.sendMessage(opts)
   }
 
-  // sendMessage(opts) {
-  //   super.sendMessage(opts)
-  // }
+
+  sendMessagePromise(opts) {
+    super.sendMessagePromise(opts)
+  }
   /**
    * 发布当前报价草稿到某个用户
    *

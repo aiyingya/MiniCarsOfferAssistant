@@ -106,9 +106,9 @@ Page({
           let scrollFiltersSelectedIndexes = []
 
           let sourcePublishDateFilterId
-          let seatNum = res.seatNum
+          let seatNum = res.seatNums
   
-          that.data.carModelsInfo.seatNum = seatNum
+          that.data.carModelsInfo.seatNums = seatNum
           for (let i = 0; i < filters.length; i++) {
             let filter = filters[i]
             // FIXME: 这里的问题是使用了不严谨的方法获取数据

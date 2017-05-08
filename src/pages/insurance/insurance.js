@@ -55,7 +55,7 @@ Page({
     /** 
      * spu规格.
      */
-    standards: ["家用6座以下", "家用6座以上"],
+    standards: ["家用6座以下"],
     standardIndex: 0,
     /** 
      *根据spu规格计算保险
@@ -184,6 +184,17 @@ Page({
   },
   onLoad(options) {
     let carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelInfo', options)
+    let seatNums = carModelInfo.seatNums
+    let standards = ["家用6座以下"]
+    
+    if(seatNums.length > 0) {
+      for(let item of seatNums) {
+        if(item > 6) {
+          standards = ["家用6座以下","家用6座以上"]
+        }
+      }
+    }
+    console.log(standards)
     wx.showToast({
       title: '正在加载',
       icon: 'loading',
@@ -197,9 +208,11 @@ Page({
     }, err => {
       wx.hideToast()
     })
-    console.log(carModelInfo.officialPrice)
+  
     this.data.officialPrice = carModelInfo.officialPrice
-
+    this.setData({
+      standards: standards
+    })
   },
   /**
    * 获取保险信息.
@@ -233,6 +246,9 @@ Page({
     })
     this.insuranceCostCount(businessRisks)
   },
+  /**
+   * 保险选择.
+   */
   bindChangeBusinessRisks(e) {  
     let businessRisks = this.data.businessRisks
     let values = e.detail.value
@@ -241,9 +257,14 @@ Page({
       for (let val of values) {
         if(item.id == val){
           item.checked = true
+          if(item.name == '第三者责任险') {
+            businessRisks[5].checked = true
+            businessRisks[6].checked = true
+            console.log(businessRisks[5],businessRisks[6],businessRisks)
+          }
           break
         }
-      }
+      } 
     }
     this.setData({
       businessRisks: businessRisks
