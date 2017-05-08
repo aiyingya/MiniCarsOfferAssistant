@@ -78,19 +78,9 @@ export default class YMC {
               const error = result.error || null
               const errorMessage = error.message || error.alertMessage
               err = new Error(errorMessage)
-              wxapi.showToast({
-                title: err.message,
-                icon: 'loading',
-                duration: 2000
-              });
               reject(err)
             } else {
               err = new Error(result)
-              wxapi.showToast({
-                title: err.message,
-                icon: 'loading',
-                duration: 2000
-              });
               reject(err)
             }
           }
@@ -102,14 +92,12 @@ export default class YMC {
          * @param {String} err.errMsg
          */
         fail(err) {
-          console.log('fail')
-          console.error(err)
           const error = new Error('网络请求错误')
-          wxapi.showToast({
-            title: '网络请求错误',
-            icon: 'loading',
-            duration: 2000
-          });
+          // wxapi.showToast({
+          //   title: error.message+options.url,
+          //   icon: 'loading',
+          //   duration: 2000
+          // });
           reject(error)
         },
         complete() {}
@@ -119,7 +107,7 @@ export default class YMC {
 
 
   /**
-   * request 需要经过测试
+   * request
    * @param options
    * loadingType  用来设置网络请求时的加载样式，默认为 toast 类型 toast/navigation/none
    * url          加载的 url
@@ -222,7 +210,7 @@ export default class YMC {
         return
       }
       wxapi.showToast({
-        title: err.message,
+        title: error.message,
         icon: 'loading',
         duration: 2000
       });
@@ -235,6 +223,7 @@ export default class YMC {
       } else {
         wxapi.hideToast()
       }
+
       const error = new Error('网络请求错误')
       wxapi.showToast({
         title: error.message,
@@ -363,7 +352,7 @@ export default class YMC {
             return
           }
           wxapi.showToast({
-            title: err.message,
+            title: error.message,// + options.url,
             icon: 'loading',
             duration: 2000
           });
@@ -391,6 +380,11 @@ export default class YMC {
       }
 
       const error = new Error('网络请求错误')
+      wxapi.showToast({
+        title: error.message,
+        icon: 'loading',
+        duration: 2000
+      });
       typeof options.fail === 'function' && options.fail(error)
       typeof options.complete === 'function' && options.complete()
     }
@@ -502,7 +496,7 @@ export default class YMC {
         return
       }
       wxapi.showToast({
-        title: '网络请求错误',
+        title: error.message,//+options.url,
         icon: 'loading',
         duration: 2000
       });
