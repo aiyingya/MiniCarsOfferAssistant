@@ -293,6 +293,10 @@ Page({
               diffPrice:diffPrice
             })
 
+            this.setData({
+              'quotation.requiredExpensesAll.purchaseTax':Math.floor(sellingPrice/1.17*0.1)
+            })
+
             // 设置报价表单数据
             let quotationItems = [{
               itemNumber: itemNumber,
