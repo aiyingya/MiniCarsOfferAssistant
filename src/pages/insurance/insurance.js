@@ -14,7 +14,7 @@ Page({
       /**
        * 交强险.
        */
-      trafficInsurance: 950,
+      trafficInsurance: 0,
       /**
        * 第三者责任险.
        */
@@ -55,7 +55,7 @@ Page({
     /** 
      * spu规格.
      */
-    standards: ["家用6座以下"],
+    standards: [],
     standardIndex: 0,
     /** 
      *根据spu规格计算保险
@@ -127,7 +127,7 @@ Page({
         /**
          * 车上人员责任险
          */
-        personnelCarRate: 0.0069
+        personnelCarRate: 0.0066
       }
     },
     /**
@@ -185,16 +185,29 @@ Page({
   onLoad(options) {
     let carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelInfo', options)
     let seatNums = carModelInfo.seatNums
-    let standards = ["家用6座以下"]
+    let standards = [] 
+    let standardIndex = 0
+    let sixUnder = [], sixAbove = []
+    let trafficInsurance = 950
     
     if(seatNums.length > 0) {
       for(let item of seatNums) {
-        if(item > 6) {
-          standards = ["家用6座以下","家用6座以上"]
+        if(item < 6) {
+          sixUnder.push(item)
+        }else {
+          sixAbove.push(item)
         }
       }
     }
-    console.log(standards)
+    
+    if(sixUnder.length > 0){
+      standards = ["家用6座以下"]
+    }else if(sixAbove.length > 0) {
+      standards = ["家用6座以上"]
+    }else if(sixUnder.length > 0 && sixAbove.length > 0) {
+      standards = ["家用6座以下","家用6座以上"]
+    }
+    trafficInsurance = standards[standardIndex] == '家用6座以下' ? 950 : 1100
     wx.showToast({
       title: '正在加载',
       icon: 'loading',
@@ -208,10 +221,10 @@ Page({
     }, err => {
       wx.hideToast()
     })
-  
-    this.data.officialPrice = carModelInfo.officialPrice
+    this.data.officialPrice = carModelInfo.sellingPrice
     this.setData({
-      standards: standards
+      standards: standards,
+      'InsuranceDetail.trafficInsurance': trafficInsurance
     })
   },
   /**
@@ -237,7 +250,8 @@ Page({
    * 车座位切换.
    */
   handleChangeStandard: function(e) {
-    let trafficInsurance = e.detail.value == 0 ? 950 : 1100
+    
+    let trafficInsurance = this.data.standards[e.detail.value] == '家用6座以下' ? 950 : 1100
     // all Insurance.
     let businessRisks = this.data.businessRisks
     this.setData({
@@ -252,20 +266,35 @@ Page({
   bindChangeBusinessRisks(e) {  
     let businessRisks = this.data.businessRisks
     let values = e.detail.value
+    let name = e.currentTarget.dataset.name
+ 
     for (let item of businessRisks) {
-      item.checked = false
-      for (let val of values) {
-        if(item.id == val){
-          item.checked = true
-          if(item.name == '第三者责任险') {
-            businessRisks[5].checked = true
-            businessRisks[6].checked = true
-            console.log(businessRisks[5],businessRisks[6],businessRisks)
+      if(item.name === name) {
+        item.checked = false
+        for (let val of values) {
+          if(item.id == val){
+            item.checked = true   
           }
-          break
+        } 
+        if(name === '第三者责任险' && item.checked) {
+          businessRisks[5].checked = true
+          businessRisks[6].checked = true
+        }else if(name === '第三者责任险' && !item.checked) {
+          businessRisks[5].checked = false
+          businessRisks[6].checked = false
+        }
+        if(name === '车辆损失险' && item.checked) {
+          businessRisks[2].checked = true
+          businessRisks[6].checked = true
+          businessRisks[8].checked = true
+        }else if(name === '车辆损失险' && !item.checked) {
+          businessRisks[2].checked = false
+          businessRisks[6].checked = false
+          businessRisks[8].checked = false
         }
       } 
     }
+    
     this.setData({
       businessRisks: businessRisks
     })
@@ -321,7 +350,8 @@ Page({
     let officialPrice = this.data.officialPrice
     let businessRisks = data
     // spu规格.
-    let standardIndex = this.data.standardIndex 
+    
+    let standardIndex = this.data.standards[this.data.standardIndex] == '家用6座以下' ? 0 : 1
     // 初始化总金额为0.
     let totalAmount = 0
     // 商业险总额.
@@ -346,6 +376,7 @@ Page({
     let personnelCarInsurance = 0
     // 车身划痕险
     let scratchesInsurance = 0
+    
     for(let item of businessRisks) { 
       if(item.checked) {
         switch (item.name) {
@@ -406,7 +437,7 @@ Page({
               scratches = this.data.scratches[scratchesTypesIndex].one
             }else if(30<= officialPrice/10000 <= 50) {
               scratches = this.data.scratches[scratchesTypesIndex].two
-            }else {
+            }else if(officialPrice/10000 > 50) {
               scratches = this.data.scratches[scratchesTypesIndex].three
             }
             scratchesInsurance = scratches 
