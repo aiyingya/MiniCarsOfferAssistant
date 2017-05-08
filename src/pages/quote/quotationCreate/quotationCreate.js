@@ -302,6 +302,7 @@ Page({
               originalPrice: originalPrice,
               baseSellingPrice: sellingPrice
             }]
+            carModelInfo.sellingPrice = sellingPrice
             this.setData({
               'quotation.quotationItems': quotationItems,
               carSKUInfo: carSkuInfo,
