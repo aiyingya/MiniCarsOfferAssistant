@@ -78,9 +78,19 @@ export default class YMC {
               const error = result.error || null
               const errorMessage = error.message || error.alertMessage
               err = new Error(errorMessage)
+              wxapi.showToast({
+                title: err.message,
+                icon: 'loading',
+                duration: 2000
+              });
               reject(err)
             } else {
               err = new Error(result)
+              wxapi.showToast({
+                title: err.message,
+                icon: 'loading',
+                duration: 2000
+              });
               reject(err)
             }
           }
@@ -95,6 +105,11 @@ export default class YMC {
           console.log('fail')
           console.error(err)
           const error = new Error('网络请求错误')
+          wxapi.showToast({
+            title: '网络请求错误',
+            icon: 'loading',
+            duration: 2000
+          });
           reject(error)
         },
         complete() {}
@@ -102,8 +117,9 @@ export default class YMC {
     })
   }
 
+
   /**
-   * request
+   * request 需要经过测试
    * @param options
    * loadingType  用来设置网络请求时的加载样式，默认为 toast 类型 toast/navigation/none
    * url          加载的 url
@@ -115,6 +131,145 @@ export default class YMC {
    * complete     完成回调
    */
   request(options) {
+    if (!options) return
+
+    let loadingType = options.loadingType
+
+    if (options.loadingType === 'navigation') {
+      console.log('显示导航栏加载')
+      wxapi.showNavigationBarLoading()
+    } else if (options.loadingType === 'none') {
+      // 不使用任何加载
+    } else {
+      wxapi.showToast({
+        title: '正在加载',
+        icon: 'loading',
+        duration: 10000,
+        mask: true
+      })
+    }
+
+    // FIXME: 处理 clientId 使用同步获取相对较重
+    let clientId = wxapi.getStorageSync('clientId')
+
+    const defaultHeader = {
+      'ClientId': clientId,
+      'ClientVersion': config.versionCod,
+      'SystemCode': '60',
+      'content-type': options.contentType || 'application/json'
+    }
+    const header = options.header || {}
+
+    wxapi.request({
+      url: options.url,
+      method: options.method,
+      data: options.data,
+      header: Object.assign(defaultHeader, header)
+    }).then(res=>{
+
+      console.log('success')
+      console.log(res)
+      const result = res.data
+      const statusCode = res.statusCode
+
+      // 新版 uc 接口使用 behavior 来处理额外行为，
+      const behavior = result.behavior || null
+      if (behavior) {
+        if (behavior.type === 'TOAST') {
+          let content = behavior.content
+          if (content && content.length) {
+            // 暂不实现
+          }
+        } else if (behavior.type === 'Alert') {
+          // 暂不实现
+        } else if (behavior.type === 'Notice') {
+          // 暂不实现
+        }
+      }
+
+      if (statusCode < 399) {
+        // 2XX, 3XX 成功
+        const data = result.data || null
+        typeof options.success === 'function' && options.success(data)
+      } else {
+        // 4XX, 5XX 失败
+        console.error(res)
+        let err
+        if (typeof result === 'object') {
+          // 旧版 ymcapi 接口中只能使用 error 中的 alertMessage 来处理额外行为
+          // 服务端可以处理的错误
+          const error = result.error || null
+          const errorMessage = error.message || error.alertMessage
+          err = new Error(errorMessage)
+        } else {
+          err = new Error(result)
+        }
+        if(typeof options.fail === 'function' ){
+          options.fail(err)
+          return
+        }
+        wxapi.showToast({
+          title: err.message,
+          icon: 'loading',
+          duration: 2000
+        });
+      }
+    },err=>{
+      console.log('fail')
+      const error = new Error('网络请求错误')
+      if(typeof options.fail === 'function' ){
+        options.fail(error)
+        return
+      }
+      wxapi.showToast({
+        title: err.message,
+        icon: 'loading',
+        duration: 2000
+      });
+    }).catch(function (e) {
+      if (options.loadingType === 'navigation') {
+        console.log('隐藏导航栏加载')
+        wxapi.hideNavigationBarLoading()
+      } else if (options.loadingType === 'none') {
+        // 不使用任何加载
+      } else {
+        wxapi.hideToast()
+      }
+      const error = new Error('网络请求错误')
+      wxapi.showToast({
+        title: error.message,
+        icon: 'loading',
+        duration: 2000
+      });
+    }).finally(function () {
+      if (options.loadingType === 'navigation') {
+        console.log('隐藏导航栏加载')
+        wxapi.hideNavigationBarLoading()
+      } else if (options.loadingType === 'none') {
+        // 不使用任何加载
+      } else {
+        wxapi.hideToast()
+      }
+      typeof options.complete === 'function' && options.complete()
+    })
+
+
+  }
+
+
+  /**
+   * request 老的
+   * @param options
+   * loadingType  用来设置网络请求时的加载样式，默认为 toast 类型 toast/navigation/none
+   * url          加载的 url
+   * method       加载的 http 方法
+   * data         加载的数据体
+   * header       加载请求所使用的 header
+   * success      成功回调
+   * fail         失败回调
+   * complete     完成回调
+   */
+  oldrequest(options) {
     if (!options) return
 
     let loadingType = options.loadingType
@@ -186,18 +341,32 @@ export default class YMC {
               const error = result.error || null
               const errorMessage = error.message || error.alertMessage
               err = new Error(errorMessage)
-              typeof options.fail === 'function' && options.fail(err)
             } else {
               err = new Error(result)
-              typeof options.fail === 'function' && options.fail(err)
             }
+            if(typeof options.fail === 'function' ){
+              options.fail(err)
+              return
+            }
+            wxapi.showToast({
+              title: err.message,
+              icon: 'loading',
+              duration: 2000
+            });
           }
         },
         fail(err) {
           console.log('fail')
-          console.error(err)
           const error = new Error('网络请求错误')
-          typeof options.fail === 'function' && options.fail(error)
+          if(typeof options.fail === 'function' ){
+            options.fail(error)
+            return
+          }
+          wxapi.showToast({
+            title: err.message,
+            icon: 'loading',
+            duration: 2000
+          });
         },
         complete: function () {
           if (options.loadingType === 'navigation') {
@@ -229,34 +398,35 @@ export default class YMC {
 
 
   /**
+   * //TODO：等1.5上线以后这里需要改成Promise的返回
+   * 用来替换requestByPromise
    * request
    * @param options
    * url          加载的 url
    * method       加载的 http 方法
    * data         加载的数据体
    * header       加载请求所使用的 header
-   * success      成功回调
-   * fail         失败回调
+   * success      成功回调sendMessagePromise
    * complete     完成回调
    */
   requestPromise(options) {
-    if (!options) return null
+    if (!options) return
 
-    let clientId = ''
-    try {
-      // FIXME: 处理 clientId 使用同步获取相对较重
-      clientId = wx.getStorageSync('clientId')
-    } catch (e) {
-      console.error(e)
-    }
+    let loadingType = options.loadingType
 
-    const defaultHeader = {
-      'ClientId': clientId,
-      'ClientVersion': config.versionCode,
-      'SystemCode': '60',
-      'content-type': options.contentType || 'application/json'
+    if (options.loadingType === 'navigation') {
+      console.log('显示导航栏加载')
+      wx.showNavigationBarLoading()
+    } else if (options.loadingType === 'none') {
+      // 不使用任何加载
+    } else {
+      wx.showToast({
+        title: '正在加载',
+        icon: 'loading',
+        duration: 10000,
+        mask: true
+      })
     }
-    const header = options.header || {};
 
     wxapi.request({
       url: options.url,
@@ -303,12 +473,25 @@ export default class YMC {
           err = new Error(errorMessage)
           if(options.fail && typeof(options.fail) ==='function'){
             options.fail(err)
+            return
           }
+          wxapi.showToast({
+            title: err.message,
+            icon: 'loading',
+            duration: 2000
+          });
+
         } else {
           err = new Error(result)
           if(options.fail && typeof(options.fail) ==='function'){
             options.fail(err)
+            return
           }
+          wxapi.showToast({
+            title: err.message,
+            icon: 'loading',
+            duration: 2000
+          });
         }
       }
     },fail=>{
@@ -316,16 +499,27 @@ export default class YMC {
       const error = new Error('网络请求错误');
       if(options.fail && typeof(options.fail) ==='function'){
         options.fail(error)
+        return
       }
+      wxapi.showToast({
+        title: '网络请求错误',
+        icon: 'loading',
+        duration: 2000
+      });
+
     }).catch(function (reason) {
       // 抛出一个全局错误
       console.log('catch',reason)
       if(options.fail && typeof(options.fail) ==='function'){
         options.fail(reason)
+        return
       }
+      wxapi.showToast({
+        title: '系统异常',
+        icon: 'loading',
+        duration: 2000
+      });
     }).finally(options.complete || function () {});
 
   }
-
-
 }
