@@ -151,7 +151,7 @@ export default {
             options.inputNumber = Number(number) + 100
             text = Number(options.inputNumber)
           }else{
-            options.inputNumber = Number(number + 1)
+            options.inputNumber = Number(number) + 1
             text = Number(options.inputNumber).toFixed(2)
           }
           this.setData({

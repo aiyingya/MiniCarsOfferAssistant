@@ -142,6 +142,8 @@ Page({
       price: '', // 1.9 万
       point: ''
     },
+    initPoint:'',
+    initSellingPrice:0,
     /// 表单相关
     paymentRatiosArray: [10, 20, 30, 40, 50, 60, 70, 80, 90],
     paymentRatiosIndex: 2,
@@ -211,7 +213,6 @@ Page({
     let carSkuInfoJSONString = options.carSkuInfo
     let carModelInfoJSONString = options.carModelsInfo
 
-
     if (quotationJSONString && quotationJSONString.length) {
       /***
        * 来源页面来自于详情页面， 参数中有 quotation
@@ -229,6 +230,7 @@ Page({
           stagesIndex: stagesIndex,
           paymentRatiosIndex: paymentRatiosIndex
         })
+
       } else {
         // 对于是全款的情况， 需要手动设置贷款的相应参数数据
         quotation.paymentRatio = 30
@@ -283,6 +285,7 @@ Page({
             this.setData({
               'requestResult': res
             })
+
             let sellingPrice = res.carPrice;
             var diffPrice = Number(sellingPrice - guidePrice);
             this.setData({
@@ -319,9 +322,7 @@ Page({
                 });
               }
             });
-
-
-
+            this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
 
           },
           fail: () => {},
@@ -467,6 +468,7 @@ Page({
     if (this.isLoanTabActive()) {
       let isMonth = (that.data.requestResult.interestType===1);
       const wRate = isMonth ? (10000/(stages*12) + expenseRate * 10) : expenseRate//万元系数
+      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
       monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
 
@@ -480,11 +482,17 @@ Page({
     let downPrice = util.downPrice(carPrice, officialPrice)
     let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
-    let _diffPrice = Number(that.data.diffPrice)
-    let downPoint = Number(Math.abs(_diffPrice)/officialPrice*100).toFixed(2)
-    // let downPoint = util.downPoint(carPrice, officialPrice).toFixed(2)
+    let downPoint = util.downPoint(carPrice, officialPrice).toFixed(2)
 
     console.log(downPriceFlag)
+
+
+    if(!that.data.initPoint){
+      this.setData({
+        initPoint:downPoint,
+        initSellingPrice:carPrice
+      });
+    }
 
     this.setData({
       'quotation.totalPayment': Math.floor(totalPayment),
@@ -517,15 +525,8 @@ Page({
     })
     this.updateForSomeReason()
   },
-  handlerStagesChange(e) {
-    let that = this
-    this.setData({
-      'stagesIndex': e.detail.value,
-      'quotation.stages': this.data.stagesArray[e.detail.value]
-    })
+  setExpenseRate(year){
     const isMonth = this.data.requestResult.interestType;
-
-    let year = this.data.stagesArray[e.detail.value];
     var expenseRate = this.data.quotation.expenseRate;
     const rateObj= this.data.requestResult;
     switch (year){
@@ -539,9 +540,19 @@ Page({
         expenseRate = isMonth ? rateObj.threeInterest : rateObj.threeWYXS
         break;
     }
-    that.setData({
+    this.setData({
       'quotation.expenseRate': Number(expenseRate)
     })
+  },
+  handlerStagesChange(e) {
+    let that = this
+    this.setData({
+      'stagesIndex': e.detail.value,
+      'quotation.stages': this.data.stagesArray[e.detail.value]
+    })
+
+    let year = this.data.stagesArray[e.detail.value];
+    this.setExpenseRate(year)
     this.updateForSomeReason()
   },
   handlerExpenseRateChange(e) {
@@ -577,13 +588,11 @@ Page({
 
     const _guidePrice = Number(this.data.quotation.quotationItems[0].guidePrice)
     const _baseSellingPrice = Number(this.data.quotation.quotationItems[0].baseSellingPrice)
-    const _sellingPrice = this.data.quotation.quotationItems[0].sellingPrice
-    const _originalPrice = this.data.quotation.quotationItems[0].originalPrice
     const _diffPrice = Number(that.data.diffPrice) //指导价差价
     let _inputT
     if(that.data.isSpecialBranch){
       //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
-      _inputT = Number(Math.abs(_diffPrice)/_guidePrice*100).toFixed(2)
+      _inputT = that.data.priceChange.point
     }else{
       _inputT = Math.abs(that.data.diffPrice)
     }
@@ -601,24 +610,22 @@ Page({
       upText: (_diffPrice > 0) ? '上':'下',
       isDot:that.data.isSpecialBranch,
       confirm: (res) => {
-        let _p =  (_diffPrice > 0) ? Number(res.inputNumber) : Number(-Number(res.inputNumber))
-        // originalPrice: originalPrice,
-        //   baseSellingPrice: sellingPrice
+        let _inputNumber =  (_diffPrice > 0) ? Number(res.inputNumber) : Number(-Number(res.inputNumber))
         let price
+
         if(that.data.isSpecialBranch){
-          let chaPrice = Number(_baseSellingPrice) - Number(_originalPrice)   //加/减价后的裸车价-裸车价 原始价差价 自定义价格
-          //行情价=指导价*（1-下的点数*0.001） 行情价=指导价*（1+上的点数*0.001）
-          //客户裸车价=行情价+自定义金额
-          price = Math.floor(_guidePrice*(1+Number(_p)*0.001+chaPrice/_guidePrice))
-          that.setData({
-            'priceChange.point':Math.abs(_p)
-        })
+          if(Number(that.data.initPoint) === Math.abs(_inputNumber)){
+            price = that.data.initSellingPrice
+          }else{
+            price = util.carPrice(_inputNumber,_guidePrice)
+          }
+
         }else{
-          price = Math.floor(_guidePrice + _p)
+          price = Math.floor(_guidePrice + _inputNumber)
         }
 
         that.setData({
-          'quotation.quotationItems[0].sellingPrice': price
+          'quotation.quotationItems[0].sellingPrice': Math.floor(price)
         })
         that.updateForSomeReason()
       },
