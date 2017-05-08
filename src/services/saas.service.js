@@ -33,6 +33,7 @@ export default class SAASService extends Service {
     super.sendMessage(opts)
   }
 
+
   sendMessagePromise(opts) {
     super.sendMessagePromise(opts)
   }
@@ -69,7 +70,7 @@ export default class SAASService extends Service {
    */
   requestPublishQuotation (draftId, customerMobile,customerName,customerSex, object) {
     if (draftId && draftId !== '') {
-      this.sendMessagePromise({
+      this.sendMessage({
         path: 'sale/quotation',
         data: {
           draftId: draftId,
@@ -204,7 +205,7 @@ export default class SAASService extends Service {
       data.snsId = snsId
       data.loginChannel = this.userService.loginChannel
 
-      this.sendMessagePromise({
+      this.sendMessage({
         path: 'sale/quotation/draft',
         data: data,
         method: 'POST',
@@ -235,7 +236,7 @@ export default class SAASService extends Service {
    * @param object
    */
   requestBookCar(itemName, spec, itemPrice, itemCount, object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: 'sale/quotation/order',
       data: {
         userId: this.userService.auth.userId,
@@ -272,7 +273,7 @@ export default class SAASService extends Service {
         snsId = this.userService.snsId
       }
 
-      this.sendMessagePromise({
+      this.sendMessage({
         path: 'sale/quotation',
         loadingType: object.loadingType,
         data: {
@@ -353,7 +354,7 @@ export default class SAASService extends Service {
       }
     }
 
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `product/car/spu/${carModelId}/sources`,
       method: 'GET',
       data: data,
@@ -374,7 +375,7 @@ export default class SAASService extends Service {
   requestAddOrRemoveTagnameForASupplier (spuId, carSourceId, tagName, supplierId, addOrRemove, object) {
     if (spuId && carSourceId  && tagName && supplierId) {
       const method = addOrRemove ? 'POST' : 'DELETE'
-      this.sendMessagePromise({
+      this.sendMessage({
         path: `product/car/spu/${spuId}/source/${carSourceId}/tag`,
         data: {
           tagName: tagName,
@@ -399,7 +400,7 @@ export default class SAASService extends Service {
    * @param object
    */
   requestCarSourceContent (carSourceId, object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `product/car/source/${carSourceId}/content`,
       loadingType: 'none',
       method: 'GET',

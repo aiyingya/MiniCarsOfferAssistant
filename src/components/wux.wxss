@@ -453,8 +453,8 @@
   position:absolute;
   left:100rpx;
   top:14rpx;
-  width:71rpx;
-  height:70rpx;
+  width:65rpx;
+  height:65rpx;
   color:#666666;
   font-size:36rpx;
 }
@@ -462,8 +462,8 @@
   position:absolute;
   right:40rpx;
   top:14rpx;
-  width:71rpx;
-  height:70rpx;
+  width:65rpx;
+  height:65rpx;
   color:#666666;
   font-size:36rpx;
 }
@@ -636,12 +636,12 @@
 }
 
 .icon-close {
-  width: 24rpx;
-  height: 24rpx;
+  width: 30rpx;
+  height: 30rpx;
   position: absolute;
   right: 0;
   top: 50%;
-  margin-top: -12rpx;
+  margin-top: -15rpx;
 }
 
 .weui-special-wrp{

@@ -59,7 +59,8 @@ Page({
         "iBJMPTYX":0,//"不计免赔特约险",
         "iWGZRX":0,//"无过责任险",
         "iCSRYZRX":0,//"车上人员责任险",
-        "iCSHHX":0//"车身划痕险"
+        "iCSHHX":0,//"车身划痕险"
+        "carSize":''//"车辆规格"
       },
       advancePayment: 0, // 必传，首次支付金额，如果全款则为全款金额",
       monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
@@ -356,7 +357,8 @@ Page({
       "iBJMPTYX":0,//"不计免赔特约险",
       "iWGZRX":0,//"无过责任险",
       "iCSRYZRX":0,//"车上人员责任险",
-      "iCSHHX":0//"车身划痕险"
+      "iCSHHX":0,//"车身划痕险"
+      "carSize":''//"车辆规格"
     }
 
     if(!_insurances){
@@ -406,7 +408,8 @@ Page({
     })
     insuranceDetail.iTotal = _insurances.insuranceTotal
     insuranceDetail.iJQX = _insurances.trafficInsurance
-
+    //TODO:盼盼提供规格数据
+    // insuranceDetail.carSize = _insurances.xxxxxxxx;
     this.setData({
       'quotation.insuranceDetail': insuranceDetail
     })
