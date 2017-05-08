@@ -453,8 +453,8 @@
   position:absolute;
   left:100rpx;
   top:14rpx;
-  width:71rpx;
-  height:70rpx;
+  width:65rpx;
+  height:65rpx;
   color:#666666;
   font-size:36rpx;
 }
@@ -462,8 +462,8 @@
   position:absolute;
   right:40rpx;
   top:14rpx;
-  width:71rpx;
-  height:70rpx;
+  width:65rpx;
+  height:65rpx;
   color:#666666;
   font-size:36rpx;
 }
