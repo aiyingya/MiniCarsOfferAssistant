@@ -28,10 +28,10 @@ export default class SAASService extends Service {
     return super.sendMessageByPromise(opts)
   }
 
-  // sendMessage(opts, loadingType = 'toast') {
-  //   opts.loadingType = loadingType
-  //   super.sendMessage(opts)
-  // }
+  sendMessage(opts, loadingType = 'toast') {
+    opts.loadingType = loadingType
+    super.sendMessage(opts)
+  }
 
   sendMessagePromise(opts) {
     super.sendMessagePromise(opts)
@@ -417,7 +417,7 @@ export default class SAASService extends Service {
    * @param object
    */
   requestSearchCarSpu (text, pageIndex, pageSize, object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `search/car/spu`,
       loadingType: 'none',
       method: 'GET',
@@ -436,7 +436,7 @@ export default class SAASService extends Service {
    *
    */
   requestSearchSpuBySpuId (spuId,data,object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `supply/car/spu/${spuId}`,
       method: 'GET',
       data: data || {},
@@ -447,7 +447,7 @@ export default class SAASService extends Service {
   }
 
   requestSearchSpuByCarSeriesId (carSeriesId, inStock, object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `supply/car/spu`,
       method: 'GET',
       data: {
@@ -474,7 +474,7 @@ export default class SAASService extends Service {
       inStock: inStock
     }
     data = type === 'CAR_SPU' ? data : resdata
-    this.sendMessagePromise({
+    this.sendMessage({
       path: path,
       method: 'GET',
       data: resdata,

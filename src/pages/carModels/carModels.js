@@ -178,6 +178,9 @@ Page({
             stockSeclect: stockSeclect
           })
         }
+      },
+      fail(err) {
+        console.log(err)
       }
     })
   },
