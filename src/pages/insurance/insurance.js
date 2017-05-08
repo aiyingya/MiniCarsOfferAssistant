@@ -266,21 +266,35 @@ Page({
   bindChangeBusinessRisks(e) {  
     let businessRisks = this.data.businessRisks
     let values = e.detail.value
-
+    let name = e.currentTarget.dataset.name
+ 
     for (let item of businessRisks) {
-      item.checked = false
-      for (let val of values) {
-        if(item.id == val){
-          item.checked = true          
-          break
+      if(item.name === name) {
+        item.checked = false
+        for (let val of values) {
+          if(item.id == val){
+            item.checked = true   
+          }
+        } 
+        if(name === '第三者责任险' && item.checked) {
+          businessRisks[5].checked = true
+          businessRisks[6].checked = true
+        }else if(name === '第三者责任险' && !item.checked) {
+          businessRisks[5].checked = false
+          businessRisks[6].checked = false
         }
-      }
-      
+        if(name === '车辆损失险' && item.checked) {
+          businessRisks[2].checked = true
+          businessRisks[6].checked = true
+          businessRisks[8].checked = true
+        }else if(name === '车辆损失险' && !item.checked) {
+          businessRisks[2].checked = false
+          businessRisks[6].checked = false
+          businessRisks[8].checked = false
+        }
+      } 
     }
-    if(businessRisks[0].name == '第三者责任险' && businessRisks[0].checked) {
-      businessRisks[5].checked = true
-      businessRisks[6].checked = true
-    }
+    
     this.setData({
       businessRisks: businessRisks
     })
