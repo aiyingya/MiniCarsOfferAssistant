@@ -213,7 +213,6 @@ Page({
     let carSkuInfoJSONString = options.carSkuInfo
     let carModelInfoJSONString = options.carModelsInfo
 
-
     if (quotationJSONString && quotationJSONString.length) {
       /***
        * 来源页面来自于详情页面， 参数中有 quotation
@@ -231,6 +230,7 @@ Page({
           stagesIndex: stagesIndex,
           paymentRatiosIndex: paymentRatiosIndex
         })
+
       } else {
         // 对于是全款的情况， 需要手动设置贷款的相应参数数据
         quotation.paymentRatio = 30
@@ -285,6 +285,7 @@ Page({
             this.setData({
               'requestResult': res
             })
+
             let sellingPrice = res.carPrice;
             var diffPrice = Number(sellingPrice - guidePrice);
             this.setData({
@@ -320,9 +321,7 @@ Page({
                 });
               }
             });
-
-
-
+            this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
 
           },
           fail: () => {},
@@ -525,15 +524,8 @@ Page({
     })
     this.updateForSomeReason()
   },
-  handlerStagesChange(e) {
-    let that = this
-    this.setData({
-      'stagesIndex': e.detail.value,
-      'quotation.stages': this.data.stagesArray[e.detail.value]
-    })
+  setExpenseRate(year){
     const isMonth = this.data.requestResult.interestType;
-
-    let year = this.data.stagesArray[e.detail.value];
     var expenseRate = this.data.quotation.expenseRate;
     const rateObj= this.data.requestResult;
     switch (year){
@@ -547,9 +539,19 @@ Page({
         expenseRate = isMonth ? rateObj.threeInterest : rateObj.threeWYXS
         break;
     }
-    that.setData({
+    this.setData({
       'quotation.expenseRate': Number(expenseRate)
     })
+  },
+  handlerStagesChange(e) {
+    let that = this
+    this.setData({
+      'stagesIndex': e.detail.value,
+      'quotation.stages': this.data.stagesArray[e.detail.value]
+    })
+
+    let year = this.data.stagesArray[e.detail.value];
+    this.setExpenseRate(year)
     this.updateForSomeReason()
   },
   handlerExpenseRateChange(e) {
