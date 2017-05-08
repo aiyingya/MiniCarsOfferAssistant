@@ -86,7 +86,7 @@ export default class Util {
   }
 
   /***
-   * 总费用（贷款首付+贷款+利息）计算公式 --1.5已经
+   * 总费用（贷款首付+贷款+利息）计算公式
    *
    * @param carPrice          裸车价，元
    * @param paymentRatio      首付比例，%

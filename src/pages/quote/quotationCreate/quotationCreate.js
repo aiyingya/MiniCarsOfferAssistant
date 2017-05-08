@@ -468,6 +468,7 @@ Page({
     if (this.isLoanTabActive()) {
       let isMonth = (that.data.requestResult.interestType===1);
       const wRate = isMonth ? (10000/(stages*12) + expenseRate * 10) : expenseRate//万元系数
+      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
       monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
 
