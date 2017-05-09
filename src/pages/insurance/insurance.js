@@ -197,7 +197,10 @@ Page({
     let standardIndex = 0
     let sixUnder = [], sixAbove = []
     let trafficInsurance = 950
-    console.log(pageSource,carModelInfo)
+    
+    // 初始获取保险信息，判断是否为二次编辑保险.
+    let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
+    console.log(pageSource,carModelInfo,insurancesAll)
     if(pageSource === 'new') {
       if(seatNums && seatNums.length > 0) {
         for(let item of seatNums) {
@@ -215,8 +218,7 @@ Page({
         sixAbove.push('1')
       }
     }
-    
-    
+
     if(sixUnder.length > 0){
       standards = ["家用6座以下"]
     }else if(sixAbove.length > 0) {
@@ -232,19 +234,50 @@ Page({
       carModelInfo: carModelInfo,
       'InsuranceDetail.trafficInsurance': trafficInsurance
     })
-    wx.showToast({
-      title: '正在加载',
-      icon: 'loading',
-      duration: 10000,
-      mask: true
-    })
-    const promise1 = this.getDefaultInsurance()
-    const promise = Promise.race([promise1])
-    promise.then(res => {
-      wx.hideToast()
-    }, err => {
-      wx.hideToast()
-    })
+    
+    // 二次进入页面,直接处理Storage.
+    if(insurancesAll !== null) {
+      console.log(insurancesAll)
+      for(let item of insurancesAll.businessInsurances) {
+        switch (item.name) {
+          case '第三者责任险':
+            this.data.liabilityTypesIndex = item.index
+            break
+          case '玻璃单独破碎险':      
+            this.data.glassBrokenTypesIndex = item.index
+            break
+          case '车身划痕险': 
+            this.data.scratchesTypesIndex = item.index
+            break
+          default:
+
+            break
+        }
+      }
+      if(standards.length > 1) {
+        standardIndex = insurancesAll.saddleValue
+      }
+      this.setData({
+        'businessRisks': insurancesAll.businessInsurances,
+        standardsIndex: standardIndex
+      })
+      this.insuranceCostCount(insurancesAll.businessInsurances)
+    }else {
+      wx.showToast({
+        title: '正在加载',
+        icon: 'loading',
+        duration: 10000,
+        mask: true
+      })
+      const promise1 = this.getDefaultInsurance()
+      const promise = Promise.race([promise1])
+      promise.then(res => {
+        wx.hideToast()
+      }, err => {
+        wx.hideToast()
+      })
+    }
+      
   },
   /**
    * 获取保险信息.
@@ -258,7 +291,76 @@ Page({
       if (res) {
         let pageSource = that.data.pageSource
         let carModelInfo = that.data.carModelInfo
+        // 编辑报价单页面进入.
+        // "iTotal":0,//"保险总额",
+        // "iJQX":0,//"交强险",
+        // "iDSZZRX":0,//"第三者责任险",
+        // "iCLSSX":0,//"车辆损失险",
+        // "iQCDQX":0,//"全车盗抢险",
+        // "iBLDDPSX":0,//"玻璃单独破碎险",
+        // "iZRSSX":0,//"自燃损失险",
+        // "iBJMPTYX":0,//"不计免赔特约险",
+        // "iWGZRX":0,//"无过责任险",
+        // "iCSRYZRX":0,//"车上人员责任险",
+        // "iCSHHX":0,//"车身划痕险"
+        
+        if(pageSource === 'editor') {
+          for(let item of res.insurances) {
+            switch (item.name) {
+              case '第三者责任险':
+                if(carModelInfo.insuranceDetail.iDSZZRX > 0) {
+                  item.checked = true
+                  that.data.liabilityTypesIndex = carModelInfo.insuranceDetail.iDSZZRX_INDEX
+                }
+                break
+              case '车辆损失险':
+                if(carModelInfo.insuranceDetail.iCLSSX > 0) {
+                  item.checked = true
+                }
+                break
+              case '全车盗抢险': 
+                if(carModelInfo.insuranceDetail.iQCDQX > 0) {
+                  item.checked = true
+                }
+                break
+              case '玻璃单独破碎险': 
+                if(carModelInfo.insuranceDetail.iBLDDPSX > 0) {
+                  item.checked = true
+                  that.data.glassBrokenTypesIndex = carModelInfo.insuranceDetail.iBLDDPSX_INDEX
+                }
+                break
+              case '自燃损失险':
+                if(carModelInfo.insuranceDetail.iZRSSX > 0) {
+                  item.checked = true
+                }
+                break
+              case '不计免赔特约险':
+                if(carModelInfo.insuranceDetail.iBJMPTYX > 0) {
+                  item.checked = true
+                }
+                break
+              case '无过责任险': 
+                if(carModelInfo.insuranceDetail.iWGZRX > 0) {
+                  item.checked = true
+                }
+                break
+              case '车上人员责任险': 
+                if(carModelInfo.insuranceDetail.iCSRYZRX > 0) {
+                  item.checked = true
+                }
+                break
+              case '车身划痕险': 
+                if(carModelInfo.insuranceDetail.iCSHHX > 0) {
+                  item.checked = true
+                  that.data.scratchesTypesIndex = carModelInfo.insuranceDetail.iCSHHX_INDEX
+                }
+                break
+              default:
 
+                break
+            } 
+          }
+        }
         that.setData({
           'businessRisks': res.insurances
         })

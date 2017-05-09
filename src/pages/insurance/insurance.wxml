@@ -26,10 +26,15 @@
 		  hover-class="active"
       >
       <view class="weui-cell__bd">规格</view>
-      <view class="weui-cell__ft weui-cell__ft_in-access {{ChangeInsuranceTotalStyle}}">
-        <picker bindchange="handleChangeStandard" value="{{standardIndex}}" range="{{standards}}">
-            {{standards[standardIndex]}}
-        </picker>
+      <view class="weui-cell__ft {{ChangeInsuranceTotalStyle}}">
+        <block wx:if="{{standards.length > 1}}">
+          <picker bindchange="handleChangeStandard" value="{{standardIndex}}" range="{{standards}}">
+            <view class="weui-cell__ft_in-access">{{standards[standardIndex]}}</view>
+          </picker>
+        </block>
+        <block wx:else>
+          {{standards[standardIndex]}}
+        </block>
       </view>
     </view>
   </view>

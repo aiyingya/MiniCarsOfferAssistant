@@ -654,6 +654,7 @@ Page({
 
         that.setData({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
+          'carModelInfo.sellingPrice': Math.floor(price)
         })
         that.updateForSomeReason()
         that.showInput()
