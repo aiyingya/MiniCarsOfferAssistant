@@ -185,8 +185,6 @@ export default class SAASService extends Service {
       }
 
       data.insuranceDetail = quotationDraft.insuranceDetail
-
-
       let snsId
       if (this.userService.isLogin) {
         snsId = this.userService.auth.userId

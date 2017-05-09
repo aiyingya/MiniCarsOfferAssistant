@@ -417,6 +417,7 @@ Page({
       }
       if(item.name === '第三者责任险'){
         insuranceDetail.iDSZZRX = item.amount
+        insuranceDetail.iDSZZRX_INDEX = item.index
         return
       }
       if(item.name === '车辆损失险'){
@@ -429,6 +430,7 @@ Page({
       }
       if(item.name === '玻璃单独破碎险'){
         insuranceDetail.iBLDDPSX = item.amount
+        insuranceDetail.iBLDDPSX_INDEX = item.index
         return
       }
       if(item.name === '自燃损失险'){
@@ -449,6 +451,7 @@ Page({
       }
       if(item.name === '车身划痕险'){
         insuranceDetail.iCSHHX = item.amount
+        insuranceDetail.iCSHHX_INDEX = item.index
         return
       }
     })
@@ -680,6 +683,7 @@ Page({
 
         that.setData({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
+          'carModelInfo.sellingPrice': Math.floor(price),
           'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price))
         })
 
