@@ -108,7 +108,6 @@ Page({
           let sourcePublishDateFilterId
           let seatNum = res.seatNums
 
-          that.data.carModelsInfo.seatNums = seatNum
           for (let i = 0; i < filters.length; i++) {
             let filter = filters[i]
             // FIXME: 这里的问题是使用了不严谨的方法获取数据
@@ -147,6 +146,7 @@ Page({
 
           carModelsInfo.capacity = res.capacity
           carModelsInfo.isElectricCar = res.electricCar
+          carModelsInfo.seatNums = seatNum
           that.setData({
             carModelsInfo: carModelsInfo
           })
