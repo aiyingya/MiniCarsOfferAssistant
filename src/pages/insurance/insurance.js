@@ -181,7 +181,12 @@ Page({
     /**
      * 设置保险明细字体颜色.
      */
-    ChangeInsuranceTotalStyle: ''
+    ChangeInsuranceTotalStyle: '',
+    /**
+     * 页面来源.
+     */
+    pageSource: 'new',
+    carModelInfo: ''
   },
   onLoad(options) {
     let carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelInfo', options)
@@ -220,6 +225,13 @@ Page({
       standards = ["家用6座以下","家用6座以上"]
     }
     trafficInsurance = standards[standardIndex] == '家用6座以下' ? 950 : 1100
+    this.data.officialPrice = pageSource === 'editor' ? carModelInfo.carPrice : carModelInfo.sellingPrice
+    this.setData({
+      standards: standards,
+      pageSource: pageSource,
+      carModelInfo: carModelInfo,
+      'InsuranceDetail.trafficInsurance': trafficInsurance
+    })
     wx.showToast({
       title: '正在加载',
       icon: 'loading',
@@ -233,11 +245,6 @@ Page({
     }, err => {
       wx.hideToast()
     })
-    this.data.officialPrice = pageSource === 'editor' ? carModelInfo.carPrice : carModelInfo.sellingPrice
-    this.setData({
-      standards: standards,
-      'InsuranceDetail.trafficInsurance': trafficInsurance
-    })
   },
   /**
    * 获取保险信息.
@@ -249,6 +256,9 @@ Page({
     const checkedValues = []
     return app.saasService.gettingInsurance().then((res) => {
       if (res) {
+        let pageSource = that.data.pageSource
+        let carModelInfo = that.data.carModelInfo
+
         that.setData({
           'businessRisks': res.insurances
         })
@@ -491,6 +501,7 @@ Page({
         switch (item.name) {
           case '第三者责任险':
             item.amount = InsuranceDetail.liabilityInsurance
+            item.index = this.data.liabilityTypesIndex
             break
           case '车辆损失险':
             item.amount = InsuranceDetail.vehicleLossInsurance
@@ -500,6 +511,7 @@ Page({
             break
           case '玻璃单独破碎险': 
             item.amount = InsuranceDetail.glassBrokenInsurance
+            item.index = this.data.glassBrokenTypesIndex
             break
           case '自燃损失险':
             item.amount = InsuranceDetail.gcombustionLossInsurance
@@ -515,6 +527,7 @@ Page({
             break
           case '车身划痕险': 
             item.amount = InsuranceDetail.scratchesInsurance
+            item.index = this.data.scratchesTypesIndex
             break
           default:
 

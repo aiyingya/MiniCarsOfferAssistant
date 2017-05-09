@@ -184,21 +184,7 @@ export default class SAASService extends Service {
         }
       }
 
-      data.insuranceDetail = {
-        "iTotal":quotationDraft.insuranceDetail.iTotal,//"保险总额",
-          "iJQX":quotationDraft.insuranceDetail.iJQX,//"交强险",
-          "iDSZZRX":quotationDraft.insuranceDetail.iDSZZRX,//"第三者责任险",
-          "iCLSSX":quotationDraft.insuranceDetail.iCLSSX,//"车辆损失险",
-          "iQCDQX":quotationDraft.insuranceDetail.iQCDQX,//"全车盗抢险",
-          "iBLDDPSX":quotationDraft.insuranceDetail.iBLDDPSX,//"玻璃单独破碎险",
-          "iZRSSX":quotationDraft.insuranceDetail.iZRSSX,//"自燃损失险",
-          "iBJMPTYX":quotationDraft.insuranceDetail.iBJMPTYX,//"不计免赔特约险",
-          "iWGZRX":quotationDraft.insuranceDetail.iWGZRX,//"无过责任险",
-          "iCSRYZRX":quotationDraft.insuranceDetail.iCSRYZRX,//"车上人员责任险",
-          "iCSHHX":quotationDraft.insuranceDetail.iCSHHX,//"车身划痕险"
-          "carSize":quotationDraft.insuranceDetail.carSize//0 6座一下 1 6座以上
-      }
-
+      data.insuranceDetail = quotationDraft.insuranceDetail
 
       let snsId
       if (this.userService.isLogin) {
