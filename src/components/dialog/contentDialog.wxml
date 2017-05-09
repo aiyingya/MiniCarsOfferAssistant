@@ -6,7 +6,7 @@
 
       <view wx:if="{{totleContent}}" class="weui-dialog__hd" wx:if="{{ title }}">
         <view class="weui-dialog__title">{{ title }}
-          <image class="icon-close" src="../../../images/icons/icon_close.png" bindtap="{{ hide }}" ></image>
+          <image class="icon-close" src="../../../images/icons/icon_close.png" bindtap="{{ close }}" ></image>
         </view>
       </view>
 

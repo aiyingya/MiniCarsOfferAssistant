@@ -653,7 +653,7 @@ Page({
         }
 
         that.setData({
-          'quotation.quotationItems[0].sellingPrice': Math.floor(price),
+          'quotation.quotationItems[0].sellingPrice': Math.floor(price)
         })
         that.updateForSomeReason()
         that.showInput()
@@ -918,6 +918,8 @@ Page({
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
     var user = app.userService;
+
+    that.hideInput()
     app.saasService.getProfit({
       "userId": user.auth.userId,
       "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
@@ -937,7 +939,10 @@ Page({
                {name:'裸车价收益约',value:'￥'+ res.profit},
                {name:'保险收益约',value:'￥'+res.insuranceProfit},
                {name:'贷款收益约',value:'￥'+res.loanProfit}
-             ]
+             ],
+             close: () => {
+               that.showInput()
+             }
            })
            return
          }
@@ -949,12 +954,15 @@ Page({
              {name:'裸车价收益约',value:'￥'+ res.profit},
              {name:'保险收益约',value:'￥'+res.insuranceProfit},
              {name:'贷款收益约',value:'￥0'}
-           ]
+           ],
+           close: () => {
+             that.showInput()
+           }
          })
 
        },
        fail:() => {console.log("查看收益失败")},
-       complete: () => {},
+       complete: () => {}
       }
     );
 
