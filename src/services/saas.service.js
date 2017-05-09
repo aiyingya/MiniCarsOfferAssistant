@@ -151,20 +151,8 @@ export default class SAASService extends Service {
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee,
-          insuranceDetail:{
-            "iTotal":quotationDraft.insuranceDetail.iTotal,//"保险总额",
-            "iJQX":quotationDraft.insuranceDetail.iCSHHX,//"交强险",
-            "iDSZZRX":quotationDraft.insuranceDetail.iCSHHX,//"第三者责任险",
-            "iCLSSX":quotationDraft.insuranceDetail.iCSHHX,//"车辆损失险",
-            "iQCDQX":quotationDraft.insuranceDetail.iCSHHX,//"全车盗抢险",
-            "iBLDDPSX":quotationDraft.insuranceDetail.iCSHHX,//"玻璃单独破碎险",
-            "iZRSSX":quotationDraft.insuranceDetail.iCSHHX,//"自燃损失险",
-            "iBJMPTYX":quotationDraft.insuranceDetail.iCSHHX,//"不计免赔特约险",
-            "iWGZRX":quotationDraft.insuranceDetail.iCSHHX,//"无过责任险",
-            "iCSRYZRX":quotationDraft.insuranceDetail.iCSHHX,//"车上人员责任险",
-            "iCSHHX":quotationDraft.insuranceDetail.iCSHHX//"车身划痕险"
-          }
+          otherFee:quotationDraft.otherExpensesAll.otherFee
+
 
         }
       } else {
@@ -191,21 +179,23 @@ export default class SAASService extends Service {
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee,
-          insuranceDetail:{
-            "iTotal":quotationDraft.insuranceDetail.iTotal,//"保险总额",
-            "iJQX":quotationDraft.insuranceDetail.iCSHHX,//"交强险",
-            "iDSZZRX":quotationDraft.insuranceDetail.iCSHHX,//"第三者责任险",
-            "iCLSSX":quotationDraft.insuranceDetail.iCSHHX,//"车辆损失险",
-            "iQCDQX":quotationDraft.insuranceDetail.iCSHHX,//"全车盗抢险",
-            "iBLDDPSX":quotationDraft.insuranceDetail.iCSHHX,//"玻璃单独破碎险",
-            "iZRSSX":quotationDraft.insuranceDetail.iCSHHX,//"自燃损失险",
-            "iBJMPTYX":quotationDraft.insuranceDetail.iCSHHX,//"不计免赔特约险",
-            "iWGZRX":quotationDraft.insuranceDetail.iCSHHX,//"无过责任险",
-            "iCSRYZRX":quotationDraft.insuranceDetail.iCSHHX,//"车上人员责任险",
-            "iCSHHX":quotationDraft.insuranceDetail.iCSHHX//"车身划痕险"
-          }
+          otherFee:quotationDraft.otherExpensesAll.otherFee
+
         }
+      }
+
+      data.insuranceDetail = {
+        "iTotal":quotationDraft.insuranceDetail.iTotal,//"保险总额",
+          "iJQX":quotationDraft.insuranceDetail.iJQX,//"交强险",
+          "iDSZZRX":quotationDraft.insuranceDetail.iDSZZRX,//"第三者责任险",
+          "iCLSSX":quotationDraft.insuranceDetail.iCLSSX,//"车辆损失险",
+          "iQCDQX":quotationDraft.insuranceDetail.iQCDQX,//"全车盗抢险",
+          "iBLDDPSX":quotationDraft.insuranceDetail.iBLDDPSX,//"玻璃单独破碎险",
+          "iZRSSX":quotationDraft.insuranceDetail.iZRSSX,//"自燃损失险",
+          "iBJMPTYX":quotationDraft.insuranceDetail.iBJMPTYX,//"不计免赔特约险",
+          "iWGZRX":quotationDraft.insuranceDetail.iWGZRX,//"无过责任险",
+          "iCSRYZRX":quotationDraft.insuranceDetail.iCSRYZRX,//"车上人员责任险",
+          "iCSHHX":quotationDraft.insuranceDetail.iCSHHX//"车身划痕险"
       }
 
 
