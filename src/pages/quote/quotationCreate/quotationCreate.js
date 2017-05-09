@@ -207,8 +207,6 @@ Page({
 
     }
 
-
-
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
     let carModelInfoJSONString = options.carModelsInfo
@@ -258,11 +256,9 @@ Page({
 
 
       this.setData({
-        'quotation': quotation
+        'quotation': quotation,
+        'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice
       })
-
-      console.log(quotation)
-
       this.updateForSomeReason()
 
 
@@ -970,5 +966,8 @@ Page({
     this.setData({
       isShowTextarea:false
     })
+  },
+  insurancesTrs(data){
+
   }
 });
