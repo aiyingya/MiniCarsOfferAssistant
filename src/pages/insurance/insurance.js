@@ -192,16 +192,25 @@ Page({
     let standardIndex = 0
     let sixUnder = [], sixAbove = []
     let trafficInsurance = 950
-    console.log(carModelInfo)
-    if(seatNums.length > 0) {
-      for(let item of seatNums) {
-        if(item < 6) {
-          sixUnder.push(item)
-        }else {
-          sixAbove.push(item)
+    console.log(pageSource,carModelInfo)
+    if(pageSource === 'new') {
+      if(seatNums && seatNums.length > 0) {
+        for(let item of seatNums) {
+          if(item < 6) {
+            sixUnder.push(item)
+          }else {
+            sixAbove.push(item)
+          }
         }
       }
+    }else {
+      if(carModelInfo && carModelInfo.insuranceDetail.carSize == 0) {
+        sixUnder.push('0')
+      }else {
+        sixAbove.push('1')
+      }
     }
+    
     
     if(sixUnder.length > 0){
       standards = ["家用6座以下"]
@@ -224,7 +233,7 @@ Page({
     }, err => {
       wx.hideToast()
     })
-    this.data.officialPrice = carModelInfo.sellingPrice
+    this.data.officialPrice = pageSource === 'editor' ? carModelInfo.carPrice : carModelInfo.sellingPrice
     this.setData({
       standards: standards,
       'InsuranceDetail.trafficInsurance': trafficInsurance
