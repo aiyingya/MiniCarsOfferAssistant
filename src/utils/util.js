@@ -104,9 +104,17 @@ export default class Util {
 
   /**
    * 购置税
+   * larry：购置税有一个逻辑需要加一下，排量1.6（含）及以上的车型购置税不变，1.6以下的购置税*0.75
+   * 车价
+   * 排量
    */
-  static purchaseTax(carPrice) {
-    return (carPrice/1.17*0.1)
+  static purchaseTax(carPrice,capacity) {
+    const  price = Number(carPrice/1.17*0.1);
+    if(capacity){
+      return (Number(capacity) < 1.6 ) ? (price*0.75) : price
+    }
+    return price
+
   }
 
   /**

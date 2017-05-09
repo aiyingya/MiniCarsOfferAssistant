@@ -212,6 +212,17 @@ Page({
     let carSkuInfoJSONString = options.carSkuInfo
     let carModelInfoJSONString = options.carModelsInfo
 
+    function activeIndexCss () {
+      wx.getSystemInfo({
+        success: function (res) {
+          that.setData({
+            sliderLeft: 0,
+            sliderOffset: res.windowWidth / 2 * that.data.activeIndex
+          });
+        }
+      });
+    }
+
     if (quotationJSONString && quotationJSONString.length) {
       /***
        * 来源页面来自于详情页面， 参数中有 quotation
@@ -260,7 +271,26 @@ Page({
         'quotation': quotation,
         'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice
       })
-      this.updateForSomeReason()
+      //获取报价单接口
+      app.saasService.getCreatCarRecordInfo({
+        data:{
+          "userId": app.userService.auth.userId,
+          "carPrice":0 //随便🚢一个金额，该接口我不需要加价后的裸车价
+        },
+        success: (res) => {
+
+          res.interestType = quotation.rateType;
+          that.setData({
+            'requestResult': res
+          })
+          that.updateForSomeReason()
+          activeIndexCss()
+
+        },
+        fail: () => {},
+        complete: () => {}
+      });
+
 
 
     } else {
@@ -338,14 +368,7 @@ Page({
               that.updateForSomeReason()
             })
 
-            wx.getSystemInfo({
-              success: function (res) {
-                that.setData({
-                  sliderLeft: 0,
-                  sliderOffset: res.windowWidth / 2 * that.data.activeIndex
-                });
-              }
-            });
+            activeIndexCss()
             this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
             
             // 计算默认保险.
@@ -493,14 +516,18 @@ Page({
     let officialPrice = this.data.quotation.quotationItems[0].guidePrice
 
     let paymentRatio = this.data.quotation.paymentRatio
-    let expenseRate = this.data.quotation.expenseRate
     let stages = this.data.quotation.stages
+
+    let expenseRate = this.data.quotation.expenseRate
 
     let monthlyPayment
     let totalPayment
     let advancePayment
     if (this.isLoanTabActive()) {
       let isMonth = (that.data.requestResult.interestType===1);
+      if(expenseRate === undefined){
+        expenseRate = that.setExpenseRate(stages)
+      }
       const wRate = isMonth ? (10000/(stages*12) + expenseRate * 10) : expenseRate//万元系数
       totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
@@ -579,6 +606,7 @@ Page({
     this.setData({
       'quotation.expenseRate': Number(expenseRate)
     })
+    return Number(expenseRate);
   },
   handlerStagesChange(e) {
     let that = this
@@ -665,10 +693,12 @@ Page({
           price = Math.floor(_guidePrice + _inputNumber)
         }
 
+        const isElectricCar = this.data.carModelInfo.isElectricCar
+        const capacity = this.data.carModelInfo.capacity
         that.setData({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
           'carModelInfo.sellingPrice': Math.floor(price),
-          'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price))
+          'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price,isElectricCar? null:capacity))
         })
         
         
@@ -755,6 +785,7 @@ Page({
     let quotation ={}
     quotation = Object.assign({}, quotation, that.data.quotation)
 
+    quotation.rateType= that.data.requestResult.interestType
     function isSendRequest (quotationDraft,mobile,name,sex) {
 
       app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile ,{
