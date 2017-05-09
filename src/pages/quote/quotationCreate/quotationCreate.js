@@ -261,7 +261,7 @@ Page({
         'quotation': quotation
       })
 
-
+      console.log(quotation)
 
       this.updateForSomeReason()
 
@@ -672,12 +672,14 @@ Page({
     let requiredExpenses = this.data.quotation.requiredExpenses
 
     let carModelsInfoKeyValueString
+    let pageSource = 'new'
     if(that.data.source = 'quotationDetail'){
       //新建
       carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
+      pageSource = 'new'
     }else{
       //TODO:盼盼需要他的格式，但是格式太大
-
+      carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.quotation)
       //编辑
       /*{
         "iTotal":"保险总额",
@@ -694,12 +696,13 @@ Page({
         "iCSHHX":"车身划痕险",
         "carSize":"车辆规格" 0 6座一下 1 6座以上
       }*/
-      carModelsInfoKeyValueString = util.urlEncodeValueForKey('insuranceDetail', this.data.quotation.insuranceDetail)
+      pageSource = 'editor'
+    
     }
 
     if(expensesInfo.title === '保险金额') {
       wx.navigateTo({
-        url: `../../insurance/insurance?${carModelsInfoKeyValueString}`
+        url: `../../insurance/insurance?${carModelsInfoKeyValueString}&pageSource=${pageSource}`
       })
     }else {
       that.hideInput()
