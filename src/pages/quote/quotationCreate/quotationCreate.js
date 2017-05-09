@@ -262,7 +262,7 @@ Page({
       quotation.otherExpensesAll = {// 其他费用（元），deciaml，取值范围0~999999999",
         boutiqueCost:quotation.boutiqueFee || 0,//精品费用
         installationFee:quotation.installFee || 0,//安装费
-        serverFee:quotation.serviceFee || 0,//
+        serverFee:quotation.serverFee || 0,//
         otherFee:quotation.otherFee || 0
       }
 
@@ -365,20 +365,22 @@ Page({
             console.log(carModelInfo)
 
             that.initVehicleAndVesselTax(function(){
-              that.updateForSomeReason()
+              // 计算默认保险.
+              const promise1 = that.getDefaultInsurance()
+              const promise = Promise.race([promise1])
+              promise.then(res => {
+                //wx.hideToast()
+                that.updateForSomeReason()
+              }, err => {
+                //wx.hideToast()
+              })
+
             })
 
             activeIndexCss()
             this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
 
-            // 计算默认保险.
-            const promise1 = this.getDefaultInsurance()
-            const promise = Promise.race([promise1])
-            promise.then(res => {
-              //wx.hideToast()
-            }, err => {
-              //wx.hideToast()
-            })
+
 
           },
           fail: () => {},
@@ -700,12 +702,15 @@ Page({
           'carModelInfo.sellingPrice': Math.floor(price),
           'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price,isElectricCar? null:capacity))
         })
-
-
+        let businessRisks = this.data.businessRisks
+        let _insurancePrice = that.insuranceCostCountDefault(businessRisks)
+        that.setData({
+          'quotation.requiredExpensesAll.insuranceAmount': _insurancePrice
+        })
         that.updateForSomeReason()
         that.showInput()
-        let businessRisks = this.data.businessRisks
-        that.insuranceCostCountDefault(businessRisks)
+
+
       },
       cancel: () => {
         that.showInput()
@@ -1066,7 +1071,10 @@ Page({
         that.setData({
           'businessRisks': res.insurances
         })
-        that.insuranceCostCountDefault(res.insurances)
+        let _insurancePrice =  that.insuranceCostCountDefault(res.insurances)
+        that.setData({
+          'quotation.requiredExpensesAll.insuranceAmount': _insurancePrice
+        })
       }
     }, (err) => {
 
@@ -1197,16 +1205,17 @@ Page({
     }
 
     totalAmount = (businessTatal+trafficInsurance).toFixed(0)
-    for(let item1 of expensesAllInfo) {
-      if(item1.title === '保险金额') {
+    // for(let item1 of expensesAllInfo) {
+    //   if(item1.title === '保险金额') {
+    //
+    //     item1.price = totalAmount
+    //   }
+    // }
 
-        item1.price = totalAmount
-      }
-    }
-
-    that.setData({
-      expensesAllInfo: expensesAllInfo,
-      'requiredExpensesAll.insuranceAmount': totalAmount
-    })
+    // that.setData({
+    //   expensesAllInfo: expensesAllInfo,
+    //   'requiredExpensesAll.insuranceAmount': totalAmount
+    // })
+    return totalAmount
   },
 });
