@@ -400,21 +400,49 @@ Page({
             item.checked = true   
           }
         } 
+        
+        // Fuckind Larry
+        // 关联取消的险种，取消a关联b也取消，但a取消的时候应该不可以再重新选择b
         if(name === '第三者责任险' && item.checked) {
-          businessRisks[5].checked = true
-          businessRisks[6].checked = true
+          for(let item1 of businessRisks) {
+            if(item1.name === '不计免赔特约险' || item1.name === '无过责任险') {
+              item1.checked = true
+            }
+          }
         }else if(name === '第三者责任险' && !item.checked) {
-          businessRisks[5].checked = false
-          businessRisks[6].checked = false
+          for(let item1 of businessRisks) {
+            if(item1.name === '不计免赔特约险' || item1.name === '无过责任险') {
+              item1.checked = false
+            }
+          }
         }
         if(name === '车辆损失险' && item.checked) {
-          businessRisks[2].checked = true
-          businessRisks[6].checked = true
-          businessRisks[8].checked = true
+          for(let item1 of businessRisks) {
+            if(item1.name === '不计免赔特约险' || item1.name === '全车盗抢险' || item1.name === '车身划痕险') {
+              item1.checked = true
+            }
+          }
         }else if(name === '车辆损失险' && !item.checked) {
-          businessRisks[2].checked = false
-          businessRisks[6].checked = false
-          businessRisks[8].checked = false
+          for(let item1 of businessRisks) {
+            if(item1.name === '不计免赔特约险' || item1.name === '全车盗抢险' || item1.name === '车身划痕险') {
+              item1.checked = false
+            }
+          }
+        }
+        
+        if(name === '不计免赔特约险' || name === '无过责任险') {
+          for(let item1 of businessRisks) {
+            if(item1.name === '第三者责任险' && !item1.checked) {
+              item.checked = false
+            }
+          }
+        }
+        if(name === '不计免赔特约险' || name === '全车盗抢险' || name === '车身划痕险') {
+          for(let item2 of businessRisks) {
+            if(item2.name === '车辆损失险' && !item2.checked) {
+              item.checked = false
+            }
+          }
         }
       } 
     }

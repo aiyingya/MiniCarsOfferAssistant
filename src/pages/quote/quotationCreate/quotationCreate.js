@@ -189,7 +189,8 @@ Page({
     isSpecialBranch:false, //宝马、奥迪、MINI展示下xx点
     isOnLoad:true,
     diffPrice:0,//是否加价卖
-    isShowTextarea:true
+    isShowTextarea:true,
+    businessRisks:''
   },
   onLoad(options) {
 
@@ -331,7 +332,7 @@ Page({
               carSKUInfo: carSkuInfo,
               carModelInfo: carModelInfo
             })
-
+            console.log(carModelInfo)
 
             that.initVehicleAndVesselTax(function(){
               that.updateForSomeReason()
@@ -346,6 +347,15 @@ Page({
               }
             });
             this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
+            
+            // 计算默认保险.
+            const promise1 = this.getDefaultInsurance()
+            const promise = Promise.race([promise1])
+            promise.then(res => {
+              //wx.hideToast()
+            }, err => {
+              //wx.hideToast()
+            })
 
           },
           fail: () => {},
@@ -353,7 +363,6 @@ Page({
         });
       }
     }
-
   },
   onReady() {},
   onShow() {
@@ -621,6 +630,7 @@ Page({
     const _baseSellingPrice = Number(this.data.quotation.quotationItems[0].baseSellingPrice)
     const _diffPrice = Number(that.data.diffPrice) //指导价差价
     let _inputT
+    
     if(that.data.isSpecialBranch){
       //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
       _inputT = that.data.priceChange.point
@@ -660,10 +670,12 @@ Page({
           'carModelInfo.sellingPrice': Math.floor(price),
           'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price))
         })
-
+        
+        
         that.updateForSomeReason()
         that.showInput()
-
+        let businessRisks = this.data.businessRisks
+        that.insuranceCostCountDefault(businessRisks)
       },
       cancel: () => {
         that.showInput()
@@ -1009,5 +1021,161 @@ Page({
       }
     })
 
-  }
+  },
+  /**
+   * 获取保险信息.
+   *
+   * @returns {Promise}
+   */
+  getDefaultInsurance() {
+    const that = this
+    const checkedValues = []
+    return app.saasService.gettingInsurance().then((res) => {
+      if (res) {
+        that.setData({
+          'businessRisks': res.insurances
+        })
+        that.insuranceCostCountDefault(res.insurances)
+      }
+    }, (err) => {
+
+    })
+  },
+  /**
+   * 默认保险费用计算.
+   */
+  insuranceCostCountDefault(data) {
+    let that = this
+    let expensesAllInfo = this.data.expensesAllInfo
+    let businessRisks = data
+    // spu规格.
+    let carModelsInfo = this.data.carModelInfo
+    // 裸车价.
+    let officialPrice = carModelsInfo.sellingPrice
+    let seatNums = carModelsInfo.seatNums
+    let standards = [] 
+    let sIndex = 0
+    let sixUnder = [], sixAbove = []
+    
+    if(seatNums && seatNums.length > 0) {
+      for(let item of seatNums) {
+        if(item < 6) {
+          sixUnder.push(item)
+        }else {
+          sixAbove.push(item)
+        }
+      }
+    }
+   
+    if(sixUnder.length > 0){
+      standards = ["家用6座以下"]
+    }else if(sixAbove.length > 0) {
+      standards = ["家用6座以上"]
+    }else if(sixUnder.length > 0 && sixAbove.length > 0) {
+      standards = ["家用6座以下","家用6座以上"]
+    }
+    let standardIndex = standards[sIndex] == '家用6座以下' ? 0 : 1
+    // 初始化总金额为0.
+    let totalAmount = 0
+    // 商业险总额.
+    let businessTatal = 0
+    // 交强险.
+    let trafficInsurance = standardIndex === 0 ? 950 : 1100
+    // 第三方责任险.
+    let liabilityInsurance = 0
+    // 车辆损失险.
+    let vehicleLossInsurance = 0
+    // 全车盗抢险
+    let vehicleDQInsurance = 0
+    // 玻璃单独破碎险
+    let glassBrokenInsurance = 0
+    // 自然损失险
+    let gcombustionLossInsurance = 0
+    // 不计免赔特约险
+    let franchiseInsurance = 0
+    // 无过责任险
+    let responsibilityInsurance = 0
+    // 车上人员责任险
+    let personnelCarInsurance = 0
+    // 车身划痕险
+    let scratchesInsurance = 0
+    
+    for(let item of businessRisks) { 
+      if(item.checked) {
+        switch (item.name) {
+          case '第三者责任险':
+            liabilityInsurance = standardIndex == 0 ? 920 : 831
+            businessTatal += liabilityInsurance
+            break
+          case '车辆损失险':
+            let basis = standardIndex == 0 ? 539 : 646
+            vehicleLossInsurance = basis + officialPrice*0.0128
+            businessTatal += vehicleLossInsurance
+            break
+          case '全车盗抢险':
+            let basisPremium = standardIndex == 0 ? 120 : 140
+            let ratePremium = standardIndex == 0 ? 0.0049 : 0.0044
+            vehicleDQInsurance = basisPremium + officialPrice*ratePremium
+            businessTatal += vehicleDQInsurance
+            break
+          case '玻璃单独破碎险':
+            let glassBrokenRate = 0.002
+            glassBrokenInsurance = officialPrice*glassBrokenRate
+            businessTatal += glassBrokenInsurance
+            break
+          case '自燃损失险':
+            gcombustionLossInsurance = officialPrice*0.0015
+            businessTatal += gcombustionLossInsurance
+            break
+          case '不计免赔特约险':
+            if(liabilityInsurance > 0 && vehicleLossInsurance > 0) {
+              franchiseInsurance = liabilityInsurance*0.2 + vehicleLossInsurance*0.2
+              
+              businessTatal += franchiseInsurance
+            }
+            
+            break
+          case '无过责任险':
+ 
+            responsibilityInsurance = liabilityInsurance*0.2 
+            businessTatal += responsibilityInsurance
+            break
+          case '车上人员责任险':
+            let personnelCarRate = standardIndex == 0 ? 0.0069 : 0.0066
+            personnelCarInsurance = officialPrice*personnelCarRate 
+            businessTatal += personnelCarInsurance
+            break
+          case '车身划痕险':
+            let scratches = 0
+            
+            if(officialPrice/10000 < 30) {
+              scratches = 570
+            }else if(30<= officialPrice/10000 && officialPrice/10000 <= 50) {
+              scratches = 900
+            }else{
+              scratches = 1100
+            }
+            
+            businessTatal += scratches
+            break
+          default:
+
+            break
+        }  
+      }    
+    }
+    
+    totalAmount = (businessTatal+trafficInsurance).toFixed(0)
+    for(let item1 of expensesAllInfo) {
+      if(item1.title === '保险金额') {
+        
+        item1.price = totalAmount
+      }
+    }
+
+    that.setData({
+      expensesAllInfo: expensesAllInfo,
+      'requiredExpensesAll.insuranceAmount': totalAmount
+    })
+  },
 });
