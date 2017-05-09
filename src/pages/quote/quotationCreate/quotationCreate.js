@@ -277,6 +277,8 @@ Page({
           "carPrice":0 //随便🚢一个金额，该接口我不需要加价后的裸车价
         },
         success: (res) => {
+
+          res.interestType = quotation.rateType;
           that.setData({
             'requestResult': res
           })
@@ -681,10 +683,12 @@ Page({
           price = Math.floor(_guidePrice + _inputNumber)
         }
 
+        const isElectricCar = this.data.carModelInfo.isElectricCar
+        const capacity = this.data.carModelInfo.capacity
         that.setData({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
           'carModelInfo.sellingPrice': Math.floor(price),
-          'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price))
+          'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price,isElectricCar? null:capacity))
         })
 
         that.updateForSomeReason()
@@ -769,6 +773,7 @@ Page({
     let quotation ={}
     quotation = Object.assign({}, quotation, that.data.quotation)
 
+    quotation.rateType= that.data.requestResult.interestType
     function isSendRequest (quotationDraft,mobile,name,sex) {
 
       app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile ,{
