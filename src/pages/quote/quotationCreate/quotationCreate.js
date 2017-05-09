@@ -310,7 +310,7 @@ Page({
 
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              'quotation.requiredExpensesAll.purchaseTax':Math.floor(sellingPrice/1.17*0.1)
+              'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice))
             })
 
             // 设置报价表单数据
@@ -653,8 +653,10 @@ Page({
         }
 
         that.setData({
-          'quotation.quotationItems[0].sellingPrice': Math.floor(price)
+          'quotation.quotationItems[0].sellingPrice': Math.floor(price),
+          'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price))
         })
+
         that.updateForSomeReason()
         that.showInput()
 
