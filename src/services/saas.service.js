@@ -195,7 +195,8 @@ export default class SAASService extends Service {
           "iBJMPTYX":quotationDraft.insuranceDetail.iBJMPTYX,//"不计免赔特约险",
           "iWGZRX":quotationDraft.insuranceDetail.iWGZRX,//"无过责任险",
           "iCSRYZRX":quotationDraft.insuranceDetail.iCSRYZRX,//"车上人员责任险",
-          "iCSHHX":quotationDraft.insuranceDetail.iCSHHX//"车身划痕险"
+          "iCSHHX":quotationDraft.insuranceDetail.iCSHHX,//"车身划痕险"
+          "carSize":quotationDraft.insuranceDetail.carSize//0 6座一下 1 6座以上
       }
 
 
@@ -572,6 +573,14 @@ export default class SAASService extends Service {
     let userId = this.userService.auth.userId
     return this.sendMessageByPromise({
       path: `api/config/getInsurance/${userId}`,
+      method: 'GET',
+      data: {}
+    })
+  }
+
+  gettingVehicleAndVesselTax(opts) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/getCarTax?capacity=${opts.data.capacity}&place=${opts.data.place}`,
       method: 'GET',
       data: {}
     })

@@ -333,7 +333,7 @@ Page({
             })
 
             this.updateForSomeReason()
-
+            this.initVehicleAndVesselTax()
             wx.getSystemInfo({
               success: function (res) {
                 that.setData({
@@ -966,7 +966,10 @@ Page({
       isShowTextarea:false
     })
   },
-  insurancesTrs(data){
+  initVehicleAndVesselTax(){
+    //初始化车船税
+    const isElectricCar = this.data.carModelInfo.isElectricCar
+    const capacity = this.data.carModelInfo.capacity
 
   }
 });

@@ -107,7 +107,7 @@ Page({
 
           let sourcePublishDateFilterId
           let seatNum = res.seatNums
-  
+
           that.data.carModelsInfo.seatNums = seatNum
           for (let i = 0; i < filters.length; i++) {
             let filter = filters[i]
@@ -144,7 +144,14 @@ Page({
             selectedSectionIndex: -1,
             selectedSectionId: '0'
           })
-          
+
+          carModelsInfo.capacity = res.capacity
+          carModelsInfo.isElectricCar = res.electricCar
+          this.setData({
+            carModelsInfo: carModelsInfo,
+            pageShare: false //  避免分享页面二次加载.
+          })
+
         }
       })
 
