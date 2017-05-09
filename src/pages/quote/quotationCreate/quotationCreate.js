@@ -188,7 +188,8 @@ Page({
     showPreferenceSetting:false,
     isSpecialBranch:false, //宝马、奥迪、MINI展示下xx点
     isOnLoad:true,
-    diffPrice:0//是否加价卖
+    diffPrice:0,//是否加价卖
+    isShowTextarea:true
   },
   onLoad(options) {
 
@@ -562,6 +563,7 @@ Page({
   handlerExpenseRateChange(e) {
     let that = this
    let con = that.data.requestResult.interestType===1 ? '月息（厘）':'万元系数（元）';
+    that.hideInput()
     $wuxInputNumberDialog.open({
       title: '贷款月息或万元系',
       content: con,
@@ -583,8 +585,11 @@ Page({
           'quotation.expenseRate': expenseRate
         })
         that.updateForSomeReason()
+        that.showInput()
+
       },
-      cancel: () => {}
+      cancel: () => {    that.showInput()
+      }
     })
   },
   handlerSellingPriceChange(e) {
@@ -601,7 +606,7 @@ Page({
       _inputT = Math.abs(that.data.diffPrice)
     }
 
-
+    this.hideInput()
     $wuxInputNumberDialog.open({
       title: '裸车价',
       inputNumber: _inputT,
@@ -629,11 +634,16 @@ Page({
         }
 
         that.setData({
-          'quotation.quotationItems[0].sellingPrice': Math.floor(price)
+          'quotation.quotationItems[0].sellingPrice': Math.floor(price),
+          'diffPrice':_inputNumber
         })
         that.updateForSomeReason()
+        that.showInput()
+
       },
-      cancel: () => {}
+      cancel: () => {
+        that.showInput()
+      }
     })
   },
   handlerExpensesChange(e) {
@@ -647,6 +657,7 @@ Page({
         url: `../../insurance/insurance?${carModelsInfoKeyValueString}`
       })
     }else {
+      that.hideInput()
       $wuxInputNumberDialog.open({
         title: expensesInfo.title,
         content: expensesInfo.title,
@@ -662,9 +673,10 @@ Page({
             [expensesInfo.protoname] : price
           })
           that.updateForSomeReason()
+          that.showInput()
 
         },
-        cancel: () => {}
+        cancel: () => {that.showInput()}
       })
     }
   },
@@ -728,6 +740,7 @@ Page({
       })
     }
 
+    that.hideInput()
     // 请求成功后弹出对话框
     $wuxSpecialUploadDialog.open({
       title: '保存并分享！',
@@ -749,6 +762,7 @@ Page({
         let mobile = res.inputNumber
         let customerName =res.inputName
         let customerSex = res.inputSex
+
         //保存报价单
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
@@ -759,6 +773,8 @@ Page({
           fail: function () {},
           complete: function () {}
         })
+        that.showInput()
+
       },
       cancel: () => {
         //保存报价单
@@ -771,6 +787,8 @@ Page({
           fail: function () {},
           complete: function () {}
         })
+        that.showInput()
+
       }
     })
   },
@@ -782,6 +800,7 @@ Page({
     const externalColorName = array[0]
     const internalColorName = array[1]
     // 输入车源
+    that.hideInput()
     $wuxSpecificationsDialog.open({
       title: '配色',
       content: '填写 外饰/内饰 颜色',
@@ -793,8 +812,11 @@ Page({
         that.setData({
           'quotation.quotationItems[0].specifications': externalColorName + '/' + internalColorName
         })
+        that.showInput()
+
       },
       cancel: () => {
+        that.showInput()
 
       }
     })
@@ -845,6 +867,7 @@ Page({
     })
   },
   lookIncome(){
+    let that = this
     console.log("查看收益")
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
@@ -858,6 +881,7 @@ Page({
        success: (res) => {
          console.log("已经有收益结果")
          //设计搞与原型搞上无全款显示效果，临时脑补判断条件与显示画面...
+
          if(this.isLoanTabActive()){
            //贷款
            $wuxContentDialog.open({
@@ -888,5 +912,15 @@ Page({
       }
     );
 
+  },
+  showInput(){
+    this.setData({
+      isShowTextarea:true
+    })
+  },
+  hideInput(){
+    this.setData({
+      isShowTextarea:false
+    })
   }
 });
