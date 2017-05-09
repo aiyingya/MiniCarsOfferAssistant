@@ -185,6 +185,8 @@ Page({
   },
   onLoad(options) {
     let carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelInfo', options)
+    // 页面来源.
+    let pageSource = options.pageSource
     let seatNums = carModelInfo.seatNums
     let standards = [] 
     let standardIndex = 0
