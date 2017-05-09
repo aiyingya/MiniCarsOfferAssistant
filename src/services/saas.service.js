@@ -68,7 +68,7 @@ export default class SAASService extends Service {
     "customerMobile":"客户手机号"
    }
    */
-  requestPublishQuotation (draftId, customerMobile,customerName,customerSex, object) {
+  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex) {
     if (draftId && draftId !== '') {
       this.sendMessage({
         path: 'sale/quotation',
