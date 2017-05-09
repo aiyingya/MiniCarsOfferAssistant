@@ -57,6 +57,7 @@ Page({
      */
     standards: [],
     standardIndex: 0,
+    saddleValue: 0,
     /** 
      *根据spu规格计算保险
      */
@@ -189,7 +190,7 @@ Page({
     let standardIndex = 0
     let sixUnder = [], sixAbove = []
     let trafficInsurance = 950
-    
+    console.log(carModelInfo)
     if(seatNums.length > 0) {
       for(let item of seatNums) {
         if(item < 6) {
@@ -433,11 +434,12 @@ Page({
           case '车身划痕险':
             let scratches = 0
             let scratchesTypesIndex = this.data.scratchesTypes[this.data.scratchesTypesIndex]
+            console.log(officialPrice/10000)
             if(officialPrice/10000 < 30) {
               scratches = this.data.scratches[scratchesTypesIndex].one
-            }else if(30<= officialPrice/10000 <= 50) {
+            }else if(30<= officialPrice/10000 && officialPrice/10000 <= 50) {
               scratches = this.data.scratches[scratchesTypesIndex].two
-            }else if(officialPrice/10000 > 50) {
+            }else{
               scratches = this.data.scratches[scratchesTypesIndex].three
             }
             scratchesInsurance = scratches 
@@ -464,7 +466,8 @@ Page({
       'InsuranceDetail.personnelCarInsurance': personnelCarInsurance.toFixed(0),
       'InsuranceDetail.scratchesInsurance': scratchesInsurance.toFixed(0),
       'InsuranceDetail.insuranceTotal': totalAmount.toFixed(0),
-      ChangeInsuranceTotalStyle: ''
+      ChangeInsuranceTotalStyle: '',
+      saddleValue: standardIndex
     })
   },
   handleChangeSubmit() {
@@ -511,7 +514,7 @@ Page({
     insurancesAll.businessInsurances = businessRisks
     insurancesAll.trafficInsurance = InsuranceDetail.trafficInsurance
     insurancesAll.insuranceTotal = InsuranceDetail.insuranceTotal
-    console.log(insurancesAll)
+    insurancesAll.saddleValue = this.data.saddleValue
     /**
      * 保存设置.
      */
