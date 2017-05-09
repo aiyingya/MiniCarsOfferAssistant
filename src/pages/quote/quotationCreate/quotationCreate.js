@@ -208,7 +208,6 @@ Page({
     }
 
 
-    this.utilsExpensesAllInfo()
 
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
@@ -224,10 +223,11 @@ Page({
       if (quotation.hasLoan) {
         let stagesIndex = this.data.stagesArray.indexOf(quotation.stages)
         let paymentRatiosIndex = this.data.paymentRatiosArray.indexOf(quotation.paymentRatio)
+
+        that.setExpenseRate(that.data.stagesArray[stagesIndex])
         // 需要初始化设置已经设置的还款周期和首付比率
         this.setData({
           activeIndex: quotation.hasLoan ? 0 : 1,
-          quotation: quotation,
           stagesIndex: stagesIndex,
           paymentRatiosIndex: paymentRatiosIndex
         })
@@ -236,13 +236,36 @@ Page({
         // 对于是全款的情况， 需要手动设置贷款的相应参数数据
         quotation.paymentRatio = 30
         quotation.stages = 3
-        quotation.expenseRate = res.interestType === 1 ? res.threeInterest : res.threeWYXS
 
         this.setData({
-          activeIndex: quotation.hasLoan ? 0 : 1,
-          'quotation': quotation
+          activeIndex: quotation.hasLoan ? 0 : 1
         })
       }
+
+      quotation.requiredExpensesAll = {//必需费用（元），deciaml，取值范围0~999999999,
+        purchaseTax:quotation.purchaseTax || 0,//购置
+        licenseFee:quotation.carNumFee || 0,//上牌
+        vehicleAndVesselTax:quotation.carTax || 0,//车船
+        insuranceAmount:quotation.insuranceDetail.iTotal || 0//保险金额
+      }
+
+      quotation.otherExpensesAll = {// 其他费用（元），deciaml，取值范围0~999999999",
+        boutiqueCost:quotation.boutiqueFee || 0,//精品费用
+        installationFee:quotation.installFee || 0,//安装费
+        serverFee:quotation.serverFee || 0,//
+        otherFee:quotation.otherFee || 0
+      }
+
+
+      this.setData({
+        'quotation': quotation
+      })
+
+
+
+      this.updateForSomeReason()
+
+
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
         var carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
@@ -288,13 +311,9 @@ Page({
             })
 
             let sellingPrice = res.carPrice;
-            var diffPrice = Number(sellingPrice - guidePrice);
-            this.setData({
-              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              diffPrice:diffPrice
-            })
 
             this.setData({
+              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(sellingPrice/1.17*0.1)
             })
 
@@ -415,8 +434,7 @@ Page({
     })
     insuranceDetail.iTotal = _insurances.insuranceTotal
     insuranceDetail.iJQX = _insurances.trafficInsurance
-    //TODO:盼盼提供规格数据
-    // insuranceDetail.carSize = _insurances.xxxxxxxx;
+    insuranceDetail.carSize = _insurances.saddleValue//： 0 6座一下 1 6座以上;
     this.setData({
       'quotation.insuranceDetail': insuranceDetail
     })
@@ -498,12 +516,14 @@ Page({
         initSellingPrice:carPrice
       });
     }
+    var diffPrice = Number(carPrice - officialPrice);
 
     this.setData({
       'quotation.totalPayment': Math.floor(totalPayment),
       'quotation.advancePayment': Math.floor(advancePayment),
       'quotation.monthlyPayment': Math.floor(monthlyPayment),
       'quotation.hasLoan': this.isLoanTabActive(),
+      diffPrice:diffPrice,
       priceChange: {
         flag: downPriceFlag,
         price: downPriceString,
@@ -603,7 +623,7 @@ Page({
       //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
       _inputT = that.data.priceChange.point
     }else{
-      _inputT = Math.abs(that.data.diffPrice)
+      _inputT = Math.abs(_diffPrice)
     }
 
     this.hideInput()
@@ -635,7 +655,6 @@ Page({
 
         that.setData({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
-          'diffPrice':_inputNumber
         })
         that.updateForSomeReason()
         that.showInput()
@@ -651,7 +670,33 @@ Page({
     var expensesInfo = e.currentTarget.dataset.feetype
 
     let requiredExpenses = this.data.quotation.requiredExpenses
-    const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
+
+    let carModelsInfoKeyValueString
+    if(that.data.source = 'quotationDetail'){
+      //新建
+      carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
+    }else{
+      //TODO:盼盼需要他的格式，但是格式太大
+
+      //编辑
+      /*{
+        "iTotal":"保险总额",
+        "showDetail":"是否显示保险明细",
+        "iJQX":"交强险",
+        "iDSZZRX":"第三者责任险",
+        "iCLSSX":"车辆损失险",
+        "iQCDQX":"全车盗抢险",
+        "iBLDDPSX":"玻璃单独破碎险",
+        "iZRSSX":"自燃损失险",
+        "iBJMPTYX":"不计免赔特约险",
+        "iWGZRX":"无过责任险",
+        "iCSRYZRX":"车上人员责任险",
+        "iCSHHX":"车身划痕险",
+        "carSize":"车辆规格" 0 6座一下 1 6座以上
+      }*/
+      carModelsInfoKeyValueString = util.urlEncodeValueForKey('insuranceDetail', this.data.quotation.insuranceDetail)
+    }
+
     if(expensesInfo.title === '保险金额') {
       wx.navigateTo({
         url: `../../insurance/insurance?${carModelsInfoKeyValueString}`
