@@ -391,7 +391,7 @@ Page({
       if(!item.checked){
         return
       }
-      if(item.name === '第三方责任险'){
+      if(item.name === '第三者责任险'){
         insuranceDetail.iDSZZRX = item.amount
         return
       }
@@ -666,14 +666,10 @@ Page({
     var expensesInfo = e.currentTarget.dataset.feetype
 
     let requiredExpenses = this.data.quotation.requiredExpenses
-
+    
     let carModelsInfoKeyValueString
     let pageSource = 'new'
-    if(that.data.source = 'quotationDetail'){
-      //新建
-      carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
-      pageSource = 'new'
-    }else{
+    if(this.data.source === 'quotationDetail'){
       //TODO:盼盼需要他的格式，但是格式太大
       carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.quotation)
       //编辑
@@ -693,7 +689,10 @@ Page({
         "carSize":"车辆规格" 0 6座一下 1 6座以上
       }*/
       pageSource = 'editor'
-    
+    }else{
+      //新建
+      carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
+      pageSource = 'new'
     }
 
     if(expensesInfo.title === '保险金额') {
