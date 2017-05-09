@@ -77,6 +77,7 @@ export default class UserService extends Service {
     this.mobile = null
 
     this.clientId = null
+    this.address = {}
     /**
      * 用户是否设置过报价设置.
      */
@@ -459,6 +460,7 @@ export default class UserService extends Service {
           }
           that.location = location
           that.mobile = res.mobile
+          that.address= res.tenants? res.tenants[0].address : {}
           opts.success(res)
         },
         fail: function () {

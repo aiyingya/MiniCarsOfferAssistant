@@ -185,7 +185,6 @@ export default class SAASService extends Service {
       }
 
       data.insuranceDetail = quotationDraft.insuranceDetail
-
       let snsId
       if (this.userService.isLogin) {
         snsId = this.userService.auth.userId
@@ -564,11 +563,17 @@ export default class SAASService extends Service {
     })
   }
 
+  /**
+   * 获取保险信息.
+   * @param data.capacity 排量
+   * @param data.place 门店所在省
+   */
   gettingVehicleAndVesselTax(opts) {
-    return this.sendMessageByPromise({
+    return this.sendMessage({
       path: `sale/quotation/getCarTax?capacity=${opts.data.capacity}&place=${opts.data.place}`,
       method: 'GET',
-      data: {}
+      success: opts.success,
+      fail: opts.fail
     })
   }
 }

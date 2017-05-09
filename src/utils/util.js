@@ -103,6 +103,13 @@ export default class Util {
   }
 
   /**
+   * 购置税
+   */
+  static purchaseTax(carPrice) {
+    return (carPrice/1.17*0.1)
+  }
+
+  /**
    * 降价数据
    *
    * @static

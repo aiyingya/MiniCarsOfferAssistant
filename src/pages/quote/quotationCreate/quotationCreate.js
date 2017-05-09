@@ -310,7 +310,7 @@ Page({
 
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              'quotation.requiredExpensesAll.purchaseTax':Math.floor(sellingPrice/1.17*0.1)
+              'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice))
             })
 
             // 设置报价表单数据
@@ -332,8 +332,11 @@ Page({
               carModelInfo: carModelInfo
             })
 
-            this.updateForSomeReason()
-            this.initVehicleAndVesselTax()
+
+            that.initVehicleAndVesselTax(function(){
+              that.updateForSomeReason()
+            })
+
             wx.getSystemInfo({
               success: function (res) {
                 that.setData({
@@ -654,8 +657,10 @@ Page({
 
         that.setData({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
-          'carModelInfo.sellingPrice': Math.floor(price)
+          'carModelInfo.sellingPrice': Math.floor(price),
+          'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price))
         })
+
         that.updateForSomeReason()
         that.showInput()
 
@@ -670,7 +675,7 @@ Page({
     var expensesInfo = e.currentTarget.dataset.feetype
 
     let requiredExpenses = this.data.quotation.requiredExpenses
-    
+
     let carModelsInfoKeyValueString
     let pageSource = 'new'
     if(this.data.source === 'quotationDetail'){
@@ -919,6 +924,8 @@ Page({
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
     var user = app.userService;
+
+    that.hideInput()
     app.saasService.getProfit({
       "userId": user.auth.userId,
       "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
@@ -938,7 +945,10 @@ Page({
                {name:'裸车价收益约',value:'￥'+ res.profit},
                {name:'保险收益约',value:'￥'+res.insuranceProfit},
                {name:'贷款收益约',value:'￥'+res.loanProfit}
-             ]
+             ],
+             close: () => {
+               that.showInput()
+             }
            })
            return
          }
@@ -950,12 +960,15 @@ Page({
              {name:'裸车价收益约',value:'￥'+ res.profit},
              {name:'保险收益约',value:'￥'+res.insuranceProfit},
              {name:'贷款收益约',value:'￥0'}
-           ]
+           ],
+           close: () => {
+             that.showInput()
+           }
          })
 
        },
        fail:() => {console.log("查看收益失败")},
-       complete: () => {},
+       complete: () => {}
       }
     );
 
@@ -970,10 +983,31 @@ Page({
       isShowTextarea:false
     })
   },
-  initVehicleAndVesselTax(){
+  initVehicleAndVesselTax(call){
+    let that  = this
     //初始化车船税
     const isElectricCar = this.data.carModelInfo.isElectricCar
     const capacity = this.data.carModelInfo.capacity
+    if(isElectricCar || !capacity){
+      if(typeof(call) === 'function'){
+        call()
+      }
+      return ;
+    }
+    let price
+    var user = app.userService;
+    app.saasService.gettingVehicleAndVesselTax({
+      data:{
+        capacity:capacity,
+        place:user.address.provinceName//provinceId
+      },
+      success:(data)=>{
+        that.setData({'quotation.requiredExpensesAll.vehicleAndVesselTax': data})
+        if(typeof(call) === 'function'){
+          call(data)
+        }
+      }
+    })
 
   }
 });
