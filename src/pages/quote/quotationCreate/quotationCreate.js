@@ -634,7 +634,8 @@ Page({
         }
 
         that.setData({
-          'quotation.quotationItems[0].sellingPrice': Math.floor(price)
+          'quotation.quotationItems[0].sellingPrice': Math.floor(price),
+          'diffPrice':_inputNumber
         })
         that.updateForSomeReason()
         that.showInput()
