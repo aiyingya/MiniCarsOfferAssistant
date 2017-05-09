@@ -19,12 +19,14 @@
       </view>
       <form bindsubmit="{{ confirm }}">
         <view class="weui-dialog__input">
-          <checkbox-group bindchange="{{ checkboxChange }}">
-            <label 
-              class="weui-cell weui-check__label" 
-              wx:for="{{ checkboxItems }}" 
-              wx:key="id"
-              >
+          <checkbox-group 
+            bindchange="{{ checkboxChange }}"
+            class="weui-cell weui-check__label" 
+            wx:for="{{ checkboxItems }}" 
+            wx:key="id"
+            data-name="{{item.name}}"
+            >
+            <label>
               <checkbox class="weui-check" name="{{item.name}}" value="{{item.id}}" checked="{{item.checked}}"/>
               <view class="weui-cell__bd">{{item.name}}</view>
               <view class="weui-cell__hd weui-check__hd_in-checkbox">

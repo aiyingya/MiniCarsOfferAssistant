@@ -83,23 +83,69 @@ export default {
           
           let checkboxItems = options.checkboxItems
           let values = e.detail.value
+          let name = e.currentTarget.dataset.name
           let disabled = !options.validate(e)
           let checkedValues = []
           for (let item of checkboxItems) {
-            item.checked = false
-            for (let value of values) {
-              if(item.id == value){
-                item.checked = true
-                checkedValues.push(item.id)
-                break
+            if(item.name === name) {
+              item.checked = false
+              for (let value of values) {
+                if(item.id == value){
+                  item.checked = true
+                  checkedValues.push(item.id)
+                  break
+                }
+              }
+
+              // Fuckind Larry
+              // 关联取消的险种，取消a关联b也取消，但a取消的时候应该不可以再重新选择b
+              if(name === '第三者责任险' && item.checked) {
+                for(let item1 of checkboxItems) {
+                  if(item1.name === '不计免赔特约险' || item1.name === '无过责任险') {
+                    item1.checked = true
+                  }
+                }
+              }else if(name === '第三者责任险' && !item.checked) {
+                for(let item1 of checkboxItems) {
+                  if(item1.name === '不计免赔特约险' || item1.name === '无过责任险') {
+                    item1.checked = false
+                  }
+                }
+              }
+              if(name === '车辆损失险' && item.checked) {
+                for(let item1 of checkboxItems) {
+                  if(item1.name === '不计免赔特约险' || item1.name === '全车盗抢险' || item1.name === '车身划痕险') {
+                    item1.checked = true
+                  }
+                }
+              }else if(name === '车辆损失险' && !item.checked) {
+                for(let item1 of checkboxItems) {
+                  if(item1.name === '不计免赔特约险' || item1.name === '全车盗抢险' || item1.name === '车身划痕险') {
+                    item1.checked = false
+                  }
+                }
+              }
+
+              if(name === '不计免赔特约险' || name === '无过责任险') {
+                for(let item1 of checkboxItems) {
+                  if(item1.name === '第三者责任险' && !item1.checked) {
+                    item.checked = false
+                  }
+                }
+              }
+              if(name === '不计免赔特约险' || name === '全车盗抢险' || name === '车身划痕险') {
+                for(let item2 of checkboxItems) {
+                  if(item2.name === '车辆损失险' && !item2.checked) {
+                    item.checked = false
+                  }
+                }
               }
             }
           }
-          options.checkedValues = checkedValues
+          
           this.setData({
             [`${this.options.scope}.confirmDisabled`]: false,
-            [`${this.options.scope}.checkboxItems`]: checkboxItems,
-            [`${this.options.scope}.checkedValues`]: checkedValues
+            [`${this.options.scope}.checkboxItems`]: checkboxItems
           })
         },
         /**
@@ -108,9 +154,16 @@ export default {
          * @param {any} e
          */
         confirm(e) {
+          
           const res = e.detail.value
           const value = options.checkboxItems
-          const checkedValues = options.checkedValues
+          const checkedValues = []
+          for(let item of value) {
+            if(item.checked) {
+              checkedValues.push(item.id)
+            }
+          }
+          console.log(checkedValues)
           this.hide(options.confirm(value,checkedValues))
         },
         /**
