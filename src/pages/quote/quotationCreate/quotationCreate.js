@@ -736,7 +736,7 @@ Page({
 
     function isSendRequest (quotationDraft,mobile,name,sex) {
 
-      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile,name,sex ,{
+      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile ,{
         success: (res) => {
           let quotation1 = res
 
@@ -780,7 +780,7 @@ Page({
           console.log("fail 保存报价单失败")
         },
         complete: () => {}
-      })
+      },name,sex)
     }
 
     that.hideInput()
