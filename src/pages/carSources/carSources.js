@@ -147,9 +147,8 @@ Page({
 
           carModelsInfo.capacity = res.capacity
           carModelsInfo.isElectricCar = res.electricCar
-          this.setData({
-            carModelsInfo: carModelsInfo,
-            pageShare: false //  避免分享页面二次加载.
+          that.setData({
+            carModelsInfo: carModelsInfo
           })
 
         }

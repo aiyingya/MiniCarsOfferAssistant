@@ -332,8 +332,11 @@ Page({
               carModelInfo: carModelInfo
             })
 
-            this.updateForSomeReason()
-            this.initVehicleAndVesselTax()
+
+            that.initVehicleAndVesselTax(function(){
+              that.updateForSomeReason()
+            })
+
             wx.getSystemInfo({
               success: function (res) {
                 that.setData({
@@ -391,7 +394,7 @@ Page({
       if(!item.checked){
         return
       }
-      if(item.name === '第三方责任险'){
+      if(item.name === '第三者责任险'){
         insuranceDetail.iDSZZRX = item.amount
         return
       }
@@ -693,7 +696,7 @@ Page({
         "carSize":"车辆规格" 0 6座一下 1 6座以上
       }*/
       pageSource = 'editor'
-    
+
     }
 
     if(expensesInfo.title === '保险金额') {
@@ -967,10 +970,31 @@ Page({
       isShowTextarea:false
     })
   },
-  initVehicleAndVesselTax(){
+  initVehicleAndVesselTax(call){
+    let that  = this
     //初始化车船税
     const isElectricCar = this.data.carModelInfo.isElectricCar
     const capacity = this.data.carModelInfo.capacity
+    if(isElectricCar || !capacity){
+      if(typeof(call) === 'function'){
+        call()
+      }
+      return ;
+    }
+    let price
+    var user = app.userService;
+    app.saasService.gettingVehicleAndVesselTax({
+      data:{
+        capacity:capacity,
+        place:user.address.provinceName//provinceId
+      },
+      success:(data)=>{
+        that.setData({'quotation.requiredExpensesAll.vehicleAndVesselTax': data})
+        if(typeof(call) === 'function'){
+          call(data)
+        }
+      }
+    })
 
   }
 });
