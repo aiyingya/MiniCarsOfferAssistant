@@ -745,11 +745,13 @@ Page({
       carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
       pageSource = 'new'
     }
-
+    
     if(expensesInfo.title === '保险金额') {
+      
       wx.navigateTo({
         url: `../../insurance/insurance?${carModelsInfoKeyValueString}&pageSource=${pageSource}`
       })
+      console.log(expensesInfo)
     }else {
       that.hideInput()
       $wuxInputNumberDialog.open({

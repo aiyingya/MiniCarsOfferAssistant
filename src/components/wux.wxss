@@ -752,3 +752,8 @@
 .checkboxDialog .weui-cell:first-child:before {
   display: block;
 }
+.checkboxDialog .weui-cell label {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
