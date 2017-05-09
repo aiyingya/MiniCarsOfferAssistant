@@ -39,7 +39,8 @@ Page({
       customerMobile: '',
       read: false,
       source: 'quotationDetail',
-      pageShare: false
+      pageShare: false,
+      rateType:1 //"费率类型 1 月息 2 万元系数",
     },
     priceChange: {
       flag: '', // true 为上， false 为下

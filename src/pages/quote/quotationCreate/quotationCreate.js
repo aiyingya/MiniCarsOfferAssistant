@@ -262,7 +262,7 @@ Page({
       quotation.otherExpensesAll = {// 其他费用（元），deciaml，取值范围0~999999999",
         boutiqueCost:quotation.boutiqueFee || 0,//精品费用
         installationFee:quotation.installFee || 0,//安装费
-        serverFee:quotation.serverFee || 0,//
+        serverFee:quotation.serviceFee || 0,//
         otherFee:quotation.otherFee || 0
       }
 
@@ -370,7 +370,7 @@ Page({
 
             activeIndexCss()
             this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
-            
+
             // 计算默认保险.
             const promise1 = this.getDefaultInsurance()
             const promise = Promise.race([promise1])
@@ -658,7 +658,7 @@ Page({
     const _baseSellingPrice = Number(this.data.quotation.quotationItems[0].baseSellingPrice)
     const _diffPrice = Number(that.data.diffPrice) //指导价差价
     let _inputT
-    
+
     if(that.data.isSpecialBranch){
       //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
       _inputT = that.data.priceChange.point
@@ -700,8 +700,8 @@ Page({
           'carModelInfo.sellingPrice': Math.floor(price),
           'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price,isElectricCar? null:capacity))
         })
-        
-        
+
+
         that.updateForSomeReason()
         that.showInput()
         let businessRisks = this.data.businessRisks
@@ -1086,10 +1086,10 @@ Page({
     // 裸车价.
     let officialPrice = carModelsInfo.sellingPrice
     let seatNums = carModelsInfo.seatNums
-    let standards = [] 
+    let standards = []
     let sIndex = 0
     let sixUnder = [], sixAbove = []
-    
+
     if(seatNums && seatNums.length > 0) {
       for(let item of seatNums) {
         if(item < 6) {
@@ -1099,7 +1099,7 @@ Page({
         }
       }
     }
-   
+
     if(sixUnder.length > 0){
       standards = ["家用6座以下"]
     }else if(sixAbove.length > 0) {
@@ -1132,8 +1132,8 @@ Page({
     let personnelCarInsurance = 0
     // 车身划痕险
     let scratchesInsurance = 0
-    
-    for(let item of businessRisks) { 
+
+    for(let item of businessRisks) {
       if(item.checked) {
         switch (item.name) {
           case '第三者责任险':
@@ -1163,24 +1163,24 @@ Page({
           case '不计免赔特约险':
             if(liabilityInsurance > 0 && vehicleLossInsurance > 0) {
               franchiseInsurance = liabilityInsurance*0.2 + vehicleLossInsurance*0.2
-              
+
               businessTatal += franchiseInsurance
             }
-            
+
             break
           case '无过责任险':
- 
-            responsibilityInsurance = liabilityInsurance*0.2 
+
+            responsibilityInsurance = liabilityInsurance*0.2
             businessTatal += responsibilityInsurance
             break
           case '车上人员责任险':
             let personnelCarRate = standardIndex == 0 ? 0.0069 : 0.0066
-            personnelCarInsurance = officialPrice*personnelCarRate 
+            personnelCarInsurance = officialPrice*personnelCarRate
             businessTatal += personnelCarInsurance
             break
           case '车身划痕险':
             let scratches = 0
-            
+
             if(officialPrice/10000 < 30) {
               scratches = 570
             }else if(30<= officialPrice/10000 && officialPrice/10000 <= 50) {
@@ -1188,20 +1188,20 @@ Page({
             }else{
               scratches = 1100
             }
-            
+
             businessTatal += scratches
             break
           default:
 
             break
-        }  
-      }    
+        }
+      }
     }
-    
+
     totalAmount = (businessTatal+trafficInsurance).toFixed(0)
     for(let item1 of expensesAllInfo) {
       if(item1.title === '保险金额') {
-        
+
         item1.price = totalAmount
       }
     }
