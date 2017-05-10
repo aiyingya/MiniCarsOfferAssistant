@@ -1218,51 +1218,74 @@ Page({
     // 车身划痕险
     let scratchesInsurance = 0
 
-
+    let insuranceDetail = {
+      "iTotal":0,//"保险总额",
+      "iJQX":trafficInsurance,//"交强险",
+      "iDSZZRX":1,//"第三者责任险", 1
+      "iCLSSX":1,//"车辆损失险",1
+      "iQCDQX":1,//"全车盗抢险",1
+      "iBLDDPSX":1,//"玻璃单独破碎险",1
+      "iZRSSX":1,//"自燃损失险",1
+      "iBJMPTYX":1,//"不计免赔特约险",1
+      "iWGZRX":1,//"无过责任险",1
+      "iCSRYZRX":1,//"车上人员责任险",1
+      "iCSHHX":1,//"车身划痕险"1
+      "carSize":standardIndex,//"车辆规格"
+      "iDSZZRX_INDEX":1,
+      "iBLDDPSX_INDEX":0,
+      "iCSHHX_INDEX":1
+    }
     for(let item of businessRisks) {
       if(item.checked) {
         switch (item.name) {
           case '第三者责任险':
             liabilityInsurance = standardIndex == 0 ? 920 : 831
             businessTatal += liabilityInsurance
+            insuranceDetail.iDSZZRX = liabilityInsurance
             break
           case '车辆损失险':
             let basis = standardIndex == 0 ? 539 : 646
             vehicleLossInsurance = basis + officialPrice*0.0128
             businessTatal += vehicleLossInsurance
+            insuranceDetail.iCLSSX = vehicleLossInsurance
             break
           case '全车盗抢险':
             let basisPremium = standardIndex == 0 ? 120 : 140
             let ratePremium = standardIndex == 0 ? 0.0049 : 0.0044
             vehicleDQInsurance = basisPremium + officialPrice*ratePremium
             businessTatal += vehicleDQInsurance
+            insuranceDetail.iQCDQX = vehicleDQInsurance
             break
           case '玻璃单独破碎险':
             let glassBrokenRate = 0.002
             glassBrokenInsurance = officialPrice*glassBrokenRate
             businessTatal += glassBrokenInsurance
+            insuranceDetail.iBLDDPSX = glassBrokenInsurance
             break
           case '自燃损失险':
             gcombustionLossInsurance = officialPrice*0.0015
             businessTatal += gcombustionLossInsurance
+            insuranceDetail.iZRSSX = gcombustionLossInsurance
             break
           case '不计免赔特约险':
             if(liabilityInsurance > 0 && vehicleLossInsurance > 0) {
               franchiseInsurance = liabilityInsurance*0.2 + vehicleLossInsurance*0.2
-
               businessTatal += franchiseInsurance
+              insuranceDetail.iBJMPTYX = franchiseInsurance
             }
 
             break
           case '无过责任险':
-
             responsibilityInsurance = liabilityInsurance*0.2
             businessTatal += responsibilityInsurance
+            insuranceDetail.iWGZRX = responsibilityInsurance
             break
           case '车上人员责任险':
             let personnelCarRate = standardIndex == 0 ? 0.0069 : 0.0066
             personnelCarInsurance = officialPrice*personnelCarRate
             businessTatal += personnelCarInsurance
+            insuranceDetail.iCSRYZRX = personnelCarInsurance
+
             break
           case '车身划痕险':
             let scratches = 0
@@ -1276,6 +1299,7 @@ Page({
             }
 
             businessTatal += scratches
+            insuranceDetail.iCSHHX = scratches
             break
           default:
 
@@ -1292,11 +1316,12 @@ Page({
         item1.price = totalAmount
       }
     }
+    insuranceDetail.iTotal = totalAmount
 
     that.setData({
       expensesAllInfo: expensesAllInfo,
       'quotation.requiredExpensesAll.insuranceAmount': totalAmount,
-      'quotation.insuranceDetail.iTotal': totalAmount
+      'quotation.insuranceDetail': insuranceDetail
     })
     return totalAmount
   }
