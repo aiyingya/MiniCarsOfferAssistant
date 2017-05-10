@@ -338,10 +338,11 @@ Page({
             })
 
             let sellingPrice = res.carPrice;
-
+            const capacity = carModelInfo.capacity
+            const isElectricCar = carModelInfo.isElectricCar
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice))
+              'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
             // 设置报价表单数据
@@ -750,9 +751,9 @@ Page({
       carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
       pageSource = 'new'
     }
-    
+
     if(expensesInfo.title === '保险金额') {
-      
+
       wx.navigateTo({
         url: `../../insurance/insurance?${carModelsInfoKeyValueString}&pageSource=${pageSource}`
       })

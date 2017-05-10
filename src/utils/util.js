@@ -27,7 +27,6 @@ export default class Util {
    * @param carPrice      裸车价, 元
    * @param paymentRatio  首付比例, %
    * @param expenseRate   万元系数, 元
-   * @param stages        期数, 月数
    * @returns {number}    月供金额, 元
    */
   static monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate) {
