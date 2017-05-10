@@ -60,7 +60,10 @@ Page({
         "iWGZRX":1,//"无过责任险",
         "iCSRYZRX":1,//"车上人员责任险",
         "iCSHHX":1,//"车身划痕险"
-        "carSize":0//"车辆规格"
+        "carSize":0,//"车辆规格"
+        "iDSZZRX_INDEX":1,
+        "iBLDDPSX_INDEX":0,
+        "iCSHHX_INDEX":1
       },
       advancePayment: 0, // 必传，首次支付金额，如果全款则为全款金额",
       monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
@@ -435,7 +438,10 @@ Page({
       "iWGZRX":1,//"无过责任险",
       "iCSRYZRX":1,//"车上人员责任险",
       "iCSHHX":1,//"车身划痕险"
-      "carSize":0//"车辆规格"
+      "carSize":0,//"车辆规格"
+      "iDSZZRX_INDEX":1,
+      "iBLDDPSX_INDEX":0,
+      "iCSHHX_INDEX":1
     }
 
     if(!_insurances){
@@ -1293,5 +1299,5 @@ Page({
       'quotation.insuranceDetail.iTotal': totalAmount
     })
     return totalAmount
-  },
+  }
 });
