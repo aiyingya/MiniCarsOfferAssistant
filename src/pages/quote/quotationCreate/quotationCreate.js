@@ -1241,50 +1241,50 @@ Page({
           case '第三者责任险':
             liabilityInsurance = standardIndex == 0 ? 920 : 831
             businessTatal += liabilityInsurance
-            insuranceDetail.iDSZZRX = liabilityInsurance
+            insuranceDetail.iDSZZRX = liabilityInsurance.toFixed(0)
             break
           case '车辆损失险':
             let basis = standardIndex == 0 ? 539 : 646
             vehicleLossInsurance = basis + officialPrice*0.0128
             businessTatal += vehicleLossInsurance
-            insuranceDetail.iCLSSX = vehicleLossInsurance
+            insuranceDetail.iCLSSX = vehicleLossInsurance.toFixed(0)
             break
           case '全车盗抢险':
             let basisPremium = standardIndex == 0 ? 120 : 140
             let ratePremium = standardIndex == 0 ? 0.0049 : 0.0044
             vehicleDQInsurance = basisPremium + officialPrice*ratePremium
             businessTatal += vehicleDQInsurance
-            insuranceDetail.iQCDQX = vehicleDQInsurance
+            insuranceDetail.iQCDQX = vehicleDQInsurance.toFixed(0)
             break
           case '玻璃单独破碎险':
             let glassBrokenRate = 0.002
             glassBrokenInsurance = officialPrice*glassBrokenRate
             businessTatal += glassBrokenInsurance
-            insuranceDetail.iBLDDPSX = glassBrokenInsurance
+            insuranceDetail.iBLDDPSX = glassBrokenInsurance.toFixed(0)
             break
           case '自燃损失险':
             gcombustionLossInsurance = officialPrice*0.0015
             businessTatal += gcombustionLossInsurance
-            insuranceDetail.iZRSSX = gcombustionLossInsurance
+            insuranceDetail.iZRSSX = gcombustionLossInsurance.toFixed(0)
             break
           case '不计免赔特约险':
             if(liabilityInsurance > 0 && vehicleLossInsurance > 0) {
               franchiseInsurance = liabilityInsurance*0.2 + vehicleLossInsurance*0.2
               businessTatal += franchiseInsurance
-              insuranceDetail.iBJMPTYX = franchiseInsurance
+              insuranceDetail.iBJMPTYX = franchiseInsurance.toFixed(0)
             }
 
             break
           case '无过责任险':
             responsibilityInsurance = liabilityInsurance*0.2
             businessTatal += responsibilityInsurance
-            insuranceDetail.iWGZRX = responsibilityInsurance
+            insuranceDetail.iWGZRX = responsibilityInsurance.toFixed(0)
             break
           case '车上人员责任险':
             let personnelCarRate = standardIndex == 0 ? 0.0069 : 0.0066
             personnelCarInsurance = officialPrice*personnelCarRate
             businessTatal += personnelCarInsurance
-            insuranceDetail.iCSRYZRX = personnelCarInsurance
+            insuranceDetail.iCSRYZRX = personnelCarInsurance.toFixed(0)
 
             break
           case '车身划痕险':
@@ -1299,7 +1299,7 @@ Page({
             }
 
             businessTatal += scratches
-            insuranceDetail.iCSHHX = scratches
+            insuranceDetail.iCSHHX = scratches.toFixed(0)
             break
           default:
 
