@@ -120,7 +120,7 @@ export default {
          */
         buttonMinus(e){
           var number = options.inputNumber;
-          if(!number){
+          if(!number ){
             return
           }
           let text
@@ -143,7 +143,7 @@ export default {
          */
         buttonPlus(e){
           var number = options.inputNumber;
-          if(!number){
+          if(!number && Number(number)!=0){
             return
           }
           let text
