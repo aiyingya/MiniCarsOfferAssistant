@@ -269,7 +269,8 @@ Page({
 
       this.setData({
         'quotation': quotation,
-        'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice
+        'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice,
+        'carModelsInfo.sellingPrice': quotation.carPrice
       })
       //获取报价单接口
       app.saasService.getCreatCarRecordInfo({
@@ -283,6 +284,7 @@ Page({
           that.setData({
             'requestResult': res
           })
+          
           that.updateForSomeReason()
           activeIndexCss()
 
@@ -291,7 +293,15 @@ Page({
         complete: () => {}
       });
 
+      const promise1 = that.getDefaultInsurance()
+      const promise = Promise.race([promise1])
+      promise.then(res => {
+        //wx.hideToast()
 
+      }, err => {
+        //wx.hideToast()
+      })
+      console.log(quotation)
 
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
@@ -701,6 +711,7 @@ Page({
         that.setData({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
           'carModelInfo.sellingPrice': Math.floor(price),
+          'quotation.carPrice': Math.floor(price),
           'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price,isElectricCar? null:capacity))
         })
         let businessRisks = this.data.businessRisks
@@ -1065,13 +1076,71 @@ Page({
   getDefaultInsurance() {
     const that = this
     const checkedValues = []
+    const source = this.data.source
+    const quotation = this.data.quotation
     return app.saasService.gettingInsurance().then((res) => {
       if (res) {
+        if(source === 'quotationDetail') {
+          for(let item of res.insurances) {
+            switch (item.name) {
+              case '第三者责任险':
+                if(quotation.insuranceDetail.iDSZZRX > 0) {
+                  item.checked = true
+                }
+                break
+              case '车辆损失险':
+                if(quotation.insuranceDetail.iCLSSX > 0) {
+                  item.checked = true
+                }
+                break
+              case '全车盗抢险': 
+                if(quotation.insuranceDetail.iQCDQX > 0) {
+                  item.checked = true
+                }
+                break
+              case '玻璃单独破碎险': 
+                if(quotation.insuranceDetail.iBLDDPSX > 0) {
+                  item.checked = true
+                }
+                break
+              case '自燃损失险':
+                if(quotation.insuranceDetail.iZRSSX > 0) {
+                  item.checked = true
+                }
+                break
+              case '不计免赔特约险':
+                if(quotation.insuranceDetail.iBJMPTYX > 0) {
+                  item.checked = true
+                }
+                break
+              case '无过责任险': 
+                if(quotation.insuranceDetail.iWGZRX > 0) {
+                  item.checked = true
+                }
+                break
+              case '车上人员责任险': 
+                if(quotation.insuranceDetail.iCSRYZRX > 0) {
+                  item.checked = true
+                }
+                break
+              case '车身划痕险': 
+                if(quotation.insuranceDetail.iCSHHX > 0) {
+                  item.checked = true
+                }
+                break
+              default:
+
+                break
+            } 
+          }
+        }
+        
         that.setData({
           'businessRisks': res.insurances
         })
-        that.insuranceCostCountDefault(res.insurances)
-
+        if(that.data.source != 'quotationDetail') {
+          that.insuranceCostCountDefault(res.insurances)
+        }
       }
     }, (err) => {
 
