@@ -151,9 +151,7 @@ export default class SAASService extends Service {
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee,
-          rateType: quotationDraft.rateType
-
+          otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       } else {
         data = {
@@ -181,9 +179,9 @@ export default class SAASService extends Service {
           installFee:quotationDraft.otherExpensesAll.installationFee,
           otherFee:quotationDraft.otherExpensesAll.otherFee
 
-
         }
       }
+      data.rateType = quotationDraft.rateType
 
       data.insuranceDetail = quotationDraft.insuranceDetail
       let snsId
