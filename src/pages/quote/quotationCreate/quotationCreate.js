@@ -266,6 +266,11 @@ Page({
         otherFee:quotation.otherFee || 0
       }
 
+      const  isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
+      this.setData({
+        'isSpecialBranch': isShow
+      })
+
 
       this.setData({
         'quotation': quotation,
