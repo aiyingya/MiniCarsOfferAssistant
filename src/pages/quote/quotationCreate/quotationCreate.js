@@ -753,10 +753,6 @@ Page({
     }
 
     if(expensesInfo.title === '保险金额') {
-<<<<<<< HEAD
-
-=======
->>>>>>> a98fcc131724152e02aca27ffaf32123d8440ba9
       wx.navigateTo({
         url: `../../insurance/insurance?${carModelsInfoKeyValueString}&pageSource=${pageSource}`
       })
