@@ -318,7 +318,7 @@ Page({
         const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
 
-        const originalPrice = carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
+        const originalPrice = carSkuInfo.showPrice || carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
 
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
         this.setData({
@@ -338,10 +338,11 @@ Page({
             })
 
             let sellingPrice = res.carPrice;
-
+            const capacity = carModelInfo.capacity
+            const isElectricCar = carModelInfo.isElectricCar
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice))
+              'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
             // 设置报价表单数据
@@ -703,10 +704,8 @@ Page({
           'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price,isElectricCar? null:capacity))
         })
         let businessRisks = this.data.businessRisks
-        let _insurancePrice = that.insuranceCostCountDefault(businessRisks)
-        that.setData({
-          'quotation.requiredExpensesAll.insuranceAmount': _insurancePrice
-        })
+        that.insuranceCostCountDefault(businessRisks)
+
         that.updateForSomeReason()
         that.showInput()
 
@@ -750,7 +749,7 @@ Page({
       carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
       pageSource = 'new'
     }
-    
+
     if(expensesInfo.title === '保险金额') {
       wx.navigateTo({
         url: `../../insurance/insurance?${carModelsInfoKeyValueString}&pageSource=${pageSource}`
@@ -1071,10 +1070,8 @@ Page({
         that.setData({
           'businessRisks': res.insurances
         })
-        let _insurancePrice =  that.insuranceCostCountDefault(res.insurances)
-        that.setData({
-          'quotation.requiredExpensesAll.insuranceAmount': _insurancePrice
-        })
+        that.insuranceCostCountDefault(res.insurances)
+
       }
     }, (err) => {
 
@@ -1138,6 +1135,7 @@ Page({
     let personnelCarInsurance = 0
     // 车身划痕险
     let scratchesInsurance = 0
+
 
     for(let item of businessRisks) {
       if(item.checked) {
@@ -1205,17 +1203,19 @@ Page({
     }
 
     totalAmount = (businessTatal+trafficInsurance).toFixed(0)
-    // for(let item1 of expensesAllInfo) {
-    //   if(item1.title === '保险金额') {
-    //
-    //     item1.price = totalAmount
-    //   }
-    // }
 
-    // that.setData({
-    //   expensesAllInfo: expensesAllInfo,
-    //   'requiredExpensesAll.insuranceAmount': totalAmount
-    // })
+    for(let item1 of expensesAllInfo) {
+      if(item1.title === '保险金额') {
+
+        item1.price = totalAmount
+      }
+    }
+
+    that.setData({
+      expensesAllInfo: expensesAllInfo,
+      'quotation.requiredExpensesAll.insuranceAmount': totalAmount,
+      'quotation.insuranceDetail.iTotal': totalAmount
+    })
     return totalAmount
   },
 });

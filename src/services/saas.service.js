@@ -181,6 +181,7 @@ export default class SAASService extends Service {
           installFee:quotationDraft.otherExpensesAll.installationFee,
           otherFee:quotationDraft.otherExpensesAll.otherFee
 
+
         }
       }
 

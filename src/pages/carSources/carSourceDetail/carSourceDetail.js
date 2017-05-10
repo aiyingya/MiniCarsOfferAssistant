@@ -98,6 +98,9 @@ export default {
         contact(e) {
           typeof options.contact === `function` && options.contact(e)
         },
+        handlerCreateQuoted(e) {
+          typeof options.handlerCreateQuoted === `function` && options.handlerCreateQuoted(e)
+        },
         /**
          * 跳转行为
          *

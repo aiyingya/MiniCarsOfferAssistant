@@ -1212,6 +1212,15 @@ Page({
       contact: function () {
         that.actionContact(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, contact)
       },
+      handlerCreateQuoted(e){
+        skuItem.carSku.showPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
+        const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+        const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', skuItem.carSku)
+        wx.navigateTo({
+          url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
+        })
+
+      },
       selectLogisticsBlock: function (e) {
         console.log(e)
         let carSource = e.currentTarget.dataset.carSource
