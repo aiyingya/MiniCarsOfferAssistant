@@ -22,6 +22,7 @@ Page({
       this.pixelRatio = res.pixelRatio
       this.apHeight = 16
       this.offsetTop = 80
+      console.log(res)
       this.setData({windowHeight: res.windowHeight + 'px'})
     } catch (e) {
 
