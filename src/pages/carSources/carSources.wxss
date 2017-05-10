@@ -913,3 +913,7 @@ page {
   height: 156rpx;
   width: 100%;
 }
+.detail-look{
+  display:inline-block;
+  color:#999999;
+}
