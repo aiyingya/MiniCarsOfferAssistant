@@ -318,7 +318,7 @@ Page({
         const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
 
-        const originalPrice = carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
+        const originalPrice = carSkuInfo.showPrice || carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
 
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
         this.setData({
