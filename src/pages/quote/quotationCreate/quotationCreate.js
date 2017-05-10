@@ -704,10 +704,8 @@ Page({
           'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price,isElectricCar? null:capacity))
         })
         let businessRisks = this.data.businessRisks
-        let _insurancePrice = that.insuranceCostCountDefault(businessRisks)
-        that.setData({
-          'quotation.requiredExpensesAll.insuranceAmount': _insurancePrice
-        })
+        that.insuranceCostCountDefault(businessRisks)
+
         that.updateForSomeReason()
         that.showInput()
 
@@ -1072,10 +1070,8 @@ Page({
         that.setData({
           'businessRisks': res.insurances
         })
-        let _insurancePrice =  that.insuranceCostCountDefault(res.insurances)
-        that.setData({
-          'quotation.requiredExpensesAll.insuranceAmount': _insurancePrice
-        })
+        that.insuranceCostCountDefault(res.insurances)
+
       }
     }, (err) => {
 
@@ -1207,20 +1203,19 @@ Page({
     }
 
     totalAmount = (businessTatal+trafficInsurance).toFixed(0)
-    that.setData({
-      'insuranceDetail.iTotal': totalAmount
-    })
-    // for(let item1 of expensesAllInfo) {
-    //   if(item1.title === '保险金额') {
-    //
-    //     item1.price = totalAmount
-    //   }
-    // }
 
-    // that.setData({
-    //   expensesAllInfo: expensesAllInfo,
-    //   'requiredExpensesAll.insuranceAmount': totalAmount
-    // })
+    for(let item1 of expensesAllInfo) {
+      if(item1.title === '保险金额') {
+
+        item1.price = totalAmount
+      }
+    }
+
+    that.setData({
+      expensesAllInfo: expensesAllInfo,
+      'quotation.requiredExpensesAll.insuranceAmount': totalAmount,
+      'quotation.insuranceDetail.iTotal': totalAmount
+    })
     return totalAmount
   },
 });
