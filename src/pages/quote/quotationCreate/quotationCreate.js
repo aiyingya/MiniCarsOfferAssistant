@@ -50,17 +50,17 @@ Page({
       },
       insuranceDetail:{
         "iTotal":0,//"保险总额",
-        "iJQX":0,//"交强险",
-        "iDSZZRX":0,//"第三者责任险",
-        "iCLSSX":0,//"车辆损失险",
-        "iQCDQX":0,//"全车盗抢险",
-        "iBLDDPSX":0,//"玻璃单独破碎险",
-        "iZRSSX":0,//"自燃损失险",
-        "iBJMPTYX":0,//"不计免赔特约险",
-        "iWGZRX":0,//"无过责任险",
-        "iCSRYZRX":0,//"车上人员责任险",
-        "iCSHHX":0,//"车身划痕险"
-        "carSize":''//"车辆规格"
+        "iJQX":1,//"交强险",
+        "iDSZZRX":1,//"第三者责任险",
+        "iCLSSX":1,//"车辆损失险",
+        "iQCDQX":1,//"全车盗抢险",
+        "iBLDDPSX":1,//"玻璃单独破碎险",
+        "iZRSSX":1,//"自燃损失险",
+        "iBJMPTYX":1,//"不计免赔特约险",
+        "iWGZRX":1,//"无过责任险",
+        "iCSRYZRX":1,//"车上人员责任险",
+        "iCSHHX":1,//"车身划痕险"
+        "carSize":0//"车辆规格"
       },
       advancePayment: 0, // 必传，首次支付金额，如果全款则为全款金额",
       monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
@@ -277,6 +277,7 @@ Page({
         'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice,
         'carModelsInfo.sellingPrice': quotation.carPrice
       })
+
       //获取报价单接口
       app.saasService.getCreatCarRecordInfo({
         data:{
@@ -289,7 +290,7 @@ Page({
           that.setData({
             'requestResult': res
           })
-          
+
           that.updateForSomeReason()
           activeIndexCss()
 
@@ -360,6 +361,7 @@ Page({
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
+
             // 设置报价表单数据
             let quotationItems = [{
               itemNumber: itemNumber,
@@ -423,17 +425,17 @@ Page({
 
     let insuranceDetail = {
       "iTotal":0,//"保险总额",
-      "iJQX":0,//"交强险",
-      "iDSZZRX":0,//"第三者责任险",
-      "iCLSSX":0,//"车辆损失险",
-      "iQCDQX":0,//"全车盗抢险",
-      "iBLDDPSX":0,//"玻璃单独破碎险",
-      "iZRSSX":0,//"自燃损失险",
-      "iBJMPTYX":0,//"不计免赔特约险",
-      "iWGZRX":0,//"无过责任险",
-      "iCSRYZRX":0,//"车上人员责任险",
-      "iCSHHX":0,//"车身划痕险"
-      "carSize":''//"车辆规格"
+      "iJQX":1,//"交强险",
+      "iDSZZRX":1,//"第三者责任险",
+      "iCLSSX":1,//"车辆损失险",
+      "iQCDQX":1,//"全车盗抢险",
+      "iBLDDPSX":1,//"玻璃单独破碎险",
+      "iZRSSX":1,//"自燃损失险",
+      "iBJMPTYX":1,//"不计免赔特约险",
+      "iWGZRX":1,//"无过责任险",
+      "iCSRYZRX":1,//"车上人员责任险",
+      "iCSHHX":1,//"车身划痕险"
+      "carSize":0//"车辆规格"
     }
 
     if(!_insurances){
@@ -1098,12 +1100,12 @@ Page({
                   item.checked = true
                 }
                 break
-              case '全车盗抢险': 
+              case '全车盗抢险':
                 if(quotation.insuranceDetail.iQCDQX > 0) {
                   item.checked = true
                 }
                 break
-              case '玻璃单独破碎险': 
+              case '玻璃单独破碎险':
                 if(quotation.insuranceDetail.iBLDDPSX > 0) {
                   item.checked = true
                 }
@@ -1118,17 +1120,17 @@ Page({
                   item.checked = true
                 }
                 break
-              case '无过责任险': 
+              case '无过责任险':
                 if(quotation.insuranceDetail.iWGZRX > 0) {
                   item.checked = true
                 }
                 break
-              case '车上人员责任险': 
+              case '车上人员责任险':
                 if(quotation.insuranceDetail.iCSRYZRX > 0) {
                   item.checked = true
                 }
                 break
-              case '车身划痕险': 
+              case '车身划痕险':
                 if(quotation.insuranceDetail.iCSHHX > 0) {
                   item.checked = true
                 }
@@ -1136,10 +1138,10 @@ Page({
               default:
 
                 break
-            } 
+            }
           }
         }
-        
+
         that.setData({
           'businessRisks': res.insurances
         })
