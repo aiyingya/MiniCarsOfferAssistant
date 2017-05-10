@@ -291,6 +291,7 @@ Page({
       if (res) {
         let pageSource = that.data.pageSource
         let carModelInfo = that.data.carModelInfo
+        let rental = 'undefined'
         // 编辑报价单页面进入.
         // "iTotal":0,//"保险总额",
         // "iJQX":0,//"交强险",
@@ -360,11 +361,14 @@ Page({
                 break
             } 
           }
+          
+          rental = carModelInfo.insuranceDetail.iTotal
         }
         that.setData({
           'businessRisks': res.insurances
         })
-        that.insuranceCostCount(res.insurances)
+        console.log(rental)
+        that.insuranceCostCount(res.insurances,rental)
       }
     }, (err) => {
 
@@ -602,7 +606,8 @@ Page({
         }  
       }    
     }
-    if(typeof(insuranceTotal) != 'undefined') {
+    
+    if(typeof(insuranceTotal) != 'undefined' && insuranceTotal != 'undefined') {
       totalAmount =  Number(insuranceTotal)
       ChangeInsuranceTotalStyle = 'color-gray'
     }else {
