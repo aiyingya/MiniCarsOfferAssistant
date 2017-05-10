@@ -262,7 +262,7 @@ Page({
       quotation.otherExpensesAll = {// 其他费用（元），deciaml，取值范围0~999999999",
         boutiqueCost:quotation.boutiqueFee || 0,//精品费用
         installationFee:quotation.installFee || 0,//安装费
-        serverFee:quotation.serverFee || 0,//
+        serverFee:quotation.serviceFee || 0,//
         otherFee:quotation.otherFee || 0
       }
 
