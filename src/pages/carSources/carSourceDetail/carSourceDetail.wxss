@@ -375,4 +375,9 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding: 15rpx 10rpx;
+  float: left;
+  margin-right:6rpx;
+}
+.carSourceDetailDialog .footer .button1:last-child{
+  margin-right:0;
 }

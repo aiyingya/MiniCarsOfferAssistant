@@ -152,6 +152,7 @@
           </view>
         </view>
         <!--立即订车-->
+        <view>
         <view class="button1 confirm" bindtap="{{handlerCreateQuoted}}" data-car-source="{{carSourceItem}}">
           生成报价
         </view>
@@ -161,6 +162,7 @@
         </view>
         <view wx:else class="button1 confirm" bindtap="{{contact}}" data-car-source="{{carSourceItem}}">
           电话联系
+        </view>
         </view>
       </view>
     </view>
