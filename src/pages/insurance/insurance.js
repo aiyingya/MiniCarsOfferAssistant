@@ -261,7 +261,7 @@ Page({
         'businessRisks': insurancesAll.businessInsurances,
         standardsIndex: standardIndex
       })
-      this.insuranceCostCount(insurancesAll.businessInsurances)
+      this.insuranceCostCount(insurancesAll.businessInsurances,insurancesAll.insuranceTotal)
     }else {
       wx.showToast({
         title: '正在加载',
@@ -496,7 +496,7 @@ Page({
   /**
    * 保险费用计算.
    */
-  insuranceCostCount(data) {
+  insuranceCostCount(data,insuranceTotal) {
     let that = this
     // 裸车价.
     let officialPrice = this.data.officialPrice
@@ -528,7 +528,7 @@ Page({
     let personnelCarInsurance = 0
     // 车身划痕险
     let scratchesInsurance = 0
-    
+    let ChangeInsuranceTotalStyle = ''
     for(let item of businessRisks) { 
       if(item.checked) {
         switch (item.name) {
@@ -602,9 +602,13 @@ Page({
         }  
       }    
     }
-    
-    totalAmount = businessTatal+trafficInsurance
-    
+    if(typeof(insuranceTotal) != 'undefined') {
+      totalAmount =  Number(insuranceTotal)
+      ChangeInsuranceTotalStyle = 'color-gray'
+    }else {
+      totalAmount = businessTatal+trafficInsurance
+    }
+    console.log(totalAmount)
     that.setData({
       'InsuranceDetail.businessTatal': businessTatal.toFixed(0),
       'InsuranceDetail.liabilityInsurance': liabilityInsurance.toFixed(0),
