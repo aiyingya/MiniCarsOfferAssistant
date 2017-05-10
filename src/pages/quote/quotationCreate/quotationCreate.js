@@ -1140,6 +1140,7 @@ Page({
     // 车身划痕险
     let scratchesInsurance = 0
 
+
     for(let item of businessRisks) {
       if(item.checked) {
         switch (item.name) {
@@ -1206,6 +1207,9 @@ Page({
     }
 
     totalAmount = (businessTatal+trafficInsurance).toFixed(0)
+    that.setData({
+      'insuranceDetail.iTotal': totalAmount
+    })
     // for(let item1 of expensesAllInfo) {
     //   if(item1.title === '保险金额') {
     //
