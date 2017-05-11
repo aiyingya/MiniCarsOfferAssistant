@@ -28,10 +28,11 @@ export default class SAASService extends Service {
     return super.sendMessageByPromise(opts)
   }
 
-  // sendMessage(opts, loadingType = 'toast') {
-  //   opts.loadingType = loadingType
-  //   super.sendMessage(opts)
-  // }
+  sendMessage(opts, loadingType = 'toast') {
+    opts.loadingType = loadingType
+    super.sendMessage(opts)
+  }
+
 
   sendMessagePromise(opts) {
     super.sendMessagePromise(opts)
@@ -67,9 +68,9 @@ export default class SAASService extends Service {
     "customerMobile":"客户手机号"
    }
    */
-  requestPublishQuotation (draftId, customerMobile,customerName,customerSex, object) {
+  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex) {
     if (draftId && draftId !== '') {
-      this.sendMessagePromise({
+      this.sendMessage({
         path: 'sale/quotation',
         data: {
           draftId: draftId,
@@ -150,21 +151,7 @@ export default class SAASService extends Service {
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee,
-          insuranceDetail:{
-            "iTotal":quotationDraft.insuranceDetail.iTotal,//"保险总额",
-            "iJQX":quotationDraft.insuranceDetail.iCSHHX,//"交强险",
-            "iDSZZRX":quotationDraft.insuranceDetail.iCSHHX,//"第三者责任险",
-            "iCLSSX":quotationDraft.insuranceDetail.iCSHHX,//"车辆损失险",
-            "iQCDQX":quotationDraft.insuranceDetail.iCSHHX,//"全车盗抢险",
-            "iBLDDPSX":quotationDraft.insuranceDetail.iCSHHX,//"玻璃单独破碎险",
-            "iZRSSX":quotationDraft.insuranceDetail.iCSHHX,//"自燃损失险",
-            "iBJMPTYX":quotationDraft.insuranceDetail.iCSHHX,//"不计免赔特约险",
-            "iWGZRX":quotationDraft.insuranceDetail.iCSHHX,//"无过责任险",
-            "iCSRYZRX":quotationDraft.insuranceDetail.iCSHHX,//"车上人员责任险",
-            "iCSHHX":quotationDraft.insuranceDetail.iCSHHX//"车身划痕险"
-          }
-
+          otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       } else {
         data = {
@@ -191,9 +178,12 @@ export default class SAASService extends Service {
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
           otherFee:quotationDraft.otherExpensesAll.otherFee
+
         }
       }
+      data.rateType = quotationDraft.rateType
 
+      data.insuranceDetail = quotationDraft.insuranceDetail
       let snsId
       if (this.userService.isLogin) {
         snsId = this.userService.auth.userId
@@ -204,7 +194,7 @@ export default class SAASService extends Service {
       data.snsId = snsId
       data.loginChannel = this.userService.loginChannel
 
-      this.sendMessagePromise({
+      this.sendMessage({
         path: 'sale/quotation/draft',
         data: data,
         method: 'POST',
@@ -235,7 +225,7 @@ export default class SAASService extends Service {
    * @param object
    */
   requestBookCar(itemName, spec, itemPrice, itemCount, object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: 'sale/quotation/order',
       data: {
         userId: this.userService.auth.userId,
@@ -272,7 +262,7 @@ export default class SAASService extends Service {
         snsId = this.userService.snsId
       }
 
-      this.sendMessagePromise({
+      this.sendMessage({
         path: 'sale/quotation',
         loadingType: object.loadingType,
         data: {
@@ -353,7 +343,7 @@ export default class SAASService extends Service {
       }
     }
 
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `product/car/spu/${carModelId}/sources`,
       method: 'GET',
       data: data,
@@ -374,7 +364,7 @@ export default class SAASService extends Service {
   requestAddOrRemoveTagnameForASupplier (spuId, carSourceId, tagName, supplierId, addOrRemove, object) {
     if (spuId && carSourceId  && tagName && supplierId) {
       const method = addOrRemove ? 'POST' : 'DELETE'
-      this.sendMessagePromise({
+      this.sendMessage({
         path: `product/car/spu/${spuId}/source/${carSourceId}/tag`,
         data: {
           tagName: tagName,
@@ -399,7 +389,7 @@ export default class SAASService extends Service {
    * @param object
    */
   requestCarSourceContent (carSourceId, object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `product/car/source/${carSourceId}/content`,
       loadingType: 'none',
       method: 'GET',
@@ -417,7 +407,7 @@ export default class SAASService extends Service {
    * @param object
    */
   requestSearchCarSpu (text, pageIndex, pageSize, object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `search/car/spu`,
       loadingType: 'none',
       method: 'GET',
@@ -436,7 +426,7 @@ export default class SAASService extends Service {
    *
    */
   requestSearchSpuBySpuId (spuId,data,object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `supply/car/spu/${spuId}`,
       method: 'GET',
       data: data || {},
@@ -447,7 +437,7 @@ export default class SAASService extends Service {
   }
 
   requestSearchSpuByCarSeriesId (carSeriesId, inStock, object) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `supply/car/spu`,
       method: 'GET',
       data: {
@@ -474,7 +464,7 @@ export default class SAASService extends Service {
       inStock: inStock
     }
     data = type === 'CAR_SPU' ? data : resdata
-    this.sendMessagePromise({
+    this.sendMessage({
       path: path,
       method: 'GET',
       data: resdata,
@@ -569,6 +559,20 @@ export default class SAASService extends Service {
       path: `api/config/getInsurance/${userId}`,
       method: 'GET',
       data: {}
+    })
+  }
+
+  /**
+   * 获取保险信息.
+   * @param data.capacity 排量
+   * @param data.place 门店所在省
+   */
+  gettingVehicleAndVesselTax(opts) {
+    return this.sendMessage({
+      path: `sale/quotation/getCarTax?capacity=${opts.data.capacity}&place=${opts.data.place}`,
+      method: 'GET',
+      success: opts.success,
+      fail: opts.fail
     })
   }
 }

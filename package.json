@@ -13,6 +13,9 @@
     "B_DEV": "export NODE_ENV=dev && gulp build:clean",
     "B_GQC": "export NODE_ENV=gqc && gulp build:clean",
     "B_PRD": "export NODE_ENV=prd && gulp build:clean",
+    "R_DEV": "export NODE_ENV=dev && gulp watch:clean",
+    "R_GQC": "export NODE_ENV=gqc && gulp watch:clean",
+    "R_PRD": "export NODE_ENV=prd && gulp watch:clean",
     "build": "gulp build:clean",
     "watch": "gulp watch:clean"
   },
@@ -61,6 +64,6 @@
     "run-sequence": "^1.2.2"
   },
   "config": {
-    "env": "gqc"
+    "env": "prd"
   }
 }

@@ -37,7 +37,7 @@ Page({
     }
   },
   handleCheckMore() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '../carList/carList'
     })
   },

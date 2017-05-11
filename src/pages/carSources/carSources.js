@@ -106,9 +106,8 @@ Page({
           let scrollFiltersSelectedIndexes = []
 
           let sourcePublishDateFilterId
-          let seatNum = res.seatNum
-  
-          that.data.carModelsInfo.seatNum = seatNum
+          let seatNum = res.seatNums
+
           for (let i = 0; i < filters.length; i++) {
             let filter = filters[i]
             // FIXME: 这里的问题是使用了不严谨的方法获取数据
@@ -144,7 +143,14 @@ Page({
             selectedSectionIndex: -1,
             selectedSectionId: '0'
           })
-          
+
+          carModelsInfo.capacity = res.capacity
+          carModelsInfo.isElectricCar = res.electricCar
+          carModelsInfo.seatNums = seatNum
+          that.setData({
+            carModelsInfo: carModelsInfo
+          })
+
         }
       })
 
@@ -1205,6 +1211,15 @@ Page({
       },
       contact: function () {
         that.actionContact(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, contact)
+      },
+      handlerCreateQuoted(e){
+        skuItem.carSku.showPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
+        const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+        const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', skuItem.carSku)
+        wx.navigateTo({
+          url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
+        })
+
       },
       selectLogisticsBlock: function (e) {
         console.log(e)

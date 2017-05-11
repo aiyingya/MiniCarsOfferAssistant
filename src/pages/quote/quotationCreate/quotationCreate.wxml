@@ -106,8 +106,8 @@
 				<view url="" class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
 					<view class="weui-cell__bd">裸车价</view>
 					<view class="weui-cell__ft weui-cell__ft_in-access">
-            <view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>
-						<view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>￥{{quotation.quotationItems[0].sellingPrice}}
+            <view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/下{{priceChange.point}}点</block>)</view>
+						<view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/上{{priceChange.point}}点</block>)</view>￥{{quotation.quotationItems[0].sellingPrice}}
 					</view>
 				</view>
 			</view>
@@ -115,8 +115,12 @@
 			<!--必要花费-->
 			<view class="h-cell-gray">必要花费</view>
 			<view class="weui-cells weui-cells_after-title ymc-cell-box">
-        <view wx:for="{{expensesAllInfo}}"  wx:if="{{item.type === 'requiredfee'}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active"
-              data-feetype="{{item}}" bindtap="handlerExpensesChange">
+        <view 
+          wx:for="{{expensesAllInfo}}"  
+          wx:if="{{item.type === 'requiredfee'}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active"
+          data-feetype="{{item}}" 
+          bindtap="handlerExpensesChange"
+          >
           <view class="weui-cell__bd">{{ item.title }}</view>
           <view class="weui-cell__ft weui-cell__ft_in-access">￥{{ item.price }}</view>
         </view>
@@ -135,8 +139,9 @@
 
 			<!--备   注-->
 			<view class="h-cell-gray">备注</view>
-			<view class="white-box">
-						<textarea
+			<view class="white-box" >
+
+						<textarea wx:if="{{isShowTextarea}}"
 								placeholder="请输入内容"
 								cursor-spacing="40px"
 								value="{{quotation.remark}}"
@@ -179,8 +184,8 @@
 				<view class="weui-cell weui-cell_access" hover-class="weui-cell_active" bindtap="handlerSellingPriceChange">
 					<view class="weui-cell__bd">裸车价</view>
 					<view class="weui-cell__ft weui-cell__ft_in-access">
-						<view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>
-						<view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>￥{{quotation.quotationItems[0].sellingPrice}}
+						<view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/下{{priceChange.point}}点</block>)</view>
+						<view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/上{{priceChange.point}}点</block>)</view>￥{{quotation.quotationItems[0].sellingPrice}}
 					</view>
 				</view>
 			</view>
@@ -205,8 +210,8 @@
 			</view>
 			<!--备   注-->
 			<view class="h-cell-gray">备注</view>
-			<view class="white-box">
-						<textarea
+			<view class="white-box" >
+						<textarea wx:if="{{isShowTextarea}}"
 								placeholder="请输入内容"
 								cursor-spacing="40px"
 								value="{{quotation.remark}}"

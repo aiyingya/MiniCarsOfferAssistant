@@ -10,6 +10,14 @@ export default {
       detailContent: []
     }
   },
+  /**
+   * 默认数据
+   */
+  data() {
+    return {
+      close() {}
+    }
+  },
   open(opts = {}) {
     const options = Object.assign({
       animateCss: undefined,
@@ -29,6 +37,9 @@ export default {
           this.removed = !0
           this.setHidden()
           setTimeout(() => typeof cb === `function` && cb(), 300)
+        },
+        close(){
+          this.hide(options.close())
         },
         /**
          * 显示

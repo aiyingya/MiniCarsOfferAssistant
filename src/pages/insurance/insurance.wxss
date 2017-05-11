@@ -121,4 +121,10 @@
 .color-gray {
   color: #999 !important;
 }
-
+.hint {
+  font-size: 28rpx;
+  line-height: 40rpx;
+  margin: 20rpx 0;
+  text-align: center;
+  color: #999;
+}

@@ -364,3 +364,20 @@
   align-items: baseline;
   justify-content: flex-start;
 }
+.carSourceDetailDialog .footer .button1 {
+  height: 56rpx;
+  width: 134rpx;
+  line-height: 26rpx;
+  text-align: center;
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+  border-radius: 6rpx;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 15rpx 10rpx;
+  float: left;
+  margin-right:6rpx;
+}
+.carSourceDetailDialog .footer .button1:last-child{
+  margin-right:0;
+}

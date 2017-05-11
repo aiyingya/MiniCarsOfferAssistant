@@ -14,7 +14,9 @@ export default {
       inputNumberMaxLength: -1,
       inputType: 'number',
       confirmDisabled: true,
-      priceStyle: false
+      priceStyle: false,
+      upText:"下",//是否是加价
+      isDot:true //是否是点 要么是元
     }
   },
   /**
@@ -117,10 +119,20 @@ export default {
          * @param {any} e
          */
         buttonMinus(e){
-          options.inputNumber = options.inputNumber ? Math.floor(options.inputNumber - 1)  : 0
-          let price = options.inputNumber && Math.floor(options.inputNumber)
+          var number = options.inputNumber;
+          if(!number ){
+            return
+          }
+          let text
+          if(!options.isDot){
+            options.inputNumber = (Number(number)>=100) ? (Number(number) - 100) : number
+            text = Number(options.inputNumber)
+          }else{
+            options.inputNumber = (Number(number)>=1) ? (Number(number) - 1) : number
+            text = Number(options.inputNumber).toFixed(2)
+          }
           this.setData({
-            [`${this.options.scope}.inputNumber`]: price
+            [`${this.options.scope}.inputNumber`]: text
           })
           this.inputNumberInput(options.inputNumber)
         },
@@ -130,10 +142,20 @@ export default {
          * @param {any} e
          */
         buttonPlus(e){
-          options.inputNumber = options.inputNumber ? Math.floor(options.inputNumber + 1)  : 1
-          let price = Math.floor(options.inputNumber)
+          var number = options.inputNumber;
+          if(!number && Number(number)!=0){
+            return
+          }
+          let text
+          if(!options.isDot){
+            options.inputNumber = Number(number) + 100
+            text = Number(options.inputNumber)
+          }else{
+            options.inputNumber = Number(number) + 1
+            text = Number(options.inputNumber).toFixed(2)
+          }
           this.setData({
-            [`${this.options.scope}.inputNumber`]: price
+            [`${this.options.scope}.inputNumber`]: text
           })
           this.inputNumberInput(options.inputNumber)
         }

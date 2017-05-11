@@ -77,6 +77,7 @@ export default class UserService extends Service {
     this.mobile = null
 
     this.clientId = null
+    this.address = {}
     /**
      * 用户是否设置过报价设置.
      */
@@ -98,13 +99,9 @@ export default class UserService extends Service {
     })
   }
 
-  // sendMessage(opts, loadingType = 'none') {
-  //   opts.loadingType = loadingType
-  //   super.sendMessage(opts)
-  // }
-
-  sendMessagePromise(opts) {
-    super.sendMessagePromise(opts)
+  sendMessage(opts, loadingType = 'none') {
+    opts.loadingType = loadingType
+    super.sendMessage(opts)
   }
 
   __loadUserInfo () {
@@ -226,7 +223,7 @@ export default class UserService extends Service {
 
     console.log('get SMS code')
 
-    this.sendMessagePromise({
+    this.sendMessage({
       path: 'cgi/vcode',
       method: 'POST',
       data: {
@@ -249,7 +246,7 @@ export default class UserService extends Service {
     if (!opts) return
 
     console.log('password login')
-    this.sendMessagePromise({
+    this.sendMessage({
       path: 'cgi/authorization',
       method: 'POST',
       data: {
@@ -334,7 +331,7 @@ export default class UserService extends Service {
   exsitTenanTmember(opts) {
     if (!opts) return
     console.log('exsit tenant tmeber')
-    this.sendMessagePromise({
+    this.sendMessage({
       path: 'cgi/tenant/member/exist',
       method: 'GET',
       data: {
@@ -351,7 +348,7 @@ export default class UserService extends Service {
   newAccessToken(opts) {
     console.log('get new accessToken')
     let that = this
-    this.sendMessagePromise({
+    this.sendMessage({
       method: 'PUT',
       path: 'cgi/authorization',
       header: {
@@ -381,7 +378,7 @@ export default class UserService extends Service {
   userBindWeixin(opts) {
     const snsId = this.weixinUserInfo.snsId
     const userId = this.auth.userId
-    this.sendMessagePromise({
+    this.sendMessage({
       path: 'cgi/user/weixin/binding',
       method: 'POST',
       header: {
@@ -400,7 +397,7 @@ export default class UserService extends Service {
    * 上传用户微信信息
    */
   uploadWeixinUserInfo(opts) {
-    this.sendMessagePromise({
+    this.sendMessage({
       path: 'cgi/user/weixin',
       method: 'POST',
       data: {
@@ -415,7 +412,7 @@ export default class UserService extends Service {
 
   getLocationId (opts) {
     const that = this
-    this.sendMessagePromise({
+    this.sendMessage({
       path: `cgi/tenant/member/${opts.userId}/tenant`,
       method: 'GET',
       data: {},
@@ -463,6 +460,7 @@ export default class UserService extends Service {
           }
           that.location = location
           that.mobile = res.mobile
+          that.address= res.tenants? res.tenants[0].address : {}
           opts.success(res)
         },
         fail: function () {
@@ -545,7 +543,7 @@ export default class UserService extends Service {
 
   getVisitor (opts) {
     const userId = this.isLogin() ? this.auth.userId : ''
-    this.sendMessagePromise({
+    this.sendMessage({
       path: 'cgi/visitor',
       data: {
         deviceId: opts.deviceId,

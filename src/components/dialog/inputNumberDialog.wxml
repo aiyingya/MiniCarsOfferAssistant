@@ -20,11 +20,13 @@
 
       <form bindsubmit="{{ confirm }}">
         <view wx:if="{{ priceStyle }}" class="weui-dialog__input_price">
-          <view class="weui-dialog__xia">下</view>
+          <view class="weui-dialog__xia">{{upText}}</view>
           <image class="weui-dialog__minus" src="../../../images/icons/icon_minus.png" bindtap="{{ buttonMinus }}"></image>
           <input type="{{ inputType }}" name="inputNumber" placeholder="0" placeholder-class="" focus="{{ visible }}"
             value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
           <image class="weui-dialog__plus" src="../../../images/icons/icon_plus.png" bindtap="{{ buttonPlus }}" ></image>
+          <text class="weui-dialog__input_text" wx:if="{{isDot}}">点</text>
+          <text class="weui-dialog__input_text" wx:else >元</text>
         </view>
 
         <view wx:else class="weui-dialog__input">

@@ -77,15 +77,17 @@
 }
 .alphanet-selector {
   position: absolute;
-  top: 80px;
+  top: 50%;
   right: 0;
-  height: 432px;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 10;
   box-sizing: border-box;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 .alphanet-selector .selector-one {
   display: flex;
