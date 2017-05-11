@@ -428,16 +428,16 @@ Page({
 
     let insuranceDetail = {
       "iTotal":0,//"保险总额",
-      "iJQX":1,//"交强险",
-      "iDSZZRX":1,//"第三者责任险",
-      "iCLSSX":1,//"车辆损失险",
-      "iQCDQX":1,//"全车盗抢险",
-      "iBLDDPSX":1,//"玻璃单独破碎险",
-      "iZRSSX":1,//"自燃损失险",
-      "iBJMPTYX":1,//"不计免赔特约险",
-      "iWGZRX":1,//"无过责任险",
-      "iCSRYZRX":1,//"车上人员责任险",
-      "iCSHHX":1,//"车身划痕险"
+      "iJQX":0,//"交强险",
+      "iDSZZRX":0,//"第三者责任险",
+      "iCLSSX":0,//"车辆损失险",
+      "iQCDQX":0,//"全车盗抢险",
+      "iBLDDPSX":0,//"玻璃单独破碎险",
+      "iZRSSX":0,//"自燃损失险",
+      "iBJMPTYX":0,//"不计免赔特约险",
+      "iWGZRX":0,//"无过责任险",
+      "iCSRYZRX":0,//"车上人员责任险",
+      "iCSHHX":0,//"车身划痕险"
       "carSize":0,//"车辆规格"
       "iDSZZRX_INDEX":1,
       "iBLDDPSX_INDEX":0,

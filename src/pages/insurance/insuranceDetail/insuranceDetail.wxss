@@ -1,0 +1,82 @@
+.insurance-detail {
+  overflow: hidden;
+  padding-bottom: 118rpx;
+}
+.title {
+  padding: 0 30rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  background-color: #EFEFEF;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  font-family: "PingFangSC-Regular";
+}
+.title .label {
+  font-size: 28rpx;
+  color: #888888;
+}
+.title .value {
+  font-size: 32rpx;
+  color: #ED4149;
+}
+.insurance-detail .weui-cells:after,
+.insurance-detail .weui-cells:before {
+  border: none;
+}
+.weui-cell-detail {
+  margin:0 15px;
+  padding: 0;
+  height: 88rpx;
+  line-height: 88rpx;
+  font-family: "PingFangSC-Regular";
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+.weui-cell__bd,.weui-cell__ft {
+  font-family: PingFangSC-Regular;
+  font-size: 30rpx;
+  letter-spacing: 0;
+}
+.weui-cell__bd {
+  color: #666666;
+  float: left;
+}
+.weui-cell__ft {
+  color: #888888;
+}
+
+.insurance-rental {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -wenkit-align-items: center;
+  align-items: center;
+  padding: 40rpx 0;
+  background: #fff;
+}
+.insurance-rental .label {
+  font-family: "PingFangSC-Medium";
+  font-size: 32rpx;
+  color: #333333;
+  margin-right: 10rpx;
+}
+.insurance-rental .value {
+  width: 200rpx;
+  height: 60rpx;
+  background: rgba(237,65,73,0.10);
+  border: 1rpx solid rgba(237,65,73,0.30);
+  border-radius: 100rpx;
+}
+
+
+.insurance-detail .bom-line .weui-cell-detail {
+  border-bottom:1rpx solid #D9D9D9;
+}
+
+.insurance-detail .bom-line .weui-cell-detail:last-child{
+  border-bottom: 0px;
+}
