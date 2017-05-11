@@ -13,7 +13,10 @@ export default {
       inputNumberPlaceHolder: undefined,
       inputNumberMaxLength: -1,
       inputType: 'number',
-      confirmDisabled: true
+      confirmDisabled: true,
+      priceStyle: false,
+      upText:"下",//是否是加价
+      isDot:true //是否是点 要么是元
     }
   },
   /**
@@ -40,6 +43,8 @@ export default {
    * @param {Function} opts.confirm 点击确认的回调函数
    * @param {Function} opts.cancel 点击确认的取消函数
    * @param {Function} opts.validate 验证函数
+   * @param {String} opts.priceStyle 是否使用价格样式
+   *
    */
   open(opts = {}) {
     const options = Object.assign({
@@ -81,6 +86,8 @@ export default {
          * @param {any} e
          */
         inputNumberInput(e) {
+          options.inputNumber = (typeof(e) === 'object') ? e.detail.value :e
+
           let disabled = false
           if (typeof options.validate === 'function') {
             disabled = !options.validate(e)
@@ -105,6 +112,52 @@ export default {
          */
         cancel(e) {
           this.hide(options.cancel())
+        },
+        /**
+         * 减金额行为
+         *
+         * @param {any} e
+         */
+        buttonMinus(e){
+          var number = options.inputNumber;
+          if(!number ){
+            return
+          }
+          let text
+          if(!options.isDot){
+            options.inputNumber = (Number(number)>=100) ? (Number(number) - 100) : number
+            text = Number(options.inputNumber)
+          }else{
+            options.inputNumber = (Number(number)>=1) ? (Number(number) - 1) : number
+            text = Number(options.inputNumber).toFixed(2)
+          }
+          this.setData({
+            [`${this.options.scope}.inputNumber`]: text
+          })
+          this.inputNumberInput(options.inputNumber)
+        },
+        /**
+         * 加金额行为
+         *
+         * @param {any} e
+         */
+        buttonPlus(e){
+          var number = options.inputNumber;
+          if(!number && Number(number)!=0){
+            return
+          }
+          let text
+          if(!options.isDot){
+            options.inputNumber = Number(number) + 100
+            text = Number(options.inputNumber)
+          }else{
+            options.inputNumber = Number(number) + 1
+            text = Number(options.inputNumber).toFixed(2)
+          }
+          this.setData({
+            [`${this.options.scope}.inputNumber`]: text
+          })
+          this.inputNumberInput(options.inputNumber)
         }
       }
     })

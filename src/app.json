@@ -10,7 +10,9 @@
     "pages/login/login",
     "pages/carList/carList",
     "pages/usersQuote/usersQuote",
-    "pages/supplier/supplier"
+    "pages/supplier/supplier",
+    "pages/setCost/setCost",
+    "pages/insurance/insurance"
   ],
   "window": {
     "backgroundTextStyle": "dark",
@@ -27,6 +29,12 @@
         "iconPath": "images/icons/tab_icon_home_off.png",
         "selectedIconPath": "images/icons/tab_icon_home_on.png",
         "text": "首页"
+      },      
+      {
+        "pagePath": "pages/carList/carList",
+        "iconPath": "images/icons/tab_icon_findcar_off.png",
+        "selectedIconPath": "images/icons/tab_icon_findcar_on.png",
+        "text": "找车"
       },
       {
         "pagePath": "pages/usersQuote/usersQuote",

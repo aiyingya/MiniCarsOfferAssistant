@@ -1,7 +1,8 @@
 {
   "name": "miniprogram-yaomaiche",
-  "version": "1.1.0",
+  "version": "1.5.0",
   "build": 1,
+  "versionCode": "010500",
   "description": "运图贸易有限公司 要卖车 微信小程序",
   "main": "index.js",
   "engines": {
@@ -9,6 +10,12 @@
     "npm": ">3.0"
   },
   "scripts": {
+    "B_DEV": "export NODE_ENV=dev && gulp build:clean",
+    "B_GQC": "export NODE_ENV=gqc && gulp build:clean",
+    "B_PRD": "export NODE_ENV=prd && gulp build:clean",
+    "R_DEV": "export NODE_ENV=dev && gulp watch:clean",
+    "R_GQC": "export NODE_ENV=gqc && gulp watch:clean",
+    "R_PRD": "export NODE_ENV=prd && gulp watch:clean",
     "build": "gulp build:clean",
     "watch": "gulp watch:clean"
   },
@@ -18,14 +25,18 @@
   },
   "author": "davidfu",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "wxapp-promise": "^1.0.0"
+  },
   "devDependencies": {
-    "babel-preset-stage-0": "^6.16.0",
     "autoprefixer": "^6.6.0",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.1.1",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "cross-env": "^3.1.3",
     "del": "^2.2.2",
     "eslint-config-standard": "^7.0.1",
     "eslint-plugin-import": "^2.2.0",
@@ -45,7 +56,14 @@
     "gulp-load-plugins": "^1.4.0",
     "gulp-postcss": "^6.2.0",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-sourcemaps": "^2.6.0",
     "gulp-uglify": "^2.0.0",
+    "gulp-wxa-copy-npm": "^0.1.3",
+    "minimist": "^1.2.0",
     "run-sequence": "^1.2.2"
+  },
+  "config": {
+    "env": "prd"
   }
 }

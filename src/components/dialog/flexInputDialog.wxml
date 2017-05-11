@@ -1,0 +1,74 @@
+<template name="flexInputDialog">
+  <view class="flexInputDialog">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} "></view>
+    <view 
+      class="weui-dialog {{ animateCss }}" 
+      wx:if="{{ visible }}"
+      >
+      <view 
+        class="weui-dialog__hd" 
+        wx:if="{{ title }}"
+        >
+        <view class="weui-dialog__title">{{ title }}</view>
+      </view>
+      <view 
+        class="weui-dialog__bd" 
+        wx:if="{{ content }}"
+        >
+        <view class="weui-dialog__bd__centent">{{ content }}</view>
+      </view>
+      <form bindsubmit="{{ confirm }}">
+        <view class="weui-dialog__input">
+          <view class="input-inner">
+            <view class="input-label">1年</view>
+            <input 
+              type="{{ inputType }}" 
+              placeholder="{{ inputPlaceholder }}" 
+              placeholder-class="" 
+              focus="{{ visible }}"
+              value="{{ inputList.oneInterest }}"
+              data-index="{{index}}" 
+              name="oneInterest"
+              bindinput="{{ handleChangeInput }}" 
+              maxlength="{{ inputNumberMaxLength }}" />
+          </view>
+          <view class="input-inner">
+            <view class="input-label">2年</view>
+            <input 
+              type="{{ inputType }}" 
+              placeholder="{{ inputPlaceholder }}" 
+              placeholder-class="" 
+              value="{{ inputList.twoInterest }}"
+              data-index="{{index}}" 
+              name="twoInterest"
+              bindinput="{{ handleChangeInput }}" 
+              maxlength="{{ inputNumberMaxLength }}" />
+          </view>
+          <view class="input-inner">
+            <view class="input-label">3年</view>
+            <input 
+              type="{{ inputType }}" 
+              placeholder="{{ inputPlaceholder }}" 
+              placeholder-class="" 
+              value="{{ inputList.threeInterest }}"
+              data-index="{{index}}" 
+              name="threeInterest"
+              bindinput="{{ handleChangeInput }}" 
+              maxlength="{{ inputNumberMaxLength }}" />
+          </view>
+        </view>
+        <view class="weui-dialog__ft">
+          <button 
+            class="weui-dialog__btn weui-dialog__btn_default" 
+            bindtap="{{ cancel }}"
+            >{{ cancelText }}</button>
+          <button 
+            class="weui-dialog__btn weui-dialog__btn_primary" 
+            formType="submit" 
+            disabled="{{ confirmDisabled }}"
+            >{{ confirmText }}</button>
+        </view>
+      </form>
+    </view>
+  </view>
+</template>

@@ -1,0 +1,117 @@
+<import src="../../components/dialog/inputNumberDialog.wxml"/>
+<template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}"/>
+
+<import src="../../components/dialog/flexInputDialog.wxml"/>
+<template is="flexInputDialog" data="{{ ...$wux.flexInputDialog }}"/>
+
+<import src="../../components/dialog/checkboxDialog.wxml"/>
+<template is="checkboxDialog" data="{{ ...$wux.checkboxDialog }}"/>
+
+<view class="container setcost-wrapper">
+  <!-- 自动加价.-->
+  <view class="title">自动加价(客户裸车价=行情价+运费+利润)</view>
+  <view class="weui-cells weui-cells_after-title"> 
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      data-type="freight"
+      bindtap="handleChangeFreight"
+      >
+      <view class="weui-cell__bd">默认运费</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">￥{{raisePrice.freight}}</view>
+    </view>
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      data-type="profit"
+      bindtap="handleChangeProfit"
+      >
+      <view class="weui-cell__bd">默认需盈利</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">￥{{raisePrice.profit}}</view>
+    </view>
+  </view>
+  
+  <!-- 贷款相关.-->
+  <view class="title">贷款相关</view>
+  <view class="weui-cells weui-cells_after-title"> 
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      bindtap="handleChangeBillingway"
+      >
+      <view class="weui-cell__bd">计费方式</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">请选择</view>
+    </view>
+<!--
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      bindtap="handleChangeInterest"
+      >
+      <view class="weui-cell__bd">月息</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">{{loan.interest}}厘</view>
+    </view>
+-->
+    <view
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      bindtap="handleChangeRebates"
+      >
+      <view class="weui-cell__bd">默认返点</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">{{loan.rebates}}%</view>
+    </view>
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      bindtap="handleChangeService"
+      >
+      <view class="weui-cell__bd">贷款服务费</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">{{loan.service}}</view>
+    </view>
+  </view>
+  
+  <!-- 保险相关.-->
+  <view class="title">保险相关</view>
+  <view class="weui-cells weui-cells_after-title"> 
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      bindtap="handleChangeInsuranceRebates"
+      >
+      <view class="weui-cell__bd">返点</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">{{insurances.rebates}}%</view>
+    </view>
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      bindtap="handleChangeInsuranceType"
+      >
+      <view class="weui-cell__bd">默认选择险种</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">请选择</view>
+    </view>
+  </view>
+  
+  <!-- 其他费用.-->
+  <view class="title">其他费用</view>
+  <view class="weui-cells weui-cells_after-title"> 
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      bindtap="handleChangeRegistration"
+      >
+      <view class="weui-cell__bd">上牌费</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">{{othersCost.registration}}</view>
+    </view>
+  </view>
+  
+  <view class="setbtn" bindtap="handlePushSet">确认</view>
+</view>  

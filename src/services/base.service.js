@@ -36,7 +36,7 @@ export default class Services {
   }
 
   /**
-   * 发送消息的封装方法，使用 promise
+   * 发送消息的封装方法
    *
    * @param {Object} options
    * @param {String} options.path
@@ -55,4 +55,28 @@ export default class Services {
       data: options.data
     })
   }
+
+  // /**
+  //  * 发送消息的封装方法，使用 promise
+  //  *
+  //  * @param {Object} options
+  //  * @param {String} options.path
+  //  * @param {Sting} options.method
+  //  * @param {Object} options.header
+  //  * @param {Object} options.data
+  //  *
+  //  * @memberOf Services
+  //  */
+  // sendMessagePromise(options) {
+  //   const url = `${this.urls[config.ENV]}${options.path}`
+  //   return this.ymc.requestPromise({
+  //     url: url,
+  //     method: options.method,
+  //     header: options.header,
+  //     data: options.data,
+  //     success: options.success,
+  //     fail: options.fail,
+  //     complete: options.complete
+  //   })
+  // }
 }

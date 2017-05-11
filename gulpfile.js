@@ -16,9 +16,23 @@ const gulp = require('gulp')
 const del = require('del')
 const runSequence = require('run-sequence')
 const $ = require('gulp-load-plugins')()
+const replace = require('gulp-replace');
+const babel = require("gulp-babel");
+const gwcn = require('gulp-wxa-copy-npm');
+const sourcemaps = require('gulp-sourcemaps');
+const minimist = require('minimist');
 
-const isProduction = process.env.NODE_ENV === 'production'
-let ENV = 'DEV'
+
+let env = process.env.NODE_ENV || process.env.npm_package_config_env || "prd";
+var myConfig = {
+  apiUrl:{}
+};
+myConfig.apiUrl.webapi = require('./src/config/config.json')[env];
+myConfig.env = env || process.env.npm_package_config_env || "prd";
+myConfig.name = process.env.npm_package_name;
+myConfig.version = process.env.npm_package_version;
+myConfig.versionCode = process.env.npm_package_versionCode;
+myConfig.build = process.env.npm_package_build;
 
 let prod = false
 
@@ -97,17 +111,40 @@ gulp.task('styles:watch', () => {
  * js 文件处理
  */
 gulp.task('scripts', ['eslint'], () => {
-  return gulp.src('./src/**/*.js')
-    // .pipe($.sourcemaps.init())
+
+  //old 注释
+  // return gulp.src(['./src/**/*.js','!./src/global.js'])
+  //   // .pipe($.sourcemaps.init())
+  //   .pipe($.babel())
+  //   // .pipe($.if(prod, $.uglify()))
+  //   // .pipe($.sourcemaps.write('.'))
+  //   .pipe(gulp.dest('./dist'))
+
+  let knownOptions = {};
+  let options = minimist(process.argv.slice(2), knownOptions);
+  //config.babel
+  return gulp.src(['./src/**/*.js','!./src/global.js'])
     .pipe($.babel())
-    // .pipe($.if(prod, $.uglify()))
-    // .pipe($.sourcemaps.write('.'))
+    .pipe(sourcemaps.init())
+    .pipe(gwcn(options))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist'))
 })
 
-gulp.task('scripts:watch', () => {
-  gulp.watch('./src/**/*.js', ['scripts'])
+
+gulp.task('scriptsconfig', ['eslint'], () => {
+  console.log("来啊互相伤害",JSON.stringify(myConfig,null,4))
+  return gulp.src(['./src/**/global.js'])
+    .pipe($.babel())
+    .pipe(replace('来啊互相伤害', JSON.stringify(myConfig,null,4)))
+    .pipe(gulp.dest('./dist'));
 })
+
+gulp.task('scripts:watch', () => {
+  gulp.watch(['./src/**/*.js'], ['scripts','scriptsconfig'])
+})
+
+
 
 /**
  * 清空 dist 目录
@@ -124,7 +161,8 @@ gulp.task('build', [
   'assets',
   'templates',
   'styles',
-  'scripts'
+  'scripts',
+  'scriptsconfig'
 ])
 
 gulp.task('watch', [
@@ -140,7 +178,7 @@ gulp.task('build:clean', (callback) => {
 })
 
 gulp.task('watch:clean', (callback) => {
-  runSequence('build:clean', 'watch', callback)
+  runSequence('build:clean', 'watch', callback);
 })
 
 gulp.task('default', ['watch:clean'])

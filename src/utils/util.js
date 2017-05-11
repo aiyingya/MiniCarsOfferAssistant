@@ -20,8 +20,22 @@ export default class Util {
     return n[1] ? n : '0' + n
   }
 
+
   /**
-   * 贷款月供计算公式
+   * 贷款月供计算公式 方式1
+   *
+   * @param carPrice      裸车价, 元
+   * @param paymentRatio  首付比例, %
+   * @param expenseRate   万元系数, 元
+   * @returns {number}    月供金额, 元
+   */
+  static monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate) {
+    let loanPayment = ((carPrice * (100 - paymentRatio) * 0.01)/10000 * expenseRate)
+    return loanPayment;
+  }
+
+  /**
+   * 贷款月供计算公式 方式2 1.5以后没有费率了
    *
    * @param carPrice      裸车价, 元
    * @param paymentRatio  首付比例, %
@@ -29,13 +43,13 @@ export default class Util {
    * @param stages        期数, 月数
    * @returns {number}    月供金额, 元
    */
-  static monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate, stages) {
+  static monthlyLoanPaymentByLoan2(carPrice, paymentRatio, expenseRate, stages) {
     let loanPayment = Util.loanPaymentByLoan(carPrice, paymentRatio, expenseRate)
     return (loanPayment / stages);
   }
 
   /***
-   * 贷款总额计算公式
+   * 贷款+利息总额计算公式
    *
    * @param carPrice      裸车价, 元
    * @param paymentRatio  首付比例，%
@@ -44,6 +58,17 @@ export default class Util {
    */
   static loanPaymentByLoan(carPrice, paymentRatio, expenseRate) {
     return (carPrice * (100 - paymentRatio) * 0.01 * (expenseRate * 0.01 + 1))
+  }
+
+  /***
+   * 贷款+利息总额计算公式
+   *
+   * @param carPrice      裸车价, 元
+   * @param paymentRatio  首付比例，%
+   * @returns {number}    贷款总额，元
+   */
+  static loanPaymentByLoan1(carPrice, paymentRatio) {
+    return (carPrice * (100 - paymentRatio) * 0.01)
   }
 
   /**
@@ -60,7 +85,7 @@ export default class Util {
   }
 
   /***
-   * 总费用计算公式
+   * 总费用（贷款首付+贷款+利息）计算公式
    *
    * @param carPrice          裸车价，元
    * @param paymentRatio      首付比例，%
@@ -74,6 +99,21 @@ export default class Util {
     let advancePayment = Util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses)
     let loanPayment = Util.loanPaymentByLoan(carPrice, paymentRatio, expennseRate)
     return (advancePayment + loanPayment)
+  }
+
+  /**
+   * 购置税
+   * larry：购置税有一个逻辑需要加一下，排量1.6（含）及以上的车型购置税不变，1.6以下的购置税*0.75
+   * 车价
+   * 排量
+   */
+  static purchaseTax(carPrice,capacity) {
+    const  price = Number(carPrice/1.17*0.1);
+    if(capacity){
+      return (Number(capacity) < 1.6 ) ? (price*0.75) : price
+    }
+    return price
+
   }
 
   /**
@@ -207,7 +247,7 @@ export default class Util {
    */
   static priceStringWithUnit(downPrice) {
     downPrice = Math.abs(downPrice)
-    if (downPrice > 10000) {
+    if (downPrice >= 10000) {
       return (downPrice / 10000).toFixed(2) + '万'
     } else {
       return downPrice.toFixed()
@@ -226,13 +266,23 @@ export default class Util {
   }
 
   /***
-   * 优惠点数公式
+   * 优惠点数公式 （以下关联）
    * @param price       修改价格
-   * @param originPrice 原价格
+   * @param originPrice 原价格／指导价
    * @return {number}
    */
   static downPoint(price, originPrice) {
     return (Math.abs(originPrice - price) * 100 / originPrice)
+  }
+
+  /***
+   * 获取价格公式 （以上关联）
+   * @param point       优惠点数 可以是正数 也可以是负数
+   * @param originPrice 原价格／指导价
+   * @return {number}
+   */
+  static carPrice(point, originPrice) {
+    return  originPrice * (1 + point*0.01)
   }
 
   static dateCompatibility(dateString) {

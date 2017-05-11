@@ -8,15 +8,24 @@ import util from '../utils/util'
 
 export default class SAASService extends Service {
 
+
   urls = {
     dev: 'https://test.yaomaiche.com/ymcdev/',
     gqc: 'https://test.yaomaiche.com/ymcgqc/',
     prd: 'https://ymcapi.yaomaiche.com/ymc/'
   }
 
+
+
   constructor(userService) {
     super()
-    this.userService = userService
+    this.userService = userService;
+
+  }
+
+  sendMessageByPromise(opts) {
+    console.log('sendMessageByPromise')
+    return super.sendMessageByPromise(opts)
   }
 
   sendMessage(opts, loadingType = 'toast') {
@@ -24,6 +33,10 @@ export default class SAASService extends Service {
     super.sendMessage(opts)
   }
 
+
+  sendMessagePromise(opts) {
+    super.sendMessagePromise(opts)
+  }
   /**
    * 发布当前报价草稿到某个用户
    *
@@ -55,13 +68,15 @@ export default class SAASService extends Service {
     "customerMobile":"客户手机号"
    }
    */
-  requestPublishQuotation (draftId, customerMobile, object) {
+  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex) {
     if (draftId && draftId !== '') {
       this.sendMessage({
         path: 'sale/quotation',
         data: {
           draftId: draftId,
-          customerMobile: customerMobile
+          customerMobile: customerMobile,
+          customerName:customerName,
+          customerSex:customerSex
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
@@ -128,7 +143,15 @@ export default class SAASService extends Service {
           advancePayment: quotationDraft.advancePayment,
           monthlyPayment: quotationDraft.monthlyPayment,
           totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark
+          remark: quotationDraft.remark,
+          carPrice : quotationDraft.quotationItems[0].sellingPrice,
+          purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
+          carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
+          carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
+          boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
+          serviceFee:quotationDraft.otherExpensesAll.serverFee,
+          installFee:quotationDraft.otherExpensesAll.installationFee,
+          otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       } else {
         data = {
@@ -146,10 +169,21 @@ export default class SAASService extends Service {
           otherExpenses: quotationDraft.otherExpenses,
           advancePayment: quotationDraft.advancePayment,
           totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark
+          remark: quotationDraft.remark,
+          carPrice : quotationDraft.quotationItems[0].sellingPrice,
+          purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
+          carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
+          carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
+          boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
+          serviceFee:quotationDraft.otherExpensesAll.serverFee,
+          installFee:quotationDraft.otherExpensesAll.installationFee,
+          otherFee:quotationDraft.otherExpensesAll.otherFee
+
         }
       }
+      data.rateType = quotationDraft.rateType
 
+      data.insuranceDetail = quotationDraft.insuranceDetail
       let snsId
       if (this.userService.isLogin) {
         snsId = this.userService.auth.userId
@@ -318,40 +352,6 @@ export default class SAASService extends Service {
       complete:object.complete
     })
   }
-
-  /**
-   * 对某一个供应商的某一个货源做靠谱操作
-   * @param supplierId
-   * @param object
-   */
-  requestReliable (spuId, carSourceId, supplierId, hasBeenReliableByUser, updatedHasBeenReliableByUser, object) {
-    console.log(spuId)
-    console.log(carSourceId)
-    console.log(supplierId)
-    console.log(hasBeenReliableByUser)
-    console.log(updatedHasBeenReliableByUser)
-    if (hasBeenReliableByUser === updatedHasBeenReliableByUser) {
-      // 没变化
-    } else {
-      if (hasBeenReliableByUser === -1) {
-        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
-      } else if (hasBeenReliableByUser === 1) {
-        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, false, object)
-      }
-
-      if (updatedHasBeenReliableByUser === -1) {
-        this.requestUnReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
-      } else if (updatedHasBeenReliableByUser === 1) {
-        this.requestReliableOrNotASupplier(spuId, carSourceId, supplierId, true, object)
-      }
-    }
-  }
-  requestReliableOrNotASupplier (spuId, carSourceId, supplierId, reliableOrNot, object) {
-    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '靠谱', supplierId, reliableOrNot, object);
-  }
-  requestUnReliableOrNotASupplier (spuId, carSourceId, supplierId, UnReliableOrNot, object) {
-    this.requestAddOrRemoveTagnameForASupplier(spuId, carSourceId, '不靠谱', supplierId, UnReliableOrNot, object);
-  }
   /**
    * 打标签接口
    * @param spuId
@@ -488,7 +488,91 @@ export default class SAASService extends Service {
     })
   }
 
+  /**
+   * 获取创建报价单的信息
+   * @param opts
+   */
+  getCreatCarRecordInfo(opts){
 
+    this.sendMessage({
+      path: `sale/quotation/initQuotation?userId=${opts.data.userId}&carPrice=${opts.data.carPrice}`,
+      method: 'GET',
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
 
+  /**
+   * 查询报价偏好设置.
+   * @param opts
+   */
+  gettingPreference(opts) {
+    let userId = this.userService.auth.userId
+    return this.sendMessageByPromise({
+      path:`api/config/getQuotaSet/${userId}`,
+      method: 'GET',
+      data: {}
+    })
+  }
 
+  /**
+   * 报价偏好设置.
+   * @param opts
+   */
+  settingPreference(opts) {
+    let userId = this.userService.auth.userId
+    opts.data.userId = userId
+    this.sendMessage({
+      path: "api/config/saveQuota",
+      method: 'POST',
+      data: opts.data || {},
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
+
+  /**
+   * 查询收益
+   * @param opts
+   * {
+    "totalProfit":"总收益",
+    "profit":"裸车收益",
+    "insuranceProfit": "保险收益",
+    "loanProfit": "贷款收益",
+    }
+   */
+  getProfit(data,opts){
+    this.sendMessage({
+      path: `/sale/quotation/queryProfit?userId=${data.userId}&loanNum=${data.loanNum}&insuranceNum=${data.insuranceNum}`,
+      method: 'GET',
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
+  /**
+   * 获取保险信息.
+   * @param opts
+   */
+  gettingInsurance() {
+    let userId = this.userService.auth.userId
+    return this.sendMessageByPromise({
+      path: `api/config/getInsurance/${userId}`,
+      method: 'GET',
+      data: {}
+    })
+  }
+
+  /**
+   * 获取保险信息.
+   * @param data.capacity 排量
+   * @param data.place 门店所在省
+   */
+  gettingVehicleAndVesselTax(opts) {
+    return this.sendMessage({
+      path: `sale/quotation/getCarTax?capacity=${opts.data.capacity}&place=${opts.data.place}`,
+      method: 'GET',
+      success: opts.success,
+      fail: opts.fail
+    })
+  }
 }

@@ -284,7 +284,7 @@
   width: 100%;
   padding-bottom: 14rpx;
 }
-.carSourceDetailDialog .body .third-part .line-item-content .report-error {
+.carSourceDetailDialog .body .third-part .line-item-content .copy-orignal-text {
   font-family: "PingFangSC-Regular";
   font-size: 24rpx;
   color: #3377EE;
@@ -363,4 +363,21 @@
   display: flex;
   align-items: baseline;
   justify-content: flex-start;
+}
+.carSourceDetailDialog .footer .button1 {
+  height: 56rpx;
+  width: 134rpx;
+  line-height: 26rpx;
+  text-align: center;
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+  border-radius: 6rpx;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 15rpx 10rpx;
+  float: left;
+  margin-right:6rpx;
+}
+.carSourceDetailDialog .footer .button1:last-child{
+  margin-right:0;
 }

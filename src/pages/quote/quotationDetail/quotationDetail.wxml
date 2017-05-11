@@ -30,8 +30,14 @@
                         <view class="weui-cell__ft">{{ quotation.stages }}年</view>
                     </view>
                     <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                        <view class="weui-cell__bd">费率</view>
-                        <view class="weui-cell__ft">{{ quotation.expenseRate }}%</view>
+                      <block wx:if="{{quotation.rateType ==1}}">
+                        <view  class="weui-cell__bd">月息</view>
+                        <view class="weui-cell__ft">{{ quotation.expenseRate }}厘</view>
+                      </block>
+                      <block wx:else >
+                        <view class="weui-cell__bd">万元系数</view>
+                        <view class="weui-cell__ft">{{ quotation.expenseRate }}元</view>
+                      </block>
                     </view>
                 </view>
             </view>

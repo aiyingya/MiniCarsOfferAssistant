@@ -1,4 +1,5 @@
 import Component from '../../../components/component'
+import * as wxapi from 'wxapp-promise'
 
 export default {
   /**
@@ -9,6 +10,8 @@ export default {
       hasFoldOriginalText: true,
       hasFoldTagCollection: true,
       spuId: '',
+      showCopyOriginalText: true,
+      originalText: '',
       carModel: {},
       carSourceItem: {}
     }
@@ -44,6 +47,9 @@ export default {
         }
       }
     }
+
+    // 判断是否该显示 复制原文 按钮
+    options.showCopyOrignalText = wx.canIUse('setClipboardData')
 
     // 实例化组件
     const component = new Component({
@@ -92,6 +98,9 @@ export default {
         contact(e) {
           typeof options.contact === `function` && options.contact(e)
         },
+        handlerCreateQuoted(e) {
+          typeof options.handlerCreateQuoted === `function` && options.handlerCreateQuoted(e)
+        },
         /**
          * 跳转行为
          *
@@ -134,8 +143,25 @@ export default {
             [`${this.options.scope}.hasFoldOriginalText`]: options.hasFoldOriginalText
           })
         },
+
         reportError(e) {
           typeof options.reportError === `function` && options.reportError(e)
+        },
+        /**
+         * 复制原文到剪切板
+         * @param e
+         */
+        copyOrignalText(e) {
+          const originalText = options.originalText
+          wxapi.setClipboardData({data: originalText}).then((res) => {
+            wxapi.showToast({
+              title: '复制成功',
+              icon: 'success',
+              duration: 2000
+            })
+          }, (err) => {
+
+          })
         }
       }
     })

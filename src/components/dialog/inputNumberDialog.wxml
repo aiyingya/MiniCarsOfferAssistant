@@ -6,13 +6,32 @@
       <view class="weui-dialog__hd" wx:if="{{ title }}">
         <view class="weui-dialog__title">{{ title }}</view>
       </view>
+
+
       <view class="weui-dialog__bd" wx:if="{{ content }}">
         <view class="weui-dialog__bd__centent">{{ content }}</view>
       </view>
+
+      <view wx:if="{{ priceStyle }}" class="weui-flex-wrp" >
+        <view class="flex-item  weui-dialog__line" style="width:20%"></view>
+        <view class="flex-item weui-bc_grey weui-bc_font24" style="width:60%">（已涵盖运费与收益）</view>
+        <view class="flex-item weui-dialog__line" style="width:20%"></view>
+      </view>
+
       <form bindsubmit="{{ confirm }}">
-        <view class="weui-dialog__input">
-          <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class="" focus="{{ visible }}"
+        <view wx:if="{{ priceStyle }}" class="weui-dialog__input_price">
+          <view class="weui-dialog__xia">{{upText}}</view>
+          <image class="weui-dialog__minus" src="../../../images/icons/icon_minus.png" bindtap="{{ buttonMinus }}"></image>
+          <input type="{{ inputType }}" name="inputNumber" placeholder="0" placeholder-class="" focus="{{ visible }}"
             value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
+          <image class="weui-dialog__plus" src="../../../images/icons/icon_plus.png" bindtap="{{ buttonPlus }}" ></image>
+          <text class="weui-dialog__input_text" wx:if="{{isDot}}">点</text>
+          <text class="weui-dialog__input_text" wx:else >元</text>
+        </view>
+
+        <view wx:else class="weui-dialog__input">
+          <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class="" focus="{{ visible }}"
+                 value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
         </view>
         <view class="weui-dialog__ft">
           <button class="weui-dialog__btn weui-dialog__btn_default" bindtap="{{ cancel }}">{{ cancelText }}
@@ -21,6 +40,7 @@
           </button>
         </view>
       </form>
+
     </view>
   </view>
 </template>

@@ -4,7 +4,10 @@
     "stage-0"
   ],
   "plugins": [
-    "transform-flow-strip-types"
+    "transform-flow-strip-types",
+    "transform-export-extensions",
+    "syntax-export-extensions",
+    "transform-runtime"
   ],
   "ignore": [
     "node_modules/babel-runtime/**/*.js",

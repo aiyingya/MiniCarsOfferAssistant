@@ -1,0 +1,125 @@
+<view class="container insurance-wrapper">
+  <!-- 保险总额.-->
+  <view class="insurance-rental">
+    <view class="label">保险总金额 ￥</view>
+    <view class="value"> 
+      <input 
+        value="{{InsuranceDetail.insuranceTotal}}" 
+        type="text" 
+        placeholder="保险总额" 
+        confirm-type="done"
+        bindinput="handleChangeInsuranceTotal"
+        bindconfirm="handleChangeInsuranceTotal"
+        />
+    </view>
+  </view>
+  
+  <!-- 交强险.-->
+  <view class="title">
+    <view class="label">交强险</view>
+    <view class="value {{ChangeInsuranceTotalStyle}}">￥{{InsuranceDetail.trafficInsurance}}</view>
+  </view>
+  <view class="weui-cells weui-cells_after-title"> 
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      >
+      <view class="weui-cell__bd">规格</view>
+      <view class="weui-cell__ft {{ChangeInsuranceTotalStyle}}">
+        <block wx:if="{{standards.length > 1}}">
+          <picker bindchange="handleChangeStandard" value="{{standardIndex}}" range="{{standards}}">
+            <view class="weui-cell__ft_in-access">{{standards[standardIndex]}}</view>
+          </picker>
+        </block>
+        <block wx:else>
+          {{standards[standardIndex]}}
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <!-- 商业险.-->
+  <view class="title">
+    <view class="label">商业险</view>
+    <view class="value {{ChangeInsuranceTotalStyle}}">￥{{InsuranceDetail.businessTatal}}</view>
+  </view>
+  <view class="weui-cells weui-cells_after-title">
+    <checkbox-group 
+     class="weui-cell weui-check__label"
+     bindchange="bindChangeBusinessRisks"
+     wx:for="{{businessRisks}}" 
+     wx:key="id"
+     data-name="{{item.name}}"
+     >
+      <label>
+        <checkbox class="weui-check" value="{{item.id}}" checked="{{item.checked}}"/>
+        <view class="weui-cell__hd weui-check__hd_in-checkbox">
+          <view class="checkbox_circle" wx:if="{{!item.checked}}"></view>
+          <image 
+            src="../../images/icons/bt_select_on.png" 
+            class="checkbox_circle checkbox_success" 
+            wx:if="{{item.checked}}"></image>
+        </view>
+        <view 
+          wx:if="{{item.checked}}" 
+          class="weui-cell__bd checked {{ChangeInsuranceTotalStyle}}"
+          >{{item.name}}</view>
+        <view 
+          wx:if="{{!item.checked}}"
+          class="weui-cell__bd"
+          >{{item.name}}</view>
+      </label>
+      <view 
+        class="weui-cell__ft"
+        wx:if="{{!item.checked}}"
+        >￥0</view>
+      <view 
+        class="weui-cell__ft checked {{ChangeInsuranceTotalStyle}}"
+        wx:if="{{item.checked}}"
+        data-name="{{item.name}}"
+        >
+        <block wx:if="{{item.name == '第三者责任险'}}">
+          <picker bindchange="handleChangeLiabilityTypes" value="{{liabilityTypesIndex}}" range="{{liabilityTypesValue}}">
+            <view class="weui-cell__ft_in-access">￥{{InsuranceDetail.liabilityInsurance}}</view>
+          </picker>
+        </block>
+        <block wx:if="{{item.name == '车辆损失险'}}">
+          ￥{{InsuranceDetail.vehicleLossInsurance}}
+        </block>
+        <block wx:if="{{item.name == '全车盗抢险'}}">
+          ￥{{InsuranceDetail.vehicleDQInsurance}}
+        </block>
+        <block wx:if="{{item.name == '玻璃单独破碎险'}}">
+          <picker bindchange="handleChangeGlassBrokenTypes" value="{{glassBrokenTypesIndex}}" range="{{glassBrokenTypes}}">
+            <view class="weui-cell__ft_in-access">￥{{InsuranceDetail.glassBrokenInsurance}}</view>
+          </picker>
+        </block>
+        <block wx:if="{{item.name == '自燃损失险'}}">
+          ￥{{InsuranceDetail.gcombustionLossInsurance}}
+        </block>
+        <block wx:if="{{item.name == '不计免赔特约险'}}">
+          ￥{{InsuranceDetail.franchiseInsurance}}
+        </block>
+        <block wx:if="{{item.name == '无过责任险'}}">
+          ￥{{InsuranceDetail.responsibilityInsurance}}
+        </block>
+        <block wx:if="{{item.name == '车上人员责任险'}}">
+          ￥{{InsuranceDetail.personnelCarInsurance}}
+        </block>
+        <block wx:if="{{item.name == '车身划痕险'}}">
+          <picker bindchange="handleChangeScratchesTypes" value="{{scratchesTypesIndex}}" range="{{scratchesTypesValue}}">
+            <view class="weui-cell__ft_in-access">￥{{InsuranceDetail.scratchesInsurance}}</view>
+          </picker>
+        </block>
+      </view>
+    </checkbox-group>
+  </view>
+  
+  <view class="hint">保险金额为预估值，仅供参考</view>
+  
+  <view 
+    class="setbtn"
+    bindtap="handleChangeSubmit"
+    >确认</view>
+</view>

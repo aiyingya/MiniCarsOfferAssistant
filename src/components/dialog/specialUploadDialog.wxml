@@ -1,0 +1,45 @@
+<template name="specialUploadDialog">
+  <view class="specialUploadDialog">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} ">
+    </view>
+    <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
+      <view class="weui-dialog__hd" wx:if="{{ title }}">
+        <view class="weui-dialog__title">{{ title }}</view>
+      </view>
+
+      <view class="weui-special-dialog__bd" wx:if="{{ content }}" style="display:flex">
+        <view class="weui-dialog__line" style="margin-top:15px;"></view>
+        <view class="weui-special-dialog__bd__centent" >{{ content }}</view>
+        <view class="weui-dialog__line" style="margin-top:15px;"></view>
+      </view>
+
+      <form bindsubmit="{{ confirm }}">
+        <view class="weui-dialog__input">
+          <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class="" focus="{{ visible }}"
+                 value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
+        </view>
+
+        <view class=" weui-flex-wrp weui-special-wrp" >
+          <view class="weui-special__input">
+            <input type="text" name="inputName" placeholder="{{ inputNumberPlaceholder1 }}" placeholder-class="" focus="{{ visible }}"
+                   value="{{ inputNumber1 }}" bindinput="{{ inputNumberInput1 }}" maxlength="{{ inputNumberMaxLength1 }}" />
+          </view>
+
+          <radio-group class="radio-group weui-radio-group" bindchange="radioChange" name="inputSex">
+            <label class="radio" wx:for="{{radioNames}}">
+              <radio value="{{item.name}}" checked="{{item.name===defaultRadio}}"/>{{item.value}}
+            </label>
+          </radio-group>
+        </view>
+
+        <view class="weui-dialog__ft">
+          <button class="weui-dialog__btn weui-dialog__btn_default" bindtap="{{ cancel }}">{{ cancelText }}
+          </button>
+          <button class="weui-dialog__btn weui-dialog__btn_primary" formType="submit" disabled="{{ confirmDisabled }}">{{ confirmText }}
+          </button>
+        </view>
+      </form>
+
+    </view>
+  </view>
+</template>
