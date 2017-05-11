@@ -1,10 +1,12 @@
 <template name="specialUploadDialog">
   <view class="specialUploadDialog">
-    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} ">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} " bindtap="{{ close }}">
     </view>
     <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
       <view class="weui-dialog__hd" wx:if="{{ title }}">
-        <view class="weui-dialog__title">{{ title }}</view>
+        <view class="weui-dialog__title">{{ title }}
+          <image class="icon-close" src="../../../images/icons/icon_close.png" bindtap="{{ close }}" ></image>
+        </view>
       </view>
 
       <view class="weui-special-dialog__bd" wx:if="{{ content }}" style="display:flex">

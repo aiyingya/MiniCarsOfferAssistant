@@ -673,7 +673,11 @@ Page({
         that.showInput()
 
       },
-      cancel: () => {    that.showInput()
+      cancel: () => {
+        that.showInput()
+      },
+      close: () => {
+        that.showInput()
       }
     })
   },
@@ -737,6 +741,9 @@ Page({
       },
       cancel: () => {
         that.showInput()
+      },
+      close: () => {
+        that.showInput()
       }
     })
   },
@@ -798,7 +805,11 @@ Page({
           that.showInput()
 
         },
-        cancel: () => {that.showInput()}
+        cancel: () => {that.showInput()},
+        close: () => {
+          that.showInput()
+        }
+
       })
     }
   },
@@ -919,6 +930,9 @@ Page({
         })
         that.showInput()
 
+      },
+      close: () => {
+        that.showInput()
       }
     })
   },
@@ -943,11 +957,12 @@ Page({
           'quotation.quotationItems[0].specifications': externalColorName + '/' + internalColorName
         })
         that.showInput()
-
       },
       cancel: () => {
         that.showInput()
-
+      },
+      close: () => {
+        that.showInput()
       }
     })
   },

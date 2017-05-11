@@ -1,6 +1,6 @@
 <template name="specificationsDialog">
   <view class="specificationsDialog">
-    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}"></view>
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" bindtap="{{ close }}"></view>
     <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
       <view class="weui-dialog__hd" wx:if="{{ title }}">
         <view class="weui-dialog__title">{{ title }}</view>

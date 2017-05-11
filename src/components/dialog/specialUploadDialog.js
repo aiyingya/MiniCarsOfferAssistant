@@ -131,6 +131,9 @@ export default {
          */
         cancel(e) {
           this.hide(options.cancel())
+        },
+        close(){
+          this.hide(options.close())
         }
       }
     })
