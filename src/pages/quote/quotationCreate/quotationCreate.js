@@ -685,11 +685,13 @@ Page({
     let that = this
 
     const _guidePrice = Number(this.data.quotation.quotationItems[0].guidePrice)
-    const _baseSellingPrice = Number(this.data.quotation.quotationItems[0].baseSellingPrice)
+    const _sellingPrice = Number(this.data.quotation.quotationItems[0].sellingPrice)
     const _diffPrice = Number(that.data.diffPrice) //指导价差价
+    const _isPoint = that.data.isSpecialBranch
+    const _hasInitPoint =that.data.initPoint
+    const _initSellingPrice = that.data.initSellingPrice
     let _inputT
-
-    if(that.data.isSpecialBranch){
+    if(_isPoint){
       //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
       _inputT = that.data.priceChange.point
     }else{
@@ -700,27 +702,27 @@ Page({
     $wuxInputNumberDialog.open({
       title: '裸车价',
       inputNumber: _inputT,
-      content: "￥" + _baseSellingPrice,
+      content: "￥" + _sellingPrice,
       inputNumberPlaceholder: '输入裸车价',
       inputNumberMaxLength: 9,
       confirmText: '确定',
       cancelText: '取消',
       priceStyle: true,
+      params:{
+        sellingPrice : _sellingPrice,
+        initSellingPrice : _initSellingPrice,
+        isPlus :(_diffPrice > 0),
+        isPoint:_isPoint,
+        hasInitPoint:_hasInitPoint,
+        guidePrice:_guidePrice
+      },
       upText: (_diffPrice > 0) ? '上':'下',
-      isDot:that.data.isSpecialBranch,
       confirm: (res) => {
-        let _inputNumber =  (_diffPrice > 0) ? Number(res.inputNumber) : Number(-Number(res.inputNumber))
         let price
-
-        if(that.data.isSpecialBranch){
-          if(Number(that.data.initPoint) === Math.abs(_inputNumber)){
-            price = that.data.initSellingPrice
-          }else{
-            price = util.carPrice(_inputNumber,_guidePrice)
-          }
-
+        if(_isPoint && (Number(_hasInitPoint) === Number(res.inputNumber))){
+          price = _initSellingPrice
         }else{
-          price = Math.floor(_guidePrice + _inputNumber)
+          price = util.getChangeCarPrice((_diffPrice > 0),_isPoint,_guidePrice,res.inputNumber)
         }
 
         const isElectricCar = this.data.carModelInfo.isElectricCar

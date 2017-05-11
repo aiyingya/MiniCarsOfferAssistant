@@ -1,5 +1,6 @@
 import config from '../config'
 
+
 export default class Util {
 
   static formatTime(date) {
@@ -293,6 +294,25 @@ export default class Util {
     } else {
       return new Date()
     }
+  }
+
+  /***
+   * 获取加价／减价 加点／减点之后裸车价的金额
+   * @param isPlus  ／OrDown     是加价  否减价  裸车价-指导价
+   * @param isPoint  ／OrPrice  是加点   否减点
+   * @param guidePrice  指导价金额
+   * @param contentNum   要变更的金额
+   * @return {number}
+   */
+  static getChangeCarPrice(isPlus, isPoint,guidePrice,contentNum) {
+    let _contentNum =  isPlus ? Number(contentNum) : Number(-Number(contentNum))
+    let price
+    if(isPoint){
+        price = Util.carPrice(_contentNum,guidePrice)
+    }else{
+      price = Math.floor(guidePrice + _contentNum)
+    }
+    return price
   }
 
   /**

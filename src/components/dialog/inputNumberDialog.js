@@ -1,6 +1,6 @@
 
 import Component from '../component'
-
+import util from '../../utils/util'
 export default {
   /**
    * 默认参数
@@ -16,7 +16,14 @@ export default {
       confirmDisabled: true,
       priceStyle: false,
       upText:"下",//是否是加价
-      isDot:true //是否是点 要么是元
+      params:{
+        ellingPrice : 0,
+        initSellingPrice : 0,
+        isPlus :false,
+        isPoint:false,
+        hasInitPoint:0,
+        guidePrice:0
+      }
     }
   },
   /**
@@ -127,15 +134,22 @@ export default {
             return
           }
           let text
-          if(!options.isDot){
+          if(!options.params.isPoint){
             options.inputNumber = (Number(number)>=100) ? (Number(number) - 100) : number
             text = Number(options.inputNumber)
           }else{
             options.inputNumber = (Number(number)>=1) ? (Number(number) - 1) : number
             text = Number(options.inputNumber).toFixed(2)
           }
+          let price
+          if(options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+            price = options.params.initSellingPrice
+          }else{
+            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          }
           this.setData({
-            [`${this.options.scope}.inputNumber`]: text
+            [`${this.options.scope}.inputNumber`]: text,
+            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
           })
           this.inputNumberInput(options.inputNumber)
         },
@@ -150,16 +164,23 @@ export default {
             return
           }
           let text
-          if(!options.isDot){
+          if(!options.params.isPoint){
             options.inputNumber = Number(number) + 100
             text = Number(options.inputNumber)
           }else{
             options.inputNumber = Number(number) + 1
             text = Number(options.inputNumber).toFixed(2)
           }
+          let price
+          if(options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+            price = options.params.initSellingPrice
+          }else{
+            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          }
           this.setData({
-            [`${this.options.scope}.inputNumber`]: text
-          })
+            [`${this.options.scope}.inputNumber`]: text,
+            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
+        })
           this.inputNumberInput(options.inputNumber)
         }
       }
