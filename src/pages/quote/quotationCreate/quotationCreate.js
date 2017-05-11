@@ -128,7 +128,7 @@ Page({
       {
         type:'otherfee',
         target:'serverFee',
-        title:'服务费',
+        title:'金融服务费',
         protoname:'quotation.otherExpensesAll.serverFee',
         price:0//同上
       },//安装费 其它 临时脑补的费用
@@ -814,6 +814,13 @@ Page({
     quotation = Object.assign({}, quotation, that.data.quotation)
 
     quotation.rateType= that.data.requestResult.interestType
+
+    //quotation.otherExpensesAll.serverFee
+    if(that.data.activeIndex == 1){
+      //全款没有金融服务费
+      quotation.otherExpensesAll.serverFee =0
+    }
+
     function isSendRequest (quotationDraft,mobile,name,sex) {
 
       app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile ,{

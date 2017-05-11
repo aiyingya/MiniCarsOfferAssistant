@@ -266,7 +266,7 @@
                       <!-- 车源基本信息 -->
                       <view class="basic-infomation">
                         <view class="basic-label">
-                          {{carSourceItem.externalColor}}/{{carSourceItem.viewModelInternalColor}} <view class="detail-look">详情生成报价>></view>
+                          {{carSourceItem.externalColor}}/{{carSourceItem.viewModelInternalColor}} <view class="detail-look">详情／生成报价>></view>
                         </view>
                         <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length}}"
                           class="basic-label">{{carSourceItem.viewModelSelectedCarSourcePlace.name}}

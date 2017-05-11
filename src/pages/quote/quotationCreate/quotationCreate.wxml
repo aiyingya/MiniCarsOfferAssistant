@@ -115,10 +115,10 @@
 			<!--必要花费-->
 			<view class="h-cell-gray">必要花费</view>
 			<view class="weui-cells weui-cells_after-title ymc-cell-box">
-        <view 
-          wx:for="{{expensesAllInfo}}"  
+        <view
+          wx:for="{{expensesAllInfo}}"
           wx:if="{{item.type === 'requiredfee'}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active"
-          data-feetype="{{item}}" 
+          data-feetype="{{item}}"
           bindtap="handlerExpensesChange"
           >
           <view class="weui-cell__bd">{{ item.title }}</view>
@@ -128,8 +128,9 @@
 
 			<!--其他花费-->
 			<view class="h-cell-gray">其他花费</view>
+
 			<view class="weui-cells weui-cells_after-title ymc-cell-box">
-				<view wx:for="{{expensesAllInfo}}"  wx:if="{{item.type === 'otherfee'}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active"
+				<view wx:for="{{expensesAllInfo}}"  wx:if="{{item.type === 'otherfee' }}" class="weui-cell weui-cell_access" hover-class="weui-cell_active"
               data-feetype="{{item}}" bindtap="handlerExpensesChange">
 					<view class="weui-cell__bd">{{ item.title }}</view>
           <!--小程序wxml中无法把变量名当成属性名获取属性的值，但是js可以  TODO：～～～～-->
@@ -202,7 +203,7 @@
 			<!--其他花费-->
 			<view class="h-cell-gray">其他花费</view>
 			<view class="weui-cells weui-cells_after-title ymc-cell-box">
-				<view wx:for="{{expensesAllInfo}}"  wx:if="{{item.type === 'otherfee'}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active"
+				<view wx:for="{{expensesAllInfo}}"  wx:if="{{item.type === 'otherfee' && item.target !=='serverFee' }}" class="weui-cell weui-cell_access" hover-class="weui-cell_active"
               data-feetype="{{item}}" bindtap="handlerExpensesChange">
 					<view class="weui-cell__bd">{{ item.title }}</view>
 					<view class="weui-cell__ft weui-cell__ft_in-access">￥{{ item.price }}</view>
