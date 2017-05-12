@@ -461,10 +461,16 @@ Page({
    */
   handleChangeInsuranceTotal(e) {
     let value = e.detail.value
-    // 当保险总额手动改变时，保险明细字体变灰.
+    let businessRisks = this.data.businessRisks
+    // 当保险总额手动改变时，保险明细字体变灰 checkbox disable.
+    
+    for(let item of businessRisks) {
+      item.checked = false
+    }
     this.setData({
       ChangeInsuranceTotalStyle: 'color-gray',
-      'InsuranceDetail.insuranceTotal': value
+      'InsuranceDetail.insuranceTotal': value,
+      businessRisks: businessRisks
     })
   },
   /**

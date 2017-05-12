@@ -19,12 +19,22 @@ Page({
      * 贷款相关.
      */
     loan: {
-      billingway: {
+      /**
+       * 计费方式.
+       */
+      
+      billingway: ["月息","万元系数"],
+      billingwayValue: 0,
+      interest: {
         oneInterest: "0",
         twoInterest: "0",
         threeInterest: "0"
       },
-      interest: "0",
+      coefficient: {
+        oneInterest: "0",
+        twoInterest: "0",
+        threeInterest: "0"
+      },
       rebates: "0",
       service: "0"
     },
@@ -72,11 +82,15 @@ Page({
         that.setData({
           "raisePrice.freight": res.freight,
           "raisePrice.profit": res.profit,
-          "loan.billingway.oneInterest": res.oneInterest,
-          "loan.billingway.twoInterest": res.twoInterest,
-          "loan.billingway.threeInterest": res.threeInterest,
+          "loan.interest.oneInterest": res.oneInterest,
+          "loan.interest.twoInterest": res.twoInterest,
+          "loan.interest.threeInterest": res.threeInterest,
+          "loan.coefficient.oneInterest": res.oneWYXS,
+          "loan.coefficient.twoInterest": res.twoWYXS,
+          "loan.coefficient.threeInterest": res.threeWYXS,
           "loan.rebates": res.loanRebate,
           "loan.service": res.loanFee,
+          "loan.billingwayValue": res.interestType -1,
           "othersCost.registration": res.carNumberFee,
           "insurances.rebates": res.insuranceRebate
         })
@@ -175,13 +189,28 @@ Page({
   /**
    * 设置计费方式.
    */
-  handleChangeBillingway() {
+  handleChangeBillingway(e) {
     let that = this
+    this.setData({
+      'loan.billingwayValue': e.detail.value
+    })
+  },
+  /**
+   * 设置息费.
+   */
+  handleChangeInterest() {
+    let that = this
+    let billingwayValue = this.data.loan.billingwayValue
+    let content = billingwayValue === 0 ? '月息(厘)' : '万元系数'
+    let inputPlaceholder = billingwayValue === 0 ? '输入月息' : '输入万元系数'
+    let inputList = billingwayValue === 0 ? this.data.loan.interest : this.data.loan.coefficient
+    let parameter = billingwayValue === 0 ? 'loan.interest' : 'loan.coefficient'
     $flexInputDialog.open({
       title: '计费方式',
-      content: '月息(厘)',
-      inputList: this.data.loan.billingway,
-      inputPlaceholder: '输入月息',
+      content: content,
+      inputList: inputList
+      ,
+      inputPlaceholder: inputPlaceholder,
       inputType: 'digit',
       confirmText: '确定',
       cancelText: '取消',
@@ -195,22 +224,10 @@ Page({
       confirm: (res) => {
         console.log(res)
         that.setData({
-          'loan.billingway': res
+          [`${parameter}`]: res
         })
       },
       cancel: () => {}
-    })
-  },
-  /**
-   * 设置月息.
-   */
-  handleChangeInterest() {
-    let that = this
-    this.popupInputNumberDialog({
-      title: '月息(厘)',
-      inputNumber: this.data.loan.interest,
-      inputNumberPlaceholder: '输入月息',
-      dataparameter: 'loan.interest'
     })
   },
   /**
@@ -294,14 +311,18 @@ Page({
    */
   handlePushSet() {
     let that = this
+    let interestType = that.data.loan.billingwayValue == 0 ? 1 : 2
     let data = {
       "insuranceTypes": that.data.insurances.checkedValues,
       "freight": that.data.raisePrice.freight,
       "profit": that.data.raisePrice.profit,
-      "oneInterest": that.data.loan.billingway.oneInterest,
-      "twoInterest": that.data.loan.billingway.twoInterest,
-      "threeInterest": that.data.loan.billingway.threeInterest,
-      "interestType": 1,
+      "oneInterest": that.data.loan.interest.oneInterest,
+      "twoInterest": that.data.loan.interest.twoInterest,
+      "threeInterest": that.data.loan.interest.threeInterest,
+      "oneWYXS": that.data.loan.coefficient.oneInterest,
+      "twoWYXS": that.data.loan.coefficient.twoInterest,
+      "threeWYXS": that.data.loan.coefficient.threeInterest,
+      "interestType": interestType,
       "loanRebate": that.data.loan.rebates,
       "loanFee": that.data.loan.service,
       "carNumberFee": that.data.othersCost.registration,
