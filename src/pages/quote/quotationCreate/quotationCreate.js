@@ -1070,17 +1070,6 @@ Page({
          $wuxContentDialog.open({
            title: '收益详情',
            totleContent: {name:'总利润约',value:'￥'+_totle},
-           detailContent: [
-             {name:'贷款收益约',value:'￥0'}
-           ],
-           close: () => {
-             that.showInput()
-           }
-         })
-
-         $wuxContentDialog.open({
-           title: '收益详情',
-           totleContent: {name:'总利润约',value:'￥'+res.totalProfit},
            detailContent: _detailContent,
            close: () => {
              that.showInput()
