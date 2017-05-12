@@ -278,7 +278,8 @@ Page({
       this.setData({
         'quotation': quotation,
         'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice,
-        'carModelsInfo.sellingPrice': quotation.carPrice
+        'carModelsInfo.sellingPrice': quotation.carPrice,
+        'quotation.quotationItems[0].originalPrice':quotation.marketPrice
       })
 
       //获取报价单接口
@@ -1024,38 +1025,63 @@ Page({
     app.saasService.getProfit({
       "userId": user.auth.userId,
       "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
-      "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount
+      "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount,
+      "carPrice":carPrice,
+      "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
+      "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
+      "loanServiceFee":that.data.quotation.otherExpensesAll.serverFee,
+      "installFee":that.data.quotation.otherExpensesAll.installationFee,
+      "otherFee":that.data.quotation.otherExpensesAll.otherFee
     },
      {
        success: (res) => {
          console.log("已经有收益结果")
          //设计搞与原型搞上无全款显示效果，临时脑补判断条件与显示画面...
 
-         if(this.isLoanTabActive()){
+         let _totle
+         let _detailContent =[]
+         _detailContent.push({
+           name:'裸车价收益约',value:'￥'+ res.profit
+         },{name:'保险收益约',value:'￥'+res.insuranceProfit})
+
+
+         if(this.isLoanTabActive()) {
            //贷款
-           $wuxContentDialog.open({
-             title: '收益详情',
-             totleContent: {name:'总利润约',value:'￥'+res.totalProfit},
-             detailContent: [
-               {name:'裸车价收益约',value:'￥'+ res.profit},
-               {name:'保险收益约',value:'￥'+res.insuranceProfit},
-               {name:'贷款收益约',value:'￥'+res.loanProfit}
-             ],
-             close: () => {
-               that.showInput()
-             }
-           })
-           return
+           _detailContent.push({name: '贷款收益约', value: '￥' + res.loanProfit})
+           _totle = res.totalProfit
+         }else{
+           //全款
+           _detailContent.push({name: '贷款收益约', value: '￥0'})
+           _totle = (Number(res.totalProfit) - Number(res.loanProfit))
          }
-          //贷款
+
+         if(res.boutiqueFee){
+           _detailContent.push({name: '精品收益约', value: '￥' + res.boutiqueFee})
+
+         }
+         if(res.installFee){
+           _detailContent.push({name: '安装收益约', value: '￥' + res.installFee})
+
+         }
+         if(res.otherFee){
+           _detailContent.push({name: '其它收益约', value: '￥' + res.otherFee})
+         }
+
          $wuxContentDialog.open({
            title: '收益详情',
-           totleContent: {name:'总利润约',value:'￥'+(Number(res.totalProfit) - Number(res.loanProfit))},
+           totleContent: {name:'总利润约',value:'￥'+_totle},
            detailContent: [
-             {name:'裸车价收益约',value:'￥'+ res.profit},
-             {name:'保险收益约',value:'￥'+res.insuranceProfit},
              {name:'贷款收益约',value:'￥0'}
            ],
+           close: () => {
+             that.showInput()
+           }
+         })
+
+         $wuxContentDialog.open({
+           title: '收益详情',
+           totleContent: {name:'总利润约',value:'￥'+res.totalProfit},
+           detailContent: _detailContent,
            close: () => {
              that.showInput()
            }
