@@ -91,7 +91,7 @@
               <view class="weui-cell weui-cell_access {{quotation.insuranceDetail.showDetail ? 'weui-arrow-padding':''}}" hover-class="weui-cell_active" bindtap="lookDetail">
                 <view class="weui-cell__bd">保险金额</view>
                 <view class="weui-cell__ft">￥{{(quotation.insuranceDetail && quotation.insuranceDetail.iTotal || 0)||0}}</view>
-                <image v-if="{{quotation.insuranceDetail.showDetail}}" class="icon_arrow" src="../../../images/icons/icon_arrow.png"></image>
+                <image wx:if ="{{quotation.insuranceDetail.showDetail}}" class="icon_arrow" src="../../../images/icons/icon_arrow.png"></image>
               </view>
 
             </view>
