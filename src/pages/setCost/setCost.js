@@ -201,10 +201,10 @@ Page({
   handleChangeInterest() {
     let that = this
     let billingwayValue = this.data.loan.billingwayValue
-    let content = billingwayValue === 0 ? '月息(厘)' : '万元系数'
-    let inputPlaceholder = billingwayValue === 0 ? '输入月息' : '输入万元系数'
-    let inputList = billingwayValue === 0 ? this.data.loan.interest : this.data.loan.coefficient
-    let parameter = billingwayValue === 0 ? 'loan.interest' : 'loan.coefficient'
+    let content = billingwayValue == 0 ? '月息(厘)' : '万元系数'
+    let inputPlaceholder = billingwayValue == 0 ? '输入月息' : '输入万元系数'
+    let inputList = billingwayValue == 0 ? this.data.loan.interest : this.data.loan.coefficient
+    let parameter = billingwayValue == 0 ? 'loan.interest' : 'loan.coefficient'
     $flexInputDialog.open({
       title: '计费方式',
       content: content,
