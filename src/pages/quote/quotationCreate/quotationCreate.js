@@ -619,7 +619,7 @@ Page({
     this.updateForSomeReason()
   },
   setExpenseRate(year){
-    const isMonth = this.data.requestResult.interestType;
+    const isMonth = (this.data.requestResult.interestType ===1);
     var expenseRate = this.data.quotation.expenseRate;
     const rateObj= this.data.requestResult;
     switch (year){
