@@ -312,48 +312,66 @@ Page({
                 if(carModelInfo.insuranceDetail.iDSZZRX > 0) {
                   item.checked = true
                   that.data.liabilityTypesIndex = carModelInfo.insuranceDetail.iDSZZRX_INDEX
+                }else {
+                  item.checked = false
                 }
                 break
               case '车辆损失险':
                 if(carModelInfo.insuranceDetail.iCLSSX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '全车盗抢险': 
                 if(carModelInfo.insuranceDetail.iQCDQX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '玻璃单独破碎险': 
                 if(carModelInfo.insuranceDetail.iBLDDPSX > 0) {
                   item.checked = true
                   that.data.glassBrokenTypesIndex = carModelInfo.insuranceDetail.iBLDDPSX_INDEX
+                }else {
+                  item.checked = false
                 }
                 break
               case '自燃损失险':
                 if(carModelInfo.insuranceDetail.iZRSSX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '不计免赔特约险':
                 if(carModelInfo.insuranceDetail.iBJMPTYX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '无过责任险': 
                 if(carModelInfo.insuranceDetail.iWGZRX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '车上人员责任险': 
                 if(carModelInfo.insuranceDetail.iCSRYZRX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '车身划痕险': 
                 if(carModelInfo.insuranceDetail.iCSHHX > 0) {
                   item.checked = true
                   that.data.scratchesTypesIndex = carModelInfo.insuranceDetail.iCSHHX_INDEX
+                }else {
+                  item.checked = false
                 }
                 break
               default:
