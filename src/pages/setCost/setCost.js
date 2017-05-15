@@ -22,7 +22,7 @@ Page({
       /**
        * 计费方式.
        */
-      
+
       billingway: ["月息","万元系数"],
       billingwayValue: 0,
       interest: {
@@ -54,7 +54,7 @@ Page({
     }
   },
   onLoad() {
-  
+
     wx.showToast({
       title: '正在加载',
       icon: 'loading',
@@ -67,7 +67,7 @@ Page({
     }, err => {
       wx.hideToast()
     })
-    
+
   },
   /**
    * 获取报价设置信息.
@@ -147,7 +147,7 @@ Page({
       confirmText: '确定',
       cancelText: '取消',
       validate: (e) => {
-        if (e.detail.value > 0) {
+        if (e.detail.value >= 0 && e.detail.value!="") {
           return true
         } else {
           return false
@@ -338,14 +338,14 @@ Page({
         try {
           wx.setStorageSync('isSetPreference', 'true')
           wx.navigateBack()
-        } catch (e) { 
-          
+        } catch (e) {
+
         }
       },
       fail(res) {
         console.log(res)
       }
     })
-    
+
   }
 })

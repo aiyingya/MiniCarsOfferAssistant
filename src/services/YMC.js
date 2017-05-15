@@ -156,7 +156,6 @@ export default class YMC {
     }).then(res=>{
 
       console.log('success')
-      console.log(res)
       const result = res.data
       const statusCode = res.statusCode
 

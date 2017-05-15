@@ -408,8 +408,6 @@ Page({
             activeIndexCss()
             this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
 
-
-
           },
           fail: () => {},
           complete: () => {}
@@ -657,7 +655,7 @@ Page({
    let con = that.data.requestResult.interestType===1 ? '月息（厘）':'万元系数（元）';
     that.hideInput()
     $wuxInputNumberDialog.open({
-      title: '贷款月息或万元系',
+      title: '贷款月息或万元系数',
       content: con,
       inputNumber: this.data.quotation.expenseRate,
       inputNumberPlaceholder: '输入贷款年利率',
@@ -665,8 +663,8 @@ Page({
       confirmText: '确定',
       cancelText: '取消',
       validate: (e) => {
-        if (e.detail.value > 0) {
-          return true
+        if (e.detail.value >= 0 && e.detail.value!="") {
+            return true
         } else {
           return false
         }
@@ -806,6 +804,13 @@ Page({
         inputNumberMaxLength: 9,
         confirmText: '确定',
         cancelText: '取消',
+        validate: (e) => {
+          if (e.detail.value >= 0 && e.detail.value!="") {
+            return true
+          } else {
+            return false
+          }
+        },
         confirm: (res) => {
           let price = Number(res.inputNumber)
           //这里如何写入插值变量
