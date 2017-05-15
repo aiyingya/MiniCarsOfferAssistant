@@ -296,7 +296,7 @@ Page({
             'requestResult': res
           })
           this.setData({
-            'quotation.otherExpensesAll.serverFee':res.loanFee,
+            'quotation.otherExpensesAll.serverFee':res.loanFee
           })
 
           that.updateForSomeReason()
@@ -380,9 +380,9 @@ Page({
               itemPic: itemPic,
               specifications: specifications,
               guidePrice: guidePrice,
-              sellingPrice: sellingPrice,
+              sellingPrice: Math.floor(sellingPrice),
               originalPrice: originalPrice,
-              baseSellingPrice: sellingPrice
+              baseSellingPrice: Math.floor(sellingPrice)
             }]
             carModelInfo.sellingPrice = sellingPrice
             this.setData({
@@ -428,7 +428,7 @@ Page({
       this.setData({
         isOnLoad: false
       })
-      return;
+      return
     }
 
     const _insurances = wx.getStorageSync("insurancesAll")? JSON.parse(wx.getStorageSync("insurancesAll")):null
@@ -724,12 +724,11 @@ Page({
         hasInitPoint:_hasInitPoint,
         guidePrice:_guidePrice
       },
-      // upText: (_diffPrice > 0) ? '上':'下',
       confirm: (res) => {
         let _isPlus = (res.isPlus === 'true' )
 
         let price
-        if(_isPoint && initIsPlus === _isPlus  && (Number(_hasInitPoint) === Number(res.inputNumber))){
+        if(_isPoint && (initIsPlus === _isPlus)  && (Number(_hasInitPoint) === Number(res.inputNumber))){
           price = _initSellingPrice
         }else{
           price = util.getChangeCarPrice(_isPlus,_isPoint,_guidePrice,res.inputNumber)

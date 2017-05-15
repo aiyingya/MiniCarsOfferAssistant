@@ -184,12 +184,12 @@ export default {
           this.inputNumberInput(options.inputNumber)
         },
         changePush(){
-          const _ispush = options.params.isPlus
-          options.params.isPlus =!_ispush
+          const _isPlus = options.params.isPlus
+          options.params.isPlus =!_isPlus
 
 
           let price
-          if(options.params.isPoint && initIsPlus === _isPlus && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+          if(options.params.isPoint && (options.params.initIsPlus === _isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
             price = options.params.initSellingPrice
           }else{
             price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
@@ -199,7 +199,7 @@ export default {
           })
 
           this.setData({
-            [`${this.options.scope}.params.isPlus`]: !_ispush
+            [`${this.options.scope}.params.isPlus`]: !_isPlus
           })
           this.setData({
             [`${this.options.scope}.confirmDisabled`]: false
