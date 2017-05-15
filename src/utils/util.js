@@ -111,7 +111,7 @@ export default class Util {
   static purchaseTax(carPrice,capacity) {
     const  price = Number(carPrice/1.17*0.1);
     if(capacity){
-      return (Number(capacity) < 1.6 ) ? (price*0.75) : price
+      return (Number(capacity) > 1.6 ) ? price : (price*0.75)
     }
     return price
 
