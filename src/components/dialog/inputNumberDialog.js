@@ -103,16 +103,18 @@ export default {
             [`${this.options.scope}.confirmDisabled`]: disabled
           })
 
-          const _isPlus = options.params.isPlus
-          let price
-          if(options.params.isPoint && (options.params.initIsPlus === _isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
-            price = options.params.initSellingPrice
-          }else{
-            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          if(options.priceStyle){
+            const _isPlus = options.params.isPlus
+            let price
+            if(options.params.isPoint && (options.params.initIsPlus === _isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+              price = options.params.initSellingPrice
+            }else{
+              price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+            }
+            this.setData({
+              [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
+            })
           }
-          this.setData({
-            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
-          })
 
         },
         /**
