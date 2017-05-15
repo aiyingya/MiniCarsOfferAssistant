@@ -23,7 +23,7 @@
 
         <view class=" weui-flex-wrp weui-special-wrp" >
           <view class="weui-special__input">
-            <input type="text" name="inputName" placeholder="{{ inputNumberPlaceholder1 }}" placeholder-class="" focus="{{ visible }}"
+            <input type="text" name="inputName" placeholder="{{ inputNumberPlaceholder1 }}" placeholder-class=""
                    value="{{ inputNumber1 }}" bindinput="{{ inputNumberInput1 }}" maxlength="{{ inputNumberMaxLength1 }}" />
           </view>
 

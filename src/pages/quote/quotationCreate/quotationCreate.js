@@ -80,7 +80,8 @@ Page({
       "twoWYXS":0.5,//"二年期万元系数",
       "threeWYXS": 0.5,//"三年期万元系数",
       "interestType":1,//"默认选中的贷款方式 1 月息 2 万元系数"
-      "carNumberFee":'200'//"上牌服务费"
+      "carNumberFee":'200',//"上牌服务费"
+      "loanFee":0 //贷款服务费
     },
     expensesAllInfo:[
       {
@@ -360,8 +361,10 @@ Page({
             let sellingPrice = res.carPrice;
             const capacity = carModelInfo.capacity
             const isElectricCar = carModelInfo.isElectricCar
+            const loanFee = res.loanFee
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
+              'quotation.otherExpensesAll.serverFee':res.loanFee,
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
@@ -616,7 +619,7 @@ Page({
     this.updateForSomeReason()
   },
   setExpenseRate(year){
-    const isMonth = this.data.requestResult.interestType;
+    const isMonth = (this.data.requestResult.interestType ===1);
     var expenseRate = this.data.quotation.expenseRate;
     const rateObj= this.data.requestResult;
     switch (year){
