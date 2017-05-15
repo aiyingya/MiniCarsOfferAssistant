@@ -15,10 +15,10 @@ export default {
       inputType: 'number',
       confirmDisabled: true,
       priceStyle: false,
-      upText:"下",//是否是加价
       params:{
         ellingPrice : 0,
         initSellingPrice : 0,
+        initIsPlus:false,//初始化的加减
         isPlus :false,
         isPoint:false,
         hasInitPoint:0,
@@ -180,8 +180,30 @@ export default {
           this.setData({
             [`${this.options.scope}.inputNumber`]: text,
             [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
-        })
+          })
           this.inputNumberInput(options.inputNumber)
+        },
+        changePush(){
+          const _ispush = options.params.isPlus
+          options.params.isPlus =!_ispush
+
+
+          let price
+          if(options.params.isPoint && initIsPlus === _isPlus && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+            price = options.params.initSellingPrice
+          }else{
+            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          }
+          this.setData({
+            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
+          })
+
+          this.setData({
+            [`${this.options.scope}.params.isPlus`]: !_ispush
+          })
+          this.setData({
+            [`${this.options.scope}.confirmDisabled`]: false
+          })
         }
       }
     })

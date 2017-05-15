@@ -295,6 +295,9 @@ Page({
           that.setData({
             'requestResult': res
           })
+          this.setData({
+            'quotation.otherExpensesAll.serverFee':res.loanFee,
+          })
 
           that.updateForSomeReason()
           activeIndexCss()
@@ -715,18 +718,21 @@ Page({
       params:{
         sellingPrice : _sellingPrice,
         initSellingPrice : _initSellingPrice,
+        initIsPlus:(_diffPrice > 0),
         isPlus :(_diffPrice > 0),
         isPoint:_isPoint,
         hasInitPoint:_hasInitPoint,
         guidePrice:_guidePrice
       },
-      upText: (_diffPrice > 0) ? '上':'下',
+      // upText: (_diffPrice > 0) ? '上':'下',
       confirm: (res) => {
+        let _isPlus = (res.isPlus === 'true' )
+
         let price
-        if(_isPoint && (Number(_hasInitPoint) === Number(res.inputNumber))){
+        if(_isPoint && initIsPlus === _isPlus  && (Number(_hasInitPoint) === Number(res.inputNumber))){
           price = _initSellingPrice
         }else{
-          price = util.getChangeCarPrice((_diffPrice > 0),_isPoint,_guidePrice,res.inputNumber)
+          price = util.getChangeCarPrice(_isPlus,_isPoint,_guidePrice,res.inputNumber)
         }
 
         const isElectricCar = this.data.carModelInfo.isElectricCar
@@ -832,7 +838,6 @@ Page({
 
     quotation.rateType= that.data.requestResult.interestType
 
-    //quotation.otherExpensesAll.serverFee
     if(that.data.activeIndex == 1){
       //全款没有金融服务费
       quotation.otherExpensesAll.serverFee =0
