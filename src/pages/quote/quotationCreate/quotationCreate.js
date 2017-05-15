@@ -364,7 +364,7 @@ Page({
             const loanFee = res.loanFee
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              'quotation.requiredExpensesAll.serverFee':res.loanFee,
+              'quotation.otherExpensesAll.serverFee':res.loanFee,
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
