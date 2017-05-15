@@ -92,6 +92,7 @@
 			  >
 				暂无数据
 			</view>
+			<view class="placeholder"></view>
 		</scroll-view>
 	</view>
 
