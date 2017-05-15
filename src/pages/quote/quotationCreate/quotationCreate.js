@@ -1297,44 +1297,44 @@ Page({
           case '车辆损失险':
             let basis = standardIndex == 0 ? 539 : 646
             vehicleLossInsurance = basis + officialPrice*0.0128
-            businessTatal += vehicleLossInsurance
+            businessTatal += Number(vehicleLossInsurance.toFixed(0))
             insuranceDetail.iCLSSX = vehicleLossInsurance.toFixed(0)
             break
           case '全车盗抢险':
             let basisPremium = standardIndex == 0 ? 120 : 140
             let ratePremium = standardIndex == 0 ? 0.0049 : 0.0044
             vehicleDQInsurance = basisPremium + officialPrice*ratePremium
-            businessTatal += vehicleDQInsurance
+            businessTatal += Number(vehicleDQInsurance.toFixed(0))
             insuranceDetail.iQCDQX = vehicleDQInsurance.toFixed(0)
             break
           case '玻璃单独破碎险':
             let glassBrokenRate = 0.002
             glassBrokenInsurance = officialPrice*glassBrokenRate
-            businessTatal += glassBrokenInsurance
+            businessTatal += Number(glassBrokenInsurance.toFixed(0))
             insuranceDetail.iBLDDPSX = glassBrokenInsurance.toFixed(0)
             break
           case '自燃损失险':
             gcombustionLossInsurance = officialPrice*0.0015
-            businessTatal += gcombustionLossInsurance
+            businessTatal += Number(gcombustionLossInsurance.toFixed(0))
             insuranceDetail.iZRSSX = gcombustionLossInsurance.toFixed(0)
             break
           case '不计免赔特约险':
             if(liabilityInsurance > 0 && vehicleLossInsurance > 0) {
               franchiseInsurance = liabilityInsurance*0.2 + vehicleLossInsurance*0.2
-              businessTatal += franchiseInsurance
+              businessTatal += Number(franchiseInsurance.toFixed(0))
               insuranceDetail.iBJMPTYX = franchiseInsurance.toFixed(0)
             }
 
             break
           case '无过责任险':
             responsibilityInsurance = liabilityInsurance*0.2
-            businessTatal += responsibilityInsurance
+            businessTatal += Number(responsibilityInsurance.toFixed(0))
             insuranceDetail.iWGZRX = responsibilityInsurance.toFixed(0)
             break
           case '车上人员责任险':
             let personnelCarRate = standardIndex == 0 ? 0.0069 : 0.0066
             personnelCarInsurance = officialPrice*personnelCarRate
-            businessTatal += personnelCarInsurance
+            businessTatal += Number(personnelCarInsurance.toFixed(0))
             insuranceDetail.iCSRYZRX = personnelCarInsurance.toFixed(0)
 
             break

@@ -56,10 +56,16 @@
         <checkbox class="weui-check" value="{{item.id}}" checked="{{item.checked}}"/>
         <view class="weui-cell__hd weui-check__hd_in-checkbox">
           <view class="checkbox_circle" wx:if="{{!item.checked}}"></view>
-          <image
-            src="../../images/icons/bt_select_on.png"
-            class="checkbox_circle checkbox_success"
-            wx:if="{{item.checked}}"></image>
+          <block wx:if="{{item.checked}}">
+            <image
+              src="../../images/icons/bt_select_on.png"
+              class="checkbox_circle checkbox_success"
+              wx:if="{{ChangeInsuranceTotalStyle == ''}}"></image>
+            <image
+              src="../../images/icons/bt_select_disable.png"
+              class="checkbox_circle checkbox_success"
+              wx:if="{{ChangeInsuranceTotalStyle != ''}}"></image>
+          </block>
         </view>
         <view
           wx:if="{{item.checked}}"
