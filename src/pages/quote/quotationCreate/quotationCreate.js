@@ -1278,6 +1278,8 @@ Page({
     let personnelCarInsurance = 0
     // 车身划痕险
     let scratchesInsurance = 0
+    
+    let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
 
     let insuranceDetail = {
       "iTotal":0,//"保险总额",
@@ -1378,7 +1380,17 @@ Page({
       }
     }
     insuranceDetail.iTotal = totalAmount
+    
+    if(insurancesAll !== null) {
+      
+      insurancesAll.insuranceTotal = totalAmount
+      try {
+        wx.setStorageSync('insurancesAll', JSON.stringify(insurancesAll))
+        console.log(insurancesAll)
+      } catch (e) { 
 
+      }
+    }
     that.setData({
       expensesAllInfo: expensesAllInfo,
       'quotation.requiredExpensesAll.insuranceAmount': totalAmount,
