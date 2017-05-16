@@ -532,14 +532,19 @@ Page({
     this.utilsExpensesAllInfo()
 
     let requiredExpenses = 0
+    let otherExpenses = 0
+    let productFee = 0
+
     var _temp1 = this.data.quotation.requiredExpensesAll
     for(let key of Object.keys(_temp1)){
       requiredExpenses += Number(_temp1[key])
     }
 
-    let otherExpenses = 0
     var _temp2 = this.data.quotation.otherExpensesAll
     for(let key of Object.keys(_temp2)){
+      if(key === "serverFee"){
+        productFee = Number(_temp2[key])
+      }
       otherExpenses += Number(_temp2[key])
     }
 
@@ -565,7 +570,8 @@ Page({
       monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
 
     } else {
-      totalPayment = carPrice + otherExpenses + requiredExpenses
+      //全款
+      totalPayment = carPrice + otherExpenses + requiredExpenses - productFee
       advancePayment = carPrice
       monthlyPayment = 0
     }
