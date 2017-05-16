@@ -503,7 +503,7 @@ Page({
       'quotation.requiredExpensesAll.insuranceAmount': _insurances.insuranceTotal
     })
     this.insuranceUpdate(_insurances.insuranceTotal)//保险金额修改
-		this.updateForSomeReason()
+
   },
   onHide() {},
   onUnload() {
