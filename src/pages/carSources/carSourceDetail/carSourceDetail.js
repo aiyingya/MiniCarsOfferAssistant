@@ -182,6 +182,7 @@ export default {
             /// 原文基本数据
             const contentItems = []
             const content = res.content
+            options.originalText =  content
             if (content && content.length) {
               const indexOf = res.indexOf
               let i = 0;

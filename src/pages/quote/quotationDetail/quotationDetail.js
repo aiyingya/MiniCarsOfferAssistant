@@ -255,5 +255,14 @@ Page({
         }
       ]
     })
+  },
+  lookDetail(){
+    if(!this.data.quotation.insuranceDetail.showDetail){
+      return
+    }
+    let insuranceDetail = util.urlEncodeValueForKey('insuranceDetail', this.data.quotation.insuranceDetail)
+    wx.navigateTo({
+      url: `../../insurance/insuranceDetail/insuranceDetail?${insuranceDetail}`
+    })
   }
 })

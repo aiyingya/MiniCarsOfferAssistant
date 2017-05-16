@@ -1,6 +1,6 @@
 <template name="contentDialog">
   <view class="contentDialog">
-    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }}"></view>
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }}" bindtap="{{ close }}"></view>
 
 	  <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}" style="margin-bottom:30rpx">
 

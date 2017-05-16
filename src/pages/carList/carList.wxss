@@ -184,7 +184,10 @@
 	height: 88rpx;
 	line-height: 88rpx;
 }
-
+.placeholder {
+  height: 80rpx;
+  padding: 15px 0;
+}
 
 
 

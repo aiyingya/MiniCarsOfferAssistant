@@ -2,25 +2,25 @@
   <!-- 保险总额.-->
   <view class="insurance-rental">
     <view class="label">保险总金额 ￥</view>
-    <view class="value"> 
-      <input 
-        value="{{InsuranceDetail.insuranceTotal}}" 
-        type="text" 
-        placeholder="保险总额" 
+    <view class="value">
+      <input
+        value="{{InsuranceDetail.insuranceTotal}}"
+        type="text"
+        placeholder="保险总额"
         confirm-type="done"
         bindinput="handleChangeInsuranceTotal"
         bindconfirm="handleChangeInsuranceTotal"
         />
     </view>
   </view>
-  
-  <!-- 交强险.-->
   <view class="title">
     <view class="label">交强险</view>
     <view class="value {{ChangeInsuranceTotalStyle}}">￥{{InsuranceDetail.trafficInsurance}}</view>
   </view>
-  <view class="weui-cells weui-cells_after-title"> 
-    <view 
+  <!-- 交强险.-->
+
+  <view class="weui-cells weui-cells_after-title">
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -45,10 +45,10 @@
     <view class="value {{ChangeInsuranceTotalStyle}}">￥{{InsuranceDetail.businessTatal}}</view>
   </view>
   <view class="weui-cells weui-cells_after-title">
-    <checkbox-group 
+    <checkbox-group
      class="weui-cell weui-check__label"
      bindchange="bindChangeBusinessRisks"
-     wx:for="{{businessRisks}}" 
+     wx:for="{{businessRisks}}"
      wx:key="id"
      data-name="{{item.name}}"
      >
@@ -56,25 +56,31 @@
         <checkbox class="weui-check" value="{{item.id}}" checked="{{item.checked}}"/>
         <view class="weui-cell__hd weui-check__hd_in-checkbox">
           <view class="checkbox_circle" wx:if="{{!item.checked}}"></view>
-          <image 
-            src="../../images/icons/bt_select_on.png" 
-            class="checkbox_circle checkbox_success" 
-            wx:if="{{item.checked}}"></image>
+          <block wx:if="{{item.checked}}">
+            <image
+              src="../../images/icons/bt_select_on.png"
+              class="checkbox_circle checkbox_success"
+              wx:if="{{ChangeInsuranceTotalStyle == ''}}"></image>
+            <image
+              src="../../images/icons/bt_select_disable.png"
+              class="checkbox_circle checkbox_success"
+              wx:if="{{ChangeInsuranceTotalStyle != ''}}"></image>
+          </block>
         </view>
-        <view 
-          wx:if="{{item.checked}}" 
+        <view
+          wx:if="{{item.checked}}"
           class="weui-cell__bd checked {{ChangeInsuranceTotalStyle}}"
           >{{item.name}}</view>
-        <view 
+        <view
           wx:if="{{!item.checked}}"
           class="weui-cell__bd"
           >{{item.name}}</view>
       </label>
-      <view 
+      <view
         class="weui-cell__ft"
         wx:if="{{!item.checked}}"
         >￥0</view>
-      <view 
+      <view
         class="weui-cell__ft checked {{ChangeInsuranceTotalStyle}}"
         wx:if="{{item.checked}}"
         data-name="{{item.name}}"
@@ -115,10 +121,10 @@
       </view>
     </checkbox-group>
   </view>
-  
+
   <view class="hint">保险金额为预估值，仅供参考</view>
-  
-  <view 
+
+  <view
     class="setbtn"
     bindtap="handleChangeSubmit"
     >确认</view>

@@ -312,48 +312,66 @@ Page({
                 if(carModelInfo.insuranceDetail.iDSZZRX > 0) {
                   item.checked = true
                   that.data.liabilityTypesIndex = carModelInfo.insuranceDetail.iDSZZRX_INDEX
+                }else {
+                  item.checked = false
                 }
                 break
               case '车辆损失险':
                 if(carModelInfo.insuranceDetail.iCLSSX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '全车盗抢险': 
                 if(carModelInfo.insuranceDetail.iQCDQX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '玻璃单独破碎险': 
                 if(carModelInfo.insuranceDetail.iBLDDPSX > 0) {
                   item.checked = true
                   that.data.glassBrokenTypesIndex = carModelInfo.insuranceDetail.iBLDDPSX_INDEX
+                }else {
+                  item.checked = false
                 }
                 break
               case '自燃损失险':
                 if(carModelInfo.insuranceDetail.iZRSSX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '不计免赔特约险':
                 if(carModelInfo.insuranceDetail.iBJMPTYX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '无过责任险': 
                 if(carModelInfo.insuranceDetail.iWGZRX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '车上人员责任险': 
                 if(carModelInfo.insuranceDetail.iCSRYZRX > 0) {
                   item.checked = true
+                }else {
+                  item.checked = false
                 }
                 break
               case '车身划痕险': 
                 if(carModelInfo.insuranceDetail.iCSHHX > 0) {
                   item.checked = true
                   that.data.scratchesTypesIndex = carModelInfo.insuranceDetail.iCSHHX_INDEX
+                }else {
+                  item.checked = false
                 }
                 break
               default:
@@ -461,7 +479,8 @@ Page({
    */
   handleChangeInsuranceTotal(e) {
     let value = e.detail.value
-    // 当保险总额手动改变时，保险明细字体变灰.
+    let businessRisks = this.data.businessRisks
+    // 当保险总额手动改变时，保险明细字体变灰 checkbox disable.
     this.setData({
       ChangeInsuranceTotalStyle: 'color-gray',
       'InsuranceDetail.insuranceTotal': value
@@ -545,46 +564,46 @@ Page({
           case '车辆损失险':
             let basis = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.vehicleBasis
                                            : this.data.spuStandard.spuAboveSix.vehicleBasis
-            vehicleLossInsurance = basis + officialPrice*0.0128
-            businessTatal += vehicleLossInsurance
+            vehicleLossInsurance = (basis + officialPrice*0.0128).toFixed(0)
+            businessTatal += Number(vehicleLossInsurance)
             break
           case '全车盗抢险':
             let basisPremium = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.vehicleDQ.basisPremium
                                                   : this.data.spuStandard.spuAboveSix.vehicleDQ.basisPremium
             let ratePremium = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.vehicleDQ.rate
                                                  : this.data.spuStandard.spuAboveSix.vehicleDQ.rate
-            vehicleDQInsurance = basisPremium + officialPrice*ratePremium
-            businessTatal += vehicleDQInsurance
+            vehicleDQInsurance = (basisPremium + officialPrice*ratePremium).toFixed(0)
+            businessTatal += Number(vehicleDQInsurance)
             break
           case '玻璃单独破碎险':
             let glassBrokenIndex = this.data.glassBrokenTypesIndex
             let glassBrokenRate = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.glassBroken[glassBrokenIndex]
                                                      : this.data.spuStandard.spuAboveSix.glassBroken[glassBrokenIndex]
-            glassBrokenInsurance = officialPrice*glassBrokenRate
-            businessTatal += glassBrokenInsurance
+            glassBrokenInsurance = (officialPrice*glassBrokenRate).toFixed(0)
+            businessTatal += Number(glassBrokenInsurance)
             break
           case '自燃损失险':
-            gcombustionLossInsurance = officialPrice*0.0015
-            businessTatal += gcombustionLossInsurance
+            gcombustionLossInsurance = (officialPrice*0.0015).toFixed(0)
+            businessTatal += Number(gcombustionLossInsurance)
             break
           case '不计免赔特约险':
             if(liabilityInsurance > 0 && vehicleLossInsurance > 0) {
-              franchiseInsurance = liabilityInsurance*0.2 + vehicleLossInsurance*0.2
+              franchiseInsurance = (liabilityInsurance*0.2 + vehicleLossInsurance*0.2).toFixed(0)
               
-              businessTatal += franchiseInsurance
+              businessTatal += Number(franchiseInsurance)
             }
             
             break
           case '无过责任险':
  
-            responsibilityInsurance = liabilityInsurance*0.2 
-            businessTatal += responsibilityInsurance
+            responsibilityInsurance = (liabilityInsurance*0.2).toFixed(0)
+            businessTatal += Number(responsibilityInsurance)
             break
           case '车上人员责任险':
             let personnelCarRate = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.personnelCarRate
                                                       : this.data.spuStandard.spuAboveSix.personnelCarRate
-            personnelCarInsurance = officialPrice*personnelCarRate 
-            businessTatal += personnelCarInsurance
+            personnelCarInsurance = (officialPrice*personnelCarRate).toFixed(0)
+            businessTatal += Number(personnelCarInsurance)
             break
           case '车身划痕险':
             let scratches = 0
@@ -598,7 +617,7 @@ Page({
               scratches = this.data.scratches[scratchesTypesIndex].three
             }
             scratchesInsurance = scratches 
-            businessTatal += scratchesInsurance
+            businessTatal += Number(scratchesInsurance.toFixed(0))
             break
           default:
 
@@ -615,17 +634,17 @@ Page({
     }
     console.log(totalAmount)
     that.setData({
-      'InsuranceDetail.businessTatal': businessTatal.toFixed(0),
-      'InsuranceDetail.liabilityInsurance': liabilityInsurance.toFixed(0),
-      'InsuranceDetail.vehicleLossInsurance': vehicleLossInsurance.toFixed(0),
-      'InsuranceDetail.vehicleDQInsurance': vehicleDQInsurance.toFixed(0),
-      'InsuranceDetail.glassBrokenInsurance': glassBrokenInsurance.toFixed(0),
-      'InsuranceDetail.gcombustionLossInsurance': gcombustionLossInsurance.toFixed(0),
-      'InsuranceDetail.franchiseInsurance': franchiseInsurance.toFixed(0),
-      'InsuranceDetail.responsibilityInsurance': responsibilityInsurance.toFixed(0),
-      'InsuranceDetail.personnelCarInsurance': personnelCarInsurance.toFixed(0),
-      'InsuranceDetail.scratchesInsurance': scratchesInsurance.toFixed(0),
-      'InsuranceDetail.insuranceTotal': totalAmount.toFixed(0),
+      'InsuranceDetail.businessTatal': businessTatal,
+      'InsuranceDetail.liabilityInsurance': liabilityInsurance,
+      'InsuranceDetail.vehicleLossInsurance': vehicleLossInsurance,
+      'InsuranceDetail.vehicleDQInsurance': vehicleDQInsurance,
+      'InsuranceDetail.glassBrokenInsurance': glassBrokenInsurance,
+      'InsuranceDetail.gcombustionLossInsurance': gcombustionLossInsurance,
+      'InsuranceDetail.franchiseInsurance': franchiseInsurance,
+      'InsuranceDetail.responsibilityInsurance': responsibilityInsurance,
+      'InsuranceDetail.personnelCarInsurance': personnelCarInsurance,
+      'InsuranceDetail.scratchesInsurance': scratchesInsurance,
+      'InsuranceDetail.insuranceTotal': totalAmount,
       ChangeInsuranceTotalStyle: '',
       saddleValue: standardIndex
     })

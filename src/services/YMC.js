@@ -156,7 +156,6 @@ export default class YMC {
     }).then(res=>{
 
       console.log('success')
-      console.log(res)
       const result = res.data
       const statusCode = res.statusCode
 
@@ -392,8 +391,9 @@ export default class YMC {
 
 
   /**
-   * //TODO：等1.5上线以后这里需要改成Promise的返回
-   * 用来替换requestByPromise
+   * //1.5.1该接口已完成内部返回promise对象 以下方法可以用来替换requestByPromise方法 开发阶段已测试
+   * TODO：等下一版本提测的时候给测试验证一下，就不在1.5.1提审了
+   *
    * request
    * @param options
    * url          加载的 url
@@ -403,33 +403,32 @@ export default class YMC {
    * success      成功回调sendMessagePromise
    * complete     完成回调
    */
-  requestPromise(options) {
-    if (!options) return
+  requestByPromise_new(options) {
+    if (!options) return null
 
-    let loadingType = options.loadingType
-
-    if (options.loadingType === 'navigation') {
-      console.log('显示导航栏加载')
-      wx.showNavigationBarLoading()
-    } else if (options.loadingType === 'none') {
-      // 不使用任何加载
-    } else {
-      wx.showToast({
-        title: '正在加载',
-        icon: 'loading',
-        duration: 10000,
-        mask: true
-      })
+    let clientId = ''
+    try {
+      // FIXME: 处理 clientId 使用同步获取相对较重
+      clientId = wx.getStorageSync('clientId')
+    } catch (e) {
+      console.error(e)
     }
 
-    wxapi.request({
+    const defaultHeader = {
+      'ClientId': clientId,
+      'ClientVersion': config.versionCode,
+      'SystemCode': '60',
+      'content-type': options.contentType || 'application/json'
+    }
+    const header = options.header || {}
+
+
+    return wxapi.request({
       url: options.url,
       data: options.data,
       header: Object.assign(defaultHeader, header),
-      method: options.method || 'GET'
+      method: options.method || 'GET',
     }).then(res=>{
-
-      console.log('success',res)
       const result = res.data
       const statusCode = res.statusCode
 
@@ -451,69 +450,41 @@ export default class YMC {
       if (statusCode < 399) {
         // 2XX, 3XX 成功
         const data = result.data || null
-        if(options.success && typeof(options.success) ==='function'){
-          options.success(data)
-        }
-
+        return data
       } else {
         // 4XX, 5XX 失败
-        // console.error(res)
+        console.error(res)
         let err
         if (typeof result === 'object') {
           // 旧版 ymcapi 接口中只能使用 error 中的 alertMessage 来处理额外行为
           // 服务端可以处理的错误
           const error = result.error || null
           const errorMessage = error.message || error.alertMessage
-          err = new Error(errorMessage)
-          if(options.fail && typeof(options.fail) ==='function'){
-            options.fail(err)
-            return
-          }
-          wxapi.showToast({
-            title: err.message,
-            icon: 'loading',
-            duration: 2000
-          });
-
+          throw new Error(errorMessage) //to -> fail
         } else {
-          err = new Error(result)
-          if(options.fail && typeof(options.fail) ==='function'){
-            options.fail(err)
-            return
-          }
-          wxapi.showToast({
-            title: err.message,
-            icon: 'loading',
-            duration: 2000
-          });
+          throw new Error(result) //to -> fail
         }
       }
     },fail=>{
-      console.log('fail',fail)
-      const error = new Error('网络请求错误');
-      if(options.fail && typeof(options.fail) ==='function'){
-        options.fail(error)
-        return
-      }
       wxapi.showToast({
-        title: error.message,//+options.url,
+        title: fail.message,//+options.url,
         icon: 'loading',
         duration: 2000
       });
+      console.log('fail',fail)
+      throw fail; //to -> fail
 
     }).catch(function (reason) {
       // 抛出一个全局错误
-      console.log('catch',reason)
-      if(options.fail && typeof(options.fail) ==='function'){
-        options.fail(reason)
-        return
-      }
       wxapi.showToast({
-        title: '系统异常',
+        title: reason.message ? reason.message : reason,
         icon: 'loading',
         duration: 2000
       });
-    }).finally(options.complete || function () {});
+      console.log('catch',reason)
+      throw reason //to -> fail
+    })
+    //.finally(function () {});
 
   }
 }

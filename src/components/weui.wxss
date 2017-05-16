@@ -1064,3 +1064,6 @@ icon {
 .weui-bc_font24{
   font-size:24rpx;
 }
+.weui-arrow-padding {
+  padding-right: 50rpx;
+}

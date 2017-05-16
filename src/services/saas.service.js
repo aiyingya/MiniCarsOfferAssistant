@@ -182,7 +182,7 @@ export default class SAASService extends Service {
         }
       }
       data.rateType = quotationDraft.rateType
-
+      data.marketPrice = quotationDraft.quotationItems[0].originalPrice
       data.insuranceDetail = quotationDraft.insuranceDetail
       let snsId
       if (this.userService.isLogin) {
@@ -542,9 +542,11 @@ export default class SAASService extends Service {
     }
    */
   getProfit(data,opts){
+    // sale/quotation/queryProfit?userId={用户id}&loanNum={贷款金额}&insuranceNum={保险金额}&carPrice={客户裸车价}&marketPrice={行情价}&boutiqueFee={精品费用}&loanServiceFee={贷款服务费}&installFee={安装费用}&otherFee={其他费用}
     this.sendMessage({
-      path: `/sale/quotation/queryProfit?userId=${data.userId}&loanNum=${data.loanNum}&insuranceNum=${data.insuranceNum}`,
+      path: 'sale/quotation/queryProfit',
       method: 'GET',
+      data:data,
       success: opts.success,
       fail: opts.fail
     })

@@ -77,17 +77,43 @@
             <view class="h-cell-gray">必要花费</view>
             <view class="weui-cells weui-cells_after-title ymc-cell-box">
                 <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                    <view class="weui-cell__bd">购置税、上牌费、车船税、保险等</view>
-                    <view class="weui-cell__ft">￥{{ quotation.requiredExpenses }} </view>
+                    <view class="weui-cell__bd">购置税</view>
+                    <view class="weui-cell__ft">￥{{ quotation.purchaseTax || 0 }} </view>
                 </view>
+              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">上牌费用</view>
+                <view class="weui-cell__ft">￥{{ quotation.carNumFee || 0}} </view>
+              </view>
+              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">车船税</view>
+                <view class="weui-cell__ft">￥{{ quotation.carTax || 0}} </view>
+              </view>
+              <view class="weui-cell weui-cell_access {{quotation.insuranceDetail.showDetail ? 'weui-arrow-padding':''}}" hover-class="weui-cell_active" bindtap="lookDetail">
+                <view class="weui-cell__bd">保险金额</view>
+                <view class="weui-cell__ft">￥{{(quotation.insuranceDetail && quotation.insuranceDetail.iTotal || 0)||0}}</view>
+                <image wx:if ="{{quotation.insuranceDetail.showDetail}}" class="icon_arrow" src="../../../images/icons/icon_arrow.png"></image>
+              </view>
+
             </view>
             <!--其他花费-->
             <view class="h-cell-gray">其他花费</view>
             <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                    <view class="weui-cell__bd">精品费、安装费等</view>
-                    <view class="weui-cell__ft">￥{{ quotation.otherExpenses }} </view>
-                </view>
+              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">精品费用</view>
+                <view class="weui-cell__ft">￥{{ quotation.boutiqueFee || 0}} </view>
+              </view>
+              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">安装费</view>
+                <view class="weui-cell__ft">￥{{ quotation.installFee || 0}} </view>
+              </view>
+              <view wx:if="{{quotation.hasLoan}}" class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">金融服务费</view>
+                <view class="weui-cell__ft">￥{{ quotation.serviceFee || 0}} </view>
+              </view>
+              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">精品费用</view>
+                <view class="weui-cell__ft">￥{{ quotation.otherFee || 0}} </view>
+              </view>
             </view>
             <!--备   注-->
             <view class="h-cell-gray">备注</view>
