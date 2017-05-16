@@ -765,6 +765,7 @@ Page({
   handlerExpensesChange(e) {
     let that = this
     var expensesInfo = e.currentTarget.dataset.feetype
+    var curPrice = e.currentTarget.dataset.price
 
     let requiredExpenses = this.data.quotation.requiredExpenses
 
@@ -805,7 +806,7 @@ Page({
       $wuxInputNumberDialog.open({
         title: expensesInfo.title,
         content: expensesInfo.title,
-        inputNumber: (expensesInfo.price || expensesInfo.price === 0) ? expensesInfo.price : "",
+        inputNumber: (curPrice || curPrice === 0) ? curPrice : "",
         inputNumberPlaceholder: '输入'+expensesInfo.title,
         inputNumberMaxLength: 9,
         confirmText: '确定',
