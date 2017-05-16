@@ -12,7 +12,8 @@
     "pages/usersQuote/usersQuote",
     "pages/supplier/supplier",
     "pages/setCost/setCost",
-    "pages/insurance/insurance"
+    "pages/insurance/insurance",
+    "pages/insurance/insuranceDetail/insuranceDetail"
   ],
   "window": {
     "backgroundTextStyle": "dark",
@@ -29,7 +30,7 @@
         "iconPath": "images/icons/tab_icon_home_off.png",
         "selectedIconPath": "images/icons/tab_icon_home_on.png",
         "text": "首页"
-      },      
+      },
       {
         "pagePath": "pages/carList/carList",
         "iconPath": "images/icons/tab_icon_findcar_off.png",

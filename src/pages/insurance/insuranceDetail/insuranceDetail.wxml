@@ -1,0 +1,92 @@
+<view class="container insurance-detail">
+  <view class="insurance-rental">
+    <view class="label">保险总金额   ￥{{insuranceDetail.iTotal}}</view>
+  </view>
+  <view class="title">
+    <view class="label">交强险</view>
+    <view class="value">￥{{insuranceDetail.iJQX}}</view>
+  </view>
+
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell-detail  weui-cell_access">
+      <view class="weui-cell__bd">规格</view>
+      <view class="weui-cell__ft ">
+        <block>
+          {{insuranceDetail.carSize === 0 ? '家用6座以下' : '家用6座以上'}}
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <view class="title" wx:if="{{otherSumAmount}}">
+    <view class="label">商业险</view>
+    <view class="value">￥{{otherSumAmount}}</view>
+  </view>
+
+  <view class="bom-line">
+
+  <view class="weui-cells weui-cells_after-title" >
+    <view class="weui-cell-detail  weui-cell_access" wx:if="{{insuranceDetail.iDSZZRX}}">
+      <view class="weui-cell__bd">第三方责任险</view>
+      <view class="weui-cell__ft ">
+          ￥{{insuranceDetail.iDSZZRX}}
+      </view>
+    </view>
+    <view class="weui-cell-detail  weui-cell_access" wx:if="{{insuranceDetail.iCLSSX}}">
+      <view class="weui-cell__bd">车辆损失险</view>
+      <view class="weui-cell__ft ">
+        ￥{{insuranceDetail.iCLSSX}}
+      </view>
+    </view>
+
+    <view class="weui-cell-detail  weui-cell_access" wx:if="{{insuranceDetail.iQCDQX}}">
+      <view class="weui-cell__bd">全车盗抢险</view>
+      <view class="weui-cell__ft ">
+        ￥{{insuranceDetail.iQCDQX}}
+      </view>
+    </view>
+
+    <view class="weui-cell-detail  weui-cell_access" wx:if="{{insuranceDetail.iBLDDPSX}}">
+      <view class="weui-cell__bd">玻璃单独破碎险</view>
+      <view class="weui-cell__ft ">
+        ￥{{insuranceDetail.iBLDDPSX}}
+      </view>
+    </view>
+
+    <view class="weui-cell-detail  weui-cell_access" wx:if="{{insuranceDetail.iZRSSX}}">
+      <view class="weui-cell__bd">自然损失险</view>
+      <view class="weui-cell__ft ">
+        ￥{{insuranceDetail.iZRSSX}}
+      </view>
+    </view>
+
+    <view class="weui-cell-detail  weui-cell_access" wx:if="{{insuranceDetail.iBJMPTYX}}">
+      <view class="weui-cell__bd">不计免赔特约险</view>
+      <view class="weui-cell__ft ">
+        ￥{{insuranceDetail.iBJMPTYX}}
+      </view>
+    </view>
+    <view class="weui-cell-detail  weui-cell_access" wx:if="{{insuranceDetail.iWGZRX}}">
+      <view class="weui-cell__bd">无过责任险</view>
+      <view class="weui-cell__ft ">
+        ￥{{insuranceDetail.iWGZRX}}
+      </view>
+    </view>
+    <view class="weui-cell-detail  weui-cell_access" wx:if="{{insuranceDetail.iCSRYZRX}}">
+      <view class="weui-cell__bd">车上人员责任险</view>
+      <view class="weui-cell__ft ">
+        ￥{{insuranceDetail.iCSRYZRX}}
+      </view>
+    </view>
+    <view class="weui-cell-detail  weui-cell_access" wx:if="{{insuranceDetail.iCSHHX}}">
+      <view class="weui-cell__bd">车身划痕险</view>
+      <view class="weui-cell__ft ">
+        ￥{{insuranceDetail.iCSHHX}}
+      </view>
+    </view>
+  </view>
+  </view>
+
+
+
+</view>

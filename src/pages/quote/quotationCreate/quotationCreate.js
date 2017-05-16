@@ -50,16 +50,16 @@ Page({
       },
       insuranceDetail:{
         "iTotal":0,//"保险总额",
-        "iJQX":1,//"交强险",
-        "iDSZZRX":1,//"第三者责任险",
-        "iCLSSX":1,//"车辆损失险",
-        "iQCDQX":1,//"全车盗抢险",
-        "iBLDDPSX":1,//"玻璃单独破碎险",
-        "iZRSSX":1,//"自燃损失险",
-        "iBJMPTYX":1,//"不计免赔特约险",
-        "iWGZRX":1,//"无过责任险",
-        "iCSRYZRX":1,//"车上人员责任险",
-        "iCSHHX":1,//"车身划痕险"
+        "iJQX":0,//"交强险",
+        "iDSZZRX":0,//"第三者责任险",
+        "iCLSSX":0,//"车辆损失险",
+        "iQCDQX":0,//"全车盗抢险",
+        "iBLDDPSX":0,//"玻璃单独破碎险",
+        "iZRSSX":0,//"自燃损失险",
+        "iBJMPTYX":0,//"不计免赔特约险",
+        "iWGZRX":0,//"无过责任险",
+        "iCSRYZRX":0,//"车上人员责任险",
+        "iCSHHX":0,//"车身划痕险"
         "carSize":0,//"车辆规格"
         "iDSZZRX_INDEX":1,
         "iBLDDPSX_INDEX":0,
@@ -80,7 +80,8 @@ Page({
       "twoWYXS":0.5,//"二年期万元系数",
       "threeWYXS": 0.5,//"三年期万元系数",
       "interestType":1,//"默认选中的贷款方式 1 月息 2 万元系数"
-      "carNumberFee":'200'//"上牌服务费"
+      "carNumberFee":'200',//"上牌服务费"
+      "loanFee":0 //贷款服务费
     },
     expensesAllInfo:[
       {
@@ -128,7 +129,7 @@ Page({
       {
         type:'otherfee',
         target:'serverFee',
-        title:'服务费',
+        title:'金融服务费',
         protoname:'quotation.otherExpensesAll.serverFee',
         price:0//同上
       },//安装费 其它 临时脑补的费用
@@ -278,7 +279,8 @@ Page({
       this.setData({
         'quotation': quotation,
         'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice,
-        'carModelsInfo.sellingPrice': quotation.carPrice
+        'carModelsInfo.sellingPrice': quotation.carPrice,
+        'quotation.quotationItems[0].originalPrice':quotation.marketPrice
       })
 
       //获取报价单接口
@@ -292,6 +294,9 @@ Page({
           res.interestType = quotation.rateType;
           that.setData({
             'requestResult': res
+          })
+          this.setData({
+            'quotation.otherExpensesAll.serverFee':res.loanFee
           })
 
           that.updateForSomeReason()
@@ -359,8 +364,10 @@ Page({
             let sellingPrice = res.carPrice;
             const capacity = carModelInfo.capacity
             const isElectricCar = carModelInfo.isElectricCar
+            const loanFee = res.loanFee
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
+              'quotation.otherExpensesAll.serverFee':res.loanFee,
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
@@ -373,9 +380,9 @@ Page({
               itemPic: itemPic,
               specifications: specifications,
               guidePrice: guidePrice,
-              sellingPrice: sellingPrice,
+              sellingPrice: Math.floor(sellingPrice),
               originalPrice: originalPrice,
-              baseSellingPrice: sellingPrice
+              baseSellingPrice: Math.floor(sellingPrice)
             }]
             carModelInfo.sellingPrice = sellingPrice
             this.setData({
@@ -401,8 +408,6 @@ Page({
             activeIndexCss()
             this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
 
-
-
           },
           fail: () => {},
           complete: () => {}
@@ -421,23 +426,23 @@ Page({
       this.setData({
         isOnLoad: false
       })
-      return;
+      return
     }
 
     const _insurances = wx.getStorageSync("insurancesAll")? JSON.parse(wx.getStorageSync("insurancesAll")):null
 
     let insuranceDetail = {
       "iTotal":0,//"保险总额",
-      "iJQX":1,//"交强险",
-      "iDSZZRX":1,//"第三者责任险",
-      "iCLSSX":1,//"车辆损失险",
-      "iQCDQX":1,//"全车盗抢险",
-      "iBLDDPSX":1,//"玻璃单独破碎险",
-      "iZRSSX":1,//"自燃损失险",
-      "iBJMPTYX":1,//"不计免赔特约险",
-      "iWGZRX":1,//"无过责任险",
-      "iCSRYZRX":1,//"车上人员责任险",
-      "iCSHHX":1,//"车身划痕险"
+      "iJQX":0,//"交强险",
+      "iDSZZRX":0,//"第三者责任险",
+      "iCLSSX":0,//"车辆损失险",
+      "iQCDQX":0,//"全车盗抢险",
+      "iBLDDPSX":0,//"玻璃单独破碎险",
+      "iZRSSX":0,//"自燃损失险",
+      "iBJMPTYX":0,//"不计免赔特约险",
+      "iWGZRX":0,//"无过责任险",
+      "iCSRYZRX":0,//"车上人员责任险",
+      "iCSHHX":0,//"车身划痕险"
       "carSize":0,//"车辆规格"
       "iDSZZRX_INDEX":1,
       "iBLDDPSX_INDEX":0,
@@ -615,7 +620,7 @@ Page({
     this.updateForSomeReason()
   },
   setExpenseRate(year){
-    const isMonth = this.data.requestResult.interestType;
+    const isMonth = (this.data.requestResult.interestType ===1);
     var expenseRate = this.data.quotation.expenseRate;
     const rateObj= this.data.requestResult;
     switch (year){
@@ -650,7 +655,7 @@ Page({
    let con = that.data.requestResult.interestType===1 ? '月息（厘）':'万元系数（元）';
     that.hideInput()
     $wuxInputNumberDialog.open({
-      title: '贷款月息或万元系',
+      title: '贷款月息或万元系数',
       content: con,
       inputNumber: this.data.quotation.expenseRate,
       inputNumberPlaceholder: '输入贷款年利率',
@@ -658,8 +663,8 @@ Page({
       confirmText: '确定',
       cancelText: '取消',
       validate: (e) => {
-        if (e.detail.value > 0) {
-          return true
+        if (e.detail.value >= 0 && e.detail.value!="") {
+            return true
         } else {
           return false
         }
@@ -673,7 +678,11 @@ Page({
         that.showInput()
 
       },
-      cancel: () => {    that.showInput()
+      cancel: () => {
+        that.showInput()
+      },
+      close: () => {
+        that.showInput()
       }
     })
   },
@@ -681,11 +690,13 @@ Page({
     let that = this
 
     const _guidePrice = Number(this.data.quotation.quotationItems[0].guidePrice)
-    const _baseSellingPrice = Number(this.data.quotation.quotationItems[0].baseSellingPrice)
+    const _sellingPrice = Number(this.data.quotation.quotationItems[0].sellingPrice)
     const _diffPrice = Number(that.data.diffPrice) //指导价差价
+    const _isPoint = that.data.isSpecialBranch
+    const _hasInitPoint =that.data.initPoint
+    const _initSellingPrice = that.data.initSellingPrice
     let _inputT
-
-    if(that.data.isSpecialBranch){
+    if(_isPoint){
       //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
       _inputT = that.data.priceChange.point
     }else{
@@ -696,27 +707,29 @@ Page({
     $wuxInputNumberDialog.open({
       title: '裸车价',
       inputNumber: _inputT,
-      content: "￥" + _baseSellingPrice,
+      content: "￥" + _sellingPrice,
       inputNumberPlaceholder: '输入裸车价',
       inputNumberMaxLength: 9,
       confirmText: '确定',
       cancelText: '取消',
       priceStyle: true,
-      upText: (_diffPrice > 0) ? '上':'下',
-      isDot:that.data.isSpecialBranch,
+      params:{
+        sellingPrice : _sellingPrice,
+        initSellingPrice : _initSellingPrice,
+        initIsPlus:(_diffPrice > 0),
+        isPlus :(_diffPrice > 0),
+        isPoint:_isPoint,
+        hasInitPoint:_hasInitPoint,
+        guidePrice:_guidePrice
+      },
       confirm: (res) => {
-        let _inputNumber =  (_diffPrice > 0) ? Number(res.inputNumber) : Number(-Number(res.inputNumber))
+        let _isPlus = (res.isPlus === 'true' )
+
         let price
-
-        if(that.data.isSpecialBranch){
-          if(Number(that.data.initPoint) === Math.abs(_inputNumber)){
-            price = that.data.initSellingPrice
-          }else{
-            price = util.carPrice(_inputNumber,_guidePrice)
-          }
-
+        if(_isPoint && (initIsPlus === _isPlus)  && (Number(_hasInitPoint) === Number(res.inputNumber))){
+          price = _initSellingPrice
         }else{
-          price = Math.floor(_guidePrice + _inputNumber)
+          price = util.getChangeCarPrice(_isPlus,_isPoint,_guidePrice,res.inputNumber)
         }
 
         const isElectricCar = this.data.carModelInfo.isElectricCar
@@ -736,6 +749,9 @@ Page({
 
       },
       cancel: () => {
+        that.showInput()
+      },
+      close: () => {
         that.showInput()
       }
     })
@@ -788,6 +804,13 @@ Page({
         inputNumberMaxLength: 9,
         confirmText: '确定',
         cancelText: '取消',
+        validate: (e) => {
+          if (e.detail.value >= 0 && e.detail.value!="") {
+            return true
+          } else {
+            return false
+          }
+        },
         confirm: (res) => {
           let price = Number(res.inputNumber)
           //这里如何写入插值变量
@@ -798,7 +821,11 @@ Page({
           that.showInput()
 
         },
-        cancel: () => {that.showInput()}
+        cancel: () => {that.showInput()},
+        close: () => {
+          that.showInput()
+        }
+
       })
     }
   },
@@ -814,6 +841,12 @@ Page({
     quotation = Object.assign({}, quotation, that.data.quotation)
 
     quotation.rateType= that.data.requestResult.interestType
+
+    if(that.data.activeIndex == 1){
+      //全款没有金融服务费
+      quotation.otherExpensesAll.serverFee =0
+    }
+
     function isSendRequest (quotationDraft,mobile,name,sex) {
 
       app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile ,{
@@ -912,6 +945,9 @@ Page({
         })
         that.showInput()
 
+      },
+      close: () => {
+        that.showInput()
       }
     })
   },
@@ -936,11 +972,12 @@ Page({
           'quotation.quotationItems[0].specifications': externalColorName + '/' + internalColorName
         })
         that.showInput()
-
       },
       cancel: () => {
         that.showInput()
-
+      },
+      close: () => {
+        that.showInput()
       }
     })
   },
@@ -1000,38 +1037,52 @@ Page({
     app.saasService.getProfit({
       "userId": user.auth.userId,
       "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
-      "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount
+      "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount,
+      "carPrice":carPrice,
+      "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
+      "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
+      "loanServiceFee":that.data.quotation.otherExpensesAll.serverFee,
+      "installFee":that.data.quotation.otherExpensesAll.installationFee,
+      "otherFee":that.data.quotation.otherExpensesAll.otherFee
     },
      {
        success: (res) => {
          console.log("已经有收益结果")
          //设计搞与原型搞上无全款显示效果，临时脑补判断条件与显示画面...
 
-         if(this.isLoanTabActive()){
+         let _totle
+         let _detailContent =[]
+         _detailContent.push({
+           name:'裸车价收益约',value:'￥'+ res.profit
+         },{name:'保险收益约',value:'￥'+res.insuranceProfit})
+
+
+         if(this.isLoanTabActive()) {
            //贷款
-           $wuxContentDialog.open({
-             title: '收益详情',
-             totleContent: {name:'总利润约',value:'￥'+res.totalProfit},
-             detailContent: [
-               {name:'裸车价收益约',value:'￥'+ res.profit},
-               {name:'保险收益约',value:'￥'+res.insuranceProfit},
-               {name:'贷款收益约',value:'￥'+res.loanProfit}
-             ],
-             close: () => {
-               that.showInput()
-             }
-           })
-           return
+           _detailContent.push({name: '贷款收益约', value: '￥' + res.loanProfit})
+           _totle = res.totalProfit
+         }else{
+           //全款
+           _detailContent.push({name: '贷款收益约', value: '￥0'})
+           _totle = (Number(res.totalProfit) - Number(res.loanProfit))
          }
-          //贷款
+
+         if(res.boutiqueFee){
+           _detailContent.push({name: '精品收益约', value: '￥' + res.boutiqueFee})
+
+         }
+         if(res.installFee){
+           _detailContent.push({name: '安装收益约', value: '￥' + res.installFee})
+
+         }
+         if(res.otherFee){
+           _detailContent.push({name: '其它收益约', value: '￥' + res.otherFee})
+         }
+
          $wuxContentDialog.open({
            title: '收益详情',
-           totleContent: {name:'总利润约',value:'￥'+(Number(res.totalProfit) - Number(res.loanProfit))},
-           detailContent: [
-             {name:'裸车价收益约',value:'￥'+ res.profit},
-             {name:'保险收益约',value:'￥'+res.insuranceProfit},
-             {name:'贷款收益约',value:'￥0'}
-           ],
+           totleContent: {name:'总利润约',value:'￥'+_totle},
+           detailContent: _detailContent,
            close: () => {
              that.showInput()
            }
@@ -1221,15 +1272,15 @@ Page({
     let insuranceDetail = {
       "iTotal":0,//"保险总额",
       "iJQX":trafficInsurance,//"交强险",
-      "iDSZZRX":1,//"第三者责任险", 1
-      "iCLSSX":1,//"车辆损失险",1
-      "iQCDQX":1,//"全车盗抢险",1
-      "iBLDDPSX":1,//"玻璃单独破碎险",1
-      "iZRSSX":1,//"自燃损失险",1
-      "iBJMPTYX":1,//"不计免赔特约险",1
-      "iWGZRX":1,//"无过责任险",1
-      "iCSRYZRX":1,//"车上人员责任险",1
-      "iCSHHX":1,//"车身划痕险"1
+      "iDSZZRX":0,//"第三者责任险", 1
+      "iCLSSX":0,//"车辆损失险",1
+      "iQCDQX":0,//"全车盗抢险",1
+      "iBLDDPSX":0,//"玻璃单独破碎险",1
+      "iZRSSX":0,//"自燃损失险",1
+      "iBJMPTYX":0,//"不计免赔特约险",1
+      "iWGZRX":0,//"无过责任险",1
+      "iCSRYZRX":0,//"车上人员责任险",1
+      "iCSHHX":0,//"车身划痕险"1
       "carSize":standardIndex,//"车辆规格"
       "iDSZZRX_INDEX":1,
       "iBLDDPSX_INDEX":0,
@@ -1246,44 +1297,44 @@ Page({
           case '车辆损失险':
             let basis = standardIndex == 0 ? 539 : 646
             vehicleLossInsurance = basis + officialPrice*0.0128
-            businessTatal += vehicleLossInsurance
+            businessTatal += Number(vehicleLossInsurance.toFixed(0))
             insuranceDetail.iCLSSX = vehicleLossInsurance.toFixed(0)
             break
           case '全车盗抢险':
             let basisPremium = standardIndex == 0 ? 120 : 140
             let ratePremium = standardIndex == 0 ? 0.0049 : 0.0044
             vehicleDQInsurance = basisPremium + officialPrice*ratePremium
-            businessTatal += vehicleDQInsurance
+            businessTatal += Number(vehicleDQInsurance.toFixed(0))
             insuranceDetail.iQCDQX = vehicleDQInsurance.toFixed(0)
             break
           case '玻璃单独破碎险':
             let glassBrokenRate = 0.002
             glassBrokenInsurance = officialPrice*glassBrokenRate
-            businessTatal += glassBrokenInsurance
+            businessTatal += Number(glassBrokenInsurance.toFixed(0))
             insuranceDetail.iBLDDPSX = glassBrokenInsurance.toFixed(0)
             break
           case '自燃损失险':
             gcombustionLossInsurance = officialPrice*0.0015
-            businessTatal += gcombustionLossInsurance
+            businessTatal += Number(gcombustionLossInsurance.toFixed(0))
             insuranceDetail.iZRSSX = gcombustionLossInsurance.toFixed(0)
             break
           case '不计免赔特约险':
             if(liabilityInsurance > 0 && vehicleLossInsurance > 0) {
               franchiseInsurance = liabilityInsurance*0.2 + vehicleLossInsurance*0.2
-              businessTatal += franchiseInsurance
+              businessTatal += Number(franchiseInsurance.toFixed(0))
               insuranceDetail.iBJMPTYX = franchiseInsurance.toFixed(0)
             }
 
             break
           case '无过责任险':
             responsibilityInsurance = liabilityInsurance*0.2
-            businessTatal += responsibilityInsurance
+            businessTatal += Number(responsibilityInsurance.toFixed(0))
             insuranceDetail.iWGZRX = responsibilityInsurance.toFixed(0)
             break
           case '车上人员责任险':
             let personnelCarRate = standardIndex == 0 ? 0.0069 : 0.0066
             personnelCarInsurance = officialPrice*personnelCarRate
-            businessTatal += personnelCarInsurance
+            businessTatal += Number(personnelCarInsurance.toFixed(0))
             insuranceDetail.iCSRYZRX = personnelCarInsurance.toFixed(0)
 
             break

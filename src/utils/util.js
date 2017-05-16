@@ -1,5 +1,6 @@
 import config from '../config'
 
+
 export default class Util {
 
   static formatTime(date) {
@@ -103,14 +104,14 @@ export default class Util {
 
   /**
    * 购置税
-   * larry：购置税有一个逻辑需要加一下，排量1.6（含）及以上的车型购置税不变，1.6以下的购置税*0.75
+   * larry：购置税有一个逻辑需要加一下，排量1.6及以上的车型购置税不变，1.6（含）以下的购置税*0.75
    * 车价
    * 排量
    */
   static purchaseTax(carPrice,capacity) {
     const  price = Number(carPrice/1.17*0.1);
     if(capacity){
-      return (Number(capacity) < 1.6 ) ? (price*0.75) : price
+      return (Number(capacity) > 1.6 ) ? price : (price*0.75)
     }
     return price
 
@@ -293,6 +294,25 @@ export default class Util {
     } else {
       return new Date()
     }
+  }
+
+  /***
+   * 获取加价／减价 加点／减点之后裸车价的金额
+   * @param isPlus  ／OrDown     是加价  否减价  裸车价-指导价
+   * @param isPoint  ／OrPrice  是加点   否减点
+   * @param guidePrice  指导价金额
+   * @param contentNum   要变更的金额
+   * @return {number}
+   */
+  static getChangeCarPrice(isPlus, isPoint,guidePrice,contentNum) {
+    let _contentNum =  isPlus ? Number(contentNum) : Number(-Number(contentNum))
+    let price
+    if(isPoint){
+        price = Util.carPrice(_contentNum,guidePrice)
+    }else{
+      price = Math.floor(guidePrice + _contentNum)
+    }
+    return price
   }
 
   /**

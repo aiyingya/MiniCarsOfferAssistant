@@ -1,6 +1,6 @@
 
 import Component from '../component'
-
+import util from '../../utils/util'
 export default {
   /**
    * 默认参数
@@ -15,8 +15,15 @@ export default {
       inputType: 'number',
       confirmDisabled: true,
       priceStyle: false,
-      upText:"下",//是否是加价
-      isDot:true //是否是点 要么是元
+      params:{
+        ellingPrice : 0,
+        initSellingPrice : 0,
+        initIsPlus:false,//初始化的加减
+        isPlus :false,
+        isPoint:false,
+        hasInitPoint:0,
+        guidePrice:0
+      }
     }
   },
   /**
@@ -95,6 +102,20 @@ export default {
           this.setData({
             [`${this.options.scope}.confirmDisabled`]: disabled
           })
+
+          if(options.priceStyle){
+            const _isPlus = options.params.isPlus
+            let price
+            if(options.params.isPoint && (options.params.initIsPlus === _isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+              price = options.params.initSellingPrice
+            }else{
+              price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+            }
+            this.setData({
+              [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
+            })
+          }
+
         },
         /**
          * 确认行为
@@ -113,6 +134,9 @@ export default {
         cancel(e) {
           this.hide(options.cancel())
         },
+        close(){
+          this.hide(options.close())
+        },
         /**
          * 减金额行为
          *
@@ -124,15 +148,22 @@ export default {
             return
           }
           let text
-          if(!options.isDot){
+          if(!options.params.isPoint){
             options.inputNumber = (Number(number)>=100) ? (Number(number) - 100) : number
             text = Number(options.inputNumber)
           }else{
             options.inputNumber = (Number(number)>=1) ? (Number(number) - 1) : number
             text = Number(options.inputNumber).toFixed(2)
           }
+          let price
+          if(options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+            price = options.params.initSellingPrice
+          }else{
+            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          }
           this.setData({
-            [`${this.options.scope}.inputNumber`]: text
+            [`${this.options.scope}.inputNumber`]: text,
+            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
           })
           this.inputNumberInput(options.inputNumber)
         },
@@ -147,17 +178,46 @@ export default {
             return
           }
           let text
-          if(!options.isDot){
+          if(!options.params.isPoint){
             options.inputNumber = Number(number) + 100
             text = Number(options.inputNumber)
           }else{
             options.inputNumber = Number(number) + 1
             text = Number(options.inputNumber).toFixed(2)
           }
+          let price
+          if(options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+            price = options.params.initSellingPrice
+          }else{
+            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          }
           this.setData({
-            [`${this.options.scope}.inputNumber`]: text
+            [`${this.options.scope}.inputNumber`]: text,
+            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
           })
           this.inputNumberInput(options.inputNumber)
+        },
+        changePush(){
+          const _isPlus = options.params.isPlus
+          options.params.isPlus =!_isPlus
+
+
+          let price
+          if(options.params.isPoint && (options.params.initIsPlus === _isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+            price = options.params.initSellingPrice
+          }else{
+            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          }
+          this.setData({
+            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
+          })
+
+          this.setData({
+            [`${this.options.scope}.params.isPlus`]: !_isPlus
+          })
+          this.setData({
+            [`${this.options.scope}.confirmDisabled`]: false
+          })
         }
       }
     })
