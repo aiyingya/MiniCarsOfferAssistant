@@ -295,9 +295,12 @@ Page({
           that.setData({
             'requestResult': res
           })
-          this.setData({
-            'quotation.otherExpensesAll.serverFee':res.loanFee
-          })
+          if(!quotation.hasLoan){
+            this.setData({
+              'quotation.otherExpensesAll.serverFee':res.loanFee
+            })
+          }
+
 
           that.updateForSomeReason()
           activeIndexCss()
