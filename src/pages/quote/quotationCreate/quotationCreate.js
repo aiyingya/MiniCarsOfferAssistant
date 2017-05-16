@@ -735,7 +735,7 @@ Page({
         let _isPlus = (res.isPlus === 'true' )
 
         let price
-        if(_isPoint && (initIsPlus === _isPlus)  && (Number(_hasInitPoint) === Number(res.inputNumber))){
+        if(_isPoint && ((_diffPrice > 0) === _isPlus)  && (Number(_hasInitPoint) === Number(res.inputNumber))){
           price = _initSellingPrice
         }else{
           price = util.getChangeCarPrice(_isPlus,_isPoint,_guidePrice,res.inputNumber)
@@ -1278,7 +1278,7 @@ Page({
     let personnelCarInsurance = 0
     // 车身划痕险
     let scratchesInsurance = 0
-    
+
     let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
 
     let insuranceDetail = {
@@ -1380,14 +1380,14 @@ Page({
       }
     }
     insuranceDetail.iTotal = totalAmount
-    
+
     if(insurancesAll !== null) {
-      
+
       insurancesAll.insuranceTotal = totalAmount
       try {
         wx.setStorageSync('insurancesAll', JSON.stringify(insurancesAll))
         console.log(insurancesAll)
-      } catch (e) { 
+      } catch (e) {
 
       }
     }
