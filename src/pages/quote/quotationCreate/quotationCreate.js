@@ -805,7 +805,7 @@ Page({
       $wuxInputNumberDialog.open({
         title: expensesInfo.title,
         content: expensesInfo.title,
-        inputNumber: expensesInfo.price ? expensesInfo.price : "",
+        inputNumber: (expensesInfo.price || expensesInfo.price === 0) ? expensesInfo.price : "",
         inputNumberPlaceholder: '输入'+expensesInfo.title,
         inputNumberMaxLength: 9,
         confirmText: '确定',
