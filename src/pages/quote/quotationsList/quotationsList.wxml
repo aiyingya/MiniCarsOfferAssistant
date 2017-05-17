@@ -8,58 +8,70 @@
 			</view>
 		</view>
 		<view wx:else class="viewCarsList-wrap">
-			<view class="weui-cells_in-small-appmsg">
-				<view class="quotation-list weui-cells"
-					  hover-class="weui-cell_active"
-					  wx:for="{{quotationsList}}"
-					  wx:for-item="cell"
-					  wx:for-index="cellIndex"
-					  data-quotation="{{cell}}"
-					  bindtap="handlerSelectQuotation"
-				>
-					<view class="weui-cell quotation-item-hd">
-						<view class="weui-cell__bd quotation-title">{{ cell.quotationItems[0].itemName }}</view>
-						<view class="weui-cell__ft quotation-price">
-							<view class="red-price">{{ cell.viewModel.totalPayment }}</view>
-						</view>
-					</view>
-					<view class="quotation-msg">
-						<view class="line-box">指导价{{ cell.viewModel.guidePrice }}</view>
-						<view class="line-box min-font-gray">裸车价{{ cell.viewModel.sellingPrice }}</view>
-						<view class="line-box">
-							<view class="depreciate-wrap">
-								<image
-										wx:if="{{ cell.viewModel.priceChange.flag === 1 }}"
-										class="depreciate-icon"
-										src="../../../images/icons/icon_price_down.png"
-								></image>
-								<image
-										wx:if="{{ cell.viewModel.priceChange.flag === -1}}"
-										class="depreciate-icon"
-										src="../../../images/icons/icon_price_up.png"
-								></image>
-								<view
-                    wx:if="{{ cell.viewModel.priceChange.flag !== 0 }}"
-                    class="depreciate"
-                >
-                  {{ cell.viewModel.priceChange.price }}元
-                </view>
-							</view>
-						</view>
-					</view>
-					<view class="weui-cell quotation-submsg">
-						<view class="weui-cell__bd min-font-gray">
-						  客户手机:{{ cell.customerMobile }}/{{cell.customerName}}
-						  <block wx:if="{{cell.customerSex == 1}}">先生</block>
-						  <block wx:if="{{cell.customerSex == 0}}">女士</block>
-						</view>
-						<view wx:if="{{ cell.customerMobile.length }}">
-							<view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.read}}">用户已查看</view>
-							<view class="weui-cell__ft text-right min-font-gray" wx:else>用户未查看</view>
-						</view>
-					</view>
-				</view>
-			</view>
+		  <view 
+        class="record-cell"
+        wx:for="{{quotationsList}}"
+        wx:for-item="cell"
+        wx:for-index="cellIndex"
+        >
+        <view 
+          class="quotation-list weui-cells"
+          hover-class="weui-cell_active"
+          hover="true"
+          data-quotation="{{cell}}"
+          bindtap="handlerSelectQuotation"
+          bindtouchstart = "handletouchtart" 
+          bindtouchmove="handletouchmove"
+          bindtouchend="handletouchend"
+          bindtouchcancel="handletouchcancel"
+          style="{{cell.Style}}"
+				  data-index="{{cellIndex}}"
+          >
+          <view class="weui-cell quotation-item-hd">
+            <view class="weui-cell__bd quotation-title">{{ cell.quotationItems[0].itemName }}</view>
+            <view class="weui-cell__ft quotation-price">
+              <view class="red-price">{{ cell.viewModel.totalPayment }}</view>
+            </view>
+          </view>
+          <view class="quotation-msg">
+            <view class="line-box">指导价{{ cell.viewModel.guidePrice }}</view>
+            <view class="line-box min-font-gray">裸车价{{ cell.viewModel.sellingPrice }}</view>
+            <view class="line-box icon-line">
+              <image
+                  wx:if="{{ cell.viewModel.priceChange.flag === 1 }}"
+                  class="depreciate-icon"
+                  src="../../../images/icons/icon_price_down.png"
+              ></image>
+              <image
+                  wx:if="{{ cell.viewModel.priceChange.flag === -1}}"
+                  class="depreciate-icon"
+                  src="../../../images/icons/icon_price_up.png"
+              ></image>
+              <view
+                  wx:if="{{ cell.viewModel.priceChange.flag !== 0 }}"
+                  class="depreciate"
+              >
+                {{ cell.viewModel.priceChange.price }}元
+              </view>
+            </view>
+          </view>
+          <view class="weui-cell quotation-submsg">
+            <view class="weui-cell__bd min-font-gray">
+              客户手机:{{ cell.customerMobile }}/{{cell.customerName}}
+              <block wx:if="{{cell.customerSex == 1}}">先生</block>
+              <block wx:if="{{cell.customerSex == 0}}">女士</block>
+            </view>
+            <view wx:if="{{ cell.customerMobile.length }}">
+              <view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.read}}">用户已查看</view>
+              <view class="weui-cell__ft text-right min-font-gray" wx:else>用户未查看</view>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 删除.-->
+				<view class="cancel-attention">删除</view>
+		  </view>
+			
 		</view>
 	</view>
 </view>
