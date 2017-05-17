@@ -111,7 +111,7 @@
                 <view class="weui-cell__ft">￥{{ quotation.serviceFee || 0}} </view>
               </view>
               <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <view class="weui-cell__bd">精品费用</view>
+                <view class="weui-cell__bd">其它</view>
                 <view class="weui-cell__ft">￥{{ quotation.otherFee || 0}} </view>
               </view>
             </view>
