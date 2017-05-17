@@ -5,7 +5,7 @@
     <view class="value">
       <input
         value="{{InsuranceDetail.insuranceTotal}}"
-        type="text"
+        type="digit"
         placeholder="保险总额"
         confirm-type="done"
         bindinput="handleChangeInsuranceTotal"

@@ -295,9 +295,12 @@ Page({
           that.setData({
             'requestResult': res
           })
-          this.setData({
-            'quotation.otherExpensesAll.serverFee':res.loanFee
-          })
+          if(!quotation.hasLoan){
+            this.setData({
+              'quotation.otherExpensesAll.serverFee':res.loanFee
+            })
+          }
+
 
           that.updateForSomeReason()
           activeIndexCss()
@@ -508,7 +511,7 @@ Page({
       'quotation.requiredExpensesAll.insuranceAmount': _insurances.insuranceTotal
     })
     this.insuranceUpdate(_insurances.insuranceTotal)//保险金额修改
-
+    this.updateForSomeReason()
   },
   onHide() {},
   onUnload() {
@@ -532,14 +535,19 @@ Page({
     this.utilsExpensesAllInfo()
 
     let requiredExpenses = 0
+    let otherExpenses = 0
+    let productFee = 0
+
     var _temp1 = this.data.quotation.requiredExpensesAll
     for(let key of Object.keys(_temp1)){
       requiredExpenses += Number(_temp1[key])
     }
 
-    let otherExpenses = 0
     var _temp2 = this.data.quotation.otherExpensesAll
     for(let key of Object.keys(_temp2)){
+      if(key === "serverFee"){
+        productFee = Number(_temp2[key])
+      }
       otherExpenses += Number(_temp2[key])
     }
 
@@ -565,7 +573,8 @@ Page({
       monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
 
     } else {
-      totalPayment = carPrice + otherExpenses + requiredExpenses
+      //全款
+      totalPayment = carPrice + otherExpenses + requiredExpenses - productFee
       advancePayment = carPrice
       monthlyPayment = 0
     }
@@ -726,7 +735,7 @@ Page({
         let _isPlus = (res.isPlus === 'true' )
 
         let price
-        if(_isPoint && (initIsPlus === _isPlus)  && (Number(_hasInitPoint) === Number(res.inputNumber))){
+        if(_isPoint && ((_diffPrice > 0) === _isPlus)  && (Number(_hasInitPoint) === Number(res.inputNumber))){
           price = _initSellingPrice
         }else{
           price = util.getChangeCarPrice(_isPlus,_isPoint,_guidePrice,res.inputNumber)
@@ -759,6 +768,7 @@ Page({
   handlerExpensesChange(e) {
     let that = this
     var expensesInfo = e.currentTarget.dataset.feetype
+    var curPrice = e.currentTarget.dataset.price
 
     let requiredExpenses = this.data.quotation.requiredExpenses
 
@@ -799,7 +809,7 @@ Page({
       $wuxInputNumberDialog.open({
         title: expensesInfo.title,
         content: expensesInfo.title,
-        inputNumber: expensesInfo.price ? expensesInfo.price : "",
+        inputNumber: (curPrice || curPrice === 0) ? curPrice : "",
         inputNumberPlaceholder: '输入'+expensesInfo.title,
         inputNumberMaxLength: 9,
         confirmText: '确定',
@@ -1269,6 +1279,8 @@ Page({
     // 车身划痕险
     let scratchesInsurance = 0
 
+    let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
+
     let insuranceDetail = {
       "iTotal":0,//"保险总额",
       "iJQX":trafficInsurance,//"交强险",
@@ -1369,6 +1381,16 @@ Page({
     }
     insuranceDetail.iTotal = totalAmount
 
+    if(insurancesAll !== null) {
+
+      insurancesAll.insuranceTotal = totalAmount
+      try {
+        wx.setStorageSync('insurancesAll', JSON.stringify(insurancesAll))
+        console.log(insurancesAll)
+      } catch (e) {
+
+      }
+    }
     that.setData({
       expensesAllInfo: expensesAllInfo,
       'quotation.requiredExpensesAll.insuranceAmount': totalAmount,

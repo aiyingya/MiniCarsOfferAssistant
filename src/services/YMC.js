@@ -12,12 +12,12 @@ export default class YMC {
    */
   requestByPromise(options) {
     if (!options) return null
-
     return new Promise((resolve, reject) => {
       let clientId = ''
       try {
         // FIXME: 处理 clientId 使用同步获取相对较重
-        clientId = wx.getStorageSync('clientId')
+        clientId = wx.getStorageSync(`${config.ENV}_clientId`)
+        console.log(clientId)
       } catch (e) {
         console.error(e)
       }
@@ -138,11 +138,11 @@ export default class YMC {
     }
 
     // FIXME: 处理 clientId 使用同步获取相对较重
-    let clientId = wxapi.getStorageSync('clientId')
+    let clientId = wxapi.getStorageSync(`${config.ENV}_clientId`)
 
     const defaultHeader = {
       'ClientId': clientId,
-      'ClientVersion': config.versionCod,
+      'ClientVersion': config.versionCode,
       'SystemCode': '60',
       'content-type': options.contentType || 'application/json'
     }
@@ -278,11 +278,11 @@ export default class YMC {
 
     try {
       // FIXME: 处理 clientId 使用同步获取相对较重
-      let clientId = wx.getStorageSync('clientId')
+      let clientId = wx.getStorageSync(`${config.ENV}_clientId`)
 
       const defaultHeader = {
         'ClientId': clientId,
-        'ClientVersion': config.versionCod,
+        'ClientVersion': config.versionCode,
         'SystemCode': '60',
         'content-type': options.contentType || 'application/json'
       }
@@ -409,7 +409,7 @@ export default class YMC {
     let clientId = ''
     try {
       // FIXME: 处理 clientId 使用同步获取相对较重
-      clientId = wx.getStorageSync('clientId')
+      clientId = wx.getStorageSync(`${config.ENV}_clientId`)
     } catch (e) {
       console.error(e)
     }
