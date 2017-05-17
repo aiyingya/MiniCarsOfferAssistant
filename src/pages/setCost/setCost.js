@@ -248,9 +248,9 @@ Page({
   handleChangeService() {
     let that = this
     this.popupInputNumberDialog({
-      title: '贷款服务费',
+      title: '贷款手续费',
       inputNumber: this.data.loan.service,
-      inputNumberPlaceholder: '输入贷款服务费',
+      inputNumberPlaceholder: '输入贷款手续费',
       dataparameter: 'loan.service'
     })
   },
@@ -300,9 +300,9 @@ Page({
     let that = this
 
     this.popupInputNumberDialog({
-      title: '上牌费',
+      title: '代收上牌费',
       inputNumber: this.data.othersCost.registration,
-      inputNumberPlaceholder: '输入保险返点',
+      inputNumberPlaceholder: '输入上牌费',
       dataparameter: 'othersCost.registration'
     })
   },
