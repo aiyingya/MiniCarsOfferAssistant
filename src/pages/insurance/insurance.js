@@ -241,13 +241,13 @@ Page({
       for(let item of insurancesAll.businessInsurances) {
         switch (item.name) {
           case '第三者责任险':
-            this.data.liabilityTypesIndex = item.index
+            this.data.liabilityTypesIndex = item.index || 1
             break
           case '玻璃单独破碎险':      
-            this.data.glassBrokenTypesIndex = item.index
+            this.data.glassBrokenTypesIndex = item.index || 0
             break
           case '车身划痕险': 
-            this.data.scratchesTypesIndex = item.index
+            this.data.scratchesTypesIndex = item.index || 1
             break
           default:
 
@@ -314,6 +314,7 @@ Page({
                   that.data.liabilityTypesIndex = carModelInfo.insuranceDetail.iDSZZRX_INDEX
                 }else {
                   item.checked = false
+                  that.data.liabilityTypesIndex = 1
                 }
                 break
               case '车辆损失险':
@@ -336,6 +337,7 @@ Page({
                   that.data.glassBrokenTypesIndex = carModelInfo.insuranceDetail.iBLDDPSX_INDEX
                 }else {
                   item.checked = false
+                  that.data.glassBrokenTypesIndex = 0
                 }
                 break
               case '自燃损失险':
@@ -372,6 +374,7 @@ Page({
                   that.data.scratchesTypesIndex = carModelInfo.insuranceDetail.iCSHHX_INDEX
                 }else {
                   item.checked = false
+                  that.data.scratchesTypesIndex = 1
                 }
                 break
               default:
@@ -606,9 +609,10 @@ Page({
             businessTatal += Number(personnelCarInsurance)
             break
           case '车身划痕险':
+           
             let scratches = 0
             let scratchesTypesIndex = this.data.scratchesTypes[this.data.scratchesTypesIndex]
-            console.log(officialPrice/10000)
+            
             if(officialPrice/10000 < 30) {
               scratches = this.data.scratches[scratchesTypesIndex].one
             }else if(30<= officialPrice/10000 && officialPrice/10000 <= 50) {
