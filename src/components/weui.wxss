@@ -1082,6 +1082,7 @@ icon {
 
 .weui-layer-icon{
   position:fixed;
+  z-index:100;
   right: 50rpx;
   top:70%;
   opacity:0.8;
@@ -1091,5 +1092,5 @@ icon {
   border-radius:100px;
   line-height:50rpx;
   text-align:center;
-  z-index:100;
+  color:#FFFFFF;
 }
