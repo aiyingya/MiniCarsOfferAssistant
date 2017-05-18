@@ -113,7 +113,7 @@ export default {
          * @param {any} e
          */
         radioChange(e) {
-          options.defaultRadio = e.detail.name
+          options.defaultRadio = e.detail.value
         },
         /**
          * 确认行为
@@ -130,7 +130,12 @@ export default {
          * @param {any} e
          */
         cancel(e) {
-          this.hide(options.cancel())
+          let result ={
+            inputNumber:options.inputNumber,
+            inputName:options.inputNumber1,
+            inputSex:options.defaultRadio
+          }
+          this.hide(options.cancel(result))
         },
         close(){
           this.hide(options.close())

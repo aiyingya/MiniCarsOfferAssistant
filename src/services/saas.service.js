@@ -68,7 +68,7 @@ export default class SAASService extends Service {
     "customerMobile":"客户手机号"
    }
    */
-  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex) {
+  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex,isSendMessage) {
     if (draftId && draftId !== '') {
       this.sendMessage({
         path: 'sale/quotation',
@@ -76,7 +76,8 @@ export default class SAASService extends Service {
           draftId: draftId,
           customerMobile: customerMobile,
           customerName:customerName,
-          customerSex:customerSex
+          customerSex:customerSex,
+          sendMessage: isSendMessage ? true : (isSendMessage === undefined) ? true :false //防止后端没有判断，兼容以前的调用
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
@@ -181,6 +182,8 @@ export default class SAASService extends Service {
 
         }
       }
+      data.loanFee = quotationDraft.loanFee
+      data.saleMobile = quotationDraft.saleMobile
       data.rateType = quotationDraft.rateType
       data.marketPrice = quotationDraft.quotationItems[0].originalPrice
       data.insuranceDetail = quotationDraft.insuranceDetail

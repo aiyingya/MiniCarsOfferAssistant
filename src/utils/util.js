@@ -50,7 +50,7 @@ export default class Util {
   }
 
   /***
-   * 贷款+利息总额计算公式
+   * (贷款+利息)总额计算公式
    *
    * @param carPrice      裸车价, 元
    * @param paymentRatio  首付比例，%
@@ -62,7 +62,7 @@ export default class Util {
   }
 
   /***
-   * 贷款+利息总额计算公式
+   * (贷款)计算公式
    *
    * @param carPrice      裸车价, 元
    * @param paymentRatio  首付比例，%
@@ -71,6 +71,47 @@ export default class Util {
   static loanPaymentByLoan1(carPrice, paymentRatio) {
     return (carPrice * (100 - paymentRatio) * 0.01)
   }
+
+  /**
+   * （贷款的利息）总额计算公式
+   *
+   * @param carPrice      裸车价, 元
+   * @param paymentRatio  首付比例，%
+   * @param monthRate      月息（厘）
+   * @param stages        期数, 月数
+   *
+   * @returns {number}    贷款利息总额
+   */
+  static loanPaymentInterest(carPrice,paymentRatio,monthRate, stages) {
+    return carPrice * (100 - paymentRatio) * 0.01 * stages * monthRate *0.001
+  }
+
+  /**
+   * 月息转换为万元系数
+   * 万元系数=10000/（贷款年数*12）+月息*10
+   *
+   * @param monthRate      月息（厘）
+   * @param stages        期数, 年
+   * @returns {number}    万元系数（元）
+   */
+  static tranMonthToW(monthRate, stages) {
+    return ((10000/(stages*12) + monthRate * 10))
+  }
+
+
+  /**
+   * 万元系数转换为月息
+   * 月息=【万元系数-10000/（贷款年数*12）】/10
+   *
+   * @param wRate      万元系数（元）
+   * @param stages        期数, 年
+   * @returns {number}    月息（厘）
+   */
+  static tranWToMonth(wRate, stages) {
+    return  ((wRate - 10000/(stages*12)) / 10)
+  }
+
+
 
   /**
    * 首付计算公式
