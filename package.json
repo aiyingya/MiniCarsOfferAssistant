@@ -25,9 +25,7 @@
   },
   "author": "davidfu",
   "license": "ISC",
-  "dependencies": {
-    "wxapp-promise": "^1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^6.6.0",
     "babel-core": "^6.23.1",
