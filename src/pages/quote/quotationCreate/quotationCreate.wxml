@@ -10,10 +10,8 @@
 <import src="../../../components/dialog/specialUploadDialog.wxml"/>
 <template is="specialUploadDialog" data="{{ ...$wux.specialUploadDialog }}"/>
 
-
-
 <view class="container page">
-
+<view class="weui-layer-icon" bindtap="lookIncome">￥</view>
 	<view class="tab-navbar weui-navbar  preferenceSetting-navbar {{showPreferenceSetting ? 'can-preferenceSetting-height' : ''}}">
 
     <view wx:if="{{showPreferenceSetting}}" class="preferenceSetting" bindtap="goPreferenceSetting" >
@@ -32,7 +30,8 @@
 	</view>
 
 	<!--导航栏分区-->
-	<view class="tab-content weui-tab__panel {{showPreferenceSetting ? 'can-preferenceSetting-top' : ''}}">
+	<view class="tab-content weui-tab__panel  {{showPreferenceSetting ? 'can-preferenceSetting-top' : ''}}">
+
 
 		<!--按揭内容-->
 		<view
@@ -42,13 +41,18 @@
 			<view class="weui-flex loan-payment-block">
 				<view class="weui-flex__item advance-payment-block">
 					<view class="payment-price">￥{{quotation.advancePayment}}</view>
-					<view>首付(元)</view>
+					<view>首付(元) </view>
 				</view>
 				<view class="weui-flex__item monthly-payment-block">
 					<view class="payment-price">￥{{quotation.monthlyPayment}}</view>
 					<view>月供(元)</view>
 				</view>
 			</view>
+      <view class="weui-detail-title">
+        落地总额约￥{{quotation.totalPayment }} / 利息约￥{{quotation.loanInterest}}
+      </view>
+
+      <view class="weui-create_page">
 			<!--费用计算列表-->
 			<view class="weui-cells weui-cells_after-title ymc-cell-box">
 				<picker class="weui-cell_picker" bindchange="handlerPaymentRatioChange" value="{{paymentRatiosIndex}}" range="{{paymentRatiosArray}}">
@@ -57,13 +61,11 @@
 						<!--当前选择：{{array[index]}}-->
 						<!--</view>-->
 						<view class="weui-cell__bd">首付比例</view>
-						<view
-								class="weui-cell__ft weui-cell__ft_in-access"
-						>{{ paymentRatiosArray[paymentRatiosIndex] }}%</view>
+						<view class="weui-cell__ft weui-cell__ft_in-access">{{ paymentRatiosArray[paymentRatiosIndex] }}%</view>
 					</view>
 				</picker>
 				<picker class="weui-cell_picker" bindchange="handlerStagesChange" value="{{stagesIndex}}" range="{{stagesArray}}">
-					<view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+					<view class="weui-cell weui-cell_access" hover-class="weui-cell_active" >
 						<view class="weui-cell__bd">还款周期</view>
 						<view class="weui-cell__ft weui-cell__ft_in-access">{{ stagesArray[stagesIndex] }}年</view>
 					</view>
@@ -78,6 +80,12 @@
             <view class="weui-cell__ft weui-cell__ft_in-access">{{ quotation.expenseRate }}元</view>
           </block>
 				</view>
+        <view class="weui-cell_picker" bindtap="handlerLoanChange" >
+          <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__bd">贷款手续费</view>
+            <view class="weui-cell__ft weui-cell__ft_in-access">￥{{ quotation.loanFee }}</view>
+          </view>
+        </view>
 			</view>
 			<!--基础信息-->
 			<view class="h-cell-gray">基础信息</view>
@@ -135,6 +143,7 @@
 					<view  class="weui-cell__ft weui-cell__ft_in-access">￥{{ item.price }}</view>
 				</view>
 			</view>
+      </view>
 
 			<!--备   注-->
 			<view class="h-cell-gray">备注</view>

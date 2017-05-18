@@ -427,7 +427,7 @@ export default class YMC {
       url: options.url,
       data: options.data,
       header: Object.assign(defaultHeader, header),
-      method: options.method || 'GET',
+      method: options.method || 'GET'
     }).then(res=>{
       const result = res.data
       const statusCode = res.statusCode

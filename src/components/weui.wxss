@@ -1067,3 +1067,29 @@ icon {
 .weui-arrow-padding {
   padding-right: 50rpx;
 }
+
+
+.weui-detail-title{
+  margin-top:0;
+  position:relative;
+  background-color:#ED4149;
+  line-height:80rpx;
+  height:80rpx;
+  opacity:0.8;
+  color:#FFFFFF;
+  text-align:center;
+}
+
+.weui-layer-icon{
+  position:fixed;
+  right: 50rpx;
+  top:70%;
+  opacity:0.8;
+  background:#ED4149;
+  height:50rpx;
+  width:50rpx;
+  border-radius:100px;
+  line-height:50rpx;
+  text-align:center;
+  z-index:100;
+}

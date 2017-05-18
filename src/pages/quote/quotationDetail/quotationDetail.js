@@ -17,6 +17,7 @@ Page({
       quotationId: '0',
       draftId: '0',
       quotationName: '',
+      loanInterest:0,
       quotationItems: [{
         itemName: '',
         itemPic: '',
@@ -60,6 +61,7 @@ Page({
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
+
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
@@ -69,11 +71,21 @@ Page({
           pageShare: true
         })
       },1000)
+
       this.setData({options: options})
       wx.navigateTo({
         url: '../../login/login'
       })
     }else {
+      if(that.data.quotation.hasLoan){
+        const isMonth = (quotation.rateType===1)
+        const expenseRate = quotation.expenseRate
+        const stages = quotation.stages
+        const paymentRatio = quotation.paymentRatio
+        const monthRate = isMonth ? expenseRate : util.tranWToMonth(expenseRate,stages)//万元系数
+        const loanInterest = util.loanPaymentInterest(carPrice,paymentRatio,monthRate,stages * 12)
+        quotation.loanInterest = Math.floor(loanInterest)
+      }
       this.setData({
         quotation: quotation,
         pageShare: false,
