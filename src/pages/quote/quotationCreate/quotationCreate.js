@@ -891,7 +891,7 @@ Page({
       quotation.loanFee = 0
     }
 
-    function isSendRequest (quotationDraft,mobile,name,sex) {
+    function isSendRequest (quotationDraft,mobile,name,sex,isSend) {
 
       app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile ,{
         success: (res) => {
@@ -937,7 +937,7 @@ Page({
           console.log("fail 保存报价单失败")
         },
         complete: () => {}
-      },name,sex)
+      },name,sex,isSend)
     }
 
     that.hideInput()
