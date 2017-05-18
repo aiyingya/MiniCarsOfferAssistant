@@ -230,5 +230,29 @@ Page({
 			 quotationsList: quotationsList
 			})
 		}
+  },
+  handleDeleteRecord(e) {
+    const that = this
+    const record = e.currentTarget.dataset.record
+    const quotationId = record.quotationId
+    const quotationsList = this.data.quotationsList
+    const newQuotationsList = []
+    app.saasService.requestDeleteRecotd(quotationId,{
+      loadingType: 'true',
+      success(res) {
+        console.log(res)
+        if(res) {
+          for(let item of quotationsList) {
+            if(item.quotationId != quotationId) {
+              newQuotationsList.push(item)
+            }
+          }
+          
+          that.setData({
+            quotationsList: newQuotationsList
+          })
+        }
+      }
+    })
   }
 })

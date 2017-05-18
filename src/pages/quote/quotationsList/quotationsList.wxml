@@ -69,7 +69,11 @@
         </view>
         
         <!-- 删除.-->
-				<view class="cancel-attention">删除</view>
+				<view 
+				  class="cancel-attention"
+				  bindtap="handleDeleteRecord"
+				  data-record="{{cell}}"
+				  >删除</view>
 		  </view>
 			
 		</view>
