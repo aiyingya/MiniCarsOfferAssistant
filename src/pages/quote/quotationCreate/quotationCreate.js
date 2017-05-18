@@ -570,7 +570,7 @@ Page({
       }
       const wRate = isMonth ? util.tranMonthToW(expenseRate,stages) : expenseRate//万元系数
       const monthRate = isMonth ? expenseRate : util.tranWToMonth(expenseRate,stages)//万元系数
-      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
+      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, monthRate, stages * 12, requiredExpenses, otherExpenses)
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
       monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
       loanInterest = util.loanPaymentInterest(carPrice,paymentRatio,monthRate,stages * 12)
