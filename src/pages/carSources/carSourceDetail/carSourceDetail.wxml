@@ -113,12 +113,12 @@
                 <view wx:if="{{carSourceItem.viewModelContentItems}}">
                   <!--<view wx:for="{{carSourceItem.viewModelContentItems}}" wx:key="*this" class="{{item.b ? 'content-highlight' : 'content-text'}}" >{{item.a}}</view>-->
                   <text wx:for="{{carSourceItem.viewModelContentItems}}" wx:key="*this" class="{{item.b ? 'content-highlight' : 'content-text'}}" >{{item.a}}</text>
-                  <!--<view-->
-                    <!--wx:if="{{showCopyOrignalText}}"-->
-                    <!--class="copy-orignal-text"-->
-                    <!--bindtap="{{copyOrignalText}}">-->
-                  <!--复制原文-->
-                  <!--</view>-->
+                  <view
+                    wx:if="{{showCopyOrignalText}}"
+                    class="copy-orignal-text"
+                    bindtap="{{copyOrignalText}}">
+                  复制原文
+                  </view>
                 </view>
 
                 <view wx:else class="content-text">
