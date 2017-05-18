@@ -1,5 +1,5 @@
 import Component from '../../../components/component'
-import * as wxapi from 'wxapp-promise'
+import * as wxapi from '../../../modules/wxapp-promise'
 
 export default {
   /**

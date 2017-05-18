@@ -8,19 +8,19 @@
 			</view>
 		</view>
 		<view wx:else class="viewCarsList-wrap">
-		  <view 
+		  <view
         class="record-cell"
         wx:for="{{quotationsList}}"
         wx:for-item="cell"
         wx:for-index="cellIndex"
         >
-        <view 
+        <view
           class="quotation-list weui-cells"
           hover-class="weui-cell_active"
           hover="true"
           data-quotation="{{cell}}"
           bindtap="handlerSelectQuotation"
-          bindtouchstart = "handletouchtart" 
+          bindtouchstart = "handletouchtart"
           bindtouchmove="handletouchmove"
           bindtouchend="handletouchend"
           bindtouchcancel="handletouchcancel"
@@ -62,12 +62,12 @@
               <block wx:if="{{cell.customerSex == 0}}">女士</block>
             </view>
             <view wx:if="{{ cell.customerMobile.length }}">
-              <view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.read}}">用户已查看</view>
+              <view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.read}}">用户已查看{{cell.viewTimes}}次</view>
               <view class="weui-cell__ft text-right min-font-gray" wx:else>用户未查看</view>
             </view>
           </view>
         </view>
-        
+
         <!-- 删除.-->
 				<view 
 				  class="cancel-attention"
@@ -75,7 +75,7 @@
 				  data-record="{{cell}}"
 				  >删除</view>
 		  </view>
-			
+
 		</view>
 	</view>
 </view>
