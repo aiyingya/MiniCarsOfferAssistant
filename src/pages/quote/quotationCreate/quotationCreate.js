@@ -537,7 +537,7 @@ Page({
     let requiredExpenses = 0
     let otherExpenses = 0
 
-
+    const _loanServerFee = this.data.quotation.loanFee
     var _temp1 = this.data.quotation.requiredExpensesAll
     for(let key of Object.keys(_temp1)){
       requiredExpenses += Number(_temp1[key])
@@ -547,8 +547,9 @@ Page({
     for(let key of Object.keys(_temp2)){
       otherExpenses += Number(_temp2[key])
     }
+    otherExpenses += _loanServerFee
 
-    let _loanServerFee = this.data.quotation.loanFee
+
 
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let officialPrice = this.data.quotation.quotationItems[0].guidePrice
