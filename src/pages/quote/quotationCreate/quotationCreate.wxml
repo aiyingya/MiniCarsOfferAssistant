@@ -32,6 +32,7 @@
 	<!--导航栏分区-->
 	<view class="tab-content weui-tab__panel  {{showPreferenceSetting ? 'can-preferenceSetting-top' : ''}}">
 
+
 		<!--按揭内容-->
 		<view
 				wx:if="{{activeIndex == 0}}"
@@ -55,7 +56,7 @@
 			<!--费用计算列表-->
 			<view class="weui-cells weui-cells_after-title ymc-cell-box">
 				<picker class="weui-cell_picker" bindchange="handlerPaymentRatioChange" value="{{paymentRatiosIndex}}" range="{{paymentRatiosArray}}">
-					<view class="weui-cell weui-cell_access" hover-class="weui-cell_active"  style="border-bottom:1rpx solid #D9D9D9;">
+					<view class="weui-cell weui-cell_access" hover-class="weui-cell_active" >
 						<!--<view class="picker">-->
 						<!--当前选择：{{array[index]}}-->
 						<!--</view>-->
@@ -64,7 +65,7 @@
 					</view>
 				</picker>
 				<picker class="weui-cell_picker" bindchange="handlerStagesChange" value="{{stagesIndex}}" range="{{stagesArray}}">
-					<view class="weui-cell weui-cell_access" hover-class="weui-cell_active" style="border-bottom:1rpx solid #D9D9D9;">
+					<view class="weui-cell weui-cell_access" hover-class="weui-cell_active" >
 						<view class="weui-cell__bd">还款周期</view>
 						<view class="weui-cell__ft weui-cell__ft_in-access">{{ stagesArray[stagesIndex] }}年</view>
 					</view>

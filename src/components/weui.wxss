@@ -1083,7 +1083,7 @@ icon {
 .weui-layer-icon{
   position:fixed;
   right: 50rpx;
-  top:50%;
+  top:70%;
   opacity:0.8;
   background:#ED4149;
   height:50rpx;
