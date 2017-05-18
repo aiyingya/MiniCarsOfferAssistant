@@ -316,8 +316,24 @@ export default class SAASService extends Service {
       object.complete();
     }
   }
-
-
+  
+  /**
+   * 删除报价记录
+   *
+   * @param id 报价单ID
+   * @param opts
+   */
+  requestDeleteRecotd(id,opts) {
+    this.sendMessage({
+      path: `sale/quotation/delete/${id}`,
+      loadingType: opts.loadingType,
+      data: opts.data,
+      method: 'POST',
+      success: opts.success,
+      fail: opts.fail,
+      complete: opts.complete
+    })
+  }
   /**
    * 获取车源列表
    * @param carModelId
