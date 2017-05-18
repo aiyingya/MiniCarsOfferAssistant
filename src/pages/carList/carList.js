@@ -113,5 +113,8 @@ Page({
   },
   onTouchMoveWithCatch () {
     // 拦截触摸移动事件， 阻止透传
+  },
+  handlePullDownRefresh() {
+    console.log(2)
   }
 })

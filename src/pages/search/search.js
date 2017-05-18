@@ -748,23 +748,26 @@ Page({
     let searchHistory = this.data.searchHistory
     let that = this
     app.tradeService.postUserSearchHistory({
-       data: {
-          "channel": "wxapp",
-          "text": text,
-          "userId": user.auth.userId
-       },
-       success(xhr) {
-         if(searchHistory.indexOf(text) < 0) {
-           searchHistory.unshift(text)
-           
-           that.setData({
-             searchHistory: searchHistory
-           })
-         }
-       },
-       fail(err) {
-         
-       }
+     data: {
+      "channel": "wxapp",
+      "text": text,
+      "userId": user.auth.userId
+     },
+     success(xhr) {
+      for (var i = 0; i < searchHistory.length; i++) {
+        if (searchHistory[i] === text) {
+          searchHistory.splice(i, 1);
+          break;
+        }
+      }
+      searchHistory.unshift(text)
+      that.setData({
+        searchHistory: searchHistory
+      })
+     },
+     fail(err) {
+
+     }
     })
   }
 })

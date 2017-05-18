@@ -65,6 +65,7 @@
 				</view>
 			</view>
 			
+<!--
 			<view
 				class="weui-cell weui-cell_access"
 				hover="true"
@@ -80,6 +81,7 @@
 						<view>供应商</view>
 				</view>
 			</view>
+-->
 	</view>
 
 	<view
