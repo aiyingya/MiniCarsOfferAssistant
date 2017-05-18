@@ -440,14 +440,20 @@
   text-align: center;
 }
 .weui-dialog__xia{
-   position:absolute;
-   left:22rpx;
-   top:23rpx;
-   width:23rpx;
-   height:25rpx;
-   color:#666666;
-   font-size:36rpx;
- }
+  position:absolute;
+  left:18rpx;
+  top:14rpx;
+  width:65rpx;
+  height:62rpx;
+  background:#FFFFFF;
+  border:1px solid #7A6D6E;
+  border-radius:8px;
+  font-family:PingFangSC-Regular;
+  font-size:30rpx;
+  color:#333333;
+  line-height:62rpx;
+
+}
 
 .weui-dialog__minus{
   position:absolute;
