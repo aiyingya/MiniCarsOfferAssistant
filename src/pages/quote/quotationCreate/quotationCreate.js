@@ -298,7 +298,7 @@ Page({
           if(!quotation.hasLoan){
             //初始化贷款手续费
             this.setData({
-              loanFee:res.loanFee
+              'quotation.loanFee':res.loanFee
             })
 
           }
@@ -370,7 +370,7 @@ Page({
             const isElectricCar = carModelInfo.isElectricCar
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              loanFee:res.loanFee,
+              'quotation.loanFee':res.loanFee,
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
