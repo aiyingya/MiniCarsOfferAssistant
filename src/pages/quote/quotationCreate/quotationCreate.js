@@ -369,9 +369,9 @@ Page({
             const capacity = carModelInfo.capacity
             const isElectricCar = carModelInfo.isElectricCar
             this.setData({
-              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              'quotation.loanFee':res.loanFee,
-              'quotation.otherExpensesAll.serverFee':res.serviceFee,
+              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee || 0,
+              'quotation.loanFee':res.loanFee || 0,
+              'quotation.otherExpensesAll.serverFee':res.serviceFee || 0,
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
