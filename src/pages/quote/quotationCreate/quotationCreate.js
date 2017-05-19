@@ -966,6 +966,9 @@ Page({
       cancel: (res) => {
         //保存报价单
         let mobile = res.inputNumber
+        if(mobile){
+          mobile = mobile.length === 11 ? mobile : "-"
+        }
         let customerName =res.inputName
         let customerSex = res.inputSex
         app.saasService.requestSaveQuotationDraft(quotation, {
@@ -1077,7 +1080,8 @@ Page({
       "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
       "loanServiceFee":that.data.quotation.loanFee,
       "installFee":that.data.quotation.otherExpensesAll.installationFee,
-      "otherFee":that.data.quotation.otherExpensesAll.otherFee
+      "otherFee":that.data.quotation.otherExpensesAll.otherFee,
+      "serviceFee":that.data.quotation.otherExpensesAll.serverFee
     },
      {
        success: (res) => {
@@ -1103,11 +1107,12 @@ Page({
 
          if(res.boutiqueFee){
            _detailContent.push({name: '精品收益约', value: '￥' + res.boutiqueFee})
-
          }
          if(res.installFee){
            _detailContent.push({name: '安装收益约', value: '￥' + res.installFee})
-
+         }
+         if(res.serviceFee){
+           _detailContent.push({name: '服务收益约', value: '￥' + res.serviceFee})
          }
          if(res.otherFee){
            _detailContent.push({name: '其它收益约', value: '￥' + res.otherFee})
