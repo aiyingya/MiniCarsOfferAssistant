@@ -77,7 +77,7 @@
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
-      bindtap="handleChangeService"
+      bindtap="handleChangeLoanService"
       >
       <view class="weui-cell__bd">贷款手续费</view>
       <view class="weui-cell__ft weui-cell__ft_in-access">{{loan.service}}</view>

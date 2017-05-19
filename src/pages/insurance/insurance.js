@@ -73,6 +73,7 @@ Page({
           '5': 638,
           '10': 920,
           '20': 1141,
+          '30': 1265,
           '50': 1546,
           '100': 2012
         },
@@ -107,6 +108,7 @@ Page({
           '5': 590,
           '10': 831,
           '20': 1014,
+          '30': 1178,
           '50': 1352,
           '100': 1760
         },
@@ -166,9 +168,9 @@ Page({
     /**
      * 第三方责任险赔付额度.
      */
-    liabilityTypes: [5,10,20,50,100],
-    liabilityTypesValue: ["赔付额度5万","赔付额度10万","赔付额度20万","赔付额度50万","赔付额度100万"],
-    liabilityTypesIndex: 1,
+    liabilityTypes: [5,10,20,30,50,100],
+    liabilityTypesValue: ["赔付额度5万","赔付额度10万","赔付额度20万","赔付额度30万","赔付额度50万","赔付额度100万"],
+    liabilityTypesIndex: 3,
     /**
      * 玻璃单独破碎险选择进口、国产.
      */
@@ -241,7 +243,7 @@ Page({
       for(let item of insurancesAll.businessInsurances) {
         switch (item.name) {
           case '第三者责任险':
-            this.data.liabilityTypesIndex = item.index || 1
+            this.data.liabilityTypesIndex = item.index || 3
             break
           case '玻璃单独破碎险':      
             this.data.glassBrokenTypesIndex = item.index || 0
@@ -314,7 +316,7 @@ Page({
                   that.data.liabilityTypesIndex = carModelInfo.insuranceDetail.iDSZZRX_INDEX
                 }else {
                   item.checked = false
-                  that.data.liabilityTypesIndex = 1
+                  that.data.liabilityTypesIndex = 3
                 }
                 break
               case '车辆损失险':

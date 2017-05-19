@@ -247,7 +247,7 @@ Page({
   /**
    * 设置贷款服务费.
    */
-  handleChangeService() {
+  handleChangeLoanService() {
     let that = this
     this.popupInputNumberDialog({
       title: '贷款手续费',

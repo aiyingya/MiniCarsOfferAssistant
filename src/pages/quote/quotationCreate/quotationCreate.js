@@ -63,7 +63,7 @@ Page({
         "iCSRYZRX":0,//"车上人员责任险",
         "iCSHHX":0,//"车身划痕险"
         "carSize":0,//"车辆规格"
-        "iDSZZRX_INDEX":1,
+        "iDSZZRX_INDEX":3,
         "iBLDDPSX_INDEX":0,
         "iCSHHX_INDEX":1
       },
@@ -446,7 +446,7 @@ Page({
       "iCSRYZRX":0,//"车上人员责任险",
       "iCSHHX":0,//"车身划痕险"
       "carSize":0,//"车辆规格"
-      "iDSZZRX_INDEX":1,
+      "iDSZZRX_INDEX":3,
       "iBLDDPSX_INDEX":0,
       "iCSHHX_INDEX":1
     }
@@ -1319,7 +1319,7 @@ Page({
       "iCSRYZRX":0,//"车上人员责任险",1
       "iCSHHX":0,//"车身划痕险"1
       "carSize":standardIndex,//"车辆规格"
-      "iDSZZRX_INDEX":1,
+      "iDSZZRX_INDEX":3,
       "iBLDDPSX_INDEX":0,
       "iCSHHX_INDEX":1
     }
@@ -1327,7 +1327,7 @@ Page({
       if(item.checked) {
         switch (item.name) {
           case '第三者责任险':
-            liabilityInsurance = standardIndex == 0 ? 920 : 831
+            liabilityInsurance = standardIndex == 0 ? 1265 : 1178
             businessTatal += liabilityInsurance
             insuranceDetail.iDSZZRX = liabilityInsurance.toFixed(0)
             break
