@@ -17,7 +17,7 @@
 
       <form bindsubmit="{{ confirm }}" >
         <view class="weui-dialog__input">
-          <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class="" focus="{{ visible }}"
+          <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class=""
                  value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
         </view>
 

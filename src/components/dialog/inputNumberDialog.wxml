@@ -20,7 +20,10 @@
 
       <form bindsubmit="{{ confirm }}">
         <view wx:if="{{ priceStyle }}" class="weui-dialog__input_price">
-          <view class="weui-dialog__xia" bindtap="{{changePush}}">{{params.isPlus? '上':'下'}}</view>
+          <view class="weui-dialog__xia" bindtap="{{changePush}}" style="flex:1">
+            <view class="weui-dialog__xia_text">{{params.isPlus? '上':'下'}}</view>
+            <image class="weui-icon_change" src="../../../images/icons/icon_change.png"></image>
+          </view>
 
           <image class="weui-dialog__minus" src="../../../images/icons/icon_minus.png" bindtap="{{ buttonMinus }}"></image>
 

@@ -436,14 +436,14 @@
   font-size: 36rpx;
   color: #333;
   line-height: 36rpx;
-  margin:24rpx 100rpx 24rpx 170rpx;
+  margin:24rpx 70rpx 24rpx 170rpx;
   text-align: center;
 }
 .weui-dialog__xia{
   position:absolute;
   left:18rpx;
   top:14rpx;
-  width:65rpx;
+  width:100rpx;
   height:62rpx;
   background:#FFFFFF;
   border:1px solid #7A6D6E;
@@ -457,7 +457,7 @@
 
 .weui-dialog__minus{
   position:absolute;
-  left:100rpx;
+  left:130rpx;
   top:14rpx;
   width:65rpx;
   height:65rpx;
@@ -466,13 +466,27 @@
 }
 .weui-dialog__plus{
   position:absolute;
-  right:40rpx;
+  right:10rpx;
   top:14rpx;
   width:65rpx;
   height:65rpx;
   color:#666666;
   font-size:36rpx;
 }
+.weui-icon_change{
+  position:absolute;
+  height:30rpx;
+  width:30rpx;
+  top:50%;
+  margin-top:-15rpx;
+  margin-left:4rpx;
+}
+.weui-dialog__xia_text{
+  position:absolute;
+  left:20rpx;
+}
+
+
 .weui-dialog__line{
   margin:0 auto;
   height:1px;

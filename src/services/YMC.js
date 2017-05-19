@@ -130,13 +130,21 @@ export default class YMC {
     } else if (options.loadingType === 'none') {
       // 不使用任何加载
     } else {
+      console.log("begin show loading",options.url)
       wxapi.showToast({
         title: '正在加载',
         icon: 'loading',
         duration: 10000,
         mask: true
       })
+      // setTimeout(function () {
+      //   console.log("------  300s close ")
+      //
+      //   wxapi.hideToast()
+      // },3000)
     }
+
+
 
     // FIXME: 处理 clientId 使用同步获取相对较重
     let clientId = wxapi.getStorageSync(`${config.ENV}_clientId`)
@@ -155,8 +163,8 @@ export default class YMC {
       data: options.data,
       header: Object.assign(defaultHeader, header)
     }).then(res=>{
+      console.log('request.. success')
 
-      console.log('success')
       const result = res.data
       const statusCode = res.statusCode
 
@@ -181,7 +189,7 @@ export default class YMC {
         typeof options.success === 'function' && options.success(data)
       } else {
         // 4XX, 5XX 失败
-        console.error(res)
+        console.log('request.. success <399 error',res)
         let err
         if (typeof result === 'object') {
           // 旧版 ymcapi 接口中只能使用 error 中的 alertMessage 来处理额外行为
@@ -203,7 +211,7 @@ export default class YMC {
         });
       }
     },err=>{
-      console.log('fail')
+      console.log('request.. fail')
       const error = new Error('网络请求错误')
       if(typeof options.fail === 'function' ){
         options.fail(error)
@@ -215,6 +223,8 @@ export default class YMC {
         duration: 2000
       });
     }).catch(function (e) {
+      console.log('request.. catch')
+
       if (options.loadingType === 'navigation') {
         console.log('隐藏导航栏加载')
         wxapi.hideNavigationBarLoading()
@@ -231,12 +241,15 @@ export default class YMC {
         duration: 2000
       });
     }).finally(function () {
+      console.log('request.. finally')
       if (options.loadingType === 'navigation') {
         console.log('隐藏导航栏加载')
         wxapi.hideNavigationBarLoading()
       } else if (options.loadingType === 'none') {
         // 不使用任何加载
       } else {
+        console.log("end close loading")
+
         wxapi.hideToast()
       }
       typeof options.complete === 'function' && options.complete()

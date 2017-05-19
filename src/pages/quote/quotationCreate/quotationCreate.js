@@ -298,7 +298,7 @@ Page({
           if(!quotation.hasLoan){
             //初始化贷款手续费
             this.setData({
-              loanFee:res.loanFee
+              'quotation.loanFee':res.loanFee
             })
 
           }
@@ -348,12 +348,12 @@ Page({
         const originalPrice = carSkuInfo.showPrice || carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
 
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
+        var user = app.userService;
         this.setData({
-          'quotation.saleMobile':carSkuInfo.viewModelLowestCarSource.contact,
+          'quotation.saleMobile':user.mobile,
           isSpecialBranch: isShow
         })
 
-        var user = app.userService;
         //获取报价单接口
         app.saasService.getCreatCarRecordInfo({
           data:{
@@ -370,7 +370,7 @@ Page({
             const isElectricCar = carModelInfo.isElectricCar
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              loanFee:res.loanFee,
+              'quotation.loanFee':res.loanFee,
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
@@ -395,7 +395,7 @@ Page({
             })
             console.log(carModelInfo)
 
-            that.initVehicleAndVesselTax(function(){
+            that.initVehicleAndVesselTax().then(data=>{
               // 计算默认保险.
               const promise1 = that.getDefaultInsurance()
               const promise = Promise.race([promise1])
@@ -405,7 +405,6 @@ Page({
               }, err => {
                 //wx.hideToast()
               })
-
             })
 
             activeIndexCss()
@@ -570,7 +569,7 @@ Page({
       }
       const wRate = isMonth ? util.tranMonthToW(expenseRate,stages) : expenseRate//万元系数
       const monthRate = isMonth ? expenseRate : util.tranWToMonth(expenseRate,stages)//万元系数
-      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
+      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, monthRate, stages * 12, requiredExpenses, otherExpenses)
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
       monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
       loanInterest = util.loanPaymentInterest(carPrice,paymentRatio,monthRate,stages * 12)
@@ -773,29 +772,11 @@ Page({
     var expensesInfo = e.currentTarget.dataset.feetype
     var curPrice = e.currentTarget.dataset.price
 
-    let requiredExpenses = this.data.quotation.requiredExpenses
-
     let carModelsInfoKeyValueString
     let pageSource = 'new'
     if(this.data.source === 'quotationDetail'){
-      //TODO:盼盼需要他的格式，但是格式太大
       carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.quotation)
       //编辑
-      /*{
-       "iTotal":"保险总额",
-       "showDetail":"是否显示保险明细",
-       "iJQX":"交强险",
-       "iDSZZRX":"第三者责任险",
-       "iCLSSX":"车辆损失险",
-       "iQCDQX":"全车盗抢险",
-       "iBLDDPSX":"玻璃单独破碎险",
-       "iZRSSX":"自燃损失险",
-       "iBJMPTYX":"不计免赔特约险",
-       "iWGZRX":"无过责任险",
-       "iCSRYZRX":"车上人员责任险",
-       "iCSHHX":"车身划痕险",
-       "carSize":"车辆规格" 0 6座一下 1 6座以上
-       }*/
       pageSource = 'editor'
     }else{
       //新建
@@ -954,9 +935,12 @@ Page({
       ],
       inputNumber1:quotation.customerName,
       inputNumber:quotation.customerMobile,
-      defaultRadio:quotation.customerSex,
+      defaultRadio:quotation.customerSex === undefined ? undefined:Number(quotation.customerSex),
       confirmText: '发送报价单',
       cancelText: '仅保存',
+      initMobValidate: function (mobile) {
+        return mobile.length === 11
+      },
       validate: function (e) {
         let mobile = e.detail.value
         return mobile.length === 11
@@ -1155,7 +1139,7 @@ Page({
       isShowTextarea:false
     })
   },
-  initVehicleAndVesselTax(call){
+  initVehicleAndVesselTax(){
     let that  = this
     //初始化车船税
     const isElectricCar = this.data.carModelInfo.isElectricCar
@@ -1166,19 +1150,15 @@ Page({
       }
       return ;
     }
-    let price
     var user = app.userService;
-    app.saasService.gettingVehicleAndVesselTax({
+
+    return app.saasService.gettingVehicleAndVesselTax({
       data:{
         capacity:capacity,
         place:user.address.provinceName//provinceId
-      },
-      success:(data)=>{
-        that.setData({'quotation.requiredExpensesAll.vehicleAndVesselTax': data})
-        if(typeof(call) === 'function'){
-          call(data)
-        }
       }
+    }).then(data=>{
+      that.setData({'quotation.requiredExpensesAll.vehicleAndVesselTax': data})
     })
 
   },
