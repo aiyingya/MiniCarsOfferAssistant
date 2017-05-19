@@ -316,7 +316,7 @@ export default class SAASService extends Service {
       object.complete();
     }
   }
-  
+
   /**
    * 删除报价记录
    *
@@ -589,11 +589,9 @@ export default class SAASService extends Service {
    * @param data.place 门店所在省
    */
   gettingVehicleAndVesselTax(opts) {
-    return this.sendMessage({
+    return this.sendMessageByPromise({
       path: `sale/quotation/getCarTax?capacity=${opts.data.capacity}&place=${opts.data.place}`,
-      method: 'GET',
-      success: opts.success,
-      fail: opts.fail
+      method: 'GET'
     })
   }
 }

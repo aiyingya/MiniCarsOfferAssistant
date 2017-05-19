@@ -130,20 +130,21 @@ export default class YMC {
     } else if (options.loadingType === 'none') {
       // 不使用任何加载
     } else {
-      console.log("begin show loading")
+      console.log("begin show loading",options.url)
       wxapi.showToast({
         title: '正在加载',
         icon: 'loading',
         duration: 10000,
         mask: true
       })
+      // setTimeout(function () {
+      //   console.log("------  300s close ")
+      //
+      //   wxapi.hideToast()
+      // },3000)
     }
-    //
-    // setTimeout(function () {
-    //   console.log("------  300s close ")
-    //
-    //   wxapi.hideToast()
-    // },3000)
+
+
 
     // FIXME: 处理 clientId 使用同步获取相对较重
     let clientId = wxapi.getStorageSync(`${config.ENV}_clientId`)

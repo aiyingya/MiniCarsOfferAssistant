@@ -395,7 +395,7 @@ Page({
             })
             console.log(carModelInfo)
 
-            that.initVehicleAndVesselTax(function(){
+            that.initVehicleAndVesselTax().then(data=>{
               // 计算默认保险.
               const promise1 = that.getDefaultInsurance()
               const promise = Promise.race([promise1])
@@ -405,7 +405,6 @@ Page({
               }, err => {
                 //wx.hideToast()
               })
-
             })
 
             activeIndexCss()
@@ -1140,7 +1139,7 @@ Page({
       isShowTextarea:false
     })
   },
-  initVehicleAndVesselTax(call){
+  initVehicleAndVesselTax(){
     let that  = this
     //初始化车船税
     const isElectricCar = this.data.carModelInfo.isElectricCar
@@ -1151,19 +1150,15 @@ Page({
       }
       return ;
     }
-    let price
     var user = app.userService;
-    app.saasService.gettingVehicleAndVesselTax({
+
+    return app.saasService.gettingVehicleAndVesselTax({
       data:{
         capacity:capacity,
         place:user.address.provinceName//provinceId
-      },
-      success:(data)=>{
-        that.setData({'quotation.requiredExpensesAll.vehicleAndVesselTax': data})
-        if(typeof(call) === 'function'){
-          call(data)
-        }
       }
+    }).then(data=>{
+      that.setData({'quotation.requiredExpensesAll.vehicleAndVesselTax': data})
     })
 
   },

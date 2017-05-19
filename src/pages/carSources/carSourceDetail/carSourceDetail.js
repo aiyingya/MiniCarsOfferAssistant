@@ -16,6 +16,11 @@ export default {
       carSourceItem: {}
     }
   },
+  data() {
+    return {
+      close() {}
+    }
+  },
   /**
    * 显示dialog组件
    * @param {Object} opts 配置项
