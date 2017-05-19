@@ -436,7 +436,7 @@
   font-size: 36rpx;
   color: #333;
   line-height: 36rpx;
-  margin:24rpx 70rpx 24rpx 170rpx;
+  margin:24rpx 60rpx 24rpx 180rpx;
   text-align: center;
 }
 .weui-dialog__xia{
