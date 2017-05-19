@@ -446,13 +446,12 @@
   width:100rpx;
   height:62rpx;
   background:#FFFFFF;
-  border:1px solid #7A6D6E;
-  border-radius:8px;
+  border:1px solid #AEA5A6;
+  border-radius:8rpx;
   font-family:PingFangSC-Regular;
   font-size:30rpx;
   color:#333333;
   line-height:62rpx;
-
 }
 
 .weui-dialog__minus{

@@ -25,7 +25,8 @@ export default {
       cancelText: `取消`,
       confirm() {},
       confirmText: `确定`,
-      validate() { return true }
+      validate() { return true },
+      close() {}
     }
   },
   /**
@@ -105,6 +106,13 @@ export default {
          */
         cancel(e) {
           this.hide(options.cancel())
+        },
+        close(){
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
         }
       }
     })

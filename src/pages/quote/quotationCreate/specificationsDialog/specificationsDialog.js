@@ -18,7 +18,9 @@ export default {
    * 默认数据
    */
   data() {
-    return {}
+    return {
+      close() {}
+    }
   },
   /**
    * 显示dialog组件
@@ -76,6 +78,9 @@ export default {
           const externalColorName = e.detail.value.externalColorName || '未知'
           const internalColorName = e.detail.value.internalColorName || '未知'
           this.hide(options.confirm(externalColorName, internalColorName))
+        },
+        close(){
+          this.hide(options.close())
         }
       }
     })

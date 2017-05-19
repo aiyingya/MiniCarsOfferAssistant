@@ -10,7 +10,8 @@ export default {
       timer: 1500,
       color: `#fff`,
       text: `已完成`,
-      success() {}
+      success() {},
+      close() {}
     }
   },
   /**
@@ -79,6 +80,13 @@ export default {
          */
         show() {
           this.setVisible()
+        },
+        close(){
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
         }
       }
     })

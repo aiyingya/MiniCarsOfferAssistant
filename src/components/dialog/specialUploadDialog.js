@@ -32,7 +32,8 @@ export default {
       confirmText: `确定`,
       validate() { return true },
       initMobValidate() { return true },
-      validate1() { return true }
+      validate1() { return true },
+      close() {}
     }
   },
   /**
@@ -140,7 +141,11 @@ export default {
           this.hide(options.cancel(result))
         },
         close(){
-          this.hide(options.close())
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
         },
         init(){
           if (typeof options.initMobValidate === 'function') {

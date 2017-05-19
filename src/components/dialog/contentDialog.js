@@ -39,7 +39,11 @@ export default {
           setTimeout(() => typeof cb === `function` && cb(), 300)
         },
         close(){
-          this.hide(options.close())
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
         },
         /**
          * 显示

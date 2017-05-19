@@ -61,15 +61,15 @@
               <block wx:if="{{cell.customerSex == 1}}">先生</block>
               <block wx:if="{{cell.customerSex == 0}}">女士</block>
             </view>
-            <view wx:if="{{ cell.customerMobile.length }}">
-              <view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.read}}">用户已查看{{cell.viewTimes}}次</view>
-              <view class="weui-cell__ft text-right min-font-gray" wx:else>用户未查看</view>
-            </view>
+            <!--<view wx:if="{{ cell.customerMobile.length }}">-->
+              <view class="weui-cell__ft text-right min-font-gray" wx:if="{{cell.viewTimes}}">用户已查看{{cell.viewTimes}}次</view>
+              <!--<view class="weui-cell__ft text-right min-font-gray" wx:else>用户未查看</view>-->
+            <!--</view>-->
           </view>
         </view>
 
         <!-- 删除.-->
-				<view 
+				<view
 				  class="cancel-attention"
 				  bindtap="handleDeleteRecord"
 				  data-record="{{cell}}"

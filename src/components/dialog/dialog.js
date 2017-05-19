@@ -22,7 +22,8 @@ export default {
       cancelType: `weui-dialog__btn_default`,
       onConfirm() {},
       confirmText: `确定`,
-      confirmType: `weui-dialog__btn_primary`
+      confirmType: `weui-dialog__btn_primary`,
+      close() {}
     }
   },
   /**
@@ -79,6 +80,13 @@ export default {
           this.setData({
             [`${this.options.scope}.prompt.response`]: e.detail.value
           })
+        },
+        close(){
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
         }
       }
     })

@@ -85,7 +85,11 @@ export default {
         onTouchMoveWithCatch(e) { },
 
         close(e) {
-          this.hide(options.close)
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
         },
         /**
          * 订车行为

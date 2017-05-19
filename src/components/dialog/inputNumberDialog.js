@@ -34,6 +34,7 @@ export default {
       cancel() {},
       cancelText: `取消`,
       confirm() {},
+      close() {},
       confirmText: `确定`,
       validate() { return true }
     }
@@ -135,7 +136,11 @@ export default {
           this.hide(options.cancel())
         },
         close(){
-          this.hide(options.close())
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
         },
         /**
          * 减金额行为
