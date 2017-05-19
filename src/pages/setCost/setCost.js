@@ -50,7 +50,8 @@ Page({
      * 其他费用.
      */
     othersCost: {
-      registration: "500"
+      registration: "500",
+      service: "500"
     }
   },
   onLoad() {
@@ -92,6 +93,7 @@ Page({
           "loan.service": res.loanFee,
           "loan.billingwayValue": res.interestType -1,
           "othersCost.registration": res.carNumberFee,
+          "othersCost.service": res.serviceFee,
           "insurances.rebates": res.insuranceRebate
         })
       }
@@ -307,6 +309,19 @@ Page({
     })
   },
   /**
+   * 服务费.
+   */
+  handleChangeService() {
+    let that = this
+
+    this.popupInputNumberDialog({
+      title: '服务费',
+      inputNumber: this.data.othersCost.service,
+      inputNumberPlaceholder: '输入服务费',
+      dataparameter: 'othersCost.service'
+    })
+  },
+  /**
    * 上报设置信息.
    */
   handlePushSet() {
@@ -326,7 +341,8 @@ Page({
       "loanRebate": that.data.loan.rebates,
       "loanFee": that.data.loan.service,
       "carNumberFee": that.data.othersCost.registration,
-      "insuranceRebate": that.data.insurances.rebates
+      "insuranceRebate": that.data.insurances.rebates,
+      "serviceFee":that.data.othersCost.service
     }
     console.log(data)
     app.saasService.settingPreference({

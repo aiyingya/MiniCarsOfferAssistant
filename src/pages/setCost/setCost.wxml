@@ -119,6 +119,16 @@
       <view class="weui-cell__bd">代收上牌费</view>
       <view class="weui-cell__ft weui-cell__ft_in-access">{{othersCost.registration}}</view>
     </view>
+    
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      bindtap="handleChangeService"
+      >
+      <view class="weui-cell__bd">服务费</view>
+      <view class="weui-cell__ft weui-cell__ft_in-access">{{othersCost.service}}</view>
+    </view>
   </view>
   
   <view class="setbtn" bindtap="handlePushSet">确认</view>
