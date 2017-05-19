@@ -371,6 +371,7 @@ Page({
             this.setData({
               'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
               'quotation.loanFee':res.loanFee,
+              'quotation.otherExpensesAll.serverFee':res.serviceFee,
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
@@ -939,7 +940,7 @@ Page({
       confirmText: '发送报价单',
       cancelText: '仅保存',
       initMobValidate: function (mobile) {
-        return mobile.length === 11
+        return mobile ? mobile.length === 11 : false
       },
       validate: function (e) {
         let mobile = e.detail.value
@@ -967,7 +968,7 @@ Page({
         //保存报价单
         let mobile = res.inputNumber
         if(mobile){
-          mobile = mobile.length === 11 ? mobile : "-"
+          mobile = mobile.length === 11 ? mobile : ""
         }
         let customerName =res.inputName
         let customerSex = res.inputSex

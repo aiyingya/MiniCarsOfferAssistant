@@ -57,7 +57,7 @@
           </view>
           <view class="weui-cell quotation-submsg">
             <view class="weui-cell__bd min-font-gray">
-              客户手机:{{ cell.customerMobile }}/{{cell.customerName}}
+              客户手机: {{ cell.customerMobile ? cell.customerMobile : '- ' }}/{{cell.customerName ? cell.customerName : ' -' }}
               <block wx:if="{{cell.customerSex == 1}}">先生</block>
               <block wx:if="{{cell.customerSex == 0}}">女士</block>
             </view>
