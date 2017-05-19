@@ -31,6 +31,7 @@ export default {
       confirm() {},
       confirmText: `确定`,
       validate() { return true },
+      initMobValidate() { return true },
       validate1() { return true }
     }
   },
@@ -74,6 +75,7 @@ export default {
         show() {
           if (this.removed) return !1
           this.setVisible()
+          this.init()
         },
         /**
          * 防止事件透传
@@ -105,7 +107,7 @@ export default {
          */
         inputNumberInput1(e) {
           options.inputNumber1 = (typeof(e) === 'object') ? e.detail.value :e
-
+          //validate1
         },
         /**
          * 处理单选事件
@@ -139,11 +141,20 @@ export default {
         },
         close(){
           this.hide(options.close())
+        },
+        init(){
+          if (typeof options.initMobValidate === 'function') {
+            let disabled = !options.initMobValidate(options.inputNumber)
+            this.setData({
+              [`${this.options.scope}.confirmDisabled`]: disabled
+            })
+          }
         }
       }
     })
 
     component.show()
+
 
     return component.hide
   }

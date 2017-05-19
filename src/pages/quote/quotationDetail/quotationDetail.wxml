@@ -45,7 +45,6 @@
                     </view>
                   <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">贷款手续费</view>
-                    <!--TODO:aiyingya  自定义的名字-->
                     <view class="weui-cell__ft">￥{{ quotation.loanFee }}</view>
                   </view>
                 </view>
