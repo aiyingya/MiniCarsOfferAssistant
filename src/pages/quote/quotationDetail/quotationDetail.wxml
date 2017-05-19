@@ -134,7 +134,7 @@
         <!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/发送报价/联系客户/立即定车-->
         <view class="btn-group fix-bt" >
             <button class='flex-item-1 btn' bindtap='handlerEditQuotation'>编辑</button>
-            <button class='flex-item-2 btn' wx:if="{{quotation.customerMobile && quotation.customerMobile.length}}" bindtap='handlerContactWithCustomer'>联系客户</button>
+            <button class='flex-item-2 btn' wx:if="{{quotation.sendMessage}}" bindtap='handlerContactWithCustomer'>联系客户</button>
             <button class='flex-item-3 btn' wx:else bindtap='handlerShareToCustomer'>发送报价</button>
             <button class='flex-item-3 btn' bindtap='handlerBookCar'>立即定车</button>
         </view>
