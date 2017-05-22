@@ -1168,6 +1168,7 @@ Page({
       });
   },
   touchStartIncome(){
+    console.log("touchStartIncome")
     const that = this
     if(that.data.touchStatus != 0){
       //用于touchEndIncome的300ms延时关闭，
@@ -1177,6 +1178,7 @@ Page({
       touchStatus : 1
     })
     setTimeout(()=>{
+      console.log("touchStartIncome400","touchStatus:"+that.data.touchStatus)
       if(that.data.touchStatus === 3){
         that.lookIncome()
       }
@@ -1184,6 +1186,15 @@ Page({
   },
   touchMoveIncome(){
     const that = this
+    if(that.data.touchStatus===2 || that.data.touchStatus ===4){
+      return
+    }
+    if(that.data.touchStatus === 3){
+      that.setData({
+        touchStatus : 4
+      })
+      return
+    }
     that.setData({
       touchStatus : 2
     })
@@ -1203,6 +1214,7 @@ Page({
         if(typeof(that.data.contentDialogFun) == 'function') {
           that.data.contentDialogFun()
         }
+        that.showInput()
         that.setData({
           touchStatus : 0
         })
