@@ -11,7 +11,15 @@
 <template is="specialUploadDialog" data="{{ ...$wux.specialUploadDialog }}"/>
 
 <view class="container page">
-<view class="weui-layer-icon" bindtap="lookIncome">￥</view>
+
+
+  <block wx:if="{{canIUse.movablearea}}">
+  <movable-area  class="weui-layer-movable" >
+    <movable-view class="weui-layer-movable-in" direction="all" bindtap="lookIncome" inertia="true" damping="100">￥</movable-view>
+  </movable-area>
+  </block>
+  <view wx:else class="weui-layer-icon" bindtap="lookIncome">￥</view>
+
 	<view class="tab-navbar weui-navbar  preferenceSetting-navbar {{showPreferenceSetting ? 'can-preferenceSetting-height' : ''}}">
 
     <view wx:if="{{showPreferenceSetting}}" class="preferenceSetting" bindtap="goPreferenceSetting" >

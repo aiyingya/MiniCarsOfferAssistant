@@ -72,7 +72,9 @@ Page({
       totalPayment: 0, // 总落地价格
       loanInterest:0,//贷款利息
       remark: '', // "无"
-      read: false
+      read: false,
+      x: 0,
+      y: 0
     },
     requestResult:{
       "carPrice":"161600",//显示裸车价= 裸车价+运费+利润
@@ -199,7 +201,10 @@ Page({
     isOnLoad:true,
     diffPrice:0,//是否加价卖
     isShowTextarea:true,
-    businessRisks:''
+    businessRisks:'',
+    canIUse:{
+      movablearea:false
+    }
   },
   onLoad(options) {
 
@@ -216,6 +221,10 @@ Page({
     } catch (e) {
 
     }
+
+    this.setData({
+      'canIUse.movablearea': wx.canIUse('movable-area')
+    })
 
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
@@ -528,6 +537,12 @@ Page({
   },
   onReachBottom() {},
   onPullDownRefresh() {},
+  tap: function(e) {
+    this.setData({
+      x: 30,
+      y: 30
+    });
+  },
   isShowDownDot(name){
     if(name.indexOf('宝马') >-1 || name.indexOf('奥迪')>-1 || name.indexOf('MINI')>-1){
       return true;
