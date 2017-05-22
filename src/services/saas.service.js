@@ -187,6 +187,8 @@ export default class SAASService extends Service {
       data.rateType = quotationDraft.rateType
       data.marketPrice = quotationDraft.quotationItems[0].originalPrice
       data.insuranceDetail = quotationDraft.insuranceDetail
+      data.carCapacity = quotationDraft.carCapacity//排量
+      data.electricCar = quotationDraft.electricCar//是否纯电动
       let snsId
       if (this.userService.isLogin) {
         snsId = this.userService.auth.userId

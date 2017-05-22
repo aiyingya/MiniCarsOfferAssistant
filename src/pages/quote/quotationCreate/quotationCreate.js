@@ -189,7 +189,9 @@ Page({
         status: '', // "no_stock",
         remark: '' // "无"
       },
-      count: '' // "7.34"
+      count: '', // "7.34"
+      capacity:null,//排量
+      isElectricCar:false//是否纯电动车
     },
     source: '', // carModels/carSources/quotationDetail/
     showPreferenceSetting:false,
@@ -280,7 +282,9 @@ Page({
         'quotation': quotation,
         'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice,
         'carModelsInfo.sellingPrice': quotation.carPrice,
-        'quotation.quotationItems[0].originalPrice':quotation.marketPrice
+        'quotation.quotationItems[0].originalPrice':quotation.marketPrice,
+        'carModelInfo.capacity':quotation.carCapacity,
+        'carModelInfo.isElectricCar':quotation.electricCar
       })
 
       //获取报价单接口
@@ -866,8 +870,9 @@ Page({
     let that = this;
     let quotation ={}
     quotation = Object.assign({}, quotation, that.data.quotation)
-
     quotation.rateType= that.data.requestResult.interestType
+    quotation.carCapacity = that.data.carModelInfo.capacity//排量
+    quotation.electricCar = that.data.carModelInfo.isElectricCar//是否纯电动
 
     if(that.data.activeIndex == 1){
       //全款没有贷款手续费
