@@ -15,12 +15,12 @@
 
   <block wx:if="{{canIUse.movablearea}}">
   <movable-area  class="weui-layer-movable"  >
-    <movable-view class="weui-layer-movable-in {{touchStatus != 0 ? 'weui-layer-movable__hover' :''  }}"
+    <movable-view class="weui-layer-movable-in {{touchStatus === 3 ? 'weui-layer-movable__hover' :''  }}"
     direction="all" bindtouchstart="touchStartIncome"  bindtouchmove="touchMoveIncome" bindtouchend="touchEndIncome"
                   catchlongtap="longTapIncome" inertia="true" damping="100">￥</movable-view>
   </movable-area>
   </block>
-  <view wx:else class="weui-layer-icon {{touchStatus != 0 ? 'weui-layer-movable__hover' :''  }}" bindtouchstart="touchStartIncome" bindtouchend="touchEndIncome"
+  <view wx:else class="weui-layer-icon {{touchStatus === 3 ? 'weui-layer-movable__hover' :''  }}" bindtouchstart="touchStartIncome" bindtouchend="touchEndIncome"
         catchlongtap="longTapIncome" >￥</view>
 
 	<view class="tab-navbar weui-navbar  preferenceSetting-navbar {{showPreferenceSetting ? 'can-preferenceSetting-height' : ''}}">

@@ -1122,5 +1122,5 @@ icon {
 
 .weui-layer-movable__hover{
   box-shadow:0 0 10px rgba(250, 0, 0,1);
-  opacity: 1;
+  opacity: 0.9;
 }
