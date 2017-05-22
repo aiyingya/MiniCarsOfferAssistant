@@ -1,5 +1,5 @@
 import Component from '../../../components/component'
-import * as wxapi from 'wxapp-promise'
+import * as wxapi from '../../../modules/wxapp-promise'
 
 export default {
   /**
@@ -14,6 +14,11 @@ export default {
       originalText: '',
       carModel: {},
       carSourceItem: {}
+    }
+  },
+  data() {
+    return {
+      close() {}
     }
   },
   /**
@@ -80,7 +85,11 @@ export default {
         onTouchMoveWithCatch(e) { },
 
         close(e) {
-          this.hide(options.close)
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
         },
         /**
          * 订车行为

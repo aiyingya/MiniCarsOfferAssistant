@@ -50,7 +50,7 @@ export default class Util {
   }
 
   /***
-   * 贷款+利息总额计算公式
+   * (贷款+利息)总额计算公式
    *
    * @param carPrice      裸车价, 元
    * @param paymentRatio  首付比例，%
@@ -62,7 +62,7 @@ export default class Util {
   }
 
   /***
-   * 贷款+利息总额计算公式
+   * (贷款)计算公式
    *
    * @param carPrice      裸车价, 元
    * @param paymentRatio  首付比例，%
@@ -73,11 +73,53 @@ export default class Util {
   }
 
   /**
+   * （贷款的利息）总额计算公式
+   *
+   * @param carPrice      裸车价, 元
+   * @param paymentRatio  首付比例，%
+   * @param monthRate      月息（厘）
+   * @param stages        期数, 月数
+   *
+   * @returns {number}    贷款利息总额
+   */
+  static loanPaymentInterest(carPrice,paymentRatio,monthRate, stages) {
+    return carPrice * (100 - paymentRatio) * 0.01 * stages * monthRate *0.001
+  }
+
+  /**
+   * 月息转换为万元系数
+   * 万元系数=10000/（贷款年数*12）+月息*10
+   *
+   * @param monthRate      月息（厘）
+   * @param stages        期数, 年
+   * @returns {number}    万元系数（元）
+   */
+  static tranMonthToW(monthRate, stages) {
+    return ((10000/(stages*12) + monthRate * 10))
+  }
+
+
+  /**
+   * 万元系数转换为月息
+   * 月息=【万元系数-10000/（贷款年数*12）】/10
+   *
+   * @param wRate      万元系数（元）
+   * @param stages        期数, 年
+   * @returns {number}    月息（厘）
+   */
+  static tranWToMonth(wRate, stages) {
+    return  ((wRate - 10000/(stages*12)) / 10)
+  }
+
+
+
+  /**
    * 首付计算公式
    *
    * @param carPrice          裸车价, 元
    * @param paymentRatio      首付比例, %
-   * @param requiredExpenses  必要花费, 元
+   * @param requiredExpenses
+   * 必要花费, 元
    * @param otherExpenses     其他话费, 元
    * @returns {number}        首付金额，元
    */
@@ -96,10 +138,29 @@ export default class Util {
    * @param otherExpenses     其他话费，元
    * @returns {number}        总费用，元
    */
-  static totalPaymentByLoan(carPrice, paymentRatio, expennseRate, stages, requiredExpenses, otherExpenses) {
+  static totalPaymentByLoan1(carPrice, paymentRatio, expennseRate, stages, requiredExpenses, otherExpenses) {
     let advancePayment = Util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses)
     let loanPayment = Util.loanPaymentByLoan(carPrice, paymentRatio, expennseRate)
     return (advancePayment + loanPayment)
+  }
+
+  /***
+   * 贷款落地总额 计算公式
+   *  1.贷款落地总额：全款落地总额+ 利息总额 +贷款手续费
+   *  2.月供*期数+首付
+   * @param carPrice          裸车价，元
+   * @param paymentRatio      首付比例，%
+   * @param monthRate         月息（厘）
+   * @param stages            期数, 月数
+   * @param requiredExpenses  必要花费
+   * @param otherExpenses     其它花费（包含贷款手续费）
+   * @returns {number}        总费用，元
+   * @returns {number}        总费用，元
+   */
+  static totalPaymentByLoan(carPrice, paymentRatio, monthRate, stages, requiredExpenses, otherExpenses) {
+    let _totle = carPrice + otherExpenses + requiredExpenses //全款落地总额+贷款手续费
+    let _lixi =  Util.loanPaymentInterest(carPrice,paymentRatio,monthRate,stages) //贷款利息
+    return _totle + _lixi
   }
 
   /**

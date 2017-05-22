@@ -31,7 +31,9 @@ export default {
       confirm() {},
       confirmText: `确定`,
       validate() { return true },
-      validate1() { return true }
+      initMobValidate() { return true },
+      validate1() { return true },
+      close() {}
     }
   },
   /**
@@ -74,6 +76,7 @@ export default {
         show() {
           if (this.removed) return !1
           this.setVisible()
+          this.init()
         },
         /**
          * 防止事件透传
@@ -105,7 +108,7 @@ export default {
          */
         inputNumberInput1(e) {
           options.inputNumber1 = (typeof(e) === 'object') ? e.detail.value :e
-
+          //validate1
         },
         /**
          * 处理单选事件
@@ -113,7 +116,7 @@ export default {
          * @param {any} e
          */
         radioChange(e) {
-          options.defaultRadio = e.detail.name
+          options.defaultRadio = e.detail.value
         },
         /**
          * 确认行为
@@ -130,15 +133,33 @@ export default {
          * @param {any} e
          */
         cancel(e) {
-          this.hide(options.cancel())
+          let result ={
+            inputNumber:options.inputNumber,
+            inputName:options.inputNumber1,
+            inputSex:options.defaultRadio
+          }
+          this.hide(options.cancel(result))
         },
         close(){
-          this.hide(options.close())
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
+        },
+        init(){
+          if (typeof options.initMobValidate === 'function') {
+            let disabled = !options.initMobValidate(options.inputNumber)
+            this.setData({
+              [`${this.options.scope}.confirmDisabled`]: disabled
+            })
+          }
         }
       }
     })
 
     component.show()
+
 
     return component.hide
   }

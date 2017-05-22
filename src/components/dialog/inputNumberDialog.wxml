@@ -20,11 +20,14 @@
 
       <form bindsubmit="{{ confirm }}">
         <view wx:if="{{ priceStyle }}" class="weui-dialog__input_price">
-          <view class="weui-dialog__xia" bindtap="{{changePush}}">{{params.isPlus? '上':'下'}}</view>
+          <view class="weui-dialog__xia" bindtap="{{changePush}}" style="flex:1">
+            <view class="weui-dialog__xia_text">{{params.isPlus? '上':'下'}}</view>
+            <image class="weui-icon_change" src="../../../images/icons/icon_change.png"></image>
+          </view>
 
           <image class="weui-dialog__minus" src="../../../images/icons/icon_minus.png" bindtap="{{ buttonMinus }}"></image>
 
-          <input type="{{ inputType }}" name="inputNumber" placeholder="0" placeholder-class="" focus="{{ visible }}"
+          <input type="{{ inputType }}" name="inputNumber" placeholder="0" placeholder-class=""
             value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
 
           <image class="weui-dialog__plus" src="../../../images/icons/icon_plus.png" bindtap="{{ buttonPlus }}" ></image>
@@ -36,7 +39,7 @@
         </view>
 
         <view wx:else class="weui-dialog__input">
-          <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class="" focus="{{ visible }}"
+          <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class=""
                  value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
         </view>
 

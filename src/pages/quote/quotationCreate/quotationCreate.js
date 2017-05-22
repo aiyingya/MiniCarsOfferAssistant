@@ -22,6 +22,8 @@ Page({
       quotationId: '0',
       draftId: '0',
       quotationName: '',
+      loanFee:0,//贷款手续费
+      saleMobile:"",//销售手机号
       quotationItems: [{
         itemType: 'self', // self/third/party
         itemName: '',
@@ -61,13 +63,14 @@ Page({
         "iCSRYZRX":0,//"车上人员责任险",
         "iCSHHX":0,//"车身划痕险"
         "carSize":0,//"车辆规格"
-        "iDSZZRX_INDEX":1,
+        "iDSZZRX_INDEX":3,
         "iBLDDPSX_INDEX":0,
         "iCSHHX_INDEX":1
       },
       advancePayment: 0, // 必传，首次支付金额，如果全款则为全款金额",
       monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
       totalPayment: 0, // 总落地价格
+      loanInterest:0,//贷款利息
       remark: '', // "无"
       read: false
     },
@@ -94,7 +97,7 @@ Page({
       {
         type:'requiredfee',
         target:'licenseFee',
-        title:'上牌费用',
+        title:'代收上牌费',
         protoname:'quotation.requiredExpensesAll.licenseFee',
         price:0//同上
       },//上牌
@@ -129,10 +132,10 @@ Page({
       {
         type:'otherfee',
         target:'serverFee',
-        title:'金融服务费',
+        title:'服务费',
         protoname:'quotation.otherExpensesAll.serverFee',
-        price:0//同上
-      },//安装费 其它 临时脑补的费用
+        price:0
+      },
       {
         type:'otherfee',
         target:'otherFee',
@@ -266,17 +269,14 @@ Page({
       quotation.otherExpensesAll = {// 其他费用（元），deciaml，取值范围0~999999999",
         boutiqueCost:quotation.boutiqueFee || 0,//精品费用
         installationFee:quotation.installFee || 0,//安装费
-        serverFee:quotation.serviceFee || 0,//
+        serverFee:quotation.serviceFee || 0,//服务费
         otherFee:quotation.otherFee || 0
       }
 
-      const  isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
-      this.setData({
-        'isSpecialBranch': isShow
-      })
-
+      const isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
 
       this.setData({
+        'isSpecialBranch': isShow,
         'quotation': quotation,
         'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice,
         'carModelsInfo.sellingPrice': quotation.carPrice,
@@ -296,12 +296,12 @@ Page({
             'requestResult': res
           })
           if(!quotation.hasLoan){
+            //初始化贷款手续费
             this.setData({
-              'quotation.otherExpensesAll.serverFee':res.loanFee
+              'quotation.loanFee':res.loanFee
             })
+
           }
-
-
           that.updateForSomeReason()
           activeIndexCss()
 
@@ -348,11 +348,12 @@ Page({
         const originalPrice = carSkuInfo.showPrice || carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
 
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
+        var user = app.userService;
         this.setData({
-          'isSpecialBranch': isShow
+          'quotation.saleMobile':user.mobile,
+          isSpecialBranch: isShow
         })
 
-        var user = app.userService;
         //获取报价单接口
         app.saasService.getCreatCarRecordInfo({
           data:{
@@ -367,10 +368,10 @@ Page({
             let sellingPrice = res.carPrice;
             const capacity = carModelInfo.capacity
             const isElectricCar = carModelInfo.isElectricCar
-            const loanFee = res.loanFee
             this.setData({
-              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee,
-              'quotation.otherExpensesAll.serverFee':res.loanFee,
+              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee || 0,
+              'quotation.loanFee':res.loanFee || 0,
+              'quotation.otherExpensesAll.serverFee':res.serviceFee || 0,
               'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
 
@@ -395,7 +396,7 @@ Page({
             })
             console.log(carModelInfo)
 
-            that.initVehicleAndVesselTax(function(){
+            that.initVehicleAndVesselTax().then(data=>{
               // 计算默认保险.
               const promise1 = that.getDefaultInsurance()
               const promise = Promise.race([promise1])
@@ -405,7 +406,6 @@ Page({
               }, err => {
                 //wx.hideToast()
               })
-
             })
 
             activeIndexCss()
@@ -447,7 +447,7 @@ Page({
       "iCSRYZRX":0,//"车上人员责任险",
       "iCSHHX":0,//"车身划痕险"
       "carSize":0,//"车辆规格"
-      "iDSZZRX_INDEX":1,
+      "iDSZZRX_INDEX":3,
       "iBLDDPSX_INDEX":0,
       "iCSHHX_INDEX":1
     }
@@ -536,8 +536,8 @@ Page({
 
     let requiredExpenses = 0
     let otherExpenses = 0
-    let productFee = 0
 
+    const _loanServerFee = this.data.quotation.loanFee
     var _temp1 = this.data.quotation.requiredExpensesAll
     for(let key of Object.keys(_temp1)){
       requiredExpenses += Number(_temp1[key])
@@ -545,11 +545,11 @@ Page({
 
     var _temp2 = this.data.quotation.otherExpensesAll
     for(let key of Object.keys(_temp2)){
-      if(key === "serverFee"){
-        productFee = Number(_temp2[key])
-      }
       otherExpenses += Number(_temp2[key])
     }
+    otherExpenses += _loanServerFee
+
+
 
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let officialPrice = this.data.quotation.quotationItems[0].guidePrice
@@ -562,19 +562,21 @@ Page({
     let monthlyPayment
     let totalPayment
     let advancePayment
+    let loanInterest
     if (this.isLoanTabActive()) {
       let isMonth = (that.data.requestResult.interestType===1);
       if(expenseRate === undefined){
         expenseRate = that.setExpenseRate(stages)
       }
-      const wRate = isMonth ? (10000/(stages*12) + expenseRate * 10) : expenseRate//万元系数
-      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, expenseRate, stages * 12, requiredExpenses, otherExpenses)
+      const wRate = isMonth ? util.tranMonthToW(expenseRate,stages) : expenseRate//万元系数
+      const monthRate = isMonth ? expenseRate : util.tranWToMonth(expenseRate,stages)//万元系数
+      totalPayment = util.totalPaymentByLoan(carPrice, paymentRatio, monthRate, stages * 12, requiredExpenses, otherExpenses)
       advancePayment = util.advancePaymentByLoan(carPrice, paymentRatio, requiredExpenses, otherExpenses);
       monthlyPayment = util.monthlyLoanPaymentByLoan(carPrice, paymentRatio, wRate);
-
+      loanInterest = util.loanPaymentInterest(carPrice,paymentRatio,monthRate,stages * 12)
     } else {
       //全款
-      totalPayment = carPrice + otherExpenses + requiredExpenses - productFee
+      totalPayment = carPrice + otherExpenses + requiredExpenses - _loanServerFee
       advancePayment = carPrice
       monthlyPayment = 0
     }
@@ -598,6 +600,7 @@ Page({
 
     this.setData({
       'quotation.totalPayment': Math.floor(totalPayment),
+      'quotation.loanInterest': Math.floor(loanInterest),
       'quotation.advancePayment': Math.floor(advancePayment),
       'quotation.monthlyPayment': Math.floor(monthlyPayment),
       'quotation.hasLoan': this.isLoanTabActive(),
@@ -770,29 +773,11 @@ Page({
     var expensesInfo = e.currentTarget.dataset.feetype
     var curPrice = e.currentTarget.dataset.price
 
-    let requiredExpenses = this.data.quotation.requiredExpenses
-
     let carModelsInfoKeyValueString
     let pageSource = 'new'
     if(this.data.source === 'quotationDetail'){
-      //TODO:盼盼需要他的格式，但是格式太大
       carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.quotation)
       //编辑
-      /*{
-        "iTotal":"保险总额",
-        "showDetail":"是否显示保险明细",
-        "iJQX":"交强险",
-        "iDSZZRX":"第三者责任险",
-        "iCLSSX":"车辆损失险",
-        "iQCDQX":"全车盗抢险",
-        "iBLDDPSX":"玻璃单独破碎险",
-        "iZRSSX":"自燃损失险",
-        "iBJMPTYX":"不计免赔特约险",
-        "iWGZRX":"无过责任险",
-        "iCSRYZRX":"车上人员责任险",
-        "iCSHHX":"车身划痕险",
-        "carSize":"车辆规格" 0 6座一下 1 6座以上
-      }*/
       pageSource = 'editor'
     }else{
       //新建
@@ -839,6 +824,38 @@ Page({
       })
     }
   },
+  handlerLoanChange(e) {
+    let that = this
+    const _loanFee = that.data.quotation.loanFee
+      that.hideInput()
+      $wuxInputNumberDialog.open({
+        title: '贷款手续费',
+        content: '贷款手续费',
+        inputNumber: (_loanFee || _loanFee === 0) ? _loanFee : "",
+        inputNumberPlaceholder: '输入贷款手续费',
+        inputNumberMaxLength: 9,
+        confirmText: '确定',
+        cancelText: '取消',
+        validate: (e) => {
+          if (e.detail.value >= 0 && e.detail.value!="") {
+            return true
+          } else {
+            return false
+          }
+        },
+        confirm: (res) => {
+          let price = Number(res.inputNumber)
+          //这里如何写入插值变量
+          that.setData({'quotation.loanFee': price})
+          that.updateForSomeReason()
+          that.showInput()
+        },
+        cancel: () => {that.showInput()},
+        close: () => {
+          that.showInput()
+        }
+      })
+  },
   handlerRemarkChange(e) {
     let remark = e.detail.value
     this.setData({
@@ -853,11 +870,11 @@ Page({
     quotation.rateType= that.data.requestResult.interestType
 
     if(that.data.activeIndex == 1){
-      //全款没有金融服务费
-      quotation.otherExpensesAll.serverFee =0
+      //全款没有贷款手续费
+      quotation.loanFee = 0
     }
 
-    function isSendRequest (quotationDraft,mobile,name,sex) {
+    function isSendRequest (quotationDraft,mobile,name,sex,isSend) {
 
       app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile ,{
         success: (res) => {
@@ -903,7 +920,7 @@ Page({
           console.log("fail 保存报价单失败")
         },
         complete: () => {}
-      },name,sex)
+      },name,sex,isSend)
     }
 
     that.hideInput()
@@ -914,12 +931,17 @@ Page({
       inputNumberPlaceholder: '输入对方的手机号码',
       inputNumberPlaceholder1: '姓名（选填）',
       radioNames: [
-        {name: 1, value: '先生', checked: 'true'},
+        {name: 1, value: '先生'},
         {name: 0, value: '女士'}
       ],
-      defaultRadio:1,
+      inputNumber1:quotation.customerName,
+      inputNumber:quotation.customerMobile,
+      defaultRadio:quotation.customerSex === undefined ? undefined:Number(quotation.customerSex),
       confirmText: '发送报价单',
       cancelText: '仅保存',
+      initMobValidate: function (mobile) {
+        return mobile ? mobile.length === 11 : false
+      },
       validate: function (e) {
         let mobile = e.detail.value
         return mobile.length === 11
@@ -934,7 +956,7 @@ Page({
           success: function (res) {
             let quotationDraft = res
             //发送报价单
-            isSendRequest(quotationDraft,mobile,customerName,customerSex)
+            isSendRequest(quotationDraft,mobile,customerName,customerSex,true)
           },
           fail: function () {},
           complete: function () {}
@@ -942,13 +964,19 @@ Page({
         that.showInput()
 
       },
-      cancel: () => {
+      cancel: (res) => {
         //保存报价单
+        let mobile = res.inputNumber
+        if(mobile){
+          mobile = mobile.length === 11 ? mobile : ""
+        }
+        let customerName =res.inputName
+        let customerSex = res.inputSex
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
             let quotationDraft = res
             /// 暂不发送, 不带电话号码发送（发布当前报价草稿到某个用户） 保留1.5以前的逻辑
-            isSendRequest(quotationDraft,null,null,null)
+            isSendRequest(quotationDraft,mobile,customerName,customerSex,false)
           },
           fail: function () {},
           complete: function () {}
@@ -1051,9 +1079,10 @@ Page({
       "carPrice":carPrice,
       "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
       "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
-      "loanServiceFee":that.data.quotation.otherExpensesAll.serverFee,
+      "loanServiceFee":that.data.quotation.loanFee,
       "installFee":that.data.quotation.otherExpensesAll.installationFee,
-      "otherFee":that.data.quotation.otherExpensesAll.otherFee
+      "otherFee":that.data.quotation.otherExpensesAll.otherFee,
+      "serviceFee":that.data.quotation.otherExpensesAll.serverFee
     },
      {
        success: (res) => {
@@ -1079,11 +1108,12 @@ Page({
 
          if(res.boutiqueFee){
            _detailContent.push({name: '精品收益约', value: '￥' + res.boutiqueFee})
-
          }
          if(res.installFee){
            _detailContent.push({name: '安装收益约', value: '￥' + res.installFee})
-
+         }
+         if(res.serviceFee){
+           _detailContent.push({name: '服务收益约', value: '￥' + res.serviceFee})
          }
          if(res.otherFee){
            _detailContent.push({name: '其它收益约', value: '￥' + res.otherFee})
@@ -1115,7 +1145,7 @@ Page({
       isShowTextarea:false
     })
   },
-  initVehicleAndVesselTax(call){
+  initVehicleAndVesselTax(){
     let that  = this
     //初始化车船税
     const isElectricCar = this.data.carModelInfo.isElectricCar
@@ -1126,19 +1156,15 @@ Page({
       }
       return ;
     }
-    let price
     var user = app.userService;
-    app.saasService.gettingVehicleAndVesselTax({
+
+    return app.saasService.gettingVehicleAndVesselTax({
       data:{
         capacity:capacity,
         place:user.address.provinceName//provinceId
-      },
-      success:(data)=>{
-        that.setData({'quotation.requiredExpensesAll.vehicleAndVesselTax': data})
-        if(typeof(call) === 'function'){
-          call(data)
-        }
       }
+    }).then(data=>{
+      that.setData({'quotation.requiredExpensesAll.vehicleAndVesselTax': data})
     })
 
   },
@@ -1294,7 +1320,7 @@ Page({
       "iCSRYZRX":0,//"车上人员责任险",1
       "iCSHHX":0,//"车身划痕险"1
       "carSize":standardIndex,//"车辆规格"
-      "iDSZZRX_INDEX":1,
+      "iDSZZRX_INDEX":3,
       "iBLDDPSX_INDEX":0,
       "iCSHHX_INDEX":1
     }
@@ -1302,7 +1328,7 @@ Page({
       if(item.checked) {
         switch (item.name) {
           case '第三者责任险':
-            liabilityInsurance = standardIndex == 0 ? 920 : 831
+            liabilityInsurance = standardIndex == 0 ? 1265 : 1178
             businessTatal += liabilityInsurance
             insuranceDetail.iDSZZRX = liabilityInsurance.toFixed(0)
             break

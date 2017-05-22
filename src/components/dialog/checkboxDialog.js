@@ -23,7 +23,8 @@ export default {
       cancelText: `取消`,
       confirm() {},
       confirmText: `确定`,
-      validate() { return true }
+      validate() { return true },
+      close() {}
     }
   },
   /**
@@ -40,8 +41,8 @@ export default {
    * @param {Function} opts.validate 验证函数
    */
   open(opts = {}) {
-    
-   
+
+
     const options = Object.assign({
       animateCss: undefined,
       visible: !1
@@ -80,7 +81,7 @@ export default {
          * @param {any} e
          */
         checkboxChange: function (e) {
-          
+
           let checkboxItems = options.checkboxItems
           let values = e.detail.value
           let name = e.currentTarget.dataset.name
@@ -142,7 +143,7 @@ export default {
               }
             }
           }
-          
+
           this.setData({
             [`${this.options.scope}.confirmDisabled`]: false,
             [`${this.options.scope}.checkboxItems`]: checkboxItems
@@ -154,7 +155,7 @@ export default {
          * @param {any} e
          */
         confirm(e) {
-          
+
           const res = e.detail.value
           const value = options.checkboxItems
           const checkedValues = []
@@ -173,6 +174,13 @@ export default {
          */
         cancel(e) {
           this.hide(options.cancel())
+        },
+        close(){
+          if (typeof options.close === 'function') {
+            this.hide(options.close())
+            return
+          }
+          this.hide()
         }
       }
     })

@@ -18,7 +18,13 @@ Page({
     //    },
     // }
     empty: false,
-    windowHeight: ''
+    windowHeight: '',
+    lastX: '',
+		lastY: '',
+		startX: '',
+		moveX: '',
+		touchElement: {},
+		delBtnWidth: 150
   },
   onLoad() {
     let that = this;
@@ -151,6 +157,7 @@ Page({
           empty: empty,
           quotationsList: res.content
         })
+        
         typeof object.complete === 'function' && object.complete()
       },
       fail: function () {
@@ -171,6 +178,92 @@ Page({
       },
       complete: function () {
 
+      }
+    })
+  },
+  handletouchmove(event) {
+		let currentX = event.changedTouches[0].clientX
+		let moveX = this.data.startX - currentX
+		let delBtnWidth = this.data.delBtnWidth
+		let index = event.currentTarget.dataset.index
+		let quotationsList = this.data.quotationsList
+
+		let X = ''
+		let Style = ""
+
+		if(Math.abs(moveX) < (delBtnWidth/2) ) {
+			X = moveX
+		}else {
+			X = delBtnWidth
+		}
+
+		if(moveX > 30){
+			Style = `left:-${X}rpx`
+		}
+		for(let item of quotationsList) {
+			item.Style = 'left:0'
+		}
+		quotationsList[index].Style = Style
+		//更新列表的状态
+		this.setData({
+		 quotationsList: quotationsList
+		})
+	},
+	handletouchtart:function(event) {
+		if(event.touches.length === 1){
+      this.data.startX = event.touches[0].clientX
+    }
+  },
+	handletouchend:function(e){
+		let that = this
+		let quotationsList = this.data.quotationsList
+    let delBtnWidth = this.data.delBtnWidth
+		let endX = e.changedTouches[0].clientX
+		let moveX = that.data.startX - endX
+    
+		if(moveX < (delBtnWidth/2)) {
+			for(let item of quotationsList) {
+				item.Style = 'left:0'
+			}
+      console.log(moveX,quotationsList)
+			this.setData({
+			 quotationsList: quotationsList
+			})
+		}
+  },
+  handleDeleteRecord(e) {
+    const that = this
+    const record = e.currentTarget.dataset.record
+    const quotationId = record.quotationId
+    const quotationsList = this.data.quotationsList
+    const newQuotationsList = []
+    app.saasService.requestDeleteRecotd(quotationId,{
+      loadingType: 'true',
+      success(res) {
+        console.log(res)
+        if(res) {
+          for(let item of quotationsList) {
+            if(item.quotationId != quotationId) {
+              newQuotationsList.push(item)
+            }
+          }
+//          wx.showModal({
+//            title: '提示',
+//            content: '这是一个模态弹窗',
+//            success: function(res) {
+//              if (res.confirm) {
+//                that.setData({
+//                  quotationsList: newQuotationsList
+//                })
+//              } else if (res.cancel) {
+//                console.log('用户点击取消')
+//              }
+//            }
+//          })
+          that.setData({
+            quotationsList: newQuotationsList
+          })
+        }
       }
     })
   }

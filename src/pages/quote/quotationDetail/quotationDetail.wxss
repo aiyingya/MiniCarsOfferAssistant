@@ -20,8 +20,8 @@
 }
 .white-box{
     background: #fff;
-    padding: 15px 0; 
-    display: -webkit-box;   
+    padding: 15px 0;
+    display: -webkit-box;
 }
 .white-box textarea,.textarea-box{
     width: calc(100% - 50px);
@@ -87,7 +87,7 @@
 .red-btn{
    border: none;
     background: #ED4149;
-    color: #fff; 
+    color: #fff;
     font-size: 32rpx;
     text-align: center;
     padding: 33rpx 0;
@@ -108,7 +108,7 @@
     height:216rpx;
     color: #f7b1b4;
     text-align: center;
-    font-size: 24rpx;    
+    font-size: 24rpx;
 }
 .payment-price{
     color: #fff;
@@ -144,4 +144,6 @@
 	font-size: 24rpx;
 	color: #888888;
 	line-height: 24rpx;
+
 }
+

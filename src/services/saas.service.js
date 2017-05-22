@@ -68,7 +68,7 @@ export default class SAASService extends Service {
     "customerMobile":"客户手机号"
    }
    */
-  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex) {
+  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex,isSendMessage) {
     if (draftId && draftId !== '') {
       this.sendMessage({
         path: 'sale/quotation',
@@ -76,7 +76,8 @@ export default class SAASService extends Service {
           draftId: draftId,
           customerMobile: customerMobile,
           customerName:customerName,
-          customerSex:customerSex
+          customerSex:customerSex,
+          sendMessage: isSendMessage ? true : (isSendMessage === undefined) ? true :false //防止后端没有判断，兼容以前的调用
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
@@ -181,6 +182,8 @@ export default class SAASService extends Service {
 
         }
       }
+      data.loanFee = quotationDraft.loanFee
+      data.saleMobile = quotationDraft.saleMobile
       data.rateType = quotationDraft.rateType
       data.marketPrice = quotationDraft.quotationItems[0].originalPrice
       data.insuranceDetail = quotationDraft.insuranceDetail
@@ -314,7 +317,23 @@ export default class SAASService extends Service {
     }
   }
 
-
+  /**
+   * 删除报价记录
+   *
+   * @param id 报价单ID
+   * @param opts
+   */
+  requestDeleteRecotd(id,opts) {
+    this.sendMessage({
+      path: `sale/quotation/delete/${id}`,
+      loadingType: opts.loadingType,
+      data: opts.data,
+      method: 'POST',
+      success: opts.success,
+      fail: opts.fail,
+      complete: opts.complete
+    })
+  }
   /**
    * 获取车源列表
    * @param carModelId
@@ -570,11 +589,9 @@ export default class SAASService extends Service {
    * @param data.place 门店所在省
    */
   gettingVehicleAndVesselTax(opts) {
-    return this.sendMessage({
+    return this.sendMessageByPromise({
       path: `sale/quotation/getCarTax?capacity=${opts.data.capacity}&place=${opts.data.place}`,
-      method: 'GET',
-      success: opts.success,
-      fail: opts.fail
+      method: 'GET'
     })
   }
 }

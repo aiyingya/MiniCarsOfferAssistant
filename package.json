@@ -1,8 +1,8 @@
 {
   "name": "miniprogram-yaomaiche",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "build": 1,
-  "versionCode": "010502",
+  "versionCode": "010600",
   "description": "运图贸易有限公司 要卖车 微信小程序",
   "main": "index.js",
   "engines": {
@@ -25,9 +25,7 @@
   },
   "author": "davidfu",
   "license": "ISC",
-  "dependencies": {
-    "wxapp-promise": "^1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "autoprefixer": "^6.6.0",
     "babel-core": "^6.23.1",

@@ -50,7 +50,8 @@ Page({
      * 其他费用.
      */
     othersCost: {
-      registration: "500"
+      registration: "500",
+      service: "500"
     }
   },
   onLoad() {
@@ -92,6 +93,7 @@ Page({
           "loan.service": res.loanFee,
           "loan.billingwayValue": res.interestType -1,
           "othersCost.registration": res.carNumberFee,
+          "othersCost.service": res.serviceFee,
           "insurances.rebates": res.insuranceRebate
         })
       }
@@ -215,7 +217,7 @@ Page({
       confirmText: '确定',
       cancelText: '取消',
       validate: (e) => {
-        if (e.detail.value > 0) {
+        if (e.detail.value >= 0 && e.detail.value!="") {
           return true
         } else {
           return false
@@ -245,12 +247,12 @@ Page({
   /**
    * 设置贷款服务费.
    */
-  handleChangeService() {
+  handleChangeLoanService() {
     let that = this
     this.popupInputNumberDialog({
-      title: '贷款服务费',
+      title: '贷款手续费',
       inputNumber: this.data.loan.service,
-      inputNumberPlaceholder: '输入贷款服务费',
+      inputNumberPlaceholder: '输入贷款手续费',
       dataparameter: 'loan.service'
     })
   },
@@ -300,10 +302,23 @@ Page({
     let that = this
 
     this.popupInputNumberDialog({
-      title: '上牌费',
+      title: '代收上牌费',
       inputNumber: this.data.othersCost.registration,
-      inputNumberPlaceholder: '输入保险返点',
+      inputNumberPlaceholder: '输入上牌费',
       dataparameter: 'othersCost.registration'
+    })
+  },
+  /**
+   * 服务费.
+   */
+  handleChangeService() {
+    let that = this
+
+    this.popupInputNumberDialog({
+      title: '服务费',
+      inputNumber: this.data.othersCost.service,
+      inputNumberPlaceholder: '输入服务费',
+      dataparameter: 'othersCost.service'
     })
   },
   /**
@@ -326,7 +341,8 @@ Page({
       "loanRebate": that.data.loan.rebates,
       "loanFee": that.data.loan.service,
       "carNumberFee": that.data.othersCost.registration,
-      "insuranceRebate": that.data.insurances.rebates
+      "insuranceRebate": that.data.insurances.rebates,
+      "serviceFee":that.data.othersCost.service
     }
     console.log(data)
     app.saasService.settingPreference({
