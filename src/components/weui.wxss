@@ -1082,7 +1082,7 @@ icon {
 
 .weui-layer-icon{
   position:fixed;
-  z-index:100;
+  z-index:1001;
   right: 50rpx;
   top:70%;
   height:60rpx;
@@ -1098,7 +1098,7 @@ icon {
 .weui-layer-movable{
   pointer-events:none;
   position:fixed;
-  z-index:501;
+  z-index:1001;
   margin: 6%;
   height:88%;
   width:88%;
@@ -1118,4 +1118,9 @@ icon {
   border-radius:100px;
   text-align:center;
   color:#FFFFFF;
+}
+
+.weui-layer-movable__hover{
+  box-shadow:0 0 10px rgba(250, 0, 0,1);
+  opacity: 1;
 }

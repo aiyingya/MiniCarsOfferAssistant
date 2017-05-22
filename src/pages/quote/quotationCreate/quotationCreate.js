@@ -204,7 +204,9 @@ Page({
     businessRisks:'',
     canIUse:{
       movablearea:false
-    }
+    },
+    contentDialogFun:null,
+    touchStatus:0 //0.无状态 1.点击了按钮 2.移动了按钮
   },
   onLoad(options) {
 
@@ -1139,7 +1141,7 @@ Page({
            _detailContent.push({name: '其它收益约', value: '￥' + res.otherFee})
          }
 
-         $wuxContentDialog.open({
+        let _contentDialogFun = $wuxContentDialog.open({
            title: '收益详情',
            totleContent: {name:'总利润约',value:'￥'+_totle},
            detailContent: _detailContent,
@@ -1147,12 +1149,57 @@ Page({
              that.showInput()
            }
          })
-
+         that.setData({
+           contentDialogFun : _contentDialogFun
+         })
        },
        fail:() => {console.log("查看收益失败")},
        complete: () => {}
       }
     );
+
+  },
+  touchStartIncome(){
+    const that = this
+    if(that.data.touchStatus != 0){
+      //用于touchEndIncome的300ms延时关闭，
+      return
+    }
+    that.setData({
+      touchStatus : 1
+    })
+    setTimeout(()=>{
+      if(that.data.touchStatus === 3){
+        that.lookIncome()
+      }
+    },400)
+  },
+  touchMoveIncome(){
+    const that = this
+    that.setData({
+      touchStatus : 2
+    })
+  },
+  longTapIncome(){
+    console.log("longTapIncome")
+    //手指触摸后，超过350ms再离开的事件
+    const that = this
+    that.setData({
+      touchStatus : 3
+    })
+  },
+  touchEndIncome(){
+    console.log("touchEndIncome")
+    const that = this
+      setTimeout(()=>{
+        if(typeof(that.data.contentDialogFun) == 'function') {
+          that.data.contentDialogFun()
+        }
+        that.setData({
+          touchStatus : 0
+        })
+      },300)
+
 
   },
   showInput(){
