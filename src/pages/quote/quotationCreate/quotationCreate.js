@@ -72,7 +72,9 @@ Page({
       totalPayment: 0, // 总落地价格
       loanInterest:0,//贷款利息
       remark: '', // "无"
-      read: false
+      read: false,
+      x: 0,
+      y: 0
     },
     requestResult:{
       "carPrice":"161600",//显示裸车价= 裸车价+运费+利润
@@ -299,7 +301,13 @@ Page({
         two: 1780,
         three: 2250
       }
-    }
+    },
+    canIUse:{
+      movablearea:false
+    },
+    contentDialogFun:null,
+    touchStatus:0, //0.无状态 1.点击了按钮 2.移动了按钮
+    getProfitResult:{}
   },
   onLoad(options) {
     let that = this
@@ -315,6 +323,10 @@ Page({
     } catch (e) {
 
     }
+
+    this.setData({
+      'canIUse.movablearea': wx.canIUse('movable-area')
+    })
 
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
@@ -628,6 +640,12 @@ Page({
   },
   onReachBottom() {},
   onPullDownRefresh() {},
+  tap: function(e) {
+    this.setData({
+      x: 30,
+      y: 30
+    });
+  },
   isShowDownDot(name){
     if(name.indexOf('宝马') >-1 || name.indexOf('奥迪')>-1 || name.indexOf('MINI')>-1){
       return true;
@@ -715,6 +733,8 @@ Page({
         point: downPoint
       }
     });
+
+    this.initIncome()
 
   },
   isLoanTabActive(e) {
@@ -1172,72 +1192,122 @@ Page({
   lookIncome(){
     let that = this
     console.log("查看收益")
+    that.hideInput()
+     const res = that.data.getProfitResult;
+     console.log("已经有收益结果")
+     //设计搞与原型搞上无全款显示效果，临时脑补判断条件与显示画面...
+
+     let _totle
+     let _detailContent =[]
+     _detailContent.push({
+       name:'裸车价收益约',value:'￥'+ res.profit
+     },{name:'保险收益约',value:'￥'+res.insuranceProfit})
+
+
+     if(this.isLoanTabActive()) {
+       //贷款
+       _detailContent.push({name: '贷款收益约', value: '￥' + res.loanProfit})
+       _totle = res.totalProfit
+     }else{
+       //全款
+       _detailContent.push({name: '贷款收益约', value: '￥0'})
+       _totle = (Number(res.totalProfit) - Number(res.loanProfit))
+     }
+
+     if(res.boutiqueFee){
+       _detailContent.push({name: '精品收益约', value: '￥' + res.boutiqueFee})
+     }
+     if(res.installFee){
+       _detailContent.push({name: '安装收益约', value: '￥' + res.installFee})
+     }
+     if(res.serviceFee){
+       _detailContent.push({name: '服务收益约', value: '￥' + res.serviceFee})
+     }
+     if(res.otherFee){
+       _detailContent.push({name: '其它收益约', value: '￥' + res.otherFee})
+     }
+
+    let _contentDialogFun = $wuxContentDialog.open({
+       title: '收益详情',
+       totleContent: {name:'总利润约',value:'￥'+_totle},
+       detailContent: _detailContent,
+       close: () => {
+         that.showInput()
+       }
+     })
+     that.setData({
+       contentDialogFun : _contentDialogFun
+     })
+  },
+  initIncome(){
+    //初始化收益
+    let that = this
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
     var user = app.userService;
-
-    that.hideInput()
     app.saasService.getProfit({
-      "userId": user.auth.userId,
-      "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
-      "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount,
-      "carPrice":carPrice,
-      "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
-      "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
-      "loanServiceFee":that.data.quotation.loanFee,
-      "installFee":that.data.quotation.otherExpensesAll.installationFee,
-      "otherFee":that.data.quotation.otherExpensesAll.otherFee,
-      "serviceFee":that.data.quotation.otherExpensesAll.serverFee
-    },
-     {
-       success: (res) => {
-         console.log("已经有收益结果")
-         //设计搞与原型搞上无全款显示效果，临时脑补判断条件与显示画面...
-
-         let _totle
-         let _detailContent =[]
-         _detailContent.push({
-           name:'裸车价收益约',value:'￥'+ res.profit
-         },{name:'保险收益约',value:'￥'+res.insuranceProfit})
-
-
-         if(this.isLoanTabActive()) {
-           //贷款
-           _detailContent.push({name: '贷款收益约', value: '￥' + res.loanProfit})
-           _totle = res.totalProfit
-         }else{
-           //全款
-           _detailContent.push({name: '贷款收益约', value: '￥0'})
-           _totle = (Number(res.totalProfit) - Number(res.loanProfit))
-         }
-
-         if(res.boutiqueFee){
-           _detailContent.push({name: '精品收益约', value: '￥' + res.boutiqueFee})
-         }
-         if(res.installFee){
-           _detailContent.push({name: '安装收益约', value: '￥' + res.installFee})
-         }
-         if(res.serviceFee){
-           _detailContent.push({name: '服务收益约', value: '￥' + res.serviceFee})
-         }
-         if(res.otherFee){
-           _detailContent.push({name: '其它收益约', value: '￥' + res.otherFee})
-         }
-
-         $wuxContentDialog.open({
-           title: '收益详情',
-           totleContent: {name:'总利润约',value:'￥'+_totle},
-           detailContent: _detailContent,
-           close: () => {
-             that.showInput()
-           }
-         })
-
-       },
-       fail:() => {console.log("查看收益失败")},
-       complete: () => {}
+        "userId": user.auth.userId,
+        "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
+        "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount,
+        "carPrice":carPrice,
+        "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
+        "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
+        "loanServiceFee":that.data.quotation.loanFee,
+        "installFee":that.data.quotation.otherExpensesAll.installationFee,
+        "otherFee":that.data.quotation.otherExpensesAll.otherFee,
+        "serviceFee":that.data.quotation.otherExpensesAll.serverFee
+      },
+      {
+        success: (res) => {
+          that.setData({
+            getProfitResult : res
+          })
+        },
+        fail:() => {console.log("查看收益失败")},
+        complete: () => {}
+      });
+  },
+  touchStartIncome(){
+    const that = this
+    if(that.data.touchStatus != 0){
+      //用于touchEndIncome的300ms延时关闭，
+      return
+    }
+    that.setData({
+      touchStatus : 1
+    })
+    setTimeout(()=>{
+      if(that.data.touchStatus === 3){
+        that.lookIncome()
       }
-    );
+    },400)
+  },
+  touchMoveIncome(){
+    const that = this
+    that.setData({
+      touchStatus : 2
+    })
+  },
+  longTapIncome(){
+    console.log("longTapIncome")
+    //手指触摸后，超过350ms再离开的事件
+    const that = this
+    that.setData({
+      touchStatus : 3
+    })
+  },
+  touchEndIncome(){
+    console.log("touchEndIncome")
+    const that = this
+      setTimeout(()=>{
+        if(typeof(that.data.contentDialogFun) == 'function') {
+          that.data.contentDialogFun()
+        }
+        that.setData({
+          touchStatus : 0
+        })
+      },300)
+
 
   },
   showInput(){
