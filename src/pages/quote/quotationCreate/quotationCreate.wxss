@@ -145,12 +145,11 @@ page {
     font-size: 60rpx;
 }
 .advance-payment-block{
-    opacity: 0.9;
     background: #ED4149;
 }
 
 .monthly-payment-block{
-    opacity: 0.8;
+    opacity: 0.9;
     background: #ED4149;
 }
 
