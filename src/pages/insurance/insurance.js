@@ -243,13 +243,19 @@ Page({
       for(let item of insurancesAll.businessInsurances) {
         switch (item.name) {
           case '第三者责任险':
-            this.data.liabilityTypesIndex = item.index || 3
+            this.setData({
+              liabilityTypesIndex: item.index || 3
+            })
             break
           case '玻璃单独破碎险':      
-            this.data.glassBrokenTypesIndex = item.index || 0
+            this.setData({
+              glassBrokenTypesIndex: item.index || 0
+            })
             break
           case '车身划痕险': 
-            this.data.scratchesTypesIndex = item.index || 1
+            this.setData({
+              scratchesTypesIndex :item.index || 1
+            })
             break
           default:
 
@@ -313,10 +319,14 @@ Page({
               case '第三者责任险':
                 if(carModelInfo.insuranceDetail.iDSZZRX > 0) {
                   item.checked = true
-                  that.data.liabilityTypesIndex = carModelInfo.insuranceDetail.iDSZZRX_INDEX
+                  that.setData({
+                    liabilityTypesIndex: carModelInfo.insuranceDetail.iDSZZRX_INDEX
+                  })
                 }else {
                   item.checked = false
-                  that.data.liabilityTypesIndex = 3
+                  that.setData({
+                    liabilityTypesIndex: 3
+                  })
                 }
                 break
               case '车辆损失险':
@@ -336,10 +346,14 @@ Page({
               case '玻璃单独破碎险': 
                 if(carModelInfo.insuranceDetail.iBLDDPSX > 0) {
                   item.checked = true
-                  that.data.glassBrokenTypesIndex = carModelInfo.insuranceDetail.iBLDDPSX_INDEX
+                  that.setData({
+                    glassBrokenTypesIndex: carModelInfo.insuranceDetail.iBLDDPSX_INDEX
+                  })
                 }else {
                   item.checked = false
-                  that.data.glassBrokenTypesIndex = 0
+                  that.setData({
+                    glassBrokenTypesIndex: 0
+                  })
                 }
                 break
               case '自燃损失险':
@@ -373,10 +387,14 @@ Page({
               case '车身划痕险': 
                 if(carModelInfo.insuranceDetail.iCSHHX > 0) {
                   item.checked = true
-                  that.data.scratchesTypesIndex = carModelInfo.insuranceDetail.iCSHHX_INDEX
+                  that.setData({
+                    scratchesTypesIndex: carModelInfo.insuranceDetail.iCSHHX_INDEX
+                  })
                 }else {
                   item.checked = false
-                  that.data.scratchesTypesIndex = 1
+                  that.setData({
+                    scratchesTypesIndex: 1
+                  })
                 }
                 break
               default:
