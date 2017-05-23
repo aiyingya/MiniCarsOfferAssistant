@@ -72,7 +72,9 @@ Page({
       totalPayment: 0, // 总落地价格
       loanInterest:0,//贷款利息
       remark: '', // "无"
-      read: false
+      read: false,
+      x: 0,
+      y: 0
     },
     requestResult:{
       "carPrice":"161600",//显示裸车价= 裸车价+运费+利润
@@ -189,7 +191,9 @@ Page({
         status: '', // "no_stock",
         remark: '' // "无"
       },
-      count: '' // "7.34"
+      count: '', // "7.34"
+      capacity:null,//排量
+      isElectricCar:false//是否纯电动车
     },
     source: '', // carModels/carSources/quotationDetail/
     showPreferenceSetting:false,
@@ -197,10 +201,115 @@ Page({
     isOnLoad:true,
     diffPrice:0,//是否加价卖
     isShowTextarea:true,
-    businessRisks:''
+    businessRisks:'',
+    /**
+     *根据spu规格计算保险
+     */
+    spuStandard: {
+      /**
+       * 6座以下.
+       */
+      spuUnderSix: {
+        /**
+         * 第三者责任险.
+         */
+        liability: {
+          '5': 638,
+          '10': 920,
+          '20': 1141,
+          '30': 1265,
+          '50': 1546,
+          '100': 2012
+        },
+        /**
+         * 车辆损失险基础保费.
+         */
+        vehicleBasis: 539,
+        /**
+         * 全车盗抢险.
+         */
+        vehicleDQ: {
+          basisPremium: 120,
+          rate: 0.0049
+        },
+        /**
+         * 玻璃单独破碎险
+         */
+        glassBroken: [0.002,0.0033],
+        /**
+         * 车上人员责任险
+         */
+        personnelCarRate: 0.0069
+      },
+      /**
+       * 6座以上.
+       */
+      spuAboveSix: {
+        /**
+         * 第三者责任险.
+         */
+        liability: {
+          '5': 590,
+          '10': 831,
+          '20': 1014,
+          '30': 1178,
+          '50': 1352,
+          '100': 1760
+        },
+        /**
+         * 车辆损失险基础保费.
+         */
+        vehicleBasis: 646,
+        /**
+         * 全车盗抢险.
+         */
+        vehicleDQ: {
+          basisPremium: 140,
+          rate: 0.0044
+        },
+        /**
+         * 玻璃单独破碎险
+         */
+        glassBroken: [0.002,0.0033],
+        /**
+         * 车上人员责任险
+         */
+        personnelCarRate: 0.0066
+      }
+    },
+    /**
+     * 根据裸车价算车身划痕险.
+     */
+    scratches: {
+      '2000': {
+        one: 400,
+        two: 585,
+        three: 850
+      },
+      '5000': {
+        one: 570,
+        two: 900,
+        three: 1100
+      },
+      '10000': {
+        one: 760,
+        two: 1170,
+        three: 1500
+      },
+      '20000': {
+        one: 1140,
+        two: 1780,
+        three: 2250
+      }
+    },
+    canIUse:{
+      movablearea:false
+    },
+    contentDialogFun:null,
+    touchStatus:0, //0.无状态 1.点击了按钮 2.移动了按钮
+    getProfitResult:{}
   },
   onLoad(options) {
-
     let that = this
     try {
       let res = wx.getSystemInfoSync();
@@ -214,6 +323,10 @@ Page({
     } catch (e) {
 
     }
+
+    this.setData({
+      'canIUse.movablearea': wx.canIUse('movable-area')
+    })
 
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
@@ -275,14 +388,19 @@ Page({
 
       const isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
 
+      // 保险相关.
+      const insuranceDetail = quotation.insuranceDetail
+
       this.setData({
         'isSpecialBranch': isShow,
         'quotation': quotation,
         'quotation.quotationItems[0].baseSellingPrice': quotation.carPrice,
         'carModelsInfo.sellingPrice': quotation.carPrice,
-        'quotation.quotationItems[0].originalPrice':quotation.marketPrice
+        'quotation.quotationItems[0].originalPrice':quotation.marketPrice,
+        'carModelInfo.capacity':quotation.carCapacity,
+        'carModelInfo.isElectricCar':quotation.electricCar
       })
-
+      console.log(quotation.insuranceDetail)
       //获取报价单接口
       app.saasService.getCreatCarRecordInfo({
         data:{
@@ -318,8 +436,6 @@ Page({
       }, err => {
         //wx.hideToast()
       })
-      console.log(quotation)
-
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
         var carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
@@ -524,6 +640,12 @@ Page({
   },
   onReachBottom() {},
   onPullDownRefresh() {},
+  tap: function(e) {
+    this.setData({
+      x: 30,
+      y: 30
+    });
+  },
   isShowDownDot(name){
     if(name.indexOf('宝马') >-1 || name.indexOf('奥迪')>-1 || name.indexOf('MINI')>-1){
       return true;
@@ -611,6 +733,8 @@ Page({
         point: downPoint
       }
     });
+
+    this.initIncome()
 
   },
   isLoanTabActive(e) {
@@ -866,8 +990,9 @@ Page({
     let that = this;
     let quotation ={}
     quotation = Object.assign({}, quotation, that.data.quotation)
-
     quotation.rateType= that.data.requestResult.interestType
+    quotation.carCapacity = that.data.carModelInfo.capacity//排量
+    quotation.electricCar = that.data.carModelInfo.isElectricCar//是否纯电动
 
     if(that.data.activeIndex == 1){
       //全款没有贷款手续费
@@ -1067,72 +1192,134 @@ Page({
   lookIncome(){
     let that = this
     console.log("查看收益")
+    that.hideInput()
+     const res = that.data.getProfitResult;
+     console.log("已经有收益结果")
+     //设计搞与原型搞上无全款显示效果，临时脑补判断条件与显示画面...
+
+     let _totle
+     let _detailContent =[]
+     _detailContent.push({
+       name:'裸车价收益约',value:'￥'+ res.profit
+     },{name:'保险收益约',value:'￥'+res.insuranceProfit})
+
+
+     if(this.isLoanTabActive()) {
+       //贷款
+       _detailContent.push({name: '贷款收益约', value: '￥' + res.loanProfit})
+       _totle = res.totalProfit
+     }else{
+       //全款
+       _detailContent.push({name: '贷款收益约', value: '￥0'})
+       _totle = (Number(res.totalProfit) - Number(res.loanProfit))
+     }
+
+     if(res.boutiqueFee){
+       _detailContent.push({name: '精品收益约', value: '￥' + res.boutiqueFee})
+     }
+     if(res.installFee){
+       _detailContent.push({name: '安装收益约', value: '￥' + res.installFee})
+     }
+     if(res.serviceFee){
+       _detailContent.push({name: '服务收益约', value: '￥' + res.serviceFee})
+     }
+     if(res.otherFee){
+       _detailContent.push({name: '其它收益约', value: '￥' + res.otherFee})
+     }
+
+    let _contentDialogFun = $wuxContentDialog.open({
+       title: '收益详情',
+       totleContent: {name:'总利润约',value:'￥'+_totle},
+       detailContent: _detailContent,
+       close: () => {
+         that.showInput()
+       }
+     })
+     that.setData({
+       contentDialogFun : _contentDialogFun
+     })
+  },
+  initIncome(){
+    //初始化收益
+    let that = this
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
     var user = app.userService;
-
-    that.hideInput()
     app.saasService.getProfit({
-      "userId": user.auth.userId,
-      "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
-      "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount,
-      "carPrice":carPrice,
-      "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
-      "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
-      "loanServiceFee":that.data.quotation.loanFee,
-      "installFee":that.data.quotation.otherExpensesAll.installationFee,
-      "otherFee":that.data.quotation.otherExpensesAll.otherFee,
-      "serviceFee":that.data.quotation.otherExpensesAll.serverFee
-    },
-     {
-       success: (res) => {
-         console.log("已经有收益结果")
-         //设计搞与原型搞上无全款显示效果，临时脑补判断条件与显示画面...
-
-         let _totle
-         let _detailContent =[]
-         _detailContent.push({
-           name:'裸车价收益约',value:'￥'+ res.profit
-         },{name:'保险收益约',value:'￥'+res.insuranceProfit})
-
-
-         if(this.isLoanTabActive()) {
-           //贷款
-           _detailContent.push({name: '贷款收益约', value: '￥' + res.loanProfit})
-           _totle = res.totalProfit
-         }else{
-           //全款
-           _detailContent.push({name: '贷款收益约', value: '￥0'})
-           _totle = (Number(res.totalProfit) - Number(res.loanProfit))
-         }
-
-         if(res.boutiqueFee){
-           _detailContent.push({name: '精品收益约', value: '￥' + res.boutiqueFee})
-         }
-         if(res.installFee){
-           _detailContent.push({name: '安装收益约', value: '￥' + res.installFee})
-         }
-         if(res.serviceFee){
-           _detailContent.push({name: '服务收益约', value: '￥' + res.serviceFee})
-         }
-         if(res.otherFee){
-           _detailContent.push({name: '其它收益约', value: '￥' + res.otherFee})
-         }
-
-         $wuxContentDialog.open({
-           title: '收益详情',
-           totleContent: {name:'总利润约',value:'￥'+_totle},
-           detailContent: _detailContent,
-           close: () => {
-             that.showInput()
-           }
-         })
-
-       },
-       fail:() => {console.log("查看收益失败")},
-       complete: () => {}
+        "userId": user.auth.userId,
+        "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
+        "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount,
+        "carPrice":carPrice,
+        "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
+        "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
+        "loanServiceFee":that.data.quotation.loanFee,
+        "installFee":that.data.quotation.otherExpensesAll.installationFee,
+        "otherFee":that.data.quotation.otherExpensesAll.otherFee,
+        "serviceFee":that.data.quotation.otherExpensesAll.serverFee
+      },
+      {
+        success: (res) => {
+          that.setData({
+            getProfitResult : res
+          })
+        },
+        fail:() => {console.log("查看收益失败")},
+        complete: () => {}
+      });
+  },
+  touchStartIncome(){
+    console.log("touchStartIncome")
+    const that = this
+    if(that.data.touchStatus != 0){
+      //用于touchEndIncome的300ms延时关闭，
+      return
+    }
+    that.setData({
+      touchStatus : 1
+    })
+    setTimeout(()=>{
+      console.log("touchStartIncome400","touchStatus:"+that.data.touchStatus)
+      if(that.data.touchStatus === 3){
+        that.lookIncome()
       }
-    );
+    },500)
+  },
+  touchMoveIncome(){
+    const that = this
+    if(that.data.touchStatus===2 || that.data.touchStatus ===4){
+      return
+    }
+    if(that.data.touchStatus === 3){
+      that.setData({
+        touchStatus : 4
+      })
+      return
+    }
+    that.setData({
+      touchStatus : 2
+    })
+  },
+  longTapIncome(){
+    console.log("longTapIncome")
+    //手指触摸后，超过350ms再离开的事件
+    const that = this
+    that.setData({
+      touchStatus : 3
+    })
+  },
+  touchEndIncome(){
+    console.log("touchEndIncome")
+    const that = this
+      setTimeout(()=>{
+        if(typeof(that.data.contentDialogFun) == 'function') {
+          that.data.contentDialogFun()
+        }
+        that.showInput()
+        that.setData({
+          touchStatus : 0
+        })
+      },300)
+
 
   },
   showInput(){
@@ -1255,12 +1442,16 @@ Page({
     let businessRisks = data
     // spu规格.
     let carModelsInfo = this.data.carModelInfo
+    let quotation = this.data.quotation
+    let insuranceDetail = this.data.quotation.insuranceDetail
     // 裸车价.
     let officialPrice = carModelsInfo.sellingPrice
     let seatNums = carModelsInfo.seatNums
     let standards = []
     let sIndex = 0
     let sixUnder = [], sixAbove = []
+    let liabilityTypes = [5,10,20,30,50,100]
+    let scratchesTypes = [2000,5000,10000,20000]
 
     if(seatNums && seatNums.length > 0) {
       for(let item of seatNums) {
@@ -1269,6 +1460,12 @@ Page({
         }else {
           sixAbove.push(item)
         }
+      }
+    }else {
+      if(quotation.insuranceDetail.carSize == 0){
+        sixUnder.push('0')
+      }else {
+        sixAbove.push('1')
       }
     }
 
@@ -1280,6 +1477,7 @@ Page({
       standards = ["家用6座以下","家用6座以上"]
     }
     let standardIndex = standards[sIndex] == '家用6座以下' ? 0 : 1
+    console.log(standardIndex)
     // 初始化总金额为0.
     let totalAmount = 0
     // 商业险总额.
@@ -1307,28 +1505,16 @@ Page({
 
     let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
 
-    let insuranceDetail = {
-      "iTotal":0,//"保险总额",
-      "iJQX":trafficInsurance,//"交强险",
-      "iDSZZRX":0,//"第三者责任险", 1
-      "iCLSSX":0,//"车辆损失险",1
-      "iQCDQX":0,//"全车盗抢险",1
-      "iBLDDPSX":0,//"玻璃单独破碎险",1
-      "iZRSSX":0,//"自燃损失险",1
-      "iBJMPTYX":0,//"不计免赔特约险",1
-      "iWGZRX":0,//"无过责任险",1
-      "iCSRYZRX":0,//"车上人员责任险",1
-      "iCSHHX":0,//"车身划痕险"1
-      "carSize":standardIndex,//"车辆规格"
-      "iDSZZRX_INDEX":3,
-      "iBLDDPSX_INDEX":0,
-      "iCSHHX_INDEX":1
-    }
+    insuranceDetail.iJQX = trafficInsurance //"交强险",
+    insuranceDetail.carSize = standardIndex //"车辆规格"
+
     for(let item of businessRisks) {
       if(item.checked) {
         switch (item.name) {
           case '第三者责任险':
-            liabilityInsurance = standardIndex == 0 ? 1265 : 1178
+            let iDSZZRX_INDEX = liabilityTypes[insuranceDetail.iDSZZRX_INDEX]
+            liabilityInsurance = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.liability[iDSZZRX_INDEX]
+                                                    : this.data.spuStandard.spuAboveSix.liability[iDSZZRX_INDEX]
             businessTatal += liabilityInsurance
             insuranceDetail.iDSZZRX = liabilityInsurance.toFixed(0)
             break
@@ -1346,7 +1532,9 @@ Page({
             insuranceDetail.iQCDQX = vehicleDQInsurance.toFixed(0)
             break
           case '玻璃单独破碎险':
-            let glassBrokenRate = 0.002
+            let iBLDDPSX_INDEX = insuranceDetail.iBLDDPSX_INDEX
+            let glassBrokenRate = standardIndex == 0 ? this.data.spuStandard.spuUnderSix.glassBroken[iBLDDPSX_INDEX]
+                                                    : this.data.spuStandard.spuAboveSix.glassBroken[iBLDDPSX_INDEX]
             glassBrokenInsurance = officialPrice*glassBrokenRate
             businessTatal += Number(glassBrokenInsurance.toFixed(0))
             insuranceDetail.iBLDDPSX = glassBrokenInsurance.toFixed(0)
@@ -1377,14 +1565,15 @@ Page({
 
             break
           case '车身划痕险':
+            let iCSHHX_INDEX = scratchesTypes[insuranceDetail.iCSHHX_INDEX]
             let scratches = 0
 
             if(officialPrice/10000 < 30) {
-              scratches = 570
+              scratches = this.data.scratches[iCSHHX_INDEX].one
             }else if(30<= officialPrice/10000 && officialPrice/10000 <= 50) {
-              scratches = 900
+              scratches = this.data.scratches[iCSHHX_INDEX].two
             }else{
-              scratches = 1100
+              scratches = this.data.scratches[iCSHHX_INDEX].three
             }
 
             businessTatal += scratches
