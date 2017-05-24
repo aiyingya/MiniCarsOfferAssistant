@@ -1,5 +1,5 @@
 import config from '../config'
-import * as wxapi from 'fmtr-wxapp-promise'
+import * as wxapi from 'fmt-wxapp-promise'
 
 
 export default class YMC {
