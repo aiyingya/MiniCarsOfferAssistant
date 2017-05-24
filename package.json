@@ -26,7 +26,7 @@
   "author": "davidfu",
   "license": "ISC",
   "dependencies": {
-    "fmtr-wxapp-promise": "^1.1.0"
+    "fmt-wxapp-promise": "^1.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.6.0",
