@@ -11,14 +11,14 @@ export default class YMC {
    *
    * @memberOf YMC
    */
-  requestByPromise(options) {
+  oldrequestByPromise(options) {
     if (!options) return null
     return new Promise((resolve, reject) => {
       let clientId = ''
       try {
         // FIXME: 处理 clientId 使用同步获取相对较重
         clientId = wx.getStorageSync(`${config.ENV}_clientId`)
-        console.log(clientId)
+        // console.log("clientId:"+clientId)
       } catch (e) {
         console.error(e)
       }
@@ -45,7 +45,7 @@ export default class YMC {
          * @param {Object} res.data
          */
         success(res) {
-          console.log('success',res)
+          console.log('success-promise',res)
           const result = res.data
           const statusCode = res.statusCode
 
@@ -67,6 +67,7 @@ export default class YMC {
           if (statusCode < 399) {
             // 2XX, 3XX 成功
             const data = result.data || null
+            console.log('resolve(data)',data)
             resolve(data)
           } else {
             // 4XX, 5XX 失败
@@ -421,7 +422,7 @@ export default class YMC {
    * success      成功回调sendMessagePromise
    * complete     完成回调
    */
-  requestByPromise_new(options) {
+  requestByPromise(options) {
     if (!options) return null
 
     let clientId = ''
@@ -447,6 +448,7 @@ export default class YMC {
       header: Object.assign(defaultHeader, header),
       method: options.method || 'GET'
     }).then(res=>{
+      console.log('success-promise-n',res)
       const result = res.data
       const statusCode = res.statusCode
 
@@ -469,6 +471,7 @@ export default class YMC {
         // 2XX, 3XX 成功
         const data = result.data || null
         return data
+
       } else {
         // 4XX, 5XX 失败
         console.error(res)
