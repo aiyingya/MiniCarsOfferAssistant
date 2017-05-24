@@ -1,5 +1,5 @@
 import config from '../config'
-import * as wxapi from '../modules/wxapp-promise'
+import * as wxapi from 'fmtr-wxapp-promise'
 
 
 export default class YMC {
@@ -45,8 +45,7 @@ export default class YMC {
          * @param {Object} res.data
          */
         success(res) {
-          console.log('success')
-          console.log(res)
+          console.log('success',res)
           const result = res.data
           const statusCode = res.statusCode
 
@@ -204,6 +203,7 @@ export default class YMC {
           options.fail(err)
           return
         }
+        console.log("show fail loading")
         wxapi.showToast({
           title: err.message,
           icon: 'loading',
@@ -217,6 +217,7 @@ export default class YMC {
         options.fail(error)
         return
       }
+      console.log("show fail loading")
       wxapi.showToast({
         title: error.message,
         icon: 'loading',
@@ -231,10 +232,13 @@ export default class YMC {
       } else if (options.loadingType === 'none') {
         // 不使用任何加载
       } else {
+        console.log("end close loading")
+
         wxapi.hideToast()
       }
 
       const error = new Error('网络请求错误')
+      console.log("show catch loading")
       wxapi.showToast({
         title: error.message,
         icon: 'loading',

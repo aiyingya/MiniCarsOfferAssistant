@@ -709,9 +709,6 @@ Page({
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(2)
 
-    console.log(downPriceFlag)
-
-
     if(!that.data.initPoint){
       this.setData({
         initPoint:downPoint,
@@ -1340,16 +1337,13 @@ Page({
         "installFee":that.data.quotation.otherExpensesAll.installationFee,
         "otherFee":that.data.quotation.otherExpensesAll.otherFee,
         "serviceFee":that.data.quotation.otherExpensesAll.serverFee
-      },
-      {
-        success: (res) => {
-          that.setData({
-            getProfitResult : res
-          })
-        },
-        fail:() => {console.log("查看收益失败")},
-        complete: () => {}
-      });
+      }).then(res=>{
+        that.setData({
+          getProfitResult : res
+        })
+    },fail=>{
+      console.log("查看收益失败")
+    })
   },
   touchStartIncome(){
     console.log("touchStartIncome")

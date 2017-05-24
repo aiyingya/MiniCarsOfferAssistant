@@ -1682,6 +1682,10 @@ flow-bin@^0.42.0:
   version "0.42.0"
   resolved "http://10.16.45.29:4873/flow-bin/-/flow-bin-0.42.0.tgz#05dd754b6b052de7b150f9210e2160746961e3cf"
 
+fmtr-wxapp-promise@^1.1.0:
+  version "1.1.0"
+  resolved "http://10.16.45.29:4873/fmtr-wxapp-promise/-/fmtr-wxapp-promise-1.1.0.tgz#229a35ce9e4c0dc9533c69549b01c5c40981be81"
+
 for-in@^1.0.1:
   version "1.0.2"
   resolved "http://10.16.45.29:4873/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -4214,10 +4218,6 @@ write@^0.2.1:
   resolved "http://10.16.45.29:4873/write/-/write-0.2.1.tgz#5fc03828e264cea3fe91455476f7a3c566cb0757"
   dependencies:
     mkdirp "^0.5.1"
-
-wxapp-promise@^1.0.0:
-  version "1.0.3"
-  resolved "http://10.16.45.29:4873/wxapp-promise/-/wxapp-promise-1.0.3.tgz#99cc93807b2d83873adb84be6e61ebdae5229d73"
 
 xml-char-classes@^1.0.0:
   version "1.0.0"

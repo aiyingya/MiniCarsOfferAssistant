@@ -9,7 +9,7 @@
 import Service from './base.service'
 import Util from '../utils/util'
 import config from '../config'
-import * as wxapi from '../modules/wxapp-promise'
+import * as wxapi from 'fmtr-wxapp-promise'
 
 
 
