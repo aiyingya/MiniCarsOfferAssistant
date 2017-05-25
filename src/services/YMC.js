@@ -486,15 +486,6 @@ export default class YMC {
           throw new Error(result) //to -> fail
         }
       }
-    },fail=>{
-      wxapi.showToast({
-        title: fail.message,//+options.url,
-        icon: 'loading',
-        duration: 2000
-      });
-      console.log('fail',fail)
-      throw fail; //to -> fail
-
     }).catch(function (reason) {
       // 抛出一个全局错误
       wxapi.showToast({
