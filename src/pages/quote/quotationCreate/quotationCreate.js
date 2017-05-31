@@ -877,8 +877,14 @@ Page({
           'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(price,isElectricCar? null:capacity))
         })
         let businessRisks = this.data.businessRisks
-        that.insuranceCostCountDefault(businessRisks)
-
+        let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
+        
+        if(insurancesAll != null) {
+          that.insuranceCostCountDefault(insurancesAll.businessInsurances)
+        }else {
+          that.insuranceCostCountDefault(businessRisks)
+        }
+        
         that.updateForSomeReason()
         that.showInput()
 
