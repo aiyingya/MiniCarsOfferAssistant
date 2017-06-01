@@ -308,7 +308,7 @@
 }
 .carSourceDetailDialog .footer .quoted-price .discount-icon {
   width: 20rpx;
-  height: 24rpx;
+  height: 22rpx;
   position: relative;
 }
 .carSourceDetailDialog .footer .quoted-price .discount {
@@ -366,7 +366,7 @@
 }
 .carSourceDetailDialog .footer .button1 {
   height: 56rpx;
-  width: 124rpx;
+  width: 120rpx;
   line-height: 26rpx;
   text-align: center;
   font-family: "PingFangSC-Regular";
