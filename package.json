@@ -62,6 +62,6 @@
     "run-sequence": "^1.2.2"
   },
   "config": {
-    "env": "gqc"
+    "env": "dev"
   }
 }
