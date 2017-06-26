@@ -22,7 +22,6 @@ const gwcn = require('gulp-wxa-copy-npm');
 const sourcemaps = require('gulp-sourcemaps');
 const minimist = require('minimist');
 
-
 let env = process.env.NODE_ENV || process.env.npm_package_config_env || "prd";
 var myConfig = {
   apiUrl:{}

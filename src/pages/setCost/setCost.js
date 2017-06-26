@@ -47,6 +47,14 @@ Page({
       checkedValues: []
     },
     /**
+     * 报价单时效.
+     */
+    quotationAging: {
+      agingIndex: 0,
+      agingValue: ["24","48","-1"],
+      agingText: ["24小时","48小时","无限制"],
+    },
+    /**
      * 其他费用.
      */
     othersCost: {
@@ -322,6 +330,15 @@ Page({
     })
   },
   /**
+   * 报价单时效.
+   */
+  handleChangeAging(e) {
+    let agingIndex = e.detail.value
+    this.setData({
+      'quotationAging.agingIndex': agingIndex
+    })
+  },
+  /**
    * 上报设置信息.
    */
   handlePushSet() {
@@ -342,7 +359,8 @@ Page({
       "loanFee": that.data.loan.service,
       "carNumberFee": that.data.othersCost.registration,
       "insuranceRebate": that.data.insurances.rebates,
-      "serviceFee":that.data.othersCost.service
+      "serviceFee":that.data.othersCost.service,
+      "validTime": that.data.quotationAging.agingValue[that.data.quotationAging.agingIndex]
     }
     console.log(data)
     app.saasService.settingPreference({

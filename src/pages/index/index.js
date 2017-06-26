@@ -21,7 +21,8 @@ Page({
     showCarSeriesInner: '',
     showCarSeriesImageUrl: '',
     carManufacturerSeriesList: [],
-    showNodata: false
+    showNodata: false,
+    anewReload: false
   },
   //事件处理函数
   searchCarType() {
@@ -69,6 +70,7 @@ Page({
     promise.then(res => {
       wx.hideToast()
     }, err => {
+      
       wx.hideToast()
     })
 
@@ -121,7 +123,9 @@ Page({
         })
       }
     }, (err) => {
-
+      that.setData({
+        anewReload: true
+      })
     })
   },
   /**

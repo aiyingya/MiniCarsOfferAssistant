@@ -13,7 +13,8 @@
     "pages/supplier/supplier",
     "pages/setCost/setCost",
     "pages/insurance/insurance",
-    "pages/insurance/insuranceDetail/insuranceDetail"
+    "pages/insurance/insuranceDetail/insuranceDetail",
+    "pages/amap/amap"
   ],
   "window": {
     "backgroundTextStyle": "dark",
@@ -42,6 +43,12 @@
         "iconPath": "images/icons/tab_icon_price_off.png",
         "selectedIconPath": "images/icons/tab_icon_price_on.png",
         "text": "我的报价"
+      },
+      {
+        "pagePath": "pages/amap/amap",
+        "iconPath": "images/icons/tab_icon_price_off.png",
+        "selectedIconPath": "images/icons/tab_icon_price_on.png",
+        "text": "地图"
       }
     ]
   },

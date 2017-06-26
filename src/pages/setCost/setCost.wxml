@@ -107,6 +107,25 @@
     </view>
   </view>
   
+  <!-- 报价单时效.-->
+  <view class="title">报价单时效（默认24小时）</view>
+  <view class="weui-cells weui-cells_after-title"> 
+    <view 
+      class="weui-cell weui-cell_access"
+      hover="true"
+		  hover-class="active"
+      >
+      <view class="weui-cell__bd">报价单时效</view>
+      <picker 
+        class="weui-cell__ft weui-cell__ft_in-access"
+        bindchange="handleChangeAging" 
+        value="{{quotationAging.agingIndex}}" 
+        range="{{quotationAging.agingText}}"
+        >
+        {{quotationAging.agingText[quotationAging.agingIndex]}}
+      </picker>
+    </view>
+  </view>
   <!-- 其他费用.-->
   <view class="title">其他费用</view>
   <view class="weui-cells weui-cells_after-title"> 
