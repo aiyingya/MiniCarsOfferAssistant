@@ -347,6 +347,15 @@ page {
 	color: #333333;
 	letter-spacing: 0rpx;
 	line-height: 30rpx;
+  display: flex;
+}
+.carSources-section .carSources-section-content .note {
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #475593;
+  letter-spacing: 0;
+  line-height: 24rpx;
+  margin-left: 20rpx;
 }
 .carSources-section .carSources-section-content .create-quoted {
 	width: 150rpx;
