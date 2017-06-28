@@ -357,18 +357,6 @@ page {
   line-height: 24rpx;
   margin-left: 20rpx;
 }
-.carSources-section .carSources-section-content .create-quoted {
-	width: 150rpx;
-	height: 56rpx;
-	background: #ED4149;
-	border-radius: 8rpx;
-	font-family: "PingFangSC-Regular";
-	font-size: 24rpx;
-	color: #FFFFFF;
-	line-height: 30rpx;
-	text-align: center;
-	padding:13rpx 15rpx;
-}
 .carSources-section .carSources-section-content .second-part {
   display: flex;
 	justify-content: flex-start;

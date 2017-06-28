@@ -159,10 +159,6 @@
                 {{skuItem.carSku.note}}
               </view>
             </view>
-
-            <view class="button confirm create-quoted" catchtap="handlerCreateQuoted" data-sku-index="{{skuItemIndex}}">
-              生成报价单
-            </view>
           </view>
 
           <view class="second-part">

@@ -1245,18 +1245,6 @@ Page({
       }
     })
   },
-  handlerCreateQuoted(e) {
-    const skuItemIndex = e.currentTarget.dataset.skuIndex
-
-    const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
-    console.log(this.data.carModelsInfo)
-    const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', this.data.carModelsInfo)
-    const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', skuItem.carSku)
-
-    wx.navigateTo({
-      url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
-    })
-  },
   onTouchMoveWithCatch() {
     // 拦截触摸移动事件， 阻止透传
   },
