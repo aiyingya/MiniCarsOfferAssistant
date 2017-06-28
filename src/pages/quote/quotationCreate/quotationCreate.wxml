@@ -155,6 +155,26 @@
 			</view>
       </view>
 
+      <!--报价单时效-->
+      <view class="h-cell-gray">报价单时效</view>
+      <view class="white-box">
+         <radio-group class="radio-group weui-radio-group" bindchange="{{effectivenessRadioChange}}" name="inputEffectiveness">
+            <label class="radio" wx:for="{{effectivenessRadios}}">
+              <block wx:if="{{item.isCustom}}">
+                <radio data-index="{{index}}" value="{{item.value}}" checked="{{index == effectivenessSelectedRadioIndex}}" >
+                  <view class="weui-special__input">
+                    <input type="digit" data-selected-index="{{effectivenessSelectedRadioIndex}}" value="" placeholder="{{item.placeholder}}" disable="{{index != effectivenessSelectedRadioIndex}}" bindinput="customEffectivenessInput"/>
+                  </view>
+                  {{item.name}}
+                </radio>
+              </block>
+              <block wx:else>
+                <radio data-index="{{index}}" value="{{item.value}}" checked="{{index == effectivenessSelectedRadioIndex}}" />{{item.name}}
+              </block>
+            </label>
+         </radio-group>
+      </view>
+
 			<!--备   注-->
 			<view class="h-cell-gray">备注</view>
 			<view class="white-box" >

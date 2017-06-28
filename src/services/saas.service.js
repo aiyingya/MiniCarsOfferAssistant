@@ -281,7 +281,7 @@ export default class SAASService extends Service {
             let currentDate = new Date()
             let checkTime = new Date(item.createdTime)
             let difference = util.getTimeDifference(checkTime)
-            
+
             let month = (checkTime.getMonth()+1) > 9 ? (checkTime.getMonth()+1) : `0${checkTime.getMonth()+1}`
             let hours = checkTime.getHours() > 9 ? checkTime.getHours() : `0${checkTime.getHours()}`
             let minutes = checkTime.getMinutes() > 9 ? checkTime.getMinutes() : `0${checkTime.getMinutes()}`
@@ -297,7 +297,7 @@ export default class SAASService extends Service {
                 let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
                 let sellingPrice = util.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
                 let guidePrice = util.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
-                
+
                 /// 实时计算优惠点数
                 let downPrice = util.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
                 let downPriceFlag = util.downPriceFlag(downPrice);
@@ -305,17 +305,17 @@ export default class SAASService extends Service {
                 if (downPriceFlag !== 0) {
                   downPriceString = util.priceStringWithUnit(downPrice)
                 }
-                
+
                 /**
                  * 计算时间.
                  */
                 let createdTime = new Date(qitem.quotationTime)
                 let createdDifference = util.getTimeDifference(createdTime)
-                
+
                 let cmonth = (createdTime.getMonth()+1) > 9 ? (createdTime.getMonth()+1) : `0${createdTime.getMonth()+1}`
                 let chours = createdTime.getHours() > 9 ? createdTime.getHours() : `0${createdTime.getHours()}`
                 let cminutes = createdTime.getMinutes() > 9 ? createdTime.getMinutes() : `0${createdTime.getMinutes()}`
-   
+
                 if(createdDifference.days >= 2) {
                   qitem.createdTime = `${createdTime.getFullYear()}/${cmonth}/${createdTime.getDate()} ${chours}:${cminutes}`
                 }else if(0 < createdDifference.days && createdDifference.days < 2) {
@@ -337,7 +337,7 @@ export default class SAASService extends Service {
                   }
                 }
               }
-            }  
+            }
           }
           object.success(res);
         },
@@ -633,12 +633,24 @@ export default class SAASService extends Service {
    * @param opts
    */
   gettingMarketTrend(opts) {
-    
     return this.sendMessageByPromise({
       path: `sale/quotation/getPriceTrend?spuId=${opts.spuId}`,
       method: 'GET',
       success: opts.success,
       fail: opts.fail
+    })
+  }
+  /**
+   * 获得的当前 spu 的当前众数 top n
+   *
+   * @param {String} spuId
+   * @returns {Promise}
+   * @memberof SAASService
+   */
+  getTopNOfCurrentMode(spuId) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/getCurrentPrice?spuId=${spuId}`,
+      method: 'GET'
     })
   }
 }

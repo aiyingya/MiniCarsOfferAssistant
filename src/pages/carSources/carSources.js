@@ -52,10 +52,47 @@ Page({
     logisticsList: [],
     selectedSectionIndex: -1,
     selectedSectionId: '0',
+    // 当前 spuId 众数 top N
+    topNOfCurrentMode: {
+      reference: {
+        companyCount: 1,
+        price: 300000,
+        discount: 2000,
+        guidePrice: 400000,
+        sortNum: 0,
+        priceDate: ''
+      },
+      priceList: [{
+        companyCount: 1,
+        price: 300000,
+        discount: 2000,
+        guidePrice: 400000,
+        sortNum: 0,
+        priceDate: ''
+      },
+      {
+        companyCount: 1,
+        price: 300000,
+        discount: 2000,
+        guidePrice: 400000,
+        sortNum: 0,
+        priceDate: ''
+      },
+      {
+        companyCount: 1,
+        price: 300000,
+        discount: 2000,
+        guidePrice: 400000,
+        sortNum: 0,
+        priceDate: ''
+      }
+      ]
+    },
     showDetailTitle: false,
     hasOverLayDropdown: false,
+    overLayDropdownOffset: 288 + 60,
     pageShare: false,
-    options: ''
+    options: '',
   },
   onLoad(options) {
     console.log(options)
@@ -96,6 +133,43 @@ Page({
       } catch (e) {
 
       }
+
+      // 获取众数 top N
+      app.saasService.getTopNOfCurrentMode(carModelsInfo.carModelId)
+      .then(res => {
+
+        const reference = res.reference
+        reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(reference.discount, reference.guidePrice, this.isShowDownPrice)
+        reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
+
+        for (let topMode of res.priceList) {
+          topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(topMode.discount, topMode.guidePrice, this.isShowDownPrice)
+          topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
+        }
+
+        this.setData({
+          topNOfCurrentMode: res
+        })
+        console.log(res)
+      }, err => {
+        // 测试代码
+        const res = this.data.topNOfCurrentMode
+
+        const reference = res.reference
+        reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(reference.discount, reference.guidePrice, this.isShowDownPrice)
+        reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
+
+        for (let topMode of res.priceList) {
+          topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(topMode.discount, topMode.guidePrice, this.isShowDownPrice)
+          topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
+        }
+
+        this.setData({
+          topNOfCurrentMode: res
+        })
+
+        console.log(err)
+      })
 
       app.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
         success: function (res) {
@@ -205,7 +279,7 @@ Page({
   handlerScroll(e) {
     const that = this
     if (e.detail) {
-      if (e.detail.scrollTop > 60) {
+      if (e.detail.scrollTop > this.data.overLayDropdownOffset) {
         if (!this.data.showDetailTitle) {
           wx.setNavigationBarTitle({
             title: this.data.carModelsInfo.carModelName,
@@ -225,7 +299,7 @@ Page({
         }
       }
 
-      if (e.detail.scrollTop > 60) {
+      if (e.detail.scrollTop > this.data.overLayDropdownOffset) {
         if (!this.data.hasOverLayDropdown) {
           console.log('fuck')
           this.setData({
@@ -844,7 +918,7 @@ Page({
     /**
      * 上报
      */
-    that.pushCallRecord(carSourceItem);
+    that.pushCallRecord(carSourceItem)
 
     wx.makePhoneCall({
       phoneNumber: phoneNumber,
@@ -1259,7 +1333,7 @@ Page({
       "contactPhone": curItem.contact || curItem.supplier.contact
     }
 
-    app.saasService.pushCallRecord({data:updata});
+    app.saasService.pushCallRecord({data:updata})
 
   }
 })

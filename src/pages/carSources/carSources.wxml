@@ -76,13 +76,36 @@
     </view>
   </view>
 
+  <!--参考成交-->
+  <view class="car-sources-reference-deal">
+
+    <view class="reference">
+      <view class="title">参考成交</view>
+      <view class="mode-item">
+        <template is="quotedPrice" data="{{ ...topNOfCurrentMode.reference.viewModelQuoted }}" />
+        <view class="company">{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
+      </view>
+    </view>
+
+    <view class="topN">
+      <view class="title">报价最多</view>
+      <view class="modes">
+        <view class="mode-item" wx:for="{{topNOfCurrentMode.priceList}}">
+          <template is="quotedPrice" data="{{ ...item.viewModelQuoted }}" />
+          <view class="company">{{item.companyCount}}家供应商</view>
+        </view>
+      </view>
+    </view>
+
+  </view>
+
   <!-- 页面主体 -->
   <block wx:if="{{nodata === 'init'}}">
   </block>
   <block wx:if="{{nodata === 'data'}}">
 
-    <!-- 下拉框筛选 -->
-    <view class="carSources-navbar" hidden="{{hasOverLayDropdown}}" style="top: 132rpx;">
+    <!-- 下拉框筛选 288 + 132 rpx-->
+    <view class="carSources-navbar" hidden="{{hasOverLayDropdown}}" style="top: 420rpx;">
       <view class="navbar cars-facade" bindtap="handlerAmendCarFacade" data-selected-filter-index="0">
         <view class="navbar-text">
           外:{{selectedExternalCarColorName}} 内:{{selectedInternalCarColorName}}
@@ -126,8 +149,8 @@
       </view>
     </view>
 
-    <!-- 标签选择 -->
-    <view class="filter-scroll-view" hidden="{{hasOverLayDropdown}}" style="top: 220rpx;">
+    <!-- 标签选择  288rpx+220rpx-->
+    <view class="filter-scroll-view" hidden="{{hasOverLayDropdown}}" style="top: 508rpx;">
       <view wx:for="{{scrollFilters}}" wx:for-index="scrollFilterIndex" wx:for-item="scrollFilterItem" wx:key="*this" class="scroll-filter">
         <view wx:for="{{scrollFilterItem.items}}" wx:for-index="filterIndex" wx:for-item="filterItem" wx:key="*this" bindtap="handlerFilterSelected"
           data-scroll-filter-index="{{scrollFilterIndex}}" data-scroll-filter-item="{{scrollFilterItem}}" data-filter-Index="{{filterIndex}}"
