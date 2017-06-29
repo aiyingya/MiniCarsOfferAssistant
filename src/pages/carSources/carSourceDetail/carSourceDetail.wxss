@@ -10,33 +10,46 @@
   z-index: 998;
 }
 .carSourceDetailDialog .header {
+  position: relative;
+  height: 120rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 18rpx;
-  padding-bottom: 18rpx;
-  margin-right: 40rpx;
-  margin-left: 40rpx;
+  margin-right: 30rpx;
+  margin-left: 30rpx;
   border-bottom: 1rpx solid #E4E4E4;
 }
 
 .carSourceDetailDialog .header .title {
   font-family: "PingFangSC-Medium";
+  width: 100%;
   font-size: 32rpx;
   color: #333333;
   letter-spacing: 0;
-  line-height: 42rpx;
-  padding-right: 53rpx;
+  line-height: 32rpx;
+  text-align: center;
 }
 
 .carSourceDetailDialog .header .close image {
+  position: absolute;
   height: 30rpx;
   width: 30rpx;
   padding: 15rpx;
+  right: -15rpx;
+  top: 30rpx;
 }
 
 .carSourceDetailDialog .body {
-  margin: 0rpx 30rpx 0rpx 30rpx;
+}
+.carSourceDetailDialog .body .brief-infomation {
+  max-height: 112rpx;
+  font-family: PingFangSC-Medium;
+  font-size: 30rpx;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 42rpx;
+  background: #FAFAFA;
+  padding: 35rpx 30rpx;
 }
 
 .carSourceDetailDialog .body .first-part {
@@ -45,6 +58,7 @@
   border-bottom: 1rpx solid #E4E4E4;
   padding-top: 30rpx;
   padding-bottom: 26rpx;
+  margin: 0rpx 30rpx 0rpx 30rpx;
 }
 
 .carSourceDetailDialog .body .first-part .line-item {
@@ -152,6 +166,7 @@
   line-height: 22rpx;
 }
 .carSourceDetailDialog .body .second-part {
+  margin: 0rpx 30rpx 0rpx 30rpx;
 }
 .carSourceDetailDialog .body .second-part .line-item {
   position: relative;
@@ -238,6 +253,7 @@
   line-height: 24rpx;
 }
 .carSourceDetailDialog .body .third-part {
+  margin: 0rpx 30rpx 0rpx 30rpx;
 }
 .carSourceDetailDialog .body .third-part .line-item {
   display: flex;
@@ -380,4 +396,75 @@
 }
 .carSourceDetailDialog .footer .button1:last-child{
   margin-right:0;
+}
+/*公司列表页面*/
+.carSourceDetailDialog .company-list {
+
+}
+
+.carSourceDetailDialog .company-cell {
+  height: 100rpx;
+  padding: 30rpx 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.carSourceDetailDialog .company-cell .left {
+  font-family: PingFangSC-Regular;
+  font-size: 28rpx;
+  color: #3377EE;
+  letter-spacing: 0;
+  line-height: 28rpx;
+}
+.carSourceDetailDialog .company-cell .right image {
+  height: 24rpx;
+  width: 24rpx;
+}
+/*电话确认要求页面*/
+.carSourceDetailDialog .header .back image {
+  position: absolute;
+  height: 30rpx;
+  width: 30rpx;
+  padding: 15rpx;
+  left: -15rpx;
+  top: 30rpx;
+}
+.carSourceDetailDialog .contact-cell {
+  height: 100rpx;
+  padding: 30rpx 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.carSourceDetailDialog .contact-cell .left {
+  font-family: PingFangSC-Regular;
+  color: #666666;
+  font-size: 28rpx;
+  letter-spacing: 0;
+  line-height: 28rpx;
+}
+.carSourceDetailDialog .contact-cell .active {
+  color: #3377EE;
+}
+.carSourceDetailDialog .contact-cell .right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.carSourceDetailDialog .contact-cell .right .call-time {
+  font-family: PingFangSC-Regular;
+  font-size: 24px;
+  color: #666666;
+  letter-spacing: 0;
+  line-height: 24rpx;
+}
+
+.nodata {
+  margin-top: 15rpx;
+  margin-bottom: 15rpx;
+  font-size: 28rpx;
+	color: #999999;
+	letter-spacing: -0.56rpx;
+	line-height: 28rpx;
+	text-align: center;
 }
