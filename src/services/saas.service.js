@@ -649,7 +649,64 @@ export default class SAASService extends Service {
    */
   getTopNOfCurrentMode(spuId) {
     return this.sendMessageByPromise({
-      path: `sale/quotation/getCurrentPrice?spuId=${spuId}`,
+      path: `sale/quotation/getCurrentPrice`,
+      data: {
+        spuId: spuId
+      },
+      method: 'GET'
+    })
+  }
+
+  /**
+   * 获取某一个公司内部对一个 spu 报价为 quotationPrice 的所有联系方式
+   *
+   * @param {String} spuId
+   * @param {Number} quotationPrice
+   * @param {String} companyId
+   * @param {String} supplierId
+   * @returns Promise
+   * @memberof SAASService
+   */
+  getContacts(spuId, quotationPrice, companyId, supplierId) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/callRecord`,
+      data: {
+        spuId: spuId,
+        companyId: companyId || '',
+        supplierId: supplierId || '',
+        price: quotationPrice || ''
+      },
+      method: 'GET'
+    })
+  }
+
+  /**
+   * 获取对一个 spu 报价为 quotationPrice 的所有公司列表
+   *
+   * response [Model]
+   *
+   * companyId
+   * companyName
+   * price
+   * spuId
+   * spuName
+   * sourceId
+   * mesNum
+   * principalPhone
+   * wechatCount
+   *
+   * @param {String} spuId
+   * @param {Number} quotationPrice
+   * @returns Promise
+   * @memberof SAASService
+   */
+  getCompanies(spuId, quotationPrice) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/getCompanyList`,
+      data: {
+        spuId: spuId,
+        price: quotationPrice || ''
+      },
       method: 'GET'
     })
   }
