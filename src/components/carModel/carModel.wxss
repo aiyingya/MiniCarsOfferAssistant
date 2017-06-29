@@ -54,7 +54,7 @@
 
 .carModels-info {
 	margin: 15rpx 0;
-	padding: 0 40rpx;
+	padding: 0 ;
 	overflow: hidden;
   display: flex;
   -webkit-justify-content: space-around;
@@ -65,12 +65,24 @@
 .carModels-info .carModels-charts-time,
 .carModels-info .carModels-carcolor {
   position: relative;
-  width: 50%;
+  width: 40%;
   display: flex;
   -webkit-justify-content: center;
   justify-content: center;
   -webkit-align-items: center;
   align-items: center;
+}
+.carModels-info .carModels-market_btn {
+  width: 140rpx;
+  height: 44rpx;
+  line-height: 44rpx;
+  background-color: rgba(51,119,238,.1);
+  border-radius: 100rpx;
+  font-family: .PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #3377EE;
+  text-align: center;
+  margin-right: 20rpx;
 }
 .carModels-info .carModels-charts-time .label,
 .carModels-info .carModels-carcolor .label {

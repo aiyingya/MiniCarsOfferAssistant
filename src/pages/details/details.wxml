@@ -1,0 +1,96 @@
+<import src="../../components/dialog/checkTimeDialog.wxml"/>
+<template is="checkTimeDialog" data="{{ ...$wux.checkTimeDialog }}"/>
+
+<view class="container">
+  <swiper 
+    indicator-dots="false"
+    autoplay="{{autoplay}}" 
+    interval="{{interval}}" 
+    duration="{{duration}}"
+    indicator-color="#CCCCCC"
+    indicator-active-color="#ED4149"
+    bindchange="handleChangeSwiper"
+    >
+    <block wx:for="{{quotationsList}}">
+      <swiper-item>
+        <view class="users-cell">
+          <view class="users-title">{{item.customerMobile}} / {{item.customerName}}</view>
+          <view class="check-time">- {{item.createdTime}} -</view>
+          <view class="cars-name">{{item.quotationItems[0].itemName}}</view>
+          <view class="cars-message">  
+            <view class="quotation-msg">
+              <view class="line-box min-font-gray">裸车价{{ item.viewModel.sellingPrice }}</view>
+              <view class="line-box icon-line">
+                <image
+                  wx:if="{{ item.viewModel.priceChange.flag === 1 }}"
+                  class="depreciate-icon"
+                  src="../../../images/icons/icon_price_down.png"
+                  ></image>
+                <image
+                  wx:if="{{ item.viewModel.priceChange.flag === -1}}"
+                  class="depreciate-icon"
+                  src="../../../images/icons/icon_price_up.png"
+                  ></image>
+                <view
+                wx:if="{{ item.viewModel.priceChange.flag !== 0 }}"
+                class="depreciate"
+                >
+                  {{ item.viewModel.priceChange.price }}元
+                </view>
+              </view>
+            </view>
+            <view class="cars-guidePrice">
+              <view class="price">{{ item.viewModel.guidePrice }}</view>万
+            </view>
+          </view>
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+  
+  <!-- 查看历史.-->
+  <view class="history-wrap">
+    <view class="title">TA的查看历史</view>
+    <view class="history-cells">
+      <view 
+        class="history-cell"
+        wx:for="{{historyList}}"
+        wx:for-item="amap"
+        wx:for-index="amapIndex"
+        data-amapindex="{{amapIndex}}"
+        bindtap="handleCheckAmap"
+        >
+        <view class="history-message">
+          <view class="check-time">
+            <image class="icon" src="../../../images/icons/icon_time_history.png"></image>
+            正在查看(停留6m)</view>
+          <view class="check-address">
+           <image class="icon" src="../../../images/icons/icon_position_gprs.png"></image>
+            瑞金市大步汽车城...</view>
+        </view>
+        <view class="history-amap" wx:if="{{amapIndex === showAmapIndex}}">
+          <view class="map_container">
+            <map 
+              class="map"  
+              longitude="{{amap.longitude}}"   
+              latitude="{{amap.latitude}}"  
+              scale="14"   
+              show-location="true"  
+              markers="{{amap.markers}}"
+              wx:if="{{showAmap}}"  
+              ></map>
+          </view>
+        </view>
+      </view>
+    </view> 
+  </view>
+  
+  
+  <view class="btn-wrap">
+    <view 
+      class="btn"
+      bindtap="handleAdjusttimes"
+      >时效调整</view>
+    <view class="btn contact-btn">联系客户</view>
+  </view>
+</view>

@@ -22,15 +22,6 @@
 			>
 			<!-- cars info.-->
 			<view class="carModels-info">
-<!--
-				<view class="carModels-supplier">{{item.supply.supplierCount}}个人供货</view>
-				<block wx:if="{{item.supply.status === '供货紧张'}}">
-					<view class="carModels-repertory">{{item.supply.status}}</view>
-				</block>
-				<block wx:else>
-					<view class="carModels-repertory adequate">{{item.supply.status}}</view>
-				</block>
--->
         <view 
           class="carModels-charts-time"
           bindtap="handleSelectTimes"
@@ -93,6 +84,13 @@
 						  class="icon-arrows"></image>
 					</view>
 				</view>
+				
+				<!-- 行情走势.-->
+				<view 
+				  class="carModels-market_btn"
+				  bindtap="handleCheckMarket"
+				  data-selectid="{{item.carModelId}}"
+				  >行情走势</view>
 			</view>
 
 			<view

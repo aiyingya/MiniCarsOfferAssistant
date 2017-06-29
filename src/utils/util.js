@@ -315,6 +315,20 @@ export default class Util {
       return downPrice.toFixed()
     }
   }
+  
+  /***
+   * 优惠价格字符串显示
+   * @param downPrice
+   * @return {string}
+   */
+  static priceStringWithUnitNumber(downPrice) {
+    downPrice = Math.abs(downPrice)
+    if (downPrice >= 10000) {
+      return (downPrice / 10000).toFixed(2)
+    } else {
+      return downPrice.toFixed()
+    }
+  }
 
   static downPriceFlag(downPrice) {
     console.log(downPrice)
@@ -432,5 +446,23 @@ export default class Util {
     const valueString = decodeURIComponent(options[key])
     const value = JSON.parse(valueString)
     return value
+  }
+  
+  /**
+   * 计算时差.
+   */
+  static getTimeDifference(starttime) {
+    const t = Date.parse(new Date()) - Date.parse(starttime)
+    const seconds = Math.floor((t / 1000) % 60)
+    const minutes = Math.floor((t / 1000 / 60) % 60)
+    const hours = Math.floor((t / (1000 * 60 * 60)) % 24)
+    const days = Math.floor(t / (1000 * 60 * 60 * 24))
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    }
   }
 }

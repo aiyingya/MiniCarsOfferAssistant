@@ -1,6 +1,112 @@
 .page{
     background-color: #EFEFEF;
 }
+.users-cells {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+.users-cell {
+  margin-bottom: 20rpx;
+}
+.users-cell_hd {
+  padding: 20rpx 30rpx;
+  background-color: #F6F7F8;
+}
+.users-cell_hd .title {
+  font-family: "PingFangSC-Regular";
+  font-size: 30rpx;
+  color: #333333;
+  line-height: 36rpx;
+}
+.users-cell_hd .messages {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  align-items: center;
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+}
+.users-cell_bd {
+  background-color: #fff;
+}
+.cars-cell {
+  position: relative;
+  padding: 20rpx 30rpx;
+}
+.cars-cell:after {
+  content: '';
+  position: absolute;
+  left: 30rpx;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1rpx solid #E5E5E5;
+}
+.cars-cell:last-child:after {
+  display: none;
+}
+.setup-time {
+  height: 60rpx;
+  line-height: 60rpx;
+  font-family: "PingFangSC-Regular";
+  font-size: 26rpx;
+  color: #666666;
+  text-align: center;
+}
+.cars-name {
+  font-family: "PingFangSC-Medium";
+  font-size: 30rpx;
+  color: #333333;
+  line-height: 36rpx;
+}
+.cars-message {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: baseline;
+  align-items: baseline;
+}
+
+.price {
+  display: inline;
+  font-family: ".SFNSDisplay";
+  font-size: 44rpx;
+  color: #ED4149;
+  letter-spacing: 0;
+  line-height: 40rpx; 
+}
+.check-more {
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-family: "PingFangSC-Regular";
+  font-size: 26rpx;
+  color: #333333;
+  background-color: #fff;
+}
+.check-number {
+  color: #475593;
+}
+.check-times,
+.check-address {
+  position: relative;
+  padding-left: 25rpx;
+  height: 60rpx;
+}
+.check-times .icon,
+.check-address .icon {
+  width: 20rpx;
+  height: 20rpx;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -10rpx;
+}
 .quotation-list{
   position: absolute;
   top: 0;
@@ -40,8 +146,7 @@
   line-height: 26rpx;
   height: 26rpx;
   font-size: 26rpx;
-  margin: 20rpx 0 40rpx 0;
-  padding: 0 30rpx;
+  margin: 20rpx 0 0 0;
   color: #666666;
   display: -webkit-flex;
   display: flex;

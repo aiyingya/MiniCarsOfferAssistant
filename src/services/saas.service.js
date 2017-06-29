@@ -277,31 +277,67 @@ export default class SAASService extends Service {
         },
         method: 'GET',
         success: function(res){
-          let content = res.content
-          for (var i = 0; i < content.length; i++) {
-            var item = content[i]
-            let totalPayment = util.priceStringWithUnit(item.totalPayment);
-            let sellingPrice = util.priceStringWithUnit(item.quotationItems[0].sellingPrice);
-            let guidePrice = util.priceStringWithUnit(item.quotationItems[0].guidePrice);
-
-            /// 实时计算优惠点数
-            let downPrice = util.downPrice(item.quotationItems[0].sellingPrice, item.quotationItems[0].guidePrice)
-            let downPriceFlag = util.downPriceFlag(downPrice);
-            let downPriceString = ''
-            if (downPriceFlag !== 0) {
-              downPriceString = util.priceStringWithUnit(downPrice)
+          for(let item of res.content) {
+            let currentDate = new Date()
+            let checkTime = new Date(item.createdTime)
+            let difference = util.getTimeDifference(checkTime)
+            
+            let month = (checkTime.getMonth()+1) > 9 ? (checkTime.getMonth()+1) : `0${checkTime.getMonth()+1}`
+            let hours = checkTime.getHours() > 9 ? checkTime.getHours() : `0${checkTime.getHours()}`
+            let minutes = checkTime.getMinutes() > 9 ? checkTime.getMinutes() : `0${checkTime.getMinutes()}`
+            if(difference.days >= 2) {
+              item.checkTime = `${checkTime.getFullYear()}/${month}/${checkTime.getDate()} ${hours}:${minutes}`
+            }else {
+              item.checkTime = `一天前 ${hours}:${minutes}`
             }
+            item.checkMoreNumber = 2
 
-            item.viewModel = {
-              totalPayment: totalPayment,
-              sellingPrice: sellingPrice,
-              guidePrice: guidePrice,
-              priceChange: {
-                flag: downPriceFlag,
-                price: downPriceString
+            if(item.quotationList.length > 0) {
+              for(let qitem of item.quotationList) {
+                let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
+                let sellingPrice = util.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
+                let guidePrice = util.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
+                
+                /// 实时计算优惠点数
+                let downPrice = util.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
+                let downPriceFlag = util.downPriceFlag(downPrice);
+                let downPriceString = ''
+                if (downPriceFlag !== 0) {
+                  downPriceString = util.priceStringWithUnit(downPrice)
+                }
+                
+                /**
+                 * 计算时间.
+                 */
+                let createdTime = new Date(qitem.quotationTime)
+                let createdDifference = util.getTimeDifference(createdTime)
+                
+                let cmonth = (createdTime.getMonth()+1) > 9 ? (createdTime.getMonth()+1) : `0${createdTime.getMonth()+1}`
+                let chours = createdTime.getHours() > 9 ? createdTime.getHours() : `0${createdTime.getHours()}`
+                let cminutes = createdTime.getMinutes() > 9 ? createdTime.getMinutes() : `0${createdTime.getMinutes()}`
+   
+                if(createdDifference.days >= 2) {
+                  qitem.createdTime = `${createdTime.getFullYear()}/${cmonth}/${createdTime.getDate()} ${chours}:${cminutes}`
+                }else if(0 < createdDifference.days && createdDifference.days < 2) {
+                  qitem.createdTime = `一天前 ${hours}:${minutes}`
+                }else if(createdDifference.days == 0 && createdDifference.hours > 0) {
+                  qitem.createdTime = `${createdDifference.hours}小时前 ${hours}:${minutes}`
+                }else if(createdDifference.days == 0 && createdDifference.hours == 0) {
+                  qitem.createdTime = `刚刚 ${hours}:${minutes}`
+                }
+                console.log(createdDifference)
+                qitem.viewModel = {
+                  totalPayment: totalPayment,
+                  sellingPrice: sellingPrice,
+                  guidePrice: guidePrice,
+                  itemName: qitem.quotationItems[0].itemName,
+                  priceChange: {
+                    flag: downPriceFlag,
+                    price: downPriceString
+                  }
+                }
               }
-            }
-
+            }  
           }
           object.success(res);
         },
@@ -590,6 +626,19 @@ export default class SAASService extends Service {
     return this.sendMessageByPromise({
       path: `sale/quotation/getCarTax?capacity=${opts.data.capacity}&place=${opts.data.place}`,
       method: 'GET'
+    })
+  }
+  /**
+   * 行情走势.
+   * @param opts
+   */
+  gettingMarketTrend(opts) {
+    
+    return this.sendMessageByPromise({
+      path: `sale/quotation/getPriceTrend?spuId=${opts.spuId}`,
+      method: 'GET',
+      success: opts.success,
+      fail: opts.fail
     })
   }
 }

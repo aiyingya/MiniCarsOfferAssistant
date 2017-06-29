@@ -24,7 +24,8 @@ Page({
 		startX: '',
 		moveX: '',
 		touchElement: {},
-		delBtnWidth: 150
+		delBtnWidth: 150,
+    checkMoreNumber: 2
   },
   onLoad() {
     let that = this;
@@ -42,6 +43,7 @@ Page({
   onReady() {
   },
   onShow() {
+    
     let that = this
     let quotation = app.fuckingLarryNavigatorTo.quotation
     let source = app.fuckingLarryNavigatorTo.source
@@ -112,6 +114,9 @@ Page({
       success: function (res) {
         if (res.content.length !== 0) {
           that.data.pageIndex = newPageIndex
+          for(let item of res.content) {
+            item.checkMoreNumber = 2
+          }
           that.setData({
             quotationsList: that.data.quotationsList.concat(res.content)
           })
@@ -146,13 +151,32 @@ Page({
       wx.hideToast()
     }, 1000)
   },
+  /**
+   * 计算时差.
+   */
+  getTimeDifference(starttime) {
+    var t = Date.parse(new Date()) - Date.parse(starttime);
+    var seconds = Math.floor((t / 1000) % 60);
+    var minutes = Math.floor((t / 1000 / 60) % 60);
+    var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+  },
   getData(object) {
     let that = this
     this.data.pageIndex = 1
     app.saasService.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
       loadingType: 'none',
       success: function (res) {
+        
         let empty = res.content.length === 0
+        console.log(res.content)
         that.setData({
           empty: empty,
           quotationsList: res.content
@@ -161,6 +185,7 @@ Page({
         typeof object.complete === 'function' && object.complete()
       },
       fail: function () {
+        
       },
       complete: function () {
       }
@@ -169,7 +194,7 @@ Page({
   handlerSelectQuotation(e) {
     let quotationKeyValueString = util.urlEncodeValueForKey('quotation', e.currentTarget.dataset.quotation)
     wx.navigateTo({
-      url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
+      url: '/pages/details/details?' + quotationKeyValueString,
       success: function (res) {
         console.log('quotationDetail 页面跳转成功');
       },
@@ -265,6 +290,19 @@ Page({
           })
         }
       }
+    })
+  },
+  handleCheckMore(e) {
+    const more = e.currentTarget.dataset.more
+    const quotationsList = this.data.quotationsList
+    console.log(e,more)
+    for(let item of quotationsList) {
+      if(more.quotationId === item.quotationId) {
+        item.checkMoreNumber = more.quotationCount
+      }
+    }
+    this.setData({
+      quotationsList: quotationsList
     })
   }
 })

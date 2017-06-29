@@ -719,6 +719,19 @@ Page({
     this.setData({
       scrollView: 'overflow: auto;'
     })
+  },
+  
+  /**
+   * 查看行情走势.
+  */
+  handleCheckMarket(e) {
+    let id = e.currentTarget.dataset.selectid
+    app.saasService.gettingMarketTrend({
+      spuId: id,
+      success(data) {
+        console.log(data)
+      }
+    })
+   
   }
-
 })
