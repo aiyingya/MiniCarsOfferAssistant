@@ -178,8 +178,8 @@
           <view class="first-part">
             <view class="title">
               {{skuItem.carSku.externalColorName}}
-              <view class="note">
-                {{skuItem.carSku.note}}
+              <view wx:if="{{skuItem.carSku.metallicPaint.length}}" class="note">
+                {{skuItem.carSku.metallicPaint}}
               </view>
             </view>
           </view>
