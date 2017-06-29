@@ -53,41 +53,7 @@ Page({
     selectedSectionIndex: -1,
     selectedSectionId: '0',
     // 当前 spuId 众数 top N
-    topNOfCurrentMode: {
-      reference: {
-        companyCount: 1,
-        price: 300000,
-        discount: 2000,
-        guidePrice: 400000,
-        sortNum: 0,
-        priceDate: ''
-      },
-      priceList: [{
-        companyCount: 1,
-        price: 300000,
-        discount: 2000,
-        guidePrice: 400000,
-        sortNum: 0,
-        priceDate: ''
-      },
-      {
-        companyCount: 1,
-        price: 300000,
-        discount: 2000,
-        guidePrice: 400000,
-        sortNum: 0,
-        priceDate: ''
-      },
-      {
-        companyCount: 1,
-        price: 300000,
-        discount: 2000,
-        guidePrice: 400000,
-        sortNum: 0,
-        priceDate: ''
-      }
-      ]
-    },
+    topNOfCurrentMode: {},
     showDetailTitle: false,
     hasOverLayDropdown: false,
     overLayDropdownOffset: 288 + 60,
@@ -137,13 +103,14 @@ Page({
       // 获取众数 top N
       app.saasService.getTopNOfCurrentMode(carModelsInfo.carModelId)
       .then(res => {
-
         const reference = res.reference
         reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(reference.discount, reference.guidePrice, this.isShowDownPrice)
+        reference.viewModelQuoted.price = reference.price
         reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
 
         for (let topMode of res.priceList) {
           topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(topMode.discount, topMode.guidePrice, this.isShowDownPrice)
+          topMode.viewModelQuoted.price = topMode.price
           topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
         }
 
@@ -153,21 +120,6 @@ Page({
         console.log(res)
       }, err => {
         // 测试代码
-        const res = this.data.topNOfCurrentMode
-
-        const reference = res.reference
-        reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(reference.discount, reference.guidePrice, this.isShowDownPrice)
-        reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
-
-        for (let topMode of res.priceList) {
-          topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(topMode.discount, topMode.guidePrice, this.isShowDownPrice)
-          topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
-        }
-
-        this.setData({
-          topNOfCurrentMode: res
-        })
-
         console.log(err)
       })
 

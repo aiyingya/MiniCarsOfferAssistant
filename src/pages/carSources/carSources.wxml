@@ -79,21 +79,27 @@
   <!--参考成交-->
   <view class="car-sources-reference-deal">
 
-    <view class="reference">
+    <view  class="reference">
       <view class="title">参考成交</view>
-      <view class="mode-item">
+      <view wx:if="{{topNOfCurrentMode.reference}}" class="mode-item" bindtap="handlerModeClick" data-mode="{{topNOfCurrentMode.reference}}">
         <template is="quotedPrice" data="{{ ...topNOfCurrentMode.reference.viewModelQuoted }}" />
         <view class="company">{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
+      </view>
+      <view wx:else class="nodata">
+        暂无
       </view>
     </view>
 
     <view class="topN">
       <view class="title">报价最多</view>
-      <view class="modes">
-        <view class="mode-item" wx:for="{{topNOfCurrentMode.priceList}}">
+      <view wx:if="{{topNOfCurrentMode.priceList}}" class="modes">
+        <view class="mode-item" wx:for="{{topNOfCurrentMode.priceList}}" bindtap="handlerModeClick" data-mode="{{item}}">
           <template is="quotedPrice" data="{{ ...item.viewModelQuoted }}" />
           <view class="company">{{item.companyCount}}家供应商</view>
         </view>
+      </view>
+      <view wx:else class="nodata">
+        暂无
       </view>
     </view>
 
