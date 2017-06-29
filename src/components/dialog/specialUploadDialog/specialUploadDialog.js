@@ -1,5 +1,5 @@
 
-import Component from '../component'
+import Component from '../../component'
 
 export default {
   /**
@@ -18,7 +18,10 @@ export default {
       inputType: 'number',
       confirmDisabled: true,
       radioNames:[],
-      defaultRadio:undefined
+      defaultRadio:undefined,
+      // 时效性
+      effectivenessCustomValue: '',
+      effectivenessCustomChecked: false
     }
   },
   /**
@@ -41,8 +44,6 @@ export default {
    * @param {Object} opts 配置项
    * @param {String} opts.title 提示标题
    * @param {String} opts.content 提示文本
-   * @param {String} opts.inputNumber 默认输入框文本
-   * @param {String} opts.inputNumberPlaceHolder 默认输入框的 placeHolder
    * @param {Function} opts.confirmText 确认按钮的文字
    * @param {Function} opts.cancelText 取消按钮的文字
    * @param {Function} opts.confirm 点击确认的回调函数
@@ -118,6 +119,25 @@ export default {
         radioChange(e) {
           options.defaultRadio = e.detail.value
         },
+        effectivenessRadioChange(e) {
+          const index = e.currentTarget.dataset.index
+          this.setData({
+            [`${this.options.scope}.effectivenessSelectedRadioIndex`]: index
+          })
+        },
+        // 用来修改自定义输入框的 radio 的 value 值
+        customEffectivenessInput(e) {
+          let selectedIndex = e.currentTarget.dataset.selectedIndex
+
+          this.setData({
+            [`${this.options.scope}.effectivenessCustomValue`]: e.detail.value
+          })
+        },
+        customEffectivenessFocus(e) {
+          this.setData({
+            [`${this.options.scope}.effectivenessCustomChecked`]: true
+          })
+        },
         /**
          * 确认行为
          *
@@ -136,7 +156,8 @@ export default {
           let result ={
             inputNumber:options.inputNumber,
             inputName:options.inputNumber1,
-            inputSex:options.defaultRadio
+            inputSex:options.defaultRadio,
+            inputEffectiveness:options.effectivenessRadios[options.effectivenessSelectedRadioIndex].value
           }
           this.hide(options.cancel(result))
         },

@@ -36,47 +36,30 @@ export default class SAASService extends Service {
   sendMessagePromise(opts) {
     super.sendMessagePromise(opts)
   }
+
   /**
    * 发布当前报价草稿到某个用户
    *
-   * @param draftId         草稿id
-   * @param customerMobile  客户手机号，选项
-   * @param object          回调对象
-   *
-   {
-    "quotationId":"报价单ID",
-    "draftId":"报价单草稿ID",
-    "quotationName":"报价单名称，没有可以不传",
-    "quotationItems":[{
-        "itemName":"商品名称",
-        "specifications":"商品规格",
-        "guidePrice":"指导价",
-        "sellingPrice":"售价"
-    }
-    ],
-    "hasLoan":"必传，true/false，boolean，是否贷款",
-    "paymentRatio":"首付比例（%），decimal，全款时没有，取值范围0~100",
-    "stages":"贷款期数，int，全款时没有",
-    "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
-    "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
-    "advancePayment":"首次支付金额，如果全款则为全款金额",
-    "monthlyPayment":"月供金额，每月还款金额，全款时没有",
-    "remark":"备注",
-    "loginChannel":"必传，登录渠道，目前固定为weixin",
-    "snsId":"必传，由上报微信用户信息的API返回",
-    "customerMobile":"客户手机号"
-   }
+   * @param {String} draftId         草稿 id
+   * @param {String} customerMobile  客户手机号
+   * @param {String} customerName    客户名字
+   * @param {Number} customerSex     客户性别
+   * @param {Boolean} isSendMessage   是否从后台发送短信
+   * @param {Number} effectiveness   时效性
+   * @param {Object} object          回调对象
+   * @memberof SAASService
    */
-  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex,isSendMessage) {
+  requestPublishQuotation (draftId, customerMobile, customerName, customerSex, isSendMessage, effectiveness, object) {
     if (draftId && draftId !== '') {
       this.sendMessage({
         path: 'sale/quotation',
         data: {
           draftId: draftId,
           customerMobile: customerMobile,
-          customerName:customerName,
-          customerSex:customerSex,
-          sendMessage: isSendMessage ? true : (isSendMessage === undefined) ? true :false //防止后端没有判断，兼容以前的调用
+          customerName: customerName,
+          customerSex: customerSex,
+          sendMessage: isSendMessage ? true : (isSendMessage === undefined) ? true :false, //防止后端没有判断，兼容以前的调用
+          validTime: effectiveness
         },
         method: 'POST',
         // header: {}, // 设置请求的 header

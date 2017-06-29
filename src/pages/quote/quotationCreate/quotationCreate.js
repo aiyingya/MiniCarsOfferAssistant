@@ -876,7 +876,7 @@ Page({
         })
         let businessRisks = this.data.businessRisks
         let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
-        
+
         if(source == 'quotationDetail') {
           console.log(quotation)
           for(let item of businessRisks) {
@@ -884,7 +884,7 @@ Page({
               case '第三者责任险':
                 if(quotation.insuranceDetail.iDSZZRX > 0) {
                   item.checked = true
-                  
+
                 }else {
                   item.checked = false
 
@@ -897,14 +897,14 @@ Page({
                   item.checked = false
                 }
                 break
-              case '全车盗抢险': 
+              case '全车盗抢险':
                 if(quotation.insuranceDetail.iQCDQX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
                 }
                 break
-              case '玻璃单独破碎险': 
+              case '玻璃单独破碎险':
                 if(quotation.insuranceDetail.iBLDDPSX > 0) {
                   item.checked = true
                 }else {
@@ -925,26 +925,26 @@ Page({
                   item.checked = false
                 }
                 break
-              case '无过责任险': 
+              case '无过责任险':
                 if(quotation.insuranceDetail.iWGZRX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
                 }
                 break
-              case '车上人员责任险': 
+              case '车上人员责任险':
                 if(quotation.insuranceDetail.iCSRYZRX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
                 }
                 break
-              case '车身划痕险': 
+              case '车身划痕险':
                 if(quotation.insuranceDetail.iCSHHX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
-              
+
                 }
                 break
               default:
@@ -953,13 +953,13 @@ Page({
             }
           }
         }
-        
+
         if(insurancesAll != null) {
           that.insuranceCostCountDefault(insurancesAll.businessInsurances)
         }else {
           that.insuranceCostCountDefault(businessRisks)
         }
-        
+
         that.updateForSomeReason()
         that.showInput()
 
@@ -1080,9 +1080,9 @@ Page({
       quotation.loanFee = 0
     }
 
-    function isSendRequest (quotationDraft,mobile,name,sex,isSend) {
+    function  isSendRequest (quotationDraft, mobile, name, sex, isSend, validTime) {
 
-      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile ,{
+      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime, {
         success: (res) => {
           let quotation1 = res
 
@@ -1126,7 +1126,7 @@ Page({
           console.log("fail 保存报价单失败")
         },
         complete: () => {}
-      },name,sex,isSend)
+      })
     }
 
     that.hideInput()
@@ -1156,13 +1156,13 @@ Page({
         let mobile = res.inputNumber
         let customerName =res.inputName
         let customerSex = res.inputSex
-
+        let effectiveness = res.inputEffectiveness
         //保存报价单
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
             let quotationDraft = res
             //发送报价单
-            isSendRequest(quotationDraft,mobile,customerName,customerSex,true)
+            isSendRequest(quotationDraft, mobile, customerName, customerSex, true, effectiveness)
           },
           fail: function () {},
           complete: function () {}
@@ -1178,17 +1178,18 @@ Page({
         }
         let customerName =res.inputName
         let customerSex = res.inputSex
+        let effectiveness = res.effectiveness
+
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
             let quotationDraft = res
             /// 暂不发送, 不带电话号码发送（发布当前报价草稿到某个用户） 保留1.5以前的逻辑
-            isSendRequest(quotationDraft,mobile,customerName,customerSex,false)
+            isSendRequest(quotationDraft, mobile, customerName, customerSex, false, effectiveness)
           },
           fail: function () {},
           complete: function () {}
         })
         that.showInput()
-
       },
       close: () => {
         that.showInput()
