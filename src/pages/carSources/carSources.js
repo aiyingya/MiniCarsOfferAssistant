@@ -3,7 +3,7 @@ import {
   $wuxInputNumberDialog,
   $wuxTrack
 } from '../../components/wux'
-import $wuxCarSourceDetailDialog from './carSourceDetail/carSourceDetail'
+import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/carSourceDetail'
 
 import util from '../../utils/util'
 import config from '../../config'

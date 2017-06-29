@@ -1,4 +1,4 @@
-@import '../carSources/carSourceDetail/carSourceDetail.wxss';
+@import '../../components/dialog/carSourceDetail/carSourceDetail.wxss';
 /* 供货详情.*/
 page {
 	height: 100%;

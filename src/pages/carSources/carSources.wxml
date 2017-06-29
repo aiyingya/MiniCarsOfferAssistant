@@ -1,5 +1,5 @@
 <!-- 货源列表（原车源详情） -->
-<import src="../carSources/carSourceDetail/carSourceDetail.wxml" />
+<import src="../../components/dialog/carSourceDetail/carSourceDetail.wxml" />
 <template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />
 
 <import src="../../components/dialog/dialog.wxml" />
