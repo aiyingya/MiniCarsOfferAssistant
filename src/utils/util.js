@@ -465,4 +465,28 @@ export default class Util {
       'seconds': seconds
     }
   }
+  
+  /**
+   * 计算时差.
+   */
+  static getTimeDifferenceString(time) {
+    let endTime = new Date(time)
+    let difference = Util.getTimeDifference(endTime)
+    
+    let month = (endTime.getMonth()+1) > 9 ? (endTime.getMonth()+1) : `0${endTime.getMonth()+1}`
+    let days = endTime.getDate() > 9 ? endTime.getDate() : `0${endTime.getDate()}`
+    let hours = endTime.getHours() > 9 ? endTime.getHours() : `0${endTime.getHours()}`
+    let minutes = endTime.getMinutes() > 9 ? endTime.getMinutes() : `0${endTime.getMinutes()}`
+    
+    if(difference.days >= 2) {
+      return `${month}/${days} ${hours}:${minutes}`
+    }else if(0 < difference.days && difference.days < 2) {
+      return `一天前 ${hours}:${minutes}`
+    }else if(difference.days == 0 && difference.hours > 0) {
+      return `${difference.hours}小时前 ${hours}:${minutes}`
+    }else if(difference.days == 0 && difference.hours == 0) {
+      return `刚刚 ${hours}:${minutes}`
+    }
+    
+  }
 }

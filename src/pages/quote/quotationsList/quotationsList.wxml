@@ -26,7 +26,7 @@
               <view class="check-number">已查看{{cell.viewCount || 0}}次</view>
               <view class="check-times">
                 <image class="icon" src="../../../images/icons/icon_time_history.png"></image>
-                {{cell.checkTime}}(停留8m)</view>
+                {{cell.checkTime}}(停留{{cell.stayTime || 0}}m)</view>
               <view class="check-address">
                 <image class="icon" src="../../../images/icons/icon_position_gprs.png"></image>
                 <block wx:if="{{cell.placeName}}">

@@ -11,9 +11,15 @@
     indicator-active-color="#ED4149"
     bindchange="handleChangeSwiper"
     >
-    <block wx:for="{{quotationsList}}">
+    <block 
+      wx:for="{{quotationsList}}"
+      >
       <swiper-item>
-        <view class="users-cell">
+        <view 
+          class="users-cell"
+          data-quotation="{{item}}"
+          bindtap="handleToquotationDetail"
+          >
           <view class="users-title">{{item.customerMobile}} / {{item.customerName}}</view>
           <view class="check-time">- {{item.createdTime}} -</view>
           <view class="cars-name">{{item.quotationItems[0].itemName}}</view>
@@ -49,39 +55,47 @@
   </swiper>
   
   <!-- 查看历史.-->
-  <view class="history-wrap">
+  <view class="history-wrap {{noHistory}}">
     <view class="title">TA的查看历史</view>
     <view class="history-cells">
-      <view 
-        class="history-cell"
-        wx:for="{{historyList}}"
-        wx:for-item="amap"
-        wx:for-index="amapIndex"
-        data-amapindex="{{amapIndex}}"
-        bindtap="handleCheckAmap"
-        >
-        <view class="history-message">
-          <view class="check-time">
-            <image class="icon" src="../../../images/icons/icon_time_history.png"></image>
-            正在查看(停留6m)</view>
-          <view class="check-address">
-           <image class="icon" src="../../../images/icons/icon_position_gprs.png"></image>
-            瑞金市大步汽车城...</view>
-        </view>
-        <view class="history-amap" wx:if="{{amapIndex === showAmapIndex}}">
-          <view class="map_container">
-            <map 
-              class="map"  
-              longitude="{{amap.longitude}}"   
-              latitude="{{amap.latitude}}"  
-              scale="14"   
-              show-location="true"  
-              markers="{{amap.markers}}"
-              wx:if="{{showAmap}}"  
-              ></map>
+      <block wx:if="{{historyList.length > 0}}">
+        <view 
+          class="history-cell"
+          wx:for="{{historyList}}"
+          wx:for-item="amap"
+          wx:for-index="amapIndex"
+          data-amapindex="{{amapIndex}}"
+          bindtap="handleCheckAmap"
+          >
+          <view class="history-message">
+            <view class="check-time">
+              <image class="icon" src="../../../images/icons/icon_time_history.png"></image>
+              {{amap.checkTime}}(停留{{amap.stayTime || 0}}m)</view>
+            <view class="check-address">
+             <image class="icon" src="../../../images/icons/icon_position_gprs.png"></image>
+              {{amap.placeName}}</view>
+          </view>
+          <view class="history-amap" wx:if="{{amapIndex === showAmapIndex}}">
+            <view class="map_container">
+              <map 
+                class="map"  
+                longitude="{{amap.longitude}}"   
+                latitude="{{amap.latitude}}"  
+                scale="14"   
+                show-location="true"  
+                markers="{{amap.markers}}"
+                wx:if="{{showAmap}}"  
+                ></map>
+            </view>
           </view>
         </view>
-      </view>
+      </block>
+      <block wx:else>
+        <view class="nodata">
+          <image src="../../images/icons/icon_time_history_empty.png"></image>
+          <view class="text">暂无查看历史记录</view>
+        </view>
+      </block>
     </view> 
   </view>
   
