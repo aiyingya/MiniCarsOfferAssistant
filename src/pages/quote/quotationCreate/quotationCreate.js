@@ -1080,7 +1080,17 @@ Page({
       quotation.loanFee = 0
     }
 
-    function  isSendRequest (quotationDraft, mobile, name, sex, isSend, validTime) {
+    /**
+     * 包装的发布报价单发送接口
+     *
+     * @param {Number} quotationDraft
+     * @param {String} mobile
+     * @param {String} name
+     * @param {Number} sex
+     * @param {Boolean} isSend
+     * @param {Number} validTime
+     */
+    function isSendRequest(quotationDraft, mobile, name, sex, isSend, validTime) {
 
       app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime, {
         success: (res) => {
@@ -1153,10 +1163,10 @@ Page({
         return mobile.length === 11
       },
       confirm: (res) => {
-        let mobile = res.inputNumber
-        let customerName =res.inputName
-        let customerSex = res.inputSex
-        let effectiveness = res.inputEffectiveness
+        const mobile = res.inputNumber
+        const customerName = res.inputName
+        const customerSex = Number(res.inputSex)
+        const effectiveness = Number(res.inputEffectiveness)
         //保存报价单
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
@@ -1173,12 +1183,12 @@ Page({
       cancel: (res) => {
         //保存报价单
         let mobile = res.inputNumber
-        if(mobile){
+        if (mobile) {
           mobile = mobile.length === 11 ? mobile : ""
         }
-        let customerName =res.inputName
-        let customerSex = res.inputSex
-        let effectiveness = res.effectiveness
+        const customerName =res.inputName
+        const customerSex = Number(res.inputSex)
+        const effectiveness = Number(res.effectiveness)
 
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
