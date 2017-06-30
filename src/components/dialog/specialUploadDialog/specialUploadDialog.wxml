@@ -33,7 +33,7 @@
           <!--先生/女生-->
           <radio-group class="radio-group weui-radio-group" bindchange="{{radioChange}}" name="inputSex">
             <label class="radio" wx:for="{{radioNames}}">
-              <radio value="{{item.name}}" checked="{{item.name===defaultRadio}}"/>{{item.value}}
+              <radio color="#999999" value="{{item.name}}" checked="{{item.name===defaultRadio}}"/>{{item.value}}
             </label>
           </radio-group>
         </view>
