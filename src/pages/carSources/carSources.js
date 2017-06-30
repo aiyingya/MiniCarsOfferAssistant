@@ -104,14 +104,18 @@ Page({
       app.saasService.getTopNOfCurrentMode(carModelsInfo.carModelId)
       .then(res => {
         const reference = res.reference
-        reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(reference.discount, reference.guidePrice, this.isShowDownPrice)
-        reference.viewModelQuoted.price = reference.price
-        reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
+        if (reference) {
+          reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-reference.discount, reference.guidePrice, this.isShowDownPrice)
+          reference.viewModelQuoted.price = reference.price
+          reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
+        }
 
-        for (let topMode of res.priceList) {
-          topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(topMode.discount, topMode.guidePrice, this.isShowDownPrice)
-          topMode.viewModelQuoted.price = topMode.price
-          topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
+        if (res.priceList && res.priceList.length) {
+          for (let topMode of res.priceList) {
+            topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-topMode.discount, topMode.guidePrice, this.isShowDownPrice)
+            topMode.viewModelQuoted.price = topMode.price
+            topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
+          }
         }
 
         this.setData({
@@ -120,6 +124,9 @@ Page({
         console.log(res)
       }, err => {
         // 测试代码
+        console.log(err)
+      })
+      .catch(err => {
         console.log(err)
       })
 

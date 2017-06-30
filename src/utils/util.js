@@ -227,7 +227,7 @@ export default class Util {
     }
   }
 
-  static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE') {
+static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE') {
     let quotedSymbol
     let quotedValue
     let quotedRange
@@ -280,7 +280,7 @@ export default class Util {
     let quotedRange
     if (abs_price > 10000) {
       quotedRange = (abs_price / 10000).toFixed(2)
-      quotedRangeUnit = '万元'
+      quotedRangeUnit = '万'
     } else {
       quotedRange = abs_price
       quotedRangeUnit = '元'
@@ -311,20 +311,6 @@ export default class Util {
     downPrice = Math.abs(downPrice)
     if (downPrice >= 10000) {
       return (downPrice / 10000).toFixed(2) + '万'
-    } else {
-      return downPrice.toFixed()
-    }
-  }
-  
-  /***
-   * 优惠价格字符串显示
-   * @param downPrice
-   * @return {string}
-   */
-  static priceStringWithUnitNumber(downPrice) {
-    downPrice = Math.abs(downPrice)
-    if (downPrice >= 10000) {
-      return (downPrice / 10000).toFixed(2)
     } else {
       return downPrice.toFixed()
     }
