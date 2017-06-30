@@ -6,7 +6,7 @@ import $checkTimeDialog from './dialog/checkTimeDialog'
 import $wuxToast from './toast/toast'
 import $wuxTrack from './track/track'
 import $wuxContentDialog from './dialog/contentDialog'
-import $wuxSpecialUploadDialog from './dialog/specialUploadDialog'
+import $wuxSpecialUploadDialog from './dialog/specialUploadDialog/specialUploadDialog'
 export {
   $wuxDialog,
   $wuxInputNumberDialog,

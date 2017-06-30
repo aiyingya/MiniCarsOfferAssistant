@@ -1,5 +1,5 @@
 <!-- 货源列表（原车源详情） -->
-<import src="../carSources/carSourceDetail/carSourceDetail.wxml" />
+<import src="../../components/dialog/carSourceDetail/carSourceDetail.wxml" />
 <template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />
 
 <import src="../../components/dialog/dialog.wxml" />
@@ -76,13 +76,42 @@
     </view>
   </view>
 
+  <!--参考成交-->
+  <view class="car-sources-reference-deal">
+
+    <view  class="reference">
+      <view class="title">参考成交</view>
+      <view wx:if="{{topNOfCurrentMode.reference}}" class="mode-item" bindtap="handlerModeClick" data-mode="{{topNOfCurrentMode.reference}}">
+        <template is="quotedPrice" data="{{ ...topNOfCurrentMode.reference.viewModelQuoted }}" />
+        <view class="company">{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
+      </view>
+      <view wx:else class="nodata">
+        暂无
+      </view>
+    </view>
+
+    <view class="topN">
+      <view class="title">报价最多</view>
+      <view wx:if="{{topNOfCurrentMode.priceList}}" class="modes">
+        <view class="mode-item" wx:for="{{topNOfCurrentMode.priceList}}" bindtap="handlerModeClick" data-mode="{{item}}">
+          <template is="quotedPrice" data="{{ ...item.viewModelQuoted }}" />
+          <view class="company">{{item.companyCount}}家供应商</view>
+        </view>
+      </view>
+      <view wx:else class="nodata">
+        暂无
+      </view>
+    </view>
+
+  </view>
+
   <!-- 页面主体 -->
   <block wx:if="{{nodata === 'init'}}">
   </block>
   <block wx:if="{{nodata === 'data'}}">
 
-    <!-- 下拉框筛选 -->
-    <view class="carSources-navbar" hidden="{{hasOverLayDropdown}}" style="top: 132rpx;">
+    <!-- 下拉框筛选 288 + 132 rpx-->
+    <view class="carSources-navbar" hidden="{{hasOverLayDropdown}}" style="top: 420rpx;">
       <view class="navbar cars-facade" bindtap="handlerAmendCarFacade" data-selected-filter-index="0">
         <view class="navbar-text">
           外:{{selectedExternalCarColorName}} 内:{{selectedInternalCarColorName}}
@@ -126,8 +155,8 @@
       </view>
     </view>
 
-    <!-- 标签选择 -->
-    <view class="filter-scroll-view" hidden="{{hasOverLayDropdown}}" style="top: 220rpx;">
+    <!-- 标签选择  288rpx+220rpx-->
+    <view class="filter-scroll-view" hidden="{{hasOverLayDropdown}}" style="top: 508rpx;">
       <view wx:for="{{scrollFilters}}" wx:for-index="scrollFilterIndex" wx:for-item="scrollFilterItem" wx:key="*this" class="scroll-filter">
         <view wx:for="{{scrollFilterItem.items}}" wx:for-index="filterIndex" wx:for-item="filterItem" wx:key="*this" bindtap="handlerFilterSelected"
           data-scroll-filter-index="{{scrollFilterIndex}}" data-scroll-filter-item="{{scrollFilterItem}}" data-filter-Index="{{filterIndex}}"
@@ -155,9 +184,9 @@
           <view class="first-part">
             <view class="title">
               {{skuItem.carSku.externalColorName}}
-            </view>
-            <view class="button confirm create-quoted" catchtap="handlerCreateQuoted" data-sku-index="{{skuItemIndex}}">
-              生成报价单
+              <view wx:if="{{skuItem.carSku.metallicPaint.length}}" class="note">
+                {{skuItem.carSku.metallicPaint}}
+              </view>
             </view>
           </view>
 
@@ -209,7 +238,7 @@
                     <view class="first-first-part">
                       <view class="supplier-name">
                         <view class="name">
-                          {{carSourceItem.supplier.name}}
+                          {{carSourceItem.suppler.companyName.length? carSourceItem.suppler.companyName : carSourceItem.supplier.name}}
                           <image wx:if="{{carSourceItem.supplierSelfSupport}}" src="/images/icons/icon_label_ymc_certification.png" class="certification">
                           </image>
                         </view>
@@ -265,18 +294,11 @@
                     <view class="second-part">
                       <!-- 车源基本信息 -->
                       <view class="basic-infomation">
-                        <view class="basic-label">
-                          {{carSourceItem.externalColor}}/{{carSourceItem.viewModelInternalColor}} <view class="detail-look">详情／生成报价>></view>
-                        </view>
-                        <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length}}"
-                          class="basic-label">{{carSourceItem.viewModelSelectedCarSourcePlace.name}}
-                        </view>
-                        <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}
-                        </view>
-                        <view wx:if="{{carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length}}" class="basic-label">{{carSourceItem.procedureTypeDesc}}
-                        </view>
+                        <view class="basic-label">{{carSourceItem.externalColor}}/{{carSourceItem.viewModelInternalColor}}</view>
+                        <view wx:if="{{carSourceItem.storeInsurance}}" class="basic-label">店保</view>
+                        <view wx:if="{{carSourceItem.sourceRegionsDesc && carSourceItem.sourceRegionsDesc.length}}" class="basic-label">{{carSourceItem.sourceRegionsDesc}}</view>
+                        <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
                       </view>
-
                       <!-- 供货价格 -->
                       <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice}}">
                         <view class="price-tips-small">价格电议</view>
@@ -288,6 +310,7 @@
 
                     <!-- 第二部分 物流信息 -->
                     <view class="third-part">
+                      <view class="detail-look">详情／生成报价>></view>
                       <view wx:if="{{ carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination }}" class="logistics-information">
                         <view class="logistics">
                           <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}" class="logistics-free">

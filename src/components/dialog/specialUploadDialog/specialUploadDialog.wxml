@@ -9,6 +9,7 @@
         </view>
       </view>
 
+      <!--分割线+标题-->
       <view class="weui-special-dialog__bd" wx:if="{{ content }}" style="display:flex">
         <view class="weui-dialog__line" style="margin-top:15px;"></view>
         <view class="weui-special-dialog__bd__centent" >{{ content }}</view>
@@ -16,21 +17,53 @@
       </view>
 
       <form bindsubmit="{{ confirm }}" >
+        <!--手机号码-->
         <view class="weui-dialog__input">
           <input type="{{ inputType }}" name="inputNumber" placeholder="{{ inputNumberPlaceholder }}" placeholder-class=""
                  value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
         </view>
 
-        <view class=" weui-flex-wrp weui-special-wrp" >
+        <view class="weui-flex-wrp weui-special-wrp" >
+          <!--姓名(选填)-->
           <view class="weui-special__input">
             <input type="text" name="inputName" placeholder="{{ inputNumberPlaceholder1 }}" placeholder-class=""
                    value="{{ inputNumber1 }}" bindinput="{{ inputNumberInput1 }}" maxlength="{{ inputNumberMaxLength1 }}" />
           </view>
 
+          <!--先生/女生-->
           <radio-group class="radio-group weui-radio-group" bindchange="{{radioChange}}" name="inputSex">
             <label class="radio" wx:for="{{radioNames}}">
               <radio value="{{item.name}}" checked="{{item.name===defaultRadio}}"/>{{item.value}}
             </label>
+          </radio-group>
+        </view>
+
+        <!--分割线-->
+        <view class="weui-dialog__line" style="margin-top:15px; width:80%;"></view>
+
+        <view class="effectiveness">
+          <!--时效性-->
+          <radio-group class="effectiveness-group" bindchange="{{effectivenessRadioChange}}" name="inputEffectiveness">
+            <view class="line">
+                <label class="radio">
+                  <radio color="#999999" value="24" checked="true" />24小时有效
+                </label>
+                <label class="radio">
+                  <radio color="#999999" value="48" checked="" />48小时有效
+                </label>
+            </view>
+            <view class="line">
+                <label class="radio" style="width:40%;">
+                  <radio color="#999999" value="-1" checked="" />无限制
+                </label>
+                <label class="radio" style="width:60%;">
+                  <radio color="#999999" value="{{effectivenessCustomValue}}" checked="{{effectivenessCustomChecked}}" />
+                  <view class="custom-input">
+                    <input type="digit" value="" placeholder="自定义" bindinput="{{customEffectivenessInput}}" bindfocus="{{customEffectivenessFocus}}" />
+                  </view>
+                  小时有效
+                </label>
+            </view>
           </radio-group>
         </view>
 

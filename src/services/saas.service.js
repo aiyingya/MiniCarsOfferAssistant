@@ -36,47 +36,30 @@ export default class SAASService extends Service {
   sendMessagePromise(opts) {
     super.sendMessagePromise(opts)
   }
+
   /**
    * 发布当前报价草稿到某个用户
    *
-   * @param draftId         草稿id
-   * @param customerMobile  客户手机号，选项
-   * @param object          回调对象
-   *
-   {
-    "quotationId":"报价单ID",
-    "draftId":"报价单草稿ID",
-    "quotationName":"报价单名称，没有可以不传",
-    "quotationItems":[{
-        "itemName":"商品名称",
-        "specifications":"商品规格",
-        "guidePrice":"指导价",
-        "sellingPrice":"售价"
-    }
-    ],
-    "hasLoan":"必传，true/false，boolean，是否贷款",
-    "paymentRatio":"首付比例（%），decimal，全款时没有，取值范围0~100",
-    "stages":"贷款期数，int，全款时没有",
-    "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
-    "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
-    "advancePayment":"首次支付金额，如果全款则为全款金额",
-    "monthlyPayment":"月供金额，每月还款金额，全款时没有",
-    "remark":"备注",
-    "loginChannel":"必传，登录渠道，目前固定为weixin",
-    "snsId":"必传，由上报微信用户信息的API返回",
-    "customerMobile":"客户手机号"
-   }
+   * @param {String} draftId         草稿 id
+   * @param {String} customerMobile  客户手机号
+   * @param {String} customerName    客户名字
+   * @param {Number} customerSex     客户性别
+   * @param {Boolean} isSendMessage   是否从后台发送短信
+   * @param {Number} effectiveness   时效性
+   * @param {Object} object          回调对象
+   * @memberof SAASService
    */
-  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex,isSendMessage) {
+  requestPublishQuotation (draftId, customerMobile, customerName, customerSex, isSendMessage, effectiveness, object) {
     if (draftId && draftId !== '') {
       this.sendMessage({
         path: 'sale/quotation',
         data: {
           draftId: draftId,
           customerMobile: customerMobile,
-          customerName:customerName,
-          customerSex:customerSex,
-          sendMessage: isSendMessage ? true : (isSendMessage === undefined) ? true :false //防止后端没有判断，兼容以前的调用
+          customerName: customerName,
+          customerSex: customerSex,
+          sendMessage: isSendMessage ? true : (isSendMessage === undefined) ? true :false, //防止后端没有判断，兼容以前的调用
+          validTime: effectiveness
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
@@ -281,7 +264,7 @@ export default class SAASService extends Service {
             let currentDate = new Date()
             let checkTime = new Date(item.viewTime)
             let difference = util.getTimeDifference(checkTime)
-            
+
             let month = (checkTime.getMonth()+1) > 9 ? (checkTime.getMonth()+1) : `0${checkTime.getMonth()+1}`
             let days = checkTime.getDate() > 9 ? checkTime.getDate() : `0${checkTime.getDate()}`
             let hours = checkTime.getHours() > 9 ? checkTime.getHours() : `0${checkTime.getHours()}`
@@ -304,7 +287,7 @@ export default class SAASService extends Service {
                 let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
                 let sellingPrice = util.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
                 let guidePrice = util.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
-                
+
                 /// 实时计算优惠点数
                 let downPrice = util.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
                 let downPriceFlag = util.downPriceFlag(downPrice);
@@ -312,18 +295,18 @@ export default class SAASService extends Service {
                 if (downPriceFlag !== 0) {
                   downPriceString = util.priceStringWithUnit(downPrice)
                 }
-                
+
                 /**
                  * 计算时间.
                  */
                 let createdTime = new Date(qitem.quotationTime)
                 let createdDifference = util.getTimeDifference(createdTime)
-                
+
                 let cmonth = (createdTime.getMonth()+1) > 9 ? (createdTime.getMonth()+1) : `0${createdTime.getMonth()+1}`
                 let cdays = createdTime.getDate() > 9 ? createdTime.getDate() : `0${createdTime.getDate()}`
                 let chours = createdTime.getHours() > 9 ? createdTime.getHours() : `0${createdTime.getHours()}`
                 let cminutes = createdTime.getMinutes() > 9 ? createdTime.getMinutes() : `0${createdTime.getMinutes()}`
-   
+
                 if(createdDifference.days >= 2) {
                   qitem.createdTime = `${cmonth}/${cdays} ${chours}:${cminutes}`
                 }else if(0 < createdDifference.days && createdDifference.days < 2) {
@@ -345,7 +328,7 @@ export default class SAASService extends Service {
                   }
                 }
               }
-            }  
+            }
           }
           object.success(res);
         },
@@ -641,12 +624,81 @@ export default class SAASService extends Service {
    * @param opts
    */
   gettingMarketTrend(opts) {
-    
     return this.sendMessageByPromise({
       path: `sale/quotation/getPriceTrend?spuId=${opts.spuId}`,
       method: 'GET',
       success: opts.success,
       fail: opts.fail
+    })
+  }
+  /**
+   * 获得的当前 spu 的当前众数 top n
+   *
+   * @param {String} spuId
+   * @returns {Promise}
+   * @memberof SAASService
+   */
+  getTopNOfCurrentMode(spuId) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/getCurrentPrice`,
+      data: {
+        spuId: spuId
+      },
+      method: 'GET'
+    })
+  }
+
+  /**
+   * 获取某一个公司内部对一个 spu 报价为 quotationPrice 的所有联系方式
+   *
+   * @param {String} spuId
+   * @param {Number} quotationPrice
+   * @param {String} companyId
+   * @param {String} supplierId
+   * @returns Promise
+   * @memberof SAASService
+   */
+  getContacts(spuId, quotationPrice, companyId, supplierId) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/callRecord`,
+      data: {
+        spuId: spuId,
+        companyId: companyId || '',
+        supplierId: supplierId || '',
+        price: quotationPrice || ''
+      },
+      method: 'GET'
+    })
+  }
+
+  /**
+   * 获取对一个 spu 报价为 quotationPrice 的所有公司列表
+   *
+   * response [Model]
+   *
+   * companyId
+   * companyName
+   * price
+   * spuId
+   * spuName
+   * sourceId
+   * mesNum
+   * principalPhone
+   * wechatCount
+   *
+   * @param {String} spuId
+   * @param {Number} quotationPrice
+   * @returns Promise
+   * @memberof SAASService
+   */
+  getCompanies(spuId, quotationPrice) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/getCompanyList`,
+      data: {
+        spuId: spuId,
+        price: quotationPrice || ''
+      },
+      method: 'GET'
     })
   }
 }
