@@ -49,10 +49,19 @@ Page({
     /**
      * 报价单时效.
      */
-    quotationAging: {
-      agingIndex: 0,
-      agingValue: ["24","48","-1"],
-      agingText: ["24小时","48小时","无限制"],
+    // quotationAging: {
+    //   agingIndex: 0,
+    //   agingValue: ["24","58","-1"],
+    //   agingText: ["24小时","48小时","无限制"],
+    // },
+    /**
+     * 报价单时效.
+     */
+    selectedAging:{
+      agingIndex: 1,
+      agingData: ["1","2","3"],
+      agingValue: ["24","48",""],
+      agingText: ["小时","小时","无限制"]
     },
     /**
      * 其他费用.
@@ -102,7 +111,10 @@ Page({
           "loan.billingwayValue": res.interestType -1,
           "othersCost.registration": res.carNumberFee,
           "othersCost.service": res.serviceFee,
-          "insurances.rebates": res.insuranceRebate
+          "insurances.rebates": res.insuranceRebate,
+          "selectedAging.agingValue[0]":res.validTime.firstChoose,
+          "selectedAging.agingValue[1]":res.validTime.secondChoose,
+          "selectedAging.agingIndex":(Number(res.validTime.chooseWho) - 1) //1,2,3 - 0,1,2
         })
       }
     }, (err) => {
@@ -332,12 +344,12 @@ Page({
   /**
    * 报价单时效.
    */
-  handleChangeAging(e) {
-    let agingIndex = e.detail.value
-    this.setData({
-      'quotationAging.agingIndex': agingIndex
-    })
-  },
+  // handleChangeAging(e) {
+  //   let agingIndex = e.detail.value
+  //   this.setData({
+  //     'quotationAging.agingIndex': agingIndex
+  //   })
+  // },
   /**
    * 上报设置信息.
    */
@@ -360,9 +372,13 @@ Page({
       "carNumberFee": that.data.othersCost.registration,
       "insuranceRebate": that.data.insurances.rebates,
       "serviceFee":that.data.othersCost.service,
-      "validTime": that.data.quotationAging.agingValue[that.data.quotationAging.agingIndex]
+      "validTime": {
+        "firstChoose":that.data.selectedAging.agingValue[0],
+        "secondChoose":that.data.selectedAging.agingValue[1],
+        "chooseWho":that.data.selectedAging.agingData[that.data.selectedAging.agingIndex]
+      }
     }
-    console.log(data)
+    // console.log(data)
     app.saasService.settingPreference({
       data: data,
       success(res) {
@@ -381,5 +397,27 @@ Page({
       }
     })
 
+  },
+  /**
+   * 处理单选事件
+   *
+   * @param {any} e
+   */
+  agingChange(e) {
+    let that = this
+    let index = e.detail.value
+    that.setData({
+      'selectedAging.agingIndex': index
+    })
+    console.log(index,that.data.selectedAging.agingValue[index])
+  },
+  agingInput(e) {
+    let that = this
+    let index = e.currentTarget.dataset.index
+    let hours = e.detail.value
+    that.setData({
+      ['selectedAging.agingValue['+index+']'] : hours
+    })
+    console.log(index,that.data.selectedAging.agingValue[index])
   }
 })
