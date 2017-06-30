@@ -279,17 +279,24 @@ export default class SAASService extends Service {
         success: function(res){
           for(let item of res.content) {
             let currentDate = new Date()
-            let checkTime = new Date(item.createdTime)
+            let checkTime = new Date(item.viewTime)
             let difference = util.getTimeDifference(checkTime)
             
             let month = (checkTime.getMonth()+1) > 9 ? (checkTime.getMonth()+1) : `0${checkTime.getMonth()+1}`
+            let days = checkTime.getDate() > 9 ? checkTime.getDate() : `0${checkTime.getDate()}`
             let hours = checkTime.getHours() > 9 ? checkTime.getHours() : `0${checkTime.getHours()}`
             let minutes = checkTime.getMinutes() > 9 ? checkTime.getMinutes() : `0${checkTime.getMinutes()}`
+            
             if(difference.days >= 2) {
-              item.checkTime = `${checkTime.getFullYear()}/${month}/${checkTime.getDate()} ${hours}:${minutes}`
-            }else {
+              item.checkTime = `${month}/${days} ${hours}:${minutes}`
+            }else if(0 < difference.days && difference.days < 2) {
               item.checkTime = `一天前 ${hours}:${minutes}`
+            }else if(difference.days == 0 && difference.hours > 0) {
+              item.checkTime = `${difference.hours}小时前 ${hours}:${minutes}`
+            }else if(difference.days == 0 && difference.hours == 0) {
+              item.checkTime = `刚刚 ${hours}:${minutes}`
             }
+            
             item.checkMoreNumber = 2
 
             if(item.quotationList.length > 0) {
@@ -313,17 +320,18 @@ export default class SAASService extends Service {
                 let createdDifference = util.getTimeDifference(createdTime)
                 
                 let cmonth = (createdTime.getMonth()+1) > 9 ? (createdTime.getMonth()+1) : `0${createdTime.getMonth()+1}`
+                let cdays = createdTime.getDate() > 9 ? createdTime.getDate() : `0${createdTime.getDate()}`
                 let chours = createdTime.getHours() > 9 ? createdTime.getHours() : `0${createdTime.getHours()}`
                 let cminutes = createdTime.getMinutes() > 9 ? createdTime.getMinutes() : `0${createdTime.getMinutes()}`
    
                 if(createdDifference.days >= 2) {
-                  qitem.createdTime = `${createdTime.getFullYear()}/${cmonth}/${createdTime.getDate()} ${chours}:${cminutes}`
+                  qitem.createdTime = `${cmonth}/${cdays} ${chours}:${cminutes}`
                 }else if(0 < createdDifference.days && createdDifference.days < 2) {
-                  qitem.createdTime = `一天前 ${hours}:${minutes}`
+                  qitem.createdTime = `一天前 ${chours}:${minutes}`
                 }else if(createdDifference.days == 0 && createdDifference.hours > 0) {
-                  qitem.createdTime = `${createdDifference.hours}小时前 ${hours}:${minutes}`
+                  qitem.createdTime = `${createdDifference.hours}小时前 ${chours}:${minutes}`
                 }else if(createdDifference.days == 0 && createdDifference.hours == 0) {
-                  qitem.createdTime = `刚刚 ${hours}:${minutes}`
+                  qitem.createdTime = `刚刚 ${chours}:${minutes}`
                 }
                 console.log(createdDifference)
                 qitem.viewModel = {

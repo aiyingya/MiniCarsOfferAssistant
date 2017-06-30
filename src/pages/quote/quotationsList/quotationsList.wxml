@@ -23,13 +23,17 @@
           <view class="users-cell_hd">
             <view class="title">{{cell.customerPhone}} / {{cell.customerName}}</view>
             <view class="messages">
-              <view class="check-number">已查看3次</view>
+              <view class="check-number">已查看{{cell.viewCount || 0}}次</view>
               <view class="check-times">
                 <image class="icon" src="../../../images/icons/icon_time_history.png"></image>
                 {{cell.checkTime}}(停留8m)</view>
               <view class="check-address">
                 <image class="icon" src="../../../images/icons/icon_position_gprs.png"></image>
-                瑞金市大步汽车...</view>
+                <block wx:if="{{cell.placeName}}">
+                  {{cell.placeName}}
+                </block>
+                <block wx:else>暂无位置信息</block>
+              </view>
             </view>
           </view>
           <view class="users-cell_bd">
