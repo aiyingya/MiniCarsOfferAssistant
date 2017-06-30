@@ -20,6 +20,7 @@ export default {
       radioNames:[],
       defaultRadio:undefined,
       // 时效性
+      defaultEffectivenessRadio:undefined,
       effectivenessCustomValue: '',
       effectivenessCustomChecked: false
     }
@@ -157,7 +158,7 @@ export default {
             inputNumber:options.inputNumber,
             inputName:options.inputNumber1,
             inputSex:options.defaultRadio,
-            inputEffectiveness:options.effectivenessRadios[options.effectivenessSelectedRadioIndex].value
+            inputEffectiveness:options.defaultEffectivenessRadio
           }
           this.hide(options.cancel(result))
         },

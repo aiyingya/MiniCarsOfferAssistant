@@ -1153,6 +1153,7 @@ Page({
       inputNumber1:quotation.customerName,
       inputNumber:quotation.customerMobile,
       defaultRadio:quotation.customerSex === undefined ? undefined:Number(quotation.customerSex),
+      defaultEffectivenessRadio: 24, // davidfu 暂时定为 24，应该是从报价偏好中心获得
       confirmText: '发送报价单',
       cancelText: '仅保存',
       initMobValidate: function (mobile) {
