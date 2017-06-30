@@ -174,7 +174,6 @@ Page({
     app.saasService.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
       loadingType: 'none',
       success: function (res) {
-        
         let empty = res.content.length === 0
         console.log(res.content)
         that.setData({

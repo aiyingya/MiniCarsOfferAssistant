@@ -315,9 +315,22 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
       return downPrice.toFixed()
     }
   }
+  
+  /***
+   * 优惠价格字符串显示
+   * @param downPrice
+   * @return {string}
+   */
+  static priceStringWithUnitNumber(downPrice) {
+    downPrice = Math.abs(downPrice)
+    if (downPrice >= 10000) {
+      return (downPrice / 10000).toFixed(2)
+    } else {
+      return downPrice.toFixed()
+    }
+  }
 
   static downPriceFlag(downPrice) {
-    console.log(downPrice)
     if (downPrice === 0) {
       return 0;
     } else if (downPrice > 0) {
@@ -326,7 +339,8 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
       return -1;
     }
   }
-
+  
+  
   /***
    * 优惠点数公式 （以下关联）
    * @param price       修改价格
@@ -456,7 +470,9 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
    * 计算时差.
    */
   static getTimeDifferenceString(time) {
-    let endTime = new Date(time)
+    if (!time) return '暂无浏览记录'
+    let stime = time.replace(/-/g, '/')
+    let endTime = new Date(stime)
     let difference = Util.getTimeDifference(endTime)
     
     let month = (endTime.getMonth()+1) > 9 ? (endTime.getMonth()+1) : `0${endTime.getMonth()+1}`

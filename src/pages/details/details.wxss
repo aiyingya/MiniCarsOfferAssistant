@@ -3,8 +3,10 @@ page {
 }
 .container {
   padding-bottom: 108rpx;
-  height: 100%;
   box-sizing: border-box;
+}
+.container.height100 {
+  height: 100%;
 }
 .users-cell {
   height: 150px;

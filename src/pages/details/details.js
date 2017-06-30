@@ -9,10 +9,12 @@ Page({
     longitude: '',
     textData: {},
     quotationsList: [],
-    historyList: [{index:1},{index:1},{index:1},{index:1},{index:1}],
+    historyList: [],
     showAmapIndex: 0,
     showAmap: true,
-    noHistory: ''
+    noHistory: '',
+    noHistoryContainer: '',
+    isShowAmap: false
   },
   makertap: function(e) {
     var id = e.markerId;
@@ -143,6 +145,8 @@ Page({
       let markers = []
       let historyList = []
       let noHistory = ''
+      let noHistoryContainer = ''
+      let isShowAmap = false
       if(res.length > 0) {
         for(let item of res) {
           
@@ -161,13 +165,17 @@ Page({
           item.longitude = item.positionX
           historyList.push(item)
         }
+        isShowAmap = true
       }else {
         noHistory = 'nohistory'
+        noHistoryContainer = 'height100'
       }
       
       this.setData({
         historyList: historyList,
-        noHistory: noHistory
+        noHistory: noHistory,
+        noHistoryContainer: noHistoryContainer,
+        isShowAmap: isShowAmap
       })
       
     }, (err) => {

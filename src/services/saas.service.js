@@ -248,7 +248,7 @@ export default class SAASService extends Service {
       } else {
         snsId = this.userService.snsId
       }
-
+      
       this.sendMessage({
         path: 'sale/quotation',
         loadingType: object.loadingType,
@@ -260,11 +260,11 @@ export default class SAASService extends Service {
         },
         method: 'GET',
         success: function(res){
+
           for(let item of res.content) {
-            
             item.checkTime = util.getTimeDifferenceString(item.viewTime)
             item.checkMoreNumber = 2
-
+           
             if(item.quotationList.length > 0) {
               for(let qitem of item.quotationList) {
                 let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
@@ -296,6 +296,7 @@ export default class SAASService extends Service {
               }
             }
           }
+          console.log(res.content)
           object.success(res);
         },
         fail: function() {

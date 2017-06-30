@@ -1,7 +1,7 @@
 <import src="../../components/dialog/checkTimeDialog.wxml"/>
 <template is="checkTimeDialog" data="{{ ...$wux.checkTimeDialog }}"/>
 
-<view class="container">
+<view class="container {{noHistoryContainer}}">
   <swiper 
     indicator-dots="false"
     autoplay="{{autoplay}}" 
@@ -69,13 +69,13 @@
           >
           <view class="history-message">
             <view class="check-time">
-              <image class="icon" src="../../../images/icons/icon_time_history.png"></image>
+              <image class="icon" src="../../images/icons/icon_time_history.png"></image>
               {{amap.checkTime}}(停留{{amap.stayTime || 0}}m)</view>
             <view class="check-address">
-             <image class="icon" src="../../../images/icons/icon_position_gprs.png"></image>
+             <image class="icon" src="../../images/icons/icon_position_gprs.png"></image>
               {{amap.placeName}}</view>
           </view>
-          <view class="history-amap" wx:if="{{amapIndex === showAmapIndex}}">
+          <view class="history-amap" wx:if="{{amapIndex === showAmapIndex && isShowAmap}}">
             <view class="map_container">
               <map 
                 class="map"  
