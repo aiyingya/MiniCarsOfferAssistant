@@ -487,13 +487,17 @@ export default class YMC {
         }
       }
     }).catch(function (reason) {
+      if (reason.message === "request:fail response data convert to UTF8 fail") {
+        // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
+        return
+      }
       // 抛出一个全局错误
       wxapi.showToast({
         title: reason.message ? reason.message : reason,
         icon: 'loading',
         duration: 2000
       });
-      console.log('catch',reason)
+      console.error('catch',reason)
       throw reason //to -> fail
     })
     //.finally(function () {});
