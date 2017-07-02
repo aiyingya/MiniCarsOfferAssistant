@@ -31,6 +31,13 @@
   height: 60rpx;
   line-height: 60rpx;
 }
+.users-cell_hd .not-sharemessage {
+  font-family: "PingFangSC-Regular";
+  font-size: 26rpx;
+  color: #666666;
+  height: 60rpx;
+  line-height: 60rpx;
+}
 .users-cell_bd {
   background-color: #fff;
 }
@@ -72,13 +79,17 @@
   align-items: baseline;
 }
 
-.price {
+.price-number {
   display: inline;
   font-family: ".SFNSDisplay";
   font-size: 44rpx;
   color: #ED4149;
-  letter-spacing: 0;
   line-height: 40rpx; 
+}
+.price-text {
+  font-family: "PingFangSC-Regular";
+  font-size: 28rpx;
+  color: #ED4149;
 }
 .check-more {
   height: 80rpx;

@@ -25,7 +25,8 @@ Page({
 		moveX: '',
 		touchElement: {},
 		delBtnWidth: 150,
-    checkMoreNumber: 2
+    checkMoreNumber: 2,
+    hasPagesNext: ''
   },
   onLoad() {
     let that = this;
@@ -104,11 +105,12 @@ Page({
   },
   onReachBottom() {
     // 上拉加载更多
+    if(!this.data.hasPagesNext) return;
     let that = this
-
+    
     let originPageIndex = this.data.pageIndex
     let newPageIndex = this.data.pageIndex + 1
-
+    
     app.saasService.requestQuotationsList(newPageIndex, this.data.pageSize, {
       loadingType: 'none',
       success: function (res) {
@@ -118,7 +120,8 @@ Page({
             item.checkMoreNumber = 2
           }
           that.setData({
-            quotationsList: that.data.quotationsList.concat(res.content)
+            quotationsList: that.data.quotationsList.concat(res.content),
+            hasPagesNext: res.hasNext
           })
         } else {
           that.data.pageIndex = originPageIndex
@@ -178,7 +181,8 @@ Page({
         console.log(res.content)
         that.setData({
           empty: empty,
-          quotationsList: res.content
+          quotationsList: res.content,
+          hasPagesNext: res.hasNext
         })
         
         typeof object.complete === 'function' && object.complete()
@@ -191,19 +195,25 @@ Page({
     })
   },
   handlerSelectQuotation(e) {
-    let quotationKeyValueString = util.urlEncodeValueForKey('quotation', e.currentTarget.dataset.quotation)
-    wx.navigateTo({
-      url: '/pages/details/details?' + quotationKeyValueString,
-      success: function (res) {
-        console.log('quotationDetail 页面跳转成功');
-      },
-      fail: function () {
-        console.log('quotationDetail 页面跳转失败');
-      },
-      complete: function () {
+    let valueString = JSON.stringify(e.currentTarget.dataset.quotation)
+    let quotationKeyValueString = encodeURIComponent(valueString)
+    try {
+      wx.setStorageSync('quotationItemKeyDetail', quotationKeyValueString)
+      wx.navigateTo({
+        url: '/pages/details/details',
+        success: function (res) {
+          console.log('quotationDetail 页面跳转成功');
+        },
+        fail: function () {
+          console.log('quotationDetail 页面跳转失败');
+        },
+        complete: function () {
 
-      }
-    })
+        }
+      })
+    } catch (e) {
+      
+    }
   },
   handletouchmove(event) {
 		let currentX = event.changedTouches[0].clientX
@@ -296,7 +306,7 @@ Page({
     const quotationsList = this.data.quotationsList
     console.log(e,more)
     for(let item of quotationsList) {
-      if(more.quotationId === item.quotationId) {
+      if(more.customerPhone === item.customerPhone) {
         item.checkMoreNumber = more.quotationCount
       }
     }

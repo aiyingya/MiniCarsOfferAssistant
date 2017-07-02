@@ -23,9 +23,22 @@ Page({
     that.changeMarkerColor(markersData,id);
   },
   onLoad: function(options) {
-    let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
-    let that = this
-    let historyList = this.data.historyList
+    try {
+      let quotationItemKeyDetail = wx.getStorageSync('quotationItemKeyDetail')
+      let opts = {
+        quotation: quotationItemKeyDetail
+      }
+      let quotation = util.urlDecodeValueForKeyFromOptions('quotation', opts)
+      let that = this
+      let historyList = this.data.historyList
+      console.log(quotation)
+      this.setData({
+        quotationsList: quotation.quotationList
+      })
+      this.getCheckHistory(0)
+    } catch (e) {
+      // Do something when catch error
+    }
 //    
 //    console.log(quotation)
 //    app.amap.getPoiAround({
@@ -49,10 +62,6 @@ Page({
 //        wx.showModal({title:info.errMsg})
 //      }
 //    })
-    this.setData({
-      quotationsList: quotation.quotationList
-    })
-    this.getCheckHistory(0)
   },
   showMarkerInfo: function(data,i){
     var that = this;
@@ -141,7 +150,6 @@ Page({
         quotationId: quotationId
       }
     }).then((res) => {
-      console.log(res)
       let markers = []
       let historyList = []
       let noHistory = ''

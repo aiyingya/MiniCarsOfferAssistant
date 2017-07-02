@@ -21,8 +21,21 @@
          bindtap="handlerSelectQuotation"
          >
           <view class="users-cell_hd">
-            <view class="title">{{cell.customerPhone}} / {{cell.customerName}}</view>
-            <view class="messages">
+            <view class="title">
+              <block wx:if="{{cell.customerPhone === '无'}}">
+                {{cell.customerPhone}} 
+              </block>
+              <block wx:else>
+                {{cell.customerPhone}} / {{cell.customerName}}
+              </block>
+            </view>
+            <view 
+              class="not-sharemessage"
+              wx:if="{{cell.customerPhone === '无'}}"
+              >
+              暂未分享
+            </view>
+            <view class="messages" wx:else>
               <view class="check-number">已查看{{cell.viewCount || 0}}次</view>
               <view class="check-times">
                 <image class="icon" src="../../../images/icons/icon_time_history.png"></image>
@@ -71,7 +84,12 @@
                 </view>
 
                 <view class="cars-guidePrice">
-                  <view class="price">{{ carcell.viewModel.guidePrice }}</view>万
+                  <block wx:if="{{carcell.quotationState}}">
+                    <view class="price-text">{{carcell.quotationState}}</view>
+                  </block>
+                  <block wx:else>
+                    <view class="price-number">{{ carcell.viewModel.guidePrice }}</view>万
+                  </block>
                 </view>
 
               </view>
