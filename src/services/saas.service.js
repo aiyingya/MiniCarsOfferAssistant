@@ -593,9 +593,7 @@ export default class SAASService extends Service {
   gettingMarketTrend(opts) {
     return this.sendMessageByPromise({
       path: `sale/quotation/getPriceTrend?spuId=${opts.spuId}`,
-      method: 'GET',
-      success: opts.success,
-      fail: opts.fail
+      method: 'GET'
     })
   }
   /**
@@ -678,6 +676,18 @@ export default class SAASService extends Service {
     return this.sendMessageByPromise({
       path: 'api/user/getViewRecord',
       method: 'GET',
+      data: opts.data || {}
+    })
+  }
+  
+  /**
+   * 修改订单有效时长.
+   * @param opts
+   */
+  postValidTime(opts) {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/modifyValidTime',
+      method: 'POST',
       data: opts.data || {}
     })
   }

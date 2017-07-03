@@ -14,7 +14,10 @@ Page({
     showAmap: true,
     noHistory: '',
     noHistoryContainer: '',
-    isShowAmap: false
+    isShowAmap: false,
+    quotationItem: {
+      customerPhone: ''
+    }
   },
   makertap: function(e) {
     var id = e.markerId;
@@ -31,9 +34,12 @@ Page({
       let quotation = util.urlDecodeValueForKeyFromOptions('quotation', opts)
       let that = this
       let historyList = this.data.historyList
+      let noHistoryContainer = quotation.customerPhone === '无' ? 'height100' : ''
       console.log(quotation)
       this.setData({
-        quotationsList: quotation.quotationList
+        'quotationItem.customerPhone': quotation.customerPhone,
+        quotationsList: quotation.quotationList,
+        noHistoryContainer: noHistoryContainer
       })
       this.getCheckHistory(0)
     } catch (e) {
@@ -106,16 +112,21 @@ Page({
     })
   },
   /**
-   * 调整时效.
+   * 调整时效 弹窗.
    */
   handleAdjusttimes() {
     let that = this
+    let showAmapIndex = this.data.showAmapIndex
+    let quotationsList = this.data.quotationsList
+    let quotationCurrent = quotationsList[showAmapIndex]
+    
     this.setData({
       showAmap: false
     })
     $checkTimeDialog.open({
       title: '时效调整',
-      checkboxItems: '',
+      validTime: quotationCurrent.validTime, // 报价单有效时间
+      createdTime: quotationCurrent.quotationTime, // 报价单创建时间
       confirmText: '确认',
       cancelText: '取消',
       validate: (e) => {
@@ -126,16 +137,69 @@ Page({
         }
       },
       confirm: (value) => {
-        console.log(value)
-        that.setData({
-          showAmap: true
-        })
+        
+        let time = ''
+        if(value.type === 'add') {
+          time = value.val
+        }else if(value.type === 'reduce') {
+          time = -(value.val)
+        }else if(value.type === 'close') {
+          time = 0
+        }
+        const promise = that.postValidTime(quotationCurrent.quotationId,time)
+
+        promise.then(res => {
+          that.setData({
+            showAmap: true
+          })
+        }, err => {
+          
+        }) 
       },
       cancel: () => {
         that.setData({
           showAmap: true
         })
       }
+    })
+  },
+  /**
+  * 调整时效 POST.
+  */
+  postValidTime(id,time) {
+    let that = this
+    let showAmapIndex = this.data.showAmapIndex
+    let quotationsList = this.data.quotationsList
+    
+    return app.saasService.postValidTime({
+      data: {
+        quotationId: id,
+        times: time
+      }
+    }).then((res) => {
+     
+      for(let item of quotationsList) {
+        if(item.quotationId === id) {
+          if(time == 0){
+            item.validTime = time
+          }else {
+            item.validTime += Number(time)
+          }
+        }
+      }
+      let valueString = JSON.stringify(quotationsList)
+      let quotationKeyValueString = encodeURIComponent(valueString)
+      try {
+        wx.setStorageSync('quotationItemKeyDetail', quotationKeyValueString)
+        that.setData({
+          quotationsList: quotationsList
+        })
+      } catch (e) {
+
+      }
+      
+    }, (err) => {
+      
     })
   },
   /**
@@ -208,5 +272,25 @@ Page({
       }
     })
   },
-  
+  /**
+   * 分享报价单.
+   */
+  handleToShareDatail() {
+    let showAmapIndex = this.data.showAmapIndex
+    let quotationsList = this.data.quotationsList
+    let quotationCurrent = quotationsList[showAmapIndex]
+    
+    const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotationCurrent)
+    wx.navigateTo({
+      url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
+      success: function (res) {
+      },
+      fail: function () {
+      },
+      complete: function () {
+        app.fuckingLarryNavigatorTo.quotation = null
+        app.fuckingLarryNavigatorTo.source = null
+      }
+    })
+  }
 })

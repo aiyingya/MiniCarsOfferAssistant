@@ -13,7 +13,8 @@ export default {
       confirmDisabled: true,
       checkedValues: [],
       addTimes: '',
-      reduceTimes: ''
+      reduceTimes: '',
+      validsTime: ''
     }
   },
   /**
@@ -49,6 +50,9 @@ export default {
       animateCss: undefined,
       visible: !1
     }, this.setDefaults(), opts)
+
+    console.log(options)
+    let timeinterval = ''
     // 实例化组件
     const component = new Component({
       scope: `$wux.checkTimeDialog`,
@@ -60,14 +64,29 @@ export default {
         hide(cb) {
           if (this.removed) return !1
           this.removed = !0
-          this.setHidden()
+          this.setHidden()   
           setTimeout(() => typeof cb === `function` && cb(), 300)
         },
         /**
          * 显示
          */
         show() {
+          
           if (this.removed) return !1
+          if (options.validTime > 0){
+            let date = options.createdTime.replace(/-/g,'/')
+            let deadline = new Date(Date.parse(new Date(date)) +  options.validTime * 60 * 60 * 1000);
+            this.initializeClock(deadline);
+          }else if(options.validTime == 0) {
+            this.setData({
+              [`${this.options.scope}.validsTime`]: '已失效'
+            })
+          }else {
+            this.setData({
+              [`${this.options.scope}.validsTime`]: '无限制'
+            })
+          }
+          
           this.setVisible()
         },
         /**
@@ -78,11 +97,60 @@ export default {
         onTouchMoveWithCatch(e) {
         },
         /**
+         * 获取时差.
+         *
+         * @param {endtime} 
+         */
+        getTimeRemaining(endtime) {
+          let t = Date.parse(endtime) - Date.parse(new Date());
+          let seconds = Math.floor((t / 1000) % 60);
+          let minutes = Math.floor((t / 1000 / 60) % 60);
+          let hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+          let days = Math.floor(t / (1000 * 60 * 60 * 24));
+          return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+          };
+        },
+        /**
+         * 有效时长倒计时.
+         *
+         * @param opts
+         */
+        initializeClock(endtime) {
+          let that = this;
+
+          function updateClock() {
+            let t = that.getTimeRemaining(endtime);
+
+            let days =  t.days > 0 ? `${t.days}天 `: '';
+            let hours = ('0' + t.hours).slice(-2);
+            let minutes = ('0' + t.minutes).slice(-2);
+            let seconds = ('0' + t.seconds).slice(-2);
+            
+            that.setData({
+              [`${that.options.scope}.validsTime`]: `${days}${hours}:${minutes}:${seconds}`
+            })
+            
+            if (t.total <= 0) {
+              clearInterval(timeinterval)
+              that.setData({
+                [`${that.options.scope}.validsTime`]: '已失效'
+              })
+            }
+          }
+          updateClock();
+          timeinterval = setInterval(updateClock, 1000)
+        },
+        /**
          * 处理输入事件
          *
          * @param {any} e
          */
-        checkboxChange: function (e) {
+        checkboxChange(e) {
           let radioItems = options.radioItems
           let values = e.detail.value
           let name = e.currentTarget.dataset.name
@@ -156,7 +224,7 @@ export default {
               value.val = res.reduceTime
             }
           }
-          console.log(value)
+          clearInterval(timeinterval)
           this.hide(options.confirm(value))
         },
         /**
@@ -165,6 +233,7 @@ export default {
          * @param {any} e
          */
         cancel(e) {
+          clearInterval(timeinterval)
           this.hide(options.cancel())
         },
         close(){

@@ -213,5 +213,11 @@ page {
   margin: 20rpx auto;
 }
 .nodata .text {
+  line-height: normal;
   text-align: center;
+  color: #666666;
+}
+.nodata .text.share {
+  text-decoration: underline;
+  color: #333;
 }

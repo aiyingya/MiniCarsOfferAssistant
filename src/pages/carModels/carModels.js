@@ -47,7 +47,8 @@ Page({
     touchindex: '',
     selectTimesData: [],
     pageShare: false,
-    options: ''
+    options: '',
+    showPopupMarketCharts: false
   },
   onLoad (options) {
     let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -726,12 +727,42 @@ Page({
   */
   handleCheckMarket(e) {
     let id = e.currentTarget.dataset.selectid
-    app.saasService.gettingMarketTrend({
+    let that = this
+    return app.saasService.gettingMarketTrend({
       spuId: id,
-      success(data) {
-        console.log(data)
-      }
+    }).then((res) => {
+      
+      console.log(res)
+      that.setData({
+        showPopupMarketCharts: true
+      })
+      let market = new app.wxcharts({
+          canvasId: 'popMarketCharts',
+          type: 'line',
+          categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
+          series: [{
+              name: '成交量1',
+              data: [0.15, 0.2, 0.45, 0.37, 0.4, 0.8],
+              format: function (val) {
+                  return val.toFixed(2) + '万';
+              }
+          }, {
+              name: '成交量2',
+              data: [0.30, 0.37, 0.65, 0.78, 0.69, 0.94],
+              format: function (val) {
+                  return val.toFixed(2) + '万';
+              }
+          }],
+          yAxis: {
+              title: '成交金额 (万元)',
+              format: function (val) {
+                  return val.toFixed(2);
+              },
+              min: 0
+          },
+          width: 320,
+          height: 200
+      })
     })
-   
   }
 })

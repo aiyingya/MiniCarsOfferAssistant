@@ -21,7 +21,14 @@
           data-quotation="{{item}}"
           bindtap="handleToquotationDetail"
           >
-          <view class="users-title">{{item.customerMobile}} / {{item.customerName}}</view>
+          <view class="users-title">
+            <block wx:if="{{item.customerMobile === '无'}}">
+              {{item.customerMobile}}
+            </block>
+            <block wx:else>
+              {{item.customerMobile}} / {{item.customerName}}
+            </block>  
+          </view>
           <view class="check-time">- {{item.createdTime}} -</view>
           <view class="cars-name">{{item.quotationItems[0].itemName}}</view>
           <view class="cars-message">  
@@ -59,44 +66,56 @@
   <view class="history-wrap {{noHistory}}">
     <view class="title">TA的查看历史</view>
     <view class="history-cells">
-      <block wx:if="{{historyList.length > 0}}">
-        <view 
-          class="history-cell"
-          wx:for="{{historyList}}"
-          wx:for-item="amap"
-          wx:for-index="amapIndex"
-          data-amapindex="{{amapIndex}}"
-          bindtap="handleCheckAmap"
-          >
-          <view class="history-message">
-            <view class="check-time">
-              <image class="icon" src="../../images/icons/icon_time_history.png"></image>
-              {{amap.checkTime}}(停留{{amap.stayTime || 0}}m)</view>
-            <view class="check-address">
-             <image class="icon" src="../../images/icons/icon_position_gprs.png"></image>
-              {{amap.placeName}}</view>
-          </view>
-          <view class="history-amap" wx:if="{{amapIndex === showAmapIndex && isShowAmap}}">
-            <view class="map_container">
-              <map 
-                class="map"  
-                longitude="{{amap.longitude}}"   
-                latitude="{{amap.latitude}}"  
-                scale="14"   
-                show-location="true"  
-                markers="{{amap.markers}}"
-                wx:if="{{showAmap}}"  
-                ></map>
-            </view>
-          </view>
+      <block wx:if="{{quotationItem.customerPhone == '无'}}">
+        <view class="nodata">
+          <image src="../../images/icons/icon_share_empty.png"></image>
+          <view class="text">暂未分享，无查看历史</view>
+          <view 
+            class="text share"
+            bindtap="handleToShareDatail"
+            >立即分享>></view>
         </view>
       </block>
       <block wx:else>
-        <view class="nodata">
-          <image src="../../images/icons/icon_time_history_empty.png"></image>
-          <view class="text">暂无查看历史记录</view>
-        </view>
-      </block>
+        <block wx:if="{{historyList.length > 0}}">
+          <view 
+            class="history-cell"
+            wx:for="{{historyList}}"
+            wx:for-item="amap"
+            wx:for-index="amapIndex"
+            data-amapindex="{{amapIndex}}"
+            bindtap="handleCheckAmap"
+            >
+            <view class="history-message">
+              <view class="check-time">
+                <image class="icon" src="../../images/icons/icon_time_history.png"></image>
+                {{amap.checkTime}}(停留{{amap.stayTime || 0}}m)</view>
+              <view class="check-address">
+               <image class="icon" src="../../images/icons/icon_position_gprs.png"></image>
+                {{amap.placeName}}</view>
+            </view>
+            <view class="history-amap" wx:if="{{amapIndex === showAmapIndex && isShowAmap}}">
+              <view class="map_container">
+                <map 
+                  class="map"  
+                  longitude="{{amap.longitude}}"   
+                  latitude="{{amap.latitude}}"  
+                  scale="14"   
+                  show-location="true"  
+                  markers="{{amap.markers}}"
+                  wx:if="{{showAmap}}"  
+                  ></map>
+              </view>
+            </view>
+          </view>
+        </block>
+        <block wx:else>
+          <view class="nodata">
+            <image src="../../images/icons/icon_time_history_empty.png"></image>
+            <view class="text">暂无查看历史记录</view>
+          </view>
+        </block>
+      </block>   
     </view> 
   </view>
   

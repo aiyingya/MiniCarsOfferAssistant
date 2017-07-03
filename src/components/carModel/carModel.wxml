@@ -233,3 +233,40 @@
   </view>
 </template> 
 
+<template name="popupMarketCharts">
+  <view 
+   class="popup-select-charts"
+   wx:if="{{showPopupMarketCharts}}"
+   >
+    <view class="popup-shade" bindtouchmove="handleClosePopupMarket" bindtap="handleClosePopupMarket"></view>
+    <view class="popup-charts-main">
+     <view class="popup-charts-hd">
+        <view>报价区间详情</view>
+        <view 
+         class="close-popup"
+         bindtap="handleClosePopup"
+         >
+          <image src="../../images/icons/icon_close.png"></image>
+        </view>
+      </view>
+      <view class="popup-charts-bd">
+        <view class="popup-charts-scale">
+          <view>报价数量(条)</view>
+          <view 
+            class="button"
+            data-carmodelsinfo="{{carModelsInfo}}"
+            bindtap="handlerToCarSources"  
+            >查看详情</view>
+        </view>
+        <canvas
+          canvas-id="popMarketCharts"
+          data-id="popMarketCharts"
+          class="pop-canvas"
+          disable-scroll
+          disable-scroll="true" 
+          bindtouchmove="popupMarketChartstouchMove"
+          ></canvas>
+      </view>
+    </view>
+  </view>
+</template>

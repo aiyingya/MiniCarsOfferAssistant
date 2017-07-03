@@ -20,7 +20,7 @@
         <view class="weui-dialog__bd">
           <!-- 剩余时效.-->
           <view class="remaining-time">
-            <view class="remaining-time_content">有效时间还剩 1:25:22</view>
+            <view class="remaining-time_content">有效时间还剩 {{validsTime}}</view>
           </view>
           <view class="input-cell">
             <view>增加</view>
