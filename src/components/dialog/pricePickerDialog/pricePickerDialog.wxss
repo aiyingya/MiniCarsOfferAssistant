@@ -51,37 +51,31 @@
 }
 
 .pricePickerDialog .scale {
-  display: flex;
   white-space: nowrap;
 }
 
 .pricePickerDialog .guide-scale {
   height: 30rpx;
   display: inline-block;
-  width: 30rpx;
 }
 
 .pricePickerDialog .major-scale {
   height: 30rpx;
   display: inline-block;
-  width: 30rpx;
 }
 
 .pricePickerDialog .minor-scale {
   height: 30rpx;
   display: inline-block;
-  width: 30rpx;
 }
 
 .pricePickerDialog .blank-scale {
   display: inline-block;
-  width: 50%;
 }
 
 .pricePickerDialog .cursor {
   display: flex;
   justify-content: center;
-  margin-bottom: -8px;
 }
 
 .pricePickerDialog .cursor image {
@@ -135,6 +129,7 @@
   font-size: 24rpx;
   color: #999999;
   line-height: 30rpx;
+  height: 30rpx;
 }
 
 .pricePickerDialog .quoted image {
@@ -143,12 +138,12 @@
 }
 
 .pricePickerDialog .scale-value-text {
-  width: 282rpx;
   text-align: center;
   display: inline-block;
   font-size: 18rpx;
   color: #999999;
   line-height: 18rpx;
+  height: 30rpx;
 }
 
 

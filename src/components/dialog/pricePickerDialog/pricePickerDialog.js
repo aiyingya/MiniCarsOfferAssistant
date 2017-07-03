@@ -4,8 +4,8 @@ import util from '../../../utils/util'
 import config from '../../../config'
 
 export default {
-  scalePx: 12,
   adjustUpdateTimeoutId: null,
+  scalePx: 0,
   /**
    * 默认参数
    */
@@ -22,7 +22,11 @@ export default {
       scaleValue: [],
       scrollLeft: 0,
       sellingPrice : 0,     // 当前设置的报价
-      quoted: {}
+      quoted: {},
+      tenScaleWidthPx: 0,
+      tenScaleMarginLeftPx: 0,
+      scalePx: 0,
+      blankWidthPx: 0
     }
   },
   /**
@@ -92,7 +96,7 @@ export default {
   },
   valueForScrollLeft(offsetX, rangeLocationLower, guidePrice, quotedMethod = 'PRICE') {
     const absoluteOffset = offsetX - this.scalePx / 2
-    const relativeScaleCount = (((absoluteOffset % this.scalePx) > this.scalePx / 2) ? 1 : 0) + Math.floor(absoluteOffset / this.scalePx)
+    const relativeScaleCount = (((absoluteOffset % this.scalePx) > this.scalePx / 2) ? 1 : 0) + (absoluteOffset / this.scalePx)
     const absoluteSellingPrice = rangeLocationLower + this.valueFromScaleCount(relativeScaleCount, guidePrice, quotedMethod)
     return {
       relativeScaleCount,
@@ -102,7 +106,7 @@ export default {
   adjustForScrollLeft(offsetX) {
     const absoluteOffset = offsetX - this.scalePx / 2
     const delta = absoluteOffset % this.scalePx
-    const adjustScrollLeft = offsetX - delta + ((delta > this.scale / 2 )? this.scale / 2 : 0)
+    const adjustScrollLeft = offsetX - delta + ((delta > this.scalePx / 2 )? this.scalePx / 2 : 0)
     return adjustScrollLeft
   },
   /**
@@ -123,16 +127,13 @@ export default {
       visible: !1
     }, this.setDefaults(), opts)
 
-    // 该方法应该转移到全局方法中
-    if (config.system.model.includes('iPhone')) {
-      if (config.system.model.includes(' Plus')) {
-        this.scalePx = Math.floor(30 * 0.552)
-      } else if (config.system.model.includes(' 4') || config.system.model.includes(' 5')) {
-        this.scalePx = Math.floor(30 * 0.42)
-      } else {
-        this.scalePx = 30 * 0.5
-      }
-    }
+    const originalScalePx = Math.floor(config.px(30))
+    options.scalePx = originalScalePx + (originalScalePx % 2 === 1 ? 1 : 0)
+    this.scalePx = options.scalePx
+    options.tenScaleWidthPx = this.scalePx * 10
+    options.tenScaleMarginLeftPx = (options.tenScaleWidthPx - this.scalePx) / 2
+    const screenWidthPx = config.system.screenWidth
+    options.blankWidthPx = (screenWidthPx * 0.8 > 300 ? 300 : screenWidthPx * 0.8) / 2
 
     const plate = this.prepareForPlate(options.params.guidePrice, options.params.sellingPrice, options.params.quotedMethod)
     console.log(plate)
@@ -179,6 +180,7 @@ export default {
          * @param {any} e
          */
         onTouchMoveWithCatch(e) {
+          console.log(e)
         },
         /**
          * 确认行为
@@ -202,7 +204,7 @@ export default {
         cancel(e) {
           this.hide(options.cancel())
         },
-        close(){
+        close() {
           if (typeof options.close === 'function') {
             this.hide(options.close())
             return
