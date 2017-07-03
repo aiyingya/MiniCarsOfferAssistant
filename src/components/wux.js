@@ -7,6 +7,8 @@ import $wuxToast from './toast/toast'
 import $wuxTrack from './track/track'
 import $wuxContentDialog from './dialog/contentDialog'
 import $wuxSpecialUploadDialog from './dialog/specialUploadDialog/specialUploadDialog'
+import $wuxPricePickerDialog from './dialog/pricePickerDialog/pricePickerDialog'
+
 export {
   $wuxDialog,
   $wuxInputNumberDialog,
@@ -16,5 +18,6 @@ export {
   $wuxTrack,
   $wuxContentDialog,
   $wuxSpecialUploadDialog,
-  $checkTimeDialog
+  $checkTimeDialog,
+  $wuxPricePickerDialog
 }
