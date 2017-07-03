@@ -51,7 +51,6 @@
 }
 
 .pricePickerDialog .scale {
-  display: flex;
   white-space: nowrap;
 }
 
@@ -77,7 +76,6 @@
 .pricePickerDialog .cursor {
   display: flex;
   justify-content: center;
-  margin-bottom: -8px;
 }
 
 .pricePickerDialog .cursor image {

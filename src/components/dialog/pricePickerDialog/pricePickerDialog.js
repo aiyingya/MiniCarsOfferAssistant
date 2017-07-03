@@ -96,7 +96,7 @@ export default {
   },
   valueForScrollLeft(offsetX, rangeLocationLower, guidePrice, quotedMethod = 'PRICE') {
     const absoluteOffset = offsetX - this.scalePx / 2
-    const relativeScaleCount = (((absoluteOffset % this.scalePx).toFixed(1) > this.scalePx / 2) ? 1 : 0) + (absoluteOffset / this.scalePx).toFixed(1)
+    const relativeScaleCount = (((absoluteOffset % this.scalePx) > this.scalePx / 2) ? 1 : 0) + (absoluteOffset / this.scalePx)
     const absoluteSellingPrice = rangeLocationLower + this.valueFromScaleCount(relativeScaleCount, guidePrice, quotedMethod)
     return {
       relativeScaleCount,
@@ -180,6 +180,7 @@ export default {
          * @param {any} e
          */
         onTouchMoveWithCatch(e) {
+          console.log(e)
         },
         /**
          * 确认行为
@@ -203,7 +204,7 @@ export default {
         cancel(e) {
           this.hide(options.cancel())
         },
-        close(){
+        close() {
           if (typeof options.close === 'function') {
             this.hide(options.close())
             return
