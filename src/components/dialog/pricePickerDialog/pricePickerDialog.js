@@ -15,15 +15,15 @@ export default {
       content: undefined,
       params: {
         quotedMethod: 'PRICE',
-        sellingPrice: 0, // 初始传入的报价
-        guidePrice:0          // 官价，该价格应该是标盘的中心
+        sellingPrice: 0,
+        guidePrice:0
       },
-      scale: [],
-      scaleValue: [],
-      scrollLeft: 0,
-      sellingPrice : 0,     // 当前设置的报价
-      quoted: {},
-      tenScaleWidthPx: 0,
+      scale: [],              // 表盘刻度
+      scaleValue: [],         // 表盘刻度标注
+      scrollLeft: 0,          // 设置当前 scroll view 的滚动距离
+      sellingPrice : 0,       // 当前设置的报价
+      quoted: {},             // 报价处理对象
+      tenScaleWidthPx: 0,     // 十个刻度的实际 px
       tenScaleMarginLeftPx: 0,
       scalePx: 0,
       blankWidthPx: 0
@@ -39,11 +39,7 @@ export default {
       confirm() {},
       close() {},
       confirmText: `确定`,
-      validate() { return true }
     }
-  },
-  pxForNumber(number) {
-    return String(number).length * this.fourDigestsLength / 4
   },
   scaleCountFromValue(value, guidePrice, quotedMethod = 'PRICE') {
     if (quotedMethod === 'POINTS') {
@@ -60,17 +56,35 @@ export default {
     }
   },
   prepareForPlate(guidePrice, sellingPrice, quotedMethod = 'PRICE', lowerRate, upperRate) {
+    let rangeLength
+    let rangeLocationLower
+    let rangeLocationUpper
+
     if (quotedMethod === 'POINTS') {
-      lowerRate = lowerRate || 0.4
-      upperRate = upperRate || 0.1
+      lowerRate = lowerRate || 1
+      upperRate = upperRate || 1
     } else if (quotedMethod === 'PRICE') {
       lowerRate = lowerRate || 0.5
       upperRate = upperRate || 0.1
     }
 
-    const rangeLength = Math.ceil(guidePrice * (upperRate + lowerRate))
-    const rangeLocationLower = Math.ceil(guidePrice * (1 - lowerRate))
-    const rangeLocationUpper = Math.ceil(guidePrice * (1 + upperRate))
+    const originalRangeLength = Math.floor(guidePrice * (upperRate + lowerRate))
+    const originalRangeLocationLower = Math.floor(guidePrice * (1 - lowerRate))
+    const originalRangeLocationUpper = Math.floor(guidePrice * (1 + upperRate))
+
+    if (quotedMethod === 'POINTS') {
+      rangeLength = originalRangeLength
+      rangeLocationLower = originalRangeLocationLower
+      rangeLocationUpper = originalRangeLocationUpper
+
+    } else if (quotedMethod === 'PRICE') {
+      const rangeLengthMod = originalRangeLength % 100
+      rangeLength = originalRangeLength - rangeLengthMod
+
+      const rangeLocationLowerMod = originalRangeLocationLower % 100
+      rangeLocationLower = originalRangeLocationLower - rangeLocationLowerMod
+      rangeLocationUpper = originalRangeLocationUpper - (rangeLengthMod - rangeLocationLowerMod)
+    }
 
     const scaleCount = this.scaleCountFromValue(rangeLength, guidePrice, quotedMethod) + 1
     const scaleCountForLower = this.scaleCountFromValue(rangeLocationLower, guidePrice, quotedMethod)
@@ -118,7 +132,9 @@ export default {
    * @param {Function} opts.cancelText 取消按钮的文字
    * @param {Function} opts.confirm 点击确认的回调函数
    * @param {Function} opts.cancel 点击确认的取消函数
-   *
+   * @param {String} opts.params.quotedMethod 报价方式 PRICE按价 / POINTS按点 / DIRECT 直接报价, 暂不支持
+   * @param {Number} opts.params.sellingPrice 报价, 由外部传入的初始报价值
+   * @param {Number} opts.params.guidePrice 官价, 由外部传入的官方价格
    */
   open(opts = {}) {
     const that = this

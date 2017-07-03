@@ -841,6 +841,8 @@ Page({
         guidePrice:_guidePrice
       },
       confirm: (res) => {
+        // sellingPrice 返回的是最终设置的 降价
+        // quoted 是返回的降价对象，内部包含了全部的降价信息
         const sellingPrice = res.sellingPrice
         const quoted = res.quoted
 
