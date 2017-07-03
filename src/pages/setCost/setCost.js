@@ -58,7 +58,7 @@ Page({
      * 报价单时效.
      */
     selectedAging:{
-      agingIndex: 1,
+      agingIndex: 0,
       agingData: ["1","2","3"],
       agingValue: ["24","48",""],
       agingText: ["小时","小时","无限制"]
