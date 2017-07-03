@@ -728,40 +728,58 @@ Page({
   handleCheckMarket(e) {
     let id = e.currentTarget.dataset.selectid
     let that = this
+    let popWindow = {}
+
+    try {
+      let res = wx.getSystemInfoSync()
+
+      popWindow.windowWidth = res.windowWidth
+    } catch (e) {
+
+    }
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
       
       console.log(res)
       that.setData({
-        showPopupMarketCharts: true
+        showPopupMarketCharts: true,
+        showCharts: false
       })
       let market = new app.wxcharts({
           canvasId: 'popMarketCharts',
           type: 'line',
           categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
-          series: [{
-              name: '成交量1',
-              data: [0.15, 0.2, 0.45, 0.37, 0.4, 0.8],
-              format: function (val) {
-                  return val.toFixed(2) + '万';
-              }
-          }, {
-              name: '成交量2',
-              data: [0.30, 0.37, 0.65, 0.78, 0.69, 0.94],
-              format: function (val) {
-                  return val.toFixed(2) + '万';
-              }
+          color: '#ECF0F7',
+          legend: false,
+          background: '#ECF0F7',
+          series: [{   
+            data: [-10.15, -10.2, -10.45, -10.37, -10.4, -10.8], 
+          }, { 
+            data: [-10.30, -10.37, -10.65, -10.78, -10.69, -10.94],   
           }],
-          yAxis: {
-              title: '成交金额 (万元)',
-              format: function (val) {
-                  return val.toFixed(2);
-              },
-              min: 0
+          xAxis: {
+            disableGrid: false,
+            fontColor: '#333333',
+            gridColor: '#333333',
+            unitText: '日期',
+            type: 'calibration'
           },
-          width: 320,
-          height: 200
+          yAxis: {
+            disabled: true,
+            fontColor: '#333333',
+            gridColor: '#333333',
+            unitText: '（个）',
+            min: -20,
+            max: 0,
+            format(val) {
+              return val.toFixed(0)
+            }
+          },
+          dataLabel: false,
+          dataPointShape: false,
+          width: popWindow.windowWidth,
+          height: 120
       })
     })
   }

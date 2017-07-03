@@ -251,7 +251,7 @@
       </view>
       <view class="popup-charts-bd">
         <view class="popup-charts-scale">
-          <view>报价数量(条)</view>
+          <view>下(万)</view>
           <view 
             class="button"
             data-carmodelsinfo="{{carModelsInfo}}"

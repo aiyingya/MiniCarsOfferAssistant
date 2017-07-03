@@ -1019,6 +1019,7 @@ function drawAreaDataPoints(series, opts, config, context) {
 }
 
 function drawLineDataPoints(series, opts, config, context) {
+
     var process = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
 
     var _calYAxisData3 = calYAxisData(series, opts, config),
@@ -1032,6 +1033,7 @@ function drawLineDataPoints(series, opts, config, context) {
     var maxRange = ranges.shift();
 
     series.forEach(function (eachSeries, seriesIndex) {
+
         var data = eachSeries.data;
         var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
         var splitPointList = splitPoints(points);
@@ -1071,7 +1073,28 @@ function drawLineDataPoints(series, opts, config, context) {
 
     return xAxisPoints;
 }
-
+/**
+ * 绘制虚线.
+ * @param ctx 传context对象
+ * @param x1, y1 始点x和y坐标
+ * @param x2, y2 终点x和y坐标
+ * @param dashLength 虚线长度
+ */
+function drawDashLine(ctx, x1, y1, x2, y2, dashLength){  
+  var dashLen = dashLength === undefined ? 3 : dashLength,
+  xpos = x2 - x1, //得到横向的宽度;
+  ypos = y2 - y1, //得到纵向的高度;
+  numDashes = Math.floor(Math.sqrt(xpos * xpos + ypos * ypos) / dashLen); 
+  //利用正切获取斜边的长度除以虚线长度，得到要分为多少段;
+  for(var i=0; i<numDashes; i++){
+     if(i % 2 === 0){
+         ctx.moveTo(x1 + (xpos/numDashes) * i, y1 + (ypos/numDashes) * i); 
+         //有了横向宽度和多少段，得出每一段是多长，起点 + 每段长度 * i = 要绘制的起点；
+      }else{
+          ctx.lineTo(x1 + (xpos/numDashes) * i, y1 + (ypos/numDashes) * i);
+      }
+   }
+}
 function drawXAxis(categories, opts, config, context) {
     var _getXAxisPoints4 = getXAxisPoints(categories, opts, config),
         xAxisPoints = _getXAxisPoints4.xAxisPoints,
@@ -1091,8 +1114,10 @@ function drawXAxis(categories, opts, config, context) {
         if (opts.xAxis.type === 'calibration') {
             xAxisPoints.forEach(function (item, index) {
                 if (index > 0) {
-                    context.moveTo(item - eachSpacing / 2, startY);
-                    context.lineTo(item - eachSpacing / 2, startY + 4);
+                  context.setStrokeStyle("#979797");
+                    //drawDashLine(context,item - eachSpacing / 2,startY,item - eachSpacing / 2, config.padding,config.legendHeight)
+                  context.moveTo(item - eachSpacing / 2, startY);
+                  context.lineTo(item - eachSpacing / 2, config.padding);
                 }
             });
         } else {
@@ -1455,7 +1480,7 @@ function drawCharts(type, opts, config, context, clickData, callback) {
                     drawYAxis(series, opts, config, context);
                     drawXAxis(categories, opts, config, context);
                     _this.chartData.xAxisPoints = drawLineDataPoints(series, opts, config, context, process);
-                    drawLegend(opts.series, opts, config, context);
+                    drawYAxisCoordLine(series, opts, config, context);
                     drawCanvas(opts, context);
                 },
                 onAnimationFinish: function onAnimationFinish() {
