@@ -37,6 +37,10 @@ export default class SAASService extends Service {
     super.sendMessagePromise(opts)
   }
 
+  requestPublishQuotationWithMobile(draftId, customerMobile, object) {
+    this.requestPublishQuotation(draftId, customerMobile, '', 0, true, 24, object)
+  }
+
   /**
    * 发布当前报价草稿到某个用户
    *
@@ -49,7 +53,7 @@ export default class SAASService extends Service {
    * @param {Object} object          回调对象
    * @memberof SAASService
    */
-  requestPublishQuotation (draftId, customerMobile, customerName, customerSex, isSendMessage, effectiveness, object) {
+  requestPublishQuotation(draftId, customerMobile, customerName, customerSex, isSendMessage, effectiveness, object) {
     if (draftId && draftId !== '') {
       this.sendMessage({
         path: 'sale/quotation',
@@ -248,7 +252,7 @@ export default class SAASService extends Service {
       } else {
         snsId = this.userService.snsId
       }
-      
+
       this.sendMessage({
         path: 'sale/quotation',
         loadingType: object.loadingType,
@@ -264,7 +268,7 @@ export default class SAASService extends Service {
           for(let item of res.content) {
             item.checkTime = util.getTimeDifferenceString(item.viewTime)
             item.checkMoreNumber = 2
-           
+
             if(item.quotationList.length > 0) {
               for(let qitem of item.quotationList) {
                 let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
@@ -666,8 +670,8 @@ export default class SAASService extends Service {
       method: 'GET'
     })
   }
-  
-  
+
+
   /**
    * 获取历史浏览记录.
    * @param opts
@@ -679,7 +683,7 @@ export default class SAASService extends Service {
       data: opts.data || {}
     })
   }
-  
+
   /**
    * 修改订单有效时长.
    * @param opts
