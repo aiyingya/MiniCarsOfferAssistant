@@ -90,6 +90,7 @@
 				  class="carModels-market_btn"
 				  bindtap="handleCheckMarket"
 				  data-selectid="{{item.carModelId}}"
+				  data-carmodelsinfo="{{item}}"
 				  >行情走势</view>
 			</view>
 
@@ -241,22 +242,35 @@
     <view class="popup-shade" bindtouchmove="handleClosePopupMarket" bindtap="handleClosePopupMarket"></view>
     <view class="popup-charts-main">
      <view class="popup-charts-hd">
-        <view>报价区间详情</view>
+        <view>行情走势</view>
         <view 
          class="close-popup"
-         bindtap="handleClosePopup"
+         bindtap="handleClosePopupMarket"
          >
           <image src="../../images/icons/icon_close.png"></image>
         </view>
       </view>
       <view class="popup-charts-bd">
         <view class="popup-charts-scale">
-          <view>下(万)</view>
+          <view class="charts-labels">
+            <view class="charts-label label1">
+              <view class="label-icon"></view>
+              no.1</view>
+              <view class="charts-label label2">
+              <view class="label-icon"></view>
+              no.2</view>
+              <view class="charts-label label3">
+              <view class="label-icon"></view>
+              no.3</view>
+          </view>
           <view 
-            class="button"
+            class="button market-btn"
             data-carmodelsinfo="{{carModelsInfo}}"
-            bindtap="handlerToCarSources"  
+		        bindtap="handlerToCarSources"  
             >查看详情</view>
+        </view>
+        <view class="popup-charts-scale">
+          <view>下(万)</view>
         </view>
         <canvas
           canvas-id="popMarketCharts"

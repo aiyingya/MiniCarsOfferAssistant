@@ -1110,14 +1110,21 @@ function drawXAxis(categories, opts, config, context) {
     context.setLineWidth(1);
     context.moveTo(startX, startY);
     context.lineTo(endX, startY);
+    context.closePath();
+    context.stroke();
     if (opts.xAxis.disableGrid !== true) {
         if (opts.xAxis.type === 'calibration') {
             xAxisPoints.forEach(function (item, index) {
                 if (index > 0) {
+                  context.beginPath();
                   context.setStrokeStyle("#979797");
+                  context.setLineWidth(1);
                     //drawDashLine(context,item - eachSpacing / 2,startY,item - eachSpacing / 2, config.padding,config.legendHeight)
                   context.moveTo(item - eachSpacing / 2, startY);
                   context.lineTo(item - eachSpacing / 2, config.padding);
+                  
+                  context.closePath();
+                  context.stroke();
                 }
             });
         } else {
@@ -1127,8 +1134,6 @@ function drawXAxis(categories, opts, config, context) {
             });
         }
     }
-    context.closePath();
-    context.stroke();
     // 对X轴列表做抽稀处理
     var validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth - config.paddingRight;
     var maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / 1.5));

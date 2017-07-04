@@ -359,3 +359,51 @@
 	text-align: center;
 	padding:16rpx 15rpx;
 }
+.button.market-btn {
+  width: 120rpx;
+  height: 44rpx;
+  padding: 0;
+  line-height: 44rpx;
+  background-color: rgba(51,119,238,.1);
+  font-size: 24rpx;
+  color: #3377EE;
+  border-radius: 100rpx;
+}
+.charts-labels {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.charts-label {
+  position: relative;
+  font-family: 'PingFangSC-Regular';
+  font-size: 20rpx;
+  color: #333333;
+  height: 40rpx;
+  line-height: 40rpx;
+  padding-left: 45rpx;
+  margin-right: 20rpx;
+}
+.charts-label .label-icon {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -4rpx;
+  width: 40rpx;
+  height: 8rpx;
+  background: #ED4149;
+  border-radius: 8rpx;
+}
+.label2 .label-icon {
+  background: #3377EE;
+}
+.label3 .label-icon {
+  background: #B0CDFF;
+}
+
+
+
+

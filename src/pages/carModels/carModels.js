@@ -22,6 +22,7 @@ Page({
     showNodata: false,
     showPopCharts: false,
     popCharts: null,
+    popMarketCharts: null,
     active: '',
     stock: 'in_stock',
     stockText: '有货',
@@ -727,6 +728,7 @@ Page({
   */
   handleCheckMarket(e) {
     let id = e.currentTarget.dataset.selectid
+    let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
     let popWindow = {}
 
@@ -741,23 +743,46 @@ Page({
       spuId: id,
     }).then((res) => {
       
-      console.log(res)
+      let series = []
+      let categories = []
+      if(res.length > 0) {
+        for(let numitems of res) {
+          let items = {}
+          items.data = []
+          items.color = ''
+          if(numitems.priceList.length > 0) {
+            for(let priceitems of numitems.priceList) {
+              if(numitems.topNum === 1) {
+                categories.push(priceitems.priceDateString)
+                items.color = '#ED4149'
+              }
+              if(numitems.topNum === 2) {
+                items.color = '#3377EE'
+              }
+              if(numitems.topNum === 3) {
+                items.color = '#B0CDFF'
+              }
+              items.data.push(util.priceAbsStringWithUnitNumber(priceitems.discount))
+            }
+            series.push(items)
+          }
+        }
+        console.log(series,categories)
+      }
       that.setData({
         showPopupMarketCharts: true,
-        showCharts: false
+        showCharts: false,
+        carModelsInfo: carModelsInfo
       })
-      let market = new app.wxcharts({
+      this.data.popMarketCharts = new app.wxcharts({
           canvasId: 'popMarketCharts',
           type: 'line',
-          categories: ['2012', '2013', '2014', '2015', '2016', '2017'],
+          categories: categories,
           color: '#ECF0F7',
           legend: false,
           background: '#ECF0F7',
-          series: [{   
-            data: [-10.15, -10.2, -10.45, -10.37, -10.4, -10.8], 
-          }, { 
-            data: [-10.30, -10.37, -10.65, -10.78, -10.69, -10.94],   
-          }],
+          animation: false,
+          series: series,
           xAxis: {
             disableGrid: false,
             fontColor: '#333333',
@@ -770,7 +795,7 @@ Page({
             fontColor: '#333333',
             gridColor: '#333333',
             unitText: '（个）',
-            min: -20,
+            min: -10,
             max: 0,
             format(val) {
               return val.toFixed(0)
@@ -782,5 +807,20 @@ Page({
           height: 120
       })
     })
+  },
+  /**
+   * 关闭行情走势.
+  */
+  handleClosePopupMarket() {
+    let carModelsList = this.data.carModelsList
+    columnCharts = null
+    columnChartsList = []
+    this.drawCanvas(carModelsList)
+    this.setData({
+      showPopupMarketCharts: false,
+      showCharts: true
+    })
+    this.data.popMarketCharts = null
+    this.data.touchindex = ''
   }
 })

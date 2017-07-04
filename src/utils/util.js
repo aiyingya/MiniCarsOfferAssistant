@@ -329,6 +329,15 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
       return downPrice.toFixed()
     }
   }
+  
+  /***
+   * 优惠价格字符串显示
+   * @param downPrice
+   * @return {string}
+   */
+  static priceAbsStringWithUnitNumber(downPrice) {
+    return (downPrice / 10000).toFixed(2)
+  }
 
   static downPriceFlag(downPrice) {
     if (downPrice === 0) {

@@ -125,7 +125,6 @@ export default {
 
           function updateClock() {
             let t = that.getTimeRemaining(endtime);
-
             let days =  t.days > 0 ? `${t.days}天 `: '';
             let hours = ('0' + t.hours).slice(-2);
             let minutes = ('0' + t.minutes).slice(-2);
