@@ -282,6 +282,7 @@ export default class SAASService extends Service {
                 /**
                  * 计算时间.
                  */
+                item.shared = qitem.shared
                 qitem.createdTime = util.getTimeDifferenceString(qitem.quotationTime)
                 qitem.viewModel = {
                   totalPayment: totalPayment,

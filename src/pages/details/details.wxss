@@ -97,7 +97,7 @@ page {
   background-color: #fff;
 }
 .history-wrap.nohistory {
-  height: calc(100% - 150px);
+  height: calc(100% - 130px);
 }
 .history-wrap .title {
   position: relative;

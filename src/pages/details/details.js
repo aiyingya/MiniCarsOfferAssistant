@@ -17,9 +17,11 @@ Page({
     isShowAmap: false,
     quotationItem: {
       customerPhone: '',
-      customerName: ''
+      customerName: '',
+      shared: false
     },
-    swiperCurrent: 0
+    swiperCurrent: 0,
+    showCurrent: 0
   },
   makertap: function(e) {
     var id = e.markerId;
@@ -42,6 +44,7 @@ Page({
       this.setData({
         'quotationItem.customerPhone': quotation.customerPhone,
         'quotationItem.customerName': quotation.customerName,
+        'quotationItem.shared': quotation.shared,
         quotationsList: quotation.quotationList,
         noHistoryContainer: noHistoryContainer,
         swiperCurrent: current
@@ -103,6 +106,9 @@ Page({
    */
   handleChangeSwiper(e) {
     let current = e.detail.current
+    this.setData({
+      showCurrent: current
+    })
     this.getCheckHistory(current)
   },
   /**
@@ -121,9 +127,9 @@ Page({
    */
   handleAdjusttimes() {
     let that = this
-    let showAmapIndex = this.data.showAmapIndex
+    let showCurrent = this.data.showCurrent
     let quotationsList = this.data.quotationsList
-    let quotationCurrent = quotationsList[showAmapIndex]
+    let quotationCurrent = quotationsList[showCurrent]
     
     this.setData({
       showAmap: false
@@ -173,7 +179,7 @@ Page({
   */
   postValidTime(id,time) {
     let that = this
-    let showAmapIndex = this.data.showAmapIndex
+    let showCurrent = this.data.showCurrent
     let quotationsList = this.data.quotationsList
     
     return app.saasService.postValidTime({
@@ -281,9 +287,9 @@ Page({
    * 分享报价单.
    */
   handleToShareDatail() {
-    let showAmapIndex = this.data.showAmapIndex
+    let showCurrent = this.data.showCurrent
     let quotationsList = this.data.quotationsList
-    let quotationCurrent = quotationsList[showAmapIndex]
+    let quotationCurrent = quotationsList[showCurrent]
     
     const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotationCurrent)
     wx.navigateTo({

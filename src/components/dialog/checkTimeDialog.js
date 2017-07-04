@@ -79,11 +79,11 @@ export default {
             this.initializeClock(deadline);
           }else if(options.validTime == 0) {
             this.setData({
-              [`${this.options.scope}.validTime`]: '已失效'
+              [`${this.options.scope}.validsTime`]: '已失效'
             })
           }else {
             this.setData({
-              [`${this.options.scope}.validTime`]: '无限制'
+              [`${this.options.scope}.validsTime`]: '无限制'
             })
           }
 
@@ -131,13 +131,13 @@ export default {
             let seconds = ('0' + t.seconds).slice(-2);
 
             that.setData({
-              [`${that.options.scope}.validTime`]: `${days}${hours}:${minutes}:${seconds}`
+              [`${that.options.scope}.validsTime`]: `${days}${hours}:${minutes}:${seconds}`
             })
 
             if (t.total <= 0) {
               clearInterval(timeinterval)
               that.setData({
-                [`${that.options.scope}.validTime`]: '已失效'
+                [`${that.options.scope}.validsTime`]: '已失效'
               })
             }
           }

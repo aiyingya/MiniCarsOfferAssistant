@@ -125,7 +125,7 @@
   </view>
   
   
-  <view class="btn-wrap">
+  <view class="btn-wrap" wx:if="{{quotationItem.shared}}">
     <view 
       class="btn"
       bindtap="handleAdjusttimes"
