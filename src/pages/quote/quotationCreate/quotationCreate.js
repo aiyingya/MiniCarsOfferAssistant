@@ -846,11 +846,12 @@ Page({
         const sellingPrice = res.sellingPrice
         const quoted = res.quoted
 
-        const originalInputNumber = sellingPrice - _guidePrice
+        const originalInputNumber = quoted.quotedValue || (quoted.quotedRangeUnit === '万' ? quoted.quotedRange * 10000 : quoted.quotedRange)
 
-        const _isPlus = (res.quotedSymbol === 'PLUS')
+        const _isPlus = (res.quoted.quotedSymbol === 'PLUS')
         let source = this.data.source
         let price
+
         if (_isPoint && ((_diffPrice > 0) === _isPlus) && (Number(_hasInitPoint) === Number(originalInputNumber))){
           price = _initSellingPrice
         } else {
