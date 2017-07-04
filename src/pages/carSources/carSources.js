@@ -101,6 +101,10 @@ Page({
       }
 
       // 获取众数 top N
+      this.setData({
+        'topNOfCurrentMode.referenceStatus': '加载中',
+        'topNOfCurrentMode.topNStatus': '加载中'
+      })
       app.saasService.getTopNOfCurrentMode(carModelsInfo.carModelId)
       .then(res => {
         const reference = res.reference
@@ -108,6 +112,8 @@ Page({
           reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-reference.discount, reference.guidePrice, this.isShowDownPrice)
           reference.viewModelQuoted.price = reference.price
           reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
+        } else {
+          res.referenceStatus = '暂无'
         }
 
         if (res.priceList && res.priceList.length) {
@@ -116,18 +122,20 @@ Page({
             topMode.viewModelQuoted.price = topMode.price
             topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
           }
+        } else {
+          res.topNStatus = '暂无'
         }
 
         this.setData({
           topNOfCurrentMode: res
         })
         console.log(res)
-      }, err => {
-        // 测试代码
-        console.log(err)
       })
       .catch(err => {
-        console.log(err)
+        this.setData({
+          'topNOfCurrentMode.referenceStatus': '加载失败',
+          'topNOfCurrentMode.topNStatus': '加载失败'
+        })
       })
 
       app.saasService.requestCarSourcesList(carModelsInfo.carModelId, {

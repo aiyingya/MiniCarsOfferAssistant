@@ -463,8 +463,8 @@
 }
 
 .nodata {
-  margin-top: 15rpx;
-  margin-bottom: 15rpx;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
   font-size: 28rpx;
 	color: #999999;
 	letter-spacing: -0.56rpx;

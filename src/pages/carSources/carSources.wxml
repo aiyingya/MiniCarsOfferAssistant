@@ -86,7 +86,7 @@
         <view class="company">{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
       </view>
       <view wx:else class="nodata">
-        暂无
+        {{topNOfCurrentMode.referenceStatus}}
       </view>
     </view>
 
@@ -99,7 +99,7 @@
         </view>
       </view>
       <view wx:else class="nodata">
-        暂无
+        {{topNOfCurrentMode.topNStatus}}
       </view>
     </view>
 

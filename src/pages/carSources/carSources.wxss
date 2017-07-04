@@ -232,8 +232,6 @@ page {
   background: #3377EE;
   margin-top: 20rpx;
   padding: 0rpx 20rpx;
-  display: flex;
-  flex-direction: column;
   box-sizing: border-box;
 }
 
@@ -282,7 +280,9 @@ page {
   letter-spacing: 0;
   line-height: 24rpx;
 }
-
+.car-sources-reference-deal .reference {
+  height: 96rpx;
+}
 .car-sources-reference-deal .reference .mode-item {
   height: 60rpx;
   width: 100%;
@@ -291,7 +291,9 @@ page {
   align-items: center;
   justify-content: center;
 }
-
+.car-sources-reference-deal .topN {
+  height: 122rpx;
+}
 .car-sources-reference-deal .topN .modes {
   width: 100%;
   display: flex;
