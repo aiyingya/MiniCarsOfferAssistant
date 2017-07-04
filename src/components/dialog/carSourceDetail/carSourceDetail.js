@@ -313,17 +313,24 @@ export default {
 
     this.component.show()
 
+    that.component.setData({
+      [`${that.component.options.scope}.status`]: "加载中"
+    })
     const app = getApp()
     app.saasService.getCompanies(options.spuId, options.quotationPrice)
       .then(res => {
         that.component.setData({
-          [`${that.component.options.scope}.companyList`]: res
+          [`${that.component.options.scope}.companyList`]: res,
+          [`${that.component.options.scope}.status`]: '没有供应商所在公司数据',
         })
       })
       .catch(err => {
+        that.component.setData({
+          [`${that.component.options.scope}.status`]: "加载失败"
+        })
       })
 
-    return this.component.hide
+    return this.component.hid
   },
 
   /**
@@ -425,15 +432,21 @@ export default {
 
     this.component.show()
 
+    that.component.setData({
+      [`${that.component.options.scope}.status`]: '加载中'
+    })
     const app = getApp()
     app.saasService.getContacts(options.spuId, options.quotationPrice, options.companyId, options.supplierId)
       .then(res => {
         that.component.setData({
-          [`${that.component.options.scope}.contactList`]: res[0]
+          [`${that.component.options.scope}.contactList`]: res[0],
+          [`${that.component.options.scope}.status`]: '没有供应商联系方式'
         })
       })
       .catch(err => {
-
+        that.component.setData({
+          [`${that.component.options.scope}.status`]: '加载失败'
+        })
       })
 
     return this.component.hide
