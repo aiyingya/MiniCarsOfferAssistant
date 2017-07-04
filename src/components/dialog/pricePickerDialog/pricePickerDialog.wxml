@@ -55,7 +55,7 @@
                   </block>
                   <block wx:else>
                     <block wx:if="{{ index !== 0 && index !== scale.length - 1 }}">
-                      <image wx:if="{{ index % 5 === 0 }}" style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
+                      <image wx:if="{{ item.index % 5 === 0 }}" style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
                       <image wx:else style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray_small.png" class="minor-scale" />
                     </block>
                     <block wx:else>

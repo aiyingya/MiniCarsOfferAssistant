@@ -154,6 +154,8 @@ export default {
     const plate = this.prepareForPlate(options.params.guidePrice, options.params.sellingPrice, options.params.quotedMethod)
     console.log(plate)
     let guidePriceGroupFlag = false
+    // 获取最后一组组合
+    const lastGroup = Number.parseInt((plate.scaleCount - 1) / 10) * 10
     for (let index = 0; index < plate.scaleCount; index ++) {
 
       let guidePriceFlag = false
@@ -167,13 +169,15 @@ export default {
           } else {
             guidePriceFlag = false
           }
-          options.scale.push({i, guidePriceFlag, bigScaleFlag})
+          options.scale.push({index: i, guidePriceFlag, bigScaleFlag})
         }
       }
 
+
+
       if (index % 10 === 0) {
         if (guidePriceGroupFlag === false) {
-          if (index === plate.scaleCount - 1) {
+          if (index === lastGroup ) {
             bigScaleFlag = false
           } else {
             bigScaleFlag = true
@@ -185,6 +189,13 @@ export default {
 
         const scaleValue = plate.rangeLocationLower + this.valueFromScaleCount(index, options.params.guidePrice, options.params.quotedMethod)
         options.scaleValue.push({index, scaleValue})
+      } else if (index === plate.scaleCount - 1) {
+        const mode = index % 10
+        for (let i = lastGroup + 1; i <= lastGroup + mode; i ++ ) {
+          guidePriceFlag = false
+          bigScaleFlag = false
+          options.scale.push({index: i, guidePriceFlag, bigScaleFlag})
+        }
       }
 
     }
