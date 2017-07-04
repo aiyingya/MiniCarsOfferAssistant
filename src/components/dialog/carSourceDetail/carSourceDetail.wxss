@@ -399,15 +399,15 @@
 }
 /*公司列表页面*/
 .carSourceDetailDialog .company-list {
-
+  padding: 30rpx 30rpx;
 }
 
 .carSourceDetailDialog .company-cell {
   height: 100rpx;
-  padding: 30rpx 30rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1rpx solid #E4E4E4;
 }
 .carSourceDetailDialog .company-cell .left {
   font-family: PingFangSC-Regular;
@@ -429,12 +429,15 @@
   left: -15rpx;
   top: 30rpx;
 }
+.carSourceDetailDialog .contact-list {
+  padding: 30rpx 30rpx;
+}
 .carSourceDetailDialog .contact-cell {
   height: 100rpx;
-  padding: 30rpx 30rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1rpx solid #E4E4E4;
 }
 .carSourceDetailDialog .contact-cell .left {
   font-family: PingFangSC-Regular;
@@ -453,7 +456,7 @@
 }
 .carSourceDetailDialog .contact-cell .right .call-time {
   font-family: PingFangSC-Regular;
-  font-size: 24px;
+  font-size: 24rpx;
   color: #666666;
   letter-spacing: 0;
   line-height: 24rpx;

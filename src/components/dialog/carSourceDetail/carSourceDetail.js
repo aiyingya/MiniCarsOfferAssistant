@@ -429,7 +429,7 @@ export default {
     app.saasService.getContacts(options.spuId, options.quotationPrice, options.companyId, options.supplierId)
       .then(res => {
         that.component.setData({
-          [`${that.component.options.scope}.contactList`]: res
+          [`${that.component.options.scope}.contactList`]: res[0]
         })
       })
       .catch(err => {
