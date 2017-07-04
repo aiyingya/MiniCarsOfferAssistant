@@ -40,17 +40,28 @@
             bindscrolltoupper="{{upper}}" bindscrolltolower="{{lower}}" bindscroll="{{scroll}}">
             <view style="height:30rpx">
               <block wx:for="{{ scale }}" wx:key="{{item.index}}">
-                <block wx:if="{{item.guidePriceFlag}}">
-                  <image style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_red.png" class="guide-scale" />
-                </block>
-                <block wx:else>
+                <block wx:if="{{ item.bigScaleFlag }}">
                   <block wx:if="{{ index !== 0 && index !== scale.length - 1 }}">
-                    <image wx:if="{{ index % 5 === 0 }}" style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
-                    <image wx:else style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray_small.png" class="minor-scale" />
+                      <image style="width: {{scalePx * 10}}px;" src="/images/icons/icon_table_scale_group.png" class="minor-scale" />
                   </block>
                   <block wx:else>
-                    <image wx:if="{{ index === 0 }}" style="width: {{scalePx}}px; margin-left:{{ blankWidthPx }}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
-                    <image wx:if="{{ index === scale.length - 1 }}" style="width: {{scalePx}}px; margin-right:{{ blankWidthPx }}px;" src="{{ index % 5 === 0 ? '/images/icons/icon_table_scale_gray.png' : '/images/icons/icon_table_scale_gray_small.png'}}" class="major-scale" />
+                    <image wx:if="{{ index === 0 }}" style="width: {{scalePx * 10}}px; margin-left:{{ blankWidthPx }}px;" src="/images/icons/icon_table_scale_group.png" class="major-scale" />
+                    <image wx:if="{{ index === scale.length - 1 }}" style="width: {{scalePx * 10}}px; margin-right:{{ blankWidthPx }}px;" src="/images/icons/icon_table_scale_group.png" class="major-scale" />
+                  </block>
+                </block>
+                <block wx:else>
+                  <block wx:if="{{item.guidePriceFlag}}">
+                    <image style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_red.png" class="guide-scale" />
+                  </block>
+                  <block wx:else>
+                    <block wx:if="{{ index !== 0 && index !== scale.length - 1 }}">
+                      <image wx:if="{{ index % 5 === 0 }}" style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
+                      <image wx:else style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray_small.png" class="minor-scale" />
+                    </block>
+                    <block wx:else>
+                      <image wx:if="{{ index === 0 }}" style="width: {{scalePx}}px; margin-left:{{ blankWidthPx }}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
+                      <image wx:if="{{ index === scale.length - 1 }}" style="width: {{scalePx}}px; margin-right:{{ blankWidthPx }}px;" src="{{ item.index % 5 === 0 ? '/images/icons/icon_table_scale_gray.png' : '/images/icons/icon_table_scale_gray_small.png'}}" class="major-scale" />
+                    </block>
                   </block>
                 </block>
               </block>

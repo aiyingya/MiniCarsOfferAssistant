@@ -153,17 +153,40 @@ export default {
 
     const plate = this.prepareForPlate(options.params.guidePrice, options.params.sellingPrice, options.params.quotedMethod)
     console.log(plate)
+    let guidePriceGroupFlag = false
     for (let index = 0; index < plate.scaleCount; index ++) {
+
       let guidePriceFlag = false
+      let bigScaleFlag = false
       if (index + plate.scaleCountForLower === plate.scaleCountForGuidePrice) {
-        guidePriceFlag = true
+        guidePriceGroupFlag = true
+        const guidePriceBigScaleIndex = Number.parseInt(index / 10)
+        for (let i = guidePriceBigScaleIndex * 10; i < guidePriceBigScaleIndex * 10 + 10; i++ ) {
+          if (i + plate.scaleCountForLower === plate.scaleCountForGuidePrice ) {
+            guidePriceFlag = true
+          } else {
+            guidePriceFlag = false
+          }
+          options.scale.push({i, guidePriceFlag, bigScaleFlag})
+        }
       }
 
       if (index % 10 === 0) {
+        if (guidePriceGroupFlag === false) {
+          if (index === plate.scaleCount - 1) {
+            bigScaleFlag = false
+          } else {
+            bigScaleFlag = true
+          }
+          options.scale.push({index, guidePriceFlag, bigScaleFlag})
+        } else {
+          guidePriceGroupFlag = false
+        }
+
         const scaleValue = plate.rangeLocationLower + this.valueFromScaleCount(index, options.params.guidePrice, options.params.quotedMethod)
         options.scaleValue.push({index, scaleValue})
       }
-      options.scale.push({index, guidePriceFlag})
+
     }
 
     const scrollLeft = this.scrollLeftForValue(options.params.sellingPrice, plate.rangeLocationLower, options.params.guidePrice, options.params.quotedMethod)
