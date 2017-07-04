@@ -1097,7 +1097,7 @@ Page({
 
           if (that.data.source === 'quotationDetail') {
             wx.navigateBack({
-              delta: 2, // 回退前 delta(默认为1) 页面
+              delta: 3, // 回退前 delta(默认为1) 页面
               success: function (res) {
                 // success
               },
