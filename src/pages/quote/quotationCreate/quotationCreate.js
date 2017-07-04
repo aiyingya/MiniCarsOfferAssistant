@@ -86,7 +86,12 @@ Page({
       "threeWYXS": 0.5,//"三年期万元系数",
       "interestType":1,//"默认选中的贷款方式 1 月息 2 万元系数"
       "carNumberFee":'200',//"上牌服务费"
-      "loanFee":0 //贷款服务费
+      "loanFee":0, //贷款服务费
+      "validTime":{
+        "firstChoose":24,
+        "secondChoose":48,
+        "chooseWho":1
+      }
     },
     expensesAllInfo:[
       {
@@ -1144,9 +1149,10 @@ Page({
       inputNumber1:quotation.customerName,
       inputNumber:quotation.customerMobile,
       defaultRadio:quotation.customerSex === undefined ? undefined:Number(quotation.customerSex),
-      defaultEffectivenessRadio: 24, // davidfu 暂时定为 24，应该是从报价偏好中心获得
+      effectivenessCustomValue: quotation.validTime, // davidfu 暂时定为 24，应该是从报价偏好中心获得
       confirmText: '发送报价单',
       cancelText: '仅保存',
+      validTimeObj: that.data.requestResult.validTime,
       initMobValidate: function (mobile) {
         return mobile ? mobile.length === 11 : false
       },
@@ -1160,6 +1166,7 @@ Page({
         const customerSex = Number(res.inputSex)
         const effectiveness = Number(res.inputEffectiveness)
         //保存报价单
+
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
             let quotationDraft = res
@@ -1180,8 +1187,7 @@ Page({
         }
         const customerName =res.inputName
         const customerSex = Number(res.inputSex)
-        const effectiveness = Number(res.effectiveness)
-
+        const effectiveness = Number(res.inputEffectiveness)
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
             let quotationDraft = res
