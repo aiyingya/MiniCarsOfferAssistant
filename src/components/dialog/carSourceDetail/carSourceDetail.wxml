@@ -226,8 +226,8 @@
             <view class="contact-list">
               <view wx:for="{{contactList.supplierModels}}" wx:key="{{supplierId}}" class="contact-cell" data-contact="{{item.supplierPhone}}"
                 bindtap="{{handlerContactClick}}">
-                <view wx:if="{{item.callCount}}" class="left">{{item.supplierName}} </view>
-                <view wx:else class="left active">{{item.supplierName}}({{item.callCount}})</view>
+                <view wx:if="{{item.callCount}}" class="left active">{{item.supplierName}}({{item.callCount}})</view>
+                <view wx:else class="left active">{{item.supplierName}}</view>
                 <view class="right">
                   <view class="call-time">{{item.callTime}}</view>
                 </view>
