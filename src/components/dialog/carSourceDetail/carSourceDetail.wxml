@@ -176,21 +176,22 @@
           <view class="brief-infomation">
             【{{carModel.officialPriceStr}}】 {{carModel.carModelName}}
           </view>
-          <block wx:if="{{companyList.length}}">
-            <view class="company-list">
-              <view wx:for="{{companyList}}" wx:key="{{companyId}}" class="company-cell" data-company-id="{{item.companyId}}" data-company-name="{{item.companyName}}"
-                bindtap="{{handlerCompanyClick}}">
-                <view class="left">{{item.companyName}}</view>
-                <view class="right">
-                  <image src="/images/icons/icon_arrow.png" />
+          <scroll-view scroll-y="true" style="height: 400rpx">
+            <block wx:if="{{companyList.length}}">
+              <view class="company-list">
+                <view wx:for="{{companyList}}" wx:key="{{companyId}}" class="company-cell" data-company-id="{{item.companyId}}" data-company-name="{{item.companyName}}"
+                  bindtap="{{handlerCompanyClick}}">
+                  <view class="left">{{item.companyName}}</view>
+                  <view class="right">
+                    <image src="/images/icons/icon_arrow.png" />
+                  </view>
                 </view>
               </view>
-            </view>
-          </block>
-          <block wx:else>
-             <view class="nodata">没有供应商所在公司数据</view>
-          </block>
-
+            </block>
+            <block wx:else>
+              <view class="nodata">{{status}}</view>
+            </block>
+          </scroll-view>
         </view>
 
         <view class="footer">
@@ -221,22 +222,23 @@
           <view class="brief-infomation">
             {{contactList.companyName}}
           </view>
-
-          <view wx:if="{{contactList.supplierModels.length}}">
-            <view class="contact-list">
-              <view wx:for="{{contactList.supplierModels}}" wx:key="{{supplierId}}" class="contact-cell" data-contact="{{item.supplierPhone}}"
-                bindtap="{{handlerContactClick}}">
-                <view wx:if="{{item.callCount}}" class="left active">{{item.supplierName}}({{item.callCount}})</view>
-                <view wx:else class="left active">{{item.supplierName}}</view>
-                <view class="right">
-                  <view class="call-time">{{item.callTime}}</view>
+          <scroll-view style="height: 400rpx">
+            <block wx:if="{{contactList.supplierModels.length}}">
+              <view class="contact-list">
+                <view wx:for="{{contactList.supplierModels}}" wx:key="{{supplierId}}" class="contact-cell" data-contact="{{item.supplierPhone}}"
+                  bindtap="{{handlerContactClick}}">
+                  <view wx:if="{{item.callCount}}" class="left active">{{item.supplierName}}({{item.callCount}})</view>
+                  <view wx:else class="left active">{{item.supplierName}}</view>
+                  <view class="right">
+                    <view class="call-time">{{item.callTime || ''}}</view>
+                  </view>
                 </view>
               </view>
-            </view>
-          </view>
-          <view wx:else>
-             <view class="nodata">没有供应商联系方式</view>
-          </view>
+            </block>
+            <block wx:else>
+              <view class="nodata">{{status}}</view>
+            </block>
+          </scroll-view>
         </view>
       </block>
     </view>
