@@ -59,7 +59,12 @@
               </view>
             </view>
             <view class="cars-guidePrice">
-              <view class="price">{{ item.viewModel.guidePrice }}</view>万
+              <block wx:if="{{item.quotationState}}">
+                <view class="price-text">{{item.quotationState}}</view>
+              </block>
+              <block wx:else>
+                <view class="price-number">{{ item.viewModel.guidePrice }}</view>万
+              </block>
             </view>
           </view>
         </view>
@@ -94,7 +99,12 @@
             <view class="history-message">
               <view class="check-time">
                 <image class="icon" src="../../images/icons/icon_time_history.png"></image>
-                {{amap.checkTime}}(停留{{amap.stayTime || 0}}m)</view>
+                <block wx:if="{{amap.viewState === '正在查看'}}">
+                 <text>{{amap.viewState}}</text>
+                </block>
+                <block wx:else>{{amap.checkTime}}</block>
+                (停留{{amap.stayTime || 0}}m)
+              </view>
               <view class="check-address">
                <image class="icon" src="../../images/icons/icon_position_gprs.png"></image>
                 {{amap.placeName}}</view>

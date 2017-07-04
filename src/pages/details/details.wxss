@@ -45,14 +45,17 @@ page {
   -webkit-align-items: baseline;
   align-items: baseline;
 }
-
-.price {
+.price-number {
   display: inline;
   font-family: ".SFNSDisplay";
   font-size: 44rpx;
   color: #ED4149;
-  letter-spacing: 0;
   line-height: 40rpx; 
+}
+.price-text {
+  font-family: "PingFangSC-Regular";
+  font-size: 28rpx;
+  color: #ED4149;
 }
 .quotation-msg{
   line-height: 26rpx;
@@ -142,11 +145,15 @@ page {
   position: relative;
   padding-left: 25rpx;
   height: 100rpx;
-}
-.history-message .check-address {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.history-message .check-time {
+  width: 52%;
+}
+.history-message .check-address {
+  width: 46%;
 }
 .check-time .icon,
 .check-address .icon {
@@ -156,6 +163,9 @@ page {
   left: 0;
   top: 50%;
   margin-top: -8rpx;
+}
+.history-message .check-time text {
+  color: #ED4149;
 }
 .history-amap {
   width: 100%;
