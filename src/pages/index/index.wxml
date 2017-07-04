@@ -1,8 +1,5 @@
 <!--index.wxml-->
-<view 
- class="container"
- wx:if="{{!anewReload}}"
- >
+<view class="container">
   <!-- 搜索车型.-->
   <view class="topbar">
     <view class="topbar-search">
@@ -103,10 +100,6 @@
 
 
   </view>
-</view>
-
-<view wx:else>
-  请求出错，重新加载
 </view>
 
 <!-- 车系.-->

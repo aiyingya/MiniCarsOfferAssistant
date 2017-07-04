@@ -15,12 +15,12 @@ page {
   padding: 15rpx 30rpx;
 }
 .users-title {
-  margin-top: 20rpx;
   font-family: "PingFangSC-Regular";
   font-size: 30rpx;
   color: #333333;
-  line-height: 30rpx;
+  line-height: 40rpx;
   text-align: center;
+  background-color: #fff;
 }
 .users-cell .check-time {
   margin-top: 20rpx;

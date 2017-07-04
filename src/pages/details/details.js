@@ -16,8 +16,10 @@ Page({
     noHistoryContainer: '',
     isShowAmap: false,
     quotationItem: {
-      customerPhone: ''
-    }
+      customerPhone: '',
+      customerName: ''
+    },
+    swiperCurrent: 0
   },
   makertap: function(e) {
     var id = e.markerId;
@@ -26,6 +28,7 @@ Page({
     that.changeMarkerColor(markersData,id);
   },
   onLoad: function(options) {
+    let current = options.current
     try {
       let quotationItemKeyDetail = wx.getStorageSync('quotationItemKeyDetail')
       let opts = {
@@ -38,10 +41,12 @@ Page({
       console.log(quotation)
       this.setData({
         'quotationItem.customerPhone': quotation.customerPhone,
+        'quotationItem.customerName': quotation.customerName,
         quotationsList: quotation.quotationList,
-        noHistoryContainer: noHistoryContainer
+        noHistoryContainer: noHistoryContainer,
+        swiperCurrent: current
       })
-      this.getCheckHistory(0)
+      this.getCheckHistory(current)
     } catch (e) {
       // Do something when catch error
     }
@@ -292,5 +297,39 @@ Page({
         app.fuckingLarryNavigatorTo.source = null
       }
     })
+  },
+  /**
+   * 联系客户.
+   */
+  handlePhoneCall(e) {
+    let phone = e.currentTarget.dataset.phone
+    
+    wx.makePhoneCall({
+      phoneNumber: phone
+    })
+  },
+  /**
+   * 长按复制手机号.
+   */
+  handleSetClipboard(e) {
+
+    const phone = e.currentTarget.dataset.phone
+    if(phone !== '无') {
+      wx.setClipboardData({
+        data: phone,
+        success: function(res) {
+          wx.getClipboardData({
+            success: function(res) {
+              console.log(res.data) // data
+              wx.showToast({
+                title: '手机号复制成功',
+                icon: 'success',
+                duration: 2000
+              })
+            }
+          })
+        }
+      })
+    }
   }
 })

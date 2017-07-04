@@ -196,11 +196,12 @@ Page({
   },
   handlerSelectQuotation(e) {
     let valueString = JSON.stringify(e.currentTarget.dataset.quotation)
+    let current = e.currentTarget.dataset.current
     let quotationKeyValueString = encodeURIComponent(valueString)
     try {
       wx.setStorageSync('quotationItemKeyDetail', quotationKeyValueString)
       wx.navigateTo({
-        url: '/pages/details/details',
+        url: `/pages/details/details?current=${current}`,
         success: function (res) {
           console.log('quotationDetail 页面跳转成功');
         },
@@ -307,7 +308,11 @@ Page({
     console.log(e,more)
     for(let item of quotationsList) {
       if(more.customerPhone === item.customerPhone) {
-        item.checkMoreNumber = more.quotationCount
+        if(item.checkMoreNumber < 3) {
+         item.checkMoreNumber = 3
+        }else if(item.checkMoreNumber === 3) {
+          item.checkMoreNumber = 2
+        }
       }
     }
     this.setData({

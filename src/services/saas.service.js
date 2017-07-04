@@ -287,7 +287,7 @@ export default class SAASService extends Service {
                   totalPayment: totalPayment,
                   sellingPrice: sellingPrice,
                   guidePrice: guidePrice,
-                  itemName: qitem.quotationItems[0].itemName,
+                  itemName: `【${qitem.quotationItems[0].guidePrice/100}】${qitem.quotationItems[0].itemName}`,
                   priceChange: {
                     flag: downPriceFlag,
                     price: downPriceString

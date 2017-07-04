@@ -261,3 +261,14 @@
 .weui-cells:before {
   display: none;
 }
+.packup {
+  display: inline;
+  line-height: 80rpx;
+  padding-left: 25rpx;
+  position: relative;
+}
+.packup-icon {
+  width: 20rpx;
+  height: 20rpx;
+  margin-top: -10rpx;
+}

@@ -2,11 +2,24 @@
 <template is="checkTimeDialog" data="{{ ...$wux.checkTimeDialog }}"/>
 
 <view class="container {{noHistoryContainer}}">
+  <view 
+    class="users-title"
+    data-phone="{{quotationItem.customerPhone}}"
+    catchlongtap="handleSetClipboard"
+    >
+    <block wx:if="{{quotationItem.customerPhone === '无'}}">
+      {{quotationItem.customerPhone}}
+    </block>
+    <block wx:else>
+      {{quotationItem.customerPhone}} / {{quotationItem.customerName || '无'}}
+    </block>  
+  </view>
   <swiper 
     indicator-dots="false"
     autoplay="{{autoplay}}" 
     interval="{{interval}}" 
     duration="{{duration}}"
+    current="{{swiperCurrent}}"
     indicator-color="#CCCCCC"
     indicator-active-color="#ED4149"
     bindchange="handleChangeSwiper"
@@ -21,16 +34,8 @@
           data-quotation="{{item}}"
           bindtap="handleToquotationDetail"
           >
-          <view class="users-title">
-            <block wx:if="{{item.customerMobile === '无'}}">
-              {{item.customerMobile}}
-            </block>
-            <block wx:else>
-              {{item.customerMobile}} / {{item.customerName}}
-            </block>  
-          </view>
           <view class="check-time">- {{item.createdTime}} -</view>
-          <view class="cars-name">{{item.quotationItems[0].itemName}}</view>
+          <view class="cars-name">{{item.viewModel.itemName}}</view>
           <view class="cars-message">  
             <view class="quotation-msg">
               <view class="line-box min-font-gray">裸车价{{ item.viewModel.sellingPrice }}</view>
@@ -125,6 +130,11 @@
       class="btn"
       bindtap="handleAdjusttimes"
       >时效调整</view>
-    <view class="btn contact-btn">联系客户</view>
+    <view 
+      class="btn contact-btn"
+      wx:if="{{quotationItem.customerPhone !== '无'}}"
+      data-phone="{{quotationItem.customerPhone}}"
+      bindtap="handlePhoneCall"
+      >联系客户</view>
   </view>
 </view>
