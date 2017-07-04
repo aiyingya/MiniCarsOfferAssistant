@@ -20,48 +20,48 @@
       </view>
       <form bindsubmit="{{ confirm }}">
         <view class="body">
-        <view class="quoted-line">
-          <view class="quoted {{ (quoted.quotedSymbol === 'NONE') ? 'hide' : '' }}" hidden="{{ quoted.quotedSymbol === 'NONE' }}">
-            <view wx:if="{{ quoted.quotedSymbol === 'DOWN' }}" class="quoted-text">下</view>
-            <view wx:if="{{ quoted.quotedSymbol === 'PLUS' }}" class="quoted-text">上</view>
-            <view wx:if="{{ quoted.quotedMethod === 'PRICE' && quoted.quotedSymbol !== 'NONE' }}" class="quoted-unit-text"> {{ quoted.quotedRange }}{{ quoted.quotedRangeUnit }} </view>
-            <view wx:if="{{ quoted.quotedMethod === 'POINTS' && quoted.quotedSymbol !== 'NONE' }}" class="quoted-unit-text"> {{ quoted.quotedValue }}点 </view>
+          <view class="quoted-line">
+            <view class="quoted {{ (quoted.quotedSymbol === 'NONE') ? 'hide' : '' }}" hidden="{{ quoted.quotedSymbol === 'NONE' }}">
+              <view wx:if="{{ quoted.quotedSymbol === 'DOWN' }}" class="quoted-text">下</view>
+              <view wx:if="{{ quoted.quotedSymbol === 'PLUS' }}" class="quoted-text">上</view>
+              <view wx:if="{{ quoted.quotedMethod === 'PRICE' && quoted.quotedSymbol !== 'NONE' }}" class="quoted-unit-text"> {{ quoted.quotedRange }}{{ quoted.quotedRangeUnit }} </view>
+              <view wx:if="{{ quoted.quotedMethod === 'POINTS' && quoted.quotedSymbol !== 'NONE' }}" class="quoted-unit-text"> {{ quoted.quotedValue }}点 </view>
 
-            <image hidden="{{ quoted.quotedSymbol === 'NONE' }}" src="/images/icons/icon_change.png"
-            />
+              <image hidden="{{ quoted.quotedSymbol === 'NONE' }}" src="/images/icons/icon_change.png" />
+            </view>
+            <view class="price-display">
+              {{sellingPrice}}
+            </view>
+            <view class="quoted-none" />
           </view>
-          <view class="price-display">
-            {{sellingPrice}}
-          </view>
-          <view class="quoted-none" />
-        </view>
-        <view class="cursor"> <image src="/images/icons/icon_table_scale.png" /> </view>
-        <scroll-view scroll-x class="scale" scroll-left="{{scrollLeft}}" style="height: 70rpx; with:100%; margin-bottom:20rpx; margin-top:20rpx;"
-          bindscrolltoupper="{{upper}}" bindscrolltolower="{{lower}}" bindscroll="{{scroll}}">
-          <view style="height:30rpx">
-          <block wx:for="{{ scale }}" wx:key="{{item.index}}">
-            <block wx:if="{{item.guidePriceFlag}}">
-              <image style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_red.png" class="guide-scale"/>
-            </block>
-            <block wx:else>
-              <block wx:if="{{ index % 5 === 0 }}">
-                <image style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray.png" wx:if="{{index !== 0 && index !== scale.length - 1}}" class="major-scale"/>
-                <image style="width: {{scalePx}}px; margin-left:{{ blankWidthPx }}px" src="/images/icons/icon_table_scale_gray.png" wx:if="{{ index === 0}}" class="major-scale"/>
-                <image style="width: {{scalePx}}px; margin-right:{{ blankWidthPx }}px" src="/images/icons/icon_table_scale_gray.png" wx:if="{{ index === scale.length - 1 }}" class="major-scale"/>
+          <view class="cursor">
+            <image src="/images/icons/icon_table_scale.png" /> </view>
+          <scroll-view scroll-x class="scale" scroll-left="{{scrollLeft}}" style="height: 70rpx; with:100%; margin-bottom:20rpx; margin-top:20rpx;"
+            bindscrolltoupper="{{upper}}" bindscrolltolower="{{lower}}" bindscroll="{{scroll}}">
+            <view style="height:30rpx">
+              <block wx:for="{{ scale }}" wx:key="{{item.index}}">
+                <block wx:if="{{item.guidePriceFlag}}">
+                  <image style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_red.png" class="guide-scale" />
+                </block>
+                <block wx:else>
+                  <block wx:if="{{ index !== 0 && index !== scale.length - 1 }}">
+                    <image wx:if="{{ index % 5 === 0 }}" style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
+                    <image wx:else style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray_small.png" class="minor-scale" />
+                  </block>
+                  <block wx:else>
+                    <image wx:if="{{ index === 0 }}" style="width: {{scalePx}}px; margin-left:{{ blankWidthPx }}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
+                    <image wx:if="{{ index === scale.length - 1 }}" style="width: {{scalePx}}px; margin-right:{{ blankWidthPx }}px;" src="{{ index % 5 === 0 ? '/images/icons/icon_table_scale_gray.png' : '/images/icons/icon_table_scale_gray_small.png'}}" class="major-scale" />
+                  </block>
+                </block>
               </block>
-              <block wx:else>
-                <image style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray_small.png" class="minor-scale"/>
+            </view>
+            <view style="height:30rpx">
+              <block wx:for="{{ scaleValue }}" wx:key="{{item.index}}">
+                <view wx:if="{{index === 0}}" class="scale-value-text" style="margin-left: {{blankWidthPx - tenScaleMarginLeftPx}}px; width:{{tenScaleWidthPx}}px">{{ item.scaleValue }} </view>
+                <view wx:else class="scale-value-text" style="width:{{tenScaleWidthPx}}px;">{{ item.scaleValue }} </view>
               </block>
-            </block>
-          </block>
-          </view>
-          <view style="height:30rpx">
-          <block wx:for="{{ scaleValue }}" wx:key="{{item.index}}">
-            <view wx:if="{{index === 0}}" class="scale-value-text" style="margin-left: {{blankWidthPx - tenScaleMarginLeftPx}}px; width:{{tenScaleWidthPx}}px" >{{ item.scaleValue }} </view>
-            <view wx:else class="scale-value-text" style="width:{{tenScaleWidthPx}}px;" >{{ item.scaleValue }} </view>
-          </block>
-          </view>
-        </scroll-view>
+            </view>
+          </scroll-view>
         </view>
 
         <view class="weui-dialog__ft">
