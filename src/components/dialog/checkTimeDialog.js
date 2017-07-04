@@ -64,14 +64,14 @@ export default {
         hide(cb) {
           if (this.removed) return !1
           this.removed = !0
-          this.setHidden()   
+          this.setHidden()
           setTimeout(() => typeof cb === `function` && cb(), 300)
         },
         /**
          * 显示
          */
         show() {
-          
+
           if (this.removed) return !1
           if (options.validTime > 0){
             let date = options.createdTime.replace(/-/g,'/')
@@ -79,14 +79,14 @@ export default {
             this.initializeClock(deadline);
           }else if(options.validTime == 0) {
             this.setData({
-              [`${this.options.scope}.validsTime`]: '已失效'
+              [`${this.options.scope}.validTime`]: '已失效'
             })
           }else {
             this.setData({
-              [`${this.options.scope}.validsTime`]: '无限制'
+              [`${this.options.scope}.validTime`]: '无限制'
             })
           }
-          
+
           this.setVisible()
         },
         /**
@@ -99,7 +99,7 @@ export default {
         /**
          * 获取时差.
          *
-         * @param {endtime} 
+         * @param {endtime}
          */
         getTimeRemaining(endtime) {
           let t = Date.parse(endtime) - Date.parse(new Date());
@@ -129,15 +129,15 @@ export default {
             let hours = ('0' + t.hours).slice(-2);
             let minutes = ('0' + t.minutes).slice(-2);
             let seconds = ('0' + t.seconds).slice(-2);
-            
+
             that.setData({
-              [`${that.options.scope}.validsTime`]: `${days}${hours}:${minutes}:${seconds}`
+              [`${that.options.scope}.validTime`]: `${days}${hours}:${minutes}:${seconds}`
             })
-            
+
             if (t.total <= 0) {
               clearInterval(timeinterval)
               that.setData({
-                [`${that.options.scope}.validsTime`]: '已失效'
+                [`${that.options.scope}.validTime`]: '已失效'
               })
             }
           }
@@ -154,7 +154,7 @@ export default {
           let values = e.detail.value
           let name = e.currentTarget.dataset.name
           let disabled = !options.validate(e)
-         
+
           if(radioItems.checked == false) {
             radioItems.checked = true
           }else {
@@ -166,13 +166,13 @@ export default {
             [`${this.options.scope}.addTimes`]: '',
             [`${this.options.scope}.reduceTimes`]: '',
           })
-         
+
         },
         handleAddTimes(e) {
           let disabled = false
           let addTimes = e.detail.value
           let radioItems = options.radioItems
-          
+
           if (typeof options.validate === 'function') {
             disabled = !options.validate(e)
           }
@@ -189,7 +189,7 @@ export default {
           let disabled = false
           let reduceTimes = e.detail.value
           let radioItems = options.radioItems
-          
+
           if (typeof options.validate === 'function') {
             disabled = !options.validate(e)
           }
@@ -210,7 +210,7 @@ export default {
           let value = {}
           let res = e.detail.value
           let radioItems = options.radioItems
-          
+
           if(radioItems.checked) {
             value.type = 'close'
             value.val = '-1'
