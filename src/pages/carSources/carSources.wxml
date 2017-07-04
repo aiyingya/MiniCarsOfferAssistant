@@ -21,7 +21,7 @@
   </view>
 </view>
 
-<!-- 条件筛选.-->
+<!-- 条件筛选. 288 + 86-->
 <view class="rmendCarFacade-popup-wrap" wx:if="{{showRmendCarFacade}}" hidden="{{!hasOverLayDropdown}}" style="top: 86rpx;">
   <view class="showMask rmendCarFacade-popup-mask" bindtap="handlerRemoveRmendCarFacade" catchtouchmove="onTouchMoveWithCatch">
   </view>
@@ -121,8 +121,8 @@
       </view>
     </view>
 
-    <!-- 条件筛选.-->
-    <view class="rmendCarFacade-popup-wrap" wx:if="{{showRmendCarFacade}}" hidden="{{hasOverLayDropdown}}" style="top: 220rpx;">
+    <!-- 条件筛选. 288 + 220-->
+    <view class="rmendCarFacade-popup-wrap" wx:if="{{showRmendCarFacade}}" hidden="{{hasOverLayDropdown}}" style="top: 508rpx;">
       <view class="showMask rmendCarFacade-popup-mask" bindtap="handlerRemoveRmendCarFacade" catchtouchmove="onTouchMoveWithCatch">
       </view>
       <view class="rmendCarFacade-inner topToBottom">
