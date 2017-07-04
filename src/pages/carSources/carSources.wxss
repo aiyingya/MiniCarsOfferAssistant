@@ -44,7 +44,7 @@ page {
 }
 .rmendCarFacade-popup-wrap {
 	bottom: 0;
-	height: auto;
+	height: 100%;
 	width: 100%;
 	z-index: 20;
   position: absolute;
@@ -259,12 +259,12 @@ page {
 
 /*样式修改*/
 .mode-item .quoted-price .price {
-	font-size: 26rpx;
-  line-height: 26rpx;
+	font-size: 25rpx;
+  line-height: 25rpx;
 }
 .mode-item .discount {
-	font-size: 24rpx;
-  line-height: 24rpx
+	font-size: 23rpx;
+  line-height: 23rpx
 }
 
 .car-sources-reference-deal .mode-item:first-child {

@@ -1001,7 +1001,19 @@ Page({
       },
       handlerCreateQuoted(e) {
         const carSku = {
-          showPrice: mode.viewModelQuoted.price
+          showPrice: mode.viewModelQuoted.price,
+          skuId: null,
+          skuPic: null,
+          externalColorId: null,
+          externalColorName: null,
+          internalColorId: null,
+          internalColorName: null,
+          price: null,
+          priceStr: null,
+          discount: null,
+          status: null,
+          remark: null,
+          metallicPaint: null
         }
         const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', that.data.carModelsInfo)
         const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', carSku)

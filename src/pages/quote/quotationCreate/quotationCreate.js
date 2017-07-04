@@ -458,7 +458,7 @@ Page({
         const itemNumber = carSkuInfo.skuId || ''
         const itemType = carSkuInfo.viewModelSupplierSelfSupport ? 'self' : 'third_party'
         const itemPic = carSkuInfo.skuPic || carModelInfo.pic || ''
-        const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
+        const specifications = (carSkuInfo.externalColorName || '-') + '/' + (carSkuInfo.internalColorName || '-')
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
 
         const originalPrice = carSkuInfo.showPrice || carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
