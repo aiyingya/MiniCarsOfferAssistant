@@ -40,11 +40,12 @@ Page({
       let that = this
       let historyList = this.data.historyList
       let noHistoryContainer = quotation.customerPhone === '无' ? 'height100' : ''
+      let currentQuotationItem = quotation.quotationList[current]
       console.log(quotation)
       this.setData({
         'quotationItem.customerPhone': quotation.customerPhone,
         'quotationItem.customerName': quotation.customerName,
-        'quotationItem.shared': quotation.shared,
+        'quotationItem.shared': currentQuotationItem.shared,
         quotationsList: quotation.quotationList,
         noHistoryContainer: noHistoryContainer,
         swiperCurrent: current
@@ -258,7 +259,8 @@ Page({
         historyList: historyList,
         noHistory: noHistory,
         noHistoryContainer: noHistoryContainer,
-        isShowAmap: isShowAmap
+        isShowAmap: isShowAmap,
+        'quotationItem.shared': quotation.shared
       })
       
     }, (err) => {

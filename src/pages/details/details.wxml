@@ -76,7 +76,7 @@
   <view class="history-wrap {{noHistory}}">
     <view class="title">TA的查看历史</view>
     <view class="history-cells">
-      <block wx:if="{{quotationItem.customerPhone == '无'}}">
+      <block wx:if="{{!quotationItem.shared}}">
         <view class="nodata">
           <image src="../../images/icons/icon_share_empty.png"></image>
           <view class="text">暂未分享，无查看历史</view>
