@@ -70,7 +70,6 @@ Page({
     promise.then(res => {
       wx.hideToast()
     }, err => {
-      
       wx.hideToast()
     })
 
@@ -80,6 +79,7 @@ Page({
   onPullDownRefresh() {
     // 下拉刷新
     const promise = this.reloadIndexData()
+    console.log(promise)
     promise.then(res => {
       wx.stopPullDownRefresh()
     }, err => {
