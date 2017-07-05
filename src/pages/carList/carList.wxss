@@ -73,7 +73,7 @@
 .viewCarsList_icon-index {
 	display: block;
 	width: 90rpx;
-	height: 60rpx;	
+	height: 60rpx;
 }
 .alphanet-selector {
   position: absolute;
@@ -123,38 +123,7 @@
 	opacity: 1;
 }
 
-/* 车系.*/
-.carSeries-wrap {
-	width: 100%;
-	height: auto;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 11;
-}
-.carSeries-mask {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(0,0,0,.5);
-	z-index: 1;
-	opacity: 0;
-}
-.carSeries-inner {
-	position: fixed;
-	top: 0;
-	left: 170rpx;
-	right: 0;
-	bottom: 0;
-	background-color: #fff;
-	z-index: 2;
-	-webkit-transform: translate3d(1000px, 0, 0);
-  transform: translate3d(1000px, 0, 0)
-}
+/* 车系 */
 .carSeries-logo {
 	width: 100%;
 	height: 160rpx;
