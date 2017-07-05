@@ -113,7 +113,6 @@
               <scroll-view scroll-y style="height: 270rpx">
                 <view class="line-content">
                   <view wx:if="{{carSourceItem.viewModelContentItems}}">
-                    <!--<view wx:for="{{carSourceItem.viewModelContentItems}}" wx:key="*this" class="{{item.b ? 'content-highlight' : 'content-text'}}" >{{item.a}}</view>-->
                     <text wx:for="{{carSourceItem.viewModelContentItems}}" wx:key="*this" class="{{item.b ? 'content-highlight' : 'content-text'}}">{{item.a}}</text>
                     <view wx:if="{{showCopyOrignalText}}" class="copy-orignal-text" bindtap="{{copyOrignalText}}">
                       复制原文
@@ -179,7 +178,7 @@
           <scroll-view scroll-y="true" style="height: 400rpx">
             <block wx:if="{{companyList.length}}">
               <view class="company-list">
-                <view wx:for="{{companyList}}" wx:key="{{companyId}}" class="company-cell" data-company-id="{{item.companyId}}" data-company-name="{{item.companyName}}"
+                <view wx:for="{{companyList}}" wx:key="companyId" class="company-cell" data-company-id="{{item.companyId}}" data-company-name="{{item.companyName}}"
                   bindtap="{{handlerCompanyClick}}">
                   <view class="left">{{item.companyName}}</view>
                   <view class="right">
@@ -225,7 +224,7 @@
           <scroll-view scroll-y="true" style="height: 400rpx">
             <block wx:if="{{contactList.supplierModels.length}}">
               <view class="contact-list">
-                <view wx:for="{{contactList.supplierModels}}" wx:key="{{supplierId}}" class="contact-cell" data-supplier="{{item}}"
+                <view wx:for="{{contactList.supplierModels}}" wx:key="supplierId" class="contact-cell" data-supplier="{{item}}"
                   bindtap="{{handlerContactClick}}">
                   <view wx:if="{{item.callCount}}" class="left active">{{item.supplierName}}({{item.callCount}})</view>
                   <view wx:else class="left active">{{item.supplierName}}</view>
