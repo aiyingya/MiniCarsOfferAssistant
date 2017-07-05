@@ -356,6 +356,24 @@ Page({
   handlePushSet() {
     let that = this
     let interestType = that.data.loan.billingwayValue == 0 ? 1 : 2
+    const _firstChoose = that.data.selectedAging.agingValue[0]
+    const _secondChoose = that.data.selectedAging.agingValue[1]
+    if(( !!!_firstChoose && _firstChoose !==0) || ( !!!_secondChoose && _secondChoose !==0)){
+      wx.showModal({
+        title: '提示',
+        content: '亲，报价单时效不能为空喔'
+      })
+      return
+    }
+
+    if(_firstChoose === _secondChoose){
+      wx.showModal({
+        title: '提示',
+        content: '亲，报价单时效不能相同喔'
+      })
+      return
+    }
+
     let data = {
       "insuranceTypes": that.data.insurances.checkedValues,
       "freight": that.data.raisePrice.freight,
@@ -373,8 +391,8 @@ Page({
       "insuranceRebate": that.data.insurances.rebates,
       "serviceFee":that.data.othersCost.service,
       "validTime": {
-        "firstChoose":that.data.selectedAging.agingValue[0],
-        "secondChoose":that.data.selectedAging.agingValue[1],
+        "firstChoose":_firstChoose,
+        "secondChoose":_secondChoose,
         "chooseWho":that.data.selectedAging.agingData[that.data.selectedAging.agingIndex]
       }
     }
