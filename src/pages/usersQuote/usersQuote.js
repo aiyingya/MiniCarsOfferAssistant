@@ -27,7 +27,10 @@ Page({
       wx.navigateTo({
         url: '/pages/quote/quotationsList/quotationsList',
         success: function (res) {},
-        fail: function () {},
+        fail: function () {
+          app.fuckingLarryNavigatorTo.quotation = null
+          app.fuckingLarryNavigatorTo.source = null
+        },
         complete: function () {}
       })
     }
