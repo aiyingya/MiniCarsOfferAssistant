@@ -46,7 +46,7 @@
       <view
         class="stand-item"
         wx:for="{{hotCarLists}}"
-        wx:key="*this"
+        wx:key="id"
       >
         <image
           mode="aspectFit"
@@ -74,7 +74,7 @@
       <view
         class="hotCarsType-cell"
         wx:for="{{hotCarsTypes}}"
-        wx:key="*this"
+        wx:key="id"
       >
         <view class="hotCarsType-title">
           <view class="hotCarsType-title-inner">【{{item.guidePriceSTR}}】{{item.name}}</view>
@@ -121,7 +121,7 @@
       <view wx:if="{{carManufacturerSeriesList.length > 0}}">
         <view
           wx:for="{{carManufacturerSeriesList}}"
-          wx:key="*this"
+          wx:key="title"
           data-id="{{item.id}}"
           class="viewCarsList-calls"
         >
@@ -132,7 +132,7 @@
               hover="true"
               hover-class="weui-cell_active"
               wx:for="{{item.items}}"
-              wx:key="*this"
+              wx:key="id"
               wx:for-item="cell"
               wx:for-index="cellIndex"
               bindtap="handlerToCarsModels"

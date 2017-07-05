@@ -1,7 +1,7 @@
 <!--index.wxml-->
-<scroll-view 
-  scroll-y="true" 
-  style="height: {{windowHeight}}" 
+<scroll-view
+  scroll-y="true"
+  style="height: {{windowHeight}}"
   scroll-into-view="{{alpha}}"
   upper-threshold="70"
   bindscrolltoupper="handlePullDownRefresh"
@@ -12,6 +12,7 @@
 		<view class="viewCarsList-wrap">
 			<view
 				wx:for="{{brandGroupList}}"
+        wx:key="title"
 				id="{{item.title}}"
 				class="viewCarsList-calls"
 				>
@@ -22,6 +23,7 @@
 						hover="true"
 						hover-class="weui-cell_active"
 						wx:for="{{item.items}}"
+            wx:key="id"
 						wx:for-item="cell"
 						wx:for-index="cellIndex"
 						bindtap="handlerSelectCarSeries"
@@ -42,7 +44,7 @@
 </scroll-view>
 <view wx:if="{{alphanetToast === alpha}}" class="alphanet-toast showToast">{{alpha}}</view>
 <view data-id="selector" catchtouchstart="handlerAlphaTap" catchtouchmove="handlerMove" class="alphanet-selector">
-	<view wx:for="{{brandGroupList}}" data-ap="{{item.title}}" class="selector-one">
+	<view wx:for="{{brandGroupList}}" wx:key="title" data-ap="{{item.title}}" class="selector-one">
 		{{item.title}}
 	</view>
 </view>
@@ -76,6 +78,7 @@
 							hover="true"
 							hover-class="weui-cell_active"
 							wx:for="{{item.items}}"
+              wx:key="id"
 							wx:for-item="cell"
 							wx:for-index="cellIndex"
 							bindtap="handlerToCarsModels"

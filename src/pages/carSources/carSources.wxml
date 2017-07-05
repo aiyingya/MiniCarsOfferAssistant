@@ -29,7 +29,7 @@
     <view class="dropdown">
       <view class="dd dropdown-left">
         <view hover="true" hover-class="weui-cell_active" wx:for="{{dropDownFiltersData}}" wx:for-item="filterItem" wx:for-index="filterIndex"
-          wx:key="*this" class="weui-cell weui-cell_access" bindtap="handlerSelectItem" data-filter-position="left" data-filter-Index="{{filterIndex}}"
+          wx:key="name" class="weui-cell weui-cell_access" bindtap="handlerSelectItem" data-filter-position="left" data-filter-Index="{{filterIndex}}"
           data-filter-item="{{filterItem}}" data-super-filter-item="{{}}">
           <view class="weui-cell__bd weui-cell_primary">
             <view>{{filterItem.name}}</view>
@@ -41,7 +41,7 @@
       </view>
       <view class="dd dropdown-right">
         <view class="weui-cell weui-cell_access" hover="true" hover-class="weui-cell_active" wx:for="{{dropDownSubFiltersData}}"
-          wx:for-item="filterItem" wx:for-index="filterIndex" bindtap="handlerSelectItem" data-filter-position="right" data-filter-Index="{{filterIndex}}"
+          wx:key="name" wx:for-item="filterItem" wx:for-index="filterIndex" bindtap="handlerSelectItem" data-filter-position="right" data-filter-Index="{{filterIndex}}"
           data-filter-item="{{filterItem}}" data-super-filter-item="{{dropDownFiltersData[selectedExternalCarColorIndex]}}">
           <view class="weui-cell__bd weui-cell_primary">
             <view>{{filterItem.name}}</view>
@@ -57,8 +57,8 @@
 
 <!-- 标签选择 -->
 <view class="filter-scroll-view" hidden="{{!hasOverLayDropdown}}" style="top: 86rpx;">
-  <view wx:for="{{scrollFilters}}" wx:for-index="scrollFilterIndex" wx:for-item="scrollFilterItem" wx:key="*this" class="scroll-filter">
-    <view wx:for="{{scrollFilterItem.items}}" wx:for-index="filterIndex" wx:for-item="filterItem" wx:key="*this" bindtap="handlerFilterSelected"
+  <view wx:for="{{scrollFilters}}" wx:for-index="scrollFilterIndex" wx:for-item="scrollFilterItem" wx:key="name" class="scroll-filter">
+    <view wx:for="{{scrollFilterItem.items}}" wx:for-index="filterIndex" wx:for-item="filterItem" wx:key="name" bindtap="handlerFilterSelected"
       data-scroll-filter-index="{{scrollFilterIndex}}" data-scroll-filter-item="{{scrollFilterItem}}" data-filter-Index="{{filterIndex}}"
       data-filter-item="{{filterItem}}" class="filter {{filterIndex == scrollFiltersSelectedIndexes[scrollFilterIndex] ? 'selected': 'unselected'}}">
       {{filterItem.name}}
@@ -93,7 +93,7 @@
     <view class="topN">
       <view class="title">报价最多</view>
       <view wx:if="{{topNOfCurrentMode.priceList}}" class="modes">
-        <view class="mode-item" wx:for="{{topNOfCurrentMode.priceList}}" bindtap="handlerModeClick" data-mode="{{item}}">
+        <view class="mode-item" wx:for="{{topNOfCurrentMode.priceList}}" wx:key="sortNum" bindtap="handlerModeClick" data-mode="{{item}}">
           <template is="quotedPrice" data="{{ ...item.viewModelQuoted }}" />
           <view class="company">{{item.companyCount}}家供应商</view>
         </view>
@@ -129,7 +129,7 @@
         <view class="dropdown">
           <view class="dd dropdown-left">
             <view hover="true" hover-class="weui-cell_active" wx:for="{{dropDownFiltersData}}" wx:for-item="filterItem" wx:for-index="filterIndex"
-              wx:key="*this" class="weui-cell weui-cell_access" bindtap="handlerSelectItem" data-filter-position="left" data-filter-Index="{{filterIndex}}"
+              wx:key="name" class="weui-cell weui-cell_access" bindtap="handlerSelectItem" data-filter-position="left" data-filter-Index="{{filterIndex}}"
               data-filter-item="{{filterItem}}" data-super-filter-item="{{}}">
               <view class="weui-cell__bd weui-cell_primary">
                 <view>{{filterItem.name}}</view>
@@ -141,7 +141,7 @@
           </view>
           <view class="dd dropdown-right">
             <view class="weui-cell weui-cell_access" hover="true" hover-class="weui-cell_active" wx:for="{{dropDownSubFiltersData}}"
-              wx:for-item="filterItem" wx:for-index="filterIndex" bindtap="handlerSelectItem" data-filter-position="right"
+              wx:key="name" wx:for-item="filterItem" wx:for-index="filterIndex" bindtap="handlerSelectItem" data-filter-position="right"
               data-filter-Index="{{filterIndex}}" data-filter-item="{{filterItem}}" data-super-filter-item="{{dropDownFiltersData[selectedExternalCarColorIndex]}}">
               <view class="weui-cell__bd weui-cell_primary">
                 <view>{{filterItem.name}}</view>
@@ -157,8 +157,8 @@
 
     <!-- 标签选择  288rpx+220rpx-->
     <view class="filter-scroll-view" hidden="{{hasOverLayDropdown}}" style="top: 508rpx;">
-      <view wx:for="{{scrollFilters}}" wx:for-index="scrollFilterIndex" wx:for-item="scrollFilterItem" wx:key="*this" class="scroll-filter">
-        <view wx:for="{{scrollFilterItem.items}}" wx:for-index="filterIndex" wx:for-item="filterItem" wx:key="*this" bindtap="handlerFilterSelected"
+      <view wx:for="{{scrollFilters}}" wx:for-index="scrollFilterIndex" wx:for-item="scrollFilterItem" wx:key="name" class="scroll-filter">
+        <view wx:for="{{scrollFilterItem.items}}" wx:for-index="filterIndex" wx:for-item="filterItem" wx:key="name" bindtap="handlerFilterSelected"
           data-scroll-filter-index="{{scrollFilterIndex}}" data-scroll-filter-item="{{scrollFilterItem}}" data-filter-Index="{{filterIndex}}"
           data-filter-item="{{filterItem}}" class="filter {{filterIndex == scrollFiltersSelectedIndexes[scrollFilterIndex] ? 'selected': 'unselected'}}">
           {{filterItem.name}}
@@ -214,7 +214,7 @@
 
         <view wx:if="{{skuItemIndex === selectedSectionIndex}}">
           <view wx:if="{{skuItem.viewModelCarSourcesList.length > 0}}" class="carSources-cells">
-            <view wx:for="{{skuItem.viewModelCarSourcesList}}" wx:for-item="carSourceItem" wx:for-index="carSourceItemIndex" wx:key="*this"
+            <view wx:for="{{skuItem.viewModelCarSourcesList}}" wx:for-item="carSourceItem" wx:for-index="carSourceItemIndex" wx:key="id"
               class="carSources-cell">
               <view class="carSources-cell-content">
                 <!-- 头部选择部分 -->
