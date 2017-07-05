@@ -421,13 +421,11 @@ export default {
           }
         },
         handlerContactClick(e) {
-          const contact = e.currentTarget.dataset.contact
-          const contactPromise = wxapi.makePhoneCall({ phoneNumber: contact })
-          .then(res => {
-            console.log('拨打电话' + contact + '成功')
-          })
+          const supplier = e.currentTarget.dataset.supplier,
+          phoneNumber = supplier.supplierPhone
+          const contactPromise = wxapi.makePhoneCall({ phoneNumber })
 
-          typeof options.contact === 'function' && options.contact(contactPromise)
+          typeof options.contact === 'function' && options.contact(contactPromise, supplier)
         }
       }
     })

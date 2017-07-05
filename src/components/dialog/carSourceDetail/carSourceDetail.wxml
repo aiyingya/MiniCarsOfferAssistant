@@ -225,7 +225,7 @@
           <scroll-view scroll-y="true" style="height: 400rpx">
             <block wx:if="{{contactList.supplierModels.length}}">
               <view class="contact-list">
-                <view wx:for="{{contactList.supplierModels}}" wx:key="{{supplierId}}" class="contact-cell" data-contact="{{item.supplierPhone}}"
+                <view wx:for="{{contactList.supplierModels}}" wx:key="{{supplierId}}" class="contact-cell" data-supplier="{{item}}"
                   bindtap="{{handlerContactClick}}">
                   <view wx:if="{{item.callCount}}" class="left active">{{item.supplierName}}({{item.callCount}})</view>
                   <view wx:else class="left active">{{item.supplierName}}</view>

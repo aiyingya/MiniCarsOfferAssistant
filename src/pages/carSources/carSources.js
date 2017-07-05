@@ -883,14 +883,19 @@ Page({
       company.companyId,
       company.companyName,
       null,
-      from)
+      from,
+      (supplier) => {
+        const
+        userId = Number(app.userService.auth.userId),
+        userPhone = app.userService.mobile,
+        supplierId = supplier.supplierId,
+        supplierPhone = supplier.supplierPhone
+        contactPhone = supplier.supplierPhone
+
+        app.saasService.pushCallRecord({userId, userPhone, supplierId, supplierPhone, contactPhone})
+      })
   },
   actionContactWithCarSourceItem(spuId, skuItemIndex, carSourceItemIndex, carSourceItem, from) {
-    /**
-     * 上报
-     */
-    const that = this
-    this.pushCallRecord(carSourceItem)
 
     this.actionContact(spuId,
       carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price,
@@ -898,18 +903,31 @@ Page({
       carSourceItem.supplier.companyName,
       carSourceItem.supplier.id,
       from,
-      function () {
+      (supplier) => {
+        /**
+         * 上报
+         */
+        const
+        userId = Number(app.userService.auth.userId),
+        userPhone = app.userService.mobile,
+        supplierId = supplier.supplierId,
+        supplierPhone = supplier.supplierPhone
+        messageResultId = carSourceItem.carSourceId
+        contactPhone = carSourceItem.contact || supplier.supplierPhone
+
+        app.saasService.pushCallRecord({userId, userPhone, supplierId, supplierPhone, messageResultId, contactPhone})
+
         /**
          * 1.4.0 埋点
          * davidfu
          */
         if (carSourceItem.supplierSelfSupport) {
-          that.data.pageParameters.carSourceId = carSourceItem.itemId
+          this.data.pageParameters.carSourceId = carSourceItem.itemId
         } else {
-          that.data.pageParameters.carSourceId = carSourceItem.id
+          this.data.pageParameters.carSourceId = carSourceItem.id
         }
-        that.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSupport
-        that.data.pageParameters.supplierId = carSourceItem.supplier.id
+        this.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSupport
+        this.data.pageParameters.supplierId = carSourceItem.supplier.id
         const event = {
           eventAction: 'click',
           eventLabel: '拨打供货方电话'
@@ -920,13 +938,13 @@ Page({
   /**
    * 包装的联系人接口
    *
-   * @param {any} spuId
-   * @param {any} quotationPrice
-   * @param {any} companyId
-   * @param {any} companyName
-   * @param {any} supplierId
-   * @param {any} from
-   * @param {any} completeHandler
+   * @param {Number} spuId
+   * @param {Number} quotationPrice
+   * @param {Number} companyId
+   * @param {String} companyName
+   * @param {Number} supplierId
+   * @param {String} from
+   * @param {Function} completeHandler
    */
   actionContact(spuId, quotationPrice, companyId, companyName, supplierId, from, completeHandler) {
     $wuxCarSourceDetailDialog.contactList({
@@ -936,10 +954,14 @@ Page({
       companyName: companyName,
       supplierId: supplierId,
       from: from,
-      contact(makePhonePromise) {
+      contact: (makePhonePromise, supplier) => {
         makePhonePromise
           .then(res => {
-            typeof completeHandler === 'function' && completeHandler()
+            console.log('拨打电话' + supplier.supplierPhone + '成功')
+            typeof completeHandler === 'function' && completeHandler(supplier)
+          })
+          .catch(err => {
+            console.error(err, '拨打电话' + supplier.supplierPhone + '失败')
           })
       }
     });
@@ -1361,19 +1383,5 @@ Page({
   },
   onTouchMoveWithCatch() {
     // 拦截触摸移动事件， 阻止透传
-  },
-  pushCallRecord(curItem) {
-    //拨打电话时,用户信息，行情上报
-    let updata = {
-      "userId":app.userService.auth.userId,
-      "userPhone":app.userService.mobile,
-      "supplierId":curItem.supplier.id,
-      "supplierPhone":curItem.supplier.contact,
-      "messageResultId":curItem.id,
-      "contactPhone": curItem.contact || curItem.supplier.contact
-    }
-
-    app.saasService.pushCallRecord({data:updata})
-
   }
 })

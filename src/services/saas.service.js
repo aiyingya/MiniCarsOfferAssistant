@@ -495,15 +495,21 @@ export default class SAASService extends Service {
 
   /**
    * 车源上报
-   * @param opts
+   * @param {Number} userId
+   * @param {String} userPhone
+   * @param {Number} supplierId
+   * @param {String} supplierPhone
+   * @param {Number} messageResultId
+   * @param {String} contactPhone
+   * @param {any} opts
+   * @returns
+   * @memberof SAASService
    */
   pushCallRecord(opts){
-    this.sendMessage({
+    return this.sendMessageByPromise({
       path: "api/user/addCallRecord",
       method: 'POST',
-      data: opts.data || {},
-      success: opts.success,
-      fail: opts.fail
+      data: opts || {},
     })
   }
 
