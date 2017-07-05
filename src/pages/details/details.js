@@ -48,7 +48,8 @@ Page({
         'quotationItem.shared': currentQuotationItem.shared,
         quotationsList: quotation.quotationList,
         noHistoryContainer: noHistoryContainer,
-        swiperCurrent: current
+        swiperCurrent: current,
+        showCurrent: current
       })
       this.getCheckHistory(current)
     } catch (e) {

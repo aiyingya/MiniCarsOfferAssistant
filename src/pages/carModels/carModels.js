@@ -742,11 +742,13 @@ Page({
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
-      
+
       let series = []
       let categories = []
-      if(res.length > 0) {
-        for(let numitems of res) {
+      let maxPrice = Number(res.maxPrice)/100
+      let minPrice = Number(res.minPrice)/100
+      if(res.priceTrendModels.length > 0) {
+        for(let numitems of res.priceTrendModels) {
           let items = {}
           items.data = []
           items.color = ''
@@ -795,8 +797,8 @@ Page({
             fontColor: '#333333',
             gridColor: '#333333',
             unitText: '（个）',
-            min: -10,
-            max: 0,
+            min: minPrice,
+            max: maxPrice,
             format(val) {
               return val.toFixed(0)
             }
@@ -804,7 +806,8 @@ Page({
           dataLabel: false,
           dataPointShape: false,
           width: popWindow.windowWidth,
-          height: 120
+          height: 120,
+          setPadding: 10
       })
     })
   },

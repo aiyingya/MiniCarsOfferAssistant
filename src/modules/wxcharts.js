@@ -396,13 +396,13 @@ function fixColumeData(points, eachSpacing, columnLen, index, config) {
 }
 
 function getXAxisPoints(categories, opts, config) {
-  
+    var setPadding = opts.setPadding || 0;
     var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
-    var spacingValid = opts.width - 2 * config.padding - yAxisTotalWidth - config.paddingRight;
+    var spacingValid = opts.width - 2 * config.padding - yAxisTotalWidth - config.paddingRight - setPadding;
     var eachSpacing = spacingValid / categories.length;
 
     var xAxisPoints = [];
-    var startX = config.padding + yAxisTotalWidth;
+    var startX = config.padding + yAxisTotalWidth + setPadding;
     var endX = opts.width - config.padding - config.paddingRight;
     categories.forEach(function (item, index) {
         xAxisPoints.push(startX + index * eachSpacing);
@@ -783,7 +783,8 @@ function drawYAxisCoordLine(series, opts, config, context) {
     
     var _calYAxisData4 = calYAxisData(series, opts, config),
         rangesFormat = _calYAxisData4.rangesFormat;
-    var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
+    var setPadding = opts.setPadding || 0;
+    var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth + setPadding;
 
     var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight - config.paddingTop;
     var eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
@@ -1101,7 +1102,7 @@ function drawXAxis(categories, opts, config, context) {
         startX = _getXAxisPoints4.startX,
         endX = _getXAxisPoints4.endX + config.paddingRight,
         eachSpacing = _getXAxisPoints4.eachSpacing;
-
+    var setPadding = opts.setPadding || 0;
     var startY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
     var endY = startY + config.xAxisLineHeight;
 
