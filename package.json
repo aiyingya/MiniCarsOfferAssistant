@@ -1,8 +1,8 @@
 {
   "name": "miniprogram-yaomaiche",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "build": 1,
-  "versionCode": "010602",
+  "versionCode": "010700",
   "description": "运图贸易有限公司 要卖车 微信小程序",
   "main": "index.js",
   "engines": {

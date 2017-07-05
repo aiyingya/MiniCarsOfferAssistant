@@ -204,9 +204,9 @@ export default {
             })
           }
 
-          if(!options.effectivenessCustomValue){
-              const _default = options.chooseWho ? options.chooseWho : 1
-              options.defaultCheck = Number(_default) === -1 ? 3 : Number(options.chooseWho)
+          if(options.effectivenessCustomValue !== 0 && !options.effectivenessCustomValue ){
+              const _default = options.validTimeObj.chooseWho ? options.validTimeObj.chooseWho : 1
+              options.defaultCheck = Number(_default) === -1 ? 3 : Number(options.validTimeObj.chooseWho)
           }
           else if(options.validTimeObj.firstChoose == options.effectivenessCustomValue){
             options.defaultCheck = 1;
