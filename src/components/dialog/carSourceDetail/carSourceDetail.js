@@ -303,7 +303,9 @@ export default {
           this.hide()
         },
         handlerCompanyClick(e) {
-          typeof options.contact === 'function' && options.contact()
+          const companyName = e.currentTarget.dataset.companyName
+          const companyId = e.currentTarget.dataset.companyId
+          typeof options.contact === 'function' && options.contact({companyId, companyName})
         },
         handlerCreateQuoted(e) {
           typeof options.handlerCreateQuoted === `function` && options.handlerCreateQuoted(e)

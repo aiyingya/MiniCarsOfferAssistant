@@ -877,11 +877,11 @@ Page({
       return this.data.scrollFilters[index].items[selectedIndex].id
     }
   },
-  actionContactWithMode(spuId, mode, from) {
+  actionContactWithMode(spuId, mode, company, from) {
     this.actionContact(spuId,
       mode.viewModelQuoted.price,
-      mode.companyId,
-      mode.companyName,
+      company.companyId,
+      company.companyName,
       null,
       from)
   },
@@ -1004,8 +1004,9 @@ Page({
       quotationPrice: mode.viewModelQuoted.price,
       carModel: this.data.carModelsInfo,
       mode: mode,
-      contact: function (contact) {
-        that.actionContactWithMode(that.data.carModelsInfo.carModelId, mode, 'companyList')
+      contact: function (res) {
+        const company = res
+        that.actionContactWithMode(that.data.carModelsInfo.carModelId, mode, company, 'companyList')
       },
       handlerCreateQuoted(e) {
         const carSku = {
