@@ -115,7 +115,7 @@
               <image class="packup-icon depreciate-icon"
                   src="../../../images/icons/puckup.png"
               ></image>
-              收起【剩余{{cell.quotationCount - cell.checkMoreNumber}}条】</view>
+              收起<block wx:if="{{cell.quotationCount != 3}}">【剩余{{cell.quotationCount - cell.checkMoreNumber}}条】</block></view>
             </block>
           </view>
       </view>
