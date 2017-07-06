@@ -853,7 +853,12 @@ Page({
         const sellingPrice = res.sellingPrice
         const quoted = res.quoted
 
-        const originalInputNumber = quoted.quotedValue || (quoted.quotedRangeUnit === '万' ? quoted.quotedRange * 10000 : quoted.quotedRange)
+        let originalInputNumber = 0
+        if (quoted.quotedMethod === 'POINTS') {
+          originalInputNumber = quoted.quotedValue
+        } else if (quoted.quotedMethod === 'PRICE') {
+          originalInputNumber = quoted.quotedRangeUnit === '万' ? quoted.quotedRange * 10000 : quoted.quotedRange
+        }
 
         const _isPlus = (res.quoted.quotedSymbol === 'PLUS')
         let source = this.data.source

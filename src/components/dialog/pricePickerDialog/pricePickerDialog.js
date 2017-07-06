@@ -162,7 +162,13 @@ export default {
       let bigScaleFlag = false
       if (index + plate.scaleCountForLower === plate.scaleCountForGuidePrice) {
         guidePriceGroupFlag = true
+
         const guidePriceBigScaleIndex = parseInt(index / 10)
+        if (index % 10 !== 0) {
+          // 如果指导价的刻度不是大刻度，则意味着需要将此前的大刻度移除
+          options.scale.pop()
+        }
+
         for (let i = guidePriceBigScaleIndex * 10; i < guidePriceBigScaleIndex * 10 + 10; i++ ) {
           if (i + plate.scaleCountForLower === plate.scaleCountForGuidePrice ) {
             guidePriceFlag = true
@@ -172,8 +178,6 @@ export default {
           options.scale.push({index: i, guidePriceFlag, bigScaleFlag})
         }
       }
-
-
 
       if (index % 10 === 0) {
         if (guidePriceGroupFlag === false) {
