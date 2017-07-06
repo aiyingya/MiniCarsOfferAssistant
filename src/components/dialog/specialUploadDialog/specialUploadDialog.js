@@ -24,7 +24,7 @@ export default {
       validTimeObj:{
         firstChoose:24,
         secondChoose:48,
-        chooseWho:1,
+        chooseWho:1, //这里的值是1 2 3  之前错认为是 1 2 -1
         otherChoose:''
       },
       defaultCheck:1 // 1：24小时,2：24小时,3无限制,4随机值
@@ -178,6 +178,13 @@ export default {
           let userSelectVal = options.effectivenessCustomValue
           if(options.defaultCheck == 4){
             userSelectVal = options.validTimeObj.otherChoose
+            if(!userSelectVal){
+              wx.showModal({
+                title: '提示',
+                content: '亲，自定义小时不能为空喔'
+              })
+              return
+            }
           }
           let result ={
             inputNumber:options.inputNumber,
@@ -206,7 +213,7 @@ export default {
 
           if(options.effectivenessCustomValue !== 0 && !options.effectivenessCustomValue ){
               const _default = options.validTimeObj.chooseWho ? options.validTimeObj.chooseWho : 1
-              options.defaultCheck = Number(_default) === -1 ? 3 : Number(options.validTimeObj.chooseWho)
+              options.defaultCheck = _default
           }
           else if(options.validTimeObj.firstChoose == options.effectivenessCustomValue){
             options.defaultCheck = 1;
@@ -216,9 +223,11 @@ export default {
             options.defaultCheck = 3;
           }else{
             options.defaultCheck = 4;
+            options.validTimeObj.otherChoose = options.effectivenessCustomValue
           }
           _this.setData({
-            [`${_this.options.scope}.defaultCheck`]:options.defaultCheck
+            [`${_this.options.scope}.defaultCheck`]:options.defaultCheck,
+            [`${_this.options.scope}.validTimeObj.otherChoose`]:options.validTimeObj.otherChoose
           })
         }
       }
