@@ -48,6 +48,13 @@ Page({
   },
   onLoad() {
 
+    try {
+      let res = wx.getSystemInfoSync()
+      config.system = res
+    } catch (e) {
+
+    }
+
     let that = this
     this.setData({
       windowHeight: config.system.windowHeight,
