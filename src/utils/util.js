@@ -245,7 +245,8 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
         quotedRange = 0
         quotedRangeUnit = ''
         return {
-          quotedValue,
+          quotedRange,
+          quotedRangeUnit,
           quotedMethod,
           quotedSymbol
         }
