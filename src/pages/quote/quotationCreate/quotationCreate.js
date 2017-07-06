@@ -1144,7 +1144,7 @@ Page({
 
     that.hideInput()
     let _validTime = quotation.validTime
-    if(!_validTime){
+    if(_validTime !== 0 && !_validTime){
       if(that.data.requestResult.validTime.chooseWho === 1 ){
         _validTime = that.data.requestResult.validTime.firstChoose
       }else if(that.data.requestResult.validTime.chooseWho === 2 ){
