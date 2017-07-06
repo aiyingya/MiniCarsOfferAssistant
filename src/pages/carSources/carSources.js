@@ -54,10 +54,11 @@ Page({
     selectedSectionIndex: -1,
     selectedSectionId: '0',
     // 当前 spuId 众数 top N
+    topNOfCurrentModeHeight: 178,
     topNOfCurrentMode: {},
     showDetailTitle: false,
     hasOverLayDropdown: false,
-    overLayDropdownOffset: 288 + 60,
+    overLayDropdownOffset: 178 + 60,
     pageShare: false,
     options: '',
   },
@@ -110,6 +111,10 @@ Page({
       .then(res => {
         const reference = res.reference
         if (reference) {
+          this.setData({
+            topNOfCurrentModeHeight: 288,
+            overLayDropdownOffset: 288 + 60
+          })
           reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-reference.discount, reference.guidePrice, this.isShowDownPrice)
           reference.viewModelQuoted.price = reference.price
           reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
