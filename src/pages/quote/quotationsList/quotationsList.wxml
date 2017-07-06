@@ -5,27 +5,28 @@
       <view class="orderlist-noorder-text">还没报过价~</view>
     </view>
   </block>
-  
+
   <block wx:else>
     <view class="users-cells">
-      <view 
+      <view
         class="users-cell"
         wx:for="{{quotationsList}}"
         wx:for-item="cell"
         wx:for-index="cellIndex"
+        wx:key="createdTime"
         >
         <!-- 用户报价信息.-->
 
         <view class="users-cell_hd">
           <view class="title">
             <block wx:if="{{cell.customerPhone === '无'}}">
-              {{cell.customerPhone}} 
+              {{cell.customerPhone}}
             </block>
             <block wx:else>
               {{cell.customerPhone}} / {{cell.customerName}}
             </block>
           </view>
-          <view 
+          <view
             class="not-sharemessage"
             wx:if="{{cell.customerPhone === '无'}}"
             >
@@ -50,11 +51,12 @@
           </view>
         </view>
         <view class="users-cell_bd">
-          <view 
+          <view
             class="cars-cell"
             wx:for="{{cell.quotationList}}"
             wx:for-item="carcell"
             wx:for-index="carcellIndex"
+            wx:key="draftId"
             wx:if="{{carcellIndex < cell.checkMoreNumber}}"
             data-quotation="{{cell}}"
             data-current="{{carcellIndex}}"
@@ -98,15 +100,15 @@
             </view>
           </view>
         </view>
- 
-        <view 
+
+        <view
           class="check-more"
           hover-class="active"
           hover="true"
           data-more="{{cell}}"
           wx:if="{{cell.quotationCount > 2}}"
           bindtap="handleCheckMore"
-          >  
+          >
             <block wx:if="{{cell.checkMoreNumber < 3}}">
               查看更多>>
             </block>
