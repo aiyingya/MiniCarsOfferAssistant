@@ -4,6 +4,7 @@ import {
 } from '../../components/wux'
 import util from '../../utils/util'
 import YMC from '../../services/YMC'
+import config from '../../config'
 
 // import moment from 'moment'
 
