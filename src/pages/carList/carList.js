@@ -1,6 +1,7 @@
 //index.js
 let app = getApp()
 import util from '../../utils/util'
+import config from '../../config'
 
 Page({
   data: {
@@ -17,21 +18,12 @@ Page({
     showNodata: false
   },
   onLoad() {
-    let that = this
-    try {
-      let res = wx.getSystemInfoSync()
-      this.pixelRatio = res.pixelRatio
-      this.apHeight = 16
-      this.offsetTop = 80
-      console.log(res)
-      this.setData({
-        windowHeight: res.windowHeight,
-        windowWidth: res.windowWidth,
-        drawerW: res.windowWidth * 0.8
-      })
-    } catch (e) {
-
-    }
+    const that = this
+    this.setData({
+      windowHeight: config.system.windowHeight,
+      windowWidth: config.system.windowWidth,
+      drawerW: config.system.windowWidth * 0.8
+    })
 
     app.tradeService.getNavigatorForCarBrands()
       .then(function (res) {
@@ -42,6 +34,8 @@ Page({
         }
       }, function (err) {
       })
+  },
+  onShow() {
   },
   handlerAlphaTap(e) {
     let { ap } = e.target.dataset
