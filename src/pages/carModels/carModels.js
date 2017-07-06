@@ -233,6 +233,8 @@ Page({
     if (newModelsList.length == 0) {
       showNodata = true
     }
+    columnCharts = null
+    columnChartsList = []
     that.drawCanvas(newModelsList)
     this.setData({
       CarsModeleText: selectItem.name,
