@@ -4,6 +4,7 @@ import {
 } from '../../components/wux'
 import util from '../../utils/util'
 import YMC from '../../services/YMC'
+import config from '../../config'
 
 // import moment from 'moment'
 
@@ -48,22 +49,11 @@ Page({
   onLoad() {
 
     let that = this
-    try {
-      //测试代码
-      // let beginTime = moment("2017-04-19 09:02:04").format("MM/DD HH:mm")
-      // console.log("LLLLLLL",beginTime)
-      let res = wx.getSystemInfoSync()
-      this.pixelRatio = res.pixelRatio
-      this.apHeight = 16
-      this.offsetTop = 80
-      this.setData({
-        windowHeight: res.windowHeight,
-        windowWidth: res.windowWidth,
-        drawerW: res.windowWidth * 0.8
-      })
-    } catch (e) {
-
-    }
+    this.setData({
+      windowHeight: config.system.windowHeight,
+      windowWidth: config.system.windowWidth,
+      drawerW: config.system.windowWidth * 0.8
+    })
 
     wx.showToast({
       title: '正在加载',

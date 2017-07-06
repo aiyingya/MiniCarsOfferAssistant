@@ -1,22 +1,21 @@
 <!--index.wxml-->
-<scroll-view scroll-y="true" style="height: {{windowHeight}}px" scroll-into-view="{{alpha}}" upper-threshold="70" bindscrolltoupper="handlePullDownRefresh">
-  <view class="container">
-    <!-- 搜索车型.-->
-    <!-- cars list.-->
-    <view class="viewCarsList-wrap">
-      <view wx:for="{{brandGroupList}}" wx:key="title" id="{{item.title}}" class="viewCarsList-calls">
-        <view class="viewCarsList-index">{{item.title}}</view>
-        <view class="weui-cells weui-cells_in-small-appmsg">
-          <view class="weui-cell weui-cell_access" hover="true" hover-class="weui-cell_active" wx:for="{{item.items}}" wx:key="id"
-            wx:for-item="cell" wx:for-index="cellIndex" bindtap="handlerSelectCarSeries" data-carSeries="{{cell}}">
-            <view class="weui-cell__hd">
-              <image src="{{cell.logoUrl}}" class="viewCarsList_icon-index" />
-            </view>
-            <view class="weui-cell__bd weui-cell_primary">
-              <view>{{cell.name}}</view>
-            </view>
-            <!--<view class="viewCars-describe">在售{{cell.onSaleCount}}款</view>-->
+<scroll-view scroll-y="true" style="height: {{windowHeight}}px" scroll-into-view="{{alpha}}" upper-threshold="70" bindscrolltoupper="handlePullDownRefresh"
+  class="container">
+  <!-- 搜索车型.-->
+  <!-- cars list.-->
+  <view class="viewCarsList-wrap">
+    <view wx:for="{{brandGroupList}}" wx:key="title" id="{{item.title}}" class="viewCarsList-calls">
+      <view class="viewCarsList-index">{{item.title}}</view>
+      <view class="weui-cells weui-cells_in-small-appmsg">
+        <view class="weui-cell weui-cell_access" hover="true" hover-class="weui-cell_active" wx:for="{{item.items}}" wx:key="id"
+          wx:for-item="cell" wx:for-index="cellIndex" bindtap="handlerSelectCarSeries" data-carSeries="{{cell}}">
+          <view class="weui-cell__hd">
+            <image src="{{cell.logoUrl}}" class="viewCarsList_icon-index" />
           </view>
+          <view class="weui-cell__bd weui-cell_primary">
+            <view>{{cell.name}}</view>
+          </view>
+          <!--<view class="viewCars-describe">在售{{cell.onSaleCount}}款</view>-->
         </view>
       </view>
     </view>

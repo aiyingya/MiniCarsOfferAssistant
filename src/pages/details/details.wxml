@@ -2,7 +2,7 @@
 <template is="checkTimeDialog" data="{{ ...$wux.checkTimeDialog }}"/>
 
 <view class="container {{noHistoryContainer}}">
-  <view 
+  <view
     class="users-title"
     data-phone="{{quotationItem.customerPhone}}"
     catchlongtap="handleSetClipboard"
@@ -12,31 +12,32 @@
     </block>
     <block wx:else>
       {{quotationItem.customerPhone}} / {{quotationItem.customerName || '无'}}
-    </block>  
+    </block>
   </view>
-  <swiper 
+  <swiper
     indicator-dots="false"
-    autoplay="{{autoplay}}" 
-    interval="{{interval}}" 
+    autoplay="{{autoplay}}"
+    interval="{{interval}}"
     duration="{{duration}}"
     current="{{swiperCurrent}}"
     indicator-color="#CCCCCC"
     indicator-active-color="#ED4149"
     bindchange="handleChangeSwiper"
     >
-    <block 
+    <block
       wx:for="{{quotationsList}}"
       wx:for-index="swiperIndex"
+      wx:key="createdTime"
       >
       <swiper-item>
-        <view 
+        <view
           class="users-cell"
           data-quotation="{{item}}"
           bindtap="handleToquotationDetail"
           >
           <view class="check-time">- {{item.createdTime}} -</view>
           <view class="cars-name">{{item.viewModel.itemName}}</view>
-          <view class="cars-message">  
+          <view class="cars-message">
             <view class="quotation-msg">
               <view class="line-box min-font-gray">裸车价{{ item.viewModel.sellingPrice }}</view>
               <view class="line-box icon-line">
@@ -71,7 +72,7 @@
       </swiper-item>
     </block>
   </swiper>
-  
+
   <!-- 查看历史.-->
   <view class="history-wrap {{noHistory}}">
     <view class="title">TA的查看历史</view>
@@ -80,7 +81,7 @@
         <view class="nodata">
           <image src="../../images/icons/icon_share_empty.png"></image>
           <view class="text">暂未分享，无查看历史</view>
-          <view 
+          <view
             class="text share"
             bindtap="handleToShareDatail"
             >立即分享>></view>
@@ -88,7 +89,7 @@
       </block>
       <block wx:else>
         <block wx:if="{{historyList.length > 0}}">
-          <view 
+          <view
             class="history-cell"
             wx:for="{{historyList}}"
             wx:for-item="amap"
@@ -111,14 +112,14 @@
             </view>
             <view class="history-amap" wx:if="{{amapIndex === showAmapIndex && isShowAmap}}">
               <view class="map_container">
-                <map 
-                  class="map"  
-                  longitude="{{amap.longitude}}"   
-                  latitude="{{amap.latitude}}"  
-                  scale="14"   
-                  show-location="true"  
+                <map
+                  class="map"
+                  longitude="{{amap.longitude}}"
+                  latitude="{{amap.latitude}}"
+                  scale="14"
+                  show-location="true"
                   markers="{{amap.markers}}"
-                  wx:if="{{showAmap}}"  
+                  wx:if="{{showAmap}}"
                   ></map>
               </view>
             </view>
@@ -130,17 +131,17 @@
             <view class="text">暂无查看历史记录</view>
           </view>
         </block>
-      </block>   
-    </view> 
+      </block>
+    </view>
   </view>
-  
-  
+
+
   <view class="btn-wrap" wx:if="{{quotationItem.shared}}">
-    <view 
+    <view
       class="btn"
       bindtap="handleAdjusttimes"
       >时效调整</view>
-    <view 
+    <view
       class="btn contact-btn"
       wx:if="{{quotationItem.customerPhone !== '无'}}"
       data-phone="{{quotationItem.customerPhone}}"

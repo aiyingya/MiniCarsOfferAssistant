@@ -77,16 +77,13 @@
   </view>
 
   <!--参考成交-->
-  <view class="car-sources-reference-deal">
+  <view class="car-sources-reference-deal" style="height: {{topNOfCurrentModeHeight}}rpx">
 
-    <view  class="reference">
+    <view class="reference" wx:if="{{topNOfCurrentMode.reference}}">
       <view class="title">参考成交</view>
-      <view wx:if="{{topNOfCurrentMode.reference}}" class="mode-item" bindtap="handlerModeClick" data-mode="{{topNOfCurrentMode.reference}}">
+      <view class="mode-item" bindtap="handlerModeClick" data-mode="{{topNOfCurrentMode.reference}}">
         <template is="quotedPrice" data="{{ ...topNOfCurrentMode.reference.viewModelQuoted }}" />
-        <view class="company">{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
-      </view>
-      <view wx:else class="nodata">
-        {{topNOfCurrentMode.referenceStatus}}
+        <view class="company">至少{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
       </view>
     </view>
 
@@ -110,8 +107,8 @@
   </block>
   <block wx:if="{{nodata === 'data'}}">
 
-    <!-- 下拉框筛选 288 + 132 rpx-->
-    <view class="carSources-navbar" hidden="{{hasOverLayDropdown}}" style="top: 420rpx;">
+    <!-- 下拉框筛选 -->
+    <view class="carSources-navbar" hidden="{{hasOverLayDropdown}}" style="top: {{ topNOfCurrentModeHeight + 132 }}rpx;">
       <view class="navbar cars-facade" bindtap="handlerAmendCarFacade" data-selected-filter-index="0">
         <view class="navbar-text">
           外:{{selectedExternalCarColorName}} 内:{{selectedInternalCarColorName}}
@@ -121,8 +118,8 @@
       </view>
     </view>
 
-    <!-- 条件筛选. 288 + 220-->
-    <view class="rmendCarFacade-popup-wrap" wx:if="{{showRmendCarFacade}}" hidden="{{hasOverLayDropdown}}" style="top: 508rpx;">
+    <!-- 条件筛选 -->
+    <view class="rmendCarFacade-popup-wrap" wx:if="{{showRmendCarFacade}}" hidden="{{hasOverLayDropdown}}" style="top: {{ topNOfCurrentModeHeight + 220 }}rpx;">
       <view class="showMask rmendCarFacade-popup-mask" bindtap="handlerRemoveRmendCarFacade" catchtouchmove="onTouchMoveWithCatch">
       </view>
       <view class="rmendCarFacade-inner topToBottom">
@@ -155,8 +152,8 @@
       </view>
     </view>
 
-    <!-- 标签选择  288rpx+220rpx-->
-    <view class="filter-scroll-view" hidden="{{hasOverLayDropdown}}" style="top: 508rpx;">
+    <!-- 标签选择 -->
+    <view class="filter-scroll-view" hidden="{{hasOverLayDropdown}}" style="top: {{ topNOfCurrentModeHeight + 220 }}rpx;">
       <view wx:for="{{scrollFilters}}" wx:for-index="scrollFilterIndex" wx:for-item="scrollFilterItem" wx:key="name" class="scroll-filter">
         <view wx:for="{{scrollFilterItem.items}}" wx:for-index="filterIndex" wx:for-item="filterItem" wx:key="name" bindtap="handlerFilterSelected"
           data-scroll-filter-index="{{scrollFilterIndex}}" data-scroll-filter-item="{{scrollFilterItem}}" data-filter-Index="{{filterIndex}}"
