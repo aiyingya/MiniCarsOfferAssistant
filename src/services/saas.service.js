@@ -254,7 +254,7 @@ export default class SAASService extends Service {
       }
 
       this.sendMessage({
-        path: 'sale/quotation',
+        path: 'sale/quotation/new',
         loadingType: object.loadingType,
         data: {
           channel: this.userService.loginChannel,
