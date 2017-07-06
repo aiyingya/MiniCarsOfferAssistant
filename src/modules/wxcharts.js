@@ -469,7 +469,6 @@ function getYAxisTextList(series, opts, config) {
 }
 
 function calYAxisData(series, opts, config) {
-   
     var ranges = getYAxisTextList(series, opts, config);
     
     var yAxisWidth = config.yAxisWidth;
@@ -1034,26 +1033,31 @@ function drawLineDataPoints(series, opts, config, context) {
     var maxRange = ranges.shift();
 
     series.forEach(function (eachSeries, seriesIndex) {
-
+        
         var data = eachSeries.data;
         var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
         var splitPointList = splitPoints(points);
 
         splitPointList.forEach(function (points, index) {
+          
             context.beginPath();
             context.setStrokeStyle(eachSeries.color);
             context.setLineWidth(2);
             if (points.length === 1) {
                 context.moveTo(points[0].x, points[0].y);
-                context.arc(points[0].x, points[0].y, 1, 0, 2 * Math.PI);
+                context.arc(points[0].x, points[0].y, 2, 0, 2 * Math.PI);
             } else {
+                context.setFillStyle(eachSeries.color);
                 context.moveTo(points[0].x, points[0].y);
+                context.arc(points[0].x, points[0].y, 2, 0, 2 * Math.PI);
                 points.forEach(function (item, index) {
                     if (index > 0) {
-                        context.lineTo(item.x, item.y);
+                      context.lineTo(item.x, item.y);
+                      context.arc(item.x, item.y, 2, 0, 2 * Math.PI);
                     }
                 });
                 context.moveTo(points[0].x, points[0].y);
+
             }
             context.closePath();
             context.stroke();

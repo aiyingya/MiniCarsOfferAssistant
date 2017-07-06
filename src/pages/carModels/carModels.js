@@ -764,8 +764,11 @@ Page({
               if(numitems.topNum === 3) {
                 items.color = '#B0CDFF'
               }
-              let val = util.priceAbsStringWithUnitNumber(priceitems.discount) == '0.00' ? '' : util.priceAbsStringWithUnitNumber(priceitems.discount)
-              items.data.push(util.priceAbsStringWithUnitNumber(priceitems.discount))
+             
+              let val = util.priceAbsStringWithUnitNumber(priceitems.discount) == '0.00' ? null : util.priceAbsStringWithUnitNumber(priceitems.discount)
+              
+              items.data.push(val)
+               
             }
             series.push(items)
           }
