@@ -50,6 +50,7 @@
   line-height: 98rpx;
   text-align: center;
   margin-top: 20rpx;
+  z-index: 999;
 }
 
 .weui-aging{
