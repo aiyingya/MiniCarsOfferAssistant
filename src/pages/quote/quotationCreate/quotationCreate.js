@@ -1156,7 +1156,7 @@ Page({
       inputNumber1:quotation.customerName,
       inputNumber:quotation.customerMobile,
       defaultRadio:quotation.customerSex === undefined ? undefined:Number(quotation.customerSex),
-      effectivenessCustomValue: quotation.validTime, // davidfu 暂时定为 24，应该是从报价偏好中心获得
+      effectivenessCustomValue: quotation.validTime ? quotation.validTime : (that.data.requestResult.validTime.chooseWho === 1 ? that.data.requestResult.validTime.firstChoose:that.data.requestResult.validTime. secondChoose), // davidfu 暂时定为 24，应该是从报价偏好中心获得
       confirmText: '发送报价单',
       cancelText: '仅保存',
       validTimeObj: that.data.requestResult.validTime,
