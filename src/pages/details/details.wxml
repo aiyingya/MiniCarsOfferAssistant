@@ -44,12 +44,12 @@
                 <image
                   wx:if="{{ item.viewModel.priceChange.flag === 1 }}"
                   class="depreciate-icon"
-                  src="../../../images/icons/icon_price_down.png"
+                  src="../../images/icons/icon_price_down.png"
                   ></image>
                 <image
                   wx:if="{{ item.viewModel.priceChange.flag === -1}}"
                   class="depreciate-icon"
-                  src="../../../images/icons/icon_price_up.png"
+                  src="../../images/icons/icon_price_up.png"
                   ></image>
                 <view
                 wx:if="{{ item.viewModel.priceChange.flag !== 0 }}"
