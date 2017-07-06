@@ -49,6 +49,13 @@ Page({
     let quotation = app.fuckingLarryNavigatorTo.quotation
     let source = app.fuckingLarryNavigatorTo.source
 
+    wx.showToast({
+      title: '正在加载',
+      icon: 'loading',
+      duration: 10000,
+      mask: true
+    })
+
     if (quotation && typeof quotation === 'object') {
       if (source === 'quotationDetail') {
         this.getData({
@@ -185,12 +192,18 @@ Page({
           hasPagesNext: res.hasNext
         })
 
+        wx.hideToast()
+        app.fuckingLarryNavigatorTo.quotation = null
+        app.fuckingLarryNavigatorTo.source = null
         typeof object.complete === 'function' && object.complete()
       },
       fail: function () {
-
+        wx.hideToast()
+        app.fuckingLarryNavigatorTo.quotation = null
+        app.fuckingLarryNavigatorTo.source = null
       },
       complete: function () {
+        wx.hideToast()
         app.fuckingLarryNavigatorTo.quotation = null
         app.fuckingLarryNavigatorTo.source = null
       }

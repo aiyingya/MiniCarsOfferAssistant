@@ -27,8 +27,7 @@ export default class SAASService extends Service {
     return super.sendMessageByPromise(opts)
   }
 
-  sendMessage(opts, loadingType = 'toast') {
-    opts.loadingType = loadingType
+  sendMessage(opts) {
     super.sendMessage(opts)
   }
 
