@@ -13,6 +13,7 @@ let app = getApp()
 Page({
 
   cacheCarSourcesBySkuInSpuList: [],
+  currentCarSourcesBySkuInSpuList: [],
   // 是否需要展示下点，目前仅限于 宝马/奥迪/MINI
   isShowDownPrice: true,
   data: {
@@ -177,7 +178,7 @@ Page({
           that.cacheCarSourcesBySkuInSpuList = carSourcesBySkuInSpuList
 
           const newCarSourcesBySkuInSpuList = that.updateSearchResult({})
-          that.selectCarSku(-1, newCarSourcesBySkuInSpuList)
+          that.selectCarSku(-1)
           that.setData({
             searchnodata: newCarSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
             carSourcesBySkuInSpuList: newCarSourcesBySkuInSpuList,
@@ -399,7 +400,7 @@ Page({
   },
   handlerPullReresh(e) {
     const skuItemIndex = e.currentTarget.dataset.skuIndex
-    const carSourcesBySkuInSpuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
+    const carSourcesBySkuInSpuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
 
     this.actionPullRefresh(carSourcesBySkuInSpuItem)
     this.setData({
@@ -408,13 +409,18 @@ Page({
   },
   handlerLoadMore(e) {
     const skuItemIndex = e.currentTarget.dataset.skuIndex
-    const carSourcesBySkuInSpuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
+    const carSourcesBySkuInSpuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
 
     this.actionLoadMore(carSourcesBySkuInSpuItem)
     this.setData({
       [`carSourcesBySkuInSpuList[${skuItemIndex}]`]: carSourcesBySkuInSpuItem
     })
   },
+  /**
+   * 针对一个 carSourcesBySkuInSpuItem 进行重新刷新分页数据
+   *
+   * @param {Object} carSourcesBySkuInSpuItem
+   */
   actionPullRefresh(carSourcesBySkuInSpuItem) {
     const pageData = this.pageData(carSourcesBySkuInSpuItem, 0, 10)
     carSourcesBySkuInSpuItem.viewModelCarSourcesList = pageData.content
@@ -589,7 +595,7 @@ Page({
   selectCarSku(selectedCarSkuIndex) {
     let section = null
     if (selectedCarSkuIndex === -1) {} else {
-      section = this.data.carSourcesBySkuInSpuList[selectedCarSkuIndex]
+      section = this.currentCarSourcesBySkuInSpuList[selectedCarSkuIndex]
       //this.updateTheCarSku(selectedCarSkuIndex, section)
     }
     return section
@@ -680,9 +686,9 @@ Page({
     if (carSourceItem) {
       actualCarSourceItem = carSourceItem
     } else {
-      actualCarSourceItem = this.data.carSourcesBySkuInSpuList[carSkuIndex].carSourcesList[carSourceIndex]
+      actualCarSourceItem = this.currentCarSourcesBySkuInSpuList[carSkuIndex].carSourcesList[carSourceIndex]
     }
-    this.data.carSourcesBySkuInSpuList[carSkuIndex].carSourcesList[carSourceIndex] = actualCarSourceItem
+    this.currentCarSourcesBySkuInSpuList[carSkuIndex].carSourcesList[carSourceIndex] = actualCarSourceItem
   },
   /**
    * 更新 sku 分区数据
@@ -693,7 +699,7 @@ Page({
     if (carSkuItem) {
       actualCarSkuItem = carSkuItem
     } else {
-      const list = this.data.carSourcesBySkuInSpuList
+      const list = this.currentCarSourcesBySkuInSpuList
       actualCarSkuItem = list[carSkuIndex]
     }
 
@@ -720,21 +726,19 @@ Page({
     console.log('selected logistics:' + selectedLogistics)
 
     const selectedSourcePublishDateFilter = function (filterId, carSourceItem) {
-      const now = new Date().getTime()
-      const publishDate = util.dateCompatibility(carSourceItem.publishDate)
-      const diff = now - publishDate
-
-      const minute = 1000 * 60
-      const hour = minute * 60
-
-      const _hour = diff / hour
-
       if (filterId === '-1') {
         return true
       } else {
+        const now = new Date().getTime()
+        const publishDate = util.dateCompatibility(carSourceItem.publishDate)
+        const diff = now - publishDate
+
+        const minute = 1000 * 60
+        const hour = minute * 60
+
+        const _hour = diff / hour
         return _hour <= parseInt(filterId)
       }
-      return true
     }
 
     const selectedLogisticsFilter = function (filterId, carSourceItem) {
@@ -824,11 +828,11 @@ Page({
       }
     }
 
+    //const currentCarSourcesBySkuInSpuList = []
+    //console.log(currentCarSourcesBySkuInSpuList)
+    const currentCarSourcesBySkuInSpuList = []
     const carSourcesBySkuInSpuList = []
-    Object.assign(carSourcesBySkuInSpuList, this.cacheCarSourcesBySkuInSpuList)
-    console.log(carSourcesBySkuInSpuList)
-    const newCarSourcesBySkuInSpuList = []
-    for (let carSourcesBySkuItem of carSourcesBySkuInSpuList) {
+    for (let carSourcesBySkuItem of this.cacheCarSourcesBySkuInSpuList) {
       const newCarSourcesList = []
       if (selectedExternalColorFilter(selectedExternalCarColorName, carSourcesBySkuItem)) {
         for (let carSourceItem of carSourcesBySkuItem.carSourcesList) {
@@ -844,12 +848,19 @@ Page({
           const newCarSourcesBySkuItem = {}
           newCarSourcesBySkuItem.carSourcesList = newCarSourcesList
           newCarSourcesBySkuItem.carSku = {}
-
           Object.assign(newCarSourcesBySkuItem.carSku, carSourcesBySkuItem.carSku)
-
           this.preprocessCarSourcesBySkuInSpuItem(newCarSourcesBySkuItem)
 
-          newCarSourcesBySkuInSpuList.push(newCarSourcesBySkuItem)
+          const new2CarSourcesBySkuItem = {}
+          new2CarSourcesBySkuItem.carSku = {}
+          new2CarSourcesBySkuItem.viewModelPageData = {}
+          new2CarSourcesBySkuItem.viewModelCarSourcesList = []
+          Object.assign(new2CarSourcesBySkuItem.carSku, newCarSourcesBySkuItem.carSku)
+          Object.assign(new2CarSourcesBySkuItem.viewModelPageData, newCarSourcesBySkuItem.viewModelPageData)
+          Object.assign(new2CarSourcesBySkuItem.viewModelCarSourcesList, newCarSourcesBySkuItem.viewModelCarSourcesList)
+
+          currentCarSourcesBySkuInSpuList.push(newCarSourcesBySkuItem)
+          carSourcesBySkuInSpuList.push(new2CarSourcesBySkuItem)
         }
       }
     }
@@ -857,8 +868,9 @@ Page({
     setTimeout(function () {
       wx.hideToast()
     }, 300)
-    console.log(newCarSourcesBySkuInSpuList)
-    return newCarSourcesBySkuInSpuList
+    this.currentCarSourcesBySkuInSpuList = currentCarSourcesBySkuInSpuList;
+
+    return carSourcesBySkuInSpuList
   },
   /**
    * 预留方法
@@ -1105,7 +1117,6 @@ Page({
     const carSourcesBySkuInSpuList = this.updateSearchResult({
       color: -1
     })
-    this.carSourcesBySkuInSpuList = carSourcesBySkuInSpuList
 
     this.setData({
       searchnodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
@@ -1113,7 +1124,7 @@ Page({
       showRmendCarFacade: false
     })
 
-    this.selectCarSku(-1, carSourcesBySkuInSpuList)
+    this.selectCarSku(-1)
     this.hideFold(null, -1, this.data.selectedSectionId)
   },
   /**
@@ -1258,7 +1269,7 @@ Page({
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
     const carModelsInfo = this.data.carModelsInfo
-    const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
+    const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
 
     this.actionContactWithCarSourceItem(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, null)
@@ -1268,7 +1279,7 @@ Page({
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
-    const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
+    const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
 
     carSourceItem.viewModelSelectedTab = -1
@@ -1289,7 +1300,7 @@ Page({
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
-    const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
+    const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
 
     carSourceItem.viewModelSelectedTab = tabItemIndex
@@ -1313,7 +1324,7 @@ Page({
     const carSourcePlaceItem = e.currentTarget.dataset.carSourcePlace
 
     const carModelsInfo = this.data.carModelsInfo
-    const skuItem = this.data.carSourcesBySkuInSpuList[skuItemIndex]
+    const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
     const contact = carSourceItem.supplier.contact
 
