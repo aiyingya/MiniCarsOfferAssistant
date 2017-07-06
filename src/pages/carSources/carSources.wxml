@@ -83,7 +83,7 @@
       <view class="title">参考成交</view>
       <view class="mode-item" bindtap="handlerModeClick" data-mode="{{topNOfCurrentMode.reference}}">
         <template is="quotedPrice" data="{{ ...topNOfCurrentMode.reference.viewModelQuoted }}" />
-        <view class="company">{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
+        <view class="company">至少{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
       </view>
     </view>
 
