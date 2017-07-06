@@ -155,14 +155,14 @@ export default {
     console.log(plate)
     let guidePriceGroupFlag = false
     // 获取最后一组组合
-    const lastGroup = Number.parseInt((plate.scaleCount - 1) / 10) * 10
+    const lastGroup = parseInt((plate.scaleCount - 1) / 10) * 10
     for (let index = 0; index < plate.scaleCount; index ++) {
 
       let guidePriceFlag = false
       let bigScaleFlag = false
       if (index + plate.scaleCountForLower === plate.scaleCountForGuidePrice) {
         guidePriceGroupFlag = true
-        const guidePriceBigScaleIndex = Number.parseInt(index / 10)
+        const guidePriceBigScaleIndex = parseInt(index / 10)
         for (let i = guidePriceBigScaleIndex * 10; i < guidePriceBigScaleIndex * 10 + 10; i++ ) {
           if (i + plate.scaleCountForLower === plate.scaleCountForGuidePrice ) {
             guidePriceFlag = true

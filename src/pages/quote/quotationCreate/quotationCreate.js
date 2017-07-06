@@ -4,7 +4,7 @@ import {
   $wuxSpecialUploadDialog,
   $wuxPricePickerDialog
 } from "../../../components/wux"
-import $wuxSpecificationsDiaog from './specificationsDialog/specificationsDialog'
+import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialog'
 import util from '../../../utils/util'
 
 const app = getApp()
