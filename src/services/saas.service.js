@@ -637,6 +637,7 @@ export default class SAASService extends Service {
     return this.sendMessageByPromise({
       path: `sale/quotation/callRecord`,
       data: {
+        userId: this.userService.auth.userId,
         spuId: spuId,
         companyId: companyId || '',
         supplierId: supplierId || '',
