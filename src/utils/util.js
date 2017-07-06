@@ -234,9 +234,21 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
     let quotedRangeUnit
     if (priceDiff === 0) {
       quotedSymbol = 'NONE'
-      return {
-        quotedMethod,
-        quotedSymbol
+      if (quotedMethod === 'POINTS') {
+        quotedValue = 0
+        return {
+          quotedValue,
+          quotedMethod,
+          quotedSymbol
+        }
+      } else if (quotedMethod === 'PRICE') {
+        quotedRange = 0
+        quotedRangeUnit = ''
+        return {
+          quotedValue,
+          quotedMethod,
+          quotedSymbol
+        }
       }
     } else if (priceDiff > 0) {
       quotedSymbol = 'DOWN'
@@ -315,7 +327,7 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
       return downPrice.toFixed()
     }
   }
-  
+
   /***
    * 优惠价格字符串显示
    * @param downPrice
@@ -329,7 +341,7 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
       return downPrice.toFixed()
     }
   }
-  
+
   /***
    * 优惠价格字符串显示
    * @param downPrice
@@ -348,8 +360,8 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
       return -1;
     }
   }
-  
-  
+
+
   /***
    * 优惠点数公式 （以下关联）
    * @param price       修改价格
@@ -456,7 +468,7 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
     const value = JSON.parse(valueString)
     return value
   }
-  
+
   /**
    * 计算时差.
    */
@@ -474,7 +486,7 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
       'seconds': seconds
     }
   }
-  
+
   /**
    * 计算时差.
    */
@@ -483,12 +495,12 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
     let stime = time.replace(/-/g, '/')
     let endTime = new Date(stime)
     let difference = Util.getTimeDifference(endTime)
-    
+
     let month = (endTime.getMonth()+1) > 9 ? (endTime.getMonth()+1) : `0${endTime.getMonth()+1}`
     let days = endTime.getDate() > 9 ? endTime.getDate() : `0${endTime.getDate()}`
     let hours = endTime.getHours() > 9 ? endTime.getHours() : `0${endTime.getHours()}`
     let minutes = endTime.getMinutes() > 9 ? endTime.getMinutes() : `0${endTime.getMinutes()}`
-    
+
     if(difference.days >= 2) {
       return `${month}/${days} ${hours}:${minutes}`
     }else if(0 < difference.days && difference.days < 2) {
@@ -498,6 +510,6 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
     }else if(difference.days == 0 && difference.hours == 0) {
       return `刚刚 ${hours}:${minutes}`
     }
-    
+
   }
 }

@@ -173,8 +173,6 @@ export default {
         }
       }
 
-
-
       if (index % 10 === 0) {
         if (guidePriceGroupFlag === false) {
           if (index === lastGroup ) {
