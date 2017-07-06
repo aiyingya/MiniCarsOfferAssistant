@@ -270,7 +270,7 @@
             >查看详情</view>
         </view>
         <view class="popup-charts-scale">
-          <view>下(百)</view>
+          <view>(万)</view>
         </view>
         <canvas
           canvas-id="popMarketCharts"

@@ -107,7 +107,7 @@
               </view>
               <view class="check-address">
                <image class="icon" src="../../images/icons/icon_position_gprs.png"></image>
-                {{amap.placeName}}</view>
+                {{amap.placeName || '定位失败'}}</view>
             </view>
             <view class="history-amap" wx:if="{{amapIndex === showAmapIndex && isShowAmap}}">
               <view class="map_container">

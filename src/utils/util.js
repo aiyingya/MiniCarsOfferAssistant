@@ -336,7 +336,7 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
    * @return {string}
    */
   static priceAbsStringWithUnitNumber(downPrice) {
-    return (downPrice / 100).toFixed()
+    return (downPrice / 10000).toFixed(2)
   }
 
   static downPriceFlag(downPrice) {

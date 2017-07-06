@@ -469,7 +469,7 @@ function getYAxisTextList(series, opts, config) {
 }
 
 function calYAxisData(series, opts, config) {
-
+   
     var ranges = getYAxisTextList(series, opts, config);
     
     var yAxisWidth = config.yAxisWidth;

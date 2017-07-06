@@ -742,11 +742,11 @@ Page({
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
-
       let series = []
       let categories = []
-      let maxPrice = Number(res.maxPrice)/100
-      let minPrice = Number(res.minPrice)/100
+      let maxPrice = (Number(res.maxPrice)/10000).toFixed(2)
+      let minPrice = (Number(res.minPrice)/10000).toFixed(2)
+      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10 
       if(res.priceTrendModels.length > 0) {
         for(let numitems of res.priceTrendModels) {
           let items = {}
@@ -764,11 +764,13 @@ Page({
               if(numitems.topNum === 3) {
                 items.color = '#B0CDFF'
               }
+              let val = util.priceAbsStringWithUnitNumber(priceitems.discount) == '0.00' ? '' : util.priceAbsStringWithUnitNumber(priceitems.discount)
               items.data.push(util.priceAbsStringWithUnitNumber(priceitems.discount))
             }
             series.push(items)
           }
         }
+        
         console.log(series,categories)
       }
       that.setData({
@@ -800,14 +802,14 @@ Page({
             min: minPrice,
             max: maxPrice,
             format(val) {
-              return val.toFixed(0)
+              return val.toFixed(2)
             }
           },
           dataLabel: false,
           dataPointShape: false,
           width: popWindow.windowWidth,
           height: 120,
-          setPadding: 10
+          setPadding: setPadding
       })
     })
   },

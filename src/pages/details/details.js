@@ -196,7 +196,8 @@ Page({
           if(time == 0){
             item.validTime = time
           }else {
-            item.validTime += Number(time)
+            let valTime = item.validTime + Number(time)
+            item.validTime = valTime <= 0 ? 0 : valTime
           }
         }
       }

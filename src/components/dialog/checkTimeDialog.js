@@ -81,7 +81,7 @@ export default {
             this.setData({
               [`${this.options.scope}.validsTime`]: '已失效'
             })
-          }else {
+          }else{
             this.setData({
               [`${this.options.scope}.validsTime`]: '无限制'
             })

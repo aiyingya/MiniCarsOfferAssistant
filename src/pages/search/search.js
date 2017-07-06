@@ -792,11 +792,13 @@ Page({
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
-      
+     
       let series = []
       let categories = []
-      let maxPrice = Number(res.maxPrice)/100
-      let minPrice = Number(res.minPrice)/100
+      let maxPrice = (Number(res.maxPrice)/10000).toFixed(2)
+      let minPrice = (Number(res.minPrice)/10000).toFixed(2)
+      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10 
+      console.log(maxPrice.toString().length)
       if(res.priceTrendModels.length > 0) {
         for(let numitems of res.priceTrendModels) {
           let items = {}
@@ -814,7 +816,8 @@ Page({
               if(numitems.topNum === 3) {
                 items.color = '#B0CDFF'
               }
-              items.data.push(util.priceAbsStringWithUnitNumber(priceitems.discount))
+              let val = util.priceAbsStringWithUnitNumber(priceitems.discount) == '0.00' ? '' :util.priceAbsStringWithUnitNumber(priceitems.discount)
+              items.data.push(val)
             }
             series.push(items)
           }
@@ -827,36 +830,37 @@ Page({
         carModelsInfo: carModelsInfo
       })
       this.data.popMarketCharts = new app.wxcharts({
-          canvasId: 'popMarketCharts',
-          type: 'line',
-          categories: categories,
-          color: '#ECF0F7',
-          legend: false,
-          background: '#ECF0F7',
-          animation: false,
-          series: series,
-          xAxis: {
-            disableGrid: false,
-            fontColor: '#333333',
-            gridColor: '#333333',
-            unitText: '日期',
-            type: 'calibration'
-          },
-          yAxis: {
-            disabled: true,
-            fontColor: '#333333',
-            gridColor: '#333333',
-            unitText: '（个）',
-            min: minPrice,
-            max: maxPrice,
-            format(val) {
-              return val.toFixed(0)
-            }
-          },
-          dataLabel: false,
-          dataPointShape: false,
-          width: popWindow.windowWidth,
-          height: 120
+        canvasId: 'popMarketCharts',
+        type: 'line',
+        categories: categories,
+        color: '#ECF0F7',
+        legend: false,
+        background: '#ECF0F7',
+        animation: false,
+        series: series,
+        xAxis: {
+          disableGrid: false,
+          fontColor: '#333333',
+          gridColor: '#333333',
+          unitText: '日期',
+          type: 'calibration'
+        },
+        yAxis: {
+          disabled: true,
+          fontColor: '#333333',
+          gridColor: '#333333',
+          unitText: '（个）',
+          min: minPrice,
+          max: maxPrice,
+          format(val) {
+            return val.toFixed(2)
+          }
+        },
+        dataLabel: false,
+        dataPointShape: false,
+        width: popWindow.windowWidth,
+        height: 120,
+        setPadding: setPadding
       })
     })
   },
@@ -864,7 +868,7 @@ Page({
    * 关闭行情走势.
   */
   handleClosePopupMarket() {
-    let carModelsList = this.data.carModelsList
+    let carModelsList = this.data.searchResults
     columnCharts = null
     columnChartsList = []
     this.drawCanvas(carModelsList)
