@@ -44,7 +44,7 @@ Page({
   onReady() {
   },
   onShow() {
-    
+
     let that = this
     let quotation = app.fuckingLarryNavigatorTo.quotation
     let source = app.fuckingLarryNavigatorTo.source
@@ -107,10 +107,10 @@ Page({
     // 上拉加载更多
     if(!this.data.hasPagesNext) return;
     let that = this
-    
+
     let originPageIndex = this.data.pageIndex
     let newPageIndex = this.data.pageIndex + 1
-    
+
     app.saasService.requestQuotationsList(newPageIndex, this.data.pageSize, {
       loadingType: 'none',
       success: function (res) {
@@ -184,13 +184,15 @@ Page({
           quotationsList: res.content,
           hasPagesNext: res.hasNext
         })
-        
+
         typeof object.complete === 'function' && object.complete()
       },
       fail: function () {
-        
+
       },
       complete: function () {
+        app.fuckingLarryNavigatorTo.quotation = null
+        app.fuckingLarryNavigatorTo.source = null
       }
     })
   },
@@ -213,7 +215,7 @@ Page({
         }
       })
     } catch (e) {
-      
+
     }
   },
   handletouchmove(event) {
@@ -255,7 +257,7 @@ Page({
     let delBtnWidth = this.data.delBtnWidth
 		let endX = e.changedTouches[0].clientX
 		let moveX = that.data.startX - endX
-    
+
 		if(moveX < (delBtnWidth/2)) {
 			for(let item of quotationsList) {
 				item.Style = 'left:0'
