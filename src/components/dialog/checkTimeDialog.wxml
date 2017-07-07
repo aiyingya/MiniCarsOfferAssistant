@@ -1,0 +1,75 @@
+<template name="checkTimeDialog">
+  <view class="checkTimeDialog">
+    <view 
+      class="weui-mask {{ animateCss }}"  
+      wx:if="{{ visible }}"    
+      catchtouchmove="{{ onTouchMoveWithCatch }} "   
+      bindtap="{{ close }}"
+      ></view>
+    <view
+      class="weui-dialog {{ animateCss }}"
+      wx:if="{{ visible }}"
+      >
+      <view
+        class="weui-dialog__hd"
+        wx:if="{{ title }}"
+        >
+        <view class="weui-dialog__title">{{ title }}</view>
+      </view>
+      <form bindsubmit="{{ confirm }}">
+        <view class="weui-dialog__bd">
+          <!-- 剩余时效.-->
+          <view class="remaining-time">
+            <view class="remaining-time_content">有效时间还剩 {{validsTime}}</view>
+          </view>
+          <view class="input-cell">
+            <view>增加</view>
+            <input 
+              type="number" 
+              name="addTime"  
+              placeholder-class=""
+              value="{{ addTimes }}" 
+              bindinput="{{ handleAddTimes }}" 
+              />
+            <view>小时</view>
+          </view>
+          <view class="input-cell">
+            <view>减少</view>
+            <input 
+              type="number" 
+              name="reduceTime" 
+              placeholder-class=""
+              value="{{ reduceTimes }}" 
+              bindinput="{{ handleReduceTimes }}" 
+              />
+            <view>小时</view>
+          </view>
+          <view
+            bindtap="{{ checkboxChange }}"
+            class="input-cell weui-check__label"
+            >
+            <label>
+              <view class="checkbox_circle" wx:if="{{!radioItems.checked}}"></view>
+              <image
+                src="../../images/icons/bt_select_on.png"
+                class="checkbox_circle checkbox_success"
+                wx:if="{{radioItems.checked}}"></image>
+              <view class="weui-cell__bd">{{radioItems.name}}</view>
+            </label>
+          </view>
+        </view>
+        <view class="weui-dialog__ft">
+          <button
+            class="weui-dialog__btn weui-dialog__btn_default"
+            bindtap="{{ cancel }}"
+            >{{ cancelText }}</button>
+          <button
+            class="weui-dialog__btn weui-dialog__btn_primary"
+            formType="submit"
+            disabled="{{ confirmDisabled }}"
+            >{{ confirmText }}</button>
+        </view>
+      </form>
+    </view>
+  </view>
+</template>

@@ -1,3 +1,4 @@
+@import '../../../components/dialog/specialUploadDialog/specialUploadDialog.wxss';
 page {
 	background-color: #fff;
 }

@@ -13,7 +13,9 @@
     "pages/supplier/supplier",
     "pages/setCost/setCost",
     "pages/insurance/insurance",
-    "pages/insurance/insuranceDetail/insuranceDetail"
+    "pages/insurance/insuranceDetail/insuranceDetail",
+    "pages/details/details",
+    "pages/amap/amap"
   ],
   "window": {
     "backgroundTextStyle": "dark",

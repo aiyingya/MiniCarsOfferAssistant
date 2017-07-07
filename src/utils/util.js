@@ -227,16 +227,29 @@ export default class Util {
     }
   }
 
-  static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE') {
+static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE') {
     let quotedSymbol
     let quotedValue
     let quotedRange
     let quotedRangeUnit
     if (priceDiff === 0) {
       quotedSymbol = 'NONE'
-      return {
-        quotedMethod,
-        quotedSymbol
+      if (quotedMethod === 'POINTS') {
+        quotedValue = 0
+        return {
+          quotedValue,
+          quotedMethod,
+          quotedSymbol
+        }
+      } else if (quotedMethod === 'PRICE') {
+        quotedRange = 0
+        quotedRangeUnit = ''
+        return {
+          quotedRange,
+          quotedRangeUnit,
+          quotedMethod,
+          quotedSymbol
+        }
       }
     } else if (priceDiff > 0) {
       quotedSymbol = 'DOWN'
@@ -280,7 +293,7 @@ export default class Util {
     let quotedRange
     if (abs_price > 10000) {
       quotedRange = (abs_price / 10000).toFixed(2)
-      quotedRangeUnit = '万元'
+      quotedRangeUnit = '万'
     } else {
       quotedRange = abs_price
       quotedRangeUnit = '元'
@@ -316,8 +329,30 @@ export default class Util {
     }
   }
 
+  /***
+   * 优惠价格字符串显示
+   * @param downPrice
+   * @return {string}
+   */
+  static priceStringWithUnitNumber(downPrice) {
+    downPrice = Math.abs(downPrice)
+    if (downPrice >= 10000) {
+      return (downPrice / 10000).toFixed(2)
+    } else {
+      return downPrice.toFixed()
+    }
+  }
+
+  /***
+   * 优惠价格字符串显示
+   * @param downPrice
+   * @return {string}
+   */
+  static priceAbsStringWithUnitNumber(downPrice) {
+    return (downPrice / 10000).toFixed(2)
+  }
+
   static downPriceFlag(downPrice) {
-    console.log(downPrice)
     if (downPrice === 0) {
       return 0;
     } else if (downPrice > 0) {
@@ -326,6 +361,7 @@ export default class Util {
       return -1;
     }
   }
+
 
   /***
    * 优惠点数公式 （以下关联）
@@ -432,5 +468,49 @@ export default class Util {
     const valueString = decodeURIComponent(options[key])
     const value = JSON.parse(valueString)
     return value
+  }
+
+  /**
+   * 计算时差.
+   */
+  static getTimeDifference(starttime) {
+    const t = Date.parse(new Date()) - Date.parse(starttime)
+    const seconds = Math.floor((t / 1000) % 60)
+    const minutes = Math.floor((t / 1000 / 60) % 60)
+    const hours = Math.floor((t / (1000 * 60 * 60)) % 24)
+    const days = Math.floor(t / (1000 * 60 * 60 * 24))
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    }
+  }
+
+  /**
+   * 计算时差.
+   */
+  static getTimeDifferenceString(time) {
+    if (!time) return '暂无浏览记录'
+    let stime = time.replace(/-/g, '/')
+    let endTime = new Date(stime)
+    let difference = Util.getTimeDifference(endTime)
+
+    let month = (endTime.getMonth()+1) > 9 ? (endTime.getMonth()+1) : `0${endTime.getMonth()+1}`
+    let days = endTime.getDate() > 9 ? endTime.getDate() : `0${endTime.getDate()}`
+    let hours = endTime.getHours() > 9 ? endTime.getHours() : `0${endTime.getHours()}`
+    let minutes = endTime.getMinutes() > 9 ? endTime.getMinutes() : `0${endTime.getMinutes()}`
+
+    if(difference.days >= 2) {
+      return `${month}/${days} ${hours}:${minutes}`
+    }else if(0 < difference.days && difference.days < 2) {
+      return `一天前 ${hours}:${minutes}`
+    }else if(difference.days == 0 && difference.hours > 0) {
+      return `${difference.hours}小时前 ${hours}:${minutes}`
+    }else if(difference.days == 0 && difference.hours == 0) {
+      return `刚刚 ${hours}:${minutes}`
+    }
+
   }
 }

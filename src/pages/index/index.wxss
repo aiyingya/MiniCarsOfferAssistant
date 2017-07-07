@@ -23,7 +23,7 @@
 .topbar-search {
 	padding: 80rpx 0;
 	background-color: #ECF0F7;
-} 
+}
 /* search.*/
 .search-wrap {
 	width: 86.67%;
@@ -73,7 +73,7 @@
 	padding: 0 30rpx;
 	line-height: 88rpx;
 	-webkit-box-sizing: border-box;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   display: -webkit-flex;
 	display: flex;
 	-webkit-justify-content: space-between;
@@ -136,7 +136,7 @@
 	position: relative;
 	width: 100%;
 	-webkit-box-sizing: border-box;
-  box-sizing: border-box; 
+  box-sizing: border-box;
 	padding: 12rpx 30rpx 30rpx;
 }
 .hotCarsType-cell:after {
@@ -228,7 +228,7 @@
 .viewCarsList_icon-index {
 	display: block;
 	width: 90rpx;
-	height: 60rpx;	
+	height: 60rpx;
 }
 .alphanet-selector {
   position: absolute;
@@ -337,8 +337,10 @@
 	height: 88rpx;
 	line-height: 88rpx;
 }
-
-
+.placeholder {
+  height: 80rpx;
+  padding: 15px 0;
+}
 
 
 

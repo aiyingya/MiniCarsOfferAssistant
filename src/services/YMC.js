@@ -1,5 +1,5 @@
 import config from '../config'
-import * as wxapi from '../modules/wxapp-promise'
+import * as wxapi from 'fmt-wxapp-promise'
 
 
 export default class YMC {
@@ -11,14 +11,14 @@ export default class YMC {
    *
    * @memberOf YMC
    */
-  requestByPromise(options) {
+  oldrequestByPromise(options) {
     if (!options) return null
     return new Promise((resolve, reject) => {
       let clientId = ''
       try {
         // FIXME: 处理 clientId 使用同步获取相对较重
         clientId = wx.getStorageSync(`${config.ENV}_clientId`)
-        console.log(clientId)
+        // console.log("clientId:"+clientId)
       } catch (e) {
         console.error(e)
       }
@@ -45,8 +45,7 @@ export default class YMC {
          * @param {Object} res.data
          */
         success(res) {
-          console.log('success')
-          console.log(res)
+          console.log('success-promise',res)
           const result = res.data
           const statusCode = res.statusCode
 
@@ -68,6 +67,7 @@ export default class YMC {
           if (statusCode < 399) {
             // 2XX, 3XX 成功
             const data = result.data || null
+            console.log('resolve(data)',data)
             resolve(data)
           } else {
             // 4XX, 5XX 失败
@@ -204,6 +204,7 @@ export default class YMC {
           options.fail(err)
           return
         }
+        console.log("show fail loading")
         wxapi.showToast({
           title: err.message,
           icon: 'loading',
@@ -217,6 +218,7 @@ export default class YMC {
         options.fail(error)
         return
       }
+      console.log("show fail loading")
       wxapi.showToast({
         title: error.message,
         icon: 'loading',
@@ -231,10 +233,13 @@ export default class YMC {
       } else if (options.loadingType === 'none') {
         // 不使用任何加载
       } else {
+        console.log("end close loading")
+
         wxapi.hideToast()
       }
 
       const error = new Error('网络请求错误')
+      console.log("show catch loading")
       wxapi.showToast({
         title: error.message,
         icon: 'loading',
@@ -417,7 +422,7 @@ export default class YMC {
    * success      成功回调sendMessagePromise
    * complete     完成回调
    */
-  requestByPromise_new(options) {
+  requestByPromise(options) {
     if (!options) return null
 
     let clientId = ''
@@ -443,6 +448,7 @@ export default class YMC {
       header: Object.assign(defaultHeader, header),
       method: options.method || 'GET'
     }).then(res=>{
+      console.log('success-promise-n',res)
       const result = res.data
       const statusCode = res.statusCode
 
@@ -465,6 +471,7 @@ export default class YMC {
         // 2XX, 3XX 成功
         const data = result.data || null
         return data
+
       } else {
         // 4XX, 5XX 失败
         console.error(res)
@@ -479,23 +486,18 @@ export default class YMC {
           throw new Error(result) //to -> fail
         }
       }
-    },fail=>{
-      wxapi.showToast({
-        title: fail.message,//+options.url,
-        icon: 'loading',
-        duration: 2000
-      });
-      console.log('fail',fail)
-      throw fail; //to -> fail
-
     }).catch(function (reason) {
+      if (reason.message === "request:fail response data convert to UTF8 fail") {
+        // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
+        return
+      }
       // 抛出一个全局错误
       wxapi.showToast({
         title: reason.message ? reason.message : reason,
         icon: 'loading',
         duration: 2000
       });
-      console.log('catch',reason)
+      console.error('catch',reason)
       throw reason //to -> fail
     })
     //.finally(function () {});

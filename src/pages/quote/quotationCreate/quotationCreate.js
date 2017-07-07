@@ -1,11 +1,11 @@
 import {
   $wuxInputNumberDialog,
   $wuxContentDialog,
-  $wuxSpecialUploadDialog
+  $wuxSpecialUploadDialog,
+  $wuxPricePickerDialog
 } from "../../../components/wux"
 import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialog'
 import util from '../../../utils/util'
-
 
 const app = getApp()
 
@@ -86,7 +86,12 @@ Page({
       "threeWYXS": 0.5,//"三年期万元系数",
       "interestType":1,//"默认选中的贷款方式 1 月息 2 万元系数"
       "carNumberFee":'200',//"上牌服务费"
-      "loanFee":0 //贷款服务费
+      "loanFee":0, //贷款服务费
+      "validTime":{
+        "firstChoose":24,
+        "secondChoose":48,
+        "chooseWho":1
+      }
     },
     expensesAllInfo:[
       {
@@ -458,7 +463,7 @@ Page({
         const itemNumber = carSkuInfo.skuId || ''
         const itemType = carSkuInfo.viewModelSupplierSelfSupport ? 'self' : 'third_party'
         const itemPic = carSkuInfo.skuPic || carModelInfo.pic || ''
-        const specifications = carSkuInfo.externalColorName + '/' + carSkuInfo.internalColorName
+        const specifications = (carSkuInfo.externalColorName || '-') + '/' + (carSkuInfo.internalColorName || '-')
         const guidePrice = carSkuInfo.officialPrice || carModelInfo.officialPrice
 
         const originalPrice = carSkuInfo.showPrice || carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
@@ -627,7 +632,9 @@ Page({
       'quotation.requiredExpensesAll.insuranceAmount': _insurances.insuranceTotal
     })
     this.insuranceUpdate(_insurances.insuranceTotal)//保险金额修改
-    this.updateForSomeReason()
+    setTimeout(() => {
+      this.updateForSomeReason()
+    }, 0);
   },
   onHide() {},
   onUnload() {
@@ -708,9 +715,6 @@ Page({
     let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(2)
-
-    console.log(downPriceFlag)
-
 
     if(!that.data.initPoint){
       this.setData({
@@ -832,41 +836,38 @@ Page({
     const _hasInitPoint =that.data.initPoint
     const _initSellingPrice = that.data.initSellingPrice
     const quotation = this.data.quotation
-    let _inputT
-    if(_isPoint){
-      //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
-      _inputT = that.data.priceChange.point
-    }else{
-      _inputT = Math.abs(_diffPrice)
-    }
 
     this.hideInput()
-    $wuxInputNumberDialog.open({
-      title: '裸车价',
-      inputNumber: _inputT,
-      content: "￥" + _sellingPrice,
-      inputNumberPlaceholder: '输入裸车价',
-      inputNumberMaxLength: 9,
+    $wuxPricePickerDialog.open({
+      title: "裸车价",
       confirmText: '确定',
       cancelText: '取消',
-      priceStyle: true,
       params:{
-        sellingPrice : _sellingPrice,
-        initSellingPrice : _initSellingPrice,
-        initIsPlus:(_diffPrice > 0),
-        isPlus :(_diffPrice > 0),
-        isPoint:_isPoint,
-        hasInitPoint:_hasInitPoint,
+        quotedMethod: _isPoint ? 'POINTS' : 'PRICE',
+        sellingPrice: _sellingPrice,
         guidePrice:_guidePrice
       },
       confirm: (res) => {
-        let _isPlus = (res.isPlus === 'true' )
+        // sellingPrice 返回的是最终设置的 降价
+        // quoted 是返回的降价对象，内部包含了全部的降价信息
+        const sellingPrice = res.sellingPrice
+        const quoted = res.quoted
+
+        let originalInputNumber = 0
+        if (quoted.quotedMethod === 'POINTS') {
+          originalInputNumber = quoted.quotedValue
+        } else if (quoted.quotedMethod === 'PRICE') {
+          originalInputNumber = quoted.quotedRangeUnit === '万' ? quoted.quotedRange * 10000 : quoted.quotedRange
+        }
+
+        const _isPlus = (res.quoted.quotedSymbol === 'PLUS')
         let source = this.data.source
         let price
-        if(_isPoint && ((_diffPrice > 0) === _isPlus)  && (Number(_hasInitPoint) === Number(res.inputNumber))){
+
+        if (_isPoint && ((_diffPrice > 0) === _isPlus) && (Number(_hasInitPoint) === Number(originalInputNumber))){
           price = _initSellingPrice
-        }else{
-          price = util.getChangeCarPrice(_isPlus,_isPoint,_guidePrice,res.inputNumber)
+        } else {
+          price = util.getChangeCarPrice(_isPlus, _isPoint, _guidePrice, originalInputNumber)
         }
 
         const isElectricCar = this.data.carModelInfo.isElectricCar
@@ -879,7 +880,7 @@ Page({
         })
         let businessRisks = this.data.businessRisks
         let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
-        
+
         if(source == 'quotationDetail') {
           console.log(quotation)
           for(let item of businessRisks) {
@@ -887,7 +888,7 @@ Page({
               case '第三者责任险':
                 if(quotation.insuranceDetail.iDSZZRX > 0) {
                   item.checked = true
-                  
+
                 }else {
                   item.checked = false
 
@@ -900,14 +901,14 @@ Page({
                   item.checked = false
                 }
                 break
-              case '全车盗抢险': 
+              case '全车盗抢险':
                 if(quotation.insuranceDetail.iQCDQX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
                 }
                 break
-              case '玻璃单独破碎险': 
+              case '玻璃单独破碎险':
                 if(quotation.insuranceDetail.iBLDDPSX > 0) {
                   item.checked = true
                 }else {
@@ -928,26 +929,26 @@ Page({
                   item.checked = false
                 }
                 break
-              case '无过责任险': 
+              case '无过责任险':
                 if(quotation.insuranceDetail.iWGZRX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
                 }
                 break
-              case '车上人员责任险': 
+              case '车上人员责任险':
                 if(quotation.insuranceDetail.iCSRYZRX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
                 }
                 break
-              case '车身划痕险': 
+              case '车身划痕险':
                 if(quotation.insuranceDetail.iCSHHX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
-              
+
                 }
                 break
               default:
@@ -956,16 +957,15 @@ Page({
             }
           }
         }
-        
+
         if(insurancesAll != null) {
           that.insuranceCostCountDefault(insurancesAll.businessInsurances)
         }else {
           that.insuranceCostCountDefault(businessRisks)
         }
-        
+
         that.updateForSomeReason()
         that.showInput()
-
 
       },
       cancel: () => {
@@ -1083,9 +1083,19 @@ Page({
       quotation.loanFee = 0
     }
 
-    function isSendRequest (quotationDraft,mobile,name,sex,isSend) {
+    /**
+     * 包装的发布报价单发送接口
+     *
+     * @param {Number} quotationDraft
+     * @param {String} mobile
+     * @param {String} name
+     * @param {Number} sex
+     * @param {Boolean} isSend
+     * @param {Number} validTime
+     */
+    function isSendRequest(quotationDraft, mobile, name, sex, isSend, validTime) {
 
-      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile ,{
+      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime, {
         success: (res) => {
           let quotation1 = res
 
@@ -1094,7 +1104,7 @@ Page({
 
           if (that.data.source === 'quotationDetail') {
             wx.navigateBack({
-              delta: 2, // 回退前 delta(默认为1) 页面
+              delta: 3, // 回退前 delta(默认为1) 页面
               success: function (res) {
                 // success
               },
@@ -1129,10 +1139,21 @@ Page({
           console.log("fail 保存报价单失败")
         },
         complete: () => {}
-      },name,sex,isSend)
+      })
     }
 
     that.hideInput()
+    let _validTime = quotation.validTime
+    if(_validTime !== 0 && !_validTime){
+      if(that.data.requestResult.validTime.chooseWho === 1 ){
+        _validTime = that.data.requestResult.validTime.firstChoose
+      }else if(that.data.requestResult.validTime.chooseWho === 2 ){
+        _validTime = that.data.requestResult.validTime. secondChoose
+      }else{
+        _validTime = -1
+      }
+    }
+
     // 请求成功后弹出对话框
     $wuxSpecialUploadDialog.open({
       title: '保存并分享！',
@@ -1146,8 +1167,10 @@ Page({
       inputNumber1:quotation.customerName,
       inputNumber:quotation.customerMobile,
       defaultRadio:quotation.customerSex === undefined ? undefined:Number(quotation.customerSex),
+      effectivenessCustomValue: _validTime, // davidfu 暂时定为 24，应该是从报价偏好中心获得
       confirmText: '发送报价单',
       cancelText: '仅保存',
+      validTimeObj: that.data.requestResult.validTime,
       initMobValidate: function (mobile) {
         return mobile ? mobile.length === 11 : false
       },
@@ -1156,16 +1179,17 @@ Page({
         return mobile.length === 11
       },
       confirm: (res) => {
-        let mobile = res.inputNumber
-        let customerName =res.inputName
-        let customerSex = res.inputSex
-
+        const mobile = res.inputNumber
+        const customerName = res.inputName
+        const customerSex = Number(res.inputSex)
+        const effectiveness = Number(res.inputEffectiveness)
         //保存报价单
+
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
             let quotationDraft = res
             //发送报价单
-            isSendRequest(quotationDraft,mobile,customerName,customerSex,true)
+            isSendRequest(quotationDraft, mobile, customerName, customerSex, true, effectiveness)
           },
           fail: function () {},
           complete: function () {}
@@ -1176,22 +1200,22 @@ Page({
       cancel: (res) => {
         //保存报价单
         let mobile = res.inputNumber
-        if(mobile){
+        if (mobile) {
           mobile = mobile.length === 11 ? mobile : ""
         }
-        let customerName =res.inputName
-        let customerSex = res.inputSex
+        const customerName =res.inputName
+        const customerSex = Number(res.inputSex)
+        const effectiveness = Number(res.inputEffectiveness)
         app.saasService.requestSaveQuotationDraft(quotation, {
           success: function (res) {
             let quotationDraft = res
             /// 暂不发送, 不带电话号码发送（发布当前报价草稿到某个用户） 保留1.5以前的逻辑
-            isSendRequest(quotationDraft,mobile,customerName,customerSex,false)
+            isSendRequest(quotationDraft, mobile, customerName, customerSex, false, effectiveness)
           },
           fail: function () {},
           complete: function () {}
         })
         that.showInput()
-
       },
       close: () => {
         that.showInput()
@@ -1340,16 +1364,13 @@ Page({
         "installFee":that.data.quotation.otherExpensesAll.installationFee,
         "otherFee":that.data.quotation.otherExpensesAll.otherFee,
         "serviceFee":that.data.quotation.otherExpensesAll.serverFee
-      },
-      {
-        success: (res) => {
-          that.setData({
-            getProfitResult : res
-          })
-        },
-        fail:() => {console.log("查看收益失败")},
-        complete: () => {}
-      });
+      }).then(res=>{
+        that.setData({
+          getProfitResult : res
+        })
+    },fail=>{
+      console.log("查看收益失败")
+    })
   },
   touchStartIncome(){
     console.log("touchStartIncome")

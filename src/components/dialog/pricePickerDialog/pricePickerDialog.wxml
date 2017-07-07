@@ -1,0 +1,87 @@
+<template name="pricePickerDialog">
+  <view class="pricePickerDialog">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} " bindtap="{{ close }}">
+    </view>
+    <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
+      <view class="weui-dialog__hd" wx:if="{{ title }}">
+        <view class="weui-dialog__title">{{ title }}</view>
+      </view>
+
+      <view class="header">
+        <view class="weui-dialog__line" style="width:20%"></view>
+        <view class="container">
+          <view class="main-content" wx:if="{{ params.sellingPrice }}">
+            <view class="main-content-text">￥{{ params.sellingPrice }}</view>
+            <!--<image class="icon-change-red" src="/images/icons/icon_change_red.png" />-->
+          </view>
+          <view class="sub-content">（已涵盖运费与收益）</view>
+        </view>
+        <view class="weui-dialog__line" style="width:20%"></view>
+      </view>
+      <form bindsubmit="{{ confirm }}">
+        <view class="body">
+          <view class="quoted-line">
+            <view class="quoted {{ (quoted.quotedSymbol === 'NONE') ? 'hide' : '' }}" hidden="{{ quoted.quotedSymbol === 'NONE' }}">
+              <view wx:if="{{ quoted.quotedSymbol === 'DOWN' }}" class="quoted-text">下</view>
+              <view wx:if="{{ quoted.quotedSymbol === 'PLUS' }}" class="quoted-text">上</view>
+              <view wx:if="{{ quoted.quotedMethod === 'PRICE' && quoted.quotedSymbol !== 'NONE' }}" class="quoted-unit-text"> {{ quoted.quotedRange }}{{ quoted.quotedRangeUnit }} </view>
+              <view wx:if="{{ quoted.quotedMethod === 'POINTS' && quoted.quotedSymbol !== 'NONE' }}" class="quoted-unit-text"> {{ quoted.quotedValue }}点 </view>
+
+              <image hidden="{{ quoted.quotedSymbol === 'NONE' }}" src="/images/icons/icon_change.png" />
+            </view>
+            <view class="price-display">
+              {{sellingPrice}}
+            </view>
+            <view class="quoted-none" />
+          </view>
+          <view class="cursor">
+            <image src="/images/icons/icon_table_scale.png" /> </view>
+          <scroll-view scroll-x class="scale" scroll-left="{{scrollLeft}}" style="height: 70rpx; with:100%; margin-bottom:20rpx; margin-top:20rpx;"
+            bindscrolltoupper="{{upper}}" bindscrolltolower="{{lower}}" bindscroll="{{scroll}}">
+            <view style="height:30rpx">
+              <block wx:for="{{ scale }}" wx:key="{{item.index}}">
+                <block wx:if="{{ item.bigScaleFlag }}">
+                  <block wx:if="{{ index !== 0 && index !== scale.length - 1 }}">
+                      <image style="width: {{scalePx * 10}}px;" src="/images/icons/icon_table_scale_group.png" class="minor-scale" />
+                  </block>
+                  <block wx:else>
+                    <image wx:if="{{ index === 0 }}" style="width: {{scalePx * 10}}px; margin-left:{{ blankWidthPx }}px;" src="/images/icons/icon_table_scale_group.png" class="major-scale" />
+                    <image wx:if="{{ index === scale.length - 1 }}" style="width: {{scalePx * 10}}px; margin-right:{{ blankWidthPx }}px;" src="/images/icons/icon_table_scale_group.png" class="major-scale" />
+                  </block>
+                </block>
+                <block wx:else>
+                  <block wx:if="{{item.guidePriceFlag}}">
+                    <image style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_red.png" class="guide-scale" />
+                  </block>
+                  <block wx:else>
+                    <block wx:if="{{ index !== 0 && index !== scale.length - 1 }}">
+                      <image wx:if="{{ item.index % 5 === 0 }}" style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
+                      <image wx:else style="width: {{scalePx}}px;" src="/images/icons/icon_table_scale_gray_small.png" class="minor-scale" />
+                    </block>
+                    <block wx:else>
+                      <image wx:if="{{ index === 0 }}" style="width: {{scalePx}}px; margin-left:{{ blankWidthPx }}px;" src="/images/icons/icon_table_scale_gray.png" class="major-scale" />
+                      <image wx:if="{{ index === scale.length - 1 }}" style="width: {{scalePx}}px; margin-right:{{ blankWidthPx }}px;" src="{{ item.index % 5 === 0 ? '/images/icons/icon_table_scale_gray.png' : '/images/icons/icon_table_scale_gray_small.png'}}" class="major-scale" />
+                    </block>
+                  </block>
+                </block>
+              </block>
+            </view>
+            <view style="height:30rpx">
+              <block wx:for="{{ scaleValue }}" wx:key="{{item.index}}">
+                <view wx:if="{{index === 0}}" class="scale-value-text" style="margin-left: {{blankWidthPx - tenScaleMarginLeftPx}}px; width:{{tenScaleWidthPx}}px">{{ item.scaleValue }} </view>
+                <view wx:else class="scale-value-text" style="width:{{tenScaleWidthPx}}px;">{{ item.scaleValue }} </view>
+              </block>
+            </view>
+          </scroll-view>
+        </view>
+
+        <view class="weui-dialog__ft">
+          <button class="weui-dialog__btn weui-dialog__btn_default" bindtap="{{ cancel }}">{{ cancelText }}
+          </button>
+          <button class="weui-dialog__btn weui-dialog__btn_primary" formType="submit">{{ confirmText }}
+          </button>
+        </view>
+      </form>
+    </view>
+  </view>
+</template>

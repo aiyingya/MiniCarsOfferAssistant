@@ -24,7 +24,9 @@ Page({
 		startX: '',
 		moveX: '',
 		touchElement: {},
-		delBtnWidth: 150
+		delBtnWidth: 150,
+    checkMoreNumber: 2,
+    hasPagesNext: ''
   },
   onLoad() {
     let that = this;
@@ -42,9 +44,17 @@ Page({
   onReady() {
   },
   onShow() {
+
     let that = this
     let quotation = app.fuckingLarryNavigatorTo.quotation
     let source = app.fuckingLarryNavigatorTo.source
+
+    wx.showToast({
+      title: '正在加载',
+      icon: 'loading',
+      duration: 10000,
+      mask: true
+    })
 
     if (quotation && typeof quotation === 'object') {
       if (source === 'quotationDetail') {
@@ -102,6 +112,7 @@ Page({
   },
   onReachBottom() {
     // 上拉加载更多
+    if(!this.data.hasPagesNext) return;
     let that = this
 
     let originPageIndex = this.data.pageIndex
@@ -112,8 +123,12 @@ Page({
       success: function (res) {
         if (res.content.length !== 0) {
           that.data.pageIndex = newPageIndex
+          for(let item of res.content) {
+            item.checkMoreNumber = 2
+          }
           that.setData({
-            quotationsList: that.data.quotationsList.concat(res.content)
+            quotationsList: that.data.quotationsList.concat(res.content),
+            hasPagesNext: res.hasNext
           })
         } else {
           that.data.pageIndex = originPageIndex
@@ -146,6 +161,23 @@ Page({
       wx.hideToast()
     }, 1000)
   },
+  /**
+   * 计算时差.
+   */
+  getTimeDifference(starttime) {
+    var t = Date.parse(new Date()) - Date.parse(starttime);
+    var seconds = Math.floor((t / 1000) % 60);
+    var minutes = Math.floor((t / 1000 / 60) % 60);
+    var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+  },
   getData(object) {
     let that = this
     this.data.pageIndex = 1
@@ -153,33 +185,51 @@ Page({
       loadingType: 'none',
       success: function (res) {
         let empty = res.content.length === 0
+        console.log(res.content)
         that.setData({
           empty: empty,
-          quotationsList: res.content
+          quotationsList: res.content,
+          hasPagesNext: res.hasNext
         })
-        
+
+        wx.hideToast()
+        app.fuckingLarryNavigatorTo.quotation = null
+        app.fuckingLarryNavigatorTo.source = null
         typeof object.complete === 'function' && object.complete()
       },
       fail: function () {
+        wx.hideToast()
+        app.fuckingLarryNavigatorTo.quotation = null
+        app.fuckingLarryNavigatorTo.source = null
       },
       complete: function () {
+        wx.hideToast()
+        app.fuckingLarryNavigatorTo.quotation = null
+        app.fuckingLarryNavigatorTo.source = null
       }
     })
   },
   handlerSelectQuotation(e) {
-    let quotationKeyValueString = util.urlEncodeValueForKey('quotation', e.currentTarget.dataset.quotation)
-    wx.navigateTo({
-      url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
-      success: function (res) {
-        console.log('quotationDetail 页面跳转成功');
-      },
-      fail: function () {
-        console.log('quotationDetail 页面跳转失败');
-      },
-      complete: function () {
+    let valueString = JSON.stringify(e.currentTarget.dataset.quotation)
+    let current = e.currentTarget.dataset.current
+    let quotationKeyValueString = encodeURIComponent(valueString)
+    try {
+      wx.setStorageSync('quotationItemKeyDetail', quotationKeyValueString)
+      wx.navigateTo({
+        url: `/pages/details/details?current=${current}`,
+        success: function (res) {
+          console.log('quotationDetail 页面跳转成功');
+        },
+        fail: function () {
+          console.log('quotationDetail 页面跳转失败');
+        },
+        complete: function () {
 
-      }
-    })
+        }
+      })
+    } catch (e) {
+
+    }
   },
   handletouchmove(event) {
 		let currentX = event.changedTouches[0].clientX
@@ -220,7 +270,7 @@ Page({
     let delBtnWidth = this.data.delBtnWidth
 		let endX = e.changedTouches[0].clientX
 		let moveX = that.data.startX - endX
-    
+
 		if(moveX < (delBtnWidth/2)) {
 			for(let item of quotationsList) {
 				item.Style = 'left:0'
@@ -265,6 +315,23 @@ Page({
           })
         }
       }
+    })
+  },
+  handleCheckMore(e) {
+    const more = e.currentTarget.dataset.more
+    const quotationsList = this.data.quotationsList
+    console.log(e,more)
+    for(let item of quotationsList) {
+      if(more.customerPhone === item.customerPhone) {
+        if(item.checkMoreNumber < 3) {
+         item.checkMoreNumber = 3
+        }else if(item.checkMoreNumber === 3) {
+          item.checkMoreNumber = 2
+        }
+      }
+    }
+    this.setData({
+      quotationsList: quotationsList
     })
   }
 })

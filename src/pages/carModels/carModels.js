@@ -22,6 +22,7 @@ Page({
     showNodata: false,
     showPopCharts: false,
     popCharts: null,
+    popMarketCharts: null,
     active: '',
     stock: 'in_stock',
     stockText: '有货',
@@ -47,7 +48,8 @@ Page({
     touchindex: '',
     selectTimesData: [],
     pageShare: false,
-    options: ''
+    options: '',
+    showPopupMarketCharts: false
   },
   onLoad (options) {
     let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -231,6 +233,8 @@ Page({
     if (newModelsList.length == 0) {
       showNodata = true
     }
+    columnCharts = null
+    columnChartsList = []
     that.drawCanvas(newModelsList)
     this.setData({
       CarsModeleText: selectItem.name,
@@ -719,6 +723,114 @@ Page({
     this.setData({
       scrollView: 'overflow: auto;'
     })
-  }
+  },
+  
+  /**
+   * 查看行情走势.
+  */
+  handleCheckMarket(e) {
+    let id = e.currentTarget.dataset.selectid
+    let carModelsInfo = e.target.dataset.carmodelsinfo
+    let that = this
+    let popWindow = {}
 
+    try {
+      let res = wx.getSystemInfoSync()
+
+      popWindow.windowWidth = res.windowWidth
+    } catch (e) {
+
+    }
+    return app.saasService.gettingMarketTrend({
+      spuId: id,
+    }).then((res) => {
+      let series = []
+      let categories = []
+      let maxPrice = (Number(res.maxPrice)/10000).toFixed(2)
+      let minPrice = (Number(res.minPrice)/10000).toFixed(2)
+      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10 
+      if(res.priceTrendModels.length > 0) {
+        for(let numitems of res.priceTrendModels) {
+          let items = {}
+          items.data = []
+          items.color = ''
+          if(numitems.priceList.length > 0) {
+            for(let priceitems of numitems.priceList) {
+              if(numitems.topNum === 1) {
+                categories.push(priceitems.priceDateString)
+                items.color = '#ED4149'
+              }
+              if(numitems.topNum === 2) {
+                items.color = '#3377EE'
+              }
+              if(numitems.topNum === 3) {
+                items.color = '#B0CDFF'
+              }
+             
+              let val = util.priceAbsStringWithUnitNumber(priceitems.discount) == '0.00' ? null : util.priceAbsStringWithUnitNumber(priceitems.discount)
+              
+              items.data.push(val)
+               
+            }
+            series.push(items)
+          }
+        }
+        
+        console.log(series,categories)
+      }
+      that.setData({
+        showPopupMarketCharts: true,
+        showCharts: false,
+        carModelsInfo: carModelsInfo
+      })
+      this.data.popMarketCharts = new app.wxcharts({
+          canvasId: 'popMarketCharts',
+          type: 'line',
+          categories: categories,
+          color: '#ECF0F7',
+          legend: false,
+          background: '#ECF0F7',
+          animation: false,
+          series: series,
+          xAxis: {
+            disableGrid: false,
+            fontColor: '#333333',
+            gridColor: '#333333',
+            unitText: '日期',
+            type: 'calibration'
+          },
+          yAxis: {
+            disabled: true,
+            fontColor: '#333333',
+            gridColor: '#333333',
+            unitText: '（个）',
+            min: minPrice,
+            max: maxPrice,
+            format(val) {
+              return val.toFixed(2)
+            }
+          },
+          dataLabel: false,
+          dataPointShape: false,
+          width: popWindow.windowWidth,
+          height: 120,
+          setPadding: setPadding
+      })
+    })
+  },
+  /**
+   * 关闭行情走势.
+  */
+  handleClosePopupMarket() {
+    let carModelsList = this.data.carModelsList
+    columnCharts = null
+    columnChartsList = []
+    this.drawCanvas(carModelsList)
+    this.setData({
+      showPopupMarketCharts: false,
+      showCharts: true
+    })
+    this.data.popMarketCharts = null
+    this.data.touchindex = ''
+  }
 })

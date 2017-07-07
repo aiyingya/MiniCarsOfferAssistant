@@ -4,6 +4,7 @@ import {
 } from '../../components/wux'
 import util from '../../utils/util'
 import YMC from '../../services/YMC'
+import config from '../../config'
 
 // import moment from 'moment'
 
@@ -16,12 +17,16 @@ Page({
     brandGroupList: [],
     alpha: '',
     windowHeight: '',
+    windowWidth: '',
+    drawerW: '',
     showCarSeries: '',
     showMask: '',
     showCarSeriesInner: '',
     showCarSeriesImageUrl: '',
     carManufacturerSeriesList: [],
-    showNodata: false
+    showNodata: false,
+    anewReload: false,
+    firstLoadFlag: true
   },
   //事件处理函数
   searchCarType() {
@@ -43,21 +48,19 @@ Page({
   },
   onLoad() {
 
-    let that = this
     try {
-      //测试代码
-      // let beginTime = moment("2017-04-19 09:02:04").format("MM/DD HH:mm")
-      // console.log("LLLLLLL",beginTime)
       let res = wx.getSystemInfoSync()
-      this.pixelRatio = res.pixelRatio
-      this.apHeight = 16
-      this.offsetTop = 80
-      this.setData({
-        windowHeight: res.windowHeight + 'px'
-      })
+      config.system = res
     } catch (e) {
 
     }
+
+    let that = this
+    this.setData({
+      windowHeight: config.system.windowHeight,
+      windowWidth: config.system.windowWidth,
+      drawerW: config.system.windowWidth * 0.8
+    })
 
     wx.showToast({
       title: '正在加载',
@@ -72,17 +75,19 @@ Page({
       wx.hideToast()
     })
 
+    this.data.firstLoadFlag = false
+
     wx.showShareMenu()
   },
-  onShow() { },
-  onPullDownRefresh() {
+  onShow() {
     // 下拉刷新
-    const promise = this.reloadIndexData()
-    promise.then(res => {
-      wx.stopPullDownRefresh()
-    }, err => {
-      wx.stopPullDownRefresh()
-    })
+    if (!this.data.firstLoadFlag) {
+      const promise = this.reloadIndexData()
+      console.log(promise)
+      promise.then(res => {
+      }, err => {
+      })
+    }
   },
   onShareAppMessage () {
     return {
@@ -121,7 +126,9 @@ Page({
         })
       }
     }, (err) => {
-
+      that.setData({
+        anewReload: true
+      })
     })
   },
   /**
@@ -183,9 +190,7 @@ Page({
     let carSeries = e.currentTarget.dataset.carseries;
     console.log(carSeries)
     let that = this;
-    let {
-      HTTPS_YMCAPI
-    } = this.data;
+    let { HTTPS_YMCAPI } = this.data;
 
     app.tradeService.getNavigatorForCarSeries({ brandId: carSeries.id })
       .then(function (res) {
@@ -202,24 +207,43 @@ Page({
           })
         }
       }, function (err) {
-
       })
 
-    that.setData({
-      showCarSeries: carSeries,
-      showCarSeriesImageUrl: carSeries.logoUrl,
-      showMask: 'showMask',
-      showCarSeriesInner: 'rightToLeft'
-    })
+    // 新的添加抽屉代码
+    const animation = wx.createAnimation({
+      duration: 300,
+      timingFunction: "linear",
+      delay: 0
+    });
+    this.animation = animation;
+    animation.translateX(-this.data.drawerW).step();
+    this.setData({
+        showDrawerFlag: true,
+        showCarSeries: carSeries,
+        showCarSeriesImageUrl: carSeries.logoUrl,
+        animationData: animation.export()
+    });
   },
+  // 新的移除抽屉的代码
   removeCarSeriesInner(e) {
-    let that = this;
-    that.setData({
+    this.setData({
       showCarSeries: '',
       showCarSeriesImageUrl: '',
       carManufacturerSeriesList: [],
       showNodata: false
     });
+
+    const animation = wx.createAnimation({
+      duration: 600,
+      timingFunction: "linear",
+      delay: 0
+    });
+    this.animation = animation;
+
+    animation.translateX(this.data.drawerW).step();
+    this.setData({
+      animationData: animation.export()
+    })
   },
   handlerToCarsModels(e) {
     if (app.userService.isLogin()) {
@@ -239,8 +263,5 @@ Page({
     wx.makePhoneCall({
       phoneNumber: phone
     })
-  },
-  onTouchMoveWithCatch() {
-    // 拦截触摸移动事件， 阻止透传
   }
 })

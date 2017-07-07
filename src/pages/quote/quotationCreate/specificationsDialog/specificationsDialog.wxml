@@ -17,7 +17,7 @@
             />
           </view>
           <view style="margin: 25rpx; font-size: 36rpx;">/</view>
-          <view class="weui-dialog__input" style="margin-left: 0rpx; margin-right: 50rpx;">
+          <view class="weui-dialog__input" >
             <input
               type="text"
               name="internalColorName"

@@ -1,12 +1,10 @@
 {
   "presets": [
-    "es2015",
-    "stage-0"
+    "env",
+    "stage-0",
+    "flow"
   ],
   "plugins": [
-    "transform-flow-strip-types",
-    "transform-export-extensions",
-    "syntax-export-extensions",
     "transform-runtime"
   ],
   "ignore": [

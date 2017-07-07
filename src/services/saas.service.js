@@ -24,12 +24,10 @@ export default class SAASService extends Service {
   }
 
   sendMessageByPromise(opts) {
-    console.log('sendMessageByPromise')
     return super.sendMessageByPromise(opts)
   }
 
-  sendMessage(opts, loadingType = 'toast') {
-    opts.loadingType = loadingType
+  sendMessage(opts) {
     super.sendMessage(opts)
   }
 
@@ -37,47 +35,34 @@ export default class SAASService extends Service {
   sendMessagePromise(opts) {
     super.sendMessagePromise(opts)
   }
+
+  requestPublishQuotationWithMobile(draftId, customerMobile, object) {
+    this.requestPublishQuotation(draftId, customerMobile, '', 0, true, 24, object)
+  }
+
   /**
    * 发布当前报价草稿到某个用户
    *
-   * @param draftId         草稿id
-   * @param customerMobile  客户手机号，选项
-   * @param object          回调对象
-   *
-   {
-    "quotationId":"报价单ID",
-    "draftId":"报价单草稿ID",
-    "quotationName":"报价单名称，没有可以不传",
-    "quotationItems":[{
-        "itemName":"商品名称",
-        "specifications":"商品规格",
-        "guidePrice":"指导价",
-        "sellingPrice":"售价"
-    }
-    ],
-    "hasLoan":"必传，true/false，boolean，是否贷款",
-    "paymentRatio":"首付比例（%），decimal，全款时没有，取值范围0~100",
-    "stages":"贷款期数，int，全款时没有",
-    "requiredExpenses":"必需费用（元），deciaml，取值范围0~999999999",
-    "otherExpenses":"其他费用（元），deciaml，取值范围0~999999999",
-    "advancePayment":"首次支付金额，如果全款则为全款金额",
-    "monthlyPayment":"月供金额，每月还款金额，全款时没有",
-    "remark":"备注",
-    "loginChannel":"必传，登录渠道，目前固定为weixin",
-    "snsId":"必传，由上报微信用户信息的API返回",
-    "customerMobile":"客户手机号"
-   }
+   * @param {String} draftId         草稿 id
+   * @param {String} customerMobile  客户手机号
+   * @param {String} customerName    客户名字
+   * @param {Number} customerSex     客户性别
+   * @param {Boolean} isSendMessage   是否从后台发送短信
+   * @param {Number} effectiveness   时效性
+   * @param {Object} object          回调对象
+   * @memberof SAASService
    */
-  requestPublishQuotation (draftId, customerMobile, object,customerName,customerSex,isSendMessage) {
+  requestPublishQuotation(draftId, customerMobile, customerName, customerSex, isSendMessage, effectiveness, object) {
     if (draftId && draftId !== '') {
       this.sendMessage({
         path: 'sale/quotation',
         data: {
           draftId: draftId,
           customerMobile: customerMobile,
-          customerName:customerName,
-          customerSex:customerSex,
-          sendMessage: isSendMessage ? true : (isSendMessage === undefined) ? true :false //防止后端没有判断，兼容以前的调用
+          customerName: customerName,
+          customerSex: customerSex,
+          sendMessage: isSendMessage ? true : (isSendMessage === undefined) ? true :false, //防止后端没有判断，兼容以前的调用
+          validTime: effectiveness
         },
         method: 'POST',
         // header: {}, // 设置请求的 header
@@ -268,7 +253,7 @@ export default class SAASService extends Service {
       }
 
       this.sendMessage({
-        path: 'sale/quotation',
+        path: 'sale/quotation/new',
         loadingType: object.loadingType,
         data: {
           channel: this.userService.loginChannel,
@@ -278,32 +263,44 @@ export default class SAASService extends Service {
         },
         method: 'GET',
         success: function(res){
-          let content = res.content
-          for (var i = 0; i < content.length; i++) {
-            var item = content[i]
-            let totalPayment = util.priceStringWithUnit(item.totalPayment);
-            let sellingPrice = util.priceStringWithUnit(item.quotationItems[0].sellingPrice);
-            let guidePrice = util.priceStringWithUnit(item.quotationItems[0].guidePrice);
 
-            /// 实时计算优惠点数
-            let downPrice = util.downPrice(item.quotationItems[0].sellingPrice, item.quotationItems[0].guidePrice)
-            let downPriceFlag = util.downPriceFlag(downPrice);
-            let downPriceString = ''
-            if (downPriceFlag !== 0) {
-              downPriceString = util.priceStringWithUnit(downPrice)
-            }
+          for(let item of res.content) {
+            item.checkTime = util.getTimeDifferenceString(item.viewTime)
+            item.checkMoreNumber = 2
 
-            item.viewModel = {
-              totalPayment: totalPayment,
-              sellingPrice: sellingPrice,
-              guidePrice: guidePrice,
-              priceChange: {
-                flag: downPriceFlag,
-                price: downPriceString
+            if(item.quotationList.length > 0) {
+              for(let qitem of item.quotationList) {
+                let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
+                let sellingPrice = util.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
+                let guidePrice = util.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
+
+                /// 实时计算优惠点数
+                let downPrice = util.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
+                let downPriceFlag = util.downPriceFlag(downPrice);
+                let downPriceString = ''
+                if (downPriceFlag !== 0) {
+                  downPriceString = util.priceStringWithUnit(downPrice)
+                }
+
+                /**
+                 * 计算时间.
+                 */
+                item.shared = qitem.shared
+                qitem.createdTime = util.getTimeDifferenceString(qitem.quotationTime)
+                qitem.viewModel = {
+                  totalPayment: totalPayment,
+                  sellingPrice: sellingPrice,
+                  guidePrice: guidePrice,
+                  itemName: `【${qitem.quotationItems[0].guidePrice/100}】${qitem.quotationItems[0].itemName}`,
+                  priceChange: {
+                    flag: downPriceFlag,
+                    price: downPriceString
+                  }
+                }
               }
             }
-            item.priceChange
           }
+          console.log(res.content)
           object.success(res);
         },
         fail: function() {
@@ -497,15 +494,21 @@ export default class SAASService extends Service {
 
   /**
    * 车源上报
-   * @param opts
+   * @param {Number} userId
+   * @param {String} userPhone
+   * @param {Number} supplierId
+   * @param {String} supplierPhone
+   * @param {Number} messageResultId
+   * @param {String} contactPhone
+   * @param {any} opts
+   * @returns
+   * @memberof SAASService
    */
   pushCallRecord(opts){
-    this.sendMessage({
+    return this.sendMessageByPromise({
       path: "api/user/addCallRecord",
       method: 'POST',
-      data: opts.data || {},
-      success: opts.success,
-      fail: opts.fail
+      data: opts || {},
     })
   }
 
@@ -564,12 +567,10 @@ export default class SAASService extends Service {
    */
   getProfit(data,opts){
     // sale/quotation/queryProfit?userId={用户id}&loanNum={贷款金额}&insuranceNum={保险金额}&carPrice={客户裸车价}&marketPrice={行情价}&boutiqueFee={精品费用}&loanServiceFee={贷款服务费}&installFee={安装费用}&otherFee={其他费用}
-    this.sendMessage({
+    return this.sendMessageByPromise({
       path: 'sale/quotation/queryProfit',
       method: 'GET',
-      data:data,
-      success: opts.success,
-      fail: opts.fail
+      data:data
     })
   }
   /**
@@ -580,8 +581,7 @@ export default class SAASService extends Service {
     let userId = this.userService.auth.userId
     return this.sendMessageByPromise({
       path: `api/config/getInsurance/${userId}`,
-      method: 'GET',
-      data: {}
+      method: 'GET'
     })
   }
 
@@ -594,6 +594,112 @@ export default class SAASService extends Service {
     return this.sendMessageByPromise({
       path: `sale/quotation/getCarTax?capacity=${opts.data.capacity}&place=${opts.data.place}`,
       method: 'GET'
+    })
+  }
+  /**
+   * 行情走势.
+   * @param opts
+   */
+  gettingMarketTrend(opts) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/getPriceTrend?spuId=${opts.spuId}`,
+      method: 'GET'
+    })
+  }
+  /**
+   * 获得的当前 spu 的当前众数 top n
+   *
+   * @param {String} spuId
+   * @returns {Promise}
+   * @memberof SAASService
+   */
+  getTopNOfCurrentMode(spuId) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/getCurrentPrice`,
+      data: {
+        spuId: spuId
+      },
+      method: 'GET'
+    })
+  }
+
+  /**
+   * 获取某一个公司内部对一个 spu 报价为 quotationPrice 的所有联系方式
+   *
+   * @param {String} spuId
+   * @param {Number} quotationPrice
+   * @param {String} companyId
+   * @param {String} supplierId
+   * @returns Promise
+   * @memberof SAASService
+   */
+  getContacts(spuId, quotationPrice, companyId, supplierId) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/callRecord`,
+      data: {
+        userId: this.userService.auth.userId,
+        spuId: spuId,
+        companyId: companyId || '',
+        supplierId: supplierId || '',
+        price: quotationPrice || ''
+      },
+      method: 'GET'
+    })
+  }
+
+  /**
+   * 获取对一个 spu 报价为 quotationPrice 的所有公司列表
+   *
+   * response [Model]
+   *
+   * companyId
+   * companyName
+   * price
+   * spuId
+   * spuName
+   * sourceId
+   * mesNum
+   * principalPhone
+   * wechatCount
+   *
+   * @param {String} spuId
+   * @param {Number} quotationPrice
+   * @returns Promise
+   * @memberof SAASService
+   */
+  getCompanies(spuId, quotationPrice) {
+    return this.sendMessageByPromise({
+      path: `sale/quotation/getCompanyList`,
+      data: {
+        spuId: spuId,
+        price: quotationPrice || ''
+      },
+      method: 'GET'
+    })
+  }
+
+
+  /**
+   * 获取历史浏览记录.
+   * @param opts
+   */
+  getCheckHistory(opts) {
+    return this.sendMessageByPromise({
+      path: 'api/user/getViewRecord',
+      method: 'GET',
+      data: opts.data || {}
+    })
+  }
+
+  /**
+   * 修改订单有效时长.
+   * @param opts
+   */
+  postValidTime(opts) {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/modifyValidTime',
+      method: 'POST',
+      data: opts.data || {}
     })
   }
 }

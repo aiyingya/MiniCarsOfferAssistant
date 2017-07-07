@@ -7,8 +7,11 @@
 <import src="../quotationCreate/specificationsDialog/specificationsDialog.wxml"/>
 <template is="specificationsDialog" data="{{ ...$wux.specificationsDialog }}"/>
 
-<import src="../../../components/dialog/specialUploadDialog.wxml"/>
+<import src="../../../components/dialog/specialUploadDialog/specialUploadDialog.wxml"/>
 <template is="specialUploadDialog" data="{{ ...$wux.specialUploadDialog }}"/>
+
+<import src="../../../components/dialog/pricePickerDialog/pricePickerDialog.wxml"/>
+<template is="pricePickerDialog" data="{{ ...$wux.pricePickerDialog }}"/>
 
 <view class="container page">
 

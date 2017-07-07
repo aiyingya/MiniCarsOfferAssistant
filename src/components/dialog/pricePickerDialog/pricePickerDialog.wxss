@@ -1,0 +1,149 @@
+.pricePickerDialog .header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 60rpx;
+  margin-top: 30rpx;
+}
+
+.pricePickerDialog .body {
+  margin: 64rpx 0rpx;
+}
+
+.pricePickerDialog .weui-icon_change{
+  position:absolute;
+  height:30rpx;
+  width:30rpx;
+  top:50%;
+  margin-top:-15rpx;
+  margin-left:4rpx;
+}
+
+.pricePickerDialog .container {
+  width: 240rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.pricePickerDialog .main-content {
+  font-size: 30rpx;
+  color: #2A2A2A;
+  line-height: 30rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pricePickerDialog .sub-content {
+  margin-top: 10rpx;
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #999999;
+  line-height: 24rpx;
+  width: 100%;
+}
+
+.pricePickerDialog .icon-change-red {
+  margin-left: 10rpx;
+  width: 40rpx;
+  height: 40rpx;
+}
+
+.pricePickerDialog .scale {
+  white-space: nowrap;
+}
+
+.pricePickerDialog .guide-scale {
+  height: 30rpx;
+  display: inline-block;
+}
+
+.pricePickerDialog .major-scale {
+  height: 30rpx;
+  display: inline-block;
+}
+
+.pricePickerDialog .minor-scale {
+  height: 30rpx;
+  display: inline-block;
+}
+
+.pricePickerDialog .blank-scale {
+  display: inline-block;
+}
+
+.pricePickerDialog .cursor {
+  display: flex;
+  justify-content: center;
+}
+
+.pricePickerDialog .cursor image {
+  height: 24rpx;
+  width: 10rpx;
+}
+
+.pricePickerDialog .price-display {
+  text-align: center;
+  font-size: 40rpx;
+  color: #ED4149;
+  line-height: 40rpx;
+  margin: 20rpx 20rpx;
+}
+
+.pricePickerDialog .quoted-line {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pricePickerDialog .quoted {
+  height: 50rpx;
+  width: 161rpx;
+  background: #FFFFFF;
+  border: 1rpx solid #AEA5A6;
+  border-radius: 8rpx;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.pricePickerDialog .hide {
+  border: 1rpx solid #FFFFFF;
+}
+
+.pricePickerDialog .quoted-none {
+  height: 50rpx;
+  width: 161rpx;
+  background: #FFFFFF;
+}
+
+.pricePickerDialog .quoted .quoted-text {
+  font-family: PingFangSC-Regular;
+  font-size: 30rpx;
+  color: #333333;
+  line-height: 30rpx;
+}
+
+.pricePickerDialog .quoted .quoted-unit-text {
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #999999;
+  line-height: 30rpx;
+  height: 30rpx;
+}
+
+.pricePickerDialog .quoted image {
+  height:30rpx;
+  width:30rpx;
+}
+
+.pricePickerDialog .scale-value-text {
+  text-align: center;
+  display: inline-block;
+  font-size: 18rpx;
+  color: #999999;
+  line-height: 18rpx;
+  height: 30rpx;
+}
+
+

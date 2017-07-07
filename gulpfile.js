@@ -22,7 +22,6 @@ const gwcn = require('gulp-wxa-copy-npm');
 const sourcemaps = require('gulp-sourcemaps');
 const minimist = require('minimist');
 
-
 let env = process.env.NODE_ENV || process.env.npm_package_config_env || "prd";
 var myConfig = {
   apiUrl:{}
@@ -125,14 +124,11 @@ gulp.task('scripts', ['eslint'], () => {
   //config.babel
   return gulp.src(['./src/**/*.js','!./src/global.js'])
     .pipe($.babel())
-    .pipe(sourcemaps.init())
     .pipe(gwcn(options))
-    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist'))
 })
 
-
-gulp.task('scriptsconfig', ['eslint'], () => {
+gulp.task('scripts_config', ['eslint'], () => {
   console.log("来啊互相伤害",JSON.stringify(myConfig,null,4))
   return gulp.src(['./src/**/global.js'])
     .pipe($.babel())
@@ -141,7 +137,7 @@ gulp.task('scriptsconfig', ['eslint'], () => {
 })
 
 gulp.task('scripts:watch', () => {
-  gulp.watch(['./src/**/*.js'], ['scripts','scriptsconfig'])
+  gulp.watch(['./src/**/*.js'], ['scripts','scripts_config'])
 })
 
 
@@ -161,8 +157,8 @@ gulp.task('build', [
   'assets',
   'templates',
   'styles',
-  'scripts',
-  'scriptsconfig'
+  'scripts_config',
+  'scripts'
 ])
 
 gulp.task('watch', [
