@@ -1143,17 +1143,6 @@ Page({
     }
 
     that.hideInput()
-    let _validTime = quotation.validTime
-    if(_validTime !== 0 && !_validTime){
-      if(that.data.requestResult.validTime.chooseWho === 1 ){
-        _validTime = that.data.requestResult.validTime.firstChoose
-      }else if(that.data.requestResult.validTime.chooseWho === 2 ){
-        _validTime = that.data.requestResult.validTime. secondChoose
-      }else{
-        _validTime = -1
-      }
-    }
-
     // 请求成功后弹出对话框
     $wuxSpecialUploadDialog.open({
       title: '保存并分享！',
@@ -1167,7 +1156,7 @@ Page({
       inputNumber1:quotation.customerName,
       inputNumber:quotation.customerMobile,
       defaultRadio:quotation.customerSex === undefined ? undefined:Number(quotation.customerSex),
-      effectivenessCustomValue: _validTime, // davidfu 暂时定为 24，应该是从报价偏好中心获得
+      effectivenessCustomValue: quotation.validTime,//说明： 为空时 是创建报价单 否则为编辑
       confirmText: '发送报价单',
       cancelText: '仅保存',
       validTimeObj: that.data.requestResult.validTime,
