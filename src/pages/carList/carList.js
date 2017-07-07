@@ -1,6 +1,7 @@
 //index.js
 let app = getApp()
 import util from '../../utils/util'
+import config from '../../config'
 
 Page({
   data: {
@@ -8,25 +9,21 @@ Page({
     brandGroupList: [],
     alpha: '',
     windowHeight: '',
+    windowWidth: '',
+    drawerW: '',
     showCarSeries: '',
-    showMask: '',
     showCarSeriesInner: '',
     showCarSeriesImageUrl: '',
     carManufacturerSeriesList: [],
     showNodata: false
   },
   onLoad() {
-    let that = this
-    try {
-      let res = wx.getSystemInfoSync()
-      this.pixelRatio = res.pixelRatio
-      this.apHeight = 16
-      this.offsetTop = 80
-      console.log(res)
-      this.setData({windowHeight: res.windowHeight + 'px'})
-    } catch (e) {
-
-    }
+    const that = this
+    this.setData({
+      windowHeight: config.system.windowHeight,
+      windowWidth: config.system.windowWidth,
+      drawerW: config.system.windowWidth * 0.8
+    })
 
     app.tradeService.getNavigatorForCarBrands()
       .then(function (res) {
@@ -38,14 +35,16 @@ Page({
       }, function (err) {
       })
   },
+  onShow() {
+  },
   handlerAlphaTap(e) {
-    let {ap} = e.target.dataset
+    let { ap } = e.target.dataset
     let that = this
-    that.setData({alpha: ap})
-    that.setData({alphanetToast: ap})
+    that.setData({ alpha: ap })
+    that.setData({ alphanetToast: ap })
   },
   handlerMove(e) {
-    let {brandGroupList} = this.data
+    let { brandGroupList } = this.data
     let moveY = e.touches[0].clientY
     let rY = moveY - this.offsetTop
     let that = this
@@ -54,8 +53,8 @@ Page({
       if (0 <= index < brandGroupList.length) {
         let nonwAp = brandGroupList[index]
         if (nonwAp) {
-          that.setData({alpha: nonwAp.title})
-          that.setData({alphanetToast: nonwAp.title})
+          that.setData({ alpha: nonwAp.title })
+          that.setData({ alphanetToast: nonwAp.title })
         }
       }
     }
@@ -64,7 +63,7 @@ Page({
     let carSeries = e.currentTarget.dataset.carseries;
     console.log(carSeries)
     let that = this;
-    let {HTTPS_YMCAPI} = this.data;
+    let { HTTPS_YMCAPI } = this.data;
 
     app.tradeService.getNavigatorForCarSeries({ brandId: carSeries.id })
       .then(function (res) {
@@ -83,21 +82,41 @@ Page({
       }, function (err) {
       })
 
-    that.setData({
-      showCarSeries: carSeries,
-      showCarSeriesImageUrl: carSeries.logoUrl,
-      showMask: 'showMask',
-      showCarSeriesInner: 'rightToLeft'
-    })
+    // 新的添加抽屉代码
+    const animation = wx.createAnimation({
+      duration: 300,
+      timingFunction: "linear",
+      delay: 0
+    });
+    this.animation = animation;
+    animation.translateX(-this.data.drawerW).step();
+    this.setData({
+        showDrawerFlag: true,
+        showCarSeries: carSeries,
+        showCarSeriesImageUrl: carSeries.logoUrl,
+        animationData: animation.export()
+    });
   },
+  // 新的移除抽屉的代码
   removeCarSeriesInner(e) {
-    let that = this;
-    that.setData({
+    this.setData({
       showCarSeries: '',
       showCarSeriesImageUrl: '',
       carManufacturerSeriesList: [],
       showNodata: false
     });
+
+    const animation = wx.createAnimation({
+      duration: 600,
+      timingFunction: "linear",
+      delay: 0
+    });
+    this.animation = animation;
+
+    animation.translateX(this.data.drawerW).step();
+    this.setData({
+      animationData: animation.export()
+    })
   },
   handlerToCarsModels(e) {
     const carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
@@ -111,10 +130,7 @@ Page({
       })
     }
   },
-  onTouchMoveWithCatch () {
-    // 拦截触摸移动事件， 阻止透传
-  },
   handlePullDownRefresh() {
     console.log(2)
-  }
+  },
 })

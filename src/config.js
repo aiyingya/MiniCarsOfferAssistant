@@ -28,6 +28,14 @@ const generateUUID = function () {
   return uuid
 }
 
+const px = function (rpx) {
+  return (system.screenWidth * rpx) / 750
+}
+
+const rpx = function (px) {
+  return (750 * px) / system.screenWidth
+}
+
 const system = {}
 try {
   const wxSystemInfo = wx.getSystemInfoSync()
@@ -137,5 +145,7 @@ export default {
    */
   // location,
   getNamespaceKey,
-  generateUUID
+  generateUUID,
+  rpx,
+  px
 }

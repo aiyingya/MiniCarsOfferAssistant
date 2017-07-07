@@ -22,7 +22,7 @@
 				<view
 					class="label"
 					wx:for="{{userTenants}}"
-					wx:key="*this"
+					wx:key="tenantId"
 					>{{item.tenantName}}</view>
 			</view>
 		</block>
@@ -64,7 +64,7 @@
 						<view>报价偏好设置</view>
 				</view>
 			</view>
-			
+
 <!--
 			<view
 				class="weui-cell weui-cell_access"

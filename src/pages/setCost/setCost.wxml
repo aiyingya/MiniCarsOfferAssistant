@@ -10,8 +10,8 @@
 <view class="container setcost-wrapper">
   <!-- 自动加价.-->
   <view class="title">自动加价(客户裸车价=行情价+运费+利润)</view>
-  <view class="weui-cells weui-cells_after-title"> 
-    <view 
+  <view class="weui-cells weui-cells_after-title">
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -21,7 +21,7 @@
       <view class="weui-cell__bd">默认运费</view>
       <view class="weui-cell__ft weui-cell__ft_in-access">￥{{raisePrice.freight}}</view>
     </view>
-    <view 
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -32,11 +32,11 @@
       <view class="weui-cell__ft weui-cell__ft_in-access">￥{{raisePrice.profit}}</view>
     </view>
   </view>
-  
+
   <!-- 贷款相关.-->
   <view class="title">贷款相关（默认利息分摊到每月）</view>
-  <view class="weui-cells weui-cells_after-title"> 
-    <view 
+  <view class="weui-cells weui-cells_after-title">
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -48,7 +48,7 @@
         </picker>
       </view>
     </view>
-    <view 
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -73,7 +73,7 @@
       <view class="weui-cell__bd">默认返点</view>
       <view class="weui-cell__ft weui-cell__ft_in-access">{{loan.rebates}}%</view>
     </view>
-    <view 
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -83,11 +83,11 @@
       <view class="weui-cell__ft weui-cell__ft_in-access">{{loan.service}}</view>
     </view>
   </view>
-  
+
   <!-- 保险相关.-->
   <view class="title">保险相关</view>
-  <view class="weui-cells weui-cells_after-title"> 
-    <view 
+  <view class="weui-cells weui-cells_after-title">
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -96,7 +96,7 @@
       <view class="weui-cell__bd">返点</view>
       <view class="weui-cell__ft weui-cell__ft_in-access">{{insurances.rebates}}%</view>
     </view>
-    <view 
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -106,11 +106,30 @@
       <view class="weui-cell__ft weui-cell__ft_in-access">请选择</view>
     </view>
   </view>
-  
+
+  <!--&lt;!&ndash; 报价单时效.&ndash;&gt;-->
+  <!--<view class="title">报价单时效（默认24小时）</view>-->
+  <!--<view class="weui-cells weui-cells_after-title">-->
+    <!--<view-->
+      <!--class="weui-cell weui-cell_access"-->
+      <!--hover="true"-->
+		  <!--hover-class="active"-->
+      <!--&gt;-->
+      <!--<view class="weui-cell__bd">报价单时效</view>-->
+      <!--<picker-->
+        <!--class="weui-cell__ft weui-cell__ft_in-access"-->
+        <!--bindchange="handleChangeAging"-->
+        <!--value="{{quotationAging.agingIndex}}"-->
+        <!--range="{{quotationAging.agingText}}"-->
+        <!--&gt;-->
+        <!--{{quotationAging.agingText[quotationAging.agingIndex]}}-->
+      <!--</picker>-->
+    <!--</view>-->
+  <!--</view>-->
   <!-- 其他费用.-->
   <view class="title">其他费用</view>
-  <view class="weui-cells weui-cells_after-title"> 
-    <view 
+  <view class="weui-cells weui-cells_after-title">
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -119,8 +138,8 @@
       <view class="weui-cell__bd">代收上牌费</view>
       <view class="weui-cell__ft weui-cell__ft_in-access">{{othersCost.registration}}</view>
     </view>
-    
-    <view 
+
+    <view
       class="weui-cell weui-cell_access"
       hover="true"
 		  hover-class="active"
@@ -130,6 +149,20 @@
       <view class="weui-cell__ft weui-cell__ft_in-access">{{othersCost.service}}</view>
     </view>
   </view>
-  
+  <!-- 报价单时效.-->
+  <view class="title">报价单时效</view>
+
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell-radio weui-cell_access weui-cell__bd">
+    <radio-group class="radio-group weui-radio-group weui-aging" bindchange="agingChange" name="inputSex">
+      <label class="radio"  wx:for="{{selectedAging.agingValue}}" >
+        <radio color="#999999" value="{{index}}" checked="{{index == selectedAging.agingIndex}}" />
+        <block wx:if="{{index != 2}}"> <input catchfocus="" type="digit" value="{{item}}" data-index="{{index}}" maxlength="5" bindinput="agingInput"/></block>
+        <span>{{selectedAging.agingText[index]}}</span>
+      </label>
+    </radio-group>
+    </view>
+  </view>
+
   <view class="setbtn" bindtap="handlePushSet">确认</view>
-</view>  
+</view>

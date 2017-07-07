@@ -396,13 +396,13 @@ function fixColumeData(points, eachSpacing, columnLen, index, config) {
 }
 
 function getXAxisPoints(categories, opts, config) {
-  
+    var setPadding = opts.setPadding || 0;
     var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
-    var spacingValid = opts.width - 2 * config.padding - yAxisTotalWidth - config.paddingRight;
+    var spacingValid = opts.width - 2 * config.padding - yAxisTotalWidth - config.paddingRight - setPadding;
     var eachSpacing = spacingValid / categories.length;
 
     var xAxisPoints = [];
-    var startX = config.padding + yAxisTotalWidth;
+    var startX = config.padding + yAxisTotalWidth + setPadding;
     var endX = opts.width - config.padding - config.paddingRight;
     categories.forEach(function (item, index) {
         xAxisPoints.push(startX + index * eachSpacing);
@@ -469,7 +469,6 @@ function getYAxisTextList(series, opts, config) {
 }
 
 function calYAxisData(series, opts, config) {
-
     var ranges = getYAxisTextList(series, opts, config);
     
     var yAxisWidth = config.yAxisWidth;
@@ -783,7 +782,8 @@ function drawYAxisCoordLine(series, opts, config, context) {
     
     var _calYAxisData4 = calYAxisData(series, opts, config),
         rangesFormat = _calYAxisData4.rangesFormat;
-    var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth;
+    var setPadding = opts.setPadding || 0;
+    var yAxisTotalWidth = config.yAxisWidth + config.yAxisTitleWidth + setPadding;
 
     var spacingValid = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight - config.paddingTop;
     var eachSpacing = Math.floor(spacingValid / config.yAxisSplit);
@@ -1019,6 +1019,7 @@ function drawAreaDataPoints(series, opts, config, context) {
 }
 
 function drawLineDataPoints(series, opts, config, context) {
+
     var process = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
 
     var _calYAxisData3 = calYAxisData(series, opts, config),
@@ -1032,25 +1033,31 @@ function drawLineDataPoints(series, opts, config, context) {
     var maxRange = ranges.shift();
 
     series.forEach(function (eachSeries, seriesIndex) {
+        
         var data = eachSeries.data;
         var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
         var splitPointList = splitPoints(points);
 
         splitPointList.forEach(function (points, index) {
+          
             context.beginPath();
             context.setStrokeStyle(eachSeries.color);
             context.setLineWidth(2);
             if (points.length === 1) {
                 context.moveTo(points[0].x, points[0].y);
-                context.arc(points[0].x, points[0].y, 1, 0, 2 * Math.PI);
+                context.arc(points[0].x, points[0].y, 2, 0, 2 * Math.PI);
             } else {
+                context.setFillStyle(eachSeries.color);
                 context.moveTo(points[0].x, points[0].y);
+                context.arc(points[0].x, points[0].y, 2, 0, 2 * Math.PI);
                 points.forEach(function (item, index) {
                     if (index > 0) {
-                        context.lineTo(item.x, item.y);
+                      context.lineTo(item.x, item.y);
+                      context.arc(item.x, item.y, 2, 0, 2 * Math.PI);
                     }
                 });
                 context.moveTo(points[0].x, points[0].y);
+
             }
             context.closePath();
             context.stroke();
@@ -1071,14 +1078,35 @@ function drawLineDataPoints(series, opts, config, context) {
 
     return xAxisPoints;
 }
-
+/**
+ * 绘制虚线.
+ * @param ctx 传context对象
+ * @param x1, y1 始点x和y坐标
+ * @param x2, y2 终点x和y坐标
+ * @param dashLength 虚线长度
+ */
+function drawDashLine(ctx, x1, y1, x2, y2, dashLength){  
+  var dashLen = dashLength === undefined ? 3 : dashLength,
+  xpos = x2 - x1, //得到横向的宽度;
+  ypos = y2 - y1, //得到纵向的高度;
+  numDashes = Math.floor(Math.sqrt(xpos * xpos + ypos * ypos) / dashLen); 
+  //利用正切获取斜边的长度除以虚线长度，得到要分为多少段;
+  for(var i=0; i<numDashes; i++){
+     if(i % 2 === 0){
+         ctx.moveTo(x1 + (xpos/numDashes) * i, y1 + (ypos/numDashes) * i); 
+         //有了横向宽度和多少段，得出每一段是多长，起点 + 每段长度 * i = 要绘制的起点；
+      }else{
+          ctx.lineTo(x1 + (xpos/numDashes) * i, y1 + (ypos/numDashes) * i);
+      }
+   }
+}
 function drawXAxis(categories, opts, config, context) {
     var _getXAxisPoints4 = getXAxisPoints(categories, opts, config),
         xAxisPoints = _getXAxisPoints4.xAxisPoints,
         startX = _getXAxisPoints4.startX,
         endX = _getXAxisPoints4.endX + config.paddingRight,
         eachSpacing = _getXAxisPoints4.eachSpacing;
-
+    var setPadding = opts.setPadding || 0;
     var startY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
     var endY = startY + config.xAxisLineHeight;
 
@@ -1087,12 +1115,21 @@ function drawXAxis(categories, opts, config, context) {
     context.setLineWidth(1);
     context.moveTo(startX, startY);
     context.lineTo(endX, startY);
+    context.closePath();
+    context.stroke();
     if (opts.xAxis.disableGrid !== true) {
         if (opts.xAxis.type === 'calibration') {
             xAxisPoints.forEach(function (item, index) {
                 if (index > 0) {
-                    context.moveTo(item - eachSpacing / 2, startY);
-                    context.lineTo(item - eachSpacing / 2, startY + 4);
+                  context.beginPath();
+                  context.setStrokeStyle("#979797");
+                  context.setLineWidth(1);
+                    //drawDashLine(context,item - eachSpacing / 2,startY,item - eachSpacing / 2, config.padding,config.legendHeight)
+                  context.moveTo(item - eachSpacing / 2, startY);
+                  context.lineTo(item - eachSpacing / 2, config.padding);
+                  
+                  context.closePath();
+                  context.stroke();
                 }
             });
         } else {
@@ -1102,8 +1139,6 @@ function drawXAxis(categories, opts, config, context) {
             });
         }
     }
-    context.closePath();
-    context.stroke();
     // 对X轴列表做抽稀处理
     var validWidth = opts.width - 2 * config.padding - config.yAxisWidth - config.yAxisTitleWidth - config.paddingRight;
     var maxXAxisListLength = Math.min(categories.length, Math.ceil(validWidth / config.fontSize / 1.5));
@@ -1149,7 +1184,9 @@ function drawXAxis(categories, opts, config, context) {
     context.beginPath();
     context.setFontSize(config.fontSize)
     context.setFillStyle(opts.yAxis.fontColor || '#666666');
-    context.fillText(opts.xAxis.unitText, endX-measureText(opts.xAxis.unitText), startY + config.fontSize + 5 );
+    if(opts.xAxis.unitText){
+      context.fillText(opts.xAxis.unitText, endX-measureText(opts.xAxis.unitText), startY + config.fontSize + 5 );
+    }
     context.closePath();
     context.stroke();
 }
@@ -1453,7 +1490,7 @@ function drawCharts(type, opts, config, context, clickData, callback) {
                     drawYAxis(series, opts, config, context);
                     drawXAxis(categories, opts, config, context);
                     _this.chartData.xAxisPoints = drawLineDataPoints(series, opts, config, context, process);
-                    drawLegend(opts.series, opts, config, context);
+                    drawYAxisCoordLine(series, opts, config, context);
                     drawCanvas(opts, context);
                 },
                 onAnimationFinish: function onAnimationFinish() {

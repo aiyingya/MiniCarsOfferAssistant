@@ -207,3 +207,30 @@ page{
   	transform: translate3d(0, 0, 0) ;
 	}
 }
+
+/* 抽屉 以后要单独抽出来 */
+.drawer-mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background: #000;
+  opacity: 0.5;
+  overflow: hidden;
+}
+.drawer-box {
+  width: 80%;
+  height:100%;
+  overflow: hidden;
+  position: fixed;
+  right: -80%;
+  bottom:0;
+  z-index: 1001;
+  background: #fff;
+}
+.drawer-content {
+  height:100%;
+  overflow-y:hidden;
+}

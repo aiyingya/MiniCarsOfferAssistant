@@ -22,15 +22,6 @@
 			>
 			<!-- cars info.-->
 			<view class="carModels-info">
-<!--
-				<view class="carModels-supplier">{{item.supply.supplierCount}}个人供货</view>
-				<block wx:if="{{item.supply.status === '供货紧张'}}">
-					<view class="carModels-repertory">{{item.supply.status}}</view>
-				</block>
-				<block wx:else>
-					<view class="carModels-repertory adequate">{{item.supply.status}}</view>
-				</block>
--->
         <view 
           class="carModels-charts-time"
           bindtap="handleSelectTimes"
@@ -93,6 +84,14 @@
 						  class="icon-arrows"></image>
 					</view>
 				</view>
+				
+				<!-- 行情走势.-->
+				<view 
+				  class="carModels-market_btn"
+				  bindtap="handleCheckMarket"
+				  data-selectid="{{item.carModelId}}"
+				  data-carmodelsinfo="{{item}}"
+				  >行情走势</view>
 			</view>
 
 			<view
@@ -235,3 +234,53 @@
   </view>
 </template> 
 
+<template name="popupMarketCharts">
+  <view 
+   class="popup-select-charts"
+   wx:if="{{showPopupMarketCharts}}"
+   >
+    <view class="popup-shade" bindtouchmove="handleClosePopupMarket" bindtap="handleClosePopupMarket"></view>
+    <view class="popup-charts-main">
+     <view class="popup-charts-hd">
+        <view>行情走势</view>
+        <view 
+         class="close-popup"
+         bindtap="handleClosePopupMarket"
+         >
+          <image src="../../images/icons/icon_close.png"></image>
+        </view>
+      </view>
+      <view class="popup-charts-bd">
+        <view class="popup-charts-scale">
+          <view class="charts-labels">
+            <view class="charts-label label1">
+              <view class="label-icon"></view>
+              no.1</view>
+              <view class="charts-label label2">
+              <view class="label-icon"></view>
+              no.2</view>
+              <view class="charts-label label3">
+              <view class="label-icon"></view>
+              no.3</view>
+          </view>
+          <view 
+            class="button market-btn"
+            data-carmodelsinfo="{{carModelsInfo}}"
+		        bindtap="handlerToCarSources"  
+            >查看详情</view>
+        </view>
+        <view class="popup-charts-scale">
+          <view>(万)</view>
+        </view>
+        <canvas
+          canvas-id="popMarketCharts"
+          data-id="popMarketCharts"
+          class="pop-canvas"
+          disable-scroll
+          disable-scroll="true" 
+          bindtouchmove="popupMarketChartstouchMove"
+          ></canvas>
+      </view>
+    </view>
+  </view>
+</template>

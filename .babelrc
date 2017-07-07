@@ -4,6 +4,9 @@
     "stage-0",
     "flow"
   ],
+  "plugins": [
+    "transform-runtime"
+  ],
   "ignore": [
     "node_modules/babel-runtime/**/*.js",
     "node_modules/core-js/**/*.js",

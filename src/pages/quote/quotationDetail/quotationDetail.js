@@ -188,7 +188,8 @@ Page({
       },
       confirm: (res) => {
         let mobile = res.inputNumber
-        app.saasService.requestPublishQuotation(that.data.quotation.draftId, mobile, {
+        const quotation = that.data.quotation
+        app.saasService.requestPublishQuotation(quotation.draftId, mobile, quotation.customerName, quotation.customerSex, true, quotation.validTime, {
           success: (res) => {
             let quotation = res
 

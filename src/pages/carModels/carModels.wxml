@@ -79,7 +79,7 @@
 	  >
 		<view
 			wx:for="{{carModelsList}}"
-      wx:key="{{item.carModelId}}"
+      wx:key="carModelId"
       >
 			<template is="carModel" data="{{item,showCharts,selectTime,selectColors,selectColorsId}}" />
 		</view>
@@ -96,5 +96,6 @@
 	</view>
 </view>
 <template is="popupCharts" data="{{showPopCharts, carModelsInfo}}" />
+<template is="popupMarketCharts" data="{{showPopupMarketCharts, carModelsInfo}}" />
 
 <template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime, carModelsInfo,selectTimesData}}" />
