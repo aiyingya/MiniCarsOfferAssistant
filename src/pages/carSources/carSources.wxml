@@ -236,7 +236,7 @@
                     <view class="first-first-part">
                       <view class="supplier-name">
                         <view class="name">
-                          {{carSourceItem.suppler.companyName.length? carSourceItem.suppler.companyName : carSourceItem.supplier.name}}
+                          {{carSourceItem.supplier.companyName.length? carSourceItem.supplier.companyName : carSourceItem.supplier.name}}
                           <image wx:if="{{carSourceItem.supplierSelfSupport}}" src="/images/icons/icon_label_ymc_certification.png" class="certification">
                           </image>
                         </view>
