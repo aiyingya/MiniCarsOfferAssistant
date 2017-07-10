@@ -79,13 +79,14 @@
   <!--参考成交-->
   <view class="car-sources-reference-deal" style="height: {{topNOfCurrentModeHeight}}rpx">
 
-    <view class="reference" wx:if="{{topNOfCurrentMode.reference}}">
+    <!--1.7.1 参考成交价移除-->
+    <!--<view class="reference" wx:if="{{topNOfCurrentMode.reference}}">
       <view class="title">参考成交</view>
       <view class="mode-item" bindtap="handlerModeClick" data-mode="{{topNOfCurrentMode.reference}}">
         <template is="quotedPrice" data="{{ ...topNOfCurrentMode.reference.viewModelQuoted }}" />
         <view class="company">至少{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
       </view>
-    </view>
+    </view>-->
 
     <view class="topN">
       <view class="title">报价最多</view>
