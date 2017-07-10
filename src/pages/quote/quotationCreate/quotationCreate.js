@@ -1342,10 +1342,12 @@ Page({
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
     var user = app.userService;
+
+    let _insuranceAmount = that.data.quotation.requiredExpensesAll.insuranceAmount - that.data.quotation.insuranceDetail.iJQX
     app.saasService.getProfit({
         "userId": user.auth.userId,
         "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
-        "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount,
+        "insuranceNum": _insuranceAmount,
         "carPrice":carPrice,
         "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
         "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
