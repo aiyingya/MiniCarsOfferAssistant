@@ -1,8 +1,7 @@
 import {
   $wuxInputNumberDialog,
   $wuxContentDialog,
-  $wuxSpecialUploadDialog,
-  $wuxPricePickerDialog
+  $wuxSpecialUploadDialog
 } from "../../../components/wux"
 import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialog'
 import util from '../../../utils/util'
@@ -827,38 +826,42 @@ Page({
     const _hasInitPoint =that.data.initPoint
     const _initSellingPrice = that.data.initSellingPrice
     const quotation = this.data.quotation
+    let _inputT
+    if(_isPoint){
+      //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
+      _inputT = that.data.priceChange.point
+    }else{
+      _inputT = Math.abs(_diffPrice)
+    }
 
     this.hideInput()
-    $wuxPricePickerDialog.open({
-      title: "裸车价",
+    $wuxInputNumberDialog.open({
+      title: '裸车价',
+      inputNumber: _inputT,
+      content: "￥" + _sellingPrice,
+      inputNumberPlaceholder: '输入裸车价',
+      inputNumberMaxLength: 9,
       confirmText: '确定',
       cancelText: '取消',
+      priceStyle: true,
       params:{
-        quotedMethod: _isPoint ? 'POINTS' : 'PRICE',
-        sellingPrice: _sellingPrice,
+        sellingPrice : _sellingPrice,
+        initSellingPrice : _initSellingPrice,
+        initIsPlus:(_diffPrice > 0),
+        isPlus :(_diffPrice > 0),
+        isPoint:_isPoint,
+        hasInitPoint:_hasInitPoint,
         guidePrice:_guidePrice
       },
       confirm: (res) => {
-        // sellingPrice 返回的是最终设置的 降价
-        // quoted 是返回的降价对象，内部包含了全部的降价信息
-        const sellingPrice = res.sellingPrice
-        const quoted = res.quoted
-
-        let originalInputNumber = 0
-        if (quoted.quotedMethod === 'POINTS') {
-          originalInputNumber = quoted.quotedValue
-        } else if (quoted.quotedMethod === 'PRICE') {
-          originalInputNumber = quoted.quotedRangeUnit === '万' ? quoted.quotedRange * 10000 : quoted.quotedRange
-        }
-
-        const _isPlus = (res.quoted.quotedSymbol === 'PLUS')
+        let _isPlus = (res.isPlus === 'true' )
         let source = this.data.source
         let price
 
-        if (_isPoint && ((_diffPrice > 0) === _isPlus) && (Number(_hasInitPoint) === Number(originalInputNumber))){
+        if(_isPoint && ((_diffPrice > 0) === _isPlus)  && (Number(_hasInitPoint) === Number(res.inputNumber))){
           price = _initSellingPrice
         } else {
-          price = util.getChangeCarPrice(_isPlus, _isPoint, _guidePrice, originalInputNumber)
+          price = util.getChangeCarPrice(_isPlus,_isPoint,_guidePrice,res.inputNumber)
         }
 
         const isElectricCar = this.data.carModelInfo.isElectricCar
