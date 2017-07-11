@@ -189,8 +189,8 @@ Page({
       confirm: (res) => {
         let mobile = res.inputNumber
         const quotation = that.data.quotation
-        app.saasService.requestPublishQuotation(quotation.draftId, mobile, quotation.customerName, quotation.customerSex, true, quotation.validTime, {
-          success: (res) => {
+        app.saasService.requestPublishQuotation(quotation.draftId, mobile, quotation.customerName, quotation.customerSex, true, quotation.validTime)
+          .then(res => {
             let quotation = res
 
             app.fuckingLarryNavigatorTo.quotation = quotation
@@ -208,14 +208,7 @@ Page({
                 // complete
               }
             })
-          },
-          fail: () => {
-            //
-          },
-          complete: () => {
-
-          }
-        })
+          })
       },
       cancel: () => {
 

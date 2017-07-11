@@ -42,7 +42,8 @@ Page({
         purchaseTax:0,//购置
         licenseFee:0,//上牌
         vehicleAndVesselTax:0,//车船
-        insuranceAmount:0//保险金额
+        insuranceAmount:0,//保险金额
+        metallicPaintAmount:0//金属漆
       },
       otherExpensesAll:{// 其他费用（元），deciaml，取值范围0~999999999",
         boutiqueCost:0,//精品费用
@@ -1095,8 +1096,8 @@ Page({
      */
     function isSendRequest(quotationDraft, mobile, name, sex, isSend, validTime) {
 
-      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime, {
-        success: (res) => {
+      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime)
+        .then(res => {
           let quotation1 = res
 
           app.fuckingLarryNavigatorTo.quotation = quotation1
@@ -1110,7 +1111,7 @@ Page({
               },
               fail: function () {
                 // fail
-                if(mobile){
+                if (mobile) {
                   app.fuckingLarryNavigatorTo.source = null
                   app.fuckingLarryNavigatorTo.quotation = null
                 }
@@ -1134,12 +1135,9 @@ Page({
               }
             })
           }
-        },
-        fail: () => {
+        }, err => {
           console.log("fail 保存报价单失败")
-        },
-        complete: () => {}
-      })
+        })
     }
 
     that.hideInput()
