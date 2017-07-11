@@ -79,7 +79,7 @@
 	  >
 		<view
 			wx:for="{{carModelsList}}"
-      wx:key="carModelId"
+      wx:key="*this"
       >
 			<template is="carModel" data="{{item,showCharts,selectTime,selectColors,selectColorsId}}" />
 		</view>

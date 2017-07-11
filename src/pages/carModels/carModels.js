@@ -233,9 +233,8 @@ Page({
     if (newModelsList.length == 0) {
       showNodata = true
     }
-    columnCharts = null
-    columnChartsList = []
-    that.drawCanvas(newModelsList)
+    
+    console.log(newModelsList)
     this.setData({
       CarsModeleText: selectItem.name,
       CarsModeleSelectId: selectId,
@@ -245,6 +244,7 @@ Page({
       filtersData: filtersData,
       showNodata: showNodata
     })
+    that.drawCanvas(newModelsList)
   },
   handleSelectInstore() {
     let that = this
@@ -276,8 +276,6 @@ Page({
         text: '暂无供货'
       })
       setTimeout(function () {
-        columnCharts = null
-        columnChartsList = []
         that.drawCanvas(carModelsList)
         that.setData({
           showCharts: true
@@ -291,8 +289,6 @@ Page({
   },
   headlerRemoveRmendCarFacade() {
     let carModelsList = this.data.carModelsList
-    columnCharts = null
-    columnChartsList = []
     this.drawCanvas(carModelsList)
     this.setData({
       showRmendCarFacade: false,
