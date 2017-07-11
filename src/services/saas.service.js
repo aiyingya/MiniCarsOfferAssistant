@@ -586,21 +586,55 @@ export default class SAASService extends Service {
   }
 
   /**
-   * 查询收益
-   * @param opts
-   * {
-    "totalProfit":"总收益",
-    "profit":"裸车收益",
-    "insuranceProfit": "保险收益",
-    "loanProfit": "贷款收益",
-    }
+   * 通过各种费用计算贷款收益
+   *
+   * @param {number} loanNum 贷款金额
+   * @param {number} insuranceNum 保险金额
+   * @param {number} carPrice 客户裸车价
+   * @param {number} marketPrice 行情价
+   * @param {number} boutiqueFee 精品费用
+   * @param {number} loanServiceFee 贷款服务费
+   * @param {number} installFee 安装费用
+   * @param {number} otherFee 其他费用
+   * @param {number} serviceFee 服务费用
+   * @returns {Promise<{
+   *       totalProfit: number, 总收益
+   *       profit: number,  裸车收益
+   *       insuranceProfit: number, 保险收益
+   *       loanProfit: number 贷款收益
+   *     }>}
+   * @memberof SAASService
    */
-  getProfit(data: any, opts: any) {
-    // sale/quotation/queryProfit?userId={用户id}&loanNum={贷款金额}&insuranceNum={保险金额}&carPrice={客户裸车价}&marketPrice={行情价}&boutiqueFee={精品费用}&loanServiceFee={贷款服务费}&installFee={安装费用}&otherFee={其他费用}
+  getProfit(
+    loanNum: number,
+    insuranceNum: number,
+    carPrice: number,
+    marketPrice: number,
+    boutiqueFee: number,
+    loanServiceFee: number,
+    installFee: number,
+    otherFee: number,
+    serviceFee: number
+    ): Promise<{
+      totalProfit: number,
+      profit: number,
+      insuranceProfit: number,
+      loanProfit: number
+    }> {
     return this.sendMessageByPromise({
       path: 'sale/quotation/queryProfit',
       method: 'GET',
-      data:data
+      data: {
+        loanNum,
+        insuranceNum,
+        carPrice,
+        marketPrice,
+        boutiqueFee,
+        loanServiceFee,
+        installFee,
+        otherFee,
+        serviceFee
+      }
     })
   }
 

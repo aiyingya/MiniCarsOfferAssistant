@@ -1328,24 +1328,23 @@ Page({
     var user = app.userService;
 
     let _insuranceAmount = that.data.quotation.requiredExpensesAll.insuranceAmount - that.data.quotation.insuranceDetail.iJQX
-    app.saasService.getProfit({
-        "userId": user.auth.userId,
-        "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
-        "insuranceNum": _insuranceAmount,
-        "carPrice":carPrice,
-        "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
-        "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
-        "loanServiceFee":that.data.quotation.loanFee,
-        "installFee":that.data.quotation.otherExpensesAll.installationFee,
-        "otherFee":that.data.quotation.otherExpensesAll.otherFee,
-        "serviceFee":that.data.quotation.otherExpensesAll.serverFee
-      })
-      .then(res=>{
+    app.saasService.getProfit(
+      util.loanPaymentByLoan1(carPrice, paymentRatio),
+      _insuranceAmount,
+      carPrice,
+      that.data.quotation.quotationItems[0].originalPrice,
+      that.data.quotation.otherExpensesAll.boutiqueCost,
+      that.data.quotation.loanFee,
+      that.data.quotation.otherExpensesAll.installationFee,
+      that.data.quotation.otherExpensesAll.otherFee,
+      that.data.quotation.otherExpensesAll.serverFee
+    )
+      .then(res => {
         that.setData({
-          getProfitResult : res
+          getProfitResult: res
         })
-      },fail=>{
-      console.log("查看收益失败")
+      }, err => {
+        console.log("查看收益失败")
       })
   },
   touchStartIncome(){
