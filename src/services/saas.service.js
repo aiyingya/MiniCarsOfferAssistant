@@ -1,10 +1,11 @@
+
+// @flow
 /**
  *
  *
  * Created by David on 28/03/2017.
  */
 
-// @flow
 import Service from './base.service'
 
 import UserService from './user.service'
@@ -17,6 +18,8 @@ export default class SAASService extends Service {
     gqc: 'https://test.yaomaiche.com/ymcgqc/',
     prd: 'https://ymcapi.yaomaiche.com/ymc/'
   }
+
+  userService: UserService
 
   constructor(userService: UserService) {
     super()
