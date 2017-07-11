@@ -1063,7 +1063,8 @@ Page({
           discount: null,
           status: null,
           remark: null,
-          metallicPaint: null
+          metallicPaint: null,
+          metallicPaintAmount: 0
         }
         const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', that.data.carModelsInfo)
         const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', carSku)

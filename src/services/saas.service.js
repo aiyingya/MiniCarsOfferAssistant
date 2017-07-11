@@ -139,7 +139,8 @@ export default class SAASService extends Service {
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee
+          otherFee:quotationDraft.otherExpensesAll.otherFee,
+          metallicPaintAmount:quotationDraft.otherExpensesAll.metallicPaintAmount
         }
       } else {
         data_part_1 = {
@@ -165,8 +166,8 @@ export default class SAASService extends Service {
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee
-
+          otherFee:quotationDraft.otherExpensesAll.otherFee,
+          metallicPaintAmount:quotationDraft.otherExpensesAll.metallicPaintAmount
         }
       }
 

@@ -124,6 +124,13 @@ Page({
         price:0//同上
       },//保险金额
       {
+        type:'requiredfee',
+        target:'metallicPaintAmount',
+        title:'金属漆加价',
+        protoname:'quotation.requiredExpensesAll.metallicPaintAmount',
+        price:0//同上
+      },//金属漆
+      {
         type:'otherfee',
         target:'boutiqueCost',
         title:'精品费用',
@@ -382,7 +389,8 @@ Page({
         purchaseTax:quotation.purchaseTax || 0,//购置
         licenseFee:quotation.carNumFee || 0,//上牌
         vehicleAndVesselTax:quotation.carTax || 0,//车船
-        insuranceAmount:quotation.insuranceDetail.iTotal || 0//保险金额
+        insuranceAmount:quotation.insuranceDetail.iTotal || 0,//保险金额
+        metallicPaintAmount: quotation.metallicPaintAmount || 0//金属漆
       }
 
       quotation.otherExpensesAll = {// 其他费用（元），deciaml，取值范围0~999999999",
@@ -408,40 +416,30 @@ Page({
       })
       console.log(quotation.insuranceDetail)
       //获取报价单接口
-      app.saasService.getCreatCarRecordInfo({
-        data:{
-          "userId": app.userService.auth.userId,
-          "carPrice":0 //随便🚢一个金额，该接口我不需要加价后的裸车价
-        },
-        success: (res) => {
-
+      app.saasService.getCreatCarRecordInfo({ carPrice: 0 }) // 随便传一个金额，该接口我不需要加价后的裸车价
+        .then(res => {
           res.interestType = quotation.rateType;
           that.setData({
             'requestResult': res
           })
-          if(!quotation.hasLoan){
+          if (!quotation.hasLoan) {
             //初始化贷款手续费
             this.setData({
-              'quotation.loanFee':res.loanFee
+              'quotation.loanFee': res.loanFee
             })
-
           }
           that.updateForSomeReason()
           activeIndexCss()
-
-        },
-        fail: () => {},
-        complete: () => {}
-      });
+        })
 
       const promise1 = that.getDefaultInsurance()
       const promise = Promise.race([promise1])
-      promise.then(res => {
-        //wx.hideToast()
-
-      }, err => {
-        //wx.hideToast()
-      })
+      promise
+        .then(res => {
+          //wx.hideToast()
+        }, err => {
+          //wx.hideToast()
+        })
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
         var carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
@@ -477,12 +475,8 @@ Page({
         })
 
         //获取报价单接口
-        app.saasService.getCreatCarRecordInfo({
-          data:{
-            "userId": user.auth.userId,
-            "carPrice":originalPrice
-          },
-          success: (res) => {
+        app.saasService.getCreatCarRecordInfo({ carPrice: originalPrice })
+          .then(res => {
             this.setData({
               'requestResult': res
             })
@@ -491,12 +485,11 @@ Page({
             const capacity = carModelInfo.capacity
             const isElectricCar = carModelInfo.isElectricCar
             this.setData({
-              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee || 0,
-              'quotation.loanFee':res.loanFee || 0,
-              'quotation.otherExpensesAll.serverFee':res.serviceFee || 0,
-              'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
+              'quotation.requiredExpensesAll.licenseFee': res.carNumberFee || 0,
+              'quotation.loanFee': res.loanFee || 0,
+              'quotation.otherExpensesAll.serverFee': res.serviceFee || 0,
+              'quotation.requiredExpensesAll.purchaseTax': Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
-
 
             // 设置报价表单数据
             let quotationItems = [{
@@ -518,7 +511,7 @@ Page({
             })
             console.log(carModelInfo)
 
-            that.initVehicleAndVesselTax().then(data=>{
+            that.initVehicleAndVesselTax().then(data => {
               // 计算默认保险.
               const promise1 = that.getDefaultInsurance()
               const promise = Promise.race([promise1])
@@ -533,10 +526,7 @@ Page({
             activeIndexCss()
             this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
 
-          },
-          fail: () => {},
-          complete: () => {}
-        });
+          })
       }
     }
   },
@@ -1172,17 +1162,13 @@ Page({
         const effectiveness = Number(res.inputEffectiveness)
         //保存报价单
 
-        app.saasService.requestSaveQuotationDraft(quotation, {
-          success: function (res) {
+        app.saasService.requestSaveQuotationDraft(quotation)
+          .then(res => {
             let quotationDraft = res
             //发送报价单
             isSendRequest(quotationDraft, mobile, customerName, customerSex, true, effectiveness)
-          },
-          fail: function () {},
-          complete: function () {}
-        })
+          })
         that.showInput()
-
       },
       cancel: (res) => {
         //保存报价单
@@ -1193,15 +1179,12 @@ Page({
         const customerName =res.inputName
         const customerSex = Number(res.inputSex)
         const effectiveness = Number(res.inputEffectiveness)
-        app.saasService.requestSaveQuotationDraft(quotation, {
-          success: function (res) {
+        app.saasService.requestSaveQuotationDraft(quotation)
+          .then(res => {
             let quotationDraft = res
             /// 暂不发送, 不带电话号码发送（发布当前报价草稿到某个用户） 保留1.5以前的逻辑
             isSendRequest(quotationDraft, mobile, customerName, customerSex, false, effectiveness)
-          },
-          fail: function () {},
-          complete: function () {}
-        })
+          })
         that.showInput()
       },
       close: () => {
@@ -1353,13 +1336,14 @@ Page({
         "installFee":that.data.quotation.otherExpensesAll.installationFee,
         "otherFee":that.data.quotation.otherExpensesAll.otherFee,
         "serviceFee":that.data.quotation.otherExpensesAll.serverFee
-      }).then(res=>{
+      })
+      .then(res=>{
         that.setData({
           getProfitResult : res
         })
-    },fail=>{
+      },fail=>{
       console.log("查看收益失败")
-    })
+      })
   },
   touchStartIncome(){
     console.log("touchStartIncome")
