@@ -21,8 +21,6 @@ export default class SAASService extends Service {
     prd: 'https://ymcapi.yaomaiche.com/ymc/'
   }
 
-  userService: UserService
-
   constructor() {
     super()
   }

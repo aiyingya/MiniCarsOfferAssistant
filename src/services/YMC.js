@@ -2,7 +2,6 @@
 
 import config from '../config'
 
-import UserService from '../services/user.service'
 import * as wxapi from 'fmt-wxapp-promise'
 
 export default class YMC {
@@ -187,7 +186,7 @@ export default class YMC {
   ): Promise<any> {
 
     const app = getApp()
-    const userService: UserService = app.userService
+    const userService = app.userService
     const ClientId = userService.clientId
     const ClientVersion = config.versionCode
     const SystemCode = 60
