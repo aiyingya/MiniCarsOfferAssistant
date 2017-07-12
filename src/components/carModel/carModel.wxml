@@ -241,8 +241,9 @@
    >
     <view class="popup-shade" bindtouchmove="handleClosePopupMarket" bindtap="handleClosePopupMarket"></view>
     <view class="popup-charts-main">
-     <view class="popup-charts-hd">
-        <view>行情走势</view>
+     <view class="popup-marketcharts-hd">
+        <view class="title">行情走势</view>
+        <view class="text">（所有资源商报得最多的3个价格）</view>
         <view 
          class="close-popup"
          bindtap="handleClosePopupMarket"
@@ -253,15 +254,15 @@
       <view class="popup-charts-bd">
         <view class="popup-charts-scale">
           <view class="charts-labels">
-            <view class="charts-label label1">
-              <view class="label-icon"></view>
-              no.1</view>
-              <view class="charts-label label2">
-              <view class="label-icon"></view>
-              no.2</view>
-              <view class="charts-label label3">
-              <view class="label-icon"></view>
-              no.3</view>
+            <view 
+              wx:for="{{marketCharts.topnoData}}"
+              wx:key="*this"
+              class="charts-label label{{index+1}}"
+              data-topno="{{index}}"
+              bindtap="handleMarketUpdateData"
+              >
+              <view class="label-icon {{item.style}}"></view>
+              {{item.text}}</view>
           </view>
           <view 
             class="button market-btn"
@@ -279,6 +280,7 @@
           disable-scroll
           disable-scroll="true" 
           bindtouchmove="popupMarketChartstouchMove"
+          bindtouchstart="handleMarketTouch"
           ></canvas>
       </view>
     </view>

@@ -104,7 +104,7 @@
                  <text>{{amap.viewState}}</text>
                 </block>
                 <block wx:else>{{amap.checkTime}}</block>
-                (停留{{amap.stayTime || 0}}m)
+                (停留{{amap.stayTime || 0}}分钟)
               </view>
               <view class="check-address">
                <image class="icon" src="../../images/icons/icon_position_gprs.png"></image>

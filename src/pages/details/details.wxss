@@ -135,7 +135,6 @@ page {
   -webkit-align-items: center;
   align-items: center;
   height: 100rpx;
-  line-height: 100rpx;
   padding: 0 30rpx;
 }
 .history-message .check-time,
@@ -144,10 +143,8 @@ page {
   margin-right: 1%;
   position: relative;
   padding-left: 25rpx;
-  height: 100rpx;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 24rpx;
+  line-height: 26rpx;
 }
 .history-message .check-time {
   width: 52%;
@@ -169,7 +166,7 @@ page {
 }
 .history-amap {
   width: 100%;
-  height: 300rpx;
+  height: 550rpx;
   position: relative;
 }
 .map_container{
