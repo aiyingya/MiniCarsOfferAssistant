@@ -342,7 +342,7 @@ export default class SAASService extends Service {
     // MARK： 目前只取地址列表中的第一个
 
     const data: {
-      userId: number,
+      userId: string,
       pid?: number,
       cid?: number,
       did?: number
