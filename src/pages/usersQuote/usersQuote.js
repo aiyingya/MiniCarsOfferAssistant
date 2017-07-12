@@ -42,24 +42,22 @@ Page({
       this.setData({
         isLogin: true
       })
-      app.userService.getLocation({
-        success: function (res) {
-          that.setData({
-            userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '',
-            userPortrait: weixinUsersInfo ? weixinUsersInfo.weixinPortrait : '../../images/icons/icon_head_default_44.png',
+      app.userService.getLocation()
+        .then(res => {
+          this.setData({
+            userName: weixinUsersInfo ? weixinUsersInfo.nickName || res.mobile : '',
+            userPortrait: weixinUsersInfo ? weixinUsersInfo.avatarUrl : '../../images/icons/icon_head_default_44.png',
             userMobile: res.mobile,
             userTenants: res.tenants
           })
-        },
-        fail: function (err) {
+        }, err => {
           $wuxToast.show({
             type: false,
             timer: 2000,
             color: '#fff',
             text: '服务器错误'
           })
-        }
-      })
+        })
     } else {
       this.setData({
         isLogin: false,
@@ -77,8 +75,8 @@ Page({
   },
   handleUserLogout() {
     let that = this
-    app.userService.logout({
-      success: function () {
+    app.userService.logout()
+      .then(res => {
         that.setData({
           isLogin: false,
           userName: '',
@@ -86,11 +84,8 @@ Page({
           userPortrait: '../../images/icons/icon_head_default_44.png',
           userTenants: ''
         })
-      },
-      fail: function () {
-        // do nothing
-      }
-    })
+      }, err => {
+      })
   },
   handleToQuoteRecord() {
     if (app.userService.isLogin()) {

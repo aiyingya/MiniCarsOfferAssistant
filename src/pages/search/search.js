@@ -67,7 +67,7 @@ Page({
     } catch (e) {
 
     }
-    
+
     this.getSearchHistory()
   },
   handleSearchInput(e) {
@@ -75,7 +75,7 @@ Page({
     let that = this;
     let searchResults = [];
     if (val) {
-      app.tradeService.searchInput({ text: val, n: 12 })
+      app.tradeService.searchInput(val, 12)
         .then(function (res) {
           that.setData({
             associateResults: res,
@@ -365,7 +365,7 @@ Page({
               for (let item of data.y) {
                 value += item
               }
-              
+
               if (value <= 0) {
                 return
               }
@@ -545,7 +545,7 @@ Page({
         }
       }
     }
-    
+
     this.setData({
       selectChartsLabel: true,
       changeSelectColors: false,
@@ -555,7 +555,7 @@ Page({
       selectTimesId: selectTimesId,
       selectTimes: selecttime
     })
-    
+
   },
   handleChangeTimesItem(e) {
     let that = this
@@ -729,50 +729,34 @@ Page({
     let user = app.userService
     let clientId = user.clientId
     let that = this
-    
-    app.tradeService.getUserSearchHistory({
-       data: {
-         ClientId: clientId
-       },
-       success(xhr) {
-         console.log(xhr)
-         that.setData({
-           searchHistory: xhr
-         })
-       },
-       fail(err) {
-         
-       }
-    })
+
+    app.tradeService.getUserSearchHistory(clientId)
+      .then(res => {
+        console.log(xhr)
+        that.setData({
+          searchHistory: xhr
+        })
+      })
   },
   postUserSearchHistory(text) {
     let user = app.userService
     let searchHistory = this.data.searchHistory
     let that = this
-    app.tradeService.postUserSearchHistory({
-     data: {
-      "channel": "wxapp",
-      "text": text,
-      "userId": user.auth.userId
-     },
-     success(xhr) {
-      for (var i = 0; i < searchHistory.length; i++) {
-        if (searchHistory[i] === text) {
-          searchHistory.splice(i, 1);
-          break;
+    app.tradeService.postUserSearchHistory(text, user.auth.userId)
+      .then(res => {
+        for (var i = 0; i < searchHistory.length; i++) {
+          if (searchHistory[i] === text) {
+            searchHistory.splice(i, 1);
+            break;
+          }
         }
-      }
-      searchHistory.unshift(text)
-      that.setData({
-        searchHistory: searchHistory
+        searchHistory.unshift(text)
+        that.setData({
+          searchHistory: searchHistory
+        })
       })
-     },
-     fail(err) {
-
-     }
-    })
   },
-  
+
   /**
    * 查看行情走势.
   */
@@ -792,12 +776,12 @@ Page({
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
-     
+
       let series = []
       let categories = []
       let maxPrice = (Number(res.maxPrice)/10000).toFixed(2)
       let minPrice = (Number(res.minPrice)/10000).toFixed(2)
-      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10 
+      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10
       console.log(maxPrice.toString().length)
       if(res.priceTrendModels.length > 0) {
         for(let numitems of res.priceTrendModels) {
@@ -817,7 +801,7 @@ Page({
                 items.color = '#B0CDFF'
               }
               let val = util.priceAbsStringWithUnitNumber(priceitems.discount) == '0.00' ? null :util.priceAbsStringWithUnitNumber(priceitems.discount)
-              
+
               items.data.push(val)
             }
             series.push(items)

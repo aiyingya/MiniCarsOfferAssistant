@@ -81,8 +81,6 @@ export default {
     // data.lat = config.location.latitude
     // data.lng = config.location.longitude
 
-    this.UBTService.report({
-      data
-    })
+    this.UBTService.report(data)
   }
 }

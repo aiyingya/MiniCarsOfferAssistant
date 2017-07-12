@@ -110,17 +110,19 @@ Page({
       app.saasService.getTopNOfCurrentMode(carModelsInfo.carModelId)
       .then(res => {
         const reference = res.reference
-        if (reference) {
-          this.setData({
-            topNOfCurrentModeHeight: 288,
-            overLayDropdownOffset: 288 + 60
-          })
-          reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-reference.discount, reference.guidePrice, this.isShowDownPrice)
-          reference.viewModelQuoted.price = reference.price
-          reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
-        } else {
-          res.referenceStatus = '暂无'
-        }
+
+        // 1.7.1 参考成交价移除
+        // if (reference) {
+        //   this.setData({
+        //     topNOfCurrentModeHeight: 288,
+        //     overLayDropdownOffset: 288 + 60
+        //   })
+        //   reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-reference.discount, reference.guidePrice, this.isShowDownPrice)
+        //   reference.viewModelQuoted.price = reference.price
+        //   reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
+        // } else {
+        //   res.referenceStatus = '暂无'
+        // }
 
         if (res.priceList && res.priceList.length) {
           for (let topMode of res.priceList) {
@@ -1061,7 +1063,8 @@ Page({
           discount: null,
           status: null,
           remark: null,
-          metallicPaint: null
+          metallicPaint: null,
+          metallicPaintAmount: 0
         }
         const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', that.data.carModelsInfo)
         const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', carSku)

@@ -15,6 +15,7 @@ export default {
       inputType: 'number',
       confirmDisabled: true,
       priceStyle: false,
+      longTapLock: false,
       params:{
         ellingPrice : 0,
         initSellingPrice : 0,
@@ -147,17 +148,23 @@ export default {
          *
          * @param {any} e
          */
-        buttonMinus(e){
+        buttonMinus(e, priceStep = 100, pointsStep = 1) {
+          // 长按锁
+          if (this.options.longTapLock === true) {
+            this.options.longTapLock = false
+            return
+          }
+
           var number = options.inputNumber;
           if(!number ){
             return
           }
           let text
           if(!options.params.isPoint){
-            options.inputNumber = (Number(number)>=100) ? (Number(number) - 100) : number
+            options.inputNumber = (Number(number)>=priceStep) ? (Number(number) - priceStep) : number
             text = Number(options.inputNumber)
           }else{
-            options.inputNumber = (Number(number)>=1) ? (Number(number) - 1) : number
+            options.inputNumber = (Number(number)>=pointsStep) ? (Number(number) - pointsStep) : number
             text = Number(options.inputNumber).toFixed(2)
           }
           let price
@@ -172,22 +179,32 @@ export default {
           })
           this.inputNumberInput(options.inputNumber)
         },
+        buttonLargeMinus(e) {
+          this.buttonMinus(e, 500, 5)
+           this.options.longTapLock = true
+        },
         /**
          * 加金额行为
          *
          * @param {any} e
          */
-        buttonPlus(e){
+        buttonPlus(e, priceStep = 100, pointsStep = 1){
+          // 长按锁
+          if (this.options.longTapLock === true) {
+            this.options.longTapLock = false
+            return
+          }
+
           var number = options.inputNumber;
           if(!number && Number(number)!=0){
             return
           }
           let text
           if(!options.params.isPoint){
-            options.inputNumber = Number(number) + 100
+            options.inputNumber = Number(number) + priceStep
             text = Number(options.inputNumber)
           }else{
-            options.inputNumber = Number(number) + 1
+            options.inputNumber = Number(number) + pointsStep
             text = Number(options.inputNumber).toFixed(2)
           }
           let price
@@ -201,6 +218,10 @@ export default {
             [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
           })
           this.inputNumberInput(options.inputNumber)
+        },
+        buttonLargePlus(e) {
+          this.buttonPlus(e, 500, 5)
+          this.options.longTapLock = true
         },
         changePush(){
           const _isPlus = options.params.isPlus
