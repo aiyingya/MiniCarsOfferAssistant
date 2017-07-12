@@ -144,11 +144,11 @@ export default class SAASService extends Service {
           purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
           carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
           carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
+          metallicPaintAmount:quotationDraft.requiredExpensesAll.metallicPaintAmount,
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee,
-          metallicPaintAmount:quotationDraft.otherExpensesAll.metallicPaintAmount
+          otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       } else {
         data_part_1 = {
@@ -171,11 +171,11 @@ export default class SAASService extends Service {
           purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
           carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
           carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
+          metallicPaintAmount:quotationDraft.requiredExpensesAll.metallicPaintAmount,
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee,
-          metallicPaintAmount:quotationDraft.otherExpensesAll.metallicPaintAmount
+          otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       }
 
