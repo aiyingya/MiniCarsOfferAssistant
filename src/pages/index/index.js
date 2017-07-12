@@ -45,8 +45,9 @@ Page({
     })
   },
   onLoad() {
-    // 基础服务启动
+    // 服务启动
     app.userService.setup()
+    app.saasService.setup()
 
     try {
       let res = wx.getSystemInfoSync()

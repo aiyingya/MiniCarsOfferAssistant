@@ -13,6 +13,8 @@ import util from '../utils/util'
 
 export default class SAASService extends Service {
 
+  userService: UserService
+
   urls = {
     dev: 'https://test.yaomaiche.com/ymcdev/',
     gqc: 'https://test.yaomaiche.com/ymcgqc/',
@@ -21,9 +23,14 @@ export default class SAASService extends Service {
 
   userService: UserService
 
-  constructor(userService: UserService) {
+  constructor() {
     super()
-    this.userService = userService
+  }
+
+  setup() {
+    super.setup()
+    const app = getApp()
+    this.userService = app.userService
   }
 
   /**
@@ -624,10 +631,12 @@ export default class SAASService extends Service {
       insuranceProfit: number,
       loanProfit: number
     }> {
+    const userId = this.userService.auth.userId
     return this.sendMessageByPromise({
       path: 'sale/quotation/queryProfit',
       method: 'GET',
       data: {
+        userId,
         loanNum,
         insuranceNum,
         carPrice,
