@@ -61,14 +61,29 @@ export default class SAASService extends Service {
    * @param {string} customerMobile
    * @param {string} customerName
    * @param {number} customerSex
-   * @param {boolean} [isSendMessage=true]
-   * @param {number} effectiveness
+   * @param {boolean} [sendMessage=true]
+   * @param {number} validTime
+   * @returns {Promise<any>}
    * @memberof SAASService
    */
-  requestPublishQuotation(draftId: number, customerMobile: string, customerName: string, customerSex: number, isSendMessage: boolean = true, effectiveness: number): Promise<any> {
+  requestPublishQuotation(
+    draftId: number,
+    customerMobile: string,
+    customerName: string,
+    customerSex: number,
+    sendMessage: boolean = true,
+    validTime: number
+  ): Promise<any> {
     return this.sendMessageByPromise({
       path: 'sale/quotation',
-      data: {draftId, customerMobile, customerName, customerSex, isSendMessage, effectiveness},
+      data: {
+        draftId,
+        customerMobile,
+        customerName,
+        customerSex,
+        sendMessage,
+        validTime
+      },
       method: 'POST'
     })
   }
@@ -111,7 +126,7 @@ export default class SAASService extends Service {
    * @param {Number} quotationDraft.carCapacity 排量
    * @param {Boolean} quotationDraft.electricCar 是否纯电动
    * @param {Number} quotationDraft.insuranceDetail
-   * @param {Number} quotationDraft.metallicPaintAmount 金属漆加价
+   * @param {Number} quotationDraft.metallicPaintFee 金属漆加价
    *
    * @returns {Promise}
    * @memberof SAASService
@@ -144,7 +159,7 @@ export default class SAASService extends Service {
           purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
           carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
           carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
-          metallicPaintAmount:quotationDraft.requiredExpensesAll.metallicPaintAmount,
+          mmetallicPaintFee:quotationDraft.requiredExpensesAll.metallicPaintFee,
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
@@ -171,7 +186,7 @@ export default class SAASService extends Service {
           purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
           carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
           carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
-          metallicPaintAmount:quotationDraft.requiredExpensesAll.metallicPaintAmount,
+          metallicPaintFee:quotationDraft.requiredExpensesAll.metallicPaintFee,
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
