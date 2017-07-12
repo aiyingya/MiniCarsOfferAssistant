@@ -42,7 +42,7 @@ Page({
       source: 'quotationDetail',
       pageShare: false,
       rateType:1, //"费率类型 1 月息 2 万元系数",
-      metallicPaintAmount: 0
+      metallicPaintFee: 0
     },
     priceChange: {
       flag: '', // true 为上， false 为下

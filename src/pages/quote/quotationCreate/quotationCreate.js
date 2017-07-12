@@ -42,7 +42,7 @@ Page({
         licenseFee:0,//上牌
         vehicleAndVesselTax:0,//车船
         insuranceAmount:0,//保险金额
-        metallicPaintAmount:0//金属漆
+        metallicPaintFee:0//金属漆
       },
       otherExpensesAll:{// 其他费用（元），deciaml，取值范围0~999999999",
         boutiqueCost:0,//精品费用
@@ -124,9 +124,9 @@ Page({
       },//保险金额
       {
         type:'requiredfee',
-        target:'metallicPaintAmount',
+        target:'metallicPaintFee',
         title:'金属漆加价',
-        protoname:'quotation.requiredExpensesAll.metallicPaintAmount',
+        protoname:'quotation.requiredExpensesAll.metallicPaintFee',
         price:0//同上
       },//金属漆
       {
@@ -389,7 +389,7 @@ Page({
         licenseFee:quotation.carNumFee || 0,//上牌
         vehicleAndVesselTax:quotation.carTax || 0,//车船
         insuranceAmount:quotation.insuranceDetail.iTotal || 0,//保险金额
-        metallicPaintAmount: quotation.metallicPaintAmount || 0//金属漆
+        metallicPaintFee: quotation.metallicPaintFee || 0//金属漆
       }
 
       quotation.otherExpensesAll = {// 其他费用（元），deciaml，取值范围0~999999999",
@@ -469,7 +469,7 @@ Page({
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
         var user = app.userService;
         this.setData({
-          'quotation.requiredExpensesAll.metallicPaintAmount': carSkuInfo.metallicPaintAmount,
+          'quotation.requiredExpensesAll.metallicPaintFee': carSkuInfo.metallicPaintAmount,
           'quotation.saleMobile':user.mobile,
           isSpecialBranch: isShow
         })
