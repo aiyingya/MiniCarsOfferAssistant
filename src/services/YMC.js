@@ -1,6 +1,7 @@
 // @flow
 
 import config from '../config'
+
 import * as wxapi from 'fmt-wxapp-promise'
 
 export default class YMC {
@@ -16,7 +17,7 @@ export default class YMC {
    * fail         失败回调
    * complete     完成回调
    */
-  request(options) {
+  request(options: any) {
     if (!options) return
 
     let loadingType = options.loadingType
@@ -173,17 +174,13 @@ export default class YMC {
    * TODO：等下一版本提测的时候给测试验证一下，就不在1.5.1提审了
    *
    * @param {string} [url='']
-   * @param {*} [data]
-   * @param {*} [header]
-   * @param {('GET'|'POST'|'PUT'|'DELETE'|'OPTIONS'|'HEAD'|'TRACE'|'CONNECT')} [method]
-   * @param {'json'} [dataType]
-   * @returns {Promise<any>}
+   * @param {{[string]: ?} [data=string|number]
    * @memberof YMC
    */
   requestByPromise(
     url: string = '',
-    data?: any,
-    header?: any,
+    data?: {[string]: ? string|number},
+    header?: {[string]: ? string|number},
     method?: 'GET'|'POST'|'PUT'|'DELETE'|'OPTIONS'|'HEAD'|'TRACE'|'CONNECT',
     dataType?: 'json'
   ): Promise<any> {
@@ -195,8 +192,10 @@ export default class YMC {
     const SystemCode = 60
     const Authorization = userService.auth != null ? userService.auth.accessToken : null
 
-    data = Object.assign({}, data)
-    const defaultHeader = {
+    const defaultData: {[string]: ? string|number} = {}
+    data = Object.assign(defaultData, data)
+
+    const defaultHeader: {[string]: ? string|number} = {
       Authorization,
       ClientId,
       ClientVersion,
@@ -205,8 +204,12 @@ export default class YMC {
     }
     header = Object.assign(defaultHeader, header)
 
-    Object.keys(data).forEach((key) => (data[key] == null) && delete data[key]);
-    Object.keys(header).forEach((key) => (header[key] == null) && delete header[key]);
+    Object.keys(data).forEach((key) => {
+      if (data != null) (data[key] == null) && delete data[key]
+    })
+    Object.keys(header).forEach((key) => {
+      if (header != null) (header[key] == null) && delete header[key]
+    })
 
     return wxapi.request({
       url: url,

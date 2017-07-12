@@ -25,12 +25,12 @@
             <image class="weui-icon_change" src="../../../images/icons/icon_change.png"></image>
           </view>
 
-          <image class="weui-dialog__minus" src="../../../images/icons/icon_minus.png" bindtap="{{ buttonMinus }}" bindlongtap="{{ buttonLargeMinus }}"></image>
+          <image class="weui-dialog__minus" src="../../../images/icons/icon_minus.png" bindtap="{{ buttonMinus }}" bindlongtap="{{ buttonLargeMinus }}" bindtouchcancel="{{buttonLargeCancel}}" bindtouchend="{{buttonLargeEnd}}"></image>
 
           <input type="{{ inputType }}" name="inputNumber" placeholder="0" placeholder-class=""
             value="{{ inputNumber }}" bindinput="{{ inputNumberInput }}" maxlength="{{ inputNumberMaxLength }}" />
 
-          <image class="weui-dialog__plus" src="../../../images/icons/icon_plus.png" bindtap="{{ buttonPlus }}" bindlongtap="{{ buttonLargePlus }}"></image>
+          <image class="weui-dialog__plus" src="../../../images/icons/icon_plus.png" bindtap="{{ buttonPlus }}" bindlongtap="{{buttonLargePlus}}" bindtouchcancel="{{buttonLargeCancel}}" bindtouchend="{{buttonLargeEnd}}"></image>
 
           <text class="weui-dialog__input_text" wx:if="{{params.isPoint}}">点</text>
           <text class="weui-dialog__input_text" wx:else >元</text>

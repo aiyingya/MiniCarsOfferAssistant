@@ -469,6 +469,7 @@ Page({
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
         var user = app.userService;
         this.setData({
+          'quotation.requiredExpensesAll.metallicPaintAmount': carSkuInfo.metallicPaintAmount,
           'quotation.saleMobile':user.mobile,
           isSpecialBranch: isShow
         })

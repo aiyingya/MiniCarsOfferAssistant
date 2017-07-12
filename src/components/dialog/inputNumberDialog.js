@@ -16,7 +16,8 @@ export default {
       confirmDisabled: true,
       priceStyle: false,
       longTapLock: false,
-      params:{
+      longTapIntervalId: 0,
+      params: {
         ellingPrice : 0,
         initSellingPrice : 0,
         initIsPlus:false,//初始化的加减
@@ -150,8 +151,8 @@ export default {
          */
         buttonMinus(e, priceStep = 100, pointsStep = 1) {
           // 长按锁
-          if (this.options.longTapLock === true) {
-            this.options.longTapLock = false
+          if (this.options.longTapSkipNextTap === true) {
+            this.options.longTapSkipNextTap = false
             return
           }
 
@@ -180,8 +181,11 @@ export default {
           this.inputNumberInput(options.inputNumber)
         },
         buttonLargeMinus(e) {
+          this.options.longTapLock = true
           this.buttonMinus(e, 500, 5)
-           this.options.longTapLock = true
+          this.options.longTapIntervalId = setInterval(() => {
+            this.buttonMinus(e, 500, 5)
+          }, 2000)
         },
         /**
          * 加金额行为
@@ -189,9 +193,10 @@ export default {
          * @param {any} e
          */
         buttonPlus(e, priceStep = 100, pointsStep = 1){
+          console.log('buttonPlus')
           // 长按锁
-          if (this.options.longTapLock === true) {
-            this.options.longTapLock = false
+          if (this.options.longTapSkipNextTap === true) {
+            this.options.longTapSkipNextTap = false
             return
           }
 
@@ -220,8 +225,25 @@ export default {
           this.inputNumberInput(options.inputNumber)
         },
         buttonLargePlus(e) {
-          this.buttonPlus(e, 500, 5)
           this.options.longTapLock = true
+          this.buttonPlus(e, 500, 5)
+          this.options.longTapIntervalId = setInterval(() => {
+            this.buttonPlus(e, 500, 5)
+          }, 2000)
+        },
+        buttonLargeCancel(e) {
+          this.clearLongTap()
+        },
+        buttonLargeEnd(e) {
+          this.clearLongTap()
+        },
+        clearLongTap() {
+          clearInterval(this.options.longTapIntervalId)
+          this.options.longTapIntervalId = 0
+          if (this.options.longTapLock === true) {
+            this.options.longTapSkipNextTap = true
+            this.options.longTapLock = false
+          }
         },
         changePush(){
           const _isPlus = options.params.isPlus
