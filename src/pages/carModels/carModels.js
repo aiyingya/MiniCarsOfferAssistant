@@ -887,7 +887,7 @@ Page({
     let series = this.data.marketCharts.series
     let updata = []
     let topnoData = this.data.marketCharts.topnoData
-
+    let isSwitch = false
     for(let item of series) {
       if(item.topno == topno) {
         if(item.switch) {
@@ -902,9 +902,15 @@ Page({
     for(let item of series) { 
       if(item.switch) {
         updata.push(item)
+        for(let val of item.data) {
+          if(val != null) {
+            isSwitch = true
+          }
+        }
       }
     }
-    if(updata.length <= 0) { return }
+    
+    if(updata.length <= 0 || !isSwitch) { return }
     console.log(series,index,updata)
     
     this.data.marketCharts.series = series

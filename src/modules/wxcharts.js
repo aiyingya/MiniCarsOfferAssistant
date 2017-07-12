@@ -786,6 +786,7 @@ function drawToolTipSplitLine(offsetX, opts, config, context) {
 }
 
 function drawToolTip(textList, offset, opts, config, context, categoriesValue) {
+
     var legendWidth = 4;
     var legendMarginRight = 5;
     var arrowWidth = 8;
@@ -795,7 +796,7 @@ function drawToolTip(textList, offset, opts, config, context, categoriesValue) {
         x: 0,
         y: 0
     }, offset);
-    offset.y -= 8;
+    offset.y = 55;
     var textWidth = textList.map(function (item) {
         return measureText(item.text);
     });
@@ -815,17 +816,17 @@ function drawToolTip(textList, offset, opts, config, context, categoriesValue) {
     context.setFillStyle(opts.tooltip.option.background || config.toolTipBackground);
     context.setGlobalAlpha(config.toolTipOpacity);
     if (isOverRightBorder) {
-        context.moveTo(offset.x, offset.y - 10);
-        context.lineTo(offset.x - arrowWidth, offset.y - 10 - 5);
-        context.lineTo(offset.x - arrowWidth, offset.y - 10 + 5);
-        context.moveTo(offset.x, offset.y - 10);
-        context.fillRect(offset.x - toolTipWidth - arrowWidth, offset.y - 25, toolTipWidth, toolTipHeight);
+        context.moveTo(offset.x, offset.y + 5);
+        context.lineTo(offset.x - arrowWidth, offset.y + 5 - 5);
+        context.lineTo(offset.x - arrowWidth, offset.y + 5 + 5);
+        context.moveTo(offset.x, offset.y + 5);
+        context.fillRect(offset.x - toolTipWidth - arrowWidth, offset.y - 16, toolTipWidth, toolTipHeight);
     } else {
-        context.moveTo(offset.x, offset.y - 10);
-        context.lineTo(offset.x + arrowWidth, offset.y  - 10 - 5);
-        context.lineTo(offset.x + arrowWidth, offset.y - 10 + 5);
-        context.moveTo(offset.x, offset.y - 10);
-        context.fillRect(offset.x + arrowWidth, offset.y - 25, toolTipWidth, toolTipHeight);
+        context.moveTo(offset.x, offset.y + 5);
+        context.lineTo(offset.x + arrowWidth, offset.y  + 5 - 5);
+        context.lineTo(offset.x + arrowWidth, offset.y + 5 + 5);
+        context.moveTo(offset.x, offset.y + 5);
+        context.fillRect(offset.x + arrowWidth, offset.y - 16, toolTipWidth, toolTipHeight);
     }
 
     context.closePath();
@@ -838,7 +839,7 @@ function drawToolTip(textList, offset, opts, config, context, categoriesValue) {
         context.beginPath();
         context.setFillStyle(item.color);
         var startX = offset.x + arrowWidth + 2 * config.toolTipPadding ;
-        var startY = offset.y + (config.toolTipLineHeight - config.fontSize) / 2 + config.toolTipLineHeight * index + config.toolTipPadding - 22;
+        var startY = offset.y + (config.toolTipLineHeight - config.fontSize) / 2 + config.toolTipLineHeight * index + config.toolTipPadding - 13;
         if (isOverRightBorder) {
             startX = offset.x - toolTipWidth - arrowWidth + 2 * config.toolTipPadding;
         }
@@ -856,7 +857,7 @@ function drawToolTip(textList, offset, opts, config, context, categoriesValue) {
         if (isOverRightBorder) {
             startX = offset.x - toolTipWidth - arrowWidth + 2 * config.toolTipPadding + +legendWidth + legendMarginRight;
         }
-        var startY = offset.y + (config.toolTipLineHeight - config.fontSize) / 2 + config.toolTipLineHeight * index + config.toolTipPadding - 23;
+        var startY = offset.y + (config.toolTipLineHeight - config.fontSize) / 2 + config.toolTipLineHeight * index + config.toolTipPadding - 14;
         var text = typeof(item) === 'object' ? item.text : item;
         context.fillText(text, startX, startY + config.fontSize);
     });
