@@ -154,7 +154,7 @@ Page({
   handlerEditQuotation(e) {
     let that = this
     const quotationKeyValueString = util.urlEncodeValueForKey('quotation', this.data.quotation)
-    wx.navigateTo({
+    wx.redirectTo({
       url: '/pages/quote/quotationCreate/quotationCreate?' + quotationKeyValueString,
       success: function (res) {
         // success
