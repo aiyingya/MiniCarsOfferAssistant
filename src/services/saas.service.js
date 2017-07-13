@@ -159,7 +159,7 @@ export default class SAASService extends Service {
           purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
           carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
           carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
-          mmetallicPaintFee:quotationDraft.requiredExpensesAll.metallicPaintFee,
+          metallicPaintFee:quotationDraft.requiredExpensesAll.metallicPaintFee,
           boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
           serviceFee:quotationDraft.otherExpensesAll.serverFee,
           installFee:quotationDraft.otherExpensesAll.installationFee,
