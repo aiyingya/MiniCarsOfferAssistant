@@ -40,7 +40,7 @@
                <text>{{cell.viewState}}</text>
               </block>
               <block wx:else>{{cell.checkTime}}</block>
-              (停留{{cell.stayTime || 0}}m)</view>
+              (停留{{cell.stayTime || 0}}分钟)</view>
             <view class="check-address">
               <image class="icon" src="../../../images/icons/icon_position_gprs.png"></image>
               <block wx:if="{{cell.placeName}}">
