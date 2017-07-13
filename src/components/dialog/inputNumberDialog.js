@@ -185,7 +185,7 @@ export default {
           this.buttonMinus(e, 500, 5)
           this.options.longTapIntervalId = setInterval(() => {
             this.buttonMinus(e, 500, 5)
-          }, 750)
+          }, 500)
         },
         /**
          * 加金额行为
@@ -229,7 +229,7 @@ export default {
           this.buttonPlus(e, 500, 5)
           this.options.longTapIntervalId = setInterval(() => {
             this.buttonPlus(e, 500, 5)
-          }, 750)
+          }, 500)
         },
         buttonLargeCancel(e) {
           this.clearLongTap()
