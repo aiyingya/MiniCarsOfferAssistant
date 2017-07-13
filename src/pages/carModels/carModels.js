@@ -59,7 +59,8 @@ Page({
       ],
       switchTopno1: true,
       switchTopno2: true,
-      switchTopno3: true
+      switchTopno3: true,
+      unit: ''
     }
     
   },
@@ -741,7 +742,8 @@ Page({
     let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
     let popWindow = {}
-
+    let xAxisName = carModelsInfo.supply.chart.xAxisName
+    let unitText = xAxisName.indexOf('万') >= 0 ? '万' : '点'
     try {
       let res = wx.getSystemInfoSync()
 
@@ -749,6 +751,7 @@ Page({
     } catch (e) {
 
     }
+    console.log(unitText)
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
@@ -811,7 +814,8 @@ Page({
         showPopupMarketCharts: true,
         showCharts: false,
         carModelsInfo: carModelsInfo,
-        'marketCharts.series': series
+        'marketCharts.series': series,
+        'marketCharts.unit': unitText
       })
       this.data.popMarketCharts = new app.wxcharts({
           canvasId: 'popMarketCharts',
@@ -911,7 +915,6 @@ Page({
     }
     
     if(updata.length <= 0 || !isSwitch) { return }
-    console.log(series,index,updata)
     
     this.data.marketCharts.series = series
     this.setData({
@@ -919,6 +922,6 @@ Page({
     })
     this.data.popMarketCharts.updateData({
         series: updata
-    });
+    })
   }
 })

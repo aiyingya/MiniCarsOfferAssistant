@@ -271,7 +271,7 @@
             >查看详情</view>
         </view>
         <view class="popup-charts-scale">
-          <view>(万)</view>
+          <view>({{marketCharts.unit}})</view>
         </view>
         <canvas
           canvas-id="popMarketCharts"
