@@ -536,8 +536,6 @@ export default class SAASService extends Service {
   /**
    * 车源上报
    *
-   * @param {number} userId
-   * @param {string} userPhone
    * @param {number} supplierId
    * @param {string} supplierPhone
    * @param {number} messageResultId
@@ -545,7 +543,9 @@ export default class SAASService extends Service {
    * @returns {Promise<any>}
    * @memberof SAASService
    */
-  pushCallRecord(userId: number, userPhone: string, supplierId: number, supplierPhone: string, messageResultId: number, contactPhone: string): Promise<any> {
+  pushCallRecord(supplierId: number, supplierPhone: string, messageResultId: number, contactPhone: string): Promise<any> {
+    const userId = this.userService.auth.userId
+    const userPhone = this.userService.mobile
     return this.sendMessageByPromise({
       path: "api/user/addCallRecord",
       method: 'POST',

@@ -48,7 +48,8 @@ Page({
       flag: '', // true 为上， false 为下
       price: '', // 1.9 万
       point: '' // 6 点
-    }
+    },
+    isSpecialBranch:false //宝马、奥迪、MINI展示下xx点
   },
   onLoad(options) {
     let that = this;
@@ -62,6 +63,7 @@ Page({
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
+    const isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
@@ -88,6 +90,7 @@ Page({
       }
       this.setData({
         quotation: quotation,
+        isSpecialBranch: isShow,
         pageShare: false,
         priceChange: {
           flag: downPriceFlag,
@@ -270,5 +273,11 @@ Page({
     wx.navigateTo({
       url: `../../insurance/insuranceDetail/insuranceDetail?${insuranceDetail}`
     })
+  },
+  isShowDownDot(name){
+    if(name.indexOf('宝马') >-1 || name.indexOf('奥迪')>-1 || name.indexOf('MINI')>-1){
+      return true;
+    }
+    return false;
   }
 })

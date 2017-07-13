@@ -26,6 +26,7 @@ export default {
       appVersion: `${config.name}:${config.version}`,
       pageId: null,
       pageName: null,
+      channel: 'mini-program',
       os: `${system.system}|wechat ${system.version}|sdk ${system.SDKVersion}`,
       screen: `${system.windowWidth}x${system.windowHeight}`,
       language: system.language,
@@ -35,7 +36,9 @@ export default {
       eventLabel: null,
       eventSource: null,
       eventValue: null,
-      eventCategory: null
+      eventCategory: null,
+      productId: null,
+      color: null
     }
   },
   /**
@@ -66,7 +69,7 @@ export default {
 
     data.pageId = component.page.data.pageId
     data.pageName = component.page.data.pageName
-    data.parameters = component.page.data.pageParameters
+    Object.assign(data, component.page.data.pageParameters)
 
     if (opts.eventAction === 'click') {
       const clickData = {
