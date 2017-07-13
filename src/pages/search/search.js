@@ -53,9 +53,9 @@ Page({
     marketCharts:{
       series: [],
       topnoData: [
-        {text: 'no.1',style: ''},
-        {text: 'no.2',style: ''},
-        {text: 'no.3',style: ''}
+        {text: 'Top.1',style: ''},
+        {text: 'Top.2',style: ''},
+        {text: 'Top.3',style: ''}
       ],
       switchTopno1: true,
       switchTopno2: true,
@@ -776,7 +776,8 @@ Page({
     let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
     let popWindow = {}
-
+    let xAxisName = carModelsInfo.supply.chart.xAxisName
+    let unitText = xAxisName.indexOf('万') >= 0 ? '万' : '点'
     try {
       let res = wx.getSystemInfoSync()
 
@@ -784,6 +785,7 @@ Page({
     } catch (e) {
 
     }
+    
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
@@ -799,38 +801,43 @@ Page({
           items.data = []
           items.color = ''
           items.switch = true
+          items.companyCount = []
           if(numitems.priceList.length > 0) {
             for(let priceitems of numitems.priceList) {
               if(numitems.topNum === 1) {
                 categories.push(priceitems.priceDateString)
                 items.color = '#ED4149'
-                items.name = 'top1变价幅度'
+                items.name = 'Top1'
                 items.topno = 1
               }
               if(numitems.topNum === 2) {
                 items.color = '#3377EE'
-                items.name = 'top2变价幅度'
+                items.name = 'Top2'
                 items.topno = 2
               }
               if(numitems.topNum === 3) {
                 items.color = '#B0CDFF'
-                items.name = 'top3变价幅度'
+                items.name = 'Top3'
                 items.topno = 3
               }
               let val = ''
+              let companyCount = ''
               if(priceitems && priceitems.discount) {
                 val = util.priceAbsStringWithUnitNumber(priceitems.discount)
               }else {
                 val = null
               }
-              
+              if(priceitems && priceitems.companyCount) {
+                companyCount = priceitems.companyCount
+              }else {
+                companyCount = null
+              }
               items.data.push(val)
-               
+              items.companyCount.push(companyCount)
             }
             series.push(items)
           }
         }
-
         categories.forEach((item,index) => {
           if(index == 0 ) {
             xScale.push(item)
@@ -841,12 +848,13 @@ Page({
           }
         })
       }
-      console.log(series,categories,xScale)
+     
       that.setData({
         showPopupMarketCharts: true,
         showCharts: false,
         carModelsInfo: carModelsInfo,
-        'marketCharts.series': series
+        'marketCharts.series': series,
+        'marketCharts.unit': unitText
       })
       this.data.popMarketCharts = new app.wxcharts({
           canvasId: 'popMarketCharts',
@@ -881,7 +889,6 @@ Page({
           width: popWindow.windowWidth,
           height: 120,
           setPadding: setPadding,
-         
           extra: {
               lineStyle: 'curve'
           }

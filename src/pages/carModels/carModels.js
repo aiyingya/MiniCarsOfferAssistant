@@ -53,9 +53,9 @@ Page({
     marketCharts:{
       series: [],
       topnoData: [
-        {text: 'no.1',style: ''},
-        {text: 'no.2',style: ''},
-        {text: 'no.3',style: ''}
+        {text: 'Top.1',style: ''},
+        {text: 'Top.2',style: ''},
+        {text: 'Top.3',style: ''}
       ],
       switchTopno1: true,
       switchTopno2: true,
@@ -815,7 +815,7 @@ Page({
           }
         })
       }
-      console.log(series)
+     
       that.setData({
         showPopupMarketCharts: true,
         showCharts: false,
