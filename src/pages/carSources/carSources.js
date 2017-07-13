@@ -905,13 +905,11 @@ Page({
       from,
       (supplier) => {
         const
-        userId = Number(app.userService.auth.userId),
-        userPhone = app.userService.mobile,
         supplierId = supplier.supplierId,
         supplierPhone = supplier.supplierPhone
         contactPhone = supplier.supplierPhone
 
-        app.saasService.pushCallRecord({userId, userPhone, supplierId, supplierPhone, contactPhone})
+        app.saasService.pushCallRecord(supplierId, supplierPhone, contactPhone)
       })
   },
   actionContactWithCarSourceItem(spuId, skuItemIndex, carSourceItemIndex, carSourceItem, from) {
@@ -927,14 +925,12 @@ Page({
          * 上报
          */
         const
-        userId = Number(app.userService.auth.userId),
-        userPhone = app.userService.mobile,
-        supplierId = supplier.supplierId,
+        supplierId = supplier.supplierId
         supplierPhone = supplier.supplierPhone
         messageResultId = carSourceItem.carSourceId
         contactPhone = carSourceItem.contact || supplier.supplierPhone
 
-        app.saasService.pushCallRecord({userId, userPhone, supplierId, supplierPhone, messageResultId, contactPhone})
+        app.saasService.pushCallRecord(supplierId, supplierPhone, messageResultId, contactPhone)
 
         /**
          * 1.4.0 埋点
