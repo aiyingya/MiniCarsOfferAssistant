@@ -210,11 +210,11 @@ Page({
     console.log('onshow')
     /**
      * 1.4.0 埋点
-     * 用户选择外饰分区颜色
+     * 行情列表展开
      * davidfu
      */
     this.data.pageParameters = {
-      spuId: this.data.carModelsInfo.carModelId
+      productId: this.data.carModelsInfo.carModelId
     }
     const event = {
       eventAction: 'pageShow',
@@ -929,20 +929,22 @@ Page({
         supplierPhone = supplier.supplierPhone
         messageResultId = carSourceItem.carSourceId
         contactPhone = carSourceItem.contact || supplier.supplierPhone
+        skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
 
         app.saasService.pushCallRecord(supplierId, supplierPhone, messageResultId, contactPhone)
 
         /**
-         * 1.4.0 埋点
+         * 1.4.0 埋点 拨打供货方电话
          * davidfu
          */
-        if (carSourceItem.supplierSelfSupport) {
-          this.data.pageParameters.carSourceId = carSourceItem.itemId
-        } else {
-          this.data.pageParameters.carSourceId = carSourceItem.id
+        this.data.pageParameters = {
+          productId: this.data.carModelsInfo.carModelId,
+          color: skuItem.carSku.externalColorName,
+          parameters: {
+            carSourceId: carSourceItem.id,
+            supplierId: carSourceItem.supplier.id
+          }
         }
-        this.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSupport
-        this.data.pageParameters.supplierId = carSourceItem.supplier.id
         const event = {
           eventAction: 'click',
           eventLabel: '拨打供货方电话'
@@ -1254,8 +1256,8 @@ Page({
        * davidfu
        */
       this.data.pageParameters = {
-        spuId: this.data.carModelsInfo.carModelId,
-        externalColorName: section.carSku.externalColorName
+        productId: this.data.carModelsInfo.carModelId,
+        color: section.carSku.externalColorName
       }
       const event = {
         eventAction: 'click',
@@ -1340,15 +1342,16 @@ Page({
 
     /**
      * 1.4.0 埋点
-     * 用户选择外饰分区颜色
+     * 用户选择行情
      * davidfu
      */
-    if (carSourceItem.supplierSelfSupport) {
-      this.data.pageParameters.carSourceId = carSourceItem.itemId
-    } else {
-      this.data.pageParameters.carSourceId = carSourceItem.id
+    this.data.pageParameters = {
+      productId: this.data.carModelsInfo.carModelId,
+      color: skuItem.carSku.externalColorName,
+      parameters: {
+        carSourceId: carSourceItem.id
+      }
     }
-    this.data.pageParameters.supplierSelfSupport = carSourceItem.supplierSelfSupport
     const event = {
       eventAction: 'click',
       eventLabel: `车源详情`
