@@ -137,6 +137,13 @@ page {
   height: 100rpx;
   padding: 0 30rpx;
 }
+.history-cars {
+  font-size: 24rpx;
+  color: #ED4149;
+  line-height: 26rpx;
+  padding: 0 30rpx;
+  margin-bottom: 20rpx;
+}
 .history-message .check-time,
 .history-message .check-address {
   width: 49%;

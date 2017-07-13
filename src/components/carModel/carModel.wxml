@@ -279,7 +279,7 @@
           class="pop-canvas"
           disable-scroll
           disable-scroll="true" 
-          bindtouchmove="popupMarketChartstouchMove"
+          bindtouchmove="handleMarketTouch"
           bindtouchstart="handleMarketTouch"
           ></canvas>
       </view>

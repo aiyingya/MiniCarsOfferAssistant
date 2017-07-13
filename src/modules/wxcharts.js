@@ -239,6 +239,7 @@ function getSeriesDataItem(series, index) {
             var seriesItem = {};
             seriesItem.color = item.color;
             seriesItem.name = item.name;
+            seriesItem.companyCount = item.companyCount[index];
             seriesItem.data = item.format ? item.format(item.data[index]) : item.data[index];
             data.push(seriesItem);
         }
@@ -269,7 +270,7 @@ function getRadarCoordinateSeries(length) {
 function getToolTipData(seriesData, calPoints, index) {
     var textList = seriesData.map(function (item) {
         return {
-            text: item.name + ': ' + item.data,
+            text: item.name + ': ' + item.data +'万,('+  item.companyCount +'报价公司数)',
             color: item.color
         };
     });
@@ -342,17 +343,19 @@ function isInExactPieChartArea(currentPoints, center, radius) {
 }
 
 function splitPoints(points) {
+  
     var newPoints = [];
     var items = [];
     points.forEach(function (item, index) {
         if (item !== null) {
             items.push(item);
-        } else {
-            if (items.length) {
-                newPoints.push(items);
-            }
-            items = [];
-        }
+        } 
+//        else {
+//            if (items.length) {
+//                newPoints.push(items);
+//            }
+//            items = [];
+//        }
     });
     if (items.length) {
         newPoints.push(items);
@@ -796,14 +799,14 @@ function drawToolTip(textList, offset, opts, config, context, categoriesValue) {
         x: 0,
         y: 0
     }, offset);
-    offset.y = 55;
+    offset.y = 35;
     var textWidth = textList.map(function (item) {
         return measureText(item.text);
     });
     if(categoriesDate) {
       textList.unshift(categoriesDate);
     }
-    var toolTipWidth = legendWidth + legendMarginRight + 4 * config.toolTipPadding + Math.max.apply(null, textWidth);
+    var toolTipWidth = legendWidth + legendMarginRight + 4 * config.toolTipPadding + Math.max.apply(null, textWidth) - 18;
     var toolTipHeight = 2 * config.toolTipPadding + textList.length * config.toolTipLineHeight + 4;
 
     // if over the right border
@@ -1251,6 +1254,7 @@ function drawLineDataPoints(series, opts, config, context, process, categories) 
     }
 
     series.forEach(function (eachSeries, seriesIndex) {
+
         var data = eachSeries.data;
         var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
         calPoints.push(points);
@@ -1259,7 +1263,7 @@ function drawLineDataPoints(series, opts, config, context, process, categories) 
         splitPointList.forEach(function (points, index) {
             context.beginPath();
             context.setStrokeStyle(eachSeries.color);
-            context.setLineWidth(2);
+            context.setLineWidth(1);
             if (points.length === 1) {
                 context.moveTo(points[0].x, points[0].y);
                 context.arc(points[0].x, points[0].y, 1, 0, 2 * Math.PI);
@@ -1278,7 +1282,7 @@ function drawLineDataPoints(series, opts, config, context, process, categories) 
                     points.forEach(function (item, index) {
                         if (index > 0) {
                             context.lineTo(item.x, item.y);
-                            context.arc(item.x, item.y, 1, 0, 2 * Math.PI);
+                            //context.arc(item.x, item.y, 1, 0, 2 * Math.PI);
                         }
                     });
                 }
@@ -1960,7 +1964,7 @@ var Charts = function Charts(opts) {
     };
     this.showToolTip = function (e) {
       var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  
+   
       if (this.opts.type === 'line' || this.opts.type === 'area') {
           var index = this.getCurrentDataIndex(e);
           var opts = assign({}, this.opts, { animation: false });

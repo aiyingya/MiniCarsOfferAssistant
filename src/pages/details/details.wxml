@@ -110,6 +110,9 @@
                <image class="icon" src="../../images/icons/icon_position_gprs.png"></image>
                 {{amap.placeName || '定位失败'}}</view>
             </view>
+            <view wx:if="{{amap.spuName}}" class="history-cars">
+              车款名：{{amap.spuName}} 请尽快电话跟进
+            </view>
             <view class="history-amap" wx:if="{{amapIndex === showAmapIndex && isShowAmap}}">
               <view class="map_container">
                 <map

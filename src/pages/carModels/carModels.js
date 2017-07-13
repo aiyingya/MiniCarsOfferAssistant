@@ -751,7 +751,7 @@ Page({
     } catch (e) {
 
     }
-    console.log(unitText)
+    
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
@@ -767,33 +767,39 @@ Page({
           items.data = []
           items.color = ''
           items.switch = true
+          items.companyCount = []
           if(numitems.priceList.length > 0) {
             for(let priceitems of numitems.priceList) {
               if(numitems.topNum === 1) {
                 categories.push(priceitems.priceDateString)
                 items.color = '#ED4149'
-                items.name = 'top1变价幅度'
+                items.name = 'Top1'
                 items.topno = 1
               }
               if(numitems.topNum === 2) {
                 items.color = '#3377EE'
-                items.name = 'top2变价幅度'
+                items.name = 'Top2'
                 items.topno = 2
               }
               if(numitems.topNum === 3) {
                 items.color = '#B0CDFF'
-                items.name = 'top3变价幅度'
+                items.name = 'Top3'
                 items.topno = 3
               }
               let val = ''
+              let companyCount = ''
               if(priceitems && priceitems.discount) {
                 val = util.priceAbsStringWithUnitNumber(priceitems.discount)
               }else {
                 val = null
               }
-              
+              if(priceitems && priceitems.companyCount) {
+                companyCount = priceitems.companyCount
+              }else {
+                companyCount = null
+              }
               items.data.push(val)
-               
+              items.companyCount.push(companyCount)
             }
             series.push(items)
           }
@@ -809,7 +815,7 @@ Page({
           }
         })
       }
-      console.log(series,categories,xScale)
+      console.log(series)
       that.setData({
         showPopupMarketCharts: true,
         showCharts: false,
@@ -850,7 +856,6 @@ Page({
           width: popWindow.windowWidth,
           height: 120,
           setPadding: setPadding,
-         
           extra: {
               lineStyle: 'curve'
           }
