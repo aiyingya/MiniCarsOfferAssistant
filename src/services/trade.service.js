@@ -1,3 +1,5 @@
+
+// @flow
 /**
  * Created by David on 27/03/2017.
  */
@@ -15,28 +17,21 @@ export default class TradeService extends Service {
     super()
   }
 
-  sendMessageByPromise(opts) {
-    console.log('sendMessageByPromise')
-    return super.sendMessageByPromise(opts)
-  }
-
   /**
    * 搜索联想接口
    *
-   * @param {any} opts
-   * @param {String} opts.text 不详
-   * @param {String} opts.n 不详
-   * @returns {Promise}
-   *
-   * @memberOf TradeService
+   * @param {string} text
+   * @param {number} n
+   * @returns {Promise<any>}
+   * @memberof TradeService
    */
-  searchInput (opts) {
+  searchInput (text: string, n: number): Promise<any> {
     return this.sendMessageByPromise({
       path: 'cgi/search/car/index',
       method: 'GET',
       data: {
-        text: opts.text,
-        n: opts.n
+        text,
+        n
       }
     })
   }
@@ -44,11 +39,11 @@ export default class TradeService extends Service {
   /**
    * 热推 车辆型号(spu)
    *
-   * @returns {Promise}
+   * @returns {Promise<any>}
    *
-   * @memberOf TradeService
+   * @memberof TradeService
    */
-  getHotPushCarModels () {
+  getHotPushCarModels(): Promise<any> {
     return this.sendMessageByPromise({
       path: 'cgi/navigate/items/hot',
       method: 'GET',
@@ -59,72 +54,81 @@ export default class TradeService extends Service {
   /**
    * 热推 车辆品牌(brand)
    *
-   * @returns {Promise}
-   *
-   * @memberOf TradeService
+   * @returns {Promise<any>}
+   * @memberof TradeService
    */
-  getHotPushBrands () {
+  getHotPushBrands(): Promise<any> {
     return this.sendMessageByPromise({
       path: 'cgi/navigate/brands/hot',
-      method: 'GET',
-      data: {}
+      method: 'GET'
     })
   }
 
   /**
    *  获取用户搜索记录
-   *  clientId 用户ID
+   *
+   * @param {string} clientId
+   * @returns {Promise<any>}
+   * @memberof TradeService
    */
-  // TODO: davidfu 需要 promise 改造
-  getUserSearchHistory(opts) {
-    this.sendMessage({
+  getUserSearchHistory(clientId: string): Promise<any> {
+    return this.sendMessageByPromise({
       path: 'cgi/search/history/text',
       method: 'GET',
-      data: opts.data,
-      success: opts.success,
-      fail: opts.fail,
-      loadingType: 'none'
+      data: {
+        clientId
+      }
     })
   }
 
   /**
    *  上传用户搜索记录
-   *  clientId 用户ID
+   *
+   * @param {number} userId
+   * @param {string} text
+   * @returns {Promise<any>}
+   * @memberof TradeService
    */
-  // TODO: davidfu 需要 promise 改造
-  postUserSearchHistory(opts) {
-    this.sendMessage({
+  postUserSearchHistory(userId: number, text: string): Promise<any> {
+    const channel = 'wxapp'
+    return this.sendMessageByPromise({
       path: 'cgi/search/history/text',
       method: 'POST',
-      data: opts.data,
-      success: opts.success,
-      fail: opts.fail,
-      loadingType: 'none'
+      data: {
+        userId,
+        text,
+        channel
+      }
     })
   }
+
   /**
    *  获取导航路径中的 车辆系列(serial) 列表
    *
-   * @param {Object} opts
-   * @param {String} opts.brandId
-   * @param {Boolean} opts.deleted
-   * @param {Boolean} opts.group
-   * @param {Boolean} opts.joinOnSaleCount
-   * @param {Number} opts.level
-   * @returns {Promise}
-   *
-   * @memberOf TradeService
+   * @param {number} brandId
+   * @param {boolean} [deleted=false]
+   * @param {boolean} [group=true]
+   * @param {boolean} [joinOnSaleCount=true]
+   * @param {number} [level=1]
+   * @returns
+   * @memberof TradeService
    */
-  getNavigatorForCarSeries (opts) {
+  getNavigatorForCarSeries(
+    brandId: number,
+    deleted: boolean = false,
+    group: boolean = true,
+    joinOnSaleCount: boolean = true,
+    level: number = 1
+    ) {
     return this.sendMessageByPromise({
       path: 'cgi/navigate/models/query',
       method: 'POST',
       data: {
-        brandId: opts.brandId,
-        deleted: false,
-        group: true,
-        joinOnSaleCount: true,
-        level: 1
+        brandId,
+        deleted,
+        group,
+        joinOnSaleCount,
+        level
       }
     })
   }
@@ -132,26 +136,30 @@ export default class TradeService extends Service {
   /**
    *  获取导航路径中的 车辆品牌(brand) 列表
    *
-   * @param {Object} opts
-   * @param {String} opts.code
-   * @param {Boolean} opts.deleted
-   * @param {Boolean} opts.group
-   * @param {Boolean} opts.joinOnSaleCount
-   * @param {Number} opts.level
-   * @returns {Promise}
-   *
-   * @memberOf TradeService
+   * @param {number} [code=0]
+   * @param {boolean} [deleted=false]
+   * @param {boolean} [group=true]
+   * @param {boolean} [joinOnSaleCount=true]
+   * @param {number} [level=1]
+   * @returns
+   * @memberof TradeService
    */
-  getNavigatorForCarBrands (opts) {
+  getNavigatorForCarBrands (
+    code: number = 0,
+    deleted: boolean = false,
+    group: boolean = true,
+    joinOnSaleCount: boolean = true,
+    level: number = 1
+    ) {
     return this.sendMessageByPromise({
       path: 'cgi/navigate/brands/query',
       method: 'POST',
       data: {
-        code: '0',
-        deleted: false,
-        group: true,
-        joinOnSaleCount: true,
-        level: 1
+        code,
+        deleted,
+        group,
+        joinOnSaleCount,
+        level
       }
     })
   }

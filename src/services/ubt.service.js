@@ -1,3 +1,4 @@
+// @flow
 /**
  * Created by David on 27/03/2017.
  */
@@ -15,24 +16,18 @@ export default class UBTService extends Service {
     super()
   }
 
-  sendMessageByPromise(opts) {
-    return super.sendMessageByPromise(opts)
-  }
-
   /**
    * 上报信息
    *
-   * @param {Object} opts
-   * @param {Object} opts.data 上报数据集合
-   * @returns {Promise}
-   *
-   * @memberOf UBTService
+   * @param {any} data
+   * @returns {Promise<any>}
+   * @memberof UBTService
    */
-  report(opts) {
+  report(data: any): Promise<any> {
     return this.sendMessageByPromise({
       path: 'acquire/report',
       method: 'GET',
-      data: opts.data
+      data: data
     })
   }
 }

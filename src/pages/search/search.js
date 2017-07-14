@@ -49,7 +49,18 @@ Page({
     touchindex: '',
     searchHistory: [],
     showSearchHistory: true,
-    popMarketCharts:''
+    popMarketCharts:'',
+    marketCharts:{
+      series: [],
+      topnoData: [
+        {text: 'Top.1',style: ''},
+        {text: 'Top.2',style: ''},
+        {text: 'Top.3',style: ''}
+      ],
+      switchTopno1: true,
+      switchTopno2: true,
+      switchTopno3: true
+    }
   },
   onLoad() {
     let that = this
@@ -67,7 +78,7 @@ Page({
     } catch (e) {
 
     }
-    
+
     this.getSearchHistory()
   },
   handleSearchInput(e) {
@@ -75,7 +86,7 @@ Page({
     let that = this;
     let searchResults = [];
     if (val) {
-      app.tradeService.searchInput({ text: val, n: 12 })
+      app.tradeService.searchInput(val, 12)
         .then(function (res) {
           that.setData({
             associateResults: res,
@@ -365,7 +376,7 @@ Page({
               for (let item of data.y) {
                 value += item
               }
-              
+
               if (value <= 0) {
                 return
               }
@@ -545,7 +556,7 @@ Page({
         }
       }
     }
-    
+
     this.setData({
       selectChartsLabel: true,
       changeSelectColors: false,
@@ -555,7 +566,7 @@ Page({
       selectTimesId: selectTimesId,
       selectTimes: selecttime
     })
-    
+
   },
   handleChangeTimesItem(e) {
     let that = this
@@ -729,50 +740,34 @@ Page({
     let user = app.userService
     let clientId = user.clientId
     let that = this
-    
-    app.tradeService.getUserSearchHistory({
-       data: {
-         ClientId: clientId
-       },
-       success(xhr) {
-         console.log(xhr)
-         that.setData({
-           searchHistory: xhr
-         })
-       },
-       fail(err) {
-         
-       }
-    })
+
+    app.tradeService.getUserSearchHistory(clientId)
+      .then(res => {
+        console.log(xhr)
+        that.setData({
+          searchHistory: xhr
+        })
+      })
   },
   postUserSearchHistory(text) {
     let user = app.userService
     let searchHistory = this.data.searchHistory
     let that = this
-    app.tradeService.postUserSearchHistory({
-     data: {
-      "channel": "wxapp",
-      "text": text,
-      "userId": user.auth.userId
-     },
-     success(xhr) {
-      for (var i = 0; i < searchHistory.length; i++) {
-        if (searchHistory[i] === text) {
-          searchHistory.splice(i, 1);
-          break;
+    app.tradeService.postUserSearchHistory(text, user.auth.userId)
+      .then(res => {
+        for (var i = 0; i < searchHistory.length; i++) {
+          if (searchHistory[i] === text) {
+            searchHistory.splice(i, 1);
+            break;
+          }
         }
-      }
-      searchHistory.unshift(text)
-      that.setData({
-        searchHistory: searchHistory
+        searchHistory.unshift(text)
+        that.setData({
+          searchHistory: searchHistory
+        })
       })
-     },
-     fail(err) {
-
-     }
-    })
   },
-  
+
   /**
    * 查看行情走势.
   */
@@ -781,7 +776,8 @@ Page({
     let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
     let popWindow = {}
-
+    let xAxisName = carModelsInfo.supply.chart.xAxisName
+    let unitText = xAxisName.indexOf('万') >= 0 ? '万' : '点'
     try {
       let res = wx.getSystemInfoSync()
 
@@ -789,79 +785,113 @@ Page({
     } catch (e) {
 
     }
+    
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
-     
       let series = []
       let categories = []
+      let xScale = []
       let maxPrice = (Number(res.maxPrice)/10000).toFixed(2)
       let minPrice = (Number(res.minPrice)/10000).toFixed(2)
       let setPadding = maxPrice.toString().length >= 5 ? 13 : 10 
-      console.log(maxPrice.toString().length)
       if(res.priceTrendModels.length > 0) {
         for(let numitems of res.priceTrendModels) {
           let items = {}
           items.data = []
           items.color = ''
+          items.switch = true
+          items.companyCount = []
           if(numitems.priceList.length > 0) {
             for(let priceitems of numitems.priceList) {
               if(numitems.topNum === 1) {
                 categories.push(priceitems.priceDateString)
                 items.color = '#ED4149'
+                items.name = 'Top1'
+                items.topno = 1
               }
               if(numitems.topNum === 2) {
                 items.color = '#3377EE'
+                items.name = 'Top2'
+                items.topno = 2
               }
               if(numitems.topNum === 3) {
                 items.color = '#B0CDFF'
+                items.name = 'Top3'
+                items.topno = 3
               }
-              let val = util.priceAbsStringWithUnitNumber(priceitems.discount) == '0.00' ? null :util.priceAbsStringWithUnitNumber(priceitems.discount)
-              
+              let val = ''
+              let companyCount = ''
+              if(priceitems && priceitems.discount) {
+                val = util.priceAbsStringWithUnitNumber(priceitems.discount)
+              }else {
+                val = null
+              }
+              if(priceitems && priceitems.companyCount) {
+                companyCount = priceitems.companyCount
+              }else {
+                companyCount = null
+              }
               items.data.push(val)
+              items.companyCount.push(companyCount)
             }
             series.push(items)
           }
         }
-        console.log(series,categories)
+        categories.forEach((item,index) => {
+          if(index == 0 ) {
+            xScale.push(item)
+          }else if(index % 5 === 0) {
+            xScale.push(item)
+          }else if(index == (categories.length-1)) {
+            xScale.push(item)
+          }
+        })
       }
+     
       that.setData({
         showPopupMarketCharts: true,
         showCharts: false,
-        carModelsInfo: carModelsInfo
+        carModelsInfo: carModelsInfo,
+        'marketCharts.series': series,
+        'marketCharts.unit': unitText
       })
       this.data.popMarketCharts = new app.wxcharts({
-        canvasId: 'popMarketCharts',
-        type: 'line',
-        categories: categories,
-        color: '#ECF0F7',
-        legend: false,
-        background: '#ECF0F7',
-        animation: false,
-        series: series,
-        xAxis: {
-          disableGrid: false,
-          fontColor: '#333333',
-          gridColor: '#333333',
-          unitText: '日期',
-          type: 'calibration'
-        },
-        yAxis: {
-          disabled: true,
-          fontColor: '#333333',
-          gridColor: '#333333',
-          unitText: '（个）',
-          min: minPrice,
-          max: maxPrice,
-          format(val) {
-            return val.toFixed(2)
+          canvasId: 'popMarketCharts',
+          type: 'line',
+          categories: categories,
+          color: '#ECF0F7',
+          legend: false,
+          background: '#ECF0F7',
+          animation: false,
+          series: series,
+          xAxis: {
+            disableGrid: true,
+            fontColor: '#333333',
+            gridColor: '#333333',
+            unitText: '日期',
+            type: 'calibration'
+          },
+          yAxis: {
+            disabled: true,
+            fontColor: '#333333',
+            gridColor: '#333333',
+            unitText: '（个）',
+            min: minPrice,
+            max: maxPrice,
+            format(val) {
+              return val.toFixed(2)
+            }
+          },
+          xScale: xScale,
+          dataLabel: false,
+          dataPointShape: false,
+          width: popWindow.windowWidth,
+          height: 120,
+          setPadding: setPadding,
+          extra: {
+              lineStyle: 'curve'
           }
-        },
-        dataLabel: false,
-        dataPointShape: false,
-        width: popWindow.windowWidth,
-        height: 120,
-        setPadding: setPadding
       })
     })
   },
@@ -870,14 +900,61 @@ Page({
   */
   handleClosePopupMarket() {
     let carModelsList = this.data.searchResults
+    let topnoData = this.data.marketCharts.topnoData
     columnCharts = null
     columnChartsList = []
+    for(let item of topnoData) {
+      item.style = ''
+    }
     this.drawCanvas(carModelsList)
     this.setData({
       showPopupMarketCharts: false,
+      'marketCharts.topnoData': topnoData,
       showCharts: true
     })
     this.data.popMarketCharts = null
     this.data.touchindex = ''
+  },
+  handleMarketTouch(e) {
+    let that = this
+    let index = this.data.popMarketCharts.getCurrentDataIndex(e)
+    console.log(index,this.data.popMarketCharts);
+    this.data.popMarketCharts.showToolTip(e, {
+      background: '#333333'
+    });
+  },
+  handleMarketUpdateData(e) {
+    let index = e.currentTarget.dataset.topno
+    let topno = index+1
+    let series = this.data.marketCharts.series
+    let updata = []
+    let topnoData = this.data.marketCharts.topnoData
+
+    for(let item of series) {
+      if(item.topno == topno) {
+        if(item.switch) {
+          item.switch = false
+          topnoData[index].style="icon-nobg"
+        }else {
+          item.switch = true
+          topnoData[index].style=""
+        }
+      }
+    }
+    for(let item of series) { 
+      if(item.switch) {
+        updata.push(item)
+      }
+    }
+    if(updata.length <= 0) { return }
+    console.log(series,index,updata)
+    
+    this.data.marketCharts.series = series
+    this.setData({
+      'marketCharts.topnoData':topnoData
+    })
+    this.data.popMarketCharts.updateData({
+        series: updata
+    });
   }
 })

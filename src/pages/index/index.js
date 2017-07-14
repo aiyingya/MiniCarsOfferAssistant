@@ -3,11 +3,9 @@ import {
   $wuxTrack
 } from '../../components/wux'
 import util from '../../utils/util'
-import YMC from '../../services/YMC'
 import config from '../../config'
 
 // import moment from 'moment'
-
 
 let app = getApp()
 Page({
@@ -47,6 +45,9 @@ Page({
     })
   },
   onLoad() {
+    // 服务启动
+    app.userService.setup()
+    app.saasService.setup()
 
     try {
       let res = wx.getSystemInfoSync()
@@ -75,7 +76,6 @@ Page({
       wx.hideToast()
     })
 
-    this.data.firstLoadFlag = false
 
     wx.showShareMenu()
   },
@@ -88,6 +88,7 @@ Page({
       }, err => {
       })
     }
+    this.data.firstLoadFlag = false
   },
   onShareAppMessage () {
     return {
@@ -192,7 +193,7 @@ Page({
     let that = this;
     let { HTTPS_YMCAPI } = this.data;
 
-    app.tradeService.getNavigatorForCarSeries({ brandId: carSeries.id })
+    app.tradeService.getNavigatorForCarSeries(carSeries.id)
       .then(function (res) {
         if (res) {
           let data = res

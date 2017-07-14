@@ -75,8 +75,8 @@
                 <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
                     <view class="weui-cell__bd">裸车价</view>
                     <view class="weui-cell__ft">
-                        <view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}/{{priceChange.point}}点)</view>
-                        <view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}/{{priceChange.point}}点)</view>￥{{quotation.quotationItems[0].sellingPrice}}
+                      <view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>
+                        <view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>￥{{quotation.quotationItems[0].sellingPrice}}
                     </view>
                 </view>
             </view>
@@ -101,7 +101,10 @@
                 <view class="weui-cell__ft">￥{{(quotation.insuranceDetail && quotation.insuranceDetail.iTotal || 0)||0}}</view>
                 <image wx:if ="{{quotation.insuranceDetail.showDetail}}" class="icon_arrow" src="../../../images/icons/icon_arrow.png"></image>
               </view>
-
+              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+                <view class="weui-cell__bd">金属漆加价</view>
+                <view class="weui-cell__ft">￥{{quotation.metallicPaintFee ||0}}</view>
+              </view>
             </view>
             <!--其他花费-->
             <view class="h-cell-gray">其他花费</view>
