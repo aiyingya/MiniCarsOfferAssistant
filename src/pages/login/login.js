@@ -37,34 +37,29 @@ Page({
       })
       return
     }
-    app.userService.exsitTenanTmember({
-      mobile: that.data.userPhoneValue,
-      success(res) {
+    app.userService.exsitTenanTmember(this.data.userPhoneValue)
+      .then(res => {
         if (res) {
-          app.userService.getSMSCode({
-            mobile: that.data.userPhoneValue,
-            success(res) {
-              that.countDown()
-              that.setData({
+          app.userService.getSMSCode(that.data.userPhoneValue)
+            .then(res => {
+              this.countDown()
+              this.setData({
                 notUserInYMC: false
               })
-            }
-          })
+            })
         } else {
           that.setData({
             notUserInYMC: true
           })
         }
-      },
-      fail(err) {
+      }, err => {
         $wuxToast.show({
           type: false,
           timer: 2000,
           color: '#fff',
           text: '服务器错误，请稍后再试'
         })
-      }
-    })
+      })
   },
   countDown() {
     let time = 30
@@ -110,33 +105,27 @@ Page({
       return
     }
 
-    app.userService.login({
-      mobile: that.data.userPhoneValue,
-      code: that.data.userCodeValue,
-      success(res) {
+    app.userService.login(that.data.userPhoneValue, that.data.userCodeValue)
+      .then(res => {
         if (res) {
           if (app.userService.hasWeixinUserInfo()) {
-            app.userService.userBindWeixin({
-              success(auth) {
+            app.userService.userBindWeixin()
+              .then(res => {
                 wx.navigateBack()
-              },
-              fail() {
+              }, err => {
                 wx.navigateBack()
-              }
-            })
+              })
           } else {
             wx.navigateBack()
           }
         }
-      },
-      fail(err) {
+      }, err => {
         $wuxToast.show({
           type: false,
           timer: 2000,
           color: '#fff',
           text: err.message
         })
-      }
-    })
+      })
   }
 })

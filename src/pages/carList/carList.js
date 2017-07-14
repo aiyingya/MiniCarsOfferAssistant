@@ -65,7 +65,7 @@ Page({
     let that = this;
     let { HTTPS_YMCAPI } = this.data;
 
-    app.tradeService.getNavigatorForCarSeries({ brandId: carSeries.id })
+    app.tradeService.getNavigatorForCarSeries(carSeries.id)
       .then(function (res) {
         if (res) {
           let data = res

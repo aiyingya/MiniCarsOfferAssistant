@@ -1,8 +1,7 @@
 import {
   $wuxInputNumberDialog,
   $wuxContentDialog,
-  $wuxSpecialUploadDialog,
-  $wuxPricePickerDialog
+  $wuxSpecialUploadDialog
 } from "../../../components/wux"
 import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialog'
 import util from '../../../utils/util'
@@ -42,7 +41,8 @@ Page({
         purchaseTax:0,//购置
         licenseFee:0,//上牌
         vehicleAndVesselTax:0,//车船
-        insuranceAmount:0//保险金额
+        insuranceAmount:0,//保险金额
+        metallicPaintFee:0//金属漆
       },
       otherExpensesAll:{// 其他费用（元），deciaml，取值范围0~999999999",
         boutiqueCost:0,//精品费用
@@ -122,6 +122,13 @@ Page({
         protoname:'quotation.requiredExpensesAll.insuranceAmount',
         price:0//同上
       },//保险金额
+      {
+        type:'requiredfee',
+        target:'metallicPaintFee',
+        title:'金属漆加价',
+        protoname:'quotation.requiredExpensesAll.metallicPaintFee',
+        price:0//同上
+      },//金属漆
       {
         type:'otherfee',
         target:'boutiqueCost',
@@ -381,7 +388,8 @@ Page({
         purchaseTax:quotation.purchaseTax || 0,//购置
         licenseFee:quotation.carNumFee || 0,//上牌
         vehicleAndVesselTax:quotation.carTax || 0,//车船
-        insuranceAmount:quotation.insuranceDetail.iTotal || 0//保险金额
+        insuranceAmount:quotation.insuranceDetail.iTotal || 0,//保险金额
+        metallicPaintFee: quotation.metallicPaintFee || 0//金属漆
       }
 
       quotation.otherExpensesAll = {// 其他费用（元），deciaml，取值范围0~999999999",
@@ -407,40 +415,30 @@ Page({
       })
       console.log(quotation.insuranceDetail)
       //获取报价单接口
-      app.saasService.getCreatCarRecordInfo({
-        data:{
-          "userId": app.userService.auth.userId,
-          "carPrice":0 //随便🚢一个金额，该接口我不需要加价后的裸车价
-        },
-        success: (res) => {
-
+      app.saasService.getCreatCarRecordInfo({ carPrice: 0 }) // 随便传一个金额，该接口我不需要加价后的裸车价
+        .then(res => {
           res.interestType = quotation.rateType;
           that.setData({
             'requestResult': res
           })
-          if(!quotation.hasLoan){
+          if (!quotation.hasLoan) {
             //初始化贷款手续费
             this.setData({
-              'quotation.loanFee':res.loanFee
+              'quotation.loanFee': res.loanFee
             })
-
           }
           that.updateForSomeReason()
           activeIndexCss()
-
-        },
-        fail: () => {},
-        complete: () => {}
-      });
+        })
 
       const promise1 = that.getDefaultInsurance()
       const promise = Promise.race([promise1])
-      promise.then(res => {
-        //wx.hideToast()
-
-      }, err => {
-        //wx.hideToast()
-      })
+      promise
+        .then(res => {
+          //wx.hideToast()
+        }, err => {
+          //wx.hideToast()
+        })
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
         var carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
@@ -471,17 +469,14 @@ Page({
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
         var user = app.userService;
         this.setData({
+          'quotation.requiredExpensesAll.metallicPaintFee': carSkuInfo.metallicPaintAmount || 0,
           'quotation.saleMobile':user.mobile,
           isSpecialBranch: isShow
         })
 
         //获取报价单接口
-        app.saasService.getCreatCarRecordInfo({
-          data:{
-            "userId": user.auth.userId,
-            "carPrice":originalPrice
-          },
-          success: (res) => {
+        app.saasService.getCreatCarRecordInfo({ carPrice: originalPrice })
+          .then(res => {
             this.setData({
               'requestResult': res
             })
@@ -490,12 +485,11 @@ Page({
             const capacity = carModelInfo.capacity
             const isElectricCar = carModelInfo.isElectricCar
             this.setData({
-              'quotation.requiredExpensesAll.licenseFee':res.carNumberFee || 0,
-              'quotation.loanFee':res.loanFee || 0,
-              'quotation.otherExpensesAll.serverFee':res.serviceFee || 0,
-              'quotation.requiredExpensesAll.purchaseTax':Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
+              'quotation.requiredExpensesAll.licenseFee': res.carNumberFee || 0,
+              'quotation.loanFee': res.loanFee || 0,
+              'quotation.otherExpensesAll.serverFee': res.serviceFee || 0,
+              'quotation.requiredExpensesAll.purchaseTax': Math.floor(util.purchaseTax(sellingPrice, isElectricCar ? null : capacity))
             })
-
 
             // 设置报价表单数据
             let quotationItems = [{
@@ -517,7 +511,7 @@ Page({
             })
             console.log(carModelInfo)
 
-            that.initVehicleAndVesselTax().then(data=>{
+            that.initVehicleAndVesselTax().then(data => {
               // 计算默认保险.
               const promise1 = that.getDefaultInsurance()
               const promise = Promise.race([promise1])
@@ -532,10 +526,7 @@ Page({
             activeIndexCss()
             this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
 
-          },
-          fail: () => {},
-          complete: () => {}
-        });
+          })
       }
     }
   },
@@ -836,38 +827,42 @@ Page({
     const _hasInitPoint =that.data.initPoint
     const _initSellingPrice = that.data.initSellingPrice
     const quotation = this.data.quotation
+    let _inputT
+    if(_isPoint){
+      //报给客户的下的点数=（指导价-裸车价）/指导价*100  保留两位小数 裸车价是加价后的
+      _inputT = that.data.priceChange.point
+    }else{
+      _inputT = Math.abs(_diffPrice)
+    }
 
     this.hideInput()
-    $wuxPricePickerDialog.open({
-      title: "裸车价",
+    $wuxInputNumberDialog.open({
+      title: '裸车价',
+      inputNumber: _inputT,
+      content: "￥" + _sellingPrice,
+      inputNumberPlaceholder: '输入裸车价',
+      inputNumberMaxLength: 9,
       confirmText: '确定',
       cancelText: '取消',
+      priceStyle: true,
       params:{
-        quotedMethod: _isPoint ? 'POINTS' : 'PRICE',
-        sellingPrice: _sellingPrice,
+        sellingPrice : _sellingPrice,
+        initSellingPrice : _initSellingPrice,
+        initIsPlus:(_diffPrice > 0),
+        isPlus :(_diffPrice > 0),
+        isPoint:_isPoint,
+        hasInitPoint:_hasInitPoint,
         guidePrice:_guidePrice
       },
       confirm: (res) => {
-        // sellingPrice 返回的是最终设置的 降价
-        // quoted 是返回的降价对象，内部包含了全部的降价信息
-        const sellingPrice = res.sellingPrice
-        const quoted = res.quoted
-
-        let originalInputNumber = 0
-        if (quoted.quotedMethod === 'POINTS') {
-          originalInputNumber = quoted.quotedValue
-        } else if (quoted.quotedMethod === 'PRICE') {
-          originalInputNumber = quoted.quotedRangeUnit === '万' ? quoted.quotedRange * 10000 : quoted.quotedRange
-        }
-
-        const _isPlus = (res.quoted.quotedSymbol === 'PLUS')
+        let _isPlus = (res.isPlus === 'true' )
         let source = this.data.source
         let price
 
-        if (_isPoint && ((_diffPrice > 0) === _isPlus) && (Number(_hasInitPoint) === Number(originalInputNumber))){
+        if(_isPoint && ((_diffPrice > 0) === _isPlus)  && (Number(_hasInitPoint) === Number(res.inputNumber))){
           price = _initSellingPrice
         } else {
-          price = util.getChangeCarPrice(_isPlus, _isPoint, _guidePrice, originalInputNumber)
+          price = util.getChangeCarPrice(_isPlus,_isPoint,_guidePrice,res.inputNumber)
         }
 
         const isElectricCar = this.data.carModelInfo.isElectricCar
@@ -1095,8 +1090,8 @@ Page({
      */
     function isSendRequest(quotationDraft, mobile, name, sex, isSend, validTime) {
 
-      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime, {
-        success: (res) => {
+      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime)
+        .then(res => {
           let quotation1 = res
 
           app.fuckingLarryNavigatorTo.quotation = quotation1
@@ -1104,13 +1099,13 @@ Page({
 
           if (that.data.source === 'quotationDetail') {
             wx.navigateBack({
-              delta: 3, // 回退前 delta(默认为1) 页面
+              delta: 2,
               success: function (res) {
                 // success
               },
               fail: function () {
                 // fail
-                if(mobile){
+                if (mobile) {
                   app.fuckingLarryNavigatorTo.source = null
                   app.fuckingLarryNavigatorTo.quotation = null
                 }
@@ -1134,26 +1129,12 @@ Page({
               }
             })
           }
-        },
-        fail: () => {
+        }, err => {
           console.log("fail 保存报价单失败")
-        },
-        complete: () => {}
-      })
+        })
     }
 
     that.hideInput()
-    let _validTime = quotation.validTime
-    if(_validTime !== 0 && !_validTime){
-      if(that.data.requestResult.validTime.chooseWho === 1 ){
-        _validTime = that.data.requestResult.validTime.firstChoose
-      }else if(that.data.requestResult.validTime.chooseWho === 2 ){
-        _validTime = that.data.requestResult.validTime. secondChoose
-      }else{
-        _validTime = -1
-      }
-    }
-
     // 请求成功后弹出对话框
     $wuxSpecialUploadDialog.open({
       title: '保存并分享！',
@@ -1167,7 +1148,7 @@ Page({
       inputNumber1:quotation.customerName,
       inputNumber:quotation.customerMobile,
       defaultRadio:quotation.customerSex === undefined ? undefined:Number(quotation.customerSex),
-      effectivenessCustomValue: _validTime, // davidfu 暂时定为 24，应该是从报价偏好中心获得
+      effectivenessCustomValue: quotation.validTime,//说明： 为空时 是创建报价单 否则为编辑
       confirmText: '发送报价单',
       cancelText: '仅保存',
       validTimeObj: that.data.requestResult.validTime,
@@ -1185,17 +1166,13 @@ Page({
         const effectiveness = Number(res.inputEffectiveness)
         //保存报价单
 
-        app.saasService.requestSaveQuotationDraft(quotation, {
-          success: function (res) {
+        app.saasService.requestSaveQuotationDraft(quotation)
+          .then(res => {
             let quotationDraft = res
             //发送报价单
             isSendRequest(quotationDraft, mobile, customerName, customerSex, true, effectiveness)
-          },
-          fail: function () {},
-          complete: function () {}
-        })
+          })
         that.showInput()
-
       },
       cancel: (res) => {
         //保存报价单
@@ -1206,15 +1183,12 @@ Page({
         const customerName =res.inputName
         const customerSex = Number(res.inputSex)
         const effectiveness = Number(res.inputEffectiveness)
-        app.saasService.requestSaveQuotationDraft(quotation, {
-          success: function (res) {
+        app.saasService.requestSaveQuotationDraft(quotation)
+          .then(res => {
             let quotationDraft = res
             /// 暂不发送, 不带电话号码发送（发布当前报价草稿到某个用户） 保留1.5以前的逻辑
             isSendRequest(quotationDraft, mobile, customerName, customerSex, false, effectiveness)
-          },
-          fail: function () {},
-          complete: function () {}
-        })
+          })
         that.showInput()
       },
       close: () => {
@@ -1353,24 +1327,26 @@ Page({
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
     var user = app.userService;
-    app.saasService.getProfit({
-        "userId": user.auth.userId,
-        "loanNum": util.loanPaymentByLoan1(carPrice, paymentRatio),
-        "insuranceNum": this.data.quotation.requiredExpensesAll.insuranceAmount,
-        "carPrice":carPrice,
-        "marketPrice":that.data.quotation.quotationItems[0].originalPrice,
-        "boutiqueFee":that.data.quotation.otherExpensesAll.boutiqueCost,
-        "loanServiceFee":that.data.quotation.loanFee,
-        "installFee":that.data.quotation.otherExpensesAll.installationFee,
-        "otherFee":that.data.quotation.otherExpensesAll.otherFee,
-        "serviceFee":that.data.quotation.otherExpensesAll.serverFee
-      }).then(res=>{
+
+    let _insuranceAmount = that.data.quotation.requiredExpensesAll.insuranceAmount - that.data.quotation.insuranceDetail.iJQX
+    app.saasService.getProfit(
+      util.loanPaymentByLoan1(carPrice, paymentRatio),
+      _insuranceAmount,
+      carPrice,
+      that.data.quotation.quotationItems[0].originalPrice,
+      that.data.quotation.otherExpensesAll.boutiqueCost,
+      that.data.quotation.loanFee,
+      that.data.quotation.otherExpensesAll.installationFee,
+      that.data.quotation.otherExpensesAll.otherFee,
+      that.data.quotation.otherExpensesAll.serverFee
+    )
+      .then(res => {
         that.setData({
-          getProfitResult : res
+          getProfitResult: res
         })
-    },fail=>{
-      console.log("查看收益失败")
-    })
+      }, err => {
+        console.log("查看收益失败")
+      })
   },
   touchStartIncome(){
     console.log("touchStartIncome")

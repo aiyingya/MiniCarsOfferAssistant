@@ -25,7 +25,7 @@ export default {
         firstChoose:24,
         secondChoose:48,
         chooseWho:1, //这里的值是1 2 3  之前错认为是 1 2 -1
-        otherChoose:''
+        otherChoose:'' //用户的自定义选项值
       },
       defaultCheck:1 // 1：24小时,2：24小时,3无限制,4随机值
 
@@ -211,23 +211,29 @@ export default {
             })
           }
 
-          if(options.effectivenessCustomValue !== 0 && !options.effectivenessCustomValue ){
-              const _default = options.validTimeObj.chooseWho ? options.validTimeObj.chooseWho : 1
-              options.defaultCheck = _default
+          //初始化报价单时效
+          const _validTime = options.effectivenessCustomValue //_validTime／effectivenessCustomValue 时效值 为空是新建 否则是更新
+          if(_validTime !== 0 && !_validTime ){
+              //新建报价单时取偏好设置中默认值
+              const _radioIndex = options.validTimeObj.chooseWho ? options.validTimeObj.chooseWho : 1 //默认为第一个选项
+              options.defaultCheck = _radioIndex  //_radioIndex === 3 是无限制
+              options.effectivenessCustomValue = (_radioIndex === 3) ? -1 : _validTime
           }
-          else if(options.validTimeObj.firstChoose == options.effectivenessCustomValue){
+          else if(options.validTimeObj.firstChoose == _validTime){
             options.defaultCheck = 1;
-          }else if(options.validTimeObj.secondChoose == options.effectivenessCustomValue){
+          }else if(options.validTimeObj.secondChoose == _validTime){
             options.defaultCheck = 2;
-          }else if("-1" == options.effectivenessCustomValue){
+          }else if("-1" == _validTime){
             options.defaultCheck = 3;
           }else{
             options.defaultCheck = 4;
-            options.validTimeObj.otherChoose = options.effectivenessCustomValue
+            options.validTimeObj.otherChoose = _validTime
           }
           _this.setData({
             [`${_this.options.scope}.defaultCheck`]:options.defaultCheck,
-            [`${_this.options.scope}.validTimeObj.otherChoose`]:options.validTimeObj.otherChoose
+            [`${_this.options.scope}.validTimeObj.otherChoose`]:options.validTimeObj.otherChoose,
+            [`${_this.options.scope}.effectivenessCustomValue`]:options.validTimeObj.otherChoose
+
           })
         }
       }
