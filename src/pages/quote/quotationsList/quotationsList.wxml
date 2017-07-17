@@ -109,10 +109,10 @@
           wx:if="{{cell.quotationCount > 2}}"
           bindtap="handleCheckMore"
           >
-            <block wx:if="{{cell.checkMoreNumber < 3}}">
+            <block wx:if="{{cell.checkMoreNumber < cell.quotationCount}}">
               查看更多>>
             </block>
-            <block wx:if="{{cell.checkMoreNumber === 3}}">
+            <block wx:else>
               <view class="packup">
               <image class="packup-icon depreciate-icon"
                   src="../../../images/icons/puckup.png"
