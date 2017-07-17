@@ -49,7 +49,20 @@ Page({
     selectTimesData: [],
     pageShare: false,
     options: '',
-    showPopupMarketCharts: false
+    showPopupMarketCharts: false,
+    marketCharts:{
+      series: [],
+      topnoData: [
+        {text: 'Top.1',style: ''},
+        {text: 'Top.2',style: ''},
+        {text: 'Top.3',style: ''}
+      ],
+      switchTopno1: true,
+      switchTopno2: true,
+      switchTopno3: true,
+      unit: ''
+    }
+    
   },
   onLoad (options) {
     let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -729,7 +742,8 @@ Page({
     let carModelsInfo = e.target.dataset.carmodelsinfo
     let that = this
     let popWindow = {}
-
+    let xAxisName = carModelsInfo.supply.chart.xAxisName
+    let unitText = xAxisName.indexOf('万') >= 0 ? '万' : '点'
     try {
       let res = wx.getSystemInfoSync()
 
@@ -737,11 +751,13 @@ Page({
     } catch (e) {
 
     }
+    
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
       let series = []
       let categories = []
+      let xScale = []
       let maxPrice = (Number(res.maxPrice)/10000).toFixed(2)
       let minPrice = (Number(res.minPrice)/10000).toFixed(2)
       let setPadding = maxPrice.toString().length >= 5 ? 13 : 10 
@@ -750,34 +766,62 @@ Page({
           let items = {}
           items.data = []
           items.color = ''
+          items.switch = true
+          items.companyCount = []
           if(numitems.priceList.length > 0) {
             for(let priceitems of numitems.priceList) {
               if(numitems.topNum === 1) {
                 categories.push(priceitems.priceDateString)
                 items.color = '#ED4149'
+                items.name = 'Top1'
+                items.topno = 1
               }
               if(numitems.topNum === 2) {
                 items.color = '#3377EE'
+                items.name = 'Top2'
+                items.topno = 2
               }
               if(numitems.topNum === 3) {
                 items.color = '#B0CDFF'
+                items.name = 'Top3'
+                items.topno = 3
               }
-             
-              let val = util.priceAbsStringWithUnitNumber(priceitems.discount) == '0.00' ? null : util.priceAbsStringWithUnitNumber(priceitems.discount)
-              
+              let val = ''
+              let companyCount = ''
+              if(priceitems && priceitems.discount) {
+                val = util.priceAbsStringWithUnitNumber(priceitems.discount)
+              }else {
+                val = null
+              }
+              if(priceitems && priceitems.companyCount) {
+                companyCount = priceitems.companyCount
+              }else {
+                companyCount = null
+              }
               items.data.push(val)
-               
+              items.companyCount.push(companyCount)
             }
             series.push(items)
           }
         }
-        
-        console.log(series,categories)
+
+        categories.forEach((item,index) => {
+          if(index == 0 ) {
+            xScale.push(item)
+          }else if(index % 5 === 0) {
+            xScale.push(item)
+          }else if(index == (categories.length-1)) {
+            xScale.push(item)
+          }
+        })
       }
+      console.log(series)
       that.setData({
         showPopupMarketCharts: true,
         showCharts: false,
-        carModelsInfo: carModelsInfo
+        carModelsInfo: carModelsInfo,
+        'marketCharts.series': series,
+        'marketCharts.unit': unitText
       })
       this.data.popMarketCharts = new app.wxcharts({
           canvasId: 'popMarketCharts',
@@ -789,7 +833,7 @@ Page({
           animation: false,
           series: series,
           xAxis: {
-            disableGrid: false,
+            disableGrid: true,
             fontColor: '#333333',
             gridColor: '#333333',
             unitText: '日期',
@@ -806,11 +850,15 @@ Page({
               return val.toFixed(2)
             }
           },
+          xScale: xScale,
           dataLabel: false,
           dataPointShape: false,
           width: popWindow.windowWidth,
           height: 120,
-          setPadding: setPadding
+          setPadding: setPadding,
+          extra: {
+              lineStyle: 'curve'
+          }
       })
     })
   },
@@ -819,14 +867,66 @@ Page({
   */
   handleClosePopupMarket() {
     let carModelsList = this.data.carModelsList
+    let topnoData = this.data.marketCharts.topnoData
     columnCharts = null
     columnChartsList = []
+    for(let item of topnoData) {
+      item.style = ''
+    }
     this.drawCanvas(carModelsList)
     this.setData({
       showPopupMarketCharts: false,
+      'marketCharts.topnoData': topnoData,
       showCharts: true
     })
     this.data.popMarketCharts = null
     this.data.touchindex = ''
+  },
+  handleMarketTouch(e) {
+    let that = this
+    let index = this.data.popMarketCharts.getCurrentDataIndex(e)
+    console.log(index,this.data.popMarketCharts);
+    this.data.popMarketCharts.showToolTip(e, {
+      background: '#333333'
+    });
+  },
+  handleMarketUpdateData(e) {
+    let index = e.currentTarget.dataset.topno
+    let topno = index+1
+    let series = this.data.marketCharts.series
+    let updata = []
+    let topnoData = this.data.marketCharts.topnoData
+    let isSwitch = false
+    for(let item of series) {
+      if(item.topno == topno) {
+        if(item.switch) {
+          item.switch = false
+          topnoData[index].style="icon-nobg"
+        }else {
+          item.switch = true
+          topnoData[index].style=""
+        }
+      }
+    }
+    for(let item of series) { 
+      if(item.switch) {
+        updata.push(item)
+        for(let val of item.data) {
+          if(val != null) {
+            isSwitch = true
+          }
+        }
+      }
+    }
+    
+    if(updata.length <= 0 || !isSwitch) { return }
+    
+    this.data.marketCharts.series = series
+    this.setData({
+      'marketCharts.topnoData':topnoData
+    })
+    this.data.popMarketCharts.updateData({
+        series: updata
+    })
   }
 })

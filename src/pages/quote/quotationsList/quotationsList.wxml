@@ -40,7 +40,7 @@
                <text>{{cell.viewState}}</text>
               </block>
               <block wx:else>{{cell.checkTime}}</block>
-              (停留{{cell.stayTime || 0}}m)</view>
+              (停留{{cell.stayTime || 0}}分钟)</view>
             <view class="check-address">
               <image class="icon" src="../../../images/icons/icon_position_gprs.png"></image>
               <block wx:if="{{cell.placeName}}">
@@ -109,15 +109,15 @@
           wx:if="{{cell.quotationCount > 2}}"
           bindtap="handleCheckMore"
           >
-            <block wx:if="{{cell.checkMoreNumber < 3}}">
+            <block wx:if="{{cell.checkMoreNumber < cell.quotationCount}}">
               查看更多>>
             </block>
-            <block wx:if="{{cell.checkMoreNumber === 3}}">
+            <block wx:else>
               <view class="packup">
               <image class="packup-icon depreciate-icon"
                   src="../../../images/icons/puckup.png"
               ></image>
-              收起<block wx:if="{{cell.quotationCount != 3}}">【剩余{{cell.quotationCount - cell.checkMoreNumber}}条】</block></view>
+              收起<!--<block wx:if="{{cell.quotationCount != 3}}">【剩余{{cell.quotationCount - cell.checkMoreNumber}}条】</block>--></view>
             </block>
           </view>
       </view>

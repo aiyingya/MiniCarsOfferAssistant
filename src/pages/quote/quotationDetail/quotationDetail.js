@@ -41,13 +41,15 @@ Page({
       read: false,
       source: 'quotationDetail',
       pageShare: false,
-      rateType:1 //"费率类型 1 月息 2 万元系数",
+      rateType:1, //"费率类型 1 月息 2 万元系数",
+      metallicPaintFee: 0
     },
     priceChange: {
       flag: '', // true 为上， false 为下
       price: '', // 1.9 万
       point: '' // 6 点
-    }
+    },
+    isSpecialBranch:false //宝马、奥迪、MINI展示下xx点
   },
   onLoad(options) {
     let that = this;
@@ -61,7 +63,7 @@ Page({
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
 
-
+    const isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
@@ -76,7 +78,7 @@ Page({
       wx.navigateTo({
         url: '../../login/login'
       })
-    }else {
+    } else {
       if(that.data.quotation.hasLoan){
         const isMonth = (quotation.rateType===1)
         const expenseRate = quotation.expenseRate
@@ -88,6 +90,7 @@ Page({
       }
       this.setData({
         quotation: quotation,
+        isSpecialBranch: isShow,
         pageShare: false,
         priceChange: {
           flag: downPriceFlag,
@@ -151,7 +154,7 @@ Page({
   handlerEditQuotation(e) {
     let that = this
     const quotationKeyValueString = util.urlEncodeValueForKey('quotation', this.data.quotation)
-    wx.navigateTo({
+    wx.redirectTo({
       url: '/pages/quote/quotationCreate/quotationCreate?' + quotationKeyValueString,
       success: function (res) {
         // success
@@ -189,8 +192,8 @@ Page({
       confirm: (res) => {
         let mobile = res.inputNumber
         const quotation = that.data.quotation
-        app.saasService.requestPublishQuotation(quotation.draftId, mobile, quotation.customerName, quotation.customerSex, true, quotation.validTime, {
-          success: (res) => {
+        app.saasService.requestPublishQuotation(quotation.draftId, mobile, quotation.customerName, quotation.customerSex, true, quotation.validTime)
+          .then(res => {
             let quotation = res
 
             app.fuckingLarryNavigatorTo.quotation = quotation
@@ -208,14 +211,7 @@ Page({
                 // complete
               }
             })
-          },
-          fail: () => {
-            //
-          },
-          complete: () => {
-
-          }
-        })
+          })
       },
       cancel: () => {
 
@@ -277,5 +273,11 @@ Page({
     wx.navigateTo({
       url: `../../insurance/insuranceDetail/insuranceDetail?${insuranceDetail}`
     })
+  },
+  isShowDownDot(name){
+    if(name.indexOf('宝马') >-1 || name.indexOf('奥迪')>-1 || name.indexOf('MINI')>-1){
+      return true;
+    }
+    return false;
   }
 })
