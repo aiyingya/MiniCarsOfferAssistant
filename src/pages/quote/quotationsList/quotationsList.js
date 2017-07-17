@@ -323,9 +323,9 @@ Page({
     console.log(e,more)
     for(let item of quotationsList) {
       if(more.customerPhone === item.customerPhone) {
-        if(item.checkMoreNumber < 3) {
-         item.checkMoreNumber = 3
-        }else if(item.checkMoreNumber === 3) {
+        if(item.checkMoreNumber < more.quotationCount) {
+         item.checkMoreNumber = more.quotationCount
+        }else {
           item.checkMoreNumber = 2
         }
       }

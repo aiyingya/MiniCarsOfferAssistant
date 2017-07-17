@@ -693,7 +693,7 @@ export default class SAASService extends Service {
    */
   gettingMarketTrend(opts:any) {
     return this.sendMessageByPromise({
-      path: `sale/quotation/getPriceTrend?spuId=${opts.spuId}`,
+      path: `sale/quotation/getPriceTrend/new?spuId=${opts.spuId}`,
       method: 'GET'
     })
   }
