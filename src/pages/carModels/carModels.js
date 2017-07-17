@@ -815,7 +815,7 @@ Page({
           }
         })
       }
-     
+      console.log(series)
       that.setData({
         showPopupMarketCharts: true,
         showCharts: false,
