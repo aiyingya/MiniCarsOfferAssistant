@@ -753,7 +753,7 @@ Page({
     let user = app.userService
     let searchHistory = this.data.searchHistory
     let that = this
-    app.tradeService.postUserSearchHistory(text, user.auth.userId)
+    app.tradeService.postUserSearchHistory(user.auth.userId, text)
       .then(res => {
         for (var i = 0; i < searchHistory.length; i++) {
           if (searchHistory[i] === text) {
@@ -785,7 +785,7 @@ Page({
     } catch (e) {
 
     }
-    
+
     return app.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
@@ -794,7 +794,7 @@ Page({
       let xScale = []
       let maxPrice = (Number(res.maxPrice)/10000).toFixed(2)
       let minPrice = (Number(res.minPrice)/10000).toFixed(2)
-      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10 
+      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10
       if(res.priceTrendModels.length > 0) {
         for(let numitems of res.priceTrendModels) {
           let items = {}
@@ -848,7 +848,7 @@ Page({
           }
         })
       }
-     
+
       that.setData({
         showPopupMarketCharts: true,
         showCharts: false,
@@ -941,14 +941,14 @@ Page({
         }
       }
     }
-    for(let item of series) { 
+    for(let item of series) {
       if(item.switch) {
         updata.push(item)
       }
     }
     if(updata.length <= 0) { return }
     console.log(series,index,updata)
-    
+
     this.data.marketCharts.series = series
     this.setData({
       'marketCharts.topnoData':topnoData
