@@ -1,4 +1,5 @@
 import util from '../../../utils/util'
+import { container } from '../../../landrover/business/index'
 let app = getApp()
 
 Page({
@@ -118,7 +119,7 @@ Page({
     let originPageIndex = this.data.pageIndex
     let newPageIndex = this.data.pageIndex + 1
 
-    app.saasService.requestQuotationsList(newPageIndex, this.data.pageSize, {
+    container.saasService.requestQuotationsList(newPageIndex, this.data.pageSize, {
       loadingType: 'none',
       success: function (res) {
         if (res.content.length !== 0) {
@@ -181,7 +182,7 @@ Page({
   getData(object) {
     let that = this
     this.data.pageIndex = 1
-    app.saasService.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
+    container.saasService.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
       loadingType: 'none',
       success: function (res) {
         let empty = res.content.length === 0
@@ -287,7 +288,7 @@ Page({
     const quotationId = record.quotationId
     const quotationsList = this.data.quotationsList
     const newQuotationsList = []
-    app.saasService.requestDeleteRecotd(quotationId,{
+    container.saasService.requestDeleteRecotd(quotationId,{
       loadingType: 'true',
       success(res) {
         console.log(res)

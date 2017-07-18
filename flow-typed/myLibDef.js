@@ -32,39 +32,3 @@ type Auth = {
   userId: string
 }
 
-/**
- *
- * appKey: "wxd5d5bf6b593d886e"
- * city : ""
- * country : "CN"
- * extra : "en"
- * gender : 1
- * openId : "oJNr60EADGT-ChvW0ValxcGcx29k"
- * province : "Shanghai"
- * nickname : "傅斌"
- * avatarUrl : "http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eopEuOnnoMv4l2otkB2d209UPSabmhQUzBGPXX3lic2HU3KahDicODEVskez8vzhSZ2qXjGZOibQhTeg/0"
- *
- * @type {{
- *     appKey: string,
- *     city: string,
- *     country: string,
- *     extra: string,
- *     gender: number,
- *     openId: string,
- *     province: string,
- *     nickName: string,
- *     avatarUrl: string
- *   }}
- * @memberof UserService
- */
-type WeixinUserInfo = {
-  appKey: string,
-  city: string,
-  country: string,
-  extra: string,
-  gender: number,
-  openId: string,
-  province: string,
-  nickName: string,
-  avatarUrl: string
-}

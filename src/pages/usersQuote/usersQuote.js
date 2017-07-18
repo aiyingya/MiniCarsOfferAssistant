@@ -1,8 +1,9 @@
 import {
   $wuxToast
 } from "../../components/wux"
+import { container } from '../../landrover/business/index'
 
-let app = getApp()
+const app = getApp()
 
 Page({
   data: {
@@ -35,14 +36,14 @@ Page({
       })
     }
 
-    if (app.userService.isLogin()) {
-      const userInfo = app.userService.auth
-      const weixinUsersInfo = app.userService.weixinUserInfo
+    if (container.userService.isLogin()) {
+      const userInfo = container.userService.auth
+      const weixinUsersInfo = container.userService.userInfoForWeixin
 
       this.setData({
         isLogin: true
       })
-      app.userService.getLocation()
+      container.userService.getLocation()
         .then(res => {
           this.setData({
             userName: weixinUsersInfo ? weixinUsersInfo.nickName || res.mobile : '',
@@ -75,7 +76,7 @@ Page({
   },
   handleUserLogout() {
     let that = this
-    app.userService.logout()
+    container.userService.logout()
       .then(res => {
         that.setData({
           isLogin: false,
@@ -88,21 +89,21 @@ Page({
       })
   },
   handleToQuoteRecord() {
-    if (app.userService.isLogin()) {
+    if (container.userService.isLogin()) {
       wx.navigateTo({
         url: '../quote/quotationsList/quotationsList'
       })
     }
   },
   handleToSupplier() {
-    if (app.userService.isLogin()) {
+    if (container.userService.isLogin()) {
       wx.navigateTo({
         url: '../supplier/supplier'
       })
     }
   },
   handleToSetcost() {
-    if (app.userService.isLogin()) {
+    if (container.userService.isLogin()) {
       wx.navigateTo({
         url: '../setCost/setCost'
       })

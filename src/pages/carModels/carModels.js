@@ -2,6 +2,7 @@ import {
   $wuxToast
 } from '../../components/wux'
 import util from '../../utils/util'
+import { container } from '../../landrover/business/index'
 
 let app = getApp()
 var columnCharts = null
@@ -62,7 +63,7 @@ Page({
       switchTopno3: true,
       unit: ''
     }
-    
+
   },
   onLoad (options) {
     let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
@@ -77,8 +78,8 @@ Page({
     } catch (e) {
 
     }
-    
-    if (!app.userService.isLogin()) {
+
+    if (!container.userService.isLogin()) {
       setTimeout(function(){
         that.data.pageShare = true
       },1000)
@@ -94,8 +95,8 @@ Page({
         })
         this.setData({carsInfo: carsInfo, options: options})
         this.pagesloadRequest(carsInfo, true)
-        
-        wx.showShareMenu()      
+
+        wx.showShareMenu()
       }
     }
   },
@@ -106,7 +107,7 @@ Page({
       this.onLoad(options)
     }
   },
-  /** 
+  /**
    * 页面分享.
    */
   onShareAppMessage () {
@@ -117,7 +118,7 @@ Page({
       path: `pages/carModels/carModels?${carsInfoKeyValueString}`,
       success(res) {
         // 分享成功
-        
+
       },
       fail(res) {
         // 分享失败
@@ -130,7 +131,7 @@ Page({
 
     let stockSeclect = inStock ? 'selected' : ''
 
-    app.saasService.requestSearchSpuByCarSeriesId(carsInfo.id, inStock, {
+    container.saasService.requestSearchSpuByCarSeriesId(carsInfo.id, inStock, {
       success: function (res) {
         if (res) {
           let carModelsList = res.content
@@ -246,7 +247,7 @@ Page({
     if (newModelsList.length == 0) {
       showNodata = true
     }
-    
+
     console.log(newModelsList)
     this.setData({
       CarsModeleText: selectItem.name,
@@ -366,7 +367,7 @@ Page({
               for (let item of data.y) {
                 value += item
               }
-              
+
               if (value <= 0) {
                 return
               }
@@ -652,7 +653,7 @@ Page({
     let newCarModelsList = []
     let times = [{value: 24, selected: 'selected'}, {value: 12, selected: ''}]
     requestData = {
-      
+
       inStock: false
     }
 
@@ -675,7 +676,7 @@ Page({
         changeTime.selected = ''
       }
     }
-    app.saasService.requestSearchSpuBySpuId(sid, requestData, {
+    container.saasService.requestSearchSpuBySpuId(sid, requestData, {
       success: function (res) {
 
         if (res.content.length > 0) {
@@ -733,7 +734,7 @@ Page({
       scrollView: 'overflow: auto;'
     })
   },
-  
+
   /**
    * 查看行情走势.
   */
@@ -751,8 +752,8 @@ Page({
     } catch (e) {
 
     }
-    
-    return app.saasService.gettingMarketTrend({
+
+    return container.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
       let series = []
@@ -760,7 +761,7 @@ Page({
       let xScale = []
       let maxPrice = (Number(res.maxPrice)/10000).toFixed(2)
       let minPrice = (Number(res.minPrice)/10000).toFixed(2)
-      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10 
+      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10
       if(res.priceTrendModels.length > 0) {
         for(let numitems of res.priceTrendModels) {
           let items = {}
@@ -908,7 +909,7 @@ Page({
         }
       }
     }
-    for(let item of series) { 
+    for(let item of series) {
       if(item.switch) {
         updata.push(item)
         for(let val of item.data) {
@@ -918,9 +919,9 @@ Page({
         }
       }
     }
-    
+
     if(updata.length <= 0 || !isSwitch) { return }
-    
+
     this.data.marketCharts.series = series
     this.setData({
       'marketCharts.topnoData':topnoData

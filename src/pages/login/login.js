@@ -1,7 +1,8 @@
 import {
   $wuxToast
 } from "../../components/wux"
-const app = getApp()
+
+import { container } from '../../landrover/business/index'
 
 Page({
   data: {
@@ -37,10 +38,10 @@ Page({
       })
       return
     }
-    app.userService.exsitTenanTmember(this.data.userPhoneValue)
+    container.userService.retrieveTenantMemberExist(this.data.userPhoneValue)
       .then(res => {
         if (res) {
-          app.userService.getSMSCode(that.data.userPhoneValue)
+          container.userService.createVCode(this.data.userPhoneValue)
             .then(res => {
               this.countDown()
               this.setData({
@@ -105,11 +106,16 @@ Page({
       return
     }
 
-    app.userService.login(that.data.userPhoneValue, that.data.userCodeValue)
+    const code = this.data.userCodeValue
+    const mobile = this.data.userPhoneValue
+    const useCase = 'access'
+    const authEntity = { code, mobile, useCase }
+
+    container.userService.login('code', authEntity, '')
       .then(res => {
         if (res) {
-          if (app.userService.hasWeixinUserInfo()) {
-            app.userService.userBindWeixin()
+          if (container.userService.hasWeixinUserInfo()) {
+            container.userService.createBindingWithWechatAccount()
               .then(res => {
                 wx.navigateBack()
               }, err => {

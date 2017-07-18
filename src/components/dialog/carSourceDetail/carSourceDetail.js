@@ -1,6 +1,8 @@
 import Component from '../../component'
 import * as wxapi from 'fmt-wxapp-promise'
 
+import { container } from '../../../landrover/business/index'
+
 export default {
 
   component: null,
@@ -186,8 +188,7 @@ export default {
         [`${this.component.options.scope}.carSourceItem.viewModelLoading`]: '原文加载中...'
       })
 
-      const app = getApp()
-      app.saasService.requestCarSourceContent(options.carSourceItem.id, {
+      container.saasService.requestCarSourceContent(options.carSourceItem.id, {
         success: function (res) {
           console.log(res)
           if (res) {
@@ -318,8 +319,7 @@ export default {
     that.component.setData({
       [`${that.component.options.scope}.status`]: "加载中"
     })
-    const app = getApp()
-    app.saasService.getCompanies(options.spuId, options.quotationPrice)
+    container.saasService.getCompanies(options.spuId, options.quotationPrice)
       .then(res => {
         that.component.setData({
           [`${that.component.options.scope}.companyList`]: res,
@@ -435,8 +435,7 @@ export default {
     that.component.setData({
       [`${that.component.options.scope}.status`]: '加载中'
     })
-    const app = getApp()
-    app.saasService.getContacts(options.spuId, options.quotationPrice, options.companyId, options.supplierId)
+    container.saasService.getContacts(options.spuId, options.quotationPrice, options.companyId, options.supplierId)
       .then(res => {
         that.component.setData({
           [`${that.component.options.scope}.contactList`]: res[0],

@@ -1,6 +1,5 @@
-// config 接口需要在应用开始执行
-import config from './config'
-import global from './global'
+import { storage, container } from './landrover/business/index'
+
 import wxcharts from './modules/wxcharts'
 
 import UserService from './services/user.service'
@@ -11,27 +10,31 @@ import amapFile from './modules/amap-wx'
 
 const userService = new UserService()
 const tradeService = new TradeService()
-
 const saasService = new SAASService()
 
+container.userService = userService
+container.tradeService = tradeService
+container.saasService = saasService
+
+container.userService.setup()
+container.tradeService.setup()
+container.saasService.setup()
+
 const amap = new amapFile.AMapWX({key:'63572efadd84fa26c86bd62f78fe0152'});
+
 App({
   onLaunch (options) {
     console.log('onLaunch:')
     console.log(options)
     // FIXME: 目前在启动的时候会检查本地存放的伪设备唯一 Id
     //调用API从本地缓存中获取数据
-    var logs = wx.getStorageSync('logs') || []
+    const logs = storage.getItemSync('logs') || []
     logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
+    storage.setItemSync('logs', logs)
   },
   globalData: {
   },
-  apiUrl:global.apiUrl,
   wxcharts: wxcharts,
-  userService: userService,
-  tradeService: tradeService,
-  saasService: saasService,
 
   amap: amap,
 
