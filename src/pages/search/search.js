@@ -743,9 +743,9 @@ Page({
 
     app.tradeService.getUserSearchHistory(clientId)
       .then(res => {
-        console.log(xhr)
-        that.setData({
-          searchHistory: xhr
+        console.log(res)
+        this.setData({
+          searchHistory: res
         })
       })
   },
