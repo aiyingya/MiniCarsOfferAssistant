@@ -1,6 +1,6 @@
 // @flow
 
-import { request, versionCode, container } from '../landrover/business/index'
+import { request, config, container } from '../landrover/business/index'
 
 import * as wxapi from 'fmt-wxapp-promise'
 
@@ -45,7 +45,7 @@ export default class YMC {
     const userService = container.userService
 
     const ClientId = userService.clientId
-    const ClientVersion = versionCode
+    const ClientVersion = config.versionCode
     const SystemCode = 60
     const Authorization = userService.auth != null ? userService.auth.accessToken : null
 
@@ -186,7 +186,7 @@ export default class YMC {
 
     const userService = container.userService
     const ClientId = userService.clientId
-    const ClientVersion = versionCode
+    const ClientVersion = config.versionCode
     const SystemCode = 60
     const Authorization = userService.auth != null ? userService.auth.accessToken : null
 

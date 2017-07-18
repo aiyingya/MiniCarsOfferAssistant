@@ -22,16 +22,6 @@ import * as wxapi from 'fmt-wxapp-promise'
  */
 export default class UserService extends BaseUserService {
 
-  /**
-   * 这两个字段不需要持久化，每次进入页面都会获取最新的结果
-   *
-   * @type {[{
-   *     provinceId: number,
-   *     cityId: number,
-   *     districtId: number
-   *   }]}
-   * @memberof UserService
-   */
   location: Array<Address>
 
   address: any = {}

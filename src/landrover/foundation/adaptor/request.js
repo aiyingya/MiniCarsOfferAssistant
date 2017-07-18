@@ -10,4 +10,17 @@ export default class Request implements RequestVirtualClass {
       header: header
     })
   }
+
+  checkSessionForWeixin(): Promise<void> {
+    return wxapi.checkSession()
+  }
+
+  loginForWeixin(): Promise<{code: string, errMsg: string}> {
+    return wxapi.login()
+  }
+
+  getUserInfoForWeixin(withCredentials: boolean): Promise<UserInfoFromMiniProgram> {
+    return wxapi.getUserInfo({ withCredentials })
+  }
+
 }

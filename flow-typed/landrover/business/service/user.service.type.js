@@ -21,9 +21,11 @@
  *   }
  * @memberof UserService
  */
+
 declare type Auth = {
   accessToken: string,
   clientId: string,
+  expireIn: number,
   expireMillis: number,
   refreshToken: string,
   scope: string,
@@ -31,42 +33,29 @@ declare type Auth = {
   userId: string
 }
 
-/**
- *
- * appKey: "wxd5d5bf6b593d886e"
- * city : ""
- * country : "CN"
- * extra : "en"
- * gender : 1
- * openId : "oJNr60EADGT-ChvW0ValxcGcx29k"
- * province : "Shanghai"
- * nickname : "傅斌"
- * avatarUrl : "http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eopEuOnnoMv4l2otkB2d209UPSabmhQUzBGPXX3lic2HU3KahDicODEVskez8vzhSZ2qXjGZOibQhTeg/0"
- *
- * @type {{
- *     appKey: string,
- *     city: string,
- *     country: string,
- *     extra: string,
- *     gender: number,
- *     openId: string,
- *     province: string,
- *     nickName: string,
- *     avatarUrl: string
- *   }}
- * @memberof UserService
- */
 declare type UserInfoForWeixin = {
-  appKey: string,
-  city: string,
+  customerId: number,
+  userId: string,
+  weixinName: string,
+  portrait: string,
+  sex: number,
   country: string,
-  extra: string,
-  gender: number,
-  openId: string,
   province: string,
-  nickName: string,
-  avatarUrl: string
+  city: string
 }
+
+declare type UserInfoPlainEntityForWeixin = {
+  rawData: string,
+  signature: string,
+  userInfo: UserInfoForWeixin
+}
+
+declare type UserInfoEncryptedEntityForWeixin = {
+  encryptedData: string,
+  iv: string
+}
+
+declare type UserInfoEntityForWeixin = UserInfoPlainEntityForWeixin | UserInfoEncryptedEntityForWeixin
 
 declare type UserInfoForTenant = {
   userId: string,

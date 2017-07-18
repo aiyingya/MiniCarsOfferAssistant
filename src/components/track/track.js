@@ -9,7 +9,7 @@
 
 import UBTService from '../../services/ubt.service.js'
 
-import { version, name, system, device } from '../../landrover/business/index'
+import { config, system, device } from '../../landrover/business/index'
 
 import Component from '../component'
 
@@ -22,7 +22,7 @@ export default {
   setDefaults() {
     return {
       deviceType: system.platform,
-      appVersion: `${name}:${version}`,
+      appVersion: `${config.name}:${config.version}`,
       pageId: null,
       pageName: null,
       channel: 'mini-program',

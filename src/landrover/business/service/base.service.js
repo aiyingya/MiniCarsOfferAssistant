@@ -1,5 +1,5 @@
 // @flow
-import { env, versionCode, container, request } from '../index'
+import { config, container, request, ui } from '../index'
 
 export default class Service {
 
@@ -19,7 +19,7 @@ export default class Service {
   ): Promise<any> {
 
     const ClientId = container.userService.clientId
-    const ClientVersion = versionCode
+    const ClientVersion = config.versionCode
     const SystemCode = 60
     const Authorization = container.userService.auth != null ? container.userService.auth.accessToken : null
 
@@ -35,7 +35,7 @@ export default class Service {
     Object.keys(finalData).forEach((key) => (finalData[key] == null) && delete finalData[key]);
     Object.keys(finalHeader).forEach((key) => (finalHeader[key] == null) && delete finalHeader[key]);
 
-    const url = `${this.baseUrl[env]}${path}`
+    const url = `${this.baseUrl[config.env]}${path}`
     const promise = request.request(
       url,
       method,
@@ -67,7 +67,7 @@ export default class Service {
           if (behavior.type === 'TOAST') {
             let content = behavior.content
             if (content && content.length) {
-              // 暂不实现
+              ui.showToast(content)
             }
           } else if (behavior.type === 'Alert') {
             // 暂不实现
@@ -91,7 +91,8 @@ export default class Service {
             throw new Error('404 or other error')
           }
         }
-      }, err => {
+      })
+      .catch(err => {
         if (err.message === "request:fail response data convert to UTF8 fail") {
           // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
           return
@@ -125,7 +126,8 @@ export default class Service {
             throw new Error('404 or other error')
           }
         }
-      }, err => {
+      })
+      .catch(err => {
         if (err.message === "request:fail response data convert to UTF8 fail") {
           // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
           return

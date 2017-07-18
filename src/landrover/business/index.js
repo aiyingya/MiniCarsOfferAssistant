@@ -7,7 +7,8 @@ import {
   generateUUID,
   system,
   px,
-  rpx
+  rpx,
+  ui
 } from '../foundation/index'
 
 const
@@ -16,6 +17,14 @@ const
   version = FMT_VERSION,
   versionCode = FMT_VERSION_CODE,
   build = FMT_BUILD
+
+const config = {
+  env,
+  name,
+  version,
+  versionCode,
+  build
+}
 
 const keyWithNamespacePrefix = (key) => {
   if (env === 'prd') {
@@ -82,15 +91,12 @@ const
   storage = storageProxy
 
 export {
-  env,
-  name,
-  version,
-  versionCode,
-  build,
+  config,
   device,
   system,
   request,
   storage,
   container,
-  util
+  util,
+  ui
 }

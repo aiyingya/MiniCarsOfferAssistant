@@ -2,11 +2,13 @@
 import container from './adaptor/container'
 import Request from './adaptor/request'
 import Storage from './adaptor/storage'
+import UI from './adaptor/ui'
 
 import { system, px, rpx } from './adaptor/system'
 
 const request = new Request()
 const storage = new Storage()
+const ui = new UI()
 
 const generateUUID = function () {
   let d = new Date().getTime()
@@ -25,5 +27,6 @@ export {
   generateUUID,
   system,
   px,
-  rpx
+  rpx,
+  ui
 }

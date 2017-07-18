@@ -38,7 +38,7 @@ Page({
       })
       return
     }
-    container.userService.retrieveTenantMemberExist(this.data.userPhoneValue)
+    container.userService.retrieveWeixinAccountCanLogin(this.data.userPhoneValue)
       .then(res => {
         if (res) {
           container.userService.createVCode(this.data.userPhoneValue)

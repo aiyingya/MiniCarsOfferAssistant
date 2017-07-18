@@ -1,6 +1,6 @@
 
 import Component from '../../component'
-import util from '../../../utils/util'
+import utils from '../../../utils/util'
 import { system, util } from '../../../landrover/business/index'
 
 export default {
@@ -272,7 +272,7 @@ export default {
             const value = that.valueForScrollLeft(e.detail.scrollLeft, plate.rangeLocationLower, this._data.params.guidePrice, this._data.params.quotedMethod)
             this._data.sellingPrice = value.absoluteSellingPrice
 
-            const quoted = util.quotedPriceByMethod(value.absoluteSellingPrice, this._data.params.guidePrice, this._data.params.quotedMethod)
+            const quoted = utils.quotedPriceByMethod(value.absoluteSellingPrice, this._data.params.guidePrice, this._data.params.quotedMethod)
             this._data.quoted = quoted
 
             this.setData({

@@ -54,7 +54,7 @@ Page({
 
     let that = this
     this.setData({
-      windowHeight: system.windowHeight,
+      windoweight: system.windowHeight,
       windowWidth: system.windowWidth,
       drawerW: system.windowWidth * 0.8
     })

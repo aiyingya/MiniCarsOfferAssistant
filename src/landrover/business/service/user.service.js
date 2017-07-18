@@ -1,6 +1,6 @@
 // @flow
 import Service from './base.service'
-import { storage } from '../index'
+import { name, versionCode, storage, request, device } from '../index'
 
 export default class UserService extends Service {
 
@@ -32,9 +32,12 @@ export default class UserService extends Service {
 
   userInfo: ?any
 
-  userInfoForWeixin: ?UserInfoForWeixin
-
   userInfoForTenant: ?UserInfoForTenant
+
+  weixin: {
+    userInfo: ?UserInfoForWeixin,
+    sessionId: ?string
+  }
 
   isAuthAvailable(): boolean {
     const currentDate = new Date()
@@ -56,16 +59,46 @@ export default class UserService extends Service {
     this.loginChannel = 'guest'
 
     this.userInfo = null
-    this.userInfoForWeixin = null
     this.userInfoForTenant = null
+
+    this.weixin = {
+      userInfo: null,
+      sessionId: null
+    }
   }
 
   setup(): void {
     super.setup()
 
-    this.getClientId(false)
-    this.loadUserInfo()
-    this.refreshAccessToken()
+    const initialPromise = Promise.resolve()
+
+    initialPromise
+    .then(() => {
+      console.info('user.service 启动开始')
+    })
+    .then(() => {
+      return this.getClientId(false)
+    })
+    .then(() => {
+      this.loadUserInfo()
+      if (this.auth != null) {
+        return this.refreshAccessToken(this.auth)
+      } else {
+        return Promise.resolve()
+      }
+    })
+    .then(() => {
+      return this.loginForWeixin()
+    })
+    .then(() => {
+      return this.getUserInfoForWeixin(true)
+    })
+    .then(() => {
+      console.info('user.service 启动完毕')
+    })
+    .catch(err => {
+      console.error('user.service 启动失败')
+    })
   }
 
   p_timestampFromNowWithDelta(delta: number): number {
@@ -81,25 +114,24 @@ export default class UserService extends Service {
     })
   }
 
+  p_authSessionIdMissingPromise(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      reject()
+    })
+  }
+
   /**
    * clientId API
    */
-  retrieveClientId(): Promise<any> {
-    const deviceId = storage.getItemSync('deviceId')
-    if (deviceId != null && deviceId.length > 0) {
-      const userId = this.auth != null ? this.auth.userId : null
-      return this.request(
-        'cgi/visitor',
-        'GET',
-        {
-          deviceId,
-          userId
-        }
-      )
-    } else {
-      console.error('同步获取 deviceId 为空')
-      return this.p_authIsNotAvailablePromise()
-    }
+  retrieveClientId(deviceId: string, userId: ?string): Promise<any> {
+    return this.request(
+      'cgi/visitor',
+      'GET',
+      {
+        deviceId,
+        userId
+      }
+    )
   }
 
   /**
@@ -147,20 +179,16 @@ export default class UserService extends Service {
     return this.request('cgi/authorization', 'DELETE')
   }
 
-  updateAuthentication(): Promise<any> {
-    if (this.auth != null) {
-      const Authorization = this.auth.refreshToken
-      return this.request(
-        'cgi/authorization',
-        'PUT',
-        null,
-        {
-          Authorization
-        }
-      )
-    } else {
-      return this.p_authIsNotAvailablePromise()
-    }
+  updateAuthentication(refreshToken: string): Promise<Auth> {
+    const Authorization = refreshToken
+    return this.request(
+      'cgi/authorization',
+      'PUT',
+      null,
+      {
+        Authorization
+      }
+    )
   }
 
   retrieveUserExist(key: string): Promise<any> {
@@ -173,35 +201,25 @@ export default class UserService extends Service {
     )
   }
 
-  createPassword(newPassword: string): Promise<any> {
-    if (this.auth != null) {
-      const userId = this.auth.userId
-      return this.request(
-        `user/${userId}/pwd`,
-        'POST',
-        {
-          newPassword
-        }
-      )
-    } else {
-      return this.p_authIsNotAvailablePromise()
-    }
+  createPassword(userId: string, newPassword: string): Promise<any> {
+    return this.request(
+      `user/${userId}/pwd`,
+      'POST',
+      {
+        newPassword
+      }
+    )
   }
 
-  updatePassword(newPassword: string, password?: string): Promise<any> {
-    if (this.auth != null) {
-      const userId = this.auth.userId
-      return this.request(
-        `user/${userId}/pwd`,
-        'PUT',
-        {
-          newPassword,
-          password
-        }
-      )
-    } else {
-      return this.p_authIsNotAvailablePromise()
-    }
+  updatePassword(userId: string, newPassword: string, password?: string): Promise<any> {
+    return this.request(
+      `user/${userId}/pwd`,
+      'PUT',
+      {
+        newPassword,
+        password
+      }
+    )
   }
 
   /**
@@ -224,43 +242,10 @@ export default class UserService extends Service {
     )
   }
 
-  createBindingWithWechatAccount(): Promise<any> {
-    if (this.auth != null) {
-      const snsId = this.snsId
-      const userId = this.auth.userId
-      return this.request(
-        'cgi/user/weixin/binding',
-        'POST',
-        {
-          snsId,
-          userId
-        }
-      )
-    } else {
-      return this.p_authIsNotAvailablePromise()
-    }
-  }
-
-  /**
-  * 微信用户 API
-  */
-
-  createOrUpdateWechatUserInformation(code: string, encryptedData: string, iv: string): Promise<any> {
-    return this.request(
-      'cgi/user/weixin',
-      'POST',
-      {
-        code,
-        encryptedData,
-        iv
-      }
-    )
-  }
-
   /**
    * 租户 api
    */
-  retrieveTenantMemberExist(mobile: string): Promise<any> {
+  retrieveTenantMemberExist(mobile: string): Promise<boolean> {
     return this.request(
       'cgi/tenant/member/exist',
       'GET',
@@ -270,17 +255,222 @@ export default class UserService extends Service {
     )
   }
 
-  retrieveTenantMemberUserInfo(): Promise<any> {
-    if (this.auth != null) {
-      const userId = this.auth.userId
-      return this.request(
-        `cgi/tenant/member/${userId}/tenant`,
-        'GET'
-      )
-    } else {
-      return this.p_authIsNotAvailablePromise()
-    }
+  retrieveTenantMemberUserInfo(userId: string): Promise<UserInfoForTenant> {
+    return this.request(
+      `cgi/tenant/member/${userId}/tenant`,
+      'GET'
+    )
   }
+
+  /**
+   * 微信小程序 api
+   */
+  createAuthenticationByMiniProgram(appId: string, code: string): Promise<{ sessionId: string }> {
+    return this.request(
+      'cgi/wxapp/auth',
+      'POST',
+      {
+        appId,
+        code
+      }
+    )
+  }
+
+  updateUserInfoByMiniProgram(sessionId: string, encrypted: boolean, userInfo: UserInfoEntityForWeixin): Promise<UserInfoForWeixin> {
+    // let data
+    // if (encrypted === true) {
+    // const encryptedData: UserInfoForMiniProgramEncrypted = userInfo
+    // data = encryptedData
+    // } else {
+    // const plainData: UserInfoForMiniProgramPlain = userInfo
+    // data = plainData
+    // }
+    return this.request(
+      'cgi/wxapp/user',
+      'POST',
+      {
+        sessionId,
+        encrypted,
+        ...userInfo
+      }
+    )
+  }
+
+  createBoundWithWeixinAccount(userId: string, sessionId: string): Promise<void> {
+    return this.request(
+      'cgi/wxapp/user/bound',
+      'PUT',
+      {
+        sessionId,
+        userId
+      }
+    )
+  }
+
+  retrieveWeixinAccountHasBound(sessionId: string): Promise<boolean> {
+    const sid = sessionId
+    return this.request(
+      'cgi/wxapp/user/bound',
+      'GET',
+      {
+        sid
+      }
+    )
+  }
+
+  retrieveWeixinAccountCanLogin(sessionId: string, mobile: string): Promise<{ success: boolean, message: string }> {
+    const sid = sessionId
+    const m = mobile
+    return this.request(
+      'cgi/wxapp/mobile/check',
+      'GET',
+      {
+        sid,
+        m
+      }
+    )
+  }
+
+  /**
+   * 微信三方登录包裹接口
+   * 自动获取 sessionId 到本地
+   *
+   * @returns {Promise<{ sessionId: string }>}
+   * @memberof UserService
+   */
+  loginForWeixin(): Promise<{ sessionId: string }> {
+    return request.checkSessionForWeixin()
+      .then(() => {
+        // 登录有效
+        const sessionId = this.weixin.sessionId
+        if (sessionId != null) {
+          // 有 sessionId
+          return { sessionId }
+        } else {
+          // 没有 sessionId
+          return Promise.reject()
+        }
+      })
+      .catch(() => {
+        // 登录过期 || 登录没过期但是没有 sessionId
+        return request.loginForWeixin()
+          .then(res => {
+            const code = res.code
+            return code
+          })
+          .catch(err => {
+            // login 接口出错的情况
+            console.error('微信小程序登录失败')
+            console.error(err.message)
+            return null
+          })
+          .then((code: ?string) => {
+            if (code != null) {
+              // FIXME: appid 需要抽象
+              this.createAuthenticationByMiniProgram('wxd5d5bf6b593d886e', code)
+                .then(res => {
+                  const sessionId = res.sessionId
+                  this.weixin.sessionId = sessionId
+                  this.saveUserInfo()
+                  return { sessionId }
+                })
+            } else {
+              return Promise.reject()
+            }
+          })
+          .catch(err => {
+            console.error('微信三方登录失败')
+          })
+      })
+  }
+
+
+  /**
+   * 绑定账号
+   * 前提条件，需要 sessionId， 也就是成功登录
+   *
+   * @returns {Promise<void>}
+   * @memberof UserService
+   */
+  boundAccountForWeixin(): Promise<void> {
+    const sessionId = this.weixin.sessionId
+    if (sessionId == null) {
+      return Promise.reject(new Error('sessionId must not be null'))
+    }
+    const auth = this.auth
+    if (auth == null) {
+      return Promise.reject(new Error('auth must not be null'))
+    }
+
+    return this.retrieveWeixinAccountHasBound(sessionId)
+      .then((hasBound: boolean) => {
+        return hasBound
+      })
+      .catch(err => {
+        return false
+      })
+      .then((hasBound: boolean) => {
+        if (hasBound) {
+          return Promise.resolve()
+        } else {
+          return this.createBoundWithWeixinAccount(sessionId, auth.userId)
+        }
+      })
+      .catch(err => {
+        return Promise.reject()
+      })
+  }
+
+  /**
+   * 获取用户信息，其中包括了向微信获取用户信息，更新至服务器后台并获取实际可用的用户信息实体
+   *
+   *
+   * @param {boolean} withCredentials
+   * @returns {Promise<UserInfoForWeixin>}
+   * @memberof UserService
+   */
+  getUserInfoForWeixin(withCredentials: boolean): Promise<UserInfoForWeixin> {
+    const sessionId = this.weixin.sessionId
+    if (sessionId == null) {
+      return Promise.reject(new Error('sessionId must not be null'))
+    }
+    return request.getUserInfoForWeixin(withCredentials)
+      .then(userInfoFromMiniProgram => {
+
+        let data: UserInfoEntityForWeixin
+        if (withCredentials) {
+          const userInfo: UserInfoEncryptedEntityForWeixin = {
+            encryptedData: userInfoFromMiniProgram.encryptedData,
+            iv: userInfoFromMiniProgram.iv
+          }
+          data = userInfo
+        } else {
+          const userInfo: UserInfoPlainEntityForWeixin = {
+            rawData: userInfoFromMiniProgram.rawData,
+            signature: userInfoFromMiniProgram.signature,
+            userInfo: {
+              weixinName: userInfoFromMiniProgram.nickName,
+              portrait: userInfoFromMiniProgram.avatarUrl,
+              country: userInfoFromMiniProgram.country,
+              province: userInfoFromMiniProgram.province,
+              city: userInfoFromMiniProgram.city,
+              sex: userInfoFromMiniProgram.gender
+            }
+          }
+          data = userInfo
+        }
+
+        return this.updateUserInfoByMiniProgram(sessionId, withCredentials, data)
+      })
+      .then(userInfoForWeixin => {
+        this.weixin.userInfo = userInfoForWeixin
+        return userInfoForWeixin
+      })
+      .catch(err => {
+        console.error(err.message)
+      })
+  }
+
 
   login(authType: AuthType, authEntity: AuthEntity, channel: string): Promise<Auth> {
     return this.createAuthentication(authType, authEntity, channel)
@@ -313,9 +503,11 @@ export default class UserService extends Service {
       })
   }
 
-  refreshAccessToken(): Promise<Auth> {
-    if (this.isAuthAvailable()) {
-      return this.updateAuthentication()
+  refreshAccessToken(auth: Auth): Promise<Auth> {
+    if (this.isAuthAvailable) {
+      return Promise.resolve(auth)
+    } else {
+      return this.updateAuthentication(auth.refreshToken)
         .then(auth => {
           const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
           auth.expireIn = expireIn
@@ -326,15 +518,15 @@ export default class UserService extends Service {
 
           return auth
         })
-    } else {
-      return this.p_authIsNotAvailablePromise()
     }
   }
 
   getClientId(force: boolean): Promise<any> {
+    const deviceId = device.deviceId
+    const userId = this.auth != null ? this.auth.userId : null
     let retrieveClientIdPromise
     if (force) {
-      retrieveClientIdPromise = this.retrieveClientId()
+      retrieveClientIdPromise = this.retrieveClientId(deviceId, userId)
     } else {
       if (this.clientId != null) {
         const clientId = this.clientId
@@ -357,7 +549,7 @@ export default class UserService extends Service {
         if (!storage.removeItemSync('clientId')) {
           console.error('同步删除 clientId 发生错误')
         }
-        retrieveClientIdPromise = this.retrieveClientId()
+        retrieveClientIdPromise = this.retrieveClientId(deviceId, userId)
       }
     }
 
@@ -376,27 +568,41 @@ export default class UserService extends Service {
   }
 
   saveUserInfo(): void {
-     const userInfo = {
-       loginChannel: this.loginChannel,
-       auth: this.auth,
-       weixinUserInfo: this.userInfoForWeixin,
-       snsId: this.snsId
-     }
+    const userInfo = {
+      loginChannel: this.loginChannel,
+      auth: this.auth,
+      snsId: this.snsId,
+      weixin: this.weixin,
+      versionCode: versionCode
+    }
 
-     const userInfoJSONString = JSON.stringify(userInfo)
-     if (!storage.setItemSync('auth', userInfoJSONString)) {
-        console.error('同步设置 auth 出错')
-     }
+    const userInfoJSONString = JSON.stringify(userInfo)
+    if (!storage.setItemSync('auth', userInfoJSONString)) {
+      console.error('同步设置 auth 出错')
+    }
   }
 
   loadUserInfo(): void {
     const userInfoJSONString = storage.getItemSync('auth')
     if (userInfoJSONString != null && userInfoJSONString.length > 0) {
       const userInfo = JSON.parse(userInfoJSONString)
-              this.loginChannel = userInfo.loginChannel || 'guest'
+      const originalVersionCode = userInfo.versionCode
+      if (originalVersionCode == null) {
+        // 如果取出的用户信息为 null / undefined
+        // 意味着在 1.8.0 之前
+        this.loginChannel = userInfo.loginChannel || 'guest'
         this.snsId = userInfo.snsId || null
         this.auth = userInfo.auth || null
-        this.userInfoForWeixin = userInfo.weixinUserInfo || null
+        this.weixin.userInfo = userInfo.weixinUserInfo || null
+      } else {
+        // 1.8.0 以及之后
+        this.loginChannel = userInfo.loginChannel || 'guest'
+        this.snsId = userInfo.snsId || null
+        this.auth = userInfo.auth || null
+        this.weixin.userInfo = userInfo.weixin.userInfo || null
+        this.weixin.sessionId = userInfo.weixin.sessionId || null
+      }
+
     } else {
       if (userInfoJSONString == null) {
         console.error('同步获取 auth 出错')
@@ -409,15 +615,22 @@ export default class UserService extends Service {
       this.loginChannel = 'guest'
       this.snsId = null
       this.auth = null
-      this.userInfoForWeixin = null
+      this.weixin = {
+        userInfo: null,
+        sessionId: null
+      }
     } else {
       console.error('同步删除 auth 出错')
     }
   }
 
   getTenant(): Promise<any> {
-    return this.retrieveTenantMemberUserInfo()
-      .then( tenant => {
+    const auth = this.auth
+    if (auth == null) {
+      return Promise.reject(new Error('auth should be not null'))
+    }
+    return this.retrieveTenantMemberUserInfo(auth.userId)
+      .then(tenant => {
         this.userInfoForTenant = tenant
       })
   }
