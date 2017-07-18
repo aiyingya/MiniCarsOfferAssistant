@@ -69,6 +69,14 @@ if (deviceId != null && deviceId.length > 0) {
 }
 console.info(device)
 
+/**
+ * util
+ */
+const util = {
+  px,
+  rpx
+}
+
 const
   request = requestProxy,
   storage = storageProxy
@@ -83,5 +91,6 @@ export {
   system,
   request,
   storage,
-  container
+  container,
+  util
 }

@@ -1,7 +1,7 @@
 
 import Component from '../../component'
 import util from '../../../utils/util'
-import { system, px, rpx } from '../../../landrover/business/index'
+import { system, util } from '../../../landrover/business/index'
 
 export default {
   adjustUpdateTimeoutId: null,
@@ -143,7 +143,7 @@ export default {
       visible: !1
     }, this.setDefaults(), opts)
 
-    const originalScalePx = Math.floor(px(30))
+    const originalScalePx = Math.floor(util.px(30))
     options.scalePx = originalScalePx + (originalScalePx % 2 === 1 ? 1 : 0)
     this.scalePx = options.scalePx
     options.tenScaleWidthPx = this.scalePx * 10
