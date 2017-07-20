@@ -73,13 +73,6 @@ Page({
         if (err.message === 'cancel_error') {
         } else {
           this.data.lockSMSButton = false
-
-          $wuxToast.show({
-            type: false,
-            timer: 2000,
-            color: '#ffffff',
-            text: '服务器错误，请稍后再试'
-          })
         }
       })
   },
@@ -142,26 +135,18 @@ Page({
     const authEntity = { code, mobile, useCase }
 
     container.userService.login('code', authEntity, '')
-      .then(res => {
-        console.log('登陆成功!')
-      })
-      .catch(err => {
-        $wuxToast.show({
-          type: false,
-          timer: 2000,
-          color: '#fff',
-          text: err.message
-        })
-        return Promise.reject()
+      .then(() => {
+        console.log("登陆成功")
+        return container.userService.boundAccountForWeixin()
       })
       .then(() => {
-        container.userService.boundAccountForWeixin()
-          .then(() => {
-            wx.navigateBack()
-          })
-          .catch(err => {
-            console.log
-          })
+        console.log("绑定成功")
+        wx.navigateBack()
+      })
+      .catch(err => {
+        console.log
+      })
+      .catch(err => {
       })
   },
   boundSelectHandler(e) {

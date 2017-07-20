@@ -53,12 +53,6 @@ Page({
           })
         })
         .catch(err => {
-          $wuxToast.show({
-            type: false,
-            timer: 2000,
-            color: '#fff',
-            text: '服务器错误'
-          })
         })
     } else {
       this.setData({

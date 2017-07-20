@@ -1,5 +1,5 @@
 // @flow
-import { config, container, request, ui } from '../index'
+import { config, container, request } from '../index'
 
 export default class Service {
 
@@ -65,10 +65,11 @@ export default class Service {
         const behavior = wx_data.behavior || null
         if (behavior != null) {
           if (behavior.type === 'TOAST') {
-            let content = behavior.content
-            if (content && content.length) {
-              ui.showToast(content)
-            }
+            // FIXME: 未实现
+            // let content = behavior.content
+            // if (content && content.length) {
+              // ui.showToast(content)
+            // }
           } else if (behavior.type === 'Alert') {
             // 暂不实现
           } else if (behavior.type === 'Notice') {
@@ -86,9 +87,9 @@ export default class Service {
           if (error != null) {
             const errorMessage = error.message
             console.error(error.debugInfo)
-            throw new Error(errorMessage) //to -> fail
+            return Promise.reject(new Error(errorMessage)) //to -> fail
           } else {
-            throw new Error('404 or other error')
+            return Promise.reject(new Error('404 or other error'))
           }
         }
       })
@@ -97,7 +98,7 @@ export default class Service {
           // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
           return
         }
-
+        return Promise.reject(err)
       })
   }
 
@@ -121,9 +122,9 @@ export default class Service {
           const error = wx_data.error
           if (error != null) {
             const errorMessage = error.alertMessage
-            throw new Error(errorMessage) //to -> fail
+            return Promise.reject(new Error(errorMessage)) //to -> fail
           } else {
-            throw new Error('404 or other error')
+            return Promise.reject(new Error('404 or other error'))
           }
         }
       })
@@ -132,6 +133,7 @@ export default class Service {
           // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
           return
         }
+        return Promise.reject(err)
       })
   }
 
