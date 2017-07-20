@@ -42,14 +42,16 @@ Page({
 
       this.setData({
         isLogin: true,
-        userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '',
+        userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
         userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
       })
       container.userService.getLocation()
         .then(res => {
           this.setData({
             userMobile: res.mobile,
-            userTenants: res.tenants
+            userTenants: res.tenants,
+            userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '匿名用户',
+            userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
           })
         })
         .catch(err => {
