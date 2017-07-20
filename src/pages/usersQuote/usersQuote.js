@@ -38,20 +38,21 @@ Page({
 
     if (container.userService.isLogin()) {
       const userInfo = container.userService.auth
-      const weixinUsersInfo = container.userService.userInfoForWeixin
+      const weixinUsersInfo = container.userService.weixin.userInfo
 
       this.setData({
-        isLogin: true
+        isLogin: true,
+        userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '',
+        userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
       })
       container.userService.getLocation()
         .then(res => {
           this.setData({
-            userName: weixinUsersInfo ? weixinUsersInfo.nickName || res.mobile : '',
-            userPortrait: weixinUsersInfo ? weixinUsersInfo.avatarUrl : '../../images/icons/icon_head_default_44.png',
             userMobile: res.mobile,
             userTenants: res.tenants
           })
-        }, err => {
+        })
+        .catch(err => {
           $wuxToast.show({
             type: false,
             timer: 2000,

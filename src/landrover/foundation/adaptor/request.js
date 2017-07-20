@@ -23,4 +23,16 @@ export default class Request implements RequestVirtualClass {
     return wxapi.getUserInfo({ withCredentials })
   }
 
+  authorizeForWeixin(scope: 'scope.userInfo'|''): Promise<{ errMsg: string}> {
+    return wxapi.authorize({ scope })
+  }
+
+  getSettingForWeixin(): Promise<{authSetting: any}> {
+    return wxapi.getSetting()
+  }
+
+  openSettingForWeixin(): Promise<{authSetting: any}> {
+    return wxapi.openSetting()
+  }
+
 }

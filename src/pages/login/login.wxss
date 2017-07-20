@@ -66,6 +66,25 @@
 .weui-toast__content {
 	margin: 0;
 }
+.account-bound {
+  display: flex;
+  align-items: center;
+  margin: 20rpx 40rpx;
+  line-height: 28rpx;
+  font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+}
+.account-bound image{
+  height: 30rpx;
+  width: 30rpx;
+  margin-right: 10rpx;
+}
+.login-tips {
+  margin: 0rpx 40rpx;
+  line-height: 28rpx;
+  font-family: "PingFangSC-Regular";
+	font-size: 26rpx;
+}
 .login-btn {
 	width: 92%;
 	height: 88rpx;

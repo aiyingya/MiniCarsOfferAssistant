@@ -141,6 +141,7 @@ export default class Service {
     return new Promise((resolve, reject) => { })
   }
 
-  setup(): void {
+  setup(): Promise<void> {
+    return Promise.resolve()
   }
 }

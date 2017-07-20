@@ -44,10 +44,15 @@ declare type UserInfoForWeixin = {
   city: string
 }
 
+declare type Weixin = {
+  userInfo: UserInfoForWeixin,
+  sessionId: string
+}
+
 declare type UserInfoPlainEntityForWeixin = {
+  userInfo: UserInfoForWeixin,
   rawData: string,
-  signature: string,
-  userInfo: UserInfoForWeixin
+  signature: string
 }
 
 declare type UserInfoEncryptedEntityForWeixin = {

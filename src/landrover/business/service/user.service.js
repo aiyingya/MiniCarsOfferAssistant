@@ -1,6 +1,6 @@
 // @flow
 import Service from './base.service'
-import { name, versionCode, storage, request, device } from '../index'
+import { config, storage, request, device, ui } from '../index'
 
 export default class UserService extends Service {
 
@@ -10,27 +10,13 @@ export default class UserService extends Service {
     prd: 'https://ymcapi.yaomaiche.com/uc/'
   }
 
-  auth: ?Auth
+  auth: (Auth|null) = null
 
-  clientId: ?string
-
-  /**
- * 当 loginChannel 为 guest, snsId 是一个 {String}, 来自于 clientId
- * 当 loginChannel 为 yuntu, snsId
- * 当 loginChannel 为 weixin,
- *
- * snsId 用来存在与否服务端对是否获得 用户的微信用户信息
- * 当为 {number} 时，意味着服务端知晓其微信用户信息
- * 当为 {string} 时，意味着服务端不知晓其微信用户信息
- *
- * @type {((string | number))}
- * @memberof UserService
- */
-  snsId: ?SNSIdType
+  clientId: (string|null) = null
 
   loginChannel: LoginChannelType
 
-  userInfo: ?any
+  userInfo: any | null
 
   userInfoForTenant: ?UserInfoForTenant
 
@@ -55,7 +41,6 @@ export default class UserService extends Service {
 
     this.auth = null
     this.clientId = null
-    this.snsId = null
     this.loginChannel = 'guest'
 
     this.userInfo = null
@@ -67,38 +52,50 @@ export default class UserService extends Service {
     }
   }
 
-  setup(): void {
-    super.setup()
-
-    const initialPromise = Promise.resolve()
-
-    initialPromise
-    .then(() => {
-      console.info('user.service 启动开始')
-    })
-    .then(() => {
-      return this.getClientId(false)
-    })
-    .then(() => {
-      this.loadUserInfo()
-      if (this.auth != null) {
-        return this.refreshAccessToken(this.auth)
-      } else {
-        return Promise.resolve()
-      }
-    })
-    .then(() => {
-      return this.loginForWeixin()
-    })
-    .then(() => {
-      return this.getUserInfoForWeixin(true)
-    })
-    .then(() => {
-      console.info('user.service 启动完毕')
-    })
-    .catch(err => {
-      console.error('user.service 启动失败')
-    })
+  setup(): Promise<void> {
+    return super.setup()
+      .then(() => {
+        // 启动开始
+        console.info('user.service 启动开始')
+      })
+      .then(() => {
+        // 获取 clientId
+        return this.getClientId(false)
+      })
+      .then(() => {
+        // 载入持有化的数据
+        this.loadUserInfo()
+        if (this.auth != null) {
+          return this.refreshAccessToken(this.auth)
+        } else {
+          return Promise.resolve()
+        }
+      })
+      .then(() => {
+        // 开始微信三方登录
+        return this.loginForWeixin()
+      })
+      .then(() => {
+        // 检查并弱请求 userInfo 权限，并获取用户信息更新
+        // 该流程的成功与否不会影响最终启动流程
+        return this.checkAndRequestAuthorize('scope.userInfo')
+          .then((res) => {
+            if (res.scopeAuthorize == true) {
+              return this.getUserInfoForWeixin(true)
+                        .catch(err => {
+                          return Promise.resolve()
+                        })
+            } else {
+              return Promise.resolve()
+            }
+          })
+      })
+      .then(() => {
+        console.info('user.service 启动完毕')
+      })
+      .catch(err => {
+        console.error('user.service 启动失败')
+      })
   }
 
   p_timestampFromNowWithDelta(delta: number): number {
@@ -106,18 +103,6 @@ export default class UserService extends Service {
     const currentTime = currentDate.getTime()
     const expirationTime = currentTime + delta
     return expirationTime
-  }
-
-  p_authIsNotAvailablePromise(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      reject()
-    })
-  }
-
-  p_authSessionIdMissingPromise(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      reject()
-    })
   }
 
   /**
@@ -265,7 +250,16 @@ export default class UserService extends Service {
   /**
    * 微信小程序 api
    */
-  createAuthenticationByMiniProgram(appId: string, code: string): Promise<{ sessionId: string }> {
+
+  /**
+   *
+   *
+   * @param {string} appId
+   * @param {string} code
+   * @returns {Promise<string>} sessionId
+   * @memberof UserService
+   */
+  createAuthenticationByMiniProgram(appId: string, code: string): Promise<string> {
     return this.request(
       'cgi/wxapp/auth',
       'POST',
@@ -287,7 +281,7 @@ export default class UserService extends Service {
     // }
     return this.request(
       'cgi/wxapp/user',
-      'POST',
+      'PUT',
       {
         sessionId,
         encrypted,
@@ -368,8 +362,8 @@ export default class UserService extends Service {
             if (code != null) {
               // FIXME: appid 需要抽象
               this.createAuthenticationByMiniProgram('wxd5d5bf6b593d886e', code)
-                .then(res => {
-                  const sessionId = res.sessionId
+                .then((sessionId: string) => {
+                  this.loginChannel = 'weixin'
                   this.weixin.sessionId = sessionId
                   this.saveUserInfo()
                   return { sessionId }
@@ -379,6 +373,9 @@ export default class UserService extends Service {
             }
           })
           .catch(err => {
+            this.loginChannel = 'guest'
+            this.weixin.sessionId = null
+            this.saveUserInfo()
             console.error('微信三方登录失败')
           })
       })
@@ -404,26 +401,73 @@ export default class UserService extends Service {
 
     return this.retrieveWeixinAccountHasBound(sessionId)
       .then((hasBound: boolean) => {
-        return hasBound
-      })
-      .catch(err => {
-        return false
-      })
-      .then((hasBound: boolean) => {
         if (hasBound) {
           return Promise.resolve()
         } else {
-          return this.createBoundWithWeixinAccount(sessionId, auth.userId)
+          return this.createBoundWithWeixinAccount(auth.userId, sessionId)
         }
       })
       .catch(err => {
-        return Promise.reject()
+        return Promise.reject(new Error('微信账号绑定失败'))
+      })
+  }
+
+  /**
+   * 检查并获取授权
+   *
+   */
+  checkAndRequestAuthorize(scope: 'scope.userInfo' | '', require?: boolean = false): Promise<{ scopeAuthorize: boolean }> {
+    const requirePromise: () => Promise<{ scopeAuthorize: boolean }> = () => {
+      return ui.showModal('提示', `需要获取${scope}权限， 否则无法使用某项功能`)
+        .then(res => {
+          if (res.confirm === true) {
+            return request.openSettingForWeixin()
+              .then(res => {
+                const scopeAuthorize = res.authSetting[scope]
+                return Promise.resolve({ scopeAuthorize })
+              })
+          }
+          if (res.cancel === true) {
+            const scopeAuthorize = false
+            return Promise.resolve({ scopeAuthorize })
+          }
+        })
+        .catch(err => {
+          return Promise.reject(new Error(`引导用户开启 ${scope} 权限时发生错误`))
+        })
+    }
+
+
+    return request.getSettingForWeixin()
+      .then(res => {
+        return res.authSetting[scope]
+      })
+      .then((scopeAuthorize: boolean) => {
+        if (scopeAuthorize === true) {
+          return Promise.resolve({ scopeAuthorize })
+        } else {
+          return request.authorizeForWeixin(scope)
+            .then(res => {
+              console.log('获取权限成功')
+              return Promise.resolve({ scopeAuthorize: true })
+            }, err => {
+              console.log('获取权限失败')
+              return Promise.resolve({ scopeAuthorize: false })
+            })
+        }
+      })
+      .then(res => {
+        const scopeAuthorize = res.scopeAuthorize
+        if (scopeAuthorize == false && require == true) {
+          return requirePromise()
+        } else {
+          return Promise.resolve({ scopeAuthorize })
+        }
       })
   }
 
   /**
    * 获取用户信息，其中包括了向微信获取用户信息，更新至服务器后台并获取实际可用的用户信息实体
-   *
    *
    * @param {boolean} withCredentials
    * @returns {Promise<UserInfoForWeixin>}
@@ -434,6 +478,7 @@ export default class UserService extends Service {
     if (sessionId == null) {
       return Promise.reject(new Error('sessionId must not be null'))
     }
+
     return request.getUserInfoForWeixin(withCredentials)
       .then(userInfoFromMiniProgram => {
 
@@ -464,6 +509,7 @@ export default class UserService extends Service {
       })
       .then(userInfoForWeixin => {
         this.weixin.userInfo = userInfoForWeixin
+        this.saveUserInfo()
         return userInfoForWeixin
       })
       .catch(err => {
@@ -471,6 +517,14 @@ export default class UserService extends Service {
       })
   }
 
+  canWeixinAccountLogin(mobile: string): Promise<{ success: boolean, message: string }> {
+    const sessionId = this.weixin.sessionId
+    if (sessionId != null) {
+      return this.retrieveWeixinAccountCanLogin(sessionId, mobile)
+    } else {
+      return Promise.reject({success: false, message: '微信三方登录未成功'})
+    }
+  }
 
   login(authType: AuthType, authEntity: AuthEntity, channel: string): Promise<Auth> {
     return this.createAuthentication(authType, authEntity, channel)
@@ -481,8 +535,6 @@ export default class UserService extends Service {
         this.loginChannel = 'yuntu'
         this.getClientId(true)
         this.saveUserInfo()
-
-        // this.getLocation()
         return auth
       })
   }
@@ -491,13 +543,7 @@ export default class UserService extends Service {
     return this.deleteAuthentication()
       .then(res => {
         this.auth = null
-        if (this.snsId == null) {
-          throw 'snsId 不应该为 空(null) 或者 未定义(undefined) 状态'
-        } else if (typeof this.snsId === 'string') {
-          this.loginChannel = 'guest'
-        } else if (typeof this.snsId === 'number') {
-          this.loginChannel = 'weixin'
-        }
+        this.loginChannel = 'guest'
         this.saveUserInfo()
         this.getClientId(true)
       })
@@ -571,9 +617,8 @@ export default class UserService extends Service {
     const userInfo = {
       loginChannel: this.loginChannel,
       auth: this.auth,
-      snsId: this.snsId,
       weixin: this.weixin,
-      versionCode: versionCode
+      versionCode: config.versionCode
     }
 
     const userInfoJSONString = JSON.stringify(userInfo)
@@ -591,13 +636,11 @@ export default class UserService extends Service {
         // 如果取出的用户信息为 null / undefined
         // 意味着在 1.8.0 之前
         this.loginChannel = userInfo.loginChannel || 'guest'
-        this.snsId = userInfo.snsId || null
         this.auth = userInfo.auth || null
         this.weixin.userInfo = userInfo.weixinUserInfo || null
       } else {
         // 1.8.0 以及之后
         this.loginChannel = userInfo.loginChannel || 'guest'
-        this.snsId = userInfo.snsId || null
         this.auth = userInfo.auth || null
         this.weixin.userInfo = userInfo.weixin.userInfo || null
         this.weixin.sessionId = userInfo.weixin.sessionId || null
@@ -613,7 +656,6 @@ export default class UserService extends Service {
   clearUserInfo(): void {
     if (storage.removeItemSync('auth')) {
       this.loginChannel = 'guest'
-      this.snsId = null
       this.auth = null
       this.weixin = {
         userInfo: null,
@@ -624,7 +666,7 @@ export default class UserService extends Service {
     }
   }
 
-  getTenant(): Promise<any> {
+  getTenant(): Promise<UserInfoForTenant> {
     const auth = this.auth
     if (auth == null) {
       return Promise.reject(new Error('auth should be not null'))
@@ -632,6 +674,7 @@ export default class UserService extends Service {
     return this.retrieveTenantMemberUserInfo(auth.userId)
       .then(tenant => {
         this.userInfoForTenant = tenant
+        return tenant
       })
   }
 

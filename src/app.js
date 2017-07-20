@@ -16,9 +16,7 @@ container.userService = userService
 container.tradeService = tradeService
 container.saasService = saasService
 
-container.userService.setup()
-container.tradeService.setup()
-container.saasService.setup()
+
 
 const amap = new amapFile.AMapWX({key:'63572efadd84fa26c86bd62f78fe0152'});
 
@@ -31,6 +29,11 @@ App({
     const logs = storage.getItemSync('logs') || []
     logs.unshift(Date.now())
     storage.setItemSync('logs', logs)
+
+    container.userService.setup()
+    container.tradeService.setup()
+    container.saasService.setup()
+
   },
   globalData: {
   },
