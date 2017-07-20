@@ -576,12 +576,12 @@ export default class UserService extends Service {
     } else {
       if (this.clientId != null) {
         const clientId = this.clientId
-        return new Promise.resolve({ clientId })
+        return Promise.resolve({ clientId })
       } else {
         const clientId = storage.getItemSync('clientId')
         if (clientId != null && clientId.length > 0) {
           this.clientId = clientId
-          return new Promise.resolve({ clientId })
+          return Promise.resolve({ clientId })
         }
 
         if (clientId == null) {
