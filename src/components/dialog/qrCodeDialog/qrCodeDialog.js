@@ -88,10 +88,13 @@ export default {
           let that = this
           wx.canvasToTempFilePath({
             canvasId: 'QRcodeCanvas',
+            destWidth: 300,
+            destHeight: 300,
             success: function (res) {
               let tempFilePath = res.tempFilePath
-              
-              options.imagePath = tempFilePath
+              that.setData({
+                [`${that.options.scope}.imagePath`]: tempFilePath
+              })
             },
             fail: function (res) {
                 
@@ -102,12 +105,26 @@ export default {
          * 按钮点击事件
          */
         handleImageLogtap(e) {
-          const image = options.imagePath
-          console.log(options)
+          let that = this
+          const image =e.currentTarget.dataset.imagepath
+
+          if(!image) return
           wx.saveImageToPhotosAlbum({
             filePath: image,
             success(res) {
               console.log(res)
+              wx.showModal({
+                title: '提示',
+                content: '已保存到相册',
+                showCancel: false,
+                success: function(res) {
+                  if (res.confirm) {
+                    that.hide()
+                  } else if (res.cancel) {
+                
+                  }
+                }
+              })
             }
           })
         },
