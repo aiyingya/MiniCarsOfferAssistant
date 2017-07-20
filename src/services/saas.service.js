@@ -793,4 +793,66 @@ export default class SAASService extends Service {
       data: opts.data || {}
     })
   }
+  
+  /**
+   * 获取砍价记录.
+   * @param opts
+   */
+  getBargainData(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/cutPriceActivities',
+      method: 'GET',
+      data: opts.data || {}
+    })
+  }
+  
+  /**
+   * 结束砍价活动.
+   * @param opts
+   */
+  finishActivity(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/finishActivity?activityId='+opts.data.activityId+'&targetId='+opts.data.targetId,
+      method: 'POST',
+      loadingType: 'show'
+    })
+  }
+  
+  /**
+   * 核销优惠券.
+   * @param opts
+   */
+  cancelCoupon(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/exchangeCoupon?couponCode='+opts.data.couponCode,
+      method: 'POST',
+      loadingType: 'show'
+    })
+  }
+  
+  /**
+   * 获取潜客列表.
+   * @param opts
+   */
+  getPotentialData(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/cutPriceLeads',
+      method: 'GET',
+      loadingType: 'show',
+      data: opts.data || {}
+    })
+  }
+  
+  /**
+   * 获取砍价二维码.
+   * @param opts
+   */
+  getBargainQRcode(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/makeQRCode',
+      method: 'GET',
+      loadingType: 'show',
+      data: opts.data || {}
+    })
+  }
 }

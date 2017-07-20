@@ -181,7 +181,8 @@ export default class YMC {
     data?: {[string]: ? string|number},
     header?: {[string]: ? string|number},
     method?: 'GET'|'POST'|'PUT'|'DELETE'|'OPTIONS'|'HEAD'|'TRACE'|'CONNECT',
-    dataType?: 'json'
+    dataType?: 'json',
+    loadingType?: 'none'
   ): Promise<any> {
 
     const userService = container.userService
@@ -208,14 +209,27 @@ export default class YMC {
     Object.keys(header).forEach((key) => {
       if (header != null) (header[key] == null) && delete header[key]
     })
+    
 
+    if (loadingType === 'navigation') {
+      console.log('显示导航栏加载')
+      wxapi.showNavigationBarLoading()
+    } else if (loadingType === 'none') {
+      // 不使用任何加载
+    } else {
+      wxapi.showToast({
+        title: '正在加载',
+        icon: 'loading',
+        duration: 10000,
+        mask: true
+      })
+    }
     return wxapi.request({
       url: url,
       data: data,
       header: header,
       method: method
     }).then(res => {
-      console.log('success-promise-n',res)
       const result = res.data
       const statusCode = res.statusCode
 
@@ -265,6 +279,18 @@ export default class YMC {
       })
       console.error('catch',reason)
       throw reason //to -> fail
+    }).finally(function () {
+      console.log('request.. finally')
+      if (loadingType === 'navigation') {
+        console.log('隐藏导航栏加载')
+        wxapi.hideNavigationBarLoading()
+      } else if (loadingType === 'none') {
+        // 不使用任何加载
+      } else {
+        console.log("end close loading")
+
+        wxapi.hideToast()
+      }
     })
     //.finally(function () {});
   }

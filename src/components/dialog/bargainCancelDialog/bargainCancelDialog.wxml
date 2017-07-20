@@ -1,0 +1,43 @@
+<template name="bargainCancelDialog">
+  <view class="bargainCancelDialog">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} " bindtap="{{ close }}">
+    </view>
+    <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
+      <view class="weui-dialog__hd" wx:if="{{ title }}">
+        <view class="weui-dialog__title">{{ title }}
+          <image class="icon-close" src="../../../images/icons/icon_close.png" bindtap="{{ close }}" ></image>
+        </view>
+      </view>
+
+      <!--分割线+标题-->
+      <view class="weui-bargain-dialog__bd" wx:if="{{ content }}">
+        <view class="weui-dialog__line"></view>
+        <view class="weui-dialog__bd__centent" >{{ content }}</view>
+        <view class="weui-dialog__line"></view>
+      </view>
+
+      <form bindsubmit="{{ confirm }}" >
+        <!--手机号码-->
+       
+        <view class="weui-dialog__input">
+          <input 
+            type="text" 
+            name="inputNumber" 
+            placeholder="{{ inputNumberPlaceholder }}" 
+            value="{{ inputNumber }}" 
+            bindinput="{{ inputNumberInput }}"  
+            />
+        </view>
+
+
+        <view class="weui-dialog__ft">
+          <button class="weui-dialog__btn weui-dialog__btn_default"  bindtap="{{ cancel }}" >{{ cancelText }}
+          </button>
+          <button class="weui-dialog__btn weui-dialog__btn_primary" formType="submit" disabled="{{ confirmDisabled }}">{{ confirmText }}
+          </button>
+        </view>
+      </form>
+
+    </view>
+  </view>
+</template>

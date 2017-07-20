@@ -1,0 +1,69 @@
+<import src="../../components/dialog/bargainCancelDialog/bargainCancelDialog.wxml"/>
+<template is="bargainCancelDialog" data="{{ ...$wux.bargainCancelDialog }}"/>
+<import src="../../components/toast/toast.wxml"/>
+<template is="toast" data="{{ ...$wux.toast }}"/>
+<view class="container">
+  <!-- tab 切换.-->
+  <view class="tabmenu">
+    <view
+      wx:for="{{tabmenu.menu}}" 
+      wx:key="*this"
+      class="tabitem {{item.active}}"
+      data-tabmenu="{{item}}"
+      bindtap="handleTabmenu"
+      >
+      {{item.text}}
+    </view>
+    <view class="tabline {{tabmenu.lineActive}}"></view>
+  </view>
+  
+  <!-- bargain list.-->
+  <view 
+    class="bargain-cells"
+    wx:if="{{bargainListData.length > 0}}"
+    >
+    <view 
+      class="bargain-cell"
+      wx:for="{{bargainListData}}"
+      wx:key="*this"
+      >
+      <view class="bargain-hd">
+        <view class="bargain-username">{{item.customer.mobile}} / {{item.customer.name}}</view>
+        <view class="bargain-times">开始时间  {{item.participateTimeStr}}</view>
+      </view>
+      <view class="bargain-bd">
+        <view class="bargain-bd_item">{{item.activityDetail.cutPriceCount}}人参与</view>
+        <view class="bargain-bd_item">{{item.activityDetail.cutPriceAmount}}元</view>
+        <view class="bargain-bd_item">转发{{item.shareTimes}}次</view>
+      </view>
+      <view class="bargain-ft">
+        <block wx:if="{{item.participateStatus === 'used'}}">
+          <view class="bargain-ft_cancel">
+            <view class="label">已核销：</view>核销时间 2017/07/13 12:53
+          </view>
+        </block> 
+        <block wx:else>
+          <view 
+            class="btn {{item.overStyle}}"
+            data-activity="{{item}}"
+            bindtap="handleFinishActivity"
+            >
+            <block wx:if="{{item.overStyle == ''}}">已结束该活动</block>
+            <block wx:else>结束该活动</block>
+          </view>
+          <view 
+            class="btn {{item.cancelStyle}}"
+            data-activity="{{item}}"
+            bindtap="handleCancelCoupon"
+            >
+            核销优惠券
+          </view>
+        </block>       
+      </view>
+    </view>
+  </view>
+  <view wx:else class="nodata">
+    <image class="nodata-icon" src="../../images/icons/orderlist_icon_noorder.png"></image>
+    <view class="nodata-text">暂无数据~</view>
+  </view>
+</view>

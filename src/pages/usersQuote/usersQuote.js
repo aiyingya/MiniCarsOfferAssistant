@@ -89,24 +89,18 @@ Page({
       }, err => {
       })
   },
+  handleToNewPages(e) {
+    const page = e.currentTarget.dataset.page
+    if (container.userService.isLogin()) {
+      wx.navigateTo({
+        url: `../${page}/${page}`
+      })
+    }
+  },
   handleToQuoteRecord() {
     if (container.userService.isLogin()) {
       wx.navigateTo({
         url: '../quote/quotationsList/quotationsList'
-      })
-    }
-  },
-  handleToSupplier() {
-    if (container.userService.isLogin()) {
-      wx.navigateTo({
-        url: '../supplier/supplier'
-      })
-    }
-  },
-  handleToSetcost() {
-    if (container.userService.isLogin()) {
-      wx.navigateTo({
-        url: '../setCost/setCost'
       })
     }
   }

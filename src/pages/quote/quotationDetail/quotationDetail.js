@@ -1,6 +1,7 @@
 import {
   $wuxInputNumberDialog,
-  $wuxDialog
+  $wuxDialog,
+  $qrCodeDialog
 } from "../../../components/wux"
 import util from '../../../utils/util'
 import { container } from '../../../landrover/business/index'
@@ -280,5 +281,17 @@ Page({
       return true;
     }
     return false;
+  },
+  /**
+   * 发起砍价活动.
+   */
+  
+  handlerBargainActive(e) {
+    let that = this
+    const quotationItem = that.data.quotation.quotationItems[0]
+    
+    $qrCodeDialog.open({
+      content: '发起定车后， 将会有工作人员与您联系'
+    })
   }
 })

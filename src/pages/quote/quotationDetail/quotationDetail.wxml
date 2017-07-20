@@ -4,6 +4,8 @@
 <import src="../../../components/dialog/dialog.wxml"/>
 <template is="dialog" data="{{ ...$wux.dialog }}"/>
 
+<import src="../../../components/dialog/qrCodeDialog/qrCodeDialog.wxml"/>
+<template is="qrCodeDialog" data="{{ ...$wux.qrCodeDialog }}"/>
 <view class="page pad-bt">
     <view class="page__bd">
         <view class="weui-tab">
@@ -139,7 +141,8 @@
             <button class='flex-item-1 btn' bindtap='handlerEditQuotation'>编辑</button>
             <button class='flex-item-2 btn' wx:if="{{quotation.sendMessage}}" bindtap='handlerContactWithCustomer'>联系客户</button>
             <button class='flex-item-3 btn' wx:else bindtap='handlerShareToCustomer'>发送报价</button>
-            <button class='flex-item-3 btn' bindtap='handlerBookCar'>立即定车</button>
+<!--            <button class='flex-item-3 btn' bindtap='handlerBookCar'>发起砍价活动</button>-->
+            <button class='flex-item-3 btn' bindtap='handlerBargainActive'>发起砍价活动</button>
         </view>
     </view>
 </view>

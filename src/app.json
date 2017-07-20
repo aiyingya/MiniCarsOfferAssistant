@@ -15,6 +15,8 @@
     "pages/insurance/insurance",
     "pages/insurance/insuranceDetail/insuranceDetail",
     "pages/details/details",
+    "pages/bargain/bargain",
+    "pages/potential/potential",
     "pages/amap/amap"
   ],
   "window": {

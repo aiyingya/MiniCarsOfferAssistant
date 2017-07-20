@@ -59,12 +59,44 @@
 				</view>
 				<view
 					class="weui-cell__bd weui-cell_primary"
-					bindtap="handleToSetcost"
+					bindtap="handleToNewPages"
+					data-page="setCost"
 					>
 						<view>报价偏好设置</view>
 				</view>
 			</view>
-
+      <view
+				class="weui-cell weui-cell_access"
+				hover="true"
+				hover-class="active"
+				>
+				<view class="weui-cell__hd">
+					<image src="../../images/icons/icon_activity_management.png" />
+				</view>
+				<view
+					class="weui-cell__bd weui-cell_primary"
+					bindtap="handleToNewPages"
+					data-page="bargain"
+					>
+						<view>砍价活动管理</view>
+				</view>
+			</view>
+			<view
+				class="weui-cell weui-cell_access"
+				hover="true"
+				hover-class="active"
+				>
+				<view class="weui-cell__hd">
+					<image src="../../images/icons/icon_potential_people.png" />
+				</view>
+				<view
+					class="weui-cell__bd weui-cell_primary"
+					bindtap="handleToNewPages"
+					data-page="potential"
+					>
+						<view>潜客</view>
+				</view>
+			</view>
 <!--
 			<view
 				class="weui-cell weui-cell_access"
@@ -76,7 +108,8 @@
 				</view>
 				<view
 					class="weui-cell__bd weui-cell_primary"
-					bindtap="handleToSupplier"
+					bindtap="handleToNewPages"
+					data-page="supplier"
 					>
 						<view>供应商</view>
 				</view>

@@ -1,0 +1,22 @@
+<template name="qrCodeDialog">
+  <view class="dialog qrCodeDialog">
+    <view 
+      class="weui-mask {{ animateCss }}" 
+      wx:if="{{ visible }}" 
+      catchtouchmove="{{ onTouchMoveWithCatch }}" 
+      bindtap="{{ close }}"></view>
+	  <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
+        
+        <view class="weui-dialog__bd" wx:if="{{ content }}">
+            <view 
+             class="qrcode-pic"
+             bindlongtap="{{handleImageLogtap}}"
+             data-image="../../../images/pages/1500519204.png"
+             >
+              <image src="../../../images/pages/1500519204.png"></image>
+            </view>
+            <view class="qrcode-text">请让客户用微信扫一扫</view>
+        </view> 
+    </view>
+  </view>
+</template>

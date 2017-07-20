@@ -8,6 +8,8 @@ import $wuxTrack from './track/track'
 import $wuxContentDialog from './dialog/contentDialog'
 import $wuxSpecialUploadDialog from './dialog/specialUploadDialog/specialUploadDialog'
 import $wuxPricePickerDialog from './dialog/pricePickerDialog/pricePickerDialog'
+import $bargainCancelDialog from './dialog/bargainCancelDialog/bargainCancelDialog'
+import $qrCodeDialog from './dialog/qrCodeDialog/qrCodeDialog'
 
 export {
   $wuxDialog,
@@ -19,5 +21,7 @@ export {
   $wuxContentDialog,
   $wuxSpecialUploadDialog,
   $checkTimeDialog,
-  $wuxPricePickerDialog
+  $wuxPricePickerDialog,
+  $bargainCancelDialog,
+  $qrCodeDialog
 }

@@ -511,4 +511,11 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
     }
 
   }
+  
+  /**
+   * 时间不足10返回0X格式.
+   */
+  static makeUpZero(s) {
+    return s < 10 ? `0${s}`: s;
+  }
 }
