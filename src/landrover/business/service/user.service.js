@@ -10,15 +10,15 @@ export default class UserService extends Service {
     prd: 'https://ymcapi.yaomaiche.com/uc/'
   }
 
-  name = "user"
+  name = 'user'
 
-  auth: (Auth | null) = null
+  auth: ?Auth = null
 
-  clientId: (string | null) = null
+  clientId: ?string = null
 
   loginChannel: LoginChannelType
 
-  userInfo: any | null
+  userInfo: any
 
   userInfoForTenant: ?UserInfoForTenant
 
@@ -513,6 +513,7 @@ export default class UserService extends Service {
       })
       .catch(err => {
         console.error(err.message)
+        return Promise.reject(err)
       })
   }
 
@@ -542,7 +543,7 @@ export default class UserService extends Service {
     return this.deleteAuthentication()
       .then(res => {
         this.auth = null
-        this.loginChannel = 'guest'
+        this.loginChannel = 'weixin'
         this.saveUserInfo()
         this.getClientId(true)
       })
@@ -575,16 +576,12 @@ export default class UserService extends Service {
     } else {
       if (this.clientId != null) {
         const clientId = this.clientId
-        return new Promise((resolve, reject) => {
-          resolve({ clientId })
-        })
+        return new Promise.resolve({ clientId })
       } else {
         const clientId = storage.getItemSync('clientId')
         if (clientId != null && clientId.length > 0) {
           this.clientId = clientId
-          return new Promise((resolve, reject) => {
-            resolve({ clientId })
-          })
+          return new Promise.resolve({ clientId })
         }
 
         if (clientId == null) {
