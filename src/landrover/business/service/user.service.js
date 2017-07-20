@@ -58,25 +58,27 @@ export default class UserService extends Service {
         console.info('user.service 开始启动')
       })
       .then(() => {
-        // 获取 clientId
+        console.log('获取 clientId')
         return this.getClientId(false)
       })
       .then(() => {
-        // 载入持有化的数据
+        console.log('载入持久化的数据')
         this.loadUserInfo()
         if (this.auth != null) {
+          cosnole.log('刷新 token')
           return this.refreshAccessToken(this.auth)
         } else {
           return Promise.resolve()
         }
       })
       .then(() => {
-        // 开始微信三方登录
+        console.log('开始微信三方登录')
         return this.loginForWeixin()
       })
       .then(() => {
         // 检查并弱请求 userInfo 权限，并获取用户信息更新
         // 该流程的成功与否不会影响最终启动流程
+        console.log('检查 userinfo 权限 并更新用户信息')
         return this.checkAndRequestAuthorize('scope.userInfo', true)
           .then((res) => {
             if (res.scopeAuthorize == true) {
@@ -568,7 +570,7 @@ export default class UserService extends Service {
     }
   }
 
-  getClientId(force: boolean): Promise<any> {
+  getClientId(force: boolean): Promise<{ clientId: string }> {
     const deviceId = device.deviceId
     const userId = this.auth != null ? this.auth.userId : null
     let retrieveClientIdPromise
@@ -598,15 +600,17 @@ export default class UserService extends Service {
 
     return retrieveClientIdPromise
       .then(res => {
-        this.clientId = res.clientId
-        this.setClientId(this.clientId)
+        const clientId = res.clientId
+        this.clientId = clientId
+        this.setClientId(clientId)
+        return { clientId }
       })
   }
 
   setClientId(clientId: string): void {
     this.clientId = clientId
     if (!storage.setItemSync('clientId', clientId)) {
-      console.error('设置删除 clientId 发生错误')
+      console.error('设置 clientId 发生错误')
     }
   }
 

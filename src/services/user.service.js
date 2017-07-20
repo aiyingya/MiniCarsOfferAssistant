@@ -44,6 +44,7 @@ export default class UserService extends BaseUserService {
     return super.request(path, method, data, header)
       .then(res => {
         console.log(res)
+        return res
       })
       .catch(err => {
         $wuxToast.show({
