@@ -36,6 +36,7 @@ Page({
   getBargainData(type) {
     let that = this
     let tenantId = container.userService.address.tenantId
+    let manager = container.userService.address.manager
     let userId = container.userService.auth.userId
     
     function makeUpZero(s) {
@@ -47,7 +48,7 @@ Page({
         targetId: tenantId,
         salePersonId: userId,
         status: type,
-        isStoreLead: true
+        isStoreLead: manager
       }
     }).then((res) => {
       

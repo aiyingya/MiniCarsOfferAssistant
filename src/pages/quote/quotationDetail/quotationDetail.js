@@ -288,10 +288,23 @@ Page({
   
   handlerBargainActive(e) {
     let that = this
-    const quotationItem = that.data.quotation.quotationItems[0]
-    
-    $qrCodeDialog.open({
-      content: '发起定车后， 将会有工作人员与您联系'
+    const quotationItem = that.data.quotation
+    const tenantId = container.userService.address.tenantId
+    console.log(quotationItem)
+    container.saasService.getBargainQRcode({
+      data: {
+        quotationId: quotationItem.quotationId,
+        targetId: tenantId,
+        width: 300,
+        height: 300
+      }
+    }).then((res) => {
+      console.log(res)
+      $qrCodeDialog.open({
+        content: res
+      })
+    },(err) => {
+      
     })
   }
 })
