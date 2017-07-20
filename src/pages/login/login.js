@@ -144,9 +144,6 @@ Page({
         wx.navigateBack()
       })
       .catch(err => {
-        console.log
-      })
-      .catch(err => {
       })
   },
   boundSelectHandler(e) {
