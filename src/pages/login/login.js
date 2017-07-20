@@ -35,7 +35,9 @@ Page({
     this.data.userCodeValue = val
   },
   handleGetSMSCode() {
-    if (this.data.lockSMSButton) return
+    if (this.data.lockSMSButton === true) {
+      return
+    }
 
     if (!this.data.countDownOver) return
 
@@ -49,31 +51,39 @@ Page({
       return
     }
 
-    this.data.lockSMSButton = true
+    this.setData({
+      codeText: '获取中...',
+      lockSMSButton: true
+    })
     const promise = container.userService.canWeixinAccountLogin(this.data.userPhoneValue)
       .then(res => {
-        this.data.lockSMSButton = false
         this.setData({
           notUserInYMC: !res.success,
-          notUserInYMCMessage: res.message
+          notUserInYMCMessage: res.message,
         })
         if (res.success === true) {
           return container.userService.createVCode(this.data.userPhoneValue)
+            .then(() => {
+              this.countDown()
+              this.setData({
+                notUserInYMC: false
+              })
+            })
+            .catch(err => {
+              this.setData({
+                codeText: '获取验证码',
+                lockSMSButton: false
+              })
+            })
         } else {
-          return Promise.reject(new Error('cancel_error'))
+          return Promise.reject()
         }
-      })
-      .then(() => {
-        this.countDown()
-        this.setData({
-          notUserInYMC: false
-        })
       })
       .catch(err => {
-        if (err.message === 'cancel_error') {
-        } else {
-          this.data.lockSMSButton = false
-        }
+        this.setData({
+          codeText: '获取验证码',
+          lockSMSButton: false
+        })
       })
   },
   countDown() {
@@ -134,6 +144,7 @@ Page({
     const useCase = 'access'
     const authEntity = { code, mobile, useCase }
 
+    wx.showLoading({ title: '登录中...', mask: true })
     container.userService.login('code', authEntity, '')
       .then(() => {
         console.log("登陆成功")
@@ -144,6 +155,9 @@ Page({
         wx.navigateBack()
       })
       .catch(err => {
+      })
+      .then(() => {
+        wx.hideLoading()
       })
   },
   boundSelectHandler(e) {
