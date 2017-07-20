@@ -10,8 +10,6 @@ export default class UserService extends Service {
     prd: 'https://ymcapi.yaomaiche.com/uc/'
   }
 
-  name = 'user'
-
   auth: ?Auth = null
 
   clientId: ?string = null
@@ -56,6 +54,9 @@ export default class UserService extends Service {
 
   setup(): Promise<void> {
     return super.setup()
+      .then(() => {
+        console.info('user.service 开始启动')
+      })
       .then(() => {
         // 获取 clientId
         return this.getClientId(false)
