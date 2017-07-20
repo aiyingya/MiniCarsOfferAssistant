@@ -65,7 +65,7 @@ export default class UserService extends Service {
         console.log('载入持久化的数据')
         this.loadUserInfo()
         if (this.auth != null) {
-          cosnole.log('刷新 token')
+          console.log('刷新 token')
           return this.refreshAccessToken(this.auth)
         } else {
           return Promise.resolve()
