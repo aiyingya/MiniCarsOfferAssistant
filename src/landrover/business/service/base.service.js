@@ -5,10 +5,19 @@ export default class Service {
 
   baseUrl: { ['dev' | 'gqc' | 'prd']: string }
 
+  name: string
+
   responsePackFormat: ResponsePackFormat
 
   constructor() {
     this.responsePackFormat = 'new'
+  }
+
+  setup(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      console.info(`service with name ${this.name} starts`)
+      resolve()
+    })
   }
 
   request(
@@ -143,7 +152,4 @@ export default class Service {
     return new Promise((resolve, reject) => { })
   }
 
-  setup(): Promise<void> {
-    return Promise.resolve()
-  }
 }

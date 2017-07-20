@@ -10,9 +10,11 @@ export default class UserService extends Service {
     prd: 'https://ymcapi.yaomaiche.com/uc/'
   }
 
-  auth: (Auth|null) = null
+  name = "user"
 
-  clientId: (string|null) = null
+  auth: (Auth | null) = null
+
+  clientId: (string | null) = null
 
   loginChannel: LoginChannelType
 
@@ -55,10 +57,6 @@ export default class UserService extends Service {
   setup(): Promise<void> {
     return super.setup()
       .then(() => {
-        // 启动开始
-        console.info('user.service 启动开始')
-      })
-      .then(() => {
         // 获取 clientId
         return this.getClientId(false)
       })
@@ -78,16 +76,16 @@ export default class UserService extends Service {
       .then(() => {
         // 检查并弱请求 userInfo 权限，并获取用户信息更新
         // 该流程的成功与否不会影响最终启动流程
-        return this.checkAndRequestAuthorize('scope.userInfo')
+        return this.checkAndRequestAuthorize('scope.userInfo', true)
           .then((res) => {
             if (res.scopeAuthorize == true) {
               return this.getUserInfoForWeixin(true)
-                        .catch(err => {
-                          return Promise.resolve()
-                        })
             } else {
               return Promise.resolve()
             }
+          })
+          .catch(err => {
+            // userInfo 权限失败，或者获取用户信息失败，也不影响流程
           })
       })
       .then(() => {
@@ -354,29 +352,25 @@ export default class UserService extends Service {
           })
           .catch(err => {
             // login 接口出错的情况
-            console.error('微信小程序登录失败')
-            console.error(err.message)
-            return null
+            return Promise.reject(new Error('wx.login fail'))
           })
-          .then((code: ?string) => {
-            if (code != null) {
-              // FIXME: appid 需要抽象
-              this.createAuthenticationByMiniProgram('wxd5d5bf6b593d886e', code)
-                .then((sessionId: string) => {
-                  this.loginChannel = 'weixin'
-                  this.weixin.sessionId = sessionId
-                  this.saveUserInfo()
-                  return { sessionId }
-                })
-            } else {
-              return Promise.reject()
-            }
+          .then((code: string) => {
+            // FIXME: appid 需要抽象
+            return this.createAuthenticationByMiniProgram('wxd5d5bf6b593d886e', code)
+          })
+          .then((sessionId: string) => {
+            this.loginChannel = 'weixin'
+            this.weixin.sessionId = sessionId
+            this.saveUserInfo()
+            return { sessionId }
           })
           .catch(err => {
             this.loginChannel = 'guest'
             this.weixin.sessionId = null
             this.saveUserInfo()
             console.error('微信三方登录失败')
+            console.error(err)
+            return Promise.reject(err)
           })
       })
   }
@@ -384,7 +378,9 @@ export default class UserService extends Service {
 
   /**
    * 绑定账号
-   * 前提条件，需要 sessionId， 也就是成功登录
+   * 前提条件
+   * 需要 sessionId， 也就是微信成功登录
+   * 需要 userId, 也就是 yuntu 账号成功登录
    *
    * @returns {Promise<void>}
    * @memberof UserService
@@ -415,10 +411,14 @@ export default class UserService extends Service {
   /**
    * 检查并获取授权
    *
+   * @param {('scope.userInfo' | '')} scope
+   * @param {boolean} [require=false]
+   * @returns {Promise<{ scopeAuthorize: boolean }>}
+   * @memberof UserService
    */
   checkAndRequestAuthorize(scope: 'scope.userInfo' | '', require?: boolean = false): Promise<{ scopeAuthorize: boolean }> {
     const requirePromise: () => Promise<{ scopeAuthorize: boolean }> = () => {
-      return ui.showModal('提示', `需要获取${scope}权限， 否则无法使用某项功能`)
+      return ui.showModal('提示', `要买车 需要获取您的用户信息， 否则会影响用户体验`)
         .then(res => {
           if (res.confirm === true) {
             return request.openSettingForWeixin()
@@ -436,7 +436,6 @@ export default class UserService extends Service {
           return Promise.reject(new Error(`引导用户开启 ${scope} 权限时发生错误`))
         })
     }
-
 
     return request.getSettingForWeixin()
       .then(res => {
@@ -522,7 +521,7 @@ export default class UserService extends Service {
     if (sessionId != null) {
       return this.retrieveWeixinAccountCanLogin(sessionId, mobile)
     } else {
-      return Promise.reject({success: false, message: '微信三方登录未成功'})
+      return Promise.reject({ success: false, message: '微信三方登录未成功' })
     }
   }
 
