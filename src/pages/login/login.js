@@ -14,16 +14,17 @@ Page({
     notUserInYMC: false,
     notUserInYMCMessage: '',
     userHasBoundWeixinAccount: false,
-    boundSelected: false
+    boundSelected: false,
+    lockSMSButton: false
   },
   onLoad() {
     const sessionId = container.userService.weixin.sessionId
     container.userService.retrieveWeixinAccountHasBound(sessionId)
-    .then((hasBound: boolean) => {
-      this.setData({
-        userHasBoundWeixinAccount: hasBound
+      .then((hasBound: boolean) => {
+        this.setData({
+          userHasBoundWeixinAccount: hasBound
+        })
       })
-    })
   },
   handleLoginPhone(e) {
     let val = e.detail.value
@@ -34,11 +35,9 @@ Page({
     this.data.userCodeValue = val
   },
   handleGetSMSCode() {
-    let that = this
+    if (this.data.lockSMSButton) return
 
-    if (!that.data.countDownOver) return
-
-    console.log(this.data.userPhoneValue)
+    if (!this.data.countDownOver) return
 
     if (!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11) {
       $wuxToast.show({
@@ -49,29 +48,32 @@ Page({
       })
       return
     }
-    container.userService.canWeixinAccountLogin(this.data.userPhoneValue)
+
+    this.data.lockSMSButton = true
+    const promise = container.userService.canWeixinAccountLogin(this.data.userPhoneValue)
       .then(res => {
+        this.data.lockSMSButton = false
         this.setData({
           notUserInYMC: !res.success,
           notUserInYMCMessage: res.message
         })
         if (res.success === true) {
           return container.userService.createVCode(this.data.userPhoneValue)
+        } else {
+          return Promise.reject(new Error('cancel_error'))
         }
       })
-      .then(res => {
+      .then(() => {
         this.countDown()
         this.setData({
           notUserInYMC: false
         })
       })
       .catch(err => {
-        $wuxToast.show({
-          type: false,
-          timer: 2000,
-          color: '#ffffff',
-          text: '服务器错误，请稍后再试'
-        })
+        if (err.message === 'cancel_error') {
+        } else {
+          this.data.lockSMSButton = false
+        }
       })
   },
   countDown() {
@@ -133,26 +135,18 @@ Page({
     const authEntity = { code, mobile, useCase }
 
     container.userService.login('code', authEntity, '')
-      .then(res => {
-        console.log('登陆成功!')
-      })
-      .catch(err => {
-        $wuxToast.show({
-          type: false,
-          timer: 2000,
-          color: '#fff',
-          text: err.message
-        })
-        return Promise.reject()
+      .then(() => {
+        console.log("登陆成功")
+        return container.userService.boundAccountForWeixin()
       })
       .then(() => {
-        container.userService.boundAccountForWeixin()
-          .then(() => {
-            wx.navigateBack()
-          })
-          .catch(err => {
-            console.log
-          })
+        console.log("绑定成功")
+        wx.navigateBack()
+      })
+      .catch(err => {
+        console.log
+      })
+      .catch(err => {
       })
   },
   boundSelectHandler(e) {

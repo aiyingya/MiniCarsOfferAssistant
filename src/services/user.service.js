@@ -11,7 +11,8 @@ import BaseUserService from '../landrover/business/service/user.service'
 
 import Util from '../utils/util'
 import { storage } from '../landrover/business/index'
-import * as wxapi from 'fmt-wxapp-promise'
+
+import { $wuxToast } from '../components/wux'
 
 /**
  * 用户中心服务
@@ -30,6 +31,24 @@ export default class UserService extends BaseUserService {
 
   constructor() {
     super()
+  }
+
+  request(
+    path: string,
+    method: RequestMethod,
+    data: ?{ [string]: any } = null,
+    header?: ?{ [string]: string } = null,
+  ): Promise<any> {
+    return super.request(path, method, data, header)
+      .catch(err => {
+        $wuxToast.show({
+          type: false,
+          timer: 2000,
+          color: '#fffff',
+          text: err.message
+        })
+        return Promise.reject(err)
+      })
   }
 
   setup(): Promise<void> {
