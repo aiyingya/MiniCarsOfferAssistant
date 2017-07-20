@@ -1,6 +1,7 @@
 import { $checkTimeDialog } from "../../components/wux"
 import util from '../../utils/util'
-let app = getApp()
+import { container } from '../../landrover/business/index'
+
 let markersData = []
 Page({
   data: {
@@ -55,7 +56,7 @@ Page({
     } catch (e) {
       // Do something when catch error
     }
-//    
+//
 //    console.log(quotation)
 //    app.amap.getPoiAround({
 //      iconPathSelected: '../../images/icons/marker_checked.png',
@@ -119,7 +120,7 @@ Page({
   handleCheckAmap(e) {
     const historyList = this.data.historyList
     const amapindex = e.currentTarget.dataset.amapindex
-    
+
     this.setData({
       showAmapIndex: amapindex
     })
@@ -132,7 +133,7 @@ Page({
     let showCurrent = this.data.showCurrent
     let quotationsList = this.data.quotationsList
     let quotationCurrent = quotationsList[showCurrent]
-    
+
     this.setData({
       showAmap: false
     })
@@ -150,7 +151,7 @@ Page({
         }
       },
       confirm: (value) => {
-        
+
         let time = ''
         if(value.type === 'add') {
           time = value.val
@@ -166,8 +167,8 @@ Page({
             showAmap: true
           })
         }, err => {
-          
-        }) 
+
+        })
       },
       cancel: () => {
         that.setData({
@@ -183,14 +184,14 @@ Page({
     let that = this
     let showCurrent = this.data.showCurrent
     let quotationsList = this.data.quotationsList
-    
-    return app.saasService.postValidTime({
+
+    return container.saasService.postValidTime({
       data: {
         quotationId: id,
         times: time
       }
     }).then((res) => {
-     
+
       for(let item of quotationsList) {
         if(item.quotationId === id) {
           if(time == 0){
@@ -211,9 +212,9 @@ Page({
       } catch (e) {
 
       }
-      
+
     }, (err) => {
-      
+
     })
   },
   /**
@@ -223,7 +224,7 @@ Page({
     let that = this
     let quotation = this.data.quotationsList[index]
     let quotationId = quotation.quotationId
-    return app.saasService.getCheckHistory({
+    return container.saasService.getCheckHistory({
       data: {
         quotationId: quotationId
       }
@@ -235,7 +236,7 @@ Page({
       let isShowAmap = false
       if(res.length > 0) {
         for(let item of res) {
-          
+
           item.checkTime = util.getTimeDifferenceString(item.createDate)
           item.markers = [{
             address: item.placeName,
@@ -256,7 +257,7 @@ Page({
         noHistory = 'nohistory'
         noHistoryContainer = 'height100'
       }
-      
+
       this.setData({
         historyList: historyList,
         noHistory: noHistory,
@@ -264,9 +265,9 @@ Page({
         isShowAmap: isShowAmap,
         'quotationItem.shared': quotation.shared
       })
-      
+
     }, (err) => {
-      
+
     })
   },
   /**
@@ -294,7 +295,7 @@ Page({
     let showCurrent = this.data.showCurrent
     let quotationsList = this.data.quotationsList
     let quotationCurrent = quotationsList[showCurrent]
-    
+
     const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotationCurrent)
     wx.navigateTo({
       url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
@@ -313,7 +314,7 @@ Page({
    */
   handlePhoneCall(e) {
     let phone = e.currentTarget.dataset.phone
-    
+
     wx.makePhoneCall({
       phoneNumber: phone
     })

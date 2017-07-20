@@ -10,6 +10,7 @@ import Service from './base.service'
 
 import UserService from './user.service'
 import util from '../utils/util'
+import { container } from '../landrover/business/index'
 
 export default class SAASService extends Service {
 
@@ -27,8 +28,7 @@ export default class SAASService extends Service {
 
   setup() {
     super.setup()
-    const app = getApp()
-    this.userService = app.userService
+    this.userService = container.userService
   }
 
   /**
@@ -195,7 +195,7 @@ export default class SAASService extends Service {
       }
 
       let snsId
-      if (this.userService.isLogin) {
+      if (this.userService.auth != null) {
         snsId = this.userService.auth.userId
       } else {
         snsId = this.userService.snsId

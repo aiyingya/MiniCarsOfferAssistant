@@ -2,6 +2,7 @@ import {
   $wuxToast
 } from "../../components/wux"
 import util from '../../utils/util'
+import { container } from '../../landrover/business/index'
 
 let app = getApp();
 
@@ -86,7 +87,7 @@ Page({
     let that = this;
     let searchResults = [];
     if (val) {
-      app.tradeService.searchInput(val, 12)
+      container.tradeService.searchInput(val, 12)
         .then(function (res) {
           that.setData({
             associateResults: res,
@@ -118,7 +119,7 @@ Page({
     let carModelsList = []
     let searchNodata = false
     console.log(results)
-    app.saasService.requireCarSpu(results.id, {}, results.type, false, {
+    container.saasService.requireCarSpu(results.id, {}, results.type, false, {
       success(res) {
         carModelsList = res.content
         searchNodata = carModelsList.length > 0 ? false : true
@@ -180,7 +181,7 @@ Page({
     let searchNodata = false
     let searchResults = []
 
-    app.saasService.requestSearchCarSpu(val, pageIndex, 10, {
+    container.saasService.requestSearchCarSpu(val, pageIndex, 10, {
       success: function (res) {
         if (res.first) {
           searchNodata = res.content.length > 0 ? false : true
@@ -687,7 +688,7 @@ Page({
       }
     }
 
-    app.saasService.requestSearchSpuBySpuId(sid, requestData, {
+    container.saasService.requestSearchSpuBySpuId(sid, requestData, {
       success: function (res) {
 
         if (res.content.length > 0) {
@@ -737,11 +738,7 @@ Page({
     console.log(e)
   },
   getSearchHistory() {
-    let user = app.userService
-    let clientId = user.clientId
-    let that = this
-
-    app.tradeService.getUserSearchHistory(clientId)
+    container.tradeService.getUserSearchHistory()
       .then(res => {
         console.log(res)
         this.setData({
@@ -750,10 +747,8 @@ Page({
       })
   },
   postUserSearchHistory(text) {
-    let user = app.userService
     let searchHistory = this.data.searchHistory
-    let that = this
-    app.tradeService.postUserSearchHistory(user.auth.userId, text)
+    container.tradeService.postUserSearchHistory(text)
       .then(res => {
         for (var i = 0; i < searchHistory.length; i++) {
           if (searchHistory[i] === text) {
@@ -762,7 +757,7 @@ Page({
           }
         }
         searchHistory.unshift(text)
-        that.setData({
+        this.setData({
           searchHistory: searchHistory
         })
       })
@@ -786,7 +781,7 @@ Page({
 
     }
 
-    return app.saasService.gettingMarketTrend({
+    return container.saasService.gettingMarketTrend({
       spuId: id,
     }).then((res) => {
       let series = []

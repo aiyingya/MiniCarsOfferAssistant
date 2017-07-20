@@ -9,7 +9,7 @@
 
 import UBTService from '../../services/ubt.service.js'
 
-import config from '../../config'
+import { config, system, device } from '../../landrover/business/index'
 
 import Component from '../component'
 
@@ -20,7 +20,6 @@ export default {
    * 默认参数
    */
   setDefaults() {
-    const system = config.system
     return {
       deviceType: system.platform,
       appVersion: `${config.name}:${config.version}`,
@@ -31,7 +30,7 @@ export default {
       screen: `${system.windowWidth}x${system.windowHeight}`,
       language: system.language,
       phoneModel: system.model,
-      deviceId: config.device.deviceId,
+      deviceId: device.deviceId,
       eventAction: null,
       eventLabel: null,
       eventSource: null,

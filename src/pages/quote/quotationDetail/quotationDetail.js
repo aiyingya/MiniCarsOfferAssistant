@@ -3,6 +3,7 @@ import {
   $wuxDialog
 } from "../../../components/wux"
 import util from '../../../utils/util'
+import { container } from '../../../landrover/business/index'
 const app = getApp()
 
 Page({
@@ -67,7 +68,7 @@ Page({
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
-    if (!app.userService.isLogin()) {
+    if (!container.userService.isLogin()) {
       setTimeout(function(){
         that.setData({
           pageShare: true
@@ -192,7 +193,7 @@ Page({
       confirm: (res) => {
         let mobile = res.inputNumber
         const quotation = that.data.quotation
-        app.saasService.requestPublishQuotation(quotation.draftId, mobile, quotation.customerName, quotation.customerSex, true, quotation.validTime)
+        container.saasService.requestPublishQuotation(quotation.draftId, mobile, quotation.customerName, quotation.customerSex, true, quotation.validTime)
           .then(res => {
             let quotation = res
 
@@ -230,7 +231,7 @@ Page({
           type: 'weui-dialog__btn_primary',
           onTap: function () {
             const quotationItem = that.data.quotation.quotationItems[0]
-            app.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.guidePrice, 1, {
+            container.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.guidePrice, 1, {
               success: (res) => {
                 wx.showModal({
                   content: '提交成功，请保持通话畅通',

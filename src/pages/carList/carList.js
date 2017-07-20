@@ -1,7 +1,6 @@
 //index.js
-let app = getApp()
 import util from '../../utils/util'
-import config from '../../config'
+import { system, container } from '../../landrover/business/index'
 
 Page({
   data: {
@@ -20,12 +19,12 @@ Page({
   onLoad() {
     const that = this
     this.setData({
-      windowHeight: config.system.windowHeight,
-      windowWidth: config.system.windowWidth,
-      drawerW: config.system.windowWidth * 0.8
+      windowHeight: system.windowHeight,
+      windowWidth: system.windowWidth,
+      drawerW: system.windowWidth * 0.8
     })
 
-    app.tradeService.getNavigatorForCarBrands()
+    container.tradeService.getNavigatorForCarBrands()
       .then(function (res) {
         if (res) {
           that.setData({
@@ -65,7 +64,7 @@ Page({
     let that = this;
     let { HTTPS_YMCAPI } = this.data;
 
-    app.tradeService.getNavigatorForCarSeries(carSeries.id)
+    container.tradeService.getNavigatorForCarSeries(carSeries.id)
       .then(function (res) {
         if (res) {
           let data = res
@@ -120,7 +119,7 @@ Page({
   },
   handlerToCarsModels(e) {
     const carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
-    if (app.userService.isLogin()) {
+    if (container.userService.isLogin()) {
       wx.navigateTo({
         url: '../carModels/carModels?' + carsInfoKeyValueString
       })

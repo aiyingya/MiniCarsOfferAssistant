@@ -22,18 +22,17 @@ const gwcn = require('gulp-wxa-copy-npm');
 const sourcemaps = require('gulp-sourcemaps');
 const minimist = require('minimist');
 
-let env = process.env.NODE_ENV || process.env.npm_package_config_env || "prd";
-var myConfig = {
-  apiUrl:{}
-};
-myConfig.apiUrl.webapi = require('./src/config/config.json')[env];
-myConfig.env = env || process.env.npm_package_config_env || "prd";
-myConfig.name = process.env.npm_package_name;
-myConfig.version = process.env.npm_package_version;
-myConfig.versionCode = process.env.npm_package_versionCode;
-myConfig.build = process.env.npm_package_build;
+const knownOptions = {}
+const args = minimist(process.argv.slice(2), knownOptions)
 
-let prod = false
+const env = args.env || "dev"
+
+const name = process.env.npm_package_name;
+const version = process.env.npm_package_version;
+const versionCode = process.env.npm_package_versionCode;
+const build = process.env.npm_package_build;
+
+const production = args.NODE_ENV === 'production'
 
 /**
  * lint 流程
@@ -57,7 +56,7 @@ gulp.task('jsonlint', () => {
  */
 gulp.task('json', ['jsonlint'], () => {
   return gulp.src('./src/**/*.json')
-    .pipe($.if(prod, $.jsonminify()))
+    .pipe($.if(production, $.jsonminify()))
     .pipe(gulp.dest('./dist'))
 })
 
@@ -82,7 +81,7 @@ gulp.task('assets:watch', () => {
  */
 gulp.task('templates', () => {
   return gulp.src('./src/**/*.wxml')
-    .pipe($.if(prod, $.htmlmin({
+    .pipe($.if(production, $.htmlmin({
       collapseWhitespace: true,
       removeComments: true,
       keepClosingSlash: true
@@ -110,37 +109,20 @@ gulp.task('styles:watch', () => {
  * js 文件处理
  */
 gulp.task('scripts', ['eslint'], () => {
-
-  //old 注释
-  // return gulp.src(['./src/**/*.js','!./src/global.js'])
-  //   // .pipe($.sourcemaps.init())
-  //   .pipe($.babel())
-  //   // .pipe($.if(prod, $.uglify()))
-  //   // .pipe($.sourcemaps.write('.'))
-  //   .pipe(gulp.dest('./dist'))
-
-  let knownOptions = {};
-  let options = minimist(process.argv.slice(2), knownOptions);
-  //config.babel
-  return gulp.src(['./src/**/*.js','!./src/global.js'])
+  return gulp.src(['./src/**/*.js'])
     .pipe($.babel())
-    .pipe(gwcn(options))
+    .pipe(gwcn(args))
+    .pipe(replace('FMT_VERSION_CODE', versionCode))
+    .pipe(replace('FMT_BUILD', build))
+    .pipe(replace('FMT_ENV', '"' + env + '"'))
+    .pipe(replace('FMT_NAME', '"' + name + '"'))
+    .pipe(replace('FMT_VERSION', '"' + version + '"'))
     .pipe(gulp.dest('./dist'))
 })
 
-gulp.task('scripts_config', ['eslint'], () => {
-  console.log("来啊互相伤害",JSON.stringify(myConfig,null,4))
-  return gulp.src(['./src/**/global.js'])
-    .pipe($.babel())
-    .pipe(replace('来啊互相伤害', JSON.stringify(myConfig,null,4)))
-    .pipe(gulp.dest('./dist'));
-})
-
 gulp.task('scripts:watch', () => {
-  gulp.watch(['./src/**/*.js'], ['scripts','scripts_config'])
+  gulp.watch(['./src/**/*.js'], ['scripts'])
 })
-
-
 
 /**
  * 清空 dist 目录
@@ -157,7 +139,6 @@ gulp.task('build', [
   'assets',
   'templates',
   'styles',
-  'scripts_config',
   'scripts'
 ])
 

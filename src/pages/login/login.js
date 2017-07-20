@@ -1,7 +1,8 @@
 import {
   $wuxToast
 } from "../../components/wux"
-const app = getApp()
+
+import { container } from '../../landrover/business/index'
 
 Page({
   data: {
@@ -10,9 +11,20 @@ Page({
     codeText: '获取验证码',
     countDownOver: true,
     countDownClass: '',
-    notUserInYMC: false
+    notUserInYMC: false,
+    notUserInYMCMessage: '',
+    userHasBoundWeixinAccount: false,
+    boundSelected: false
   },
-  onLoad() {},
+  onLoad() {
+    const sessionId = container.userService.weixin.sessionId
+    container.userService.retrieveWeixinAccountHasBound(sessionId)
+    .then((hasBound: boolean) => {
+      this.setData({
+        userHasBoundWeixinAccount: hasBound
+      })
+    })
+  },
   handleLoginPhone(e) {
     let val = e.detail.value
     this.data.userPhoneValue = val
@@ -32,31 +44,32 @@ Page({
       $wuxToast.show({
         type: false,
         timer: 2000,
-        color: '#fff',
+        color: '#ffffff',
         text: '手机号输入不正确'
       })
       return
     }
-    app.userService.exsitTenanTmember(this.data.userPhoneValue)
+    container.userService.canWeixinAccountLogin(this.data.userPhoneValue)
       .then(res => {
-        if (res) {
-          app.userService.getSMSCode(that.data.userPhoneValue)
-            .then(res => {
-              this.countDown()
-              this.setData({
-                notUserInYMC: false
-              })
-            })
-        } else {
-          that.setData({
-            notUserInYMC: true
-          })
+        this.setData({
+          notUserInYMC: !res.success,
+          notUserInYMCMessage: res.message
+        })
+        if (res.success === true) {
+          return container.userService.createVCode(this.data.userPhoneValue)
         }
-      }, err => {
+      })
+      .then(res => {
+        this.countDown()
+        this.setData({
+          notUserInYMC: false
+        })
+      })
+      .catch(err => {
         $wuxToast.show({
           type: false,
           timer: 2000,
-          color: '#fff',
+          color: '#ffffff',
           text: '服务器错误，请稍后再试'
         })
       })
@@ -84,8 +97,7 @@ Page({
     }, 1000)
   },
   userLogin() {
-    let that = this
-    if (!that.data.userPhoneValue) {
+    if (!this.data.userPhoneValue) {
       $wuxToast.show({
         type: false,
         timer: 2000,
@@ -95,7 +107,7 @@ Page({
       return
     }
 
-    if (!that.data.userCodeValue) {
+    if (!this.data.userCodeValue) {
       $wuxToast.show({
         type: false,
         timer: 2000,
@@ -105,27 +117,48 @@ Page({
       return
     }
 
-    app.userService.login(that.data.userPhoneValue, that.data.userCodeValue)
+    if (!this.data.userHasBoundWeixinAccount && !this.data.boundSelected) {
+      $wuxToast.show({
+        type: false,
+        timer: 2000,
+        color: '#fff',
+        text: '需要选择与微信号绑定才能登陆'
+      })
+      return
+    }
+
+    const code = this.data.userCodeValue
+    const mobile = this.data.userPhoneValue
+    const useCase = 'access'
+    const authEntity = { code, mobile, useCase }
+
+    container.userService.login('code', authEntity, '')
       .then(res => {
-        if (res) {
-          if (app.userService.hasWeixinUserInfo()) {
-            app.userService.userBindWeixin()
-              .then(res => {
-                wx.navigateBack()
-              }, err => {
-                wx.navigateBack()
-              })
-          } else {
-            wx.navigateBack()
-          }
-        }
-      }, err => {
+        console.log('登陆成功!')
+      })
+      .catch(err => {
         $wuxToast.show({
           type: false,
           timer: 2000,
           color: '#fff',
           text: err.message
         })
+        return Promise.reject()
       })
+      .then(() => {
+        container.userService.boundAccountForWeixin()
+          .then(() => {
+            wx.navigateBack()
+          })
+          .catch(err => {
+            console.log
+          })
+      })
+  },
+  boundSelectHandler(e) {
+    this.setData({
+      boundSelected: !this.data.boundSelected
+    })
   }
+
 })

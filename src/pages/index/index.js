@@ -3,11 +3,10 @@ import {
   $wuxTrack
 } from '../../components/wux'
 import util from '../../utils/util'
-import config from '../../config'
+import { system, container } from '../../landrover/business/index'
 
 // import moment from 'moment'
 
-let app = getApp()
 Page({
   data: {
     hotCarLists: [],
@@ -29,7 +28,7 @@ Page({
   //事件处理函数
   searchCarType() {
     console.log('To Search')
-    if (app.userService.isLogin()) {
+    if (container.userService.isLogin()) {
       wx.navigateTo({
         url: '../search/search'
       })
@@ -45,22 +44,19 @@ Page({
     })
   },
   onLoad() {
-    // 服务启动
-    app.userService.setup()
-    app.saasService.setup()
 
     try {
-      let res = wx.getSystemInfoSync()
-      config.system = res
+      const res = wx.getSystemInfoSync()
+      Object.assign(system, res)
     } catch (e) {
-
+      console.log('同步获取 system info 错误')
     }
 
     let that = this
     this.setData({
-      windowHeight: config.system.windowHeight,
-      windowWidth: config.system.windowWidth,
-      drawerW: config.system.windowWidth * 0.8
+      windoweight: system.windowHeight,
+      windowWidth: system.windowWidth,
+      drawerW: system.windowWidth * 0.8
     })
 
     wx.showToast({
@@ -120,17 +116,18 @@ Page({
    */
   getHotPushBrands() {
     const that = this
-    return app.tradeService.getHotPushBrands().then((res) => {
-      if (res) {
+    return container.tradeService.getHotPushBrands()
+      .then((res) => {
+        if (res) {
+          that.setData({
+            hotCarLists: res
+          })
+        }
+      }, (err) => {
         that.setData({
-          hotCarLists: res
+          anewReload: true
         })
-      }
-    }, (err) => {
-      that.setData({
-        anewReload: true
       })
-    })
   },
   /**
    * 获取热推车型
@@ -139,19 +136,20 @@ Page({
    */
   getHotPushCarModels() {
     const that = this
-    return app.tradeService.getHotPushCarModels().then((res) => {
-      let depreciate
-      for (let item of res) {
-        item.depreciate = (item.guidePrice - item.salePrice)
-        item.depreciateSTR = (Math.abs(item.guidePrice - item.salePrice) / 10000).toFixed(2)
-        item.guidePriceSTR = (item.guidePrice / 100).toFixed(0)
-      }
-      that.setData({
-        hotCarsTypes: res
-      })
-    }, (err) => {
+    return container.tradeService.getHotPushCarModels().
+      then((res) => {
+        let depreciate
+        for (let item of res) {
+          item.depreciate = (item.guidePrice - item.salePrice)
+          item.depreciateSTR = (Math.abs(item.guidePrice - item.salePrice) / 10000).toFixed(2)
+          item.guidePriceSTR = (item.guidePrice / 100).toFixed(0)
+        }
+        that.setData({
+          hotCarsTypes: res
+        })
+      }, (err) => {
 
-    })
+      })
   },
   handlerAlphaTap(e) {
     let {
@@ -193,7 +191,7 @@ Page({
     let that = this;
     let { HTTPS_YMCAPI } = this.data;
 
-    app.tradeService.getNavigatorForCarSeries(carSeries.id)
+    container.tradeService.getNavigatorForCarSeries(carSeries.id)
       .then(function (res) {
         if (res) {
           let data = res
@@ -247,7 +245,7 @@ Page({
     })
   },
   handlerToCarsModels(e) {
-    if (app.userService.isLogin()) {
+    if (container.userService.isLogin()) {
       const carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
       wx.navigateTo({
         url: '../carModels/carModels?' + carsInfoKeyValueString
