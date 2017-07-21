@@ -26,15 +26,14 @@ export default class UserService extends Service {
   }
 
   isAuthAvailable(): boolean {
-    // const currentDate = new Date()
-    // const currentTime = currentDate.getTime()
-    // if (this.auth != null) {
-      // const expireTime = this.auth.expireIn
-      // return currentTime < expireTime
-    // } else {
-      // return false
-    // }
-    return this.auth != null
+    const currentDate = new Date()
+    const currentTime = currentDate.getTime()
+    if (this.auth != null) {
+      const expireTime = this.auth.expireIn
+      return currentTime < expireTime
+    } else {
+      return false
+    }
   }
 
   constructor() {
@@ -66,7 +65,6 @@ export default class UserService extends Service {
         console.log('载入持久化的数据')
         this.loadUserInfo()
         if (this.auth != null) {
-          console.log('刷新 token')
           return this.refreshAccessToken(this.auth)
         } else {
           return Promise.resolve()
@@ -543,7 +541,7 @@ export default class UserService extends Service {
         this.loginChannel = 'yuntu'
         this.getClientId(true)
         this.saveUserInfo()
-        return auth
+        return this.refreshAccessToken(auth, true)
       })
   }
 
@@ -557,10 +555,8 @@ export default class UserService extends Service {
       })
   }
 
-  refreshAccessToken(auth: Auth): Promise<Auth> {
-    if (this.isAuthAvailable) {
-      return Promise.resolve(auth)
-    } else {
+  refreshAccessToken(auth: Auth, force?: boolean = false): Promise<Auth> {
+    if (force === true || (force === false && !this.isAuthAvailable())) {
       return this.updateAuthentication(auth.refreshToken)
         .then(auth => {
           const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
@@ -569,9 +565,10 @@ export default class UserService extends Service {
           this.loginChannel = 'yuntu'
           this.getClientId(true)
           this.saveUserInfo()
-
           return auth
         })
+    } else {
+      return Promise.resolve(auth)
     }
   }
 
