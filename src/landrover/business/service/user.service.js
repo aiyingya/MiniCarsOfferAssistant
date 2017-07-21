@@ -347,6 +347,8 @@ export default class UserService extends Service {
         }
       })
       .catch(() => {
+        // 失败后意味着当前存储的 sessionId 无效，移除
+        this.weixin.sessionId = null
         // 登录过期 || 登录没过期但是没有 sessionId
         return request.loginForWeixin()
           .then(res => {

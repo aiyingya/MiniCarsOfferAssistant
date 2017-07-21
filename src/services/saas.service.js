@@ -194,12 +194,7 @@ export default class SAASService extends Service {
         }
       }
 
-      let snsId
-      if (this.userService.auth != null) {
-        snsId = this.userService.auth.userId
-      } else {
-        snsId = this.userService.snsId
-      }
+      const snsId = this.userService.weixin.userInfo ? this.userService.weixin.userInfo.customerId : null
       const data_part_2: any = {
         loanFee: quotationDraft.loanFee,
         saleMobile: quotationDraft.saleMobile,
@@ -260,12 +255,7 @@ export default class SAASService extends Service {
    */
   requestQuotationsList(pageIndex: number, pageSize: number, object: any) {
     if (pageIndex > 0 && pageSize > 0) {
-      let snsId
-      if (this.userService.isLogin) {
-        snsId = this.userService.auth.userId
-      } else {
-        snsId = this.userService.snsId
-      }
+      const snsId = this.userService.weixin.userInfo ? this.userService.weixin.userInfo.customerId : null
 
       this.sendMessage({
         path: 'sale/quotation/new',
@@ -793,7 +783,7 @@ export default class SAASService extends Service {
       data: opts.data || {}
     })
   }
-  
+
   /**
    * 获取砍价记录.
    * @param opts
@@ -805,7 +795,7 @@ export default class SAASService extends Service {
       data: opts.data || {}
     })
   }
-  
+
   /**
    * 结束砍价活动.
    * @param opts
@@ -817,7 +807,7 @@ export default class SAASService extends Service {
       loadingType: 'show'
     })
   }
-  
+
   /**
    * 核销优惠券.
    * @param opts
@@ -829,7 +819,7 @@ export default class SAASService extends Service {
       loadingType: 'show'
     })
   }
-  
+
   /**
    * 获取潜客列表.
    * @param opts
@@ -842,7 +832,7 @@ export default class SAASService extends Service {
       data: opts.data || {}
     })
   }
-  
+
   /**
    * 获取砍价二维码.
    * @param opts
