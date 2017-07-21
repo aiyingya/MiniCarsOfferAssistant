@@ -30,7 +30,8 @@ export default class UserService extends Service {
     const currentTime = currentDate.getTime()
     if (this.auth != null) {
       const expireTime = this.auth.expireIn
-      return currentTime < expireTime
+      // 在过期时间前一天设置为过期标识
+      return currentTime < expireTime - 1 * 24 * 60 * 60 * 1000
     } else {
       return false
     }
@@ -541,7 +542,7 @@ export default class UserService extends Service {
         this.loginChannel = 'yuntu'
         this.getClientId(true)
         this.saveUserInfo()
-        return this.refreshAccessToken(auth, true)
+        return this.refreshAccessToken(auth)
       })
   }
 
@@ -555,8 +556,10 @@ export default class UserService extends Service {
       })
   }
 
-  refreshAccessToken(auth: Auth, force?: boolean = false): Promise<Auth> {
-    if (force === true || (force === false && !this.isAuthAvailable())) {
+  refreshAccessToken(auth: Auth): Promise<Auth> {
+    if (this.isAuthAvailable()) {
+      return Promise.resolve(auth)
+    } else {
       return this.updateAuthentication(auth.refreshToken)
         .then(auth => {
           const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
@@ -567,8 +570,6 @@ export default class UserService extends Service {
           this.saveUserInfo()
           return auth
         })
-    } else {
-      return Promise.resolve(auth)
     }
   }
 
