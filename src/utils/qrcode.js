@@ -750,9 +750,16 @@ var QR = (function () {
             var roundedSize = px * (width + 8),
                 offset = Math.floor((size - roundedSize) / 2);
             size = roundedSize;
-            ctx.clearRect(0, 0, cavW, cavW);
-            ctx.setFillStyle('#ffffff');
-            ctx.rect(0, 0, size, size);
+            ctx.beginPath();
+            ctx.rect(0, 0, cavW, cavH)
+            ctx.setFillStyle('#ffffff')
+            ctx.closePath();
+            ctx.fill();
+          
+            ctx.beginPath();
+//           ctx.clearRect(0, 0, cavW, cavW);
+//            ctx.setFillStyle('#ffffff');
+//            ctx.rect(0, 0, size, size);
             ctx.setFillStyle('#000000');
 			// ctx.setLineWidth(1);
             for (var i = 0; i < width; i++) {

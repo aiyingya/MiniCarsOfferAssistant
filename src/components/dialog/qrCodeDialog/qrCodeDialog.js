@@ -88,8 +88,10 @@ export default {
           let that = this
           wx.canvasToTempFilePath({
             canvasId: 'QRcodeCanvas',
-            destWidth: 300,
-            destHeight: 300,
+            width: 220,
+            height: 220,
+            destWidth: 220,
+            destHeight: 220,
             success: function (res) {
               let tempFilePath = res.tempFilePath
               that.setData({
