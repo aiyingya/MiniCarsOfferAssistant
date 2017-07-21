@@ -73,7 +73,9 @@ Page({
     })
 
 
-    wx.showShareMenu()
+    if (wx.showShareMenu) {
+      wx.showShareMenu()
+    }
   },
   onShow() {
     // 下拉刷新

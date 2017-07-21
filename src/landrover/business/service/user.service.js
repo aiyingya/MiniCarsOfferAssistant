@@ -26,14 +26,15 @@ export default class UserService extends Service {
   }
 
   isAuthAvailable(): boolean {
-    const currentDate = new Date()
-    const currentTime = currentDate.getTime()
-    if (this.auth != null) {
-      const expireTime = this.auth.expireIn
-      return currentTime < expireTime
-    } else {
-      return false
-    }
+    // const currentDate = new Date()
+    // const currentTime = currentDate.getTime()
+    // if (this.auth != null) {
+      // const expireTime = this.auth.expireIn
+      // return currentTime < expireTime
+    // } else {
+      // return false
+    // }
+    return this.auth != null
   }
 
   constructor() {
@@ -82,8 +83,10 @@ export default class UserService extends Service {
         return this.checkAndRequestAuthorize('scope.userInfo', true)
           .then((res) => {
             if (res.scopeAuthorize == true) {
+              console.log('更新用户信息')
               return this.getUserInfoForWeixin(true)
             } else {
+              console.log('没有更新用户信息')
               return Promise.resolve()
             }
           })
@@ -95,7 +98,7 @@ export default class UserService extends Service {
         console.info('user.service 启动完毕')
       })
       .catch(err => {
-        console.error('user.service 启动失败')
+        console.error('user.service 启动失败' + err.stack)
       })
   }
 

@@ -100,7 +100,10 @@ Page({
           point: downPoint
         }
       })
-      wx.showShareMenu()
+
+      if (wx.showShareMenu) {
+        wx.showShareMenu()
+      }
     }
   },
   onReady() {
@@ -285,7 +288,7 @@ Page({
   /**
    * 发起砍价活动.
    */
-  
+
   handlerBargainActive(e) {
     let that = this
     const quotationItem = that.data.quotation
@@ -304,7 +307,7 @@ Page({
         content: res
       })
     },(err) => {
-      
+
     })
   }
 })
