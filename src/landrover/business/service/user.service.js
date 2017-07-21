@@ -4,6 +4,7 @@ import { config, storage, request, device, ui } from '../index'
 
 export default class UserService extends Service {
 
+
   baseUrl = {
     dev: 'https://test.yaomaiche.com/ucdev/',
     gqc: 'https://test.yaomaiche.com/ucgqc/',
@@ -565,6 +566,17 @@ export default class UserService extends Service {
     )
   }
 
+  retrieveWeixinSessionIdValidation(sessionId: string): Promise<boolean> {
+    const sid = sessionId
+    return this.request(
+      'cgi/wxapp/auth',
+      'GET',
+      {
+        sid
+      }
+    )
+  }
+
   /**
    * 微信三方登录包裹接口
    * 自动获取 sessionId 到本地
@@ -573,50 +585,60 @@ export default class UserService extends Service {
    * @memberof UserService
    */
   loginForWeixin(): Promise<{ sessionId: string }> {
-    return request.checkSessionForWeixin()
-      .then(() => {
-        // 登录有效
-        const sessionId = this.weixin.sessionId
-        if (sessionId != null) {
-          // 有 sessionId
+    const loginPromise: () => Promise<{ sessionId: string }> = () => {
+      this.weixin.sessionId = null
+      // 登录过期 || 登录没过期但是没有 sessionId
+      return request.loginForWeixin()
+        .then(res => {
+          const code = res.code
+          return code
+        })
+        .catch(err => {
+          // login 接口出错的情况
+          return Promise.reject(new Error('wx.login fail'))
+        })
+        .then((code: string) => {
+          // FIXME: appid 需要抽象
+          return this.createAuthenticationByMiniProgram('wxd5d5bf6b593d886e', code)
+        })
+        .then((sessionId: string) => {
+          this.loginChannel = 'weixin'
+          this.weixin.sessionId = sessionId
+          this.saveUserInfo()
           return { sessionId }
-        } else {
-          // 没有 sessionId
-          return Promise.reject()
-        }
-      })
-      .catch(() => {
-        // 失败后意味着当前存储的 sessionId 无效，移除
-        this.weixin.sessionId = null
-        // 登录过期 || 登录没过期但是没有 sessionId
-        return request.loginForWeixin()
+        })
+        .catch(err => {
+          this.loginChannel = 'guest'
+          this.weixin.sessionId = null
+          this.saveUserInfo()
+          console.error('微信三方登录失败')
+          console.error(err)
+          return Promise.reject(err)
+        })
+    }
+
+    const sessionId = this.weixin.sessionId
+    if (sessionId != null) {
+      return this.retrieveWeixinSessionIdValidation(sessionId)
+      .then((validate: boolean) => {
+        if (validate === true) {
+          return request.checkSessionForWeixin()
           .then(res => {
-            const code = res.code
-            return code
-          })
-          .catch(err => {
-            // login 接口出错的情况
-            return Promise.reject(new Error('wx.login fail'))
-          })
-          .then((code: string) => {
-            // FIXME: appid 需要抽象
-            return this.createAuthenticationByMiniProgram('wxd5d5bf6b593d886e', code)
-          })
-          .then((sessionId: string) => {
-            this.loginChannel = 'weixin'
-            this.weixin.sessionId = sessionId
-            this.saveUserInfo()
             return { sessionId }
           })
           .catch(err => {
-            this.loginChannel = 'guest'
-            this.weixin.sessionId = null
-            this.saveUserInfo()
-            console.error('微信三方登录失败')
-            console.error(err)
-            return Promise.reject(err)
+            return Promise.reject()
           })
+        } else {
+          return Promise.reject()
+        }
       })
+      .catch(err => {
+        return loginPromise()
+      })
+    } else {
+      return loginPromise()
+    }
   }
 
 
