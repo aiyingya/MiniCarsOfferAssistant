@@ -1,5 +1,5 @@
 // @flow
-import { config, container, request } from '../index'
+import { config, container, request, ui } from '../index'
 
 export default class Service {
 
@@ -69,11 +69,10 @@ export default class Service {
         const behavior = wx_data.behavior || null
         if (behavior != null) {
           if (behavior.type === 'TOAST') {
-            // FIXME: 未实现
-            // let content = behavior.content
-            // if (content && content.length) {
-              // ui.showToast(content)
-            // }
+            const content = behavior.content
+            if (content && content.length) {
+              ui.showToast(content)
+            }
           } else if (behavior.type === 'Alert') {
             // 暂不实现
           } else if (behavior.type === 'Notice') {

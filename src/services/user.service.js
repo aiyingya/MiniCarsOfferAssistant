@@ -46,15 +46,6 @@ export default class UserService extends BaseUserService {
         console.log(res)
         return res
       })
-      .catch(err => {
-        $wuxToast.show({
-          type: false,
-          timer: 2000,
-          color: '#fffff',
-          text: err.message
-        })
-        return Promise.reject(err)
-      })
   }
 
   setup(): Promise<void> {
