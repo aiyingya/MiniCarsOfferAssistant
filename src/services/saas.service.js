@@ -193,8 +193,12 @@ export default class SAASService extends Service {
           otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       }
-
-      const snsId = this.userService.weixin.userInfo ? this.userService.weixin.userInfo.customerId : null
+      let snsId = null
+      if (this.userService.auth != null) {
+        snsId = this.userService.auth.userId
+      } else if (this.userService.weixin.userInfo != null) {
+        snsId = this.userService.weixin.userInfo.customerId
+      }
       const data_part_2: any = {
         loanFee: quotationDraft.loanFee,
         saleMobile: quotationDraft.saleMobile,
@@ -255,8 +259,12 @@ export default class SAASService extends Service {
    */
   requestQuotationsList(pageIndex: number, pageSize: number, object: any) {
     if (pageIndex > 0 && pageSize > 0) {
-      const snsId = this.userService.weixin.userInfo ? this.userService.weixin.userInfo.customerId : null
-
+      let snsId = null
+      if (this.userService.auth != null) {
+        snsId = this.userService.auth.userId
+      } else if (this.userService.weixin.userInfo != null) {
+        snsId = this.userService.weixin.userInfo.customerId
+      }
       this.sendMessage({
         path: 'sale/quotation/new',
         data: {
