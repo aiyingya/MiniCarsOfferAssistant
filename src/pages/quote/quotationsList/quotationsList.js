@@ -1,9 +1,14 @@
+import {
+  $wuxTrack
+} from "../../../components/wux"
 import util from '../../../utils/util'
 import { container } from '../../../landrover/business/index'
 let app = getApp()
 
 Page({
   data: {
+    pageId: 'quotationsList',
+    pageName: '报价列表',
     pageIndex: 1,
     pageSize: 10,
     quotationsList: [],
@@ -45,6 +50,11 @@ Page({
   onReady() {
   },
   onShow() {
+    const event = {
+      eventAction: 'pageShow',
+      eventLabel: `页面展开`
+    }
+    $wuxTrack.push(event)
 
     let that = this
     let quotation = app.fuckingLarryNavigatorTo.quotation

@@ -1,7 +1,8 @@
 import {
   $wuxInputNumberDialog,
   $wuxDialog,
-  $qrCodeDialog
+  $qrCodeDialog,
+  $wuxTrack
 } from "../../../components/wux"
 import util from '../../../utils/util'
 import { container } from '../../../landrover/business/index'
@@ -9,6 +10,8 @@ const app = getApp()
 
 Page({
   data: {
+    pageId: 'quotationsDetail',
+    pageName: '报价详情',
     // 导航头部数据
     activeIndex: 0,
     slderOffset: 0,
@@ -110,6 +113,12 @@ Page({
 
   },
   onShow() {
+    const event = {
+      eventAction: 'pageShow',
+      eventLabel: `页面展开`
+    }
+    $wuxTrack.push(event)
+
     /**
      * 登陆后刷新页面.
      */

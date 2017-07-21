@@ -1,5 +1,5 @@
 import {
-  $wuxToast
+  $wuxTrack
 } from '../../components/wux'
 import util from '../../utils/util'
 import { container } from '../../landrover/business/index'
@@ -10,6 +10,9 @@ var columnChartsList = []
 
 Page({
   data: {
+    pageId: 'carModels',
+    pageName: '车款列表',
+    pageParameters: {},
     carModelsList: [],
     inStockData: [],
     cacheCarModelsList: [],
@@ -103,6 +106,12 @@ Page({
     }
   },
   onShow () {
+    const event = {
+      eventAction: 'pageShow',
+      eventLabel: `页面展开`
+    }
+    $wuxTrack.push(event)
+
     let options = this.data.options
     let pageShare = this.data.pageShare
     if(pageShare) {
