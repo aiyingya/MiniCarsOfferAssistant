@@ -39,7 +39,7 @@ export default class UserService extends BaseUserService {
     data: ?{ [string]: any } = null,
     header?: ?{ [string]: string } = null,
   ): Promise<any> {
-    console.log(path)
+    console.log(`${path} ${method}`)
     console.log(data)
     return super.request(path, method, data, header)
       .then(res => {
