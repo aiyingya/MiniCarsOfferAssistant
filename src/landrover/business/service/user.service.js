@@ -566,7 +566,16 @@ export default class UserService extends Service {
     )
   }
 
-  retrieveWeixinSessionIdValidation(sessionId: string): Promise<boolean> {
+  /**
+   * 验证当前 sessionId 是否有效
+   *
+   * @param {string} sessionId
+   * @returns {Promise<boolean>}
+   * @memberof UserService
+   */
+  retrieveWeixinSessionIdValidation(
+    sessionId: string
+  ): Promise<boolean> {
     const sid = sessionId
     return this.request(
       'cgi/wxapp/auth',
