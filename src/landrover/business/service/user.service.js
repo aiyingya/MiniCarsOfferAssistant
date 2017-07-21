@@ -10,21 +10,82 @@ export default class UserService extends Service {
     prd: 'https://ymcapi.yaomaiche.com/uc/'
   }
 
-  auth: ?Auth = null
+  /**
+   * 运图账号登录鉴权对象
+   *
+   * @type {(Auth | null)}
+   * @memberof UserService
+   */
+  auth: Auth | null = null
 
-  clientId: ?string = null
+  /**
+   * 当前用户状态的的 clientId 由 userId + deviceId 服务器生成
+   * clientId 的获取时机为启动后无登录状态时获取，登录和登出运图账号登录状态时重新获取
+   *
+   * @type {(string | null)}
+   * @memberof UserService
+   */
+  clientId: string | null = null
 
-  loginChannel: LoginChannelType
+  /**
+   * 登录渠道，目前支持 guest 游客， weixin 微信，yuntu 运图
+   * 用户第一次进入界面默认状态就是 游客
+   * 通过微信登录后即为 微信登录
+   * 运图账号登录后即为 运图登录
+   *
+   * @type {LoginChannelType}
+   * @memberof UserService
+   */
+  loginChannel: LoginChannelType = 'guest'
 
-  userInfo: any
+  /**
+   * 运图账号用户信息
+   *
+   * @type {UserInfo}
+   * @memberof UserService
+   */
+  userInfo: UserInfo
 
-  userInfoForTenant: ?UserInfoForTenant
+  /**
+   * 运图账号租户用户信息
+   *
+   * @type {(UserInfoForTenant | null)}
+   * @memberof UserService
+   */
+  userInfoForTenant: UserInfoForTenant | null = null
 
+  /**
+   * 微信登录相关信息
+   *
+   * userInfo 后台处理过的微信账号的用户信息
+   * sessionId 后台处理过交由客户端保存的会话标识
+   *
+   * @type {({
+   *     userInfo: UserInfoForWeixin | null,
+   *     sessionId: string | null
+   *   })}
+   * @memberof UserService
+   */
   weixin: {
-    userInfo: ?UserInfoForWeixin,
-    sessionId: ?string
+    userInfo: UserInfoForWeixin | null,
+    sessionId: string | null
+  } = {
+    userInfo: null,
+    sessionId: null
   }
 
+  constructor() {
+    super()
+  }
+
+  /**
+   * 当前鉴权对象是否有效
+   * accessToken 是否存在 expireIn 在有效期内
+   * 当前的过期时间为真实过期时间前一天
+   *
+   * @returns {boolean}
+   * @memberof UserService
+   */
   isAuthAvailable(): boolean {
     const currentDate = new Date()
     const currentTime = currentDate.getTime()
@@ -34,22 +95,6 @@ export default class UserService extends Service {
       return currentTime < expireTime - 1 * 24 * 60 * 60 * 1000
     } else {
       return false
-    }
-  }
-
-  constructor() {
-    super()
-
-    this.auth = null
-    this.clientId = null
-    this.loginChannel = 'guest'
-
-    this.userInfo = null
-    this.userInfoForTenant = null
-
-    this.weixin = {
-      userInfo: null,
-      sessionId: null
     }
   }
 
@@ -101,6 +146,13 @@ export default class UserService extends Service {
       })
   }
 
+  /**
+   * 通过过期时间量计算过期的时间戳
+   *
+   * @param {number} delta 过期时间量
+   * @returns {number} 过期时间戳
+   * @memberof UserService
+   */
   p_timestampFromNowWithDelta(delta: number): number {
     const currentDate = new Date()
     const currentTime = currentDate.getTime()
@@ -108,10 +160,19 @@ export default class UserService extends Service {
     return expirationTime
   }
 
+
   /**
-   * clientId API
+   * 获取 clientId
+   *
+   * @param {string} deviceId
+   * @param {(string|null)} userId
+   * @returns {Promise<{ clientId: string }>}
+   * @memberof UserService
    */
-  retrieveClientId(deviceId: string, userId: ?string): Promise<any> {
+  retrieveClientId(
+    deviceId: string,
+    userId: string|null
+  ): Promise<{ clientId: string }> {
     return this.request(
       'cgi/visitor',
       'GET',
@@ -123,10 +184,22 @@ export default class UserService extends Service {
   }
 
   /**
-   * 用户授权 API
+   * 创建验证码验证流程
+   * 支持语音和短信验证码
+   *
+   * @param {string} mobile
+   * @param {VCodeType} type
+   * @param {UseCaseType} useCase
+   * @param {boolean} strictlyCheck
+   * @returns {Promise<void>}
+   * @memberof UserService
    */
-
-  createVCode(mobile: string, type: VCodeType = 'SMS', useCase: UseCaseType = 'access', strictlyCheck: boolean = true): Promise<void> {
+  createVCode(
+    mobile: string,
+    type: VCodeType,
+    useCase: UseCaseType,
+    strictlyCheck: boolean
+  ): Promise<void> {
     return this.request(
       'cgi/vcode',
       'POST',
@@ -139,7 +212,44 @@ export default class UserService extends Service {
     )
   }
 
-  createAuthentication(type: AuthType, entity: AuthEntity, channel: string, ): Promise<any> {
+  /**
+   * 授权或者登录
+   * 支持验证码和密码两种方式
+   *
+   * + 请求
+   *
+   * 当 type === 'code'
+   * entity 的类型应该为 VCode
+   * 当 type === 'password'
+   * entity 的类型应该为 Passport
+   *
+   * + 响应
+   *
+   * 当 (type === 'code') && (userCase === 'registerOrAccess' | 'access')
+   * 其 scope 为 com.yuntu.*
+   *
+   * 当 (type === 'code') && (userCase === 'resetPassword' | 'register')
+   * 其 scope 为 com.yuntu.uc.passport.resetPassword
+   * 注 重置和修改密码必须使用 scope 为 com.yuntu.uc.passport.resetPassword 的 accessToken
+   *
+   * 注 初次获得的 accessToken 的有效期为 30分钟，登录和注册登录流程需要额外刷新一次 token
+   *
+   * 当 (type === 'code') && (userCase === 'registerOrAccess')
+   * 其 extra 会有可能返回 'access' | 'setPassword'
+   * 'access' 意味着直接登录
+   * 'setPassword' 意味着需要客户端设置密码
+   *
+   * @param {AuthType} type
+   * @param {AuthEntity} entity
+   * @param {string} channel
+   * @returns {Promise<Auth>}
+   * @memberof UserService
+   */
+  createAuthentication(
+    type: AuthType,
+    entity: AuthEntity,
+    channel: string
+  ): Promise<Auth> {
     let data
     if (type === 'code') {
       const vcode = entity
@@ -156,18 +266,41 @@ export default class UserService extends Service {
     )
   }
 
-  retrieveAuthenticationInformation(): Promise<AuthInfoType> {
+  /**
+   *
+   *
+   * @returns {Promise<AuthInfoType>}
+   * @memberof UserService
+   */
+  retrieveAuthenticationInformation(
+  ): Promise<AuthInfoType> {
     return this.request(
       'user',
       'GET',
     )
   }
 
-  deleteAuthentication(): Promise<any> {
+  /**
+   * 删除授权
+   *
+   * @returns {Promise<void>}
+   * @memberof UserService
+   */
+  deleteAuthentication(
+  ): Promise<void> {
     return this.request('cgi/authorization', 'DELETE')
   }
 
-  updateAuthentication(refreshToken: string): Promise<Auth> {
+  /**
+   * 更新授权对象，更新完毕后新的 accessToken 有效期为 7 天
+   *
+   * @param {string} refreshToken
+   * @returns {Promise<Auth>}
+   * @memberof UserService
+   */
+  updateAuthentication(
+    refreshToken: string
+  ): Promise<Auth> {
     const Authorization = refreshToken
     return this.request(
       'cgi/authorization',
@@ -179,7 +312,17 @@ export default class UserService extends Service {
     )
   }
 
-  retrieveUserExist(key: string): Promise<any> {
+  /**
+   * 判断用户是否存在
+   *
+   * @param {string} loginName 用户名/手机号/邮箱
+   * @returns {Promise<boolean>}
+   * @memberof UserService
+   */
+  retrieveUserExist(
+    loginName: string
+  ): Promise<boolean> {
+    const key = loginName
     return this.request(
       'user/exist',
       'GET',
@@ -189,7 +332,18 @@ export default class UserService extends Service {
     )
   }
 
-  createPassword(userId: string, newPassword: string): Promise<any> {
+  /**
+   * 设置密码
+   *
+   * @param {string} userId
+   * @param {string} newPassword
+   * @returns {Promise<void>}
+   * @memberof UserService
+   */
+  createPassword(
+    userId: string,
+    newPassword: string
+  ): Promise<void> {
     return this.request(
       `user/${userId}/pwd`,
       'POST',
@@ -199,7 +353,47 @@ export default class UserService extends Service {
     )
   }
 
-  updatePassword(userId: string, newPassword: string, password?: string): Promise<any> {
+  /**
+   * 修改密码，用于无法获得登录权限的况下
+   *
+   * @param {string} accessToken 授权范围为 'com.yuntu.uc.passport.resetPassword' 的 accessToken
+   * @param {string} userId
+   * @param {string} newPassword
+   * @returns {Promise<void>}
+   * @memberof UserService
+   */
+  updatePasswordWithoutLogin(
+    accessToken: string,
+    userId: string,
+    newPassword: string
+  ): Promise<void> {
+    const Authorization = accessToken
+    return this.request(
+      `user/${userId}/pwd`,
+      'PUT',
+      {
+        newPassword
+      },
+      {
+        Authorization
+      }
+    )
+  }
+
+  /**
+   * 修改密码，用于已经有登录权限的情况下
+   *
+   * @param {string} userId
+   * @param {string} newPassword
+   * @param {string} password
+   * @returns {Promise<void>}
+   * @memberof UserService
+   */
+  updatePassword(
+    userId: string,
+    newPassword: string,
+    password: string
+  ): Promise<void> {
     return this.request(
       `user/${userId}/pwd`,
       'PUT',
@@ -211,29 +405,15 @@ export default class UserService extends Service {
   }
 
   /**
-   * 用户信息 API
+   * 查看租户是否存在
+   *
+   * @param {string} mobile
+   * @returns {Promise<boolean>}
+   * @memberof UserService
    */
-
-  /**
-   * 三方登录 API
-   */
-
-  createAuthenticationByWechat(appKey: string, openId: string, code: string): Promise<any> {
-    return this.request(
-      'cgi/authorization/weixin',
-      'POST',
-      {
-        appKey,
-        openId,
-        code
-      }
-    )
-  }
-
-  /**
-   * 租户 api
-   */
-  retrieveTenantMemberExist(mobile: string): Promise<boolean> {
+  retrieveTenantMemberExist(
+    mobile: string
+  ): Promise<boolean> {
     return this.request(
       'cgi/tenant/member/exist',
       'GET',
@@ -243,7 +423,16 @@ export default class UserService extends Service {
     )
   }
 
-  retrieveTenantMemberUserInfo(userId: string): Promise<UserInfoForTenant> {
+  /**
+   * 获取租户的用户信息
+   *
+   * @param {string} userId
+   * @returns {Promise<UserInfoForTenant>}
+   * @memberof UserService
+   */
+  retrieveTenantMemberUserInfo(
+    userId: string
+  ): Promise<UserInfoForTenant> {
     return this.request(
       `cgi/tenant/member/${userId}/tenant`,
       'GET'
@@ -251,18 +440,17 @@ export default class UserService extends Service {
   }
 
   /**
-   * 微信小程序 api
-   */
-
-  /**
+   * 微信小程序创建登录鉴权
    *
-   *
-   * @param {string} appId
-   * @param {string} code
+   * @param {string} appId 微信的 appId
+   * @param {string} code 通过 wx.login 接口获得的 code
    * @returns {Promise<string>} sessionId
    * @memberof UserService
    */
-  createAuthenticationByMiniProgram(appId: string, code: string): Promise<string> {
+  createAuthenticationByMiniProgram(
+    appId: string,
+    code: string
+  ): Promise<string> {
     return this.request(
       'cgi/wxapp/auth',
       'POST',
@@ -273,15 +461,33 @@ export default class UserService extends Service {
     )
   }
 
-  updateUserInfoByMiniProgram(sessionId: string, encrypted: boolean, userInfo: UserInfoEntityForWeixin): Promise<UserInfoForWeixin> {
-    // let data
-    // if (encrypted === true) {
-    // const encryptedData: UserInfoForMiniProgramEncrypted = userInfo
-    // data = encryptedData
-    // } else {
-    // const plainData: UserInfoForMiniProgramPlain = userInfo
-    // data = plainData
-    // }
+  /**
+   * 微信小程序更新用户信息
+   *
+   * 当 encrypted === true
+   * userInfo 的实体类型为 UserInfoEncryptedEntityForWeixin
+   * 当 encrypted === false
+   * userInfo 的实体类型为 UserInfoPlainEntityForWeixin
+   *
+   * @param {string} sessionId
+   * @param {boolean} encrypted 是否需要上传敏感信息
+   * @param {UserInfoEntityForWeixin} userInfo 微信小程序中获得的用户信息，包含加密的和不加密的
+   * @returns {Promise<UserInfoForWeixin>}
+   * @memberof UserService
+   */
+  updateUserInfoByMiniProgram(
+    sessionId: string,
+    encrypted: boolean,
+    userInfo: UserInfoEntityForWeixin
+  ): Promise<UserInfoForWeixin> {
+    let data
+    if (encrypted === true) {
+      const encryptedData = userInfo
+      data = encryptedData
+    } else {
+      const plainData = userInfo
+      data = plainData
+    }
     return this.request(
       'cgi/wxapp/user',
       'PUT',
@@ -293,7 +499,18 @@ export default class UserService extends Service {
     )
   }
 
-  createBoundWithWeixinAccount(userId: string, sessionId: string): Promise<void> {
+  /**
+   * 创建微信账号和运图账号之间的绑定关系
+   *
+   * @param {string} userId
+   * @param {string} sessionId
+   * @returns {Promise<void>}
+   * @memberof UserService
+   */
+  createBoundWithWeixinAccount(
+    userId: string,
+    sessionId: string
+  ): Promise<void> {
     return this.request(
       'cgi/wxapp/user/bound',
       'PUT',
@@ -304,7 +521,16 @@ export default class UserService extends Service {
     )
   }
 
-  retrieveWeixinAccountHasBound(sessionId: string): Promise<boolean> {
+  /**
+   * 检测当前的微信账号是否已经绑定过运图账号
+   *
+   * @param {string} sessionId
+   * @returns {Promise<boolean>}
+   * @memberof UserService
+   */
+  retrieveWeixinAccountHasBound(
+    sessionId: string
+  ): Promise<boolean> {
     const sid = sessionId
     return this.request(
       'cgi/wxapp/user/bound',
@@ -315,7 +541,18 @@ export default class UserService extends Service {
     )
   }
 
-  retrieveWeixinAccountCanLogin(sessionId: string, mobile: string): Promise<{ success: boolean, message: string }> {
+  /**
+   * 检测当前手机号否等登录要卖车小程序
+   *
+   * @param {string} sessionId
+   * @param {string} mobile
+   * @returns {Promise<{ success: boolean, message: string }>}
+   * @memberof UserService
+   */
+  retrieveWeixinAccountCanLogin(
+    sessionId: string,
+    mobile: string
+  ): Promise<{ success: boolean, message: string }> {
     const sid = sessionId
     const m = mobile
     return this.request(

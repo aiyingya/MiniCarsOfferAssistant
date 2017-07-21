@@ -28,10 +28,25 @@ declare type Auth = {
   expireIn: number,
   expireMillis: number,
   refreshToken: string,
-  scope: string,
+  scope: Scope,
   tokenType: string,
   userId: string
 }
+
+declare type UserInfo = {
+  userId: string,
+  userName: string,
+  mobile: string,
+  email: string,
+  name: string,
+  gender: '男'|'女',
+  birthday: string,
+  headPortrait: string,
+  nickName: string,
+  idCard: string
+}
+
+declare type Scope = 'com.yuntu.*' | 'com.yuntu.uc.passport.resetPassword'
 
 declare type UserInfoForWeixin = {
   customerId: number,
@@ -93,7 +108,7 @@ declare type AuthInfoType = {
   userId: string,
   mobile: string,
   email: string,
-  scope: string,
+  scope: Scope,
   registerType: RegisterType,
   active: boolean,
   hasPassword: boolean
