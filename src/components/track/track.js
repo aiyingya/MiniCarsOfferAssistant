@@ -9,7 +9,7 @@
 
 import UBTService from '../../services/ubt.service.js'
 
-import { config, system, device } from '../../landrover/business/index'
+import { config, system, device, container } from '../../landrover/business/index'
 
 import Component from '../component'
 
@@ -25,6 +25,7 @@ export default {
       appVersion: `${config.name}:${config.version}`,
       pageId: null,
       pageName: null,
+      guid: container.userService.auth.userId,
       channel: 'mini-program',
       os: `${system.system}|wechat ${system.version}|sdk ${system.SDKVersion}`,
       screen: `${system.windowWidth}x${system.windowHeight}`,
