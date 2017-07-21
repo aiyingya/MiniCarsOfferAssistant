@@ -144,7 +144,7 @@ Page({
     const useCase = 'access'
     const authEntity = { code, mobile, useCase }
 
-    wx.showLoading({ title: '登录中...', mask: true })
+    wx.showToast({ title: '登录中...', icon: 'loading', mask: true })
     container.userService.login('code', authEntity, '')
       .then(() => {
         console.log("登陆成功")
@@ -157,7 +157,7 @@ Page({
       .catch(err => {
       })
       .then(() => {
-        wx.hideLoading()
+        wx.hideToast()
       })
   },
   boundSelectHandler(e) {
