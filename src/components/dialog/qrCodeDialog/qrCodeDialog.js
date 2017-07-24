@@ -70,7 +70,7 @@ export default {
         /**
          * 生成二维码.
          */
-        createQrCode:function(content,canvasId,cavW,cavH){
+        createQrCode (content,canvasId,cavW,cavH){
           let that = this
           //调用插件中的draw方法，绘制二维码图片
           QR.qrApi.draw(content,canvasId,cavW,cavH)
@@ -84,7 +84,7 @@ export default {
         /**
          * 获取临时缓存照片路径，存入data中
          */
-        canvasToTempImage:function(){
+        canvasToTempImage(){
           let that = this
           wx.canvasToTempFilePath({
             canvasId: 'QRcodeCanvas',
@@ -102,6 +102,9 @@ export default {
                 
             }
           });
+        },
+        touchMove(e) {
+          console.log(e)
         },
         /**
          * 按钮点击事件

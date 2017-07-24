@@ -3,8 +3,9 @@
     <view 
       class="weui-mask {{ animateCss }}" 
       wx:if="{{ visible }}" 
-      catchtouchmove="{{ onTouchMoveWithCatch }}" 
-      bindtap="{{ close }}"></view>
+      bindtap="{{ close }}"
+      bindtouchmove="{{ close }}"  
+      ></view>
 	  <view class="weui-dialog weui-dialog_qr {{ animateCss }}" wx:if="{{ visible }}">
         
         <view class="weui-qrdialog__bd" wx:if="{{ content }}">
@@ -14,6 +15,8 @@
               class="qrcode-pic">
               <canvas 
                 canvas-id="QRcodeCanvas"
+                disable-scroll="true"
+                bindtouchmove="touchMove"
                 style="width: 220px; height: 220px; background:#ffffff;"
                 />
             </view>
