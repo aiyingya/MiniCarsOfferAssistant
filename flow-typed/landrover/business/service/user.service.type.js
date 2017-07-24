@@ -1,27 +1,3 @@
-/**
- * user center auth entity
- *
- * accessToken : "8213e95cd952929676f777fa4367a19ad4d84751874581f14a7106b0000c26ba"
- * clientId : "5b16b13900078bc557cdac6ec4728f4c"
- * expireIn : 1499958344657
- * expireMillis : 604799993
- * refreshToken : "14a662e9eeeef933fa57297f5df3dfcefa290386864433578935df83ae680206"
- * scope : "com.yuntu.*"
- * tokenType : "bearer"
- * userId : "4117590"
- *
- * @type {
- *     accessToken: string,
- *     clientId: string,
- *     expireMillis: number,
- *     refreshToken: string,
- *     scope: string,
- *     tokenType: string,
- *     userId: string
- *   }
- * @memberof UserService
- */
-
 declare type Auth = {
   accessToken: string,
   clientId: string,
@@ -46,7 +22,7 @@ declare type UserInfo = {
   idCard: string
 }
 
-declare type Scope = 'com.yuntu.*' | 'com.yuntu.uc.passport.resetPassword'
+declare type Scope = 'com.yuntu.*'|'com.yuntu.uc.passport.resetPassword'
 
 declare type UserInfoForWeixin = {
   customerId: number,
@@ -88,7 +64,7 @@ declare type Tenant = {
   tenantName: string,
   tenantDescription: string,
   tenantTelephone: string,
-  tenantStatus: 'online' | '',
+  tenantStatus: 'online'|'',
   remark: string,
   AddressList: Array<Tenant>
 }
@@ -102,7 +78,7 @@ declare type Address = {
   detailAddress: string
 }
 
-declare type RegisterType = 'mobile' | ''
+declare type RegisterType = 'mobile'|''
 
 declare type AuthInfoType = {
   userId: string,
@@ -114,13 +90,13 @@ declare type AuthInfoType = {
   hasPassword: boolean
 }
 
-declare type UseCaseType = 'register' | 'access' | 'registerOrAccess' | 'resetPassword'
+declare type UseCaseType = 'register'|'access'|'registerOrAccess'|'resetPassword'
 
-declare type AuthType = 'code' | 'password'
+declare type AuthType = 'code'|'password'
 
-declare type AuthEntity = Passport | VCode
+declare type AuthEntity = Passport|VCode
 
-declare type VCodeType = 'SMS' | 'Voice'
+declare type VCodeType = 'SMS'|'Voice'
 
 declare type Passport = {
   loginName: string,
@@ -133,10 +109,10 @@ declare type VCode = {
   useCase: UseCaseType
 }
 
-declare type TokenType = 'bearer' | 'mac'
+declare type TokenType = 'bearer'|'mac'
 
-declare type ExtraType = 'access' | 'setPassword' | 'bound' | 'unbound'
+declare type ExtraType = 'access'|'setPassword'|'bound'|'unbound'
 
-declare type LoginChannelType = 'guest' | 'weixin' | 'yuntu'
+declare type LoginChannelType = 'guest'|'weixin'|'yuntu'
 
-declare type SNSIdType = string | number
+declare type SNSIdType = string|number
