@@ -1,5 +1,5 @@
 <view class="container">
-  <view class="potential-cells">
+  <view wx:if="{{potentialListData.length > 0}}" class="potential-cells">
     <view 
       class="potential-cell"
       wx:for="{{potentialListData}}"
@@ -11,5 +11,10 @@
       </view>
       <view class="potential-sponsor">关联活动发起者：{{item.sourceMobile || '暂无'}}</view>
     </view>
+  </view>
+  
+  <view wx:else class="nodata">
+    <image class="nodata-icon" src="../../images/icons/orderlist_icon_noorder.png"></image>
+    <view class="nodata-text">暂无数据~</view>
   </view>
 </view>
