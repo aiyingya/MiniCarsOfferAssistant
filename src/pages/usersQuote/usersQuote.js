@@ -1,7 +1,7 @@
 import {
   $wuxToast
 } from "../../components/wux"
-import { container } from '../../landrover/business/index'
+import { container, config } from '../../landrover/business/index'
 
 const app = getApp()
 
@@ -11,9 +11,18 @@ Page({
     userName: '',
     userMobile: '',
     userPortrait: '../../images/icons/icon_head_default_44.png',
-    userTenants: ''
+    userTenants: '',
+    version: config.version
   },
-  onLoad() {},
+  onLoad() {
+    let version = null
+    if (config.env === 'prd') {
+      version = `v${config.version}`
+    } else {
+      version = `v${config.version}.${config.build}-${config.env}`
+    }
+    this.setData({ version })
+  },
   onShow() {
     let that = this
 

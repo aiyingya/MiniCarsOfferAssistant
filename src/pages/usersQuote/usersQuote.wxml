@@ -117,6 +117,9 @@
 -->
 	</view>
 
+  <view class="version">
+    {{version}}
+  </view>
 	<view
 		class="users-logout"
 		hover="true"
