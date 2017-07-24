@@ -93,7 +93,7 @@ export default class UserService extends Service {
     if (this.auth != null) {
       const expireTime = this.auth.expireIn
       // 在过期时间前一天设置为过期标识
-      return currentTime < expireTime - 1 * 24 * 60 * 60 * 1000
+      return (currentTime < expireTime)
     } else {
       return false
     }
@@ -113,6 +113,10 @@ export default class UserService extends Service {
         this.loadUserInfo()
         if (this.auth != null) {
           return this.refreshAccessToken(this.auth)
+            .catch(err => {
+              // 新失时发现 auth 过期, 或者调动接口失败
+              this.clearUserInfo()
+            })
         } else {
           return Promise.resolve()
         }
@@ -817,28 +821,36 @@ export default class UserService extends Service {
   logout(): Promise<any> {
     return this.deleteAuthentication()
       .then(res => {
-        this.auth = null
-        this.loginChannel = 'weixin'
-        this.saveUserInfo()
+        this.clearUserInfo()
         this.getClientId(true)
       })
   }
 
   refreshAccessToken(auth: Auth): Promise<Auth> {
-    if (this.isAuthAvailable()) {
+    const currentDate = new Date()
+    const currentTime = currentDate.getTime()
+    const expireTime = auth.expireIn
+
+    if (currentTime < expireTime - auth.expireMillis / 2) {
+      // 有效期内一半
       return Promise.resolve(auth)
     } else {
-      return this.updateAuthentication(auth.refreshToken)
-        .then(auth => {
-          const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
-          auth.expireIn = expireIn
-          this.auth = auth
-          this.loginChannel = 'yuntu'
-          this.getClientId(true)
-          this.saveUserInfo()
-          return auth
-        })
-    }
+      if (currentTime < expireTime) {
+        // 有效期外一半, 刷新处理
+        return this.updateAuthentication(auth.refreshToken)
+          .then(auth => {
+            const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
+            auth.expireIn = expireIn
+            this.auth = auth
+            this.loginChannel = 'yuntu'
+            this.getClientId(true)
+            this.saveUserInfo()
+            return auth
+          })
+      } else {
+        // 超过有效期, 直接删除当前登录状态
+        return Promise.reject()
+      }
   }
 
   getClientId(force: boolean): Promise<{ clientId: string }> {
@@ -927,12 +939,8 @@ export default class UserService extends Service {
 
   clearUserInfo(): void {
     if (storage.removeItemSync('auth')) {
-      this.loginChannel = 'guest'
+      this.loginChannel = 'weixin'
       this.auth = null
-      this.weixin = {
-        userInfo: null,
-        sessionId: null
-      }
     } else {
       console.error('同步删除 auth 出错')
     }
