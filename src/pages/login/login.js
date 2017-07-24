@@ -62,7 +62,7 @@ Page({
           notUserInYMCMessage: res.message,
         })
         if (res.success === true) {
-          return container.userService.createVCode(this.data.userPhoneValue)
+          return container.userService.createVCode(this.data.userPhoneValue, 'SMS', 'access', true)
             .then(() => {
               this.countDown()
               this.setData({
