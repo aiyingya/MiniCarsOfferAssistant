@@ -45,7 +45,7 @@
         "pagePath": "pages/usersQuote/usersQuote",
         "iconPath": "images/icons/tab_icon_price_off.png",
         "selectedIconPath": "images/icons/tab_icon_price_on.png",
-        "text": "我的报价"
+        "text": "我的"
       }
     ]
   },

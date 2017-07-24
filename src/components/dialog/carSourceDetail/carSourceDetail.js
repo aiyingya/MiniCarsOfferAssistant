@@ -61,7 +61,7 @@ export default {
     }
 
     // 判断是否该显示 复制原文 按钮
-    options.showCopyOrignalText = wx.canIUse('setClipboardData')
+    options.showCopyOrignalText = wx.setClipboardData != null ? true : false
 
     // 实例化组件
     this.component = new Component({

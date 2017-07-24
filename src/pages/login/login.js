@@ -66,7 +66,8 @@ Page({
             .then(() => {
               this.countDown()
               this.setData({
-                notUserInYMC: false
+                notUserInYMC: false,
+                lockSMSButton: false
               })
             })
             .catch(err => {
@@ -88,19 +89,18 @@ Page({
   },
   countDown() {
     let time = 30
-    let that = this
-    let t = setInterval(function () {
+    const t = setInterval(() => {
       if (time > 0) {
         time--
-        let STR = `已发送(${time}s)`
-        that.setData({
+        const STR = `已发送(${time}s)`
+        this.setData({
           codeText: STR,
           countDownOver: false,
           countDownClass: 'count-down'
         })
       } else {
         clearInterval(t)
-        that.setData({
+        this.setData({
           codeText: '重新获取',
           countDownOver: true,
           countDownClass: ''

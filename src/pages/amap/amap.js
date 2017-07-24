@@ -1,7 +1,13 @@
+import {
+  $wuxTrack
+} from "../../components/wux"
+
 let app = getApp()
 let markersData = []
 Page({
   data: {
+    pageId: 'amap',
+    pageName: '报价详情-地图',
     markers: [],
     latitude: '',
     longitude: '',
@@ -19,7 +25,7 @@ Page({
       iconPathSelected: '../../images/icons/marker_checked.png',
       iconPath: '../../images/icons/marker.png',
       success: function(data){
-        
+
         console.log(data)
         markersData = data.markers;
         that.setData({
@@ -37,6 +43,13 @@ Page({
         wx.showModal({title:info.errMsg})
       }
     })
+  },
+  onShow: function() {
+    const event = {
+      eventAction: 'pageShow',
+      eventLabel: `页面展开`
+    }
+    $wuxTrack.push(event)
   },
   showMarkerInfo: function(data,i){
     var that = this;
