@@ -4,7 +4,6 @@ import { config, storage, request, device, ui } from '../index'
 
 export default class UserService extends Service {
 
-
   baseUrl = {
     dev: 'https://test.yaomaiche.com/ucdev/',
     gqc: 'https://test.yaomaiche.com/ucgqc/',
@@ -93,7 +92,7 @@ export default class UserService extends Service {
     if (this.auth != null) {
       const expireTime = this.auth.expireIn
       // 在过期时间前一天设置为过期标识
-      return (currentTime < expireTime)
+      return currentTime < expireTime
     } else {
       return false
     }
@@ -107,6 +106,9 @@ export default class UserService extends Service {
       .then(() => {
         console.log('获取 clientId')
         return this.getClientId(false)
+          .then(res => {
+            console.log(res)
+          })
       })
       .then(() => {
         console.log('载入持久化的数据')
@@ -115,7 +117,6 @@ export default class UserService extends Service {
           return this.refreshAccessToken(this.auth)
             .catch(err => {
               // 新失时发现 auth 过期, 或者调动接口失败
-              this.clearUserInfo()
             })
         } else {
           return Promise.resolve()
@@ -134,6 +135,9 @@ export default class UserService extends Service {
             if (res.scopeAuthorize == true) {
               console.log('更新用户信息')
               return this.getUserInfoForWeixin(true)
+              .then(res => {
+                console.log(res)
+              })
             } else {
               console.log('没有更新用户信息')
               return Promise.resolve()
@@ -849,8 +853,10 @@ export default class UserService extends Service {
           })
       } else {
         // 超过有效期, 直接删除当前登录状态
-        return Promise.reject()
+        this.clearUserInfo()
+        return Promise.reject(new Error('access token 过期'))
       }
+    }
   }
 
   getClientId(force: boolean): Promise<{ clientId: string }> {
