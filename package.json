@@ -65,6 +65,6 @@
     "run-sequence": "^1.2.2"
   },
   "config": {
-    "env": "prd"
+    "env": "dev"
   }
 }
