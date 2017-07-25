@@ -18,7 +18,7 @@ export default {
       longTapLock: false,
       longTapIntervalId: 0,
       params: {
-        ellingPrice : 0,
+        sellingPrice : 0,
         initSellingPrice : 0,
         initIsPlus:false,//初始化的加减
         isPlus :false,
@@ -126,12 +126,25 @@ export default {
          * @param {any} e
          */
         inputPriceInput(e) {
-          const price = Number(e.detail.value)
+          const sellingPrice = Number(e.detail.value)
+          if (sellingPrice > 99999999) {
+            return '99999999'
+          }
+          if (sellingPrice < 0) {
+            return '0'
+          }
+
           if (options.priceStyle) {
-            const _isPlus = options.params.isPlus
+            const quotedMethod = options.params.isPoint ? 'POINTS' : 'PRICE'
+
+            const quoted = util.quotedPriceByMethod(sellingPrice, options.params.guidePrice, quotedMethod, false)
+            const isPlus = quoted.quotedSymbol === 'PLUS'
+            const quotedValueOrRange = options.params.isPoint ? quoted.quotedValue : quoted.quotedRange
 
             this.setData({
-              [`${this.options.scope}.inputNumber`]: 0
+              [`${this.options.scope}.params.isPlus`]: isPlus,
+              [`${this.options.scope}.params.sellingPrice`]: sellingPrice,
+              [`${this.options.scope}.inputNumber`]: quotedValueOrRange
             })
           }
         },
