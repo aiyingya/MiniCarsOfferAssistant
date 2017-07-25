@@ -8,7 +8,7 @@ export default class UserService extends Service {
     dev: 'https://test.yaomaiche.com/ucdev/',
     gqc: 'https://test.yaomaiche.com/ucgqc/',
     prd: 'https://ymcapi.yaomaiche.com/uc/'
-  }
+  };
 
   /**
    * 运图账号登录鉴权对象
@@ -16,7 +16,7 @@ export default class UserService extends Service {
    * @type {(Auth | null)}
    * @memberof UserService
    */
-  auth: Auth | null = null
+  auth: Auth | null = null;
 
   /**
    * 当前用户状态的的 clientId 由 userId + deviceId 服务器生成
@@ -25,7 +25,7 @@ export default class UserService extends Service {
    * @type {(string | null)}
    * @memberof UserService
    */
-  clientId: string | null = null
+  clientId: string | null = null;
 
   /**
    * 登录渠道，目前支持 guest 游客， weixin 微信，yuntu 运图
@@ -36,7 +36,7 @@ export default class UserService extends Service {
    * @type {LoginChannelType}
    * @memberof UserService
    */
-  loginChannel: LoginChannelType = 'guest'
+  loginChannel: LoginChannelType = 'guest';
 
   /**
    * 运图账号用户信息
@@ -44,7 +44,7 @@ export default class UserService extends Service {
    * @type {UserInfo}
    * @memberof UserService
    */
-  userInfo: UserInfo
+  userInfo: UserInfo;
 
   /**
    * 运图账号租户用户信息
@@ -52,7 +52,7 @@ export default class UserService extends Service {
    * @type {(UserInfoForTenant | null)}
    * @memberof UserService
    */
-  userInfoForTenant: UserInfoForTenant | null = null
+  userInfoForTenant: UserInfoForTenant | null = null;
 
   /**
    * 微信登录相关信息
@@ -72,7 +72,15 @@ export default class UserService extends Service {
   } = {
     userInfo: null,
     sessionId: null
-  }
+  };
+
+  /**
+   * 微信登陆的异步 promise
+   *
+   * @type {(Promise<{ sessionId: string }> | null)}
+   * @memberof UserService
+   */
+  promiseForWeixinLogin: Promise<{ sessionId: string }> | null = null;
 
   constructor() {
     super()
@@ -124,7 +132,8 @@ export default class UserService extends Service {
       })
       .then(() => {
         console.log('开始微信三方登录')
-        return this.loginForWeixin()
+        this.promiseForWeixinLogin = this.loginForWeixin()
+        return this.promiseForWeixinLogin
       })
       .then(() => {
         // 检查并弱请求 userInfo 权限，并获取用户信息更新
@@ -135,9 +144,9 @@ export default class UserService extends Service {
             if (res.scopeAuthorize == true) {
               console.log('更新用户信息')
               return this.getUserInfoForWeixin(true)
-              .then(res => {
-                console.log(res)
-              })
+                .then(res => {
+                  console.log(res)
+                })
             } else {
               console.log('没有更新用户信息')
               return Promise.resolve()
@@ -180,7 +189,7 @@ export default class UserService extends Service {
    */
   retrieveClientId(
     deviceId: string,
-    userId: string|null
+    userId: string | null
   ): Promise<{ clientId: string }> {
     return this.request(
       'cgi/visitor',
@@ -602,7 +611,7 @@ export default class UserService extends Service {
    * @memberof UserService
    */
   loginForWeixin(): Promise<{ sessionId: string }> {
-    const loginPromise: () => Promise<{ sessionId: string }> = () => {
+    const promiseForWeixinLoginFunction: () => Promise<{ sessionId: string }> = () => {
       this.weixin.sessionId = null
       // 登录过期 || 登录没过期但是没有 sessionId
       return request.loginForWeixin()
@@ -636,27 +645,27 @@ export default class UserService extends Service {
     const sessionId = this.weixin.sessionId
     if (sessionId != null) {
       return this.retrieveWeixinSessionIdValidation(sessionId)
-      .then((validate: boolean) => {
-        if (validate === true) {
-          return request.checkSessionForWeixin()
-          .then(res => {
-            return { sessionId }
-          })
-          .catch(err => {
+        .then((validate: boolean) => {
+          if (validate === true) {
+            return request.checkSessionForWeixin()
+              .then(res => {
+                return { sessionId }
+              })
+              .catch(err => {
+                return Promise.reject()
+              })
+          } else {
             return Promise.reject()
-          })
-        } else {
-          return Promise.reject()
-        }
-      })
-      .catch(err => {
-        return loginPromise()
-      })
+          }
+        })
+        .catch(err => {
+          this.weixin.sessionId = null
+          return promiseForWeixinLoginFunction()
+        })
     } else {
-      return loginPromise()
+      return promiseForWeixinLoginFunction()
     }
   }
-
 
   /**
    * 绑定账号

@@ -19,12 +19,38 @@ Page({
   },
   onLoad() {
     const sessionId = container.userService.weixin.sessionId
-    container.userService.retrieveWeixinAccountHasBound(sessionId)
-      .then((hasBound: boolean) => {
-        this.setData({
-          userHasBoundWeixinAccount: hasBound
+    if (sessionId != null) {
+      container.userService.retrieveWeixinAccountHasBound(sessionId)
+        .then((hasBound: boolean) => {
+          this.setData({
+            userHasBoundWeixinAccount: hasBound
+          })
         })
+        .catch(err => {
+          console.error('请求出错')
+        })
+    } else {
+      wx.showToast({
+        title: '正在三方登录',
+        icon: 'loading',
+        duration: 10000,
+        mask: true
       })
+      container.userService.promiseForWeixinLogin
+        .then(res => {
+          wx.hideToast()
+          const realSessionId = res.sessionId
+          return container.userService.retrieveWeixinAccountHasBound(realSessionId)
+        })
+        .then((hasBound: boolean) => {
+          this.setData({
+            userHasBoundWeixinAccount: hasBound
+          })
+        })
+        .catch(err => {
+          wx.hideToast()
+        })
+    }
   },
   handleLoginPhone(e) {
     let val = e.detail.value
