@@ -85,6 +85,11 @@ export default class Service {
           const data = wx_data.data
           return data
         } else {
+          if (wx_statusCode === 401) {
+            // 接口无权限
+            container.userService.clearUserInfo()
+          }
+
           // 4XX, 5XX 失败
           const error = wx_data.error
           if (error != null) {
@@ -120,11 +125,17 @@ export default class Service {
           const data = wx_data.data || null
           return data
         } else {
+          if (wx_statusCode === 401) {
+            // 接口无权限
+            container.userService.clearUserInfo()
+          }
+
           // 4XX, 5XX 失败
           let err
           const error = wx_data.error
           if (error != null) {
             const errorMessage = error.alertMessage
+            ui.showToast(errorMessage)
             return Promise.reject(new Error(errorMessage)) //to -> fail
           } else {
             return Promise.reject(new Error('404 or other error'))

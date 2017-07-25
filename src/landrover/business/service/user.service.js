@@ -4,7 +4,6 @@ import { config, storage, request, device, ui } from '../index'
 
 export default class UserService extends Service {
 
-
   baseUrl = {
     dev: 'https://test.yaomaiche.com/ucdev/',
     gqc: 'https://test.yaomaiche.com/ucgqc/',
@@ -93,7 +92,7 @@ export default class UserService extends Service {
     if (this.auth != null) {
       const expireTime = this.auth.expireIn
       // 在过期时间前一天设置为过期标识
-      return currentTime < expireTime - 1 * 24 * 60 * 60 * 1000
+      return currentTime < expireTime
     } else {
       return false
     }
@@ -107,12 +106,18 @@ export default class UserService extends Service {
       .then(() => {
         console.log('获取 clientId')
         return this.getClientId(false)
+          .then(res => {
+            console.log(res)
+          })
       })
       .then(() => {
         console.log('载入持久化的数据')
         this.loadUserInfo()
         if (this.auth != null) {
           return this.refreshAccessToken(this.auth)
+            .catch(err => {
+              // 新失时发现 auth 过期, 或者调动接口失败
+            })
         } else {
           return Promise.resolve()
         }
@@ -130,6 +135,9 @@ export default class UserService extends Service {
             if (res.scopeAuthorize == true) {
               console.log('更新用户信息')
               return this.getUserInfoForWeixin(true)
+              .then(res => {
+                console.log(res)
+              })
             } else {
               console.log('没有更新用户信息')
               return Promise.resolve()
@@ -611,15 +619,14 @@ export default class UserService extends Service {
           return this.createAuthenticationByMiniProgram('wxd5d5bf6b593d886e', code)
         })
         .then((sessionId: string) => {
-          this.loginChannel = 'weixin'
+          if (this.loginChannel === 'guest') {
+            this.loginChannel = 'weixin'
+          }
           this.weixin.sessionId = sessionId
           this.saveUserInfo()
           return { sessionId }
         })
         .catch(err => {
-          this.loginChannel = 'guest'
-          this.weixin.sessionId = null
-          this.saveUserInfo()
           console.error('微信三方登录失败')
           console.error(err)
           return Promise.reject(err)
@@ -817,27 +824,37 @@ export default class UserService extends Service {
   logout(): Promise<any> {
     return this.deleteAuthentication()
       .then(res => {
-        this.auth = null
-        this.loginChannel = 'weixin'
-        this.saveUserInfo()
+        this.clearUserInfo()
         this.getClientId(true)
       })
   }
 
   refreshAccessToken(auth: Auth): Promise<Auth> {
-    if (this.isAuthAvailable()) {
+    const currentDate = new Date()
+    const currentTime = currentDate.getTime()
+    const expireTime = auth.expireIn
+
+    if (currentTime < expireTime - auth.expireMillis / 2) {
+      // 有效期内一半
       return Promise.resolve(auth)
     } else {
-      return this.updateAuthentication(auth.refreshToken)
-        .then(auth => {
-          const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
-          auth.expireIn = expireIn
-          this.auth = auth
-          this.loginChannel = 'yuntu'
-          this.getClientId(true)
-          this.saveUserInfo()
-          return auth
-        })
+      if (currentTime < expireTime) {
+        // 有效期外一半, 刷新处理
+        return this.updateAuthentication(auth.refreshToken)
+          .then(auth => {
+            const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
+            auth.expireIn = expireIn
+            this.auth = auth
+            this.loginChannel = 'yuntu'
+            this.getClientId(true)
+            this.saveUserInfo()
+            return auth
+          })
+      } else {
+        // 超过有效期, 直接删除当前登录状态
+        this.clearUserInfo()
+        return Promise.reject(new Error('access token 过期'))
+      }
     }
   }
 
@@ -927,12 +944,8 @@ export default class UserService extends Service {
 
   clearUserInfo(): void {
     if (storage.removeItemSync('auth')) {
-      this.loginChannel = 'guest'
+      this.loginChannel = 'weixin'
       this.auth = null
-      this.weixin = {
-        userInfo: null,
-        sessionId: null
-      }
     } else {
       console.error('同步删除 auth 出错')
     }

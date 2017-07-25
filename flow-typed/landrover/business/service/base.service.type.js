@@ -1,5 +1,5 @@
 declare type RequestMethod = 'GET'|'POST'|'PUT'|'DELETE'|'OPTIONS'|'HEAD'|'TRACE'|'CONNECT'
-declare type ResponsePackFormat = 'legacy' | 'old' | 'new'
+declare type ResponsePackFormat = 'legacy'|'old'|'new'
 declare type ResponsePackage = {
   data?: any,
   error?: {
@@ -10,7 +10,7 @@ declare type ResponsePackage = {
   behavior?: {
     content: string,
     urlScheme: string,
-    type: 'NOTICE' | 'ALERT' | 'TOAST'
+    type: 'NOTICE'|'ALERT'|'TOAST'
   }
 }
 declare type ResponseOldPackage = {

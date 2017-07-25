@@ -840,7 +840,7 @@ Page({
     $wuxInputNumberDialog.open({
       title: '裸车价',
       inputNumber: _inputT,
-      content: "￥" + _sellingPrice,
+      content: _sellingPrice,
       inputNumberPlaceholder: '输入裸车价',
       inputNumberMaxLength: 9,
       confirmText: '确定',

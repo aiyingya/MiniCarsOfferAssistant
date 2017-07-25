@@ -115,10 +115,25 @@ export default {
               price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
             }
             this.setData({
-              [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
+              [`${this.options.scope}.content`]: Math.floor(price)
             })
           }
+        },
 
+        /**
+         * 裸车价输入时间
+         *
+         * @param {any} e
+         */
+        inputPriceInput(e) {
+          const price = Number(e.detail.value)
+          if (options.priceStyle) {
+            const _isPlus = options.params.isPlus
+
+            this.setData({
+              [`${this.options.scope}.inputNumber`]: 00000
+            })
+          }
         },
         /**
          * 确认行为
