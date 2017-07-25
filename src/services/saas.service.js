@@ -853,4 +853,17 @@ export default class SAASService extends Service {
       data: opts.data || {}
     })
   }
+  
+  /**
+   * 获取报价记录详情列表
+   * @param opts
+   */
+  getQuoteDateilList(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/getQuotationByPhone',
+      method: 'GET',
+      loadingType: 'show',
+      data: opts.data || {}
+    })
+  }
 }

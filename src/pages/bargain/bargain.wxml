@@ -28,7 +28,7 @@
       wx:key="*this"
       >
       <view class="bargain-hd">
-        <view class="bargain-username">{{item.customer.mobile}} / {{item.customer.name}}</view>
+        <view class="bargain-username">{{item.customer.mobile}} / {{item.customer.name || '暂无'}}</view>
         <view class="bargain-times">开始时间  {{item.participateTimeStr}}</view>
       </view>
       <view class="bargain-bd">
@@ -39,7 +39,7 @@
       <view class="bargain-ft">
         <block wx:if="{{item.participateStatus === 'used'}}">
           <view class="bargain-ft_cancel">
-            <view class="label">已核销：</view>核销时间 2017/07/13 12:53
+            <view class="label">已核销：</view>核销时间 {{item.usedTimeStr}}
           </view>
         </block> 
         <block wx:else>

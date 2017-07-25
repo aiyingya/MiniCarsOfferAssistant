@@ -56,8 +56,14 @@ Page({
         for(let item of res) {
           let time = new Date(item.participateTime)
           let timeStr = `${makeUpZero(time.getMonth()+1)}/${makeUpZero(time.getDate())} ${makeUpZero(time.getHours())}:${makeUpZero(time.getMinutes())}`
-          
+          let usedTime = ''
+          let usedTimeStr = ''
+          if(item.usedTime) {
+            usedTime = new Date(item.usedTime)
+            usedTimeStr = `${usedTime.getFullYear()}/${makeUpZero(usedTime.getMonth()+1)}/${makeUpZero(usedTime.getDate())} ${makeUpZero(usedTime.getHours())}:${makeUpZero(usedTime.getMinutes())}`
+          }
           item.participateTimeStr = timeStr
+          item.usedTimeStr = usedTimeStr
           item.overStyle = ''
           item.cancelStyle = ''
           if(item.participateStatus === 'joined' || item.participateStatus === 'full') {

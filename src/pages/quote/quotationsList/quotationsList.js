@@ -221,26 +221,22 @@ Page({
     })
   },
   handlerSelectQuotation(e) {
-    let valueString = JSON.stringify(e.currentTarget.dataset.quotation)
+    let valueString = e.currentTarget.dataset.quotation 
     let current = e.currentTarget.dataset.current
-    let quotationKeyValueString = encodeURIComponent(valueString)
-    try {
-      wx.setStorageSync('quotationItemKeyDetail', quotationKeyValueString)
-      wx.navigateTo({
-        url: `/pages/details/details?current=${current}`,
-        success: function (res) {
-          console.log('quotationDetail 页面跳转成功');
-        },
-        fail: function () {
-          console.log('quotationDetail 页面跳转失败');
-        },
-        complete: function () {
+   
+    wx.navigateTo({
+      url: `/pages/details/details?current=${current}&mobile=${valueString.customerPhone}`,
+      success: function (res) {
+        console.log('quotationDetail 页面跳转成功');
+      },
+      fail: function () {
+        console.log('quotationDetail 页面跳转失败');
+      },
+      complete: function () {
 
-        }
-      })
-    } catch (e) {
-
-    }
+      }
+    })
+   
   },
   handletouchmove(event) {
 		let currentX = event.changedTouches[0].clientX
