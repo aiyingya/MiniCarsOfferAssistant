@@ -619,15 +619,14 @@ export default class UserService extends Service {
           return this.createAuthenticationByMiniProgram('wxd5d5bf6b593d886e', code)
         })
         .then((sessionId: string) => {
-          this.loginChannel = 'weixin'
+          if (this.loginChannel === 'guest') {
+            this.loginChannel = 'weixin'
+          }
           this.weixin.sessionId = sessionId
           this.saveUserInfo()
           return { sessionId }
         })
         .catch(err => {
-          this.loginChannel = 'guest'
-          this.weixin.sessionId = null
-          this.saveUserInfo()
           console.error('微信三方登录失败')
           console.error(err)
           return Promise.reject(err)
