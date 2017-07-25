@@ -1,3 +1,5 @@
+declare type Scope = 'com.yuntu.*' | 'com.yuntu.uc.passport.resetPassword';
+
 declare type Auth = {
   accessToken: string,
   clientId: string,
@@ -7,7 +9,7 @@ declare type Auth = {
   scope: Scope,
   tokenType: string,
   userId: string
-}
+};
 
 declare type UserInfo = {
   userId: string,
@@ -15,14 +17,12 @@ declare type UserInfo = {
   mobile: string,
   email: string,
   name: string,
-  gender: '男'|'女',
+  gender: '男' | '女',
   birthday: string,
   headPortrait: string,
   nickName: string,
   idCard: string
-}
-
-declare type Scope = 'com.yuntu.*'|'com.yuntu.uc.passport.resetPassword'
+};
 
 declare type UserInfoForWeixin = {
   customerId: number,
@@ -33,41 +33,28 @@ declare type UserInfoForWeixin = {
   country: string,
   province: string,
   city: string
-}
+};
 
 declare type Weixin = {
   userInfo: UserInfoForWeixin,
   sessionId: string
-}
-
-declare type UserInfoPlainEntityForWeixin = {
-  userInfo: UserInfoForWeixin,
-  rawData: string,
-  signature: string
-}
-
-declare type UserInfoEncryptedEntityForWeixin = {
-  encryptedData: string,
-  iv: string
-}
-
-declare type UserInfoEntityForWeixin = UserInfoPlainEntityForWeixin | UserInfoEncryptedEntityForWeixin
+};
 
 declare type UserInfoForTenant = {
   userId: string,
   mobile: string,
   tenants: Array<Tenant>
-}
+};
 
 declare type Tenant = {
   tenantId: number,
   tenantName: string,
   tenantDescription: string,
   tenantTelephone: string,
-  tenantStatus: 'online'|'',
+  tenantStatus: 'online' | '',
   remark: string,
   AddressList: Array<Tenant>
-}
+};
 
 declare type Address = {
   addressId: number,
@@ -76,9 +63,9 @@ declare type Address = {
   cityName: string,
   districtName: string,
   detailAddress: string
-}
+};
 
-declare type RegisterType = 'mobile'|''
+declare type RegisterType = 'mobile' | '';
 
 declare type AuthInfoType = {
   userId: string,
@@ -88,31 +75,46 @@ declare type AuthInfoType = {
   registerType: RegisterType,
   active: boolean,
   hasPassword: boolean
-}
+};
 
-declare type UseCaseType = 'register'|'access'|'registerOrAccess'|'resetPassword'
+declare type UseCaseType = 'register' | 'access' | 'registerOrAccess' | 'resetPassword';
 
-declare type AuthType = 'code'|'password'
+declare type AuthType = 'code' | 'password';
 
-declare type AuthEntity = Passport|VCode
+declare type AuthEntity = Passport | VCode;
 
-declare type VCodeType = 'SMS'|'Voice'
+declare type VCodeType = 'SMS' | 'Voice';
 
 declare type Passport = {
   loginName: string,
   password: string
-}
+};
 
 declare type VCode = {
   mobile: string,
   code: string,
   useCase: UseCaseType
-}
+};
 
-declare type TokenType = 'bearer'|'mac'
+declare type TokenType = 'bearer' | 'mac';
 
-declare type ExtraType = 'access'|'setPassword'|'bound'|'unbound'
+declare type ExtraType = 'access' | 'setPassword' | 'bound' | 'unbound';
 
-declare type LoginChannelType = 'guest'|'weixin'|'yuntu'
+declare type LoginChannelType = 'guest' | 'weixin' | 'yuntu';
 
-declare type SNSIdType = string|number
+declare type SNSIdType = string | number;
+
+declare type UserInfoPlainEntityForWeixin = {
+  userInfo: UserInfoForWeixin,
+  rawData: string,
+  signature: string
+};
+
+declare type UserInfoEncryptedEntityForWeixin = {
+  encryptedData: string,
+  iv: string
+};
+
+declare type UserInfoEntityForWeixin = UserInfoPlainEntityForWeixin | UserInfoEncryptedEntityForWeixin;
+
+declare type ScopeForWeixin = 'scope.userInfo' | 'scope.userLocation' | 'scope.address' | 'scope.record' | 'scope.writePhotosAlbum';

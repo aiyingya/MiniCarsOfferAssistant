@@ -48,7 +48,8 @@ export default class TradeService extends Service {
     return this.sendMessageByPromise({
       path: 'cgi/navigate/items/hot',
       method: 'GET',
-      data: {}
+      data: {},
+      loadingType: 'none'
     })
   }
 
@@ -61,7 +62,8 @@ export default class TradeService extends Service {
   getHotPushBrands(): Promise<any> {
     return this.sendMessageByPromise({
       path: 'cgi/navigate/brands/hot',
-      method: 'GET'
+      method: 'GET',
+      loadingType: 'none'
     })
   }
 

@@ -698,7 +698,7 @@ export default class UserService extends Service {
    * @returns {Promise<{ scopeAuthorize: boolean }>}
    * @memberof UserService
    */
-  checkAndRequestAuthorize(scope: 'scope.userInfo' | '', require?: boolean = false): Promise<{ scopeAuthorize: boolean }> {
+  checkAndRequestAuthorize(scope: ScopeForWeixin, require?: boolean = false): Promise<{ scopeAuthorize: boolean }> {
     const requirePromise: () => Promise<{ scopeAuthorize: boolean }> = () => {
       return ui.showModal('提示', `要买车 需要获取您的用户信息， 否则会影响用户体验`)
         .then(res => {

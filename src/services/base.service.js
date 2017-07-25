@@ -67,13 +67,15 @@ export default class Services {
     data,
     header,
     method,
-    dataType
+    dataType,
+    loadingType
   }: {
       path: string,
       data?: any,
       header?: any,
       method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'TRACE' | 'CONNECT',
-      dataType?: 'json'
+      dataType?: 'json',
+      loadingType?: 'none'|'navigation'|'toast'
     }): Promise<any> {
     const url = `${this.urls[config.env]}${path}`
     return this.ymc.requestByPromise(
@@ -81,7 +83,8 @@ export default class Services {
       data,
       header,
       method,
-      data
+      data,
+      loadingType
     )
   }
 
