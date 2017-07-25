@@ -142,7 +142,10 @@
             <button class='flex-item-2 btn' wx:if="{{quotation.sendMessage}}" bindtap='handlerContactWithCustomer'>联系客户</button>
             <button class='flex-item-3 btn' wx:else bindtap='handlerShareToCustomer'>发送报价</button>
 <!--            <button class='flex-item-3 btn' bindtap='handlerBookCar'>发起砍价活动</button>-->
-            <button class='flex-item-3 btn' bindtap='handlerBargainActive'>发起砍价活动</button>
+            <button class='flex-item-3 btn {{cutPriceCountStyle}}' bindtap='handlerBargainActive'>
+              <block wx:if="{{cutPriceCountStyle != ''}}">已发起砍价活动</block>
+              <block wx:else>发起砍价活动</block>
+            </button>
         </view>
     </view>
 </view>

@@ -31,9 +31,26 @@ Page({
     that.changeMarkerColor(markersData,id);
   },
   onLoad: function(options) {
-    let current = options.current || 0
-    let mobile = options.mobile
-    this.getQuoteDateilList(mobile,current)
+    let that = this
+    /**
+     * 分享进入页面，在未登录的情况下 跳转到登录页
+     */
+    if (!container.userService.isLogin()) {
+      setTimeout(function(){
+        that.setData({
+          pageShare: true
+        })
+      },1000)
+
+      this.setData({options: options})
+      wx.navigateTo({
+        url: '../../login/login'
+      })
+    } else {
+      let current = options.current || 0
+      let mobile = options.mobile
+      this.getQuoteDateilList(mobile,current)
+    }
 
 //    app.amap.getPoiAround({
 //      iconPathSelected: '../../images/icons/marker_checked.png',

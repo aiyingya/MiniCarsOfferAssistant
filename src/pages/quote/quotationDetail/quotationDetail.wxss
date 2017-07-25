@@ -145,4 +145,7 @@
 	line-height: 24rpx;
 
 }
+.btn.cutPriceCountStyle {
+  background-color: #dcdce0 !important;
+}
 

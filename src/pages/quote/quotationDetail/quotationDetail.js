@@ -54,6 +54,8 @@ Page({
       price: '', // 1.9 万
       point: '' // 6 点
     },
+    cutPriceCount: '',
+    cutPriceCountStyle: '',
     isSpecialBranch:false //宝马、奥迪、MINI展示下xx点
   },
   onLoad(options) {
@@ -61,13 +63,13 @@ Page({
     let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
     let carPrice = quotation.quotationItems[0].sellingPrice
     let officialPrice = quotation.quotationItems[0].guidePrice
-
+console.log(quotation)
     /// 实时计算优惠点数
     let downPrice = util.downPrice(carPrice, officialPrice)
     let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
-
+    let cutPriceCount , cutPriceCountStyle
     const isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
@@ -93,10 +95,20 @@ Page({
         const loanInterest = util.loanPaymentInterest(carPrice,paymentRatio,monthRate,stages * 12)
         quotation.loanInterest = Math.floor(loanInterest)
       }
+      if(quotation.cutPriceCount || quotation.cutPriceCount === 0) {
+        cutPriceCount = true
+        cutPriceCountStyle = 'cutPriceCountStyle'
+      }else {
+        cutPriceCount = false
+        cutPriceCountStyle = ''
+      }
+      
       this.setData({
         quotation: quotation,
         isSpecialBranch: isShow,
         pageShare: false,
+        cutPriceCount: cutPriceCount,
+        cutPriceCountStyle: cutPriceCountStyle,
         priceChange: {
           flag: downPriceFlag,
           price: downPriceString,
@@ -303,6 +315,9 @@ Page({
     const quotationItem = that.data.quotation
     const tenantId = container.userService.address.tenantId
     console.log(quotationItem)
+    const cutPriceCount = this.data.cutPriceCount
+    
+    if(cutPriceCount) return
     container.saasService.getBargainQRcode({
       data: {
         quotationId: quotationItem.quotationId,
