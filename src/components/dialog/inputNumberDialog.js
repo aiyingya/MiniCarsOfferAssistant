@@ -131,7 +131,7 @@ export default {
             const _isPlus = options.params.isPlus
 
             this.setData({
-              [`${this.options.scope}.inputNumber`]: 00000
+              [`${this.options.scope}.inputNumber`]: 0
             })
           }
         },
