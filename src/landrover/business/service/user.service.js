@@ -107,12 +107,11 @@ export default class UserService extends Service {
   }
 
   setup(): Promise<void> {
+    console.info('user.service 开始启动')
+    console.log('载入持久化的数据')
+    this.loadUserInfo()
+
     return super.setup()
-      .then(() => {
-        console.info('user.service 开始启动')
-        console.log('载入持久化的数据')
-        this.loadUserInfo()
-      })
       .then(() => {
         console.log('获取 clientId')
         return this.getClientId(false)
