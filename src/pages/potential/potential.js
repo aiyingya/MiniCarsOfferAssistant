@@ -16,7 +16,7 @@ Page({
       if(res.length > 0) {
         for(let item of res) {
           let time = new Date(item.joinTime)
-          let timeStr = `${time.getFullYear()}/${util.makeUpZero(time.getMonth()+1)}/${util.makeUpZero(time.getDate())} ${util.makeUpZero(time.getHours())}:${util.makeUpZero(time.getMilliseconds())}`
+          let timeStr = `${time.getFullYear()}/${util.makeUpZero(time.getMonth()+1)}/${util.makeUpZero(time.getDate())} ${util.makeUpZero(time.getHours())}:${util.makeUpZero(time.getMinutes())}`
           
           item.joinTimeStr = timeStr
         }

@@ -55,12 +55,12 @@ Page({
       if(res.length > 0) {
         for(let item of res) {
           let time = new Date(item.participateTime)
-          let timeStr = `${makeUpZero(time.getMonth()+1)}/${makeUpZero(time.getDate())} ${makeUpZero(time.getHours())}:${makeUpZero(time.getMilliseconds())}`
+          let timeStr = `${makeUpZero(time.getMonth()+1)}/${makeUpZero(time.getDate())} ${makeUpZero(time.getHours())}:${makeUpZero(time.getMinutes())}`
           
           item.participateTimeStr = timeStr
           item.overStyle = ''
           item.cancelStyle = ''
-          if(item.participateStatus === 'joined') {
+          if(item.participateStatus === 'joined' || item.participateStatus === 'full') {
             item.overStyle = 'btn-active'
           }else if(item.participateStatus === 'completed') {
             item.cancelStyle = 'btn-active'

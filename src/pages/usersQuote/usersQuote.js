@@ -12,7 +12,8 @@ Page({
     userMobile: '',
     userPortrait: '../../images/icons/icon_head_default_44.png',
     userTenants: '',
-    version: config.version
+    version: config.version,
+    manager: false
   },
   onLoad() {
     let version = null
@@ -21,7 +22,10 @@ Page({
     } else {
       version = `v${config.version}.${config.build}-${config.env}`
     }
-    this.setData({ version })
+    this.setData({ 
+      version ,
+      manager: container.userService.userInfoForTenant.tenants[0].manager
+    })
   },
   onShow() {
     let that = this
