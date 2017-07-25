@@ -1,5 +1,3 @@
-
-
 declare type Business = {
   env: string,
   name: string,
@@ -8,4 +6,4 @@ declare type Business = {
   build: number,
   storage: StorageVirtualClass,
   request: RequestVirtualClass
-}
+};

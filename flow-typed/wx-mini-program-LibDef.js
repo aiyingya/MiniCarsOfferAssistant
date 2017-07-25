@@ -1,8 +1,8 @@
-declare function getApp(): any
+declare function getApp(): any;
 declare module "fmt-wxapp-promise" {
   declare module.exports: any;
-}
-declare var wx: any
+};
+declare var wx: any;
 
 declare type UserInfoPlainFromMiniProgram = {
   nickName: string,
@@ -11,7 +11,7 @@ declare type UserInfoPlainFromMiniProgram = {
   city: string,
   province: string,
   country: string,
-}
+};
 
 declare type UserInfoEncryptedFromMiniProgram = {
   openId: string,
@@ -26,6 +26,6 @@ declare type UserInfoEncryptedFromMiniProgram = {
     appId: string,
     timestamp: number
   }
-}
+};
 
-declare type UserInfoFromMiniProgram = UserInfoPlainFromMiniProgram | UserInfoEncryptedFromMiniProgram
+declare type UserInfoFromMiniProgram = UserInfoPlainFromMiniProgram | UserInfoEncryptedFromMiniProgram;
