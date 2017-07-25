@@ -110,6 +110,8 @@ export default class UserService extends Service {
     return super.setup()
       .then(() => {
         console.info('user.service 开始启动')
+        console.log('载入持久化的数据')
+        this.loadUserInfo()
       })
       .then(() => {
         console.log('获取 clientId')
@@ -119,8 +121,6 @@ export default class UserService extends Service {
           })
       })
       .then(() => {
-        console.log('载入持久化的数据')
-        this.loadUserInfo()
         if (this.auth != null) {
           return this.refreshAccessToken(this.auth)
             .catch(err => {
