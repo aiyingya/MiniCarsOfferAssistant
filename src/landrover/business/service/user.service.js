@@ -946,6 +946,8 @@ export default class UserService extends Service {
     if (storage.removeItemSync('auth')) {
       this.loginChannel = 'weixin'
       this.auth = null
+      this.userInfo = null
+      this.userInfoForTenant = null
     } else {
       console.error('同步删除 auth 出错')
     }
