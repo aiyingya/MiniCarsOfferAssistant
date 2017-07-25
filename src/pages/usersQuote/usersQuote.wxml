@@ -85,6 +85,7 @@
 				class="weui-cell weui-cell_access"
 				hover="true"
 				hover-class="active"
+				wx:if="{{manager}}"
 				>
 				<view class="weui-cell__hd">
 					<image src="../../images/icons/icon_potential_people.png" />
