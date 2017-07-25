@@ -22,9 +22,8 @@ Page({
     } else {
       version = `v${config.version}.${config.build}-${config.env}`
     }
-    this.setData({ 
-      version ,
-      manager: container.userService.userInfoForTenant.tenants[0].manager
+    this.setData({
+      version
     })
   },
   onShow() {
@@ -57,12 +56,14 @@ Page({
         isLogin: true,
         userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
         userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
+        manager: false
       })
       container.userService.getLocation()
         .then(res => {
           this.setData({
             userMobile: res.mobile,
             userTenants: res.tenants,
+            manager: container.userService.userInfoForTenant.tenants[0].manager,
             userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '匿名用户',
             userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
           })
@@ -75,7 +76,8 @@ Page({
         userName: '',
         userMobile: '',
         userPortrait: '../../images/icons/icon_head_default_44.png',
-        userTenants: ''
+        userTenants: '',
+        manager: false
       })
     }
   },
@@ -93,7 +95,8 @@ Page({
           userName: '',
           userMobile: '',
           userPortrait: '../../images/icons/icon_head_default_44.png',
-          userTenants: ''
+          userTenants: '',
+          manager: false
         })
       }, err => {
       })
