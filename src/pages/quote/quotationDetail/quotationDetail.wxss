@@ -65,13 +65,24 @@
 }
 
 .btn-group .btn{
-    border-radius: 0;
-    border-bottom: none;
-    background: #fff;
-    font-size: 32rpx;
-    padding: 33rpx 0;
-    line-height: 32rpx;
-    display: inline-block;
+  border-radius: 0;
+  border-bottom: none;
+  background: #fff;
+  font-family: "PingFangSC-Regular";
+  font-size: 20rpx;
+  color: #888888;
+  position: relative;
+  height: 98rpx;
+  box-sizing: border-box;
+  text-align: center;
+}
+.btn-group image{ 
+  position: absolute;
+  width: 54rpx;
+  height: 54rpx;
+  top: 8rpx;
+  left: 50%;
+  margin-left: -27rpx;
 }
 
 .btn-group .btn:first-child{
@@ -83,6 +94,8 @@
     border: none;
     background: #ED4149;
     color: #fff;
+  font-size: 32rpx;
+  line-height: 98rpx;
 }
 .red-btn{
    border: none;
@@ -93,10 +106,12 @@
     padding: 33rpx 0;
 }
 .flex-item-1 {
-    flex-grow: 1;
+  padding-top: 64rpx;
+  flex-grow: 1;
 }
 
 .flex-item-2 {
+  padding-top: 64rpx;
     flex-grow: 2;
 }
 

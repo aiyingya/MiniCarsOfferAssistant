@@ -17,13 +17,15 @@ Page({
   },
   onLoad() {
     let version = null
+    let manager = container.userService.isLogin() ? container.userService.userInfoForTenant.tenants[0].manager : false
     if (config.env === 'prd') {
       version = `v${config.version}`
     } else {
       version = `v${config.version}.${config.build}-${config.env}`
     }
     this.setData({
-      version
+      version,
+      manager: manager
     })
   },
   onShow() {
@@ -55,8 +57,7 @@ Page({
       this.setData({
         isLogin: true,
         userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
-        userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
-        manager: false
+        userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
       })
       container.userService.getLocation()
         .then(res => {
