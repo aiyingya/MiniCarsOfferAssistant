@@ -338,7 +338,7 @@ Page({
     }
 
     this.setData({
-      'canIUse.movablearea': wx.canIUse('movable-area')
+      'canIUse.movablearea': wx.canIUse ? wx.canIUse('movable-area') : false
     })
 
     let quotationJSONString = options.quotation
