@@ -817,6 +817,24 @@ export default class UserService extends Service {
   }
 
   login(authType: AuthType, authEntity: AuthEntity, channel: string): Promise<Auth> {
+    // 更新 token 的 promise 方法, 该方法要保证即便失败也能返回之前需要刷新的 auth 对象
+    const promiseForUpdateAuthentication: (authNeedRefresh: Auth) => Promise<Auth> = (authNeedRefresh: Auth) => {
+      return this.updateAuthentication(authNeedRefresh.refreshToken)
+          .then(auth => {
+            const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
+            auth.expireIn = expireIn
+            this.auth = auth
+            this.loginChannel = 'yuntu'
+            this.getClientId(true)
+            this.saveUserInfo()
+            return auth
+          })
+          .catch(err => {
+            console.info('登陆后刷新失败')
+            return authNeedRefresh
+          })
+    }
+
     return this.createAuthentication(authType, authEntity, channel)
       .then(auth => {
         const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
@@ -825,7 +843,11 @@ export default class UserService extends Service {
         this.loginChannel = 'yuntu'
         this.getClientId(true)
         this.saveUserInfo()
-        return this.refreshAccessToken(auth)
+        return promiseForUpdateAuthentication()
+      })
+      .catch(err => {
+        console.error('登录失败')
+        return Promise.reject()
       })
   }
 
@@ -926,6 +948,7 @@ export default class UserService extends Service {
 
   loadUserInfo(): void {
     const userInfoJSONString = storage.getItemSync('auth')
+    console.log("获得 auth" + userInfoJSONString)
     if (userInfoJSONString != null && userInfoJSONString.length > 0) {
       const userInfo = JSON.parse(userInfoJSONString)
       const originalVersionCode = userInfo.versionCode
