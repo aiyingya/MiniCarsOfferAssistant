@@ -954,11 +954,16 @@ export default class UserService extends Service {
       const userInfo = JSON.parse(userInfoJSONString)
       const originalVersionCode = userInfo.versionCode
       if (originalVersionCode == null) {
-        // 如果取出的用户信息为 null / undefined
-        // 意味着在 1.8.0 之前
-        this.loginChannel = userInfo.loginChannel || 'guest'
-        this.auth = userInfo.auth || null
-        this.weixin.userInfo = userInfo.weixinUserInfo || null
+        // 1.8.0 之前, 直接清空登录态
+        if (storage.removeItemSync('auth')) {
+          this.loginChannel = 'guest'
+          this.auth = null
+          this.userInfo = null
+          this.userInfoForTenant = null
+          this.weixin = null
+        } else {
+          console.error('同步移除 auth 出错')
+        }
       } else {
         // 1.8.0 以及之后
         this.loginChannel = userInfo.loginChannel || 'guest'
@@ -966,7 +971,6 @@ export default class UserService extends Service {
         this.weixin.userInfo = userInfo.weixin.userInfo || null
         this.weixin.sessionId = userInfo.weixin.sessionId || null
       }
-
     } else {
       if (userInfoJSONString == null) {
         console.error('同步获取 auth 出错')
