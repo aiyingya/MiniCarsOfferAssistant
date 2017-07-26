@@ -843,7 +843,7 @@ export default class UserService extends Service {
         this.loginChannel = 'yuntu'
         this.getClientId(true)
         this.saveUserInfo()
-        return promiseForUpdateAuthentication()
+        return promiseForUpdateAuthentication(auth)
       })
       .catch(err => {
         console.error('登录失败')
