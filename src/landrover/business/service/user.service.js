@@ -7,7 +7,7 @@ export default class UserService extends Service {
   baseUrl = {
     dev: 'https://test.yaomaiche.com/ucdev/',
     gqc: 'https://test.yaomaiche.com/ucgqc/',
-    prd: 'https://ymcapi.yaomaiche.com/uc/'
+    prd: 'https://uc.yaomaiche.com/uc/'
   };
 
   /**
