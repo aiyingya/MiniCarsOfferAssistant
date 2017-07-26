@@ -277,9 +277,8 @@ export default {
           const _isPlus = options.params.isPlus
           options.params.isPlus =!_isPlus
 
-
           let price
-          if(options.params.isPoint && (options.params.initIsPlus === _isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+          if(options.params.isPoint && (options.params.initIsPlus === !_isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
             price = options.params.initSellingPrice
           }else{
             price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
