@@ -611,7 +611,6 @@ export default class UserService extends Service {
    */
   loginForWeixin(): Promise<{ sessionId: string }> {
     const promiseForWeixinLoginFunction: () => Promise<{ sessionId: string }> = () => {
-      this.weixin.sessionId = null
       // 登录过期 || 登录没过期但是没有 sessionId
       return request.loginForWeixin()
         .then(res => {
@@ -642,12 +641,14 @@ export default class UserService extends Service {
     }
 
     const sessionId = this.weixin.sessionId
+    this.weixin.sessionId = null
     if (sessionId != null) {
       return this.retrieveWeixinSessionIdValidation(sessionId)
         .then((validate: boolean) => {
           if (validate === true) {
             return request.checkSessionForWeixin()
               .then(res => {
+                this.weixin.sessionId = sessionId
                 return { sessionId }
               })
               .catch(err => {
@@ -658,7 +659,6 @@ export default class UserService extends Service {
           }
         })
         .catch(err => {
-          this.weixin.sessionId = null
           return promiseForWeixinLoginFunction()
         })
     } else {

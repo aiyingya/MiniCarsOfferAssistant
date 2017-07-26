@@ -31,7 +31,7 @@ Page({
         })
     } else {
       wx.showToast({
-        title: '正在三方登录',
+        title: '微信三方登录...',
         icon: 'loading',
         duration: 10000,
         mask: true
