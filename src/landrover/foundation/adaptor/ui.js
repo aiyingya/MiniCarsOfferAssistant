@@ -4,7 +4,7 @@ import $wuxToast from '../../../components/toast/toast'
 
 export default class UI {
 
-  showToast(title: string, duration?: number = 1500): Promise<void> {
+  showToast(title: string, duration?: number = 1800): Promise<void> {
     $wuxToast.show({
       type: false,
       timer: 2000,
