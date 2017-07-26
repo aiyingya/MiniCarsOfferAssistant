@@ -882,6 +882,7 @@ export default class UserService extends Service {
           })
       } else {
         // 超过有效期, 直接删除当前登录状态
+        ui.showToast('登录已失效, 请重新登录')
         this.clearUserInfo()
         return Promise.reject(new Error('access token 过期'))
       }
