@@ -204,7 +204,7 @@ export default {
           }
           this.setData({
             [`${this.options.scope}.inputNumber`]: text,
-            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
+            [`${this.options.scope}.content`]: Math.floor(price)
           })
           this.inputNumberInput(options.inputNumber)
         },
@@ -248,7 +248,7 @@ export default {
           }
           this.setData({
             [`${this.options.scope}.inputNumber`]: text,
-            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
+            [`${this.options.scope}.content`]: Math.floor(price)
           })
           this.inputNumberInput(options.inputNumber)
         },
@@ -285,7 +285,7 @@ export default {
             price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
           }
           this.setData({
-            [`${this.options.scope}.content`]:  "￥" + Math.floor(price)
+            [`${this.options.scope}.content`]: Math.floor(price)
           })
 
           this.setData({
