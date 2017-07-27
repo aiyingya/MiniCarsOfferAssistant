@@ -97,10 +97,7 @@ Page({
               })
             })
             .catch(err => {
-              this.setData({
-                codeText: '获取验证码',
-                lockSMSButton: false
-              })
+              return Promise.reject()
             })
         } else {
           return Promise.reject()
