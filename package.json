@@ -1,8 +1,8 @@
 {
   "name": "miniprogram-yaomaiche",
-  "version": "1.7.2",
+  "version": "1.8.0",
   "build": 1,
-  "versionCode": 10702,
+  "versionCode": 10800,
   "description": "运图贸易有限公司 要卖车 微信小程序",
   "main": "index.js",
   "engines": {
@@ -10,12 +10,12 @@
     "npm": ">3.0"
   },
   "scripts": {
-    "B_DEV": "export NODE_ENV=production && env=dev && gulp build:clean",
-    "B_GQC": "export NODE_ENV=production && env=gqc && gulp build:clean",
-    "B_PRD": "export NODE_ENV=production && env=prd && gulp build:clean",
-    "R_DEV": "export NODE_ENV=production && env=dev && gulp watch:clean",
-    "R_GQC": "export NODE_ENV=production && env=gqc && gulp watch:clean",
-    "R_PRD": "export NODE_ENV=production && env=prd && gulp watch:clean",
+    "B_DEV": "export NODE_ENV=production && gulp build:clean --env dev",
+    "B_GQC": "export NODE_ENV=production && gulp build:clean --env gqc",
+    "B_PRD": "export NODE_ENV=production && gulp build:clean --env prd",
+    "R_DEV": "export NODE_ENV=production && gulp watch:clean --env dev",
+    "R_GQC": "export NODE_ENV=production && gulp watch:clean --env gqc",
+    "R_PRD": "export NODE_ENV=production && gulp watch:clean --env prd",
     "build": "gulp build:clean",
     "watch": "gulp watch:clean"
   },

@@ -1,5 +1,5 @@
 import Component from '../../component'
-
+import QR from "../../../utils/qrcode"
 export default {
   /**
    * 默认参数
@@ -8,6 +8,7 @@ export default {
     return {
       title: undefined,
       content: undefined,
+      imagePath: undefined,
       buttons: [],
       verticalButtons: !1
     }
@@ -64,26 +65,71 @@ export default {
         show() {
           if (this.removed) return !1
           this.setVisible()
+          this.createQrCode(options.content,'QRcodeCanvas',220,220)
+        },
+        /**
+         * 生成二维码.
+         */
+        createQrCode (content,canvasId,cavW,cavH){
+          let that = this
+          //调用插件中的draw方法，绘制二维码图片
+          QR.qrApi.draw(content,canvasId,cavW,cavH)
+          
+          //二维码生成之后调用canvasToTempImage();延迟3s，否则获取图片路径为空
+          let st = setTimeout(function(){
+            that.canvasToTempImage()
+            clearTimeout(st)
+          },3000)
+        },
+        /**
+         * 获取临时缓存照片路径，存入data中
+         */
+        canvasToTempImage(){
+          let that = this
+          wx.canvasToTempFilePath({
+            canvasId: 'QRcodeCanvas',
+            width: 220,
+            height: 220,
+            destWidth: 220,
+            destHeight: 220,
+            success: function (res) {
+              let tempFilePath = res.tempFilePath
+              that.setData({
+                [`${that.options.scope}.imagePath`]: tempFilePath
+              })
+            },
+            fail: function (res) {
+                
+            }
+          });
+        },
+        touchMove(e) {
+          console.log(e)
         },
         /**
          * 按钮点击事件
          */
         handleImageLogtap(e) {
-          const image = e.currentTarget.dataset.image
-          console.log(image)
-          wx.downloadFile({
-            url: image, 
-            type: 'image',
-            success: function(res) {
-              wx.playVoice({
-                filePath: res.tempFilePath
+          let that = this
+          const image =e.currentTarget.dataset.imagepath
+
+          if(!image) return
+          wx.saveImageToPhotosAlbum({
+            filePath: image,
+            success(res) {
+              console.log(res)
+              wx.showModal({
+                title: '提示',
+                content: '已保存到相册',
+                showCancel: false,
+                success: function(res) {
+                  if (res.confirm) {
+                    that.hide()
+                  } else if (res.cancel) {
+                
+                  }
+                }
               })
-            },
-            fail: function (res) {
-              console.log("download fail");
-            },
-            complete: function (res) {
-              console.log("download complete");
             }
           })
         },

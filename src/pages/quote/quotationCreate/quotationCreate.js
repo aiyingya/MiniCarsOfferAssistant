@@ -338,7 +338,7 @@ Page({
     }
 
     this.setData({
-      'canIUse.movablearea': wx.canIUse('movable-area')
+      'canIUse.movablearea': wx.canIUse ? wx.canIUse('movable-area') : false
     })
 
     let quotationJSONString = options.quotation
@@ -840,7 +840,7 @@ Page({
     $wuxInputNumberDialog.open({
       title: '裸车价',
       inputNumber: _inputT,
-      content: "￥" + _sellingPrice,
+      content: _sellingPrice,
       inputNumberPlaceholder: '输入裸车价',
       inputNumberMaxLength: 9,
       confirmText: '确定',

@@ -11,6 +11,10 @@ export default class Service {
     this.responsePackFormat = 'new'
   }
 
+  setup(): Promise<void> {
+    return Promise.resolve()
+  }
+
   request(
     path: string,
     method: RequestMethod,
@@ -65,7 +69,7 @@ export default class Service {
         const behavior = wx_data.behavior || null
         if (behavior != null) {
           if (behavior.type === 'TOAST') {
-            let content = behavior.content
+            const content = behavior.content
             if (content && content.length) {
               ui.showToast(content)
             }
@@ -81,14 +85,19 @@ export default class Service {
           const data = wx_data.data
           return data
         } else {
+          if (wx_statusCode === 401) {
+            // 接口无权限
+            container.userService.clearUserInfo()
+          }
+
           // 4XX, 5XX 失败
           const error = wx_data.error
           if (error != null) {
             const errorMessage = error.message
             console.error(error.debugInfo)
-            throw new Error(errorMessage) //to -> fail
+            return Promise.reject(new Error(errorMessage)) //to -> fail
           } else {
-            throw new Error('404 or other error')
+            return Promise.reject(new Error('404 or other error'))
           }
         }
       })
@@ -97,7 +106,7 @@ export default class Service {
           // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
           return
         }
-
+        return Promise.reject(err)
       })
   }
 
@@ -116,14 +125,20 @@ export default class Service {
           const data = wx_data.data || null
           return data
         } else {
+          if (wx_statusCode === 401) {
+            // 接口无权限
+            container.userService.clearUserInfo()
+          }
+
           // 4XX, 5XX 失败
           let err
           const error = wx_data.error
           if (error != null) {
             const errorMessage = error.alertMessage
-            throw new Error(errorMessage) //to -> fail
+            ui.showToast(errorMessage)
+            return Promise.reject(new Error(errorMessage)) //to -> fail
           } else {
-            throw new Error('404 or other error')
+            return Promise.reject(new Error('404 or other error'))
           }
         }
       })
@@ -132,6 +147,7 @@ export default class Service {
           // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
           return
         }
+        return Promise.reject(err)
       })
   }
 
@@ -141,7 +157,4 @@ export default class Service {
     return new Promise((resolve, reject) => { })
   }
 
-  setup(): Promise<void> {
-    return Promise.resolve()
-  }
 }

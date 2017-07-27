@@ -1,7 +1,7 @@
 import {
   $wuxToast
 } from "../../components/wux"
-import { container } from '../../landrover/business/index'
+import { container, config } from '../../landrover/business/index'
 
 const app = getApp()
 
@@ -11,9 +11,23 @@ Page({
     userName: '',
     userMobile: '',
     userPortrait: '../../images/icons/icon_head_default_44.png',
-    userTenants: ''
+    userTenants: '',
+    version: config.version,
+    manager: false
   },
-  onLoad() {},
+  onLoad() {
+    let version = null
+    let manager = container.userService.isLogin() ? container.userService.userInfoForTenant.tenants[0].manager : false
+    if (config.env === 'prd') {
+      version = `v${config.version}`
+    } else {
+      version = `v${config.version}.${config.build}-${config.env}`
+    }
+    this.setData({
+      version,
+      manager: manager
+    })
+  },
   onShow() {
     let that = this
 
@@ -42,23 +56,20 @@ Page({
 
       this.setData({
         isLogin: true,
-        userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '',
-        userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
+        userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
+        userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
       })
       container.userService.getLocation()
         .then(res => {
           this.setData({
             userMobile: res.mobile,
-            userTenants: res.tenants
+            userTenants: res.tenants,
+            manager: container.userService.userInfoForTenant.tenants[0].manager,
+            userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '匿名用户',
+            userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
           })
         })
         .catch(err => {
-          $wuxToast.show({
-            type: false,
-            timer: 2000,
-            color: '#fff',
-            text: '服务器错误'
-          })
         })
     } else {
       this.setData({
@@ -66,7 +77,8 @@ Page({
         userName: '',
         userMobile: '',
         userPortrait: '../../images/icons/icon_head_default_44.png',
-        userTenants: ''
+        userTenants: '',
+        manager: false
       })
     }
   },
@@ -84,7 +96,8 @@ Page({
           userName: '',
           userMobile: '',
           userPortrait: '../../images/icons/icon_head_default_44.png',
-          userTenants: ''
+          userTenants: '',
+          manager: false
         })
       }, err => {
       })

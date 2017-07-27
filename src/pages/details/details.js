@@ -31,33 +31,27 @@ Page({
     that.changeMarkerColor(markersData,id);
   },
   onLoad: function(options) {
-    let current = options.current
-    try {
-      let quotationItemKeyDetail = wx.getStorageSync('quotationItemKeyDetail')
-      let opts = {
-        quotation: quotationItemKeyDetail
-      }
-      let quotation = util.urlDecodeValueForKeyFromOptions('quotation', opts)
-      let that = this
-      let historyList = this.data.historyList
-      let noHistoryContainer = quotation.customerPhone === '无' ? 'height100' : ''
-      let currentQuotationItem = quotation.quotationList[current]
-      console.log(quotation)
-      this.setData({
-        'quotationItem.customerPhone': quotation.customerPhone,
-        'quotationItem.customerName': quotation.customerName,
-        'quotationItem.shared': currentQuotationItem.shared,
-        quotationsList: quotation.quotationList,
-        noHistoryContainer: noHistoryContainer,
-        swiperCurrent: current,
-        showCurrent: current
+    let that = this
+    /**
+     * 分享进入页面，在未登录的情况下 跳转到登录页
+     */
+    if (!container.userService.isLogin()) {
+      setTimeout(function(){
+        that.setData({
+          pageShare: true
+        })
+      },1000)
+
+      this.setData({options: options})
+      wx.navigateTo({
+        url: '../../login/login'
       })
-      this.getCheckHistory(current)
-    } catch (e) {
-      // Do something when catch error
+    } else {
+      let current = options.current || 0
+      let mobile = options.mobile
+      this.getQuoteDateilList(mobile,current)
     }
-//
-//    console.log(quotation)
+
 //    app.amap.getPoiAround({
 //      iconPathSelected: '../../images/icons/marker_checked.png',
 //      iconPath: '../../images/icons/marker.png',
@@ -79,6 +73,67 @@ Page({
 //        wx.showModal({title:info.errMsg})
 //      }
 //    })
+  },
+  getQuoteDateilList(mobile,current){
+    let that = this
+    let userId = container.userService.auth.userId
+    if(mobile) {
+      container.saasService.getQuoteDateilList({
+        data: {
+          mobile: mobile,
+          snsId: userId
+        }
+      }).then((res) => {
+        if(res) {
+          let noHistoryContainer = res.customerPhone === '无' ? 'height100' : ''
+          let currentQuotationItem = res.quotationList[current]
+          
+          if(res.quotationList.length > 0) {
+            for(let qitem of res.quotationList) {
+              let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
+              let sellingPrice = util.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
+              let guidePrice = util.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
+
+              /// 实时计算优惠点数
+              let downPrice = util.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
+              let downPriceFlag = util.downPriceFlag(downPrice);
+              let downPriceString = ''
+              if (downPriceFlag !== 0) {
+                downPriceString = util.priceStringWithUnit(downPrice)
+              }
+
+              /**
+               * 计算时间.
+               */
+              qitem.createdTime = util.getTimeDifferenceString(qitem.quotationTime)
+              qitem.viewModel = {
+                totalPayment: totalPayment,
+                sellingPrice: sellingPrice,
+                guidePrice: guidePrice,
+                itemName: `【${qitem.quotationItems[0].guidePrice/100}】${qitem.quotationItems[0].itemName}`,
+                priceChange: {
+                  flag: downPriceFlag,
+                  price: downPriceString
+                }
+              }
+            }
+          }
+  
+          that.setData({
+            'quotationItem.customerPhone': res.customerPhone,
+            'quotationItem.customerName': res.customerName,
+            'quotationItem.shared': currentQuotationItem.shared,
+            quotationsList: res.quotationList,
+            noHistoryContainer: noHistoryContainer,
+            swiperCurrent: current,
+            showCurrent: current
+          })
+          that.getCheckHistory(current)
+        }
+      },(err) => {
+        
+      })
+    }
   },
   showMarkerInfo: function(data,i){
     var that = this;

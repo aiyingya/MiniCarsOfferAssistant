@@ -193,12 +193,11 @@ export default class SAASService extends Service {
           otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       }
-
-      let snsId
+      let snsId = null
       if (this.userService.auth != null) {
         snsId = this.userService.auth.userId
-      } else {
-        snsId = this.userService.snsId
+      } else if (this.userService.weixin.userInfo != null) {
+        snsId = this.userService.weixin.userInfo.customerId
       }
       const data_part_2: any = {
         loanFee: quotationDraft.loanFee,
@@ -260,13 +259,12 @@ export default class SAASService extends Service {
    */
   requestQuotationsList(pageIndex: number, pageSize: number, object: any) {
     if (pageIndex > 0 && pageSize > 0) {
-      let snsId
-      if (this.userService.isLogin) {
+      let snsId = null
+      if (this.userService.auth != null) {
         snsId = this.userService.auth.userId
-      } else {
-        snsId = this.userService.snsId
+      } else if (this.userService.weixin.userInfo != null) {
+        snsId = this.userService.weixin.userInfo.customerId
       }
-
       this.sendMessage({
         path: 'sale/quotation/new',
         data: {
@@ -793,7 +791,7 @@ export default class SAASService extends Service {
       data: opts.data || {}
     })
   }
-  
+
   /**
    * 获取砍价记录.
    * @param opts
@@ -805,7 +803,7 @@ export default class SAASService extends Service {
       data: opts.data || {}
     })
   }
-  
+
   /**
    * 结束砍价活动.
    * @param opts
@@ -817,7 +815,7 @@ export default class SAASService extends Service {
       loadingType: 'show'
     })
   }
-  
+
   /**
    * 核销优惠券.
    * @param opts
@@ -829,7 +827,7 @@ export default class SAASService extends Service {
       loadingType: 'show'
     })
   }
-  
+
   /**
    * 获取潜客列表.
    * @param opts
@@ -842,7 +840,7 @@ export default class SAASService extends Service {
       data: opts.data || {}
     })
   }
-  
+
   /**
    * 获取砍价二维码.
    * @param opts
@@ -850,6 +848,19 @@ export default class SAASService extends Service {
   getBargainQRcode(opts: any): Promise<any> {
     return this.sendMessageByPromise({
       path: 'sale/quotation/makeQRCode',
+      method: 'GET',
+      loadingType: 'show',
+      data: opts.data || {}
+    })
+  }
+  
+  /**
+   * 获取报价记录详情列表
+   * @param opts
+   */
+  getQuoteDateilList(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/getQuotationByPhone',
       method: 'GET',
       loadingType: 'show',
       data: opts.data || {}

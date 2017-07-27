@@ -28,7 +28,9 @@
 	border-radius: 3px;
 	overflow: hidden;
 }
-
+.weui-dialog_qr {
+  text-align: left;
+}
 .weui-dialog__hd {
 	padding: 1.3em 1.6em 0.5em;
 }
@@ -856,17 +858,22 @@
   color:#999999;
   font-size:24rpx;
 }
-.qrCodeDialog .weui-dialog__bd {
-  padding: 40rpx 40rpx 100rpx 40rpx;
+.qrCodeDialog .weui-qrdialog__bd {
+  padding: 20rpx 20rpx 50rpx 20rpx;
   margin: 0;
   width: auto;
 }
 .qrcode-pic {
-  width: 275rpx;
-  height: 275rpx;
-  margin: 80rpx auto 10rpx auto;
+  width: 220px;
+  height: 220px;
+  margin: 40rpx auto 0 auto;
+  position: relative;
 }
 .qrcode-pic image {
-  width: 275rpx;
-  height: 275rpx;
+  width: 220px;
+  height: 220px;
+  background-color: #fff;
+}
+.qrcode-text {
+  text-align: center;
 }

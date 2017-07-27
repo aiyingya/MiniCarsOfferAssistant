@@ -182,7 +182,7 @@ export default class YMC {
     header?: {[string]: ? string|number},
     method?: 'GET'|'POST'|'PUT'|'DELETE'|'OPTIONS'|'HEAD'|'TRACE'|'CONNECT',
     dataType?: 'json',
-    loadingType?: 'none'
+    loadingType?: 'none'|'toast'|'navigation'
   ): Promise<any> {
 
     const userService = container.userService
@@ -209,7 +209,7 @@ export default class YMC {
     Object.keys(header).forEach((key) => {
       if (header != null) (header[key] == null) && delete header[key]
     })
-    
+
 
     if (loadingType === 'navigation') {
       console.log('显示导航栏加载')

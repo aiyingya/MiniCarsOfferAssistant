@@ -36,8 +36,9 @@ Page({
   getBargainData(type) {
     let that = this
     let tenantId = container.userService.address.tenantId
+    let manager = container.userService.userInfoForTenant.tenants[0].manager
     let userId = container.userService.auth.userId
-    
+    console.log(container.userService)
     function makeUpZero(s) {
       return s < 10 ? `0${s}`: s;
     }
@@ -47,19 +48,25 @@ Page({
         targetId: tenantId,
         salePersonId: userId,
         status: type,
-        isStoreLead: true
+        isStoreLead: manager
       }
     }).then((res) => {
       
       if(res.length > 0) {
         for(let item of res) {
           let time = new Date(item.participateTime)
-          let timeStr = `${makeUpZero(time.getMonth()+1)}/${makeUpZero(time.getDate())} ${makeUpZero(time.getHours())}:${makeUpZero(time.getMilliseconds())}`
-          
+          let timeStr = `${makeUpZero(time.getMonth()+1)}/${makeUpZero(time.getDate())} ${makeUpZero(time.getHours())}:${makeUpZero(time.getMinutes())}`
+          let usedTime = ''
+          let usedTimeStr = ''
+          if(item.usedTime) {
+            usedTime = new Date(item.usedTime)
+            usedTimeStr = `${usedTime.getFullYear()}/${makeUpZero(usedTime.getMonth()+1)}/${makeUpZero(usedTime.getDate())} ${makeUpZero(usedTime.getHours())}:${makeUpZero(usedTime.getMinutes())}`
+          }
           item.participateTimeStr = timeStr
+          item.usedTimeStr = usedTimeStr
           item.overStyle = ''
           item.cancelStyle = ''
-          if(item.participateStatus === 'joined') {
+          if(item.participateStatus === 'joined' || item.participateStatus === 'full') {
             item.overStyle = 'btn-active'
           }else if(item.participateStatus === 'completed') {
             item.cancelStyle = 'btn-active'

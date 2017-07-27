@@ -1,18 +1,20 @@
 
 import * as wxapi from 'fmt-wxapp-promise'
+import $wuxToast from '../../../components/toast/toast'
 
 export default class UI {
 
-  showToast(title: string, duration?: number = 1500): Promise<void> {
-    const mask = false
-    return wxapi.showToast({
-      title,
-      duration
+  showToast(title: string, duration?: number = 1800): Promise<void> {
+    $wuxToast.show({
+      type: false,
+      timer: 2000,
+      color: '#fff',
+      text: title
     })
   }
 
   hideToast(): Promise<void> {
-    return wxapi.hideToast()
+
   }
 
   showLoading(title: string): Promise<void> {

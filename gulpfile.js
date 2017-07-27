@@ -24,7 +24,6 @@ const minimist = require('minimist');
 
 const knownOptions = {}
 const args = minimist(process.argv.slice(2), knownOptions)
-
 const env = args.env || "dev"
 
 const name = process.env.npm_package_name;
@@ -32,7 +31,7 @@ const version = process.env.npm_package_version;
 const versionCode = process.env.npm_package_versionCode;
 const build = process.env.npm_package_build;
 
-const production = args.NODE_ENV === 'production'
+const production = process.env.NODE_ENV === 'production'
 
 /**
  * lint 流程
@@ -56,7 +55,7 @@ gulp.task('jsonlint', () => {
  */
 gulp.task('json', ['jsonlint'], () => {
   return gulp.src('./src/**/*.json')
-    .pipe($.if(production, $.jsonminify()))
+    //.pipe($.if(production, $.jsonminify()))
     .pipe(gulp.dest('./dist'))
 })
 
@@ -81,11 +80,11 @@ gulp.task('assets:watch', () => {
  */
 gulp.task('templates', () => {
   return gulp.src('./src/**/*.wxml')
-    .pipe($.if(production, $.htmlmin({
-      collapseWhitespace: true,
-      removeComments: true,
-      keepClosingSlash: true
-    })))
+    // .pipe($.if(production, $.htmlmin({
+    //   collapseWhitespace: true,
+    //   removeComments: true,
+    //   keepClosingSlash: true
+    // })))
     .pipe(gulp.dest('./dist'))
 })
 

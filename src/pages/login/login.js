@@ -14,16 +14,43 @@ Page({
     notUserInYMC: false,
     notUserInYMCMessage: '',
     userHasBoundWeixinAccount: false,
-    boundSelected: false
+    boundSelected: false,
+    lockSMSButton: false
   },
   onLoad() {
     const sessionId = container.userService.weixin.sessionId
-    container.userService.retrieveWeixinAccountHasBound(sessionId)
-    .then((hasBound: boolean) => {
-      this.setData({
-        userHasBoundWeixinAccount: hasBound
+    if (sessionId != null) {
+      container.userService.retrieveWeixinAccountHasBound(sessionId)
+        .then((hasBound: boolean) => {
+          this.setData({
+            userHasBoundWeixinAccount: hasBound
+          })
+        })
+        .catch(err => {
+          console.error('请求出错')
+        })
+    } else {
+      wx.showToast({
+        title: '微信三方登录...',
+        icon: 'loading',
+        duration: 10000,
+        mask: true
       })
-    })
+      container.userService.promiseForWeixinLogin
+        .then(res => {
+          wx.hideToast()
+          const realSessionId = res.sessionId
+          return container.userService.retrieveWeixinAccountHasBound(realSessionId)
+        })
+        .then((hasBound: boolean) => {
+          this.setData({
+            userHasBoundWeixinAccount: hasBound
+          })
+        })
+        .catch(err => {
+          wx.hideToast()
+        })
+    }
   },
   handleLoginPhone(e) {
     let val = e.detail.value
@@ -34,11 +61,11 @@ Page({
     this.data.userCodeValue = val
   },
   handleGetSMSCode() {
-    let that = this
+    if (this.data.lockSMSButton === true) {
+      return
+    }
 
-    if (!that.data.countDownOver) return
-
-    console.log(this.data.userPhoneValue)
+    if (!this.data.countDownOver) return
 
     if (!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11) {
       $wuxToast.show({
@@ -49,46 +76,57 @@ Page({
       })
       return
     }
-    container.userService.canWeixinAccountLogin(this.data.userPhoneValue)
+
+    this.setData({
+      codeText: '获取中...',
+      lockSMSButton: true
+    })
+    const promise = container.userService.canWeixinAccountLogin(this.data.userPhoneValue)
       .then(res => {
         this.setData({
           notUserInYMC: !res.success,
-          notUserInYMCMessage: res.message
+          notUserInYMCMessage: res.message,
         })
         if (res.success === true) {
-          return container.userService.createVCode(this.data.userPhoneValue)
+          return container.userService.createVCode(this.data.userPhoneValue, 'SMS', 'access', true)
+            .then(() => {
+              this.countDown()
+              this.setData({
+                notUserInYMC: false,
+                lockSMSButton: false
+              })
+            })
+            .catch(err => {
+              this.setData({
+                codeText: '获取验证码',
+                lockSMSButton: false
+              })
+            })
+        } else {
+          return Promise.reject()
         }
       })
-      .then(res => {
-        this.countDown()
-        this.setData({
-          notUserInYMC: false
-        })
-      })
       .catch(err => {
-        $wuxToast.show({
-          type: false,
-          timer: 2000,
-          color: '#ffffff',
-          text: '服务器错误，请稍后再试'
+        this.setData({
+          codeText: '获取验证码',
+          lockSMSButton: false
         })
       })
   },
   countDown() {
     let time = 30
-    let that = this
-    let t = setInterval(function () {
+    const t = setInterval(() => {
       if (time > 0) {
         time--
-        let STR = `已发送(${time}s)`
-        that.setData({
+        const STR = `已发送(${time}s)`
+        this.setData({
           codeText: STR,
           countDownOver: false,
           countDownClass: 'count-down'
         })
       } else {
         clearInterval(t)
-        that.setData({
+        this.setData({
           codeText: '重新获取',
           countDownOver: true,
           countDownClass: ''
@@ -132,27 +170,20 @@ Page({
     const useCase = 'access'
     const authEntity = { code, mobile, useCase }
 
+    wx.showToast({ title: '登录中...', icon: 'loading', mask: true })
     container.userService.login('code', authEntity, '')
-      .then(res => {
-        console.log('登陆成功!')
-      })
-      .catch(err => {
-        $wuxToast.show({
-          type: false,
-          timer: 2000,
-          color: '#fff',
-          text: err.message
-        })
-        return Promise.reject()
+      .then(() => {
+        console.log("登陆成功")
+        return container.userService.boundAccountForWeixin()
       })
       .then(() => {
-        container.userService.boundAccountForWeixin()
-          .then(() => {
-            wx.navigateBack()
-          })
-          .catch(err => {
-            console.log
-          })
+        console.log("绑定成功")
+        wx.navigateBack()
+      })
+      .catch(err => {
+      })
+      .then(() => {
+        wx.hideToast()
       })
   },
   boundSelectHandler(e) {
