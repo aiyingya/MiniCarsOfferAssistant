@@ -225,7 +225,7 @@ Page({
 
     const that = this
     /**
-     * 登陆后刷新页面.
+     * 登录后刷新页面.
      */
     console.log(`pageShare:${this.data.pageShare}`)
     if (this.data.pageShare === true) {

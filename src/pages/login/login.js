@@ -160,7 +160,7 @@ Page({
         type: false,
         timer: 2000,
         color: '#fff',
-        text: '需要选择与微信号绑定才能登陆'
+        text: '需要选择与微信号绑定才能登录'
       })
       return
     }
@@ -173,7 +173,7 @@ Page({
     wx.showToast({ title: '登录中...', icon: 'loading', mask: true })
     container.userService.login('code', authEntity, '')
       .then(() => {
-        console.log("登陆成功")
+        console.log("登录成功")
         return container.userService.boundAccountForWeixin()
       })
       .then(() => {

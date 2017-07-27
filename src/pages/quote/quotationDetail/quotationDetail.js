@@ -132,7 +132,7 @@ console.log(quotation)
     $wuxTrack.push(event)
 
     /**
-     * 登陆后刷新页面.
+     * 登录后刷新页面.
      */
     let options = this.data.options
     console.log(`pageShare:${this.data.pageShare}`)
