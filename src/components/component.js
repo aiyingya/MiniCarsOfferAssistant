@@ -18,7 +18,12 @@ class Component {
    */
   __init() {
     this.page = getCurrentPages()[getCurrentPages().length - 1]
-    this.setData = this.page.setData.bind(this.page)
+    if (this.page != null) {
+      this.setData = this.page.setData.bind(this.page)
+    } else {
+      this.setData = (object) => {
+      }
+    }
     this.__initState()
   }
 
@@ -52,10 +57,12 @@ class Component {
       }
     }
 
-    // 将数据同步到 page.data 上面方便渲染组件
-    this.page.setData({
-      [`${scope}`]: this._data
-    })
+    if (this.page != null) {
+      // 将数据同步到 page.data 上面方便渲染组件
+      this.page.setData({
+        [`${scope}`]: this._data
+      })
+    }
   }
 
   /**
@@ -71,8 +78,10 @@ class Component {
         if (methods.hasOwnProperty(key) && typeof methods[key] === `function`) {
           this[key] = methods[key] = methods[key].bind(this)
 
-          // 将 methods 内的方法重命名并挂载到 page 上面，否则 template 内找不到事件
-          this.page[`${scope}.${key}`] = methods[key]
+          if (this.page != null) {
+            // 将 methods 内的方法重命名并挂载到 page 上面，否则 template 内找不到事件
+            this.page[`${scope}.${key}`] = methods[key]
+          }
 
           // 将方法名同步至 page.data 上面，方便在模板内使用 {{ method }} 方式绑定事件
           this.setData({

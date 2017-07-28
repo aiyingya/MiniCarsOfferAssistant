@@ -28,7 +28,9 @@
 	border-radius: 3px;
 	overflow: hidden;
 }
-
+.weui-dialog_qr {
+  text-align: left;
+}
 .weui-dialog__hd {
 	padding: 1.3em 1.6em 0.5em;
 }
@@ -836,4 +838,42 @@
   padding-left: 40rpx;
   width: 50%;
   text-align: left;
+}
+
+.weui-bargain-dialog__bd {
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+}
+.weui-bargain-dialog__bd .weui-dialog__line {
+  width: 12%;
+}
+.weui-bargain-dialog__bd .weui-dialog__bd__centent {
+  text-align: center;
+  width: 56%;
+  color:#999999;
+  font-size:24rpx;
+}
+.qrCodeDialog .weui-qrdialog__bd {
+  padding: 20rpx 20rpx 50rpx 20rpx;
+  margin: 0;
+  width: auto;
+}
+.qrcode-pic {
+  width: 220px;
+  height: 220px;
+  margin: 40rpx auto 0 auto;
+  position: relative;
+}
+.qrcode-pic image {
+  width: 220px;
+  height: 220px;
+  background-color: #fff;
+}
+.qrcode-text {
+  text-align: center;
 }

@@ -1,5 +1,3 @@
-import config from '../config'
-
 
 export default class Util {
 
@@ -193,7 +191,7 @@ export default class Util {
    *
    * @memberOf Util
    */
-  static quotedPriceByMethod(price, originPrice, quotedMethod = 'PRICE') {
+static quotedPriceByMethod(price, originPrice, quotedMethod = 'PRICE', pretty = true) {
     let quotedSymbol
     const priceDiff = Util.downPrice(price, originPrice)
 
@@ -212,7 +210,7 @@ export default class Util {
 
       const abs_diff = Math.abs(priceDiff)
 
-      const range = Util.quotedPriceUnit(price)
+      const range = Util.quotedPriceUnit(price, pretty)
       const quotedRange = range.quotedRange
       const quotedRangeUnit = range.quotedRangeUnit
 
@@ -223,11 +221,11 @@ export default class Util {
         quotedRangeUnit
       }
     } else {
-      return Util.quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod)
+      return Util.quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod, pretty)
     }
   }
 
-static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE') {
+static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE', pretty = true) {
     let quotedSymbol
     let quotedValue
     let quotedRange
@@ -259,7 +257,7 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
     const abs_diff = Math.abs(priceDiff)
 
     if (quotedMethod === 'PRICE') {
-      const range = Util.quotedPriceUnit(abs_diff)
+      const range = Util.quotedPriceUnit(abs_diff, pretty)
       quotedRange = range.quotedRange
       quotedRangeUnit = range.quotedRangeUnit
     } else if (quotedMethod === 'POINTS') {
@@ -287,13 +285,18 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
     return Util.quotedPriceByMethod(price, originPrice, quotedMethod)
   }
 
-  static quotedPriceUnit(price) {
+  static quotedPriceUnit(price, pretty = true) {
     const abs_price = Math.abs(price)
     let quotedRangeUnit
     let quotedRange
-    if (abs_price > 10000) {
-      quotedRange = (abs_price / 10000).toFixed(2)
-      quotedRangeUnit = '万'
+    if (pretty) {
+      if (abs_price > 10000) {
+        quotedRange = (abs_price / 10000).toFixed(2)
+        quotedRangeUnit = '万'
+      } else {
+        quotedRange = abs_price
+        quotedRangeUnit = '元'
+      }
     } else {
       quotedRange = abs_price
       quotedRangeUnit = '元'
@@ -512,5 +515,12 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
       return `刚刚 ${hours}:${minutes}`
     }
 
+  }
+
+  /**
+   * 时间不足10返回0X格式.
+   */
+  static makeUpZero(s) {
+    return s < 10 ? `0${s}`: s;
   }
 }

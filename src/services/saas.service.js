@@ -10,6 +10,7 @@ import Service from './base.service'
 
 import UserService from './user.service'
 import util from '../utils/util'
+import { container } from '../landrover/business/index'
 
 export default class SAASService extends Service {
 
@@ -27,8 +28,7 @@ export default class SAASService extends Service {
 
   setup() {
     super.setup()
-    const app = getApp()
-    this.userService = app.userService
+    this.userService = container.userService
   }
 
   /**
@@ -193,12 +193,11 @@ export default class SAASService extends Service {
           otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       }
-
-      let snsId
-      if (this.userService.isLogin) {
+      let snsId = null
+      if (this.userService.auth != null) {
         snsId = this.userService.auth.userId
-      } else {
-        snsId = this.userService.snsId
+      } else if (this.userService.weixin.userInfo != null) {
+        snsId = this.userService.weixin.userInfo.customerId
       }
       const data_part_2: any = {
         loanFee: quotationDraft.loanFee,
@@ -260,13 +259,12 @@ export default class SAASService extends Service {
    */
   requestQuotationsList(pageIndex: number, pageSize: number, object: any) {
     if (pageIndex > 0 && pageSize > 0) {
-      let snsId
-      if (this.userService.isLogin) {
+      let snsId = null
+      if (this.userService.auth != null) {
         snsId = this.userService.auth.userId
-      } else {
-        snsId = this.userService.snsId
+      } else if (this.userService.weixin.userInfo != null) {
+        snsId = this.userService.weixin.userInfo.customerId
       }
-
       this.sendMessage({
         path: 'sale/quotation/new',
         data: {
@@ -790,6 +788,81 @@ export default class SAASService extends Service {
     return this.sendMessageByPromise({
       path: 'sale/quotation/modifyValidTime',
       method: 'POST',
+      data: opts.data || {}
+    })
+  }
+
+  /**
+   * 获取砍价记录.
+   * @param opts
+   */
+  getBargainData(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/cutPriceActivities',
+      method: 'GET',
+      data: opts.data || {}
+    })
+  }
+
+  /**
+   * 结束砍价活动.
+   * @param opts
+   */
+  finishActivity(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/finishActivity?activityId='+opts.data.activityId+'&targetId='+opts.data.targetId,
+      method: 'POST',
+      loadingType: 'show'
+    })
+  }
+
+  /**
+   * 核销优惠券.
+   * @param opts
+   */
+  cancelCoupon(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/exchangeCoupon?couponCode='+opts.data.couponCode,
+      method: 'POST',
+      loadingType: 'show'
+    })
+  }
+
+  /**
+   * 获取潜客列表.
+   * @param opts
+   */
+  getPotentialData(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/cutPriceLeads',
+      method: 'GET',
+      loadingType: 'show',
+      data: opts.data || {}
+    })
+  }
+
+  /**
+   * 获取砍价二维码.
+   * @param opts
+   */
+  getBargainQRcode(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/makeQRCode',
+      method: 'GET',
+      loadingType: 'show',
+      data: opts.data || {}
+    })
+  }
+  
+  /**
+   * 获取报价记录详情列表
+   * @param opts
+   */
+  getQuoteDateilList(opts: any): Promise<any> {
+    return this.sendMessageByPromise({
+      path: 'sale/quotation/getQuotationByPhone',
+      method: 'GET',
+      loadingType: 'show',
       data: opts.data || {}
     })
   }

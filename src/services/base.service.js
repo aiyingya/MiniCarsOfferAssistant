@@ -3,7 +3,7 @@
  * Created by David on 28/03/2017.
  */
 
-import config from '../config'
+import { config } from '../landrover/business/index'
 import YMC from './YMC'
 
 /**
@@ -31,7 +31,7 @@ export default class Services {
    * @memberof Services
    */
   sendMessage(options: any) {
-    const url = `${this.urls[config.ENV]}${options.path}`
+    const url = `${this.urls[config.env]}${options.path}`
     this.ymc.request({
       url: url,
       method: options.method,
@@ -67,21 +67,24 @@ export default class Services {
     data,
     header,
     method,
-    dataType
+    dataType,
+    loadingType
   }: {
       path: string,
       data?: any,
       header?: any,
       method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'HEAD' | 'TRACE' | 'CONNECT',
-      dataType?: 'json'
+      dataType?: 'json',
+      loadingType?: 'none'|'navigation'|'toast'
     }): Promise<any> {
-    const url = `${this.urls[config.ENV]}${path}`
+    const url = `${this.urls[config.env]}${path}`
     return this.ymc.requestByPromise(
       url,
       data,
       header,
       method,
-      data
+      data,
+      loadingType
     )
   }
 

@@ -1472,7 +1472,7 @@ function drawYAxis(series, opts, config, context) {
     if (opts.yAxis.disabled === true) {
         return;
     }
-
+debugger
     var _calYAxisData4 = calYAxisData(series, opts, config),
         rangesFormat = _calYAxisData4.rangesFormat;
 

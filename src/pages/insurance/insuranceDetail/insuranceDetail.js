@@ -1,6 +1,5 @@
 import util from '../../../utils/util'
 
-let app = getApp()
 Page({
   data: {
     insuranceDetail:{

@@ -5,6 +5,7 @@ import {
 } from "../../../components/wux"
 import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialog'
 import util from '../../../utils/util'
+import { container } from '../../../landrover/business/index'
 
 const app = getApp()
 
@@ -337,7 +338,7 @@ Page({
     }
 
     this.setData({
-      'canIUse.movablearea': wx.canIUse('movable-area')
+      'canIUse.movablearea': wx.canIUse ? wx.canIUse('movable-area') : false
     })
 
     let quotationJSONString = options.quotation
@@ -415,7 +416,7 @@ Page({
       })
       console.log(quotation.insuranceDetail)
       //获取报价单接口
-      app.saasService.getCreatCarRecordInfo({ carPrice: 0 }) // 随便传一个金额，该接口我不需要加价后的裸车价
+      container.saasService.getCreatCarRecordInfo({ carPrice: 0 }) // 随便传一个金额，该接口我不需要加价后的裸车价
         .then(res => {
           res.interestType = quotation.rateType;
           that.setData({
@@ -467,7 +468,7 @@ Page({
         const originalPrice = carSkuInfo.showPrice || carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
 
         const  isShow = that.isShowDownDot(carModelInfo.carModelName)
-        var user = app.userService;
+        var user = container.userService;
         this.setData({
           'quotation.requiredExpensesAll.metallicPaintFee': carSkuInfo.metallicPaintAmount || 0,
           'quotation.saleMobile':user.mobile,
@@ -475,7 +476,7 @@ Page({
         })
 
         //获取报价单接口
-        app.saasService.getCreatCarRecordInfo({ carPrice: originalPrice })
+        container.saasService.getCreatCarRecordInfo({ carPrice: originalPrice })
           .then(res => {
             this.setData({
               'requestResult': res
@@ -534,9 +535,9 @@ Page({
   onShow() {
     //判断是否需要显示报价偏好设置
     this.setData({
-      showPreferenceSetting: (app.userService.isSetPreference() === "false")
+      showPreferenceSetting: (container.userService.isSetPreference() === "false")
     })
-    console.log(app.userService.isSetPreference())
+    console.log(container.userService.isSetPreference())
     if(this.data.isOnLoad){
       this.setData({
         isOnLoad: false
@@ -839,7 +840,7 @@ Page({
     $wuxInputNumberDialog.open({
       title: '裸车价',
       inputNumber: _inputT,
-      content: "￥" + _sellingPrice,
+      content: _sellingPrice,
       inputNumberPlaceholder: '输入裸车价',
       inputNumberMaxLength: 9,
       confirmText: '确定',
@@ -1090,7 +1091,7 @@ Page({
      */
     function isSendRequest(quotationDraft, mobile, name, sex, isSend, validTime) {
 
-      app.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime)
+      container.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime)
         .then(res => {
           let quotation1 = res
 
@@ -1133,7 +1134,7 @@ Page({
           console.log("fail 保存报价单失败")
         })
     }
-
+    console.log(quotation.customerMobile)
     that.hideInput()
     // 请求成功后弹出对话框
     $wuxSpecialUploadDialog.open({
@@ -1166,7 +1167,7 @@ Page({
         const effectiveness = Number(res.inputEffectiveness)
         //保存报价单
 
-        app.saasService.requestSaveQuotationDraft(quotation)
+        container.saasService.requestSaveQuotationDraft(quotation)
           .then(res => {
             let quotationDraft = res
             //发送报价单
@@ -1183,7 +1184,7 @@ Page({
         const customerName =res.inputName
         const customerSex = Number(res.inputSex)
         const effectiveness = Number(res.inputEffectiveness)
-        app.saasService.requestSaveQuotationDraft(quotation)
+        container.saasService.requestSaveQuotationDraft(quotation)
           .then(res => {
             let quotationDraft = res
             /// 暂不发送, 不带电话号码发送（发布当前报价草稿到某个用户） 保留1.5以前的逻辑
@@ -1326,10 +1327,10 @@ Page({
     let that = this
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
-    var user = app.userService;
+    var user = container.userService;
 
     let _insuranceAmount = that.data.quotation.requiredExpensesAll.insuranceAmount - that.data.quotation.insuranceDetail.iJQX
-    app.saasService.getProfit(
+    container.saasService.getProfit(
       util.loanPaymentByLoan1(carPrice, paymentRatio),
       _insuranceAmount,
       carPrice,
@@ -1424,9 +1425,9 @@ Page({
       }
       return ;
     }
-    var user = app.userService;
+    var user = container.userService;
 
-    return app.saasService.gettingVehicleAndVesselTax({
+    return container.saasService.gettingVehicleAndVesselTax({
       data:{
         capacity:capacity,
         place:user.address.provinceName//provinceId
@@ -1446,7 +1447,7 @@ Page({
     const checkedValues = []
     const source = this.data.source
     const quotation = this.data.quotation
-    return app.saasService.gettingInsurance().then((res) => {
+    return container.saasService.gettingInsurance().then((res) => {
       if (res) {
         if(source === 'quotationDetail') {
           for(let item of res.insurances) {

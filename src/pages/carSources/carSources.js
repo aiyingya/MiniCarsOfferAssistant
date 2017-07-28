@@ -6,9 +6,7 @@ import {
 import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/carSourceDetail'
 
 import util from '../../utils/util'
-import config from '../../config'
-
-let app = getApp()
+import { container } from '../../landrover/business/index'
 
 Page({
 
@@ -69,7 +67,7 @@ Page({
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
-    if (!app.userService.isLogin()) {
+    if (!container.userService.isLogin()) {
       setTimeout(function () {
         that.setData({
           pageShare: true
@@ -107,7 +105,7 @@ Page({
         'topNOfCurrentMode.referenceStatus': '加载中',
         'topNOfCurrentMode.topNStatus': '加载中'
       })
-      app.saasService.getTopNOfCurrentMode(carModelsInfo.carModelId)
+      container.saasService.getTopNOfCurrentMode(carModelsInfo.carModelId)
       .then(res => {
         const reference = res.reference
 
@@ -146,7 +144,7 @@ Page({
         })
       })
 
-      app.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
+      container.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
         success: function (res) {
 
           let filters = res.filters
@@ -203,7 +201,10 @@ Page({
         }
       })
 
-      wx.showShareMenu()
+
+      if (wx.showShareMenu) {
+        wx.showShareMenu()
+      }
     }
   },
   onShow() {
@@ -909,7 +910,7 @@ Page({
         supplierPhone = supplier.supplierPhone
         contactPhone = supplier.supplierPhone
 
-        app.saasService.pushCallRecord(supplierId, supplierPhone, contactPhone)
+        container.saasService.pushCallRecord(supplierId, supplierPhone, contactPhone)
       })
   },
   actionContactWithCarSourceItem(spuId, skuItemIndex, carSourceItemIndex, carSourceItem, from) {
@@ -931,7 +932,7 @@ Page({
         contactPhone = carSourceItem.contact || supplier.supplierPhone
         skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
 
-        app.saasService.pushCallRecord(supplierId, supplierPhone, messageResultId, contactPhone)
+        container.saasService.pushCallRecord(supplierId, supplierPhone, messageResultId, contactPhone)
 
         /**
          * 1.4.0 埋点 拨打供货方电话
@@ -996,7 +997,7 @@ Page({
             const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
             const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
 
-            app.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
+            container.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
               success(res) {
                 wx.showModal({
                   title: '提示',

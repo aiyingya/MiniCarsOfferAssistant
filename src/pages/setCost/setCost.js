@@ -3,6 +3,7 @@ import { $wuxInputNumberDialog } from "../../components/wux"
 import { $flexInputDialog } from "../../components/wux"
 import { $checkboxDialog } from "../../components/wux"
 import util from '../../utils/util'
+import { container } from '../../landrover/business/index'
 
 let app = getApp()
 
@@ -94,7 +95,7 @@ Page({
    */
   getDefaultPreference() {
     const that = this
-    return app.saasService.gettingPreference().then((res) => {
+    return container.saasService.gettingPreference().then((res) => {
       if (res) {
         console.log(res)
         that.setData({
@@ -129,7 +130,7 @@ Page({
   getDefaultInsurance() {
     const that = this
     const checkedValues = []
-    return app.saasService.gettingInsurance().then((res) => {
+    return container.saasService.gettingInsurance().then((res) => {
       if (res) {
         for(let item of res.insurances) {
           if(item.checked) {
@@ -397,7 +398,7 @@ Page({
       }
     }
     // console.log(data)
-    app.saasService.settingPreference({
+    container.saasService.settingPreference({
       data: data,
       success(res) {
         /**

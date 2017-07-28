@@ -1,12 +1,17 @@
 import {
   $wuxInputNumberDialog,
-  $wuxDialog
+  $wuxDialog,
+  $qrCodeDialog,
+  $wuxTrack
 } from "../../../components/wux"
 import util from '../../../utils/util'
+import { container } from '../../../landrover/business/index'
 const app = getApp()
 
 Page({
   data: {
+    pageId: 'quotationsDetail',
+    pageName: '报价详情',
     // 导航头部数据
     activeIndex: 0,
     slderOffset: 0,
@@ -49,6 +54,8 @@ Page({
       price: '', // 1.9 万
       point: '' // 6 点
     },
+    cutPriceCount: '',
+    cutPriceCountStyle: '',
     isSpecialBranch:false //宝马、奥迪、MINI展示下xx点
   },
   onLoad(options) {
@@ -56,18 +63,18 @@ Page({
     let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
     let carPrice = quotation.quotationItems[0].sellingPrice
     let officialPrice = quotation.quotationItems[0].guidePrice
-
+console.log(quotation)
     /// 实时计算优惠点数
     let downPrice = util.downPrice(carPrice, officialPrice)
     let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
-
+    let cutPriceCount , cutPriceCountStyle
     const isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
-    if (!app.userService.isLogin()) {
+    if (!container.userService.isLogin()) {
       setTimeout(function(){
         that.setData({
           pageShare: true
@@ -88,23 +95,42 @@ Page({
         const loanInterest = util.loanPaymentInterest(carPrice,paymentRatio,monthRate,stages * 12)
         quotation.loanInterest = Math.floor(loanInterest)
       }
+      if(quotation.cutPriceCount || quotation.cutPriceCount === 0) {
+        cutPriceCount = true
+        cutPriceCountStyle = 'cutPriceCountStyle'
+      }else {
+        cutPriceCount = false
+        cutPriceCountStyle = ''
+      }
+      
       this.setData({
         quotation: quotation,
         isSpecialBranch: isShow,
         pageShare: false,
+        cutPriceCount: cutPriceCount,
+        cutPriceCountStyle: cutPriceCountStyle,
         priceChange: {
           flag: downPriceFlag,
           price: downPriceString,
           point: downPoint
         }
       })
-      wx.showShareMenu()
+
+      if (wx.showShareMenu) {
+        wx.showShareMenu()
+      }
     }
   },
   onReady() {
 
   },
   onShow() {
+    const event = {
+      eventAction: 'pageShow',
+      eventLabel: `页面展开`
+    }
+    $wuxTrack.push(event)
+
     /**
      * 登陆后刷新页面.
      */
@@ -192,7 +218,7 @@ Page({
       confirm: (res) => {
         let mobile = res.inputNumber
         const quotation = that.data.quotation
-        app.saasService.requestPublishQuotation(quotation.draftId, mobile, quotation.customerName, quotation.customerSex, true, quotation.validTime)
+        container.saasService.requestPublishQuotation(quotation.draftId, mobile, quotation.customerName, quotation.customerSex, true, quotation.validTime)
           .then(res => {
             let quotation = res
 
@@ -230,7 +256,7 @@ Page({
           type: 'weui-dialog__btn_primary',
           onTap: function () {
             const quotationItem = that.data.quotation.quotationItems[0]
-            app.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.guidePrice, 1, {
+            container.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.guidePrice, 1, {
               success: (res) => {
                 wx.showModal({
                   content: '提交成功，请保持通话畅通',
@@ -279,5 +305,33 @@ Page({
       return true;
     }
     return false;
+  },
+  /**
+   * 发起砍价活动.
+   */
+
+  handlerBargainActive(e) {
+    let that = this
+    const quotationItem = that.data.quotation
+    const tenantId = container.userService.address.tenantId
+    console.log(quotationItem)
+    const cutPriceCount = this.data.cutPriceCount
+    
+    if(cutPriceCount) return
+    container.saasService.getBargainQRcode({
+      data: {
+        quotationId: quotationItem.quotationId,
+        targetId: tenantId,
+        width: 300,
+        height: 300
+      }
+    }).then((res) => {
+      console.log(res)
+      $qrCodeDialog.open({
+        content: res
+      })
+    },(err) => {
+
+    })
   }
 })

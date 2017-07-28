@@ -1,7 +1,7 @@
 
 import Component from '../../component'
-import util from '../../../utils/util'
-import config from '../../../config'
+import utils from '../../../utils/util'
+import { system, util } from '../../../landrover/business/index'
 
 export default {
   adjustUpdateTimeoutId: null,
@@ -143,12 +143,12 @@ export default {
       visible: !1
     }, this.setDefaults(), opts)
 
-    const originalScalePx = Math.floor(config.px(30))
+    const originalScalePx = Math.floor(util.px(30))
     options.scalePx = originalScalePx + (originalScalePx % 2 === 1 ? 1 : 0)
     this.scalePx = options.scalePx
     options.tenScaleWidthPx = this.scalePx * 10
     options.tenScaleMarginLeftPx = (options.tenScaleWidthPx - this.scalePx) / 2
-    const screenWidthPx = config.system.screenWidth
+    const screenWidthPx = system.screenWidth
     options.blankWidthPx = (screenWidthPx * 0.8 > 300 ? 300 : screenWidthPx * 0.8) / 2
 
     const plate = this.prepareForPlate(options.params.guidePrice, options.params.sellingPrice, options.params.quotedMethod)
@@ -272,7 +272,7 @@ export default {
             const value = that.valueForScrollLeft(e.detail.scrollLeft, plate.rangeLocationLower, this._data.params.guidePrice, this._data.params.quotedMethod)
             this._data.sellingPrice = value.absoluteSellingPrice
 
-            const quoted = util.quotedPriceByMethod(value.absoluteSellingPrice, this._data.params.guidePrice, this._data.params.quotedMethod)
+            const quoted = utils.quotedPriceByMethod(value.absoluteSellingPrice, this._data.params.guidePrice, this._data.params.quotedMethod)
             this._data.quoted = quoted
 
             this.setData({

@@ -5,6 +5,7 @@
  */
 import Service from './base.service'
 
+import { container } from '../landrover/business/index'
 export default class TradeService extends Service {
 
   urls = {
@@ -47,7 +48,8 @@ export default class TradeService extends Service {
     return this.sendMessageByPromise({
       path: 'cgi/navigate/items/hot',
       method: 'GET',
-      data: {}
+      data: {},
+      loadingType: 'none'
     })
   }
 
@@ -60,36 +62,34 @@ export default class TradeService extends Service {
   getHotPushBrands(): Promise<any> {
     return this.sendMessageByPromise({
       path: 'cgi/navigate/brands/hot',
-      method: 'GET'
+      method: 'GET',
+      loadingType: 'none'
     })
   }
 
   /**
    *  获取用户搜索记录
    *
-   * @param {string} clientId
    * @returns {Promise<any>}
    * @memberof TradeService
    */
-  getUserSearchHistory(clientId: string): Promise<any> {
+  getUserSearchHistory(): Promise<any> {
     return this.sendMessageByPromise({
       path: 'cgi/search/history/text',
-      method: 'GET',
-      data: {
-        clientId
-      }
+      method: 'GET'
     })
   }
 
   /**
    *  上传用户搜索记录
    *
-   * @param {number} userId
    * @param {string} text
    * @returns {Promise<any>}
    * @memberof TradeService
    */
-  postUserSearchHistory(userId: number, text: string): Promise<any> {
+  postUserSearchHistory(text: string): Promise<any> {
+    const auth = container.userService.auth
+    const userId = auth != null? auth.userId : null
     const channel = 'wxapp'
     return this.sendMessageByPromise({
       path: 'cgi/search/history/text',

@@ -1,8 +1,14 @@
+import {
+  $wuxTrack
+} from "../../../components/wux"
 import util from '../../../utils/util'
+import { container } from '../../../landrover/business/index'
 let app = getApp()
 
 Page({
   data: {
+    pageId: 'quotationsList',
+    pageName: '报价列表',
     pageIndex: 1,
     pageSize: 10,
     quotationsList: [],
@@ -44,6 +50,11 @@ Page({
   onReady() {
   },
   onShow() {
+    const event = {
+      eventAction: 'pageShow',
+      eventLabel: `页面展开`
+    }
+    $wuxTrack.push(event)
 
     let that = this
     let quotation = app.fuckingLarryNavigatorTo.quotation
@@ -118,7 +129,7 @@ Page({
     let originPageIndex = this.data.pageIndex
     let newPageIndex = this.data.pageIndex + 1
 
-    app.saasService.requestQuotationsList(newPageIndex, this.data.pageSize, {
+    container.saasService.requestQuotationsList(newPageIndex, this.data.pageSize, {
       loadingType: 'none',
       success: function (res) {
         if (res.content.length !== 0) {
@@ -181,7 +192,7 @@ Page({
   getData(object) {
     let that = this
     this.data.pageIndex = 1
-    app.saasService.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
+    container.saasService.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
       loadingType: 'none',
       success: function (res) {
         let empty = res.content.length === 0
@@ -210,26 +221,22 @@ Page({
     })
   },
   handlerSelectQuotation(e) {
-    let valueString = JSON.stringify(e.currentTarget.dataset.quotation)
+    let valueString = e.currentTarget.dataset.quotation 
     let current = e.currentTarget.dataset.current
-    let quotationKeyValueString = encodeURIComponent(valueString)
-    try {
-      wx.setStorageSync('quotationItemKeyDetail', quotationKeyValueString)
-      wx.navigateTo({
-        url: `/pages/details/details?current=${current}`,
-        success: function (res) {
-          console.log('quotationDetail 页面跳转成功');
-        },
-        fail: function () {
-          console.log('quotationDetail 页面跳转失败');
-        },
-        complete: function () {
+   
+    wx.navigateTo({
+      url: `/pages/details/details?current=${current}&mobile=${valueString.customerPhone}`,
+      success: function (res) {
+        console.log('quotationDetail 页面跳转成功');
+      },
+      fail: function () {
+        console.log('quotationDetail 页面跳转失败');
+      },
+      complete: function () {
 
-        }
-      })
-    } catch (e) {
-
-    }
+      }
+    })
+   
   },
   handletouchmove(event) {
 		let currentX = event.changedTouches[0].clientX
@@ -287,7 +294,7 @@ Page({
     const quotationId = record.quotationId
     const quotationsList = this.data.quotationsList
     const newQuotationsList = []
-    app.saasService.requestDeleteRecotd(quotationId,{
+    container.saasService.requestDeleteRecotd(quotationId,{
       loadingType: 'true',
       success(res) {
         console.log(res)

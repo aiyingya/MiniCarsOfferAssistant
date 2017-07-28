@@ -1,5 +1,6 @@
-let app = getApp()
 import util from '../../utils/util'
+import { container } from '../../landrover/business/index'
+
 Page({
   data: {
     InsuranceDetail: {
@@ -51,14 +52,14 @@ Page({
        * 车身划痕险.
        */
       scratchesInsurance: '0'
-    }, 
-    /** 
+    },
+    /**
      * spu规格.
      */
     standards: [],
     standardIndex: 0,
     saddleValue: 0,
-    /** 
+    /**
      *根据spu规格计算保险
      */
     spuStandard: {
@@ -195,11 +196,11 @@ Page({
     // 页面来源.
     let pageSource = options.pageSource
     let seatNums = carModelInfo.seatNums
-    let standards = [] 
+    let standards = []
     let standardIndex = 0
     let sixUnder = [], sixAbove = []
     let trafficInsurance = 950
-    
+
     // 初始获取保险信息，判断是否为二次编辑保险.
     let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
     console.log(pageSource,carModelInfo,insurancesAll)
@@ -236,7 +237,7 @@ Page({
       carModelInfo: carModelInfo,
       'InsuranceDetail.trafficInsurance': trafficInsurance
     })
-    
+
     // 二次进入页面,直接处理Storage.
     if(insurancesAll !== null) {
       console.log(insurancesAll)
@@ -247,12 +248,12 @@ Page({
               liabilityTypesIndex: item.index || 3
             })
             break
-          case '玻璃单独破碎险':      
+          case '玻璃单独破碎险':
             this.setData({
               glassBrokenTypesIndex: item.index || 0
             })
             break
-          case '车身划痕险': 
+          case '车身划痕险':
             this.setData({
               scratchesTypesIndex :item.index || 1
             })
@@ -285,7 +286,7 @@ Page({
         wx.hideToast()
       })
     }
-      
+
   },
   /**
    * 获取保险信息.
@@ -295,7 +296,7 @@ Page({
   getDefaultInsurance() {
     const that = this
     const checkedValues = []
-    return app.saasService.gettingInsurance().then((res) => {
+    return container.saasService.gettingInsurance().then((res) => {
       if (res) {
         let pageSource = that.data.pageSource
         let carModelInfo = that.data.carModelInfo
@@ -312,7 +313,7 @@ Page({
         // "iWGZRX":0,//"无过责任险",
         // "iCSRYZRX":0,//"车上人员责任险",
         // "iCSHHX":0,//"车身划痕险"
-        
+
         if(pageSource === 'editor') {
           for(let item of res.insurances) {
             switch (item.name) {
@@ -336,14 +337,14 @@ Page({
                   item.checked = false
                 }
                 break
-              case '全车盗抢险': 
+              case '全车盗抢险':
                 if(carModelInfo.insuranceDetail.iQCDQX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
                 }
                 break
-              case '玻璃单独破碎险': 
+              case '玻璃单独破碎险':
                 if(carModelInfo.insuranceDetail.iBLDDPSX > 0) {
                   item.checked = true
                   that.setData({
@@ -370,21 +371,21 @@ Page({
                   item.checked = false
                 }
                 break
-              case '无过责任险': 
+              case '无过责任险':
                 if(carModelInfo.insuranceDetail.iWGZRX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
                 }
                 break
-              case '车上人员责任险': 
+              case '车上人员责任险':
                 if(carModelInfo.insuranceDetail.iCSRYZRX > 0) {
                   item.checked = true
                 }else {
                   item.checked = false
                 }
                 break
-              case '车身划痕险': 
+              case '车身划痕险':
                 if(carModelInfo.insuranceDetail.iCSHHX > 0) {
                   item.checked = true
                   that.setData({
@@ -400,9 +401,9 @@ Page({
               default:
 
                 break
-            } 
+            }
           }
-          
+
           rental = carModelInfo.insuranceDetail.iTotal
         }
         that.setData({
@@ -419,7 +420,7 @@ Page({
    * 车座位切换.
    */
   handleChangeStandard: function(e) {
-    
+
     let trafficInsurance = this.data.standards[e.detail.value] == '家用6座以下' ? 950 : 1100
     // all Insurance.
     let businessRisks = this.data.businessRisks
@@ -432,20 +433,20 @@ Page({
   /**
    * 保险选择.
    */
-  bindChangeBusinessRisks(e) {  
+  bindChangeBusinessRisks(e) {
     let businessRisks = this.data.businessRisks
     let values = e.detail.value
     let name = e.currentTarget.dataset.name
- 
+
     for (let item of businessRisks) {
       if(item.name === name) {
         item.checked = false
         for (let val of values) {
           if(item.id == val){
-            item.checked = true   
+            item.checked = true
           }
-        } 
-        
+        }
+
         // Fuckind Larry
         // 关联取消的险种，取消a关联b也取消，但a取消的时候应该不可以再重新选择b
         if(name === '第三者责任险' && item.checked) {
@@ -474,7 +475,7 @@ Page({
             }
           }
         }
-        
+
         if(name === '不计免赔特约险' || name === '无过责任险') {
           for(let item1 of businessRisks) {
             if(item1.name === '第三者责任险' && !item1.checked) {
@@ -489,9 +490,9 @@ Page({
             }
           }
         }
-      } 
+      }
     }
-    
+
     this.setData({
       businessRisks: businessRisks
     })
@@ -548,7 +549,7 @@ Page({
     let officialPrice = this.data.officialPrice
     let businessRisks = data
     // spu规格.
-    
+
     let standardIndex = this.data.standards[this.data.standardIndex] == '家用6座以下' ? 0 : 1
     // 初始化总金额为0.
     let totalAmount = 0
@@ -575,7 +576,7 @@ Page({
     // 车身划痕险
     let scratchesInsurance = 0
     let ChangeInsuranceTotalStyle = ''
-    for(let item of businessRisks) { 
+    for(let item of businessRisks) {
       if(item.checked) {
         switch (item.name) {
           case '第三者责任险':
@@ -612,13 +613,13 @@ Page({
           case '不计免赔特约险':
             if(liabilityInsurance > 0 && vehicleLossInsurance > 0) {
               franchiseInsurance = (liabilityInsurance*0.2 + vehicleLossInsurance*0.2).toFixed(0)
-              
+
               businessTatal += Number(franchiseInsurance)
             }
-            
+
             break
           case '无过责任险':
- 
+
             responsibilityInsurance = (liabilityInsurance*0.2).toFixed(0)
             businessTatal += Number(responsibilityInsurance)
             break
@@ -629,10 +630,10 @@ Page({
             businessTatal += Number(personnelCarInsurance)
             break
           case '车身划痕险':
-           
+
             let scratches = 0
             let scratchesTypesIndex = this.data.scratchesTypes[this.data.scratchesTypesIndex]
-            
+
             if(officialPrice/10000 < 30) {
               scratches = this.data.scratches[scratchesTypesIndex].one
             }else if(30<= officialPrice/10000 && officialPrice/10000 <= 50) {
@@ -640,16 +641,16 @@ Page({
             }else{
               scratches = this.data.scratches[scratchesTypesIndex].three
             }
-            scratchesInsurance = scratches 
+            scratchesInsurance = scratches
             businessTatal += Number(scratchesInsurance.toFixed(0))
             break
           default:
 
             break
-        }  
-      }    
+        }
+      }
     }
-    
+
     if(typeof(insuranceTotal) != 'undefined' && insuranceTotal != 'undefined') {
       totalAmount =  Number(insuranceTotal)
       ChangeInsuranceTotalStyle = 'color-gray'
@@ -674,7 +675,7 @@ Page({
     })
   },
   handleChangeSubmit() {
-    
+
     let businessRisks = this.data.businessRisks
     let InsuranceDetail = this.data.InsuranceDetail
     let insurancesAll = {}
@@ -688,10 +689,10 @@ Page({
           case '车辆损失险':
             item.amount = InsuranceDetail.vehicleLossInsurance
             break
-          case '全车盗抢险': 
+          case '全车盗抢险':
             item.amount = InsuranceDetail.vehicleDQInsurance
             break
-          case '玻璃单独破碎险': 
+          case '玻璃单独破碎险':
             item.amount = InsuranceDetail.glassBrokenInsurance
             item.index = this.data.glassBrokenTypesIndex
             break
@@ -701,20 +702,20 @@ Page({
           case '不计免赔特约险':
             item.amount = InsuranceDetail.franchiseInsurance
             break
-          case '无过责任险': 
+          case '无过责任险':
             item.amount = InsuranceDetail.responsibilityInsurance
             break
-          case '车上人员责任险': 
+          case '车上人员责任险':
             item.amount = InsuranceDetail.personnelCarInsurance
             break
-          case '车身划痕险': 
+          case '车身划痕险':
             item.amount = InsuranceDetail.scratchesInsurance
             item.index = this.data.scratchesTypesIndex
             break
           default:
 
             break
-        } 
+        }
       }
     }
     insurancesAll.businessInsurances = businessRisks
@@ -727,7 +728,7 @@ Page({
     try {
       wx.setStorageSync('insurancesAll', JSON.stringify(insurancesAll))
       wx.navigateBack()
-    } catch (e) { 
+    } catch (e) {
 
     }
   }

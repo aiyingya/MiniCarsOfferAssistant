@@ -15,6 +15,8 @@
     "pages/insurance/insurance",
     "pages/insurance/insuranceDetail/insuranceDetail",
     "pages/details/details",
+    "pages/bargain/bargain",
+    "pages/potential/potential",
     "pages/amap/amap"
   ],
   "window": {
@@ -43,7 +45,7 @@
         "pagePath": "pages/usersQuote/usersQuote",
         "iconPath": "images/icons/tab_icon_price_off.png",
         "selectedIconPath": "images/icons/tab_icon_price_on.png",
-        "text": "我的报价"
+        "text": "我的"
       }
     ]
   },

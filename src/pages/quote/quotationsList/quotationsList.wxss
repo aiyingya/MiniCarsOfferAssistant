@@ -275,3 +275,43 @@
   height: 20rpx;
   margin-top: -10rpx;
 }
+.bargain-bd {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  align-items: center;
+  margin-top: 16rpx;
+  width: 100%;
+  position: relative;
+  padding-top: 20rpx;
+}
+.bargain-bd:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  border-top: 1rpx solid #E5E5E5;
+}
+.bargain-bd_item {
+  width: 33.33%;
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+  color: #666666;
+  line-height: 24rpx;
+  text-align: center;
+  position: relative;
+}
+.bargain-bd_item:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  border-right: 1rpx solid #E5E5E5;
+}
+.bargain-bd_item:last-child:after {
+  display: none;
+}

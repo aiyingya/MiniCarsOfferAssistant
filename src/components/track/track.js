@@ -9,7 +9,7 @@
 
 import UBTService from '../../services/ubt.service.js'
 
-import config from '../../config'
+import { config, system, device, container } from '../../landrover/business/index'
 
 import Component from '../component'
 
@@ -20,18 +20,18 @@ export default {
    * 默认参数
    */
   setDefaults() {
-    const system = config.system
     return {
       deviceType: system.platform,
       appVersion: `${config.name}:${config.version}`,
       pageId: null,
       pageName: null,
+      guid: container.userService.auth.userId,
       channel: 'mini-program',
       os: `${system.system}|wechat ${system.version}|sdk ${system.SDKVersion}`,
       screen: `${system.windowWidth}x${system.windowHeight}`,
       language: system.language,
       phoneModel: system.model,
-      deviceId: config.device.deviceId,
+      deviceId: device.deviceId,
       eventAction: null,
       eventLabel: null,
       eventSource: null,

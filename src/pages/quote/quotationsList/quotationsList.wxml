@@ -96,7 +96,11 @@
                   <view class="price-number">{{ carcell.viewModel.guidePrice }}</view>万
                 </block>
               </view>
-
+            </view>
+            <view class="bargain-bd" wx:if="{{carcell.cutPriceCount || carcell.cutPriceCount === 0}}">
+              <view class="bargain-bd_item">{{carcell.cutPriceCount}}人参与</view>
+              <view class="bargain-bd_item">已砍{{carcell.cutPriceAmount}}元</view>
+              <view class="bargain-bd_item">转发{{carcell.shareTimes}}次</view>
             </view>
           </view>
         </view>

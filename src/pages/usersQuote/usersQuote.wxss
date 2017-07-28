@@ -88,6 +88,13 @@
 	text-align: center;
 	border-radius: 8rpx;
 }
+.version {
+  font-size: 20rpx;
+  color: #999999;
+  text-align: center;
+  width: 100%;
+  margin-top: 10rpx;
+}
 .users-logout_active {
 	background-color: rgba(237,65,73,.7);
 }

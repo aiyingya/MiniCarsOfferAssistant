@@ -1,0 +1,32 @@
+.potential-cells {
+  width: 100%;
+  overflow: hidden;
+}
+.potential-cell {
+  width: 100%;
+  padding: 28rpx 20rpx;
+  box-sizing: border-box;
+  background-color: #fff;
+  margin-bottom: 10rpx;
+}
+.potential-cell_content {
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.potential-phone,
+.potential-times {
+  font-family: "PingFangSC-Semibold";
+  font-size: 30rpx;
+  color: #333333;
+  line-height: 30rpx;
+}
+.potential-sponsor {
+  margin-top: 20rpx;
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+  color: #666666;
+  line-height: 24rpx;
+}
