@@ -35,14 +35,14 @@
   </view>
   <view wx:else class="account-bound" ontap="boundSelectHandler">
     <image src="{{ boundSelected ? '/images/icons/bt_select_on.png' : '/images/icons/bt_select_disable.png'}}"></image>
-    登录手机号与此微信号绑定
+    确认登录手机号与此微信号绑定后请勾选
   </view>
 
   <view
     class="login-tips"
   >
-    注：绑定后此手机号只能通过此微信号登陆，其他微信号
-    无法通过此手机号登陆使用。
+    注：绑定后此手机号只能通过此微信号登录，其他微信号
+    无法通过此手机号登录使用。
     若需解绑请联系区域督导或总部技术人员
   </view>
 

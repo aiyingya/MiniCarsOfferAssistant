@@ -340,7 +340,7 @@ Page({
     this.setData({
       'canIUse.movablearea': wx.canIUse ? wx.canIUse('movable-area') : false
     })
-
+    
     let quotationJSONString = options.quotation
     let carSkuInfoJSONString = options.carSkuInfo
     let carModelInfoJSONString = options.carModelsInfo
@@ -1067,18 +1067,21 @@ Page({
     })
   },
   handlerSaveQuotationDraft(e) {
+
     let that = this;
     let quotation ={}
     quotation = Object.assign({}, quotation, that.data.quotation)
     quotation.rateType= that.data.requestResult.interestType
     quotation.carCapacity = that.data.carModelInfo.capacity//排量
     quotation.electricCar = that.data.carModelInfo.isElectricCar//是否纯电动
+    quotation.spuId = that.data.carModelInfo.carModelId || that.data.quotation.quotationItems[0].spuId// spuid
 
     if(that.data.activeIndex == 1){
       //全款没有贷款手续费
       quotation.loanFee = 0
     }
-
+    
+    console.log(that.data.quotation)
     /**
      * 包装的发布报价单发送接口
      *
@@ -1134,7 +1137,7 @@ Page({
           console.log("fail 保存报价单失败")
         })
     }
-
+    console.log(quotation.customerMobile)
     that.hideInput()
     // 请求成功后弹出对话框
     $wuxSpecialUploadDialog.open({

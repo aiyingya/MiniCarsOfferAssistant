@@ -75,7 +75,7 @@ export default class UserService extends Service {
   };
 
   /**
-   * 微信登陆的异步 promise
+   * 微信登录的异步 promise
    *
    * @type {(Promise<{ sessionId: string }> | null)}
    * @memberof UserService
@@ -830,7 +830,7 @@ export default class UserService extends Service {
             return auth
           })
           .catch(err => {
-            console.info('登陆后刷新失败')
+            console.info('登录后刷新失败')
             return authNeedRefresh
           })
     }

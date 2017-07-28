@@ -13,7 +13,7 @@ export default {
       inputNumber1: undefined,
       inputNumberPlaceHolder: undefined,
       inputNumberPlaceholder1: undefined,
-      inputNumberMaxLength: -1,
+      inputNumberMaxLength: 11,
       inputNumberMaxLength1: -1,
       inputType: 'number',
       confirmDisabled: true,
