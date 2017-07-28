@@ -25,7 +25,7 @@ export default {
       appVersion: `${config.name}:${config.version}`,
       pageId: null,
       pageName: null,
-      guid: container.userService.auth.userId,
+      ymc_userkey: container.userService.auth.userId,
       channel: 'mini-program',
       os: `${system.system}|wechat ${system.version}|sdk ${system.SDKVersion}`,
       screen: `${system.windowWidth}x${system.windowHeight}`,
