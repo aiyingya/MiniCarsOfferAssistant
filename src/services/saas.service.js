@@ -143,7 +143,8 @@ export default class SAASService extends Service {
             itemPic: quotationDraft.quotationItems[0].itemPic,
             specifications: quotationDraft.quotationItems[0].specifications,
             guidePrice: quotationDraft.quotationItems[0].guidePrice,
-            sellingPrice: quotationDraft.quotationItems[0].sellingPrice
+            sellingPrice: quotationDraft.quotationItems[0].sellingPrice,
+            spuId: quotationDraft.spuId
           }],
           hasLoan: quotationDraft.hasLoan,
           paymentRatio: quotationDraft.paymentRatio,
@@ -193,6 +194,7 @@ export default class SAASService extends Service {
           otherFee:quotationDraft.otherExpensesAll.otherFee
         }
       }
+console.log(quotationDraft)
       let snsId = null
       if (this.userService.auth != null) {
         snsId = this.userService.auth.userId
