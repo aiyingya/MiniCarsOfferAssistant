@@ -35,7 +35,7 @@
   </view>
   <view wx:else class="account-bound" ontap="boundSelectHandler">
     <image src="{{ boundSelected ? '/images/icons/bt_select_on.png' : '/images/icons/bt_select_disable.png'}}"></image>
-    登录手机号与此微信号绑定
+    确认登录手机号与此微信号绑定后请勾选
   </view>
 
   <view

@@ -157,7 +157,7 @@ Page({
         type: false,
         timer: 2000,
         color: '#fff',
-        text: '需要选择与微信号绑定才能登录'
+        text: '需要勾选绑定微信号才能登录'
       })
       return
     }
