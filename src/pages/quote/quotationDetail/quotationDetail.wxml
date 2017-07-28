@@ -146,7 +146,9 @@
              <image src="../../../images/icons/tab_icon_call.png"></image>
               联系客户
             </view>
-            <button class='flex-item-3 btn' wx:else bindtap='handlerShareToCustomer'>发送报价</button>
+            <view class='flex-item-2 btn' wx:else bindtap='handlerShareToCustomer'>
+              <image src="../../../images/icons/tab_icon_send_price.png"></image>
+              发送报价</view>
 <!--            <button class='flex-item-3 btn' bindtap='handlerBookCar'>发起砍价活动</button>-->
             <view class='flex-item-3 btn {{cutPriceCountStyle}}' bindtap='handlerBargainActive'>
               <block wx:if="{{cutPriceCountStyle != ''}}">已发起砍价活动</block>

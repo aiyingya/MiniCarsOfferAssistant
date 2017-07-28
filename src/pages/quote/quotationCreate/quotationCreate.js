@@ -1134,7 +1134,7 @@ Page({
           console.log("fail 保存报价单失败")
         })
     }
-
+    console.log(quotation.customerMobile)
     that.hideInput()
     // 请求成功后弹出对话框
     $wuxSpecialUploadDialog.open({
