@@ -44,7 +44,7 @@ export default class UserService extends Service {
    * @type {UserInfo}
    * @memberof UserService
    */
-  userInfo: UserInfo;
+  userInfo: UserInfo | null = null;
 
   /**
    * 运图账号租户用户信息
@@ -960,7 +960,10 @@ export default class UserService extends Service {
           this.auth = null
           this.userInfo = null
           this.userInfoForTenant = null
-          this.weixin = null
+          this.weixin = {
+            userInfo: null,
+            sessionId: null
+          }
         } else {
           console.error('同步移除 auth 出错')
         }
