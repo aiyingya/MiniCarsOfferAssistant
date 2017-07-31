@@ -76,14 +76,15 @@ export default class UserService extends BaseUserService {
     return this.isAuthAvailable()
   }
 
-  getLocation(): Promise<any> {
+  getLocation(): Promise<UserInfoForTenant> {
     return this.getTenant()
-      .then(res => {
+      .then((res: UserInfoForTenant) => {
         const location = []
         if (res.tenants) {
           for (let item of res.tenants) {
-            if (item.address) {
-              location.push(item.address)
+            const address = item.address
+            if (address != null) {
+              location.push(address)
             }
           }
         }

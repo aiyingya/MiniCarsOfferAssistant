@@ -8,8 +8,13 @@
     "flowtype"
   ],
   "rules": {
-    ////////// Possible Errors //////////
+    ////////// Avoid Errors /////////
+    "spaced-comment": 0,
+    "prefer-promise-reject-errors": 0,
+    "no-useless-constructor": 0,
+    "space-before-function-paren": 0,
 
+    ////////// Possible Errors /////////
     "comma-dangle":   1,          // disallow trailing commas in object literals
     "no-cond-assign": 0,          // disallow assignment in conditional expressions
     "no-console": 0,              // disallow use of console (off by default in the node environment)

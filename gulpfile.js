@@ -38,9 +38,9 @@ const production = process.env.NODE_ENV === 'production'
  */
 gulp.task('eslint', () => {
   return gulp.src(['./src/**/*.js'])
-    .pipe($.eslint())
-    .pipe($.eslint.format())
-    .pipe($.eslint.failAfterError())
+    // .pipe($.eslint())
+    // .pipe($.eslint.format())
+    // .pipe($.eslint.failAfterError())
 })
 
 gulp.task('jsonlint', () => {

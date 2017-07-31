@@ -43,6 +43,7 @@ declare type Weixin = {
 declare type UserInfoForTenant = {
   userId: string,
   mobile: string,
+  name: string,
   tenants: Array<Tenant>
 };
 
@@ -53,16 +54,21 @@ declare type Tenant = {
   tenantTelephone: string,
   tenantStatus: 'online' | '',
   remark: string,
-  AddressList: Array<Tenant>
+  address: Address
 };
 
 declare type Address = {
   addressId: number,
-  tenantId: number,
-  provinceName: string,
+  cityId: number,
   cityName: string,
+  detailAddress: string,
+  districtId: number,
   districtName: string,
-  detailAddress: string
+  lat: number,
+  lon: number,
+  provinceId: number,
+  provinceName: string,
+  tenantId: number
 };
 
 declare type RegisterType = 'mobile' | '';
