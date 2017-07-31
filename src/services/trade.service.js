@@ -3,10 +3,10 @@
 /**
  * Created by David on 27/03/2017.
  */
-import BaseTradeService from '../landrover/business/service/trade.service'
+import Service from './base.service'
 
 import { container } from '../landrover/business/index'
-export default class TradeService extends BaseTradeService {
+export default class TradeService extends Service {
 
   urls = {
     dev: 'https://test.yaomaiche.com/tradedev/',
@@ -27,7 +27,14 @@ export default class TradeService extends BaseTradeService {
    * @memberof TradeService
    */
   searchInput (text: string, n: number): Promise<any> {
-    return this.retrieveSearchResult(text, n)
+    return this.sendMessageByPromise({
+      path: 'cgi/search/car/index',
+      method: 'GET',
+      data: {
+        text,
+        n
+      }
+    })
   }
 
   /**
