@@ -1,5 +1,5 @@
 {
-  "extend": [
+  "extends": [
     "standard",
     "plugin:flowtype/recommended"
   ],
