@@ -164,11 +164,9 @@ Page({
 
     const code = this.data.userCodeValue
     const mobile = this.data.userPhoneValue
-    const useCase = 'access'
-    const authEntity = { code, mobile, useCase }
 
     wx.showToast({ title: '登录中...', icon: 'loading', mask: true })
-    container.userService.login('code', authEntity, '')
+    container.userService.login(mobile, code)
       .then(() => {
         console.log("登录成功")
         return container.userService.boundAccountForWeixin()
