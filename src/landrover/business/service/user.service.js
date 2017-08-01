@@ -623,7 +623,7 @@ export default class UserService extends Service {
         })
         .then((code: string) => {
           // FIXME: appid 需要抽象
-          return this.createAuthenticationByMiniProgram('wxd5d5bf6b593d886e', code)
+          return this.createAuthenticationByMiniProgram(config.appId, code)
         })
         .then((sessionId: string) => {
           if (this.loginChannel === 'guest') {
