@@ -33,21 +33,6 @@ export default class UserService extends BaseUserService {
     super()
   }
 
-  request(
-    path: string,
-    method: RequestMethod,
-    data: ?{ [string]: any } = null,
-    header?: ?{ [string]: string } = null,
-  ): Promise<any> {
-    console.log(`${path} ${method}`)
-    console.log(data)
-    return super.request(path, method, data, header)
-      .then(res => {
-        console.log(res)
-        return res
-      })
-  }
-
   setup(): Promise<void> {
     return super.setup()
       .then(() => {
@@ -75,6 +60,8 @@ export default class UserService extends BaseUserService {
   isLogin(): boolean {
     return this.isAuthAvailable()
   }
+
+
 
   /**
    * 查询访客信息接口
