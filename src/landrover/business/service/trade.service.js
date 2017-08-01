@@ -10,21 +10,21 @@ export default class TradeService extends Service {
     prd: 'https://trade.yaomaiche.com/trade/'
   };
 
-  constructor () {
+  constructor() {
     super()
   }
 
-    /**
-     * 获取搜索结果
-     *
-     * @param {string} searchText
-     * @param {number} resultMaxCount  查询结果最多数量，服务端有默认值 10
-     * @returns {Promise<Array<SearchResult>>}
-     * @memberof TradeService
-     */
-  retrieveSearchResult (
-      searchText: string,
-      resultMaxCount: number | null
+  /**
+   * 获取搜索结果
+   *
+   * @param {string} searchText
+   * @param {number} resultMaxCount  查询结果最多数量，服务端有默认值 10
+   * @returns {Promise<Array<SearchResult>>}
+   * @memberof TradeService
+   */
+  retrieveSearchResult(
+    searchText: string,
+    resultMaxCount: number | null
   ): Promise<Array<SearchResult>> {
     const text = searchText
     const n = resultMaxCount
@@ -40,11 +40,11 @@ export default class TradeService extends Service {
 
   /**
    * 获取热推车型
-   * 
+   *
    * @returns {Promise<Array<HotCarModel>>}
    * @memberof TradeService
    */
-  retrieveHotCarModels (): Promise<Array<HotCarModel>> {
+  retrieveHotCarModels(): Promise<Array<HotCarModel>> {
     return this.request(
       'cgi/navigate/items/hot',
       'GET'
@@ -53,11 +53,11 @@ export default class TradeService extends Service {
 
   /**
    * 获取热推车辆品牌
-   * 
+   *
    * @returns {Promise<Array<HotCarBrand>>}
    * @memberof TradeService
    */
-  retrieveHotBrands (): Promise<Array<HotCarBrand>> {
+  retrieveHotBrands(): Promise<Array<HotCarBrand>> {
     return this.request(
       'cgi/navigate/brands/hot',
       'GET'
@@ -65,17 +65,17 @@ export default class TradeService extends Service {
   }
 
 
-/**
- * 获取用户搜索记录
- * 
- * @param {number} resultMaxCount 查询最大记录条数，默认10
- */
-  retrieveSearchHistory (
+  /**
+   * 获取用户搜索记录
+   *
+   * @param {number} resultMaxCount 查询最大记录条数，默认10
+   */
+  retrieveSearchHistory(
     resultMaxCount: number | null
   ): Promise<Array<string>> {
     const n = resultMaxCount
     return this.request(
-      'cgi/search/history/text', 
+      'cgi/search/history/text',
       'GET',
       {
         n
@@ -89,7 +89,7 @@ export default class TradeService extends Service {
    * @param {*} userId ，没有可以不传
    * @param {string} channel 渠道，传 wxapp，ymc等
    */
-  postSearchHistory (
+  postSearchHistory(
     searchText: string,
     userId: string | null,
     channel: string
@@ -108,27 +108,27 @@ export default class TradeService extends Service {
 
   /**
    * 获取导航路径中的车辆品牌 (brand) 列表
-   * 
+   *
    * @param {boolean} showDeleted 是否显示删除的品牌
    * @param {boolean} resultGroupByFirstLetter 结果是否按首字母分组
    * @param {boolean} showSaleCount  是否显示在售数量
    * @param {*} brandLevel 品牌等级，1级 2级，null 为所有
    */
-  retrieveNavigatorCarBrands (
+  retrieveNavigatorCarBrands(
     categoryCode: 0 | 1,
     showDeleted: boolean = false,
     resultGroupByFirstLetter: boolean = false,
     showSaleCount: boolean = false,
     brandLevel: number = 1
   ): Promise<Array<CarBrand> | Array<CarGroup>> {
-    const code = categoryCode      // 分类Code, 0 车， 1 精品    
+    const code = categoryCode      // 分类Code, 0 车， 1 精品
     const deleted = showDeleted
     const group = resultGroupByFirstLetter
     const joinOnSaleCount = showSaleCount
     const level = brandLevel
     return this.request(
-      'cgi/navigate/brands/query', 
-      'POST', 
+      'cgi/navigate/brands/query',
+      'POST',
       {
         code,
         deleted,
@@ -138,19 +138,19 @@ export default class TradeService extends Service {
       }
     )
   }
-  
+
   /**
-   * 获取导航路径中的 车辆系列(serial) 列表 
-   * 
+   * 获取导航路径中的 车辆系列(serial) 列表
+   *
    * @param {number} brandId 所属品牌 ID
    * @param {boolean} showDeleted 是否显示删除的品牌
    * @param {boolean} resultGroupByFirstLetter 结果是否按型号分组
    * @param {boolean} showSaleCount  是否显示在售数量
    * @param {*} brandLevel 品牌等级，1级 2级，null 为所有
-   * @returns {Promise<any>} 
+   * @returns {Promise<any>}
    * @memberof TradeService
    */
-  retrieveNavigatorCarSeries (
+  retrieveNavigatorCarSeries(
     brandId: number,
     showDeleted: boolean = false,
     resultGroupByFirstLetter: boolean = false,
@@ -162,8 +162,8 @@ export default class TradeService extends Service {
     const joinOnSaleCount = showSaleCount
     const level = brandLevel
     return this.request(
-      'cgi/navigate/models/query', 
-      'POST', 
+      'cgi/navigate/models/query',
+      'POST',
       {
         brandId,
         deleted,
@@ -173,5 +173,5 @@ export default class TradeService extends Service {
       }
     )
   }
-  
+
 }
