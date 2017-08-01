@@ -23,7 +23,16 @@ Page({
     carManufacturerSeriesList: [],
     showNodata: false,
     anewReload: false,
-    firstLoadFlag: true
+    firstLoadFlag: true,
+    visitorInfo: {
+      status: 'none',
+      times: {
+        hours: '',
+        days: '',
+        minutes: '',
+        seconds: ''
+      }
+    }
   },
   //事件处理函数
   searchCarType() {
@@ -108,7 +117,8 @@ Page({
   reloadIndexData() {
     const promise1 = this.getHotPushBrands()
     const promise2 = this.getHotPushCarModels()
-    const promise = Promise.race([promise1, promise2])
+    const promise3 = this.getGuestUserInfo()
+    const promise = Promise.race([promise1, promise2, promise3])
     return promise
   },
   /**
@@ -152,6 +162,88 @@ Page({
       }, (err) => {
 
       })
+  },
+  /**
+   * 倒计时.
+   */
+  getTimeRemaining(endtime) {
+    var t = Date.parse(endtime) - Date.parse(new Date());
+    var seconds = Math.floor((t / 1000) % 60);
+    var minutes = Math.floor((t / 1000 / 60) % 60);
+    var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+  },
+  initializeClock(endtime,status) {
+    var that = this
+
+    function updateClock() {
+      var t = that.getTimeRemaining(endtime)
+
+      var days =  t.days
+      var hours = ('0' + t.hours).slice(-2)
+      var minutes = ('0' + t.minutes).slice(-2)
+      var seconds = ('0' + t.seconds).slice(-2)
+      //console.log(days,hours,minutes,seconds)
+      var times = {
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds
+      }
+     
+      if (t.total <= 0) {
+        clearInterval(timeinterval)
+        wx.showModal({
+          title: '提示',
+          content: '很抱歉，您的有效期已到期，可联系何先生 15821849025获取权限',
+          cancelColor: '#ED4149',
+          showCancel: false,
+          success: function(res) {
+            if (res.confirm) {
+              container.userService.logout()
+              that.setData({
+                'visitorInfo.status': 'none'
+              })
+            } 
+          }
+        })
+      }else {
+        that.setData({
+          'visitorInfo.status': status,
+          'visitorInfo.times': times
+        })
+      }
+    }
+    updateClock()
+    var timeinterval = setInterval(updateClock, 1000)
+  },
+  /**
+   * 获取访客信息.
+   */
+  getGuestUserInfo() {
+    const that = this
+    return container.userService.getGuestUserInfo().then((res) => {
+      console.log(res)
+      if(res.status !=='none') {
+        let date = res.expireTime.replace(/-/g,'/')
+        let deadline = new Date(Date.parse(date))
+        that.initializeClock(deadline,res.status);
+      }else {
+        that.setData({
+          'visitorInfo.status': res.status
+        })
+      }
+      
+    }, (err) => {
+
+    })
   },
   handlerAlphaTap(e) {
     let {

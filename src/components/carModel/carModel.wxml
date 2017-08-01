@@ -43,17 +43,9 @@
            {{times.value}}小时
           </view>
 -->
-          <view class="carcolor-label label">时间：</view>
-          <view class="carcolor-inner">
-            <view class="carcolor-all">
-              {{item.selectTimes}}
-              <block wx:if="{{item.selectTimes !== '全部'}}">
-              小时
-              </block>
-            </view>
-            <image 
-              src="../../images/icons/icon_dropdownarrow_down_gray.png"
-              class="icon-arrows"></image>
+          <view class="carcolor-label label">热度</view>
+          <view class="carcolor-inner bar">
+            <view class="carcolor-all bar-inner" style="width: {{item.hot}}%"></view>
           </view>
         </view>
 				<view
@@ -243,7 +235,7 @@
     <view class="popup-charts-main">
      <view class="popup-marketcharts-hd">
         <view class="title">行情走势</view>
-        <view class="text">（所有资源商报得最多的3个价格）</view>
+        <view class="text">（所有供应商报得最多的3个价格）</view>
         <view 
          class="close-popup"
          bindtap="handleClosePopupMarket"

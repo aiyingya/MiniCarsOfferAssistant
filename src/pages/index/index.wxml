@@ -1,10 +1,19 @@
 <!--index.wxml-->
 <scroll-view scroll-y="true" style="height: {{windowHeight}}px" class="container">
   <!-- 试用时间.-->
-  <view class="trial-times-wrap">
+  <view class="trial-times-wrap" wx:if="{{visitorInfo.status === 'normal'}}">
     <view class="trial-times">
       <image src="../../images/icons/icon_prompt.png"></image>
-      你还可以试用10天，若想继续试用，请联系何先生可拨打电话<view class="call-phone">15821849025</view>
+      你还可以试用
+      <block wx:if="{{visitorInfo.times.days > 0}}">{{visitorInfo.times.days}}天</block>
+      <block wx:elif="{{visitorInfo.times.hours > 0}}">{{visitorInfo.times.days}}小时</block>
+      <block wx:else>1小时</block>
+      ，若想继续试用，请联系何先生可拨打电话
+      <view 
+        class="call-phone"
+        data-phone="15821849025"
+        bindtap="handlerMakePhoneCall"
+        >15821849025</view>
     </view>
   </view>
   
