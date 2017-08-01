@@ -1,5 +1,13 @@
 <!--index.wxml-->
 <scroll-view scroll-y="true" style="height: {{windowHeight}}px" class="container">
+  <!-- 试用时间.-->
+  <view class="trial-times-wrap">
+    <view class="trial-times">
+      <image src="../../images/icons/icon_prompt.png"></image>
+      你还可以试用10天，若想继续试用，请联系何先生可拨打电话<view class="call-phone">15821849025</view>
+    </view>
+  </view>
+  
   <!-- 搜索车型.-->
   <view class="topbar">
     <view class="topbar-search">
