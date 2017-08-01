@@ -8,12 +8,6 @@ import Service from './base.service'
 import { container } from '../landrover/business/index'
 export default class TradeService extends Service {
 
-  urls = {
-    dev: 'https://test.yaomaiche.com/tradedev/',
-    gqc: 'https://test.yaomaiche.com/tradegqc/',
-    prd: 'https://trade.yaomaiche.com/trade/'
-  }
-
   constructor () {
     super()
   }
@@ -23,144 +17,97 @@ export default class TradeService extends Service {
    *
    * @param {string} text
    * @param {number} n
-   * @returns {Promise<any>}
+   * @returns {Promise<Array<SearchResult>>}
    * @memberof TradeService
    */
-  searchInput (text: string, n: number): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'cgi/search/car/index',
-      method: 'GET',
-      data: {
-        text,
-        n
-      }
-    })
+  searchInput (text: string, n: number): Promise<Array<SearchResult>> {
+    return this.retrieveSearchResult(text, n)
   }
 
   /**
    * 热推 车辆型号(spu)
    *
-   * @returns {Promise<any>}
+   * @returns {Promise<Array<HotCarModel>>}
    *
    * @memberof TradeService
    */
-  getHotPushCarModels(): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'cgi/navigate/items/hot',
-      method: 'GET',
-      data: {},
-      loadingType: 'none'
-    })
+  getHotPushCarModels (): Promise<Array<HotCarModel>> {
+    return this.retrieveHotCarModels()
   }
 
   /**
    * 热推 车辆品牌(brand)
    *
-   * @returns {Promise<any>}
+   * @returns {Promise<Array<HotCarBrand>>}
    * @memberof TradeService
    */
-  getHotPushBrands(): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'cgi/navigate/brands/hot',
-      method: 'GET',
-      loadingType: 'none'
-    })
+  getHotPushBrands (): Promise<Array<HotCarBrand>> {
+    return this.retrieveHotBrands()
   }
 
   /**
    *  获取用户搜索记录
    *
-   * @returns {Promise<any>}
+   * @returns {Promise<Array<string>>}
    * @memberof TradeService
    */
-  getUserSearchHistory(): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'cgi/search/history/text',
-      method: 'GET'
-    })
+  getUserSearchHistory (): Promise<Array<string>> {
+    return this.retrieveSearchHistory(null)
   }
 
   /**
    *  上传用户搜索记录
    *
-   * @param {string} text
-   * @returns {Promise<any>}
+   * @param {string} searchText
+   * @returns {Promise<void>}
    * @memberof TradeService
    */
-  postUserSearchHistory(text: string): Promise<any> {
+  postUserSearchHistory (searchText: string): Promise<void> {
     const auth = container.userService.auth
     const userId = auth != null? auth.userId : null
     const channel = 'wxapp'
-    return this.sendMessageByPromise({
-      path: 'cgi/search/history/text',
-      method: 'POST',
-      data: {
-        userId,
-        text,
-        channel
-      }
-    })
+    return this.postSearchHistory(searchText, userId, channel)
   }
 
   /**
-   *  获取导航路径中的 车辆系列(serial) 列表
-   *
-   * @param {number} brandId
-   * @param {boolean} [deleted=false]
-   * @param {boolean} [group=true]
-   * @param {boolean} [joinOnSaleCount=true]
-   * @param {number} [level=1]
-   * @returns
+   * 获取导航路径中的 车辆系列(serial) 列表
+   * 
+   * @param {number} brandId 
+   * @param {boolean} [showDeleted=false] 
+   * @param {boolean} [resultGroupByFirstLetter=true] 
+   * @param {boolean} [showSaleCount=true] 
+   * @param {number} [brandLevel=1] 
+   * @returns {(Promise<Array<CarModel> | Array<CarGroup>>)} 
    * @memberof TradeService
    */
-  getNavigatorForCarSeries(
+  getNavigatorForCarSeries (
     brandId: number,
-    deleted: boolean = false,
-    group: boolean = true,
-    joinOnSaleCount: boolean = true,
-    level: number = 1
-    ) {
-    return this.sendMessageByPromise({
-      path: 'cgi/navigate/models/query',
-      method: 'POST',
-      data: {
-        brandId,
-        deleted,
-        group,
-        joinOnSaleCount,
-        level
-      }
-    })
+    showDeleted: boolean = false,
+    resultGroupByFirstLetter: boolean = true,
+    showSaleCount: boolean = true,
+    brandLevel: number = 1
+    ): Promise<Array<CarModel> | Array<CarGroup>> {
+    return this.retrieveNavigatorCarSeries(brandId, showDeleted, resultGroupByFirstLetter, showSaleCount, brandLevel)
   }
 
   /**
-   *  获取导航路径中的 车辆品牌(brand) 列表
-   *
-   * @param {number} [code=0]
-   * @param {boolean} [deleted=false]
-   * @param {boolean} [group=true]
-   * @param {boolean} [joinOnSaleCount=true]
-   * @param {number} [level=1]
-   * @returns
+   * 获取导航路径中的 车辆品牌(brand) 列表
+   * 
+   * @param {(0 | 1)} [categoryCode=0] 
+   * @param {boolean} [showDeleted=false] 
+   * @param {boolean} [resultGroupByFirstLetter=true] 
+   * @param {boolean} [showSaleCount=true] 
+   * @param {number} [brandLevel=1] 
+   * @returns 
    * @memberof TradeService
    */
   getNavigatorForCarBrands (
-    code: number = 0,
-    deleted: boolean = false,
-    group: boolean = true,
-    joinOnSaleCount: boolean = true,
-    level: number = 1
-    ) {
-    return this.sendMessageByPromise({
-      path: 'cgi/navigate/brands/query',
-      method: 'POST',
-      data: {
-        code,
-        deleted,
-        group,
-        joinOnSaleCount,
-        level
-      }
-    })
+    categoryCode: 0 | 1 = 0,
+    showDeleted: boolean = false,
+    resultGroupByFirstLetter: boolean = true,
+    showSaleCount: boolean = true,
+    brandLevel: number = 1
+    ): Promise<Array<CarBrand> | Array<CarGroup>> {
+    return this.retrieveNavigatorCarBrands(categoryCode, showDeleted, resultGroupByFirstLetter, showSaleCount, brandLevel)
   }
 }
