@@ -17,7 +17,7 @@ Page({
   },
   onLoad() {
     let version = null
-    let manager = container.userService.isLogin() ? container.userService.userInfoForTenant.tenants[0].manager : false
+    let manager = container.userService.isLogin() ? container.userService.roleInfo.tenants[0].manager : false
     if (config.env === 'prd') {
       version = `v${config.version}`
     } else {
@@ -61,13 +61,15 @@ Page({
       })
       container.userService.getLocation()
         .then(res => {
-          this.setData({
-            userMobile: res.mobile,
-            userTenants: res.tenants,
-            manager: container.userService.userInfoForTenant.tenants[0].manager,
-            userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '匿名用户',
-            userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
-          })
+          if (res != null) {
+            this.setData({
+              userMobile: res.mobile,
+              userTenants: res.tenants,
+              manager: container.userService.roleInfo.tenants[0].manager,
+              userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '匿名用户',
+              userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
+            })
+          }
         })
         .catch(err => {
         })

@@ -1,7 +1,7 @@
 /**
  * 普通访客用户实体
  */
-declare type GuestEntity = {
+declare type RoleInfoForGuest = {
   /**
    * 访客标志
    *
@@ -35,10 +35,30 @@ declare type GuestEntity = {
   /**
    * 访客有三种状态
    * normal 代表属于无登录权限的访客, 会拥有试用期
-   * none 代表费访客, 也就是正常用户
    * expire 代表当前访客过期
    *
-   * @type {('normal' | 'none' | 'expire')}
+   * @type {('normal' | 'expire')}
    */
-  status: 'normal' | 'none' | 'expire'
+  status: 'normal' | 'expire'
 };
+
+declare type RoleEntity = {
+
+  /**
+   * 角色信息
+   * 当 roleName === 'guest' 时, 角色信息实体为 RoleInfoForGuest
+   * 当 roleName === 'employee' 时, 角色信息实体为 RoleInfoForEmployee
+   *
+   * @type {(GuestEntity | RoleInfoForEmployee)}
+   */
+  roleInfo: RoleInfoForGuest | RoleInfoForEmployee,
+
+  /**
+   * 角色名称, 分为 访客 guest, 雇员 employee
+   *
+   * 1.9.0 中 访客为普通登录用户, 其享有10有效期, 十天过后无法登陆
+   *
+   * @type {('guest' | 'employee')}
+   */
+  roleName: 'guest' | 'employee'
+}

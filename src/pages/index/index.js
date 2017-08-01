@@ -96,6 +96,15 @@ Page({
       })
     }
     this.data.firstLoadFlag = false
+
+    // 傅斌: 微信登陆成功后得到 sessionId 才可以获取访客信息
+    // 该接口首页启动时只掉一次, 此后每当用户进入用户中心页面时会刷新一次
+    container.userService.promiseForWeixinLogin
+      .then(res => {
+        if (container.userService.auth != null) {
+          return this.getGuestUserInfo()
+        }
+      })
   },
   onShareAppMessage () {
     return {
@@ -117,8 +126,7 @@ Page({
   reloadIndexData() {
     const promise1 = this.getHotPushBrands()
     const promise2 = this.getHotPushCarModels()
-    const promise3 = this.getGuestUserInfo()
-    const promise = Promise.race([promise1, promise2, promise3])
+    const promise = Promise.race([promise1, promise2])
     return promise
   },
   /**
@@ -197,7 +205,7 @@ Page({
         minutes: minutes,
         seconds: seconds
       }
-     
+
       if (t.total <= 0) {
         clearInterval(timeinterval)
         wx.showModal({
@@ -211,7 +219,7 @@ Page({
               that.setData({
                 'visitorInfo.status': 'none'
               })
-            } 
+            }
           }
         })
       }else {
@@ -229,21 +237,21 @@ Page({
    */
   getGuestUserInfo() {
     const that = this
-    return container.userService.getGuestUserInfo().then((res) => {
-      console.log(res)
-      if(res.status !=='none') {
-        let date = res.expireTime.replace(/-/g,'/')
-        let deadline = new Date(Date.parse(date))
-        that.initializeClock(deadline,res.status);
-      }else {
-        that.setData({
-          'visitorInfo.status': res.status
-        })
-      }
-      
-    }, (err) => {
+    return container.userService.getRoleInformation()
+      .then((res) => {
+        console.log(res)
+        if (res.status !== 'none') {
+          let date = res.expireTime.replace(/-/g, '/')
+          let deadline = new Date(Date.parse(date))
+          that.initializeClock(deadline, res.status);
+        } else {
+          that.setData({
+            'visitorInfo.status': res.status
+          })
+        }
+      }, (err) => {
 
-    })
+      })
   },
   handlerAlphaTap(e) {
     let {

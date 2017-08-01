@@ -1,33 +1,43 @@
 // @flow
 
-//  UserService.js 用户登录注册.
-//  Version 1.0.0
-//
-//  Created by pandali on 17-02-23.
-//  Copyright (c) 2016年 yaomaiche. All rights reserved.
-//
-
 import BaseUserService from '../landrover/business/service/user.service'
 
 import Util from '../utils/util'
 import { config, storage } from '../landrover/business/index'
-
-import { $wuxToast } from '../components/wux'
 
 /**
  * 用户中心服务
  *
  * @export
  * @class UserService
- * @extends {Service}
+ * @extends {BaseUserService}
  */
 export default class UserService extends BaseUserService {
 
-  location: Array<Address>
+  /**
+   * 要卖车用户业务层用户信息
+   *
+   * @type {(RoleInfoForEmployee | RoleInfoForGuest | null)}
+   * @memberof UserService
+   */
+  roleInfo: RoleInfoForEmployee | RoleInfoForGuest | null = null;
 
-  address: any = {}
+  /**
+   * 角色名称
+   *
+   * 'guest' 指访客, 即除此登录拥有 10 天体验时间, 时间过期后即无法登陆
+   * 'employee' 指雇员, 即可以无限制登录使用要卖车的人员
+   *
+   * @type {('guest' | 'employee' | null)}
+   * @memberof UserService
+   */
+  roleName: 'guest' | 'employee' | null = null;
 
-  mobile: ?string
+  location: Array<Address>;
+
+  address: any = {};
+
+  mobile: ?string;
 
   constructor() {
     super()
@@ -36,7 +46,7 @@ export default class UserService extends BaseUserService {
   setup(): Promise<void> {
     return super.setup()
       .then(() => {
-        this.getLocation()
+        return this.getRoleInformation()
       })
   }
 
@@ -61,28 +71,26 @@ export default class UserService extends BaseUserService {
     return this.isAuthAvailable()
   }
 
-
-
   /**
-   * 查询访客信息接口
-   * 1.9.0 新增
+   * 查询当前登录用户的角色信息
    *
-   * @param {string} appId
+   * @param {string} sessionId
    * @param {string} userId
-   * @returns {Promise<GuestEntity>}
+   * @returns {Promise<RoleEntity>}
    * @memberof UserService
    */
-  retrieveGuestInformation(
-    appId: string,
-    userId: string
-  ): Promise<GuestEntity> {
-    const aid = appId
-    const uid = userId
+  retriveRoleInfomation(
+    sessionId: string,
+    userId: string,
+  ): Promise<RoleEntity> {
+    const
+      sid = sessionId,
+      uid = userId
     return this.request(
-      'cgi/wxapp/guest',
+      'cgi/wxapp/role',
       'GET',
       {
-        aid,
+        sid,
         uid
       }
     )
@@ -98,7 +106,7 @@ export default class UserService extends BaseUserService {
    * @returns {Promise<Auth>}
    * @memberof UserService
    */
-  createAuthenticationForMiniProgram (
+  createAuthenticationForMiniProgram(
     type: AuthType,
     entity: AuthEntity,
     appId: string
@@ -120,17 +128,78 @@ export default class UserService extends BaseUserService {
   }
 
   /**
-   * 获取访客信息方法
+   * 获取租户的用户信息
    *
-   * @returns {Promise<GuestEntity>}
+   * @param {string} userId
+   * @returns {Promise<URoleInfoForEmployee>}
    * @memberof UserService
    */
-  getGuestUserInfo(): Promise<GuestEntity> {
-    if (this.auth != null) {
-      return this.retrieveGuestInformation(config.appId, this.auth.userId)
-    } else {
-      return Promise.reject(new Error('该接口要登录态'))
+  retrieveTenantMemberUserInfo(
+    userId: string
+  ): Promise<RoleInfoForEmployee> {
+    return this.request(
+      `cgi/tenant/member/${userId}/tenant`,
+      'GET'
+    )
+  }
+
+  /**
+ * 查看租户是否存在
+ *
+ * @param {string} mobile
+ * @returns {Promise<boolean>}
+ * @memberof UserService
+ */
+  retrieveTenantMemberExist(
+    mobile: string
+  ): Promise<boolean> {
+    return this.request(
+      'cgi/tenant/member/exist',
+      'GET',
+      {
+        mobile
+      }
+    )
+  }
+
+  /**
+   * 获取当前登录用户的角色信息
+   *
+   * @returns {Promise<RoleEntity>}
+   * @memberof UserService
+   */
+  getRoleInformation(): Promise<RoleEntity> {
+    if (this.auth == null) {
+      return Promise.reject(new Error('该接口需要登录态'))
     }
+
+    if (this.weixin.sessionId == null) {
+      return Promise.reject(new Error('该接口需要 sessionId'))
+    }
+
+    return this.retriveRoleInfomation(this.weixin.sessionId, this.auth.userId)
+      .then((res: RoleEntity) => {
+        this.roleName = res.roleName
+        this.roleInfo = res.roleInfo
+
+        if (res.roleName === 'guest') {
+          // 当用户信息为 guest 时做什么操作
+        } else if (res.roleName === 'employee') {
+          const location = []
+          if (res.roleInfo.tenants) {
+            for (let item of res.roleInfo.tenants) {
+              const address = item.address
+              if (address != null) {
+                location.push(address)
+              }
+            }
+          }
+          this.location = location
+          this.mobile = res.roleInfo.mobile
+          this.address = res.roleInfo.tenants ? res.roleInfo.tenants[0].address : {}
+          return res
+        }
+      })
   }
 
   /**
@@ -183,28 +252,14 @@ export default class UserService extends BaseUserService {
       })
   }
 
-  /**
-   * 保留方法, 该方法通过获取租户数据填充本地数据
-   *
-   * @returns {Promise<UserInfoForTenant>}
-   * @memberof UserService
-   */
-  getLocation(): Promise<UserInfoForTenant> {
-    return this.getTenant()
-      .then((res: UserInfoForTenant) => {
-        const location = []
-        if (res.tenants) {
-          for (let item of res.tenants) {
-            const address = item.address
-            if (address != null) {
-              location.push(address)
-            }
-          }
+  getLocation(): Promise<RoleInfoForEmployee | null> {
+    return this.getRoleInformation()
+      .then((res: RoleEntity) => {
+        if (res.roleName === 'employee') {
+          return res.roleInfo
+        } else {
+          return null
         }
-        this.location = location
-        this.mobile = res.mobile
-        this.address = res.tenants ? res.tenants[0].address : {}
-        return res
       })
   }
 }

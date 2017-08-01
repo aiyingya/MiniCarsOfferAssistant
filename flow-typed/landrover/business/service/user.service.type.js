@@ -53,7 +53,7 @@ declare type UserInfoEncryptedEntityForWeixin = {
 
 declare type UserInfoEntityForWeixin = UserInfoPlainEntityForWeixin | UserInfoEncryptedEntityForWeixin;
 
-declare type UserInfoForTenant = {
+declare type RoleInfoForEmployee = {
   userId: string,
   mobile: string,
   name: string,
