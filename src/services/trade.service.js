@@ -3,10 +3,10 @@
 /**
  * Created by David on 27/03/2017.
  */
-import Service from './base.service'
+import BaseTradeService from '../landrover/business/service/trade.service'
 
 import { container } from '../landrover/business/index'
-export default class TradeService extends Service {
+export default class TradeService extends BaseTradeService {
 
   constructor () {
     super()
@@ -71,13 +71,13 @@ export default class TradeService extends Service {
 
   /**
    * 获取导航路径中的 车辆系列(serial) 列表
-   * 
-   * @param {number} brandId 
-   * @param {boolean} [showDeleted=false] 
-   * @param {boolean} [resultGroupByFirstLetter=true] 
-   * @param {boolean} [showSaleCount=true] 
-   * @param {number} [brandLevel=1] 
-   * @returns {(Promise<Array<CarModel> | Array<CarGroup>>)} 
+   *
+   * @param {number} brandId
+   * @param {boolean} [showDeleted=false]
+   * @param {boolean} [resultGroupByFirstLetter=true]
+   * @param {boolean} [showSaleCount=true]
+   * @param {number} [brandLevel=1]
+   * @returns {(Promise<Array<CarModel> | Array<CarGroup>>)}
    * @memberof TradeService
    */
   getNavigatorForCarSeries (
@@ -92,13 +92,13 @@ export default class TradeService extends Service {
 
   /**
    * 获取导航路径中的 车辆品牌(brand) 列表
-   * 
-   * @param {(0 | 1)} [categoryCode=0] 
-   * @param {boolean} [showDeleted=false] 
-   * @param {boolean} [resultGroupByFirstLetter=true] 
-   * @param {boolean} [showSaleCount=true] 
-   * @param {number} [brandLevel=1] 
-   * @returns 
+   *
+   * @param {(0 | 1)} [categoryCode=0]
+   * @param {boolean} [showDeleted=false]
+   * @param {boolean} [resultGroupByFirstLetter=true]
+   * @param {boolean} [showSaleCount=true]
+   * @param {number} [brandLevel=1]
+   * @returns
    * @memberof TradeService
    */
   getNavigatorForCarBrands (
