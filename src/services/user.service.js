@@ -184,6 +184,7 @@ export default class UserService extends BaseUserService {
 
         if (res.roleName === 'guest') {
           // 当用户信息为 guest 时做什么操作
+          return res
         } else if (res.roleName === 'employee') {
           const location = []
           if (res.roleInfo.tenants) {

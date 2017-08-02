@@ -89,11 +89,11 @@ Page({
   onShow() {
     // 下拉刷新
     if (!this.data.firstLoadFlag) {
-      const promise = this.reloadIndexData()
-      console.log(promise)
-      promise.then(res => {
-      }, err => {
-      })
+      this.reloadIndexData()
+        .then(res => {
+        })
+        .catch(err => {
+        })
     }
     this.data.firstLoadFlag = false
 
@@ -156,8 +156,8 @@ Page({
    */
   getHotPushCarModels() {
     const that = this
-    return container.tradeService.getHotPushCarModels().
-      then((res) => {
+    return container.tradeService.getHotPushCarModels()
+      .then((res) => {
         let depreciate
         for (let item of res) {
           item.depreciate = (item.guidePrice - item.salePrice)
@@ -222,7 +222,7 @@ Page({
             }
           }
         })
-      }else {
+      } else {
         that.setData({
           'visitorInfo.status': status,
           'visitorInfo.times': times
@@ -236,20 +236,22 @@ Page({
    * 获取访客信息.
    */
   getGuestUserInfo() {
-    const that = this
     return container.userService.getRoleInformation()
       .then((res) => {
-        console.log(res)
-        if (res.status !== 'none') {
-          let date = res.expireTime.replace(/-/g, '/')
-          let deadline = new Date(Date.parse(date))
-          that.initializeClock(deadline, res.status);
-        } else {
-          that.setData({
-            'visitorInfo.status': res.status
-          })
+        if (res.roleName === 'guest') {
+          const roleInfo = res.roleInfo
+          if (roleInfo.status !== 'none') {
+            let date = roleInfo.expireTime.replace(/-/g, '/')
+            let deadline = new Date(Date.parse(date))
+            this.initializeClock(deadline, roleInfo.status);
+          } else {
+            this.setData({
+              'visitorInfo.status': roleInfo.status
+            })
+          }
         }
-      }, (err) => {
+      })
+      .catch((err) => {
 
       })
   },
@@ -319,11 +321,11 @@ Page({
     this.animation = animation;
     animation.translateX(-this.data.drawerW).step();
     this.setData({
-        showDrawerFlag: true,
-        showCarSeries: carSeries,
-        showCarSeriesImageUrl: carSeries.logoUrl,
-        animationData: animation.export()
-    });
+      showDrawerFlag: true,
+      showCarSeries: carSeries,
+      showCarSeriesImageUrl: carSeries.logoUrl,
+      animationData: animation.export()
+    })
   },
   // 新的移除抽屉的代码
   removeCarSeriesInner(e) {
