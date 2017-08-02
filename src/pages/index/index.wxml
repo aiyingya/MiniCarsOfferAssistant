@@ -1,4 +1,7 @@
 <!--index.wxml-->
+<import src="../../components/toast/toast.wxml"/>
+<template is="toast" data="{{ ...$wux.toast }}"/>
+
 <scroll-view scroll-y="true" style="height: {{windowHeight}}px" class="container">
   <!-- 试用时间.-->
   <view class="trial-times-wrap" wx:if="{{visitorInfo.status === 'normal'}}">
@@ -9,14 +12,14 @@
       <block wx:elif="{{visitorInfo.times.hours > 0}}">{{visitorInfo.times.days}}小时</block>
       <block wx:else>1小时</block>
       ，若想继续试用，请联系何先生可拨打电话
-      <view 
+      <view
         class="call-phone"
         data-phone="15821849025"
         bindtap="handlerMakePhoneCall"
         >15821849025</view>
     </view>
   </view>
-  
+
   <!-- 搜索车型.-->
   <view class="topbar">
     <view class="topbar-search">

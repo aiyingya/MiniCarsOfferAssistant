@@ -2,7 +2,8 @@ import {
   $wuxInputNumberDialog,
   $wuxDialog,
   $qrCodeDialog,
-  $wuxTrack
+  $wuxTrack,
+  $wuxToast
 } from "../../../components/wux"
 import util from '../../../utils/util'
 import { container } from '../../../landrover/business/index'
@@ -16,7 +17,7 @@ Page({
     activeIndex: 0,
     slderOffset: 0,
     sliderLeft: 0,
-
+    roleName: null,
     /* 报价单主体数据 */
     quotation: {
       quotationId: '0',
@@ -102,7 +103,7 @@ console.log(quotation)
         cutPriceCount = false
         cutPriceCountStyle = ''
       }
-      
+
       this.setData({
         quotation: quotation,
         isSpecialBranch: isShow,
@@ -125,6 +126,10 @@ console.log(quotation)
 
   },
   onShow() {
+    this.setData({
+      roleName: container.userService.roleName
+    })
+
     const event = {
       eventAction: 'pageShow',
       eventLabel: `页面展开`
@@ -311,13 +316,24 @@ console.log(quotation)
    */
 
   handlerBargainActive(e) {
+    if (container.userService.roleName === 'guest') {
+      $wuxToast.show({
+        type: 'text',
+        timer: 2000,
+        color: '#fff',
+        text: '体验权限暂时无法使用发起砍价功能'
+      })
+
+      return
+    }
+
     let that = this
     const quotationItem = that.data.quotation
     const tenantId = container.userService.address.tenantId
     console.log(quotationItem)
     const cutPriceCount = this.data.cutPriceCount
-    
-    if(cutPriceCount) return
+
+    if (cutPriceCount) return
     container.saasService.getBargainQRcode({
       data: {
         quotationId: quotationItem.quotationId,
@@ -330,8 +346,9 @@ console.log(quotation)
       $qrCodeDialog.open({
         content: res
       })
-    },(err) => {
+    }, (err) => {
 
     })
   }
+
 })

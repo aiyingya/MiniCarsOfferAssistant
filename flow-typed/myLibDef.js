@@ -7,7 +7,7 @@ declare type RoleInfoForGuest = {
    *
    * @type {number}
    */
-  guestId?: number,
+  guestId: number,
 
   /**
    * 试用期创建/开始时间
@@ -15,7 +15,7 @@ declare type RoleInfoForGuest = {
    *
    * @type {string}
    */
-  createTime?: string,
+  createTime: string,
 
   /**
    * 试用期过期时间
@@ -23,7 +23,14 @@ declare type RoleInfoForGuest = {
    *
    * @type {string}
    */
-  expireTime?: string,
+  expireTime: string,
+
+  /**
+   * 访客电话号码
+   *
+   * @type {string}
+   */
+  mobile: string,
 
   /**
    * 用户标示
