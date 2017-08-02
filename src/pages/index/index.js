@@ -220,7 +220,7 @@ Page({
           content: '很抱歉，您的有效期已到期，可联系何先生 15821849025获取权限',
           cancelColor: '#ED4149',
           showCancel: false,
-          success: function(res) {
+          success: (res) => {
             if (res.confirm) {
               container.userService.logout()
               this.setData({
