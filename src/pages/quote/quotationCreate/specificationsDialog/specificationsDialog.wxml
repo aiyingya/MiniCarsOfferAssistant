@@ -16,8 +16,8 @@
               placeholder="外饰"
             />
           </view>
-          <view style="margin: 25rpx; font-size: 36rpx;">/</view>
-          <view class="weui-dialog__input" >
+          <view style="margin: 25rpx; padding:25rpx 0rpx; font-size: 36rpx;">/</view>
+          <view class="weui-dialog__input" style="margin-left:10rpx;margin-right:50rpx" >
             <input
               type="text"
               name="internalColorName"
