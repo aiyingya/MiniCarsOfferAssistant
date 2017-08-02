@@ -56,7 +56,7 @@ Page({
 
     if (!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11) {
       $wuxToast.show({
-        type: false,
+        type: 'text',
         timer: 2000,
         color: '#ffffff',
         text: '手机号输入不正确'
@@ -121,7 +121,7 @@ Page({
   userLogin() {
     if (!this.data.userPhoneValue) {
       $wuxToast.show({
-        type: false,
+        type: 'text',
         timer: 2000,
         color: '#fff',
         text: '手机号输入不正确'
@@ -131,7 +131,7 @@ Page({
 
     if (!this.data.userCodeValue) {
       $wuxToast.show({
-        type: false,
+        type: 'text',
         timer: 2000,
         color: '#fff',
         text: '验证码输入不正确'
@@ -141,7 +141,7 @@ Page({
 
     if (!this.data.userHasBoundWeixinAccount && !this.data.boundSelected) {
       $wuxToast.show({
-        type: false,
+        type: 'text',
         timer: 2000,
         color: '#fff',
         text: '需要勾选绑定微信号才能登录'

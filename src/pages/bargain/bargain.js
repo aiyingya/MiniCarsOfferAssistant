@@ -154,7 +154,7 @@ Page({
           })
         }else {
           $wuxToast.show({
-            type: false,
+            type: 'text',
             timer: 2000,
             color: '#fff',
             text: res.message
@@ -216,7 +216,7 @@ Page({
           })
         }else {
           $wuxToast.show({
-            type: false,
+            type: 'text',
             timer: 2000,
             color: '#fff',
             text: res.message
