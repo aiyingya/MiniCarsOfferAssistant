@@ -102,9 +102,7 @@ Page({
     // 该接口首页启动时只掉一次, 此后每当用户进入用户中心页面时会刷新一次
     container.userService.promiseForWeixinLogin
       .then(res => {
-        if (container.userService.auth != null) {
-          return this.getGuestUserInfo()
-        }
+        return this.getGuestUserInfo()
       })
   },
   onShareAppMessage () {
@@ -243,24 +241,34 @@ Page({
    * 获取访客信息.
    */
   getGuestUserInfo() {
-    return container.userService.getRoleInformation()
-      .then((res) => {
-        if (res.roleName === 'guest') {
-          const roleInfo = res.roleInfo
-          if (roleInfo.status !== 'none') {
-            let date = roleInfo.expireTime.replace(/-/g, '/')
-            let deadline = new Date(Date.parse(date))
-            this.initializeClock(deadline, roleInfo.status)
-          } else {
-            this.setData({
-              'visitorInfo.status': roleInfo.status
-            })
+    if (container.userService.auth == null) {
+      this.setData({
+        'visitorInfo.status': 'none'
+      })
+      return Promise.reject(new Error('没有登录状态, 重置'))
+    } else {
+      return container.userService.getRoleInformation()
+        .then((res) => {
+          if (res.roleName === 'guest') {
+            const roleInfo = res.roleInfo
+            if (roleInfo.status !== 'none') {
+              let date = roleInfo.expireTime.replace(/-/g, '/')
+              let deadline = new Date(Date.parse(date))
+              this.initializeClock(deadline, roleInfo.status)
+            } else {
+              this.setData({
+                'visitorInfo.status': 'none'
+              })
+            }
           }
-        }
-      })
-      .catch((err) => {
-
-      })
+        })
+        .catch((err) => {
+          this.setData({
+            'visitorInfo.status': 'none'
+          })
+          return Promise.reject(new Error('发生错误, 重置'))
+        })
+    }
   },
   handlerAlphaTap(e) {
     let {
