@@ -31,6 +31,7 @@ Page({
         return container.userService.retrieveWeixinAccountHasBound(realSessionId)
       })
       .then((hasBound) => {
+        wx.hideToast()
         this.setData({
           userHasBoundWeixinAccount: hasBound
         })
