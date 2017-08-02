@@ -18,6 +18,9 @@ Page({
     lockSMSButton: false
   },
   onLoad() {
+
+  },
+  onShow() {
     wx.showToast({
       title: '微信三方登录...',
       icon: 'loading',
@@ -26,7 +29,6 @@ Page({
     })
     container.userService.promiseForWeixinLogin
       .then(res => {
-        wx.hideToast()
         const realSessionId = res.sessionId
         return container.userService.retrieveWeixinAccountHasBound(realSessionId)
       })
