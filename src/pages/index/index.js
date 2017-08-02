@@ -32,7 +32,8 @@ Page({
         minutes: '',
         seconds: ''
       }
-    }
+    },
+    guestTimeIntervalHandler: null
   },
   //事件处理函数
   searchCarType() {
@@ -188,11 +189,15 @@ Page({
       'seconds': seconds
     };
   },
-  initializeClock(endtime,status) {
-    var that = this
+  initializeClock(endtime, status) {
+    // 每次进入该方法都要清除上次的定时器, 确保始终只有一个定时器运转
+    if (this.data.guestTimeIntervalHandler != null) {
+      clearInterval(this.data.guestTimeIntervalHandler)
+      this.data.guestTimeIntervalHandler = null
+    }
 
-    function updateClock() {
-      var t = that.getTimeRemaining(endtime)
+    const updateClock = () => {
+      var t = this.getTimeRemaining(endtime)
 
       var days =  t.days
       var hours = ('0' + t.hours).slice(-2)
@@ -207,7 +212,9 @@ Page({
       }
 
       if (t.total <= 0) {
-        clearInterval(timeinterval)
+        // 当超时, 清除定时器
+        clearInterval(this.data.guestTimeIntervalHandler)
+        this.data.guestTimeIntervalHandler = null
         wx.showModal({
           title: '提示',
           content: '很抱歉，您的有效期已到期，可联系何先生 15821849025获取权限',
@@ -216,21 +223,21 @@ Page({
           success: function(res) {
             if (res.confirm) {
               container.userService.logout()
-              that.setData({
+              this.setData({
                 'visitorInfo.status': 'none'
               })
             }
           }
         })
       } else {
-        that.setData({
+        this.setData({
           'visitorInfo.status': status,
           'visitorInfo.times': times
         })
       }
     }
     updateClock()
-    var timeinterval = setInterval(updateClock, 1000)
+    this.guestTimeIntervalHandler = setInterval(updateClock, 1000)
   },
   /**
    * 获取访客信息.
@@ -243,7 +250,7 @@ Page({
           if (roleInfo.status !== 'none') {
             let date = roleInfo.expireTime.replace(/-/g, '/')
             let deadline = new Date(Date.parse(date))
-            this.initializeClock(deadline, roleInfo.status);
+            this.initializeClock(deadline, roleInfo.status)
           } else {
             this.setData({
               'visitorInfo.status': roleInfo.status
