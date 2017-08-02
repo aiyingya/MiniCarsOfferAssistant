@@ -237,7 +237,7 @@ Page({
       }
     }
     updateClock()
-    this.guestTimeIntervalHandler = setInterval(updateClock, 1000)
+    this.data.guestTimeIntervalHandler = setInterval(updateClock, 1000)
   },
   /**
    * 获取访客信息.
