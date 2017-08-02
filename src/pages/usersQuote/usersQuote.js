@@ -56,7 +56,7 @@ Page({
         this.setData({
           isLogin: true,
           roleName: container.userService.roleName,
-          manager: containter.userService.roleInfo.tenants[0].manager,
+          manager: container.userService.roleInfo.tenants[0].manager,
           userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
           userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
         })
