@@ -72,7 +72,7 @@ Page({
 
       container.userService.getRoleInformation()
         .then(res => {
-          if (res.roleName === 'guest') {
+          if (res.roleName === 'employee') {
             const userInfoForEmployee = res.roleInfo
             this.setData({
               isLogin: true,
@@ -83,13 +83,13 @@ Page({
               userTenants: userInfoForEmployee.tenants,
               manager: userInfoForEmployee.tenants[0].manager
             })
-          } else if (res.roleName === 'employee') {
+          } else if (res.roleName === 'guest') {
             const userInfoForGuest = res.roleInfo
             this.setData({
               isLogin: true,
               roleName: userInfoForGuest.roleName,
               userMobile: userInfoForGuest.mobile,
-              userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '匿名用户',
+              userName: weixinUsersInfo ? weixinUsersInfo.weixinName || userInfoForGuest.mobile : '匿名用户',
               userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
               userTenants: '',
               manager: false
