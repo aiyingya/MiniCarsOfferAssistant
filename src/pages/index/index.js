@@ -198,9 +198,9 @@ Page({
       var t = this.getTimeRemaining(endtime)
 
       var days =  t.days
-      var hours = ('0' + t.hours).slice(-2)
-      var minutes = ('0' + t.minutes).slice(-2)
-      var seconds = ('0' + t.seconds).slice(-2)
+      var hours = (t.hours)
+      var minutes = (t.minutes)
+      var seconds = (t.seconds)
       //console.log(days,hours,minutes,seconds)
       var times = {
         days: days,
