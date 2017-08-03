@@ -8,6 +8,7 @@ const app = getApp()
 Page({
   data: {
     isLogin: false,
+    roleName: null,
     userName: '',
     userMobile: '',
     userPortrait: '../../images/icons/icon_head_default_44.png',
@@ -17,20 +18,16 @@ Page({
   },
   onLoad() {
     let version = null
-    let manager = container.userService.isLogin() ? container.userService.userInfoForTenant.tenants[0].manager : false
     if (config.env === 'prd') {
       version = `v${config.version}`
     } else {
       version = `v${config.version}.${config.build}-${config.env}`
     }
     this.setData({
-      version,
-      manager: manager
+      version
     })
   },
   onShow() {
-    let that = this
-
     /**
      * fucking larry 跳转流程
      * @type {*}
@@ -41,39 +38,70 @@ Page({
     if (quotation && typeof quotation === 'object') {
       wx.navigateTo({
         url: '/pages/quote/quotationsList/quotationsList',
-        success: function (res) {},
+        success: function (res) { },
         fail: function () {
           app.fuckingLarryNavigatorTo.quotation = null
           app.fuckingLarryNavigatorTo.source = null
         },
-        complete: function () {}
+        complete: function () { }
       })
     }
 
     if (container.userService.isLogin()) {
+      // 如果是雇员
       const userInfo = container.userService.auth
       const weixinUsersInfo = container.userService.weixin.userInfo
 
-      this.setData({
-        isLogin: true,
-        userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
-        userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
-      })
-      container.userService.getLocation()
+      if (container.userService.roleName === 'employee') {
+        this.setData({
+          isLogin: true,
+          roleName: container.userService.roleName,
+          manager: container.userService.roleInfo.tenants[0].manager,
+          userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
+          userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
+        })
+      } else if (container.userService.roleName === 'guest') {
+        this.setData({
+          isLogin: true,
+          roleName: container.userService.roleName,
+          manager: false,
+          userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
+          userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
+        })
+      }
+
+      container.userService.getRoleInformation()
         .then(res => {
-          this.setData({
-            userMobile: res.mobile,
-            userTenants: res.tenants,
-            manager: container.userService.userInfoForTenant.tenants[0].manager,
-            userName: weixinUsersInfo ? weixinUsersInfo.weixinName || res.mobile : '匿名用户',
-            userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
-          })
+          if (res.roleName === 'employee') {
+            const userInfoForEmployee = res.roleInfo
+            this.setData({
+              isLogin: true,
+              roleName: userInfoForEmployee.roleName,
+              userMobile: userInfoForEmployee.mobile,
+              userName: weixinUsersInfo ? weixinUsersInfo.weixinName || userInfoForEmployee.mobile : '匿名用户',
+              userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
+              userTenants: userInfoForEmployee.tenants,
+              manager: userInfoForEmployee.tenants[0].manager
+            })
+          } else if (res.roleName === 'guest') {
+            const userInfoForGuest = res.roleInfo
+            this.setData({
+              isLogin: true,
+              roleName: userInfoForGuest.roleName,
+              userMobile: userInfoForGuest.mobile,
+              userName: weixinUsersInfo ? weixinUsersInfo.weixinName || userInfoForGuest.mobile : '匿名用户',
+              userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
+              userTenants: '',
+              manager: false
+            })
+          }
         })
         .catch(err => {
         })
     } else {
       this.setData({
         isLogin: false,
+        roleName: null,
         userName: '',
         userMobile: '',
         userPortrait: '../../images/icons/icon_head_default_44.png',
@@ -88,11 +116,11 @@ Page({
     })
   },
   handleUserLogout() {
-    let that = this
     container.userService.logout()
       .then(res => {
-        that.setData({
+        this.setData({
           isLogin: false,
+          roleName: null,
           userName: '',
           userMobile: '',
           userPortrait: '../../images/icons/icon_head_default_44.png',

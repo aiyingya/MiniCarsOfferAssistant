@@ -23,7 +23,17 @@ Page({
     carManufacturerSeriesList: [],
     showNodata: false,
     anewReload: false,
-    firstLoadFlag: true
+    firstLoadFlag: true,
+    visitorInfo: {
+      status: 'none',
+      times: {
+        hours: '',
+        days: '',
+        minutes: '',
+        seconds: ''
+      }
+    },
+    guestTimeIntervalHandler: null
   },
   //事件处理函数
   searchCarType() {
@@ -80,13 +90,20 @@ Page({
   onShow() {
     // 下拉刷新
     if (!this.data.firstLoadFlag) {
-      const promise = this.reloadIndexData()
-      console.log(promise)
-      promise.then(res => {
-      }, err => {
-      })
+      this.reloadIndexData()
+        .then(res => {
+        })
+        .catch(err => {
+        })
     }
     this.data.firstLoadFlag = false
+
+    // 傅斌: 微信登陆成功后得到 sessionId 才可以获取访客信息
+    // 该接口首页启动时只掉一次, 此后每当用户进入用户中心页面时会刷新一次
+    container.userService.promiseForWeixinLogin
+      .then(res => {
+        return this.getGuestUserInfo()
+      })
   },
   onShareAppMessage () {
     return {
@@ -138,8 +155,8 @@ Page({
    */
   getHotPushCarModels() {
     const that = this
-    return container.tradeService.getHotPushCarModels().
-      then((res) => {
+    return container.tradeService.getHotPushCarModels()
+      .then((res) => {
         let depreciate
         for (let item of res) {
           item.depreciate = (item.guidePrice - item.salePrice)
@@ -152,6 +169,106 @@ Page({
       }, (err) => {
 
       })
+  },
+  /**
+   * 倒计时.
+   */
+  getTimeRemaining(endtime) {
+    var t = Date.parse(endtime) - Date.parse(new Date());
+    var seconds = Math.floor((t / 1000) % 60);
+    var minutes = Math.floor((t / 1000 / 60) % 60);
+    var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+  },
+  initializeClock(endtime, status) {
+    // 每次进入该方法都要清除上次的定时器, 确保始终只有一个定时器运转
+    if (this.data.guestTimeIntervalHandler != null) {
+      clearInterval(this.data.guestTimeIntervalHandler)
+      this.data.guestTimeIntervalHandler = null
+    }
+
+    const updateClock = () => {
+      var t = this.getTimeRemaining(endtime)
+
+      var days =  t.days
+      var hours = ('0' + t.hours).slice(-2)
+      var minutes = ('0' + t.minutes).slice(-2)
+      var seconds = ('0' + t.seconds).slice(-2)
+      //console.log(days,hours,minutes,seconds)
+      var times = {
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds
+      }
+
+      if (t.total <= 0) {
+        // 当超时, 清除定时器
+        clearInterval(this.data.guestTimeIntervalHandler)
+        this.data.guestTimeIntervalHandler = null
+        wx.showModal({
+          title: '提示',
+          content: '很抱歉，您的有效期已到期，可联系何先生 15821849025获取权限',
+          cancelColor: '#ED4149',
+          showCancel: false,
+          success: (res) => {
+            if (res.confirm) {
+              container.userService.logout()
+              this.setData({
+                'visitorInfo.status': 'none'
+              })
+            }
+          }
+        })
+      } else {
+        this.setData({
+          'visitorInfo.status': status,
+          'visitorInfo.times': times
+        })
+      }
+    }
+    updateClock()
+    this.data.guestTimeIntervalHandler = setInterval(updateClock, 1000)
+  },
+  /**
+   * 获取访客信息.
+   */
+  getGuestUserInfo() {
+    if (container.userService.auth == null) {
+      this.setData({
+        'visitorInfo.status': 'none'
+      })
+      return Promise.reject(new Error('没有登录状态, 重置'))
+    } else {
+      return container.userService.getRoleInformation()
+        .then((res) => {
+          if (res.roleName === 'guest') {
+            const roleInfo = res.roleInfo
+            if (roleInfo.status !== 'none') {
+              let date = roleInfo.expireTime.replace(/-/g, '/')
+              let deadline = new Date(Date.parse(date))
+              this.initializeClock(deadline, roleInfo.status)
+            } else {
+              this.setData({
+                'visitorInfo.status': 'none'
+              })
+            }
+          }
+        })
+        .catch((err) => {
+          this.setData({
+            'visitorInfo.status': 'none'
+          })
+          return Promise.reject(new Error('发生错误, 重置'))
+        })
+    }
   },
   handlerAlphaTap(e) {
     let {
@@ -219,11 +336,11 @@ Page({
     this.animation = animation;
     animation.translateX(-this.data.drawerW).step();
     this.setData({
-        showDrawerFlag: true,
-        showCarSeries: carSeries,
-        showCarSeriesImageUrl: carSeries.logoUrl,
-        animationData: animation.export()
-    });
+      showDrawerFlag: true,
+      showCarSeries: carSeries,
+      showCarSeriesImageUrl: carSeries.logoUrl,
+      animationData: animation.export()
+    })
   },
   // 新的移除抽屉的代码
   removeCarSeriesInner(e) {

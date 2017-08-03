@@ -18,39 +18,29 @@ Page({
     lockSMSButton: false
   },
   onLoad() {
-    const sessionId = container.userService.weixin.sessionId
-    if (sessionId != null) {
-      container.userService.retrieveWeixinAccountHasBound(sessionId)
-        .then((hasBound: boolean) => {
-          this.setData({
-            userHasBoundWeixinAccount: hasBound
-          })
-        })
-        .catch(err => {
-          console.error('请求出错')
-        })
-    } else {
-      wx.showToast({
-        title: '微信三方登录...',
-        icon: 'loading',
-        duration: 10000,
-        mask: true
+
+  },
+  onShow() {
+    wx.showToast({
+      title: '微信三方登录...',
+      icon: 'loading',
+      duration: 10000,
+      mask: true
+    })
+    container.userService.promiseForWeixinLogin
+      .then(res => {
+        const realSessionId = res.sessionId
+        return container.userService.retrieveWeixinAccountHasBound(realSessionId)
       })
-      container.userService.promiseForWeixinLogin
-        .then(res => {
-          wx.hideToast()
-          const realSessionId = res.sessionId
-          return container.userService.retrieveWeixinAccountHasBound(realSessionId)
+      .then((hasBound) => {
+        wx.hideToast()
+        this.setData({
+          userHasBoundWeixinAccount: hasBound
         })
-        .then((hasBound: boolean) => {
-          this.setData({
-            userHasBoundWeixinAccount: hasBound
-          })
-        })
-        .catch(err => {
-          wx.hideToast()
-        })
-    }
+      })
+      .catch(err => {
+        wx.hideToast()
+      })
   },
   handleLoginPhone(e) {
     let val = e.detail.value
@@ -69,7 +59,7 @@ Page({
 
     if (!this.data.userPhoneValue || this.data.userPhoneValue.length !== 11) {
       $wuxToast.show({
-        type: false,
+        type: 'text',
         timer: 2000,
         color: '#ffffff',
         text: '手机号输入不正确'
@@ -88,7 +78,7 @@ Page({
           notUserInYMCMessage: res.message,
         })
         if (res.success === true) {
-          return container.userService.createVCode(this.data.userPhoneValue, 'SMS', 'access', true)
+          return container.userService.createVCode(this.data.userPhoneValue, 'SMS', 'registerOrAccess', false)
             .then(() => {
               this.countDown()
               this.setData({
@@ -134,7 +124,7 @@ Page({
   userLogin() {
     if (!this.data.userPhoneValue) {
       $wuxToast.show({
-        type: false,
+        type: 'text',
         timer: 2000,
         color: '#fff',
         text: '手机号输入不正确'
@@ -144,7 +134,7 @@ Page({
 
     if (!this.data.userCodeValue) {
       $wuxToast.show({
-        type: false,
+        type: 'text',
         timer: 2000,
         color: '#fff',
         text: '验证码输入不正确'
@@ -154,7 +144,7 @@ Page({
 
     if (!this.data.userHasBoundWeixinAccount && !this.data.boundSelected) {
       $wuxToast.show({
-        type: false,
+        type: 'text',
         timer: 2000,
         color: '#fff',
         text: '需要勾选绑定微信号才能登录'

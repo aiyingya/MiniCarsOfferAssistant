@@ -1,4 +1,4 @@
-import { 
+import {
   $bargainCancelDialog ,
   $wuxToast
 } from "../../components/wux"
@@ -36,13 +36,13 @@ Page({
   getBargainData(type) {
     let that = this
     let tenantId = container.userService.address.tenantId
-    let manager = container.userService.userInfoForTenant.tenants[0].manager
+    let manager = container.userService.roleInfo.tenants[0].manager
     let userId = container.userService.auth.userId
     console.log(container.userService)
     function makeUpZero(s) {
       return s < 10 ? `0${s}`: s;
     }
-    
+
     container.saasService.getBargainData({
       data: {
         targetId: tenantId,
@@ -51,7 +51,7 @@ Page({
         isStoreLead: manager
       }
     }).then((res) => {
-      
+
       if(res.length > 0) {
         for(let item of res) {
           let time = new Date(item.participateTime)
@@ -78,7 +78,7 @@ Page({
         bargainListData: res
       })
     },(err) => {
-      
+
     })
   },
   /**
@@ -114,9 +114,9 @@ Page({
     let that = this
     const ativity = e.currentTarget.dataset.activity
     const ativityId = ativity.participantId
-    
+
     if(ativity.overStyle == '' ) { return }
-    
+
     wx.showModal({
       title: '结束该活动？',
       content: '确认要结束该活动，结束后客户将无法继续砍价，并且获得优惠码',
@@ -154,7 +154,7 @@ Page({
           })
         }else {
           $wuxToast.show({
-            type: false,
+            type: 'text',
             timer: 2000,
             color: '#fff',
             text: res.message
@@ -162,7 +162,7 @@ Page({
           return
         }
       }, (err) => {
-        
+
       })
     }
   },
@@ -172,7 +172,7 @@ Page({
   handleCancelCoupon(e) {
     let that = this
     const ativity = e.currentTarget.dataset.activity
-    
+
     if(ativity.cancelStyle == '' ) { return }
     $bargainCancelDialog.open({
       title: '核销优惠券！',
@@ -191,7 +191,7 @@ Page({
         that.cancelCoupon(value,ativity.participantId)
       },
       cancel: () => {
-        
+
       }
     })
   },
@@ -216,7 +216,7 @@ Page({
           })
         }else {
           $wuxToast.show({
-            type: false,
+            type: 'text',
             timer: 2000,
             color: '#fff',
             text: res.message
@@ -224,7 +224,7 @@ Page({
           return
         }
       },(err) => {
-        
+
       })
     }
   }

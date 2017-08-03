@@ -6,7 +6,7 @@ export default class UI {
 
   showToast(title: string, duration?: number = 1800): Promise<void> {
     $wuxToast.show({
-      type: false,
+      type: 'text',
       timer: 2000,
       color: '#fff',
       text: title

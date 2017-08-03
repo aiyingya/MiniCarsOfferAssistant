@@ -47,14 +47,6 @@ export default class UserService extends Service {
   userInfo: UserInfo | null = null;
 
   /**
-   * 运图账号租户用户信息
-   *
-   * @type {(UserInfoForTenant | null)}
-   * @memberof UserService
-   */
-  userInfoForTenant: UserInfoForTenant | null = null;
-
-  /**
    * 微信登录相关信息
    *
    * userInfo 后台处理过的微信账号的用户信息
@@ -107,6 +99,13 @@ export default class UserService extends Service {
   }
 
   setup(): Promise<void> {
+    let promiseResolveForWeixinLogin = null
+    let promiseRejectForWeixinLogin = null
+    this.promiseForWeixinLogin = new Promise((resolve, reject) => {
+      promiseResolveForWeixinLogin = resolve
+      promiseRejectForWeixinLogin = reject
+    })
+
     console.info('user.service 开始启动')
     console.log('载入持久化的数据')
     this.loadUserInfo()
@@ -131,8 +130,13 @@ export default class UserService extends Service {
       })
       .then(() => {
         console.log('开始微信三方登录')
-        this.promiseForWeixinLogin = this.loginForWeixin()
-        return this.promiseForWeixinLogin
+        return this.loginForWeixin()
+          .then(res => {
+            promiseResolveForWeixinLogin(res)
+          }, err => {
+            promiseRejectForWeixinLogin(err)
+            return Promise.reject(err)
+          })
       })
       .then(() => {
         // 检查并弱请求 userInfo 权限，并获取用户信息更新
@@ -418,41 +422,6 @@ export default class UserService extends Service {
         newPassword,
         password
       }
-    )
-  }
-
-  /**
-   * 查看租户是否存在
-   *
-   * @param {string} mobile
-   * @returns {Promise<boolean>}
-   * @memberof UserService
-   */
-  retrieveTenantMemberExist(
-    mobile: string
-  ): Promise<boolean> {
-    return this.request(
-      'cgi/tenant/member/exist',
-      'GET',
-      {
-        mobile
-      }
-    )
-  }
-
-  /**
-   * 获取租户的用户信息
-   *
-   * @param {string} userId
-   * @returns {Promise<UserInfoForTenant>}
-   * @memberof UserService
-   */
-  retrieveTenantMemberUserInfo(
-    userId: string
-  ): Promise<UserInfoForTenant> {
-    return this.request(
-      `cgi/tenant/member/${userId}/tenant`,
-      'GET'
     )
   }
 
@@ -820,19 +789,19 @@ export default class UserService extends Service {
     // 更新 token 的 promise 方法, 该方法要保证即便失败也能返回之前需要刷新的 auth 对象
     const promiseForUpdateAuthentication: (authNeedRefresh: Auth) => Promise<Auth> = (authNeedRefresh: Auth) => {
       return this.updateAuthentication(authNeedRefresh.refreshToken)
-          .then(auth => {
-            const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
-            auth.expireIn = expireIn
-            this.auth = auth
-            this.loginChannel = 'yuntu'
-            this.getClientId(true)
-            this.saveUserInfo()
-            return auth
-          })
-          .catch(err => {
-            console.info('登录后刷新失败')
-            return authNeedRefresh
-          })
+        .then(auth => {
+          const expireIn = this.p_timestampFromNowWithDelta(auth.expireMillis)
+          auth.expireIn = expireIn
+          this.auth = auth
+          this.loginChannel = 'yuntu'
+          this.getClientId(true)
+          this.saveUserInfo()
+          return auth
+        })
+        .catch(err => {
+          console.info('登录后刷新失败')
+          return authNeedRefresh
+        })
     }
 
     return this.createAuthentication(authType, authEntity, channel)
@@ -959,7 +928,6 @@ export default class UserService extends Service {
           this.loginChannel = 'guest'
           this.auth = null
           this.userInfo = null
-          this.userInfoForTenant = null
           this.weixin = {
             userInfo: null,
             sessionId: null
@@ -986,22 +954,8 @@ export default class UserService extends Service {
       this.loginChannel = 'weixin'
       this.auth = null
       this.userInfo = null
-      this.userInfoForTenant = null
     } else {
       console.error('同步删除 auth 出错')
     }
   }
-
-  getTenant(): Promise<UserInfoForTenant> {
-    const auth = this.auth
-    if (auth == null) {
-      return Promise.reject(new Error('auth should be not null'))
-    }
-    return this.retrieveTenantMemberUserInfo(auth.userId)
-      .then(tenant => {
-        this.userInfoForTenant = tenant
-        return tenant
-      })
-  }
-
 }

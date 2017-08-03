@@ -40,7 +40,20 @@ declare type Weixin = {
   sessionId: string
 };
 
-declare type UserInfoForTenant = {
+declare type UserInfoPlainEntityForWeixin = {
+  userInfo: UserInfoForWeixin,
+  rawData: string,
+  signature: string
+};
+
+declare type UserInfoEncryptedEntityForWeixin = {
+  encryptedData: string,
+  iv: string
+};
+
+declare type UserInfoEntityForWeixin = UserInfoPlainEntityForWeixin | UserInfoEncryptedEntityForWeixin;
+
+declare type RoleInfoForEmployee = {
   userId: string,
   mobile: string,
   name: string,
@@ -109,18 +122,5 @@ declare type ExtraType = 'access' | 'setPassword' | 'bound' | 'unbound';
 declare type LoginChannelType = 'guest' | 'weixin' | 'yuntu';
 
 declare type SNSIdType = string | number;
-
-declare type UserInfoPlainEntityForWeixin = {
-  userInfo: UserInfoForWeixin,
-  rawData: string,
-  signature: string
-};
-
-declare type UserInfoEncryptedEntityForWeixin = {
-  encryptedData: string,
-  iv: string
-};
-
-declare type UserInfoEntityForWeixin = UserInfoPlainEntityForWeixin | UserInfoEncryptedEntityForWeixin;
 
 declare type ScopeForWeixin = 'scope.userInfo' | 'scope.userLocation' | 'scope.address' | 'scope.record' | 'scope.writePhotosAlbum';
