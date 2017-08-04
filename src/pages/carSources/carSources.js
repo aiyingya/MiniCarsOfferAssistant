@@ -151,14 +151,14 @@ Page({
       container.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
         success: function (res) {
           let filters = res.filters
-          let praiseModels = res.praiseModels
+          
           let dropDownFilters = []
           let scrollFilters = []
           let scrollFiltersSelectedIndexes = []
             
           let sourcePublishDateFilterId
           let seatNum = res.seatNums
-
+          let praiseModels = []
           for (let i = 0; i < filters.length; i++) {
             let filter = filters[i]
             // FIXME: 这里的问题是使用了不严谨的方法获取数据
@@ -174,15 +174,19 @@ Page({
               scrollFiltersSelectedIndexes.push(-1)
             }
           }
-          
-          if(praiseModels.length > 0) {
-            for(let item of praiseModels) {
-              item.style = ''
-              if(item.praiseType) {
-                item.style = 'goodlabel'
+          if(res && res.praiseModels) {
+            praiseModels = res.praiseModels
+            
+            if(praiseModels.length > 0) {
+              for(let item of praiseModels) {
+                item.style = ''
+                if(item.praiseType) {
+                  item.style = 'goodlabel'
+                }
               }
             }
           }
+          
           
           const carSourcesBySkuInSpuList = that.bakeTheRawCarSourcesBySkuInSpuList(res.carSourcesBySkuInSpuList)
 

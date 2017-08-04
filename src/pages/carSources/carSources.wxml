@@ -76,7 +76,11 @@
     </view>
     
     <!-- 标签.-->
-    <view class="carSources-label {{carModelLabel.unfold}}" bindtap="handleSwitchShow">
+    <view 
+      wx:if="{{praiseModels.length > 0}}"
+      class="carSources-label {{carModelLabel.unfold}}" 
+      bindtap="handleSwitchShow"
+      >
       <view 
         wx:for="{{praiseModels}}"
         class="label {{item.style}}"
