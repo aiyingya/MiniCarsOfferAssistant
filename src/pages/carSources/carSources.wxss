@@ -43,6 +43,7 @@ page {
 	background-color: #f2f2f2;
 }
 .rmendCarFacade-popup-wrap {
+  top: 88rpx;
 	bottom: 0;
 	height: 100%;
 	width: 100%;
@@ -50,9 +51,9 @@ page {
   position: absolute;
 }
 .rmendCarFacade-popup-mask {
-	position: absolute;
+	position: fixed;
 	width: 100%;
-	top: 0;
+	top: 700rpx;
 	bottom: 0;
 	background-color: rgba(0,0,0,.4);
 	z-index: 1;
@@ -125,7 +126,6 @@ page {
 	-webkit-align-items:center;
 	align-items:center;
 	white-space: nowrap;
-  position: absolute;
   z-index: 10;
 }
 .filter-scroll-view:after {
@@ -200,6 +200,8 @@ page {
 .carSources-topbar {
 	background-color: #fff;
 	overflow: hidden;
+  padding: 20rpx 30rpx 10rpx 30rpx;
+  display: block;
 }
 .carSources-topbar .weui-media-box {
 	padding: 0 24rpx;
@@ -319,7 +321,7 @@ page {
 	align-items: center;
 	background-color: #fff;
 	z-index: 10;
-  position: absolute;
+  position: relative;
 }
 .carSources-navbar:after  {
 	content: '';
@@ -1021,3 +1023,52 @@ page {
 	line-height: 26rpx;
 }
 
+.carSources-label {
+  position: relative;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-top: 8rpx;
+  padding-right: 26rpx;
+  height: 40rpx;
+  overflow: hidden;
+}
+.carSources-label.show {
+  height: auto;
+}
+.carSources-label .label {
+  margin: 0 10rpx 10rpx 0;
+  padding: 0 5rpx;
+  background: #FFFFFF;
+  border: 1rpx solid #999999;
+  border-radius: 10rpx;
+  font-family: "PingFangSC-Regular";
+  font-size: 22rpx;
+  color: #666666;
+}
+.carSources-label .label.goodlabel {
+  background: #4dbfa0;
+  border: none;
+  color: #fff;
+}
+.carSources-label .icon_arrow {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 24rpx;
+  height: 24rpx;
+  margin-top: -12rpx;
+  transform:rotate(90deg);
+  -webkit-transform:rotate(90deg); 
+  z-index: 999;
+}
+.carSources-label .icon_arrow.show {
+  transform:rotate(-90deg);
+  -webkit-transform:rotate(-90deg); 
+}
+.carSources-navbar-wrapper {
+  position: relative;
+}
