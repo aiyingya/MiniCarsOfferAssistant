@@ -59,6 +59,10 @@ Page({
     overLayDropdownOffset: 178 + 60,
     pageShare: false,
     options: '',
+    carModelLabel: {
+      unfold: ''
+    },
+    praiseModels: []
   },
   onLoad(options) {
     console.log(options)
@@ -146,15 +150,15 @@ Page({
 
       container.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
         success: function (res) {
-
           let filters = res.filters
+          
           let dropDownFilters = []
           let scrollFilters = []
           let scrollFiltersSelectedIndexes = []
-
+            
           let sourcePublishDateFilterId
           let seatNum = res.seatNums
-
+          let praiseModels = []
           for (let i = 0; i < filters.length; i++) {
             let filter = filters[i]
             // FIXME: 这里的问题是使用了不严谨的方法获取数据
@@ -170,12 +174,26 @@ Page({
               scrollFiltersSelectedIndexes.push(-1)
             }
           }
-
+          if(res && res.praiseModels) {
+            praiseModels = res.praiseModels
+            
+            if(praiseModels.length > 0) {
+              for(let item of praiseModels) {
+                item.style = ''
+                if(item.praiseType) {
+                  item.style = 'goodlabel'
+                }
+              }
+            }
+          }
+          
+          
           const carSourcesBySkuInSpuList = that.bakeTheRawCarSourcesBySkuInSpuList(res.carSourcesBySkuInSpuList)
 
           that.setData({
             nodata: carSourcesBySkuInSpuList.length !== 0 ? 'data' : 'none',
             filters: filters,
+            praiseModels: praiseModels,
             dropDownFilters: dropDownFilters,
             scrollFilters: scrollFilters,
             scrollFiltersSelectedIndexes: scrollFiltersSelectedIndexes
@@ -1402,5 +1420,23 @@ Page({
   },
   onTouchMoveWithCatch() {
     // 拦截触摸移动事件， 阻止透传
+  },
+  /**
+   * 切换label.
+   */
+  
+  handleSwitchShow() {
+    let that = this 
+    let carModelLabel = that.data.carModelLabel
+    
+    if(carModelLabel.unfold !== '') {
+      that.setData({
+        'carModelLabel.unfold': ''
+      })
+    }else {
+      that.setData({
+        'carModelLabel.unfold': 'show'
+      })
+    }
   }
 })

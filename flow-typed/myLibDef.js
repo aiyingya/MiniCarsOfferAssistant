@@ -69,3 +69,4 @@ declare type RoleEntity = {
    */
   roleName: 'guest' | 'employee'
 }
+
