@@ -688,13 +688,19 @@ console.log(quotationDraft)
   }
 
   /**
-   * 行情走势.
-   * @param opts
+   * 获取某一个 spu 的行情走势.
+   *
+   * @param {number} spuId
+   * @returns {Promise<SPUMarketTrendEntity>}
+   * @memberof SAASService
    */
-  gettingMarketTrend(opts:any) {
+  gettingMarketTrend(spuId: number): Promise<SPUMarketTrendEntity> {
     return this.sendMessageByPromise({
-      path: `sale/quotation/getPriceTrend/new?spuId=${opts.spuId}`,
-      method: 'GET'
+      path: `sale/quotation/getPriceTrend`,
+      method: 'GET',
+      data: {
+        spuId
+      }
     })
   }
 

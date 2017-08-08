@@ -1,34 +1,18 @@
 <template name="carModel">
-	<view
-		class="carModels-cell"
-		hover="true"
-		hover-class="carModels-cell_active"
-		>
-		<!-- title.-->
-		<view
-		  class="carModels-message"
-		  data-carmodelsinfo="{{item}}"
-		  bindtap="handlerToCarSources"
-		  >
-			<view class="carModels-message-title">
-				【{{item.officialPriceStr}}】 {{item.carModelName}}
-			</view>
-			<image class="icon_arrow" src="../../images/icons/icon_arrow.png"></image>
-		</view>
+  <view class="carModels-cell" hover="true" hover-class="carModels-cell_active">
+    <!-- title.-->
+    <view class="carModels-message" data-carmodelsinfo="{{item}}" bindtap="handlerToCarSources">
+      <view class="carModels-message-title">
+        【{{item.officialPriceStr}}】 {{item.carModelName}}
+      </view>
+      <image class="icon_arrow" src="../../images/icons/icon_arrow.png"></image>
+    </view>
 
-		<view
-			class="carModels-inner"
-			wx:if="{{item.supply.supplierCount > 0}}"
-			>
-			<!-- cars info.-->
-			<view class="carModels-info">
-        <view
-          class="carModels-charts-time"
-          data-hours="{{item.hours}}"
-          data-selectTime="{{item.selectTimes}}"
-          data-selectid="{{item.carModelId}}"
-          >
-<!--
+    <view class="carModels-inner" wx:if="{{item.supply.supplierCount > 0}}">
+      <!-- cars info.-->
+      <view class="carModels-info">
+        <view class="carModels-charts-time" data-hours="{{item.hours}}" data-selectTime="{{item.selectTimes}}" data-selectid="{{item.carModelId}}">
+          <!--
           <view
             class="chartstime-inner {{times.selected}}"
             wx:for="{{item.selectTimesData}}"
@@ -47,177 +31,98 @@
             <view class="carcolor-all bar-inner" style="width: {{item.hot}}%"></view>
           </view>
         </view>
-				<view
-					class="carModels-carcolor"
-					wx:if="{{item.colors.length > 0}}"
-					bindtap="handleSelectColor"
-					data-colors="{{item.colors}}"
-					data-selectColors="{{item.selectColors}}"
-					data-selectcolorsid="{{item.carModelId}}"
-					>
-					<view class="carcolor-label label">外饰：</view>
-					<view class="carcolor-inner">
-					  <block  wx:if="{{item.selectColors.length > 0 && item.selectColorsId == item.carModelId}}">
-					    <view
-                class="carcolor-item"
-                wx:for="{{item.selectColors}}"
-                wx:for-item="cell"
-                wx:for-index="cellIndex"
-                wx:key="*this"
-                wx:if="{{cellIndex < 4}}"
-                style="background:{{cell.value}}; {cell.style}"
-                ></view>
-					  </block>
+        <view class="carModels-carcolor" wx:if="{{item.colors.length > 0}}" bindtap="handleSelectColor" data-colors="{{item.colors}}"
+          data-selectColors="{{item.selectColors}}" data-selectcolorsid="{{item.carModelId}}">
+          <view class="carcolor-label label">外饰：</view>
+          <view class="carcolor-inner">
+            <block wx:if="{{item.selectColors.length > 0 && item.selectColorsId == item.carModelId}}">
+              <view class="carcolor-item" wx:for="{{item.selectColors}}" wx:for-item="cell" wx:for-index="cellIndex" wx:key="*this" wx:if="{{cellIndex < 4}}"
+                style="background:{{cell.value}}; {cell.style}"></view>
+            </block>
 
-						<view wx:else class="carcolor-all">全部</view>
-						<image
-						  src="../../images/icons/icon_dropdownarrow_down_gray.png"
-						  class="icon-arrows"></image>
-					</view>
-				</view>
+            <view wx:else class="carcolor-all">全部</view>
+            <image src="../../images/icons/icon_dropdownarrow_down_gray.png" class="icon-arrows"></image>
+          </view>
+        </view>
 
-				<!-- 行情走势.-->
-				<view
-				  class="carModels-market_btn"
-				  bindtap="handleCheckMarket"
-				  data-selectid="{{item.carModelId}}"
-				  data-carmodelsinfo="{{item}}"
-				  >行情走势</view>
-			</view>
+        <!-- 行情走势.-->
+        <view class="carModels-market_btn" bindtap="handleCheckMarket" data-selectid="{{item.carModelId}}" data-carmodelsinfo="{{item}}">行情走势</view>
+      </view>
 
-			<view
-				class="charts-inner"
-				wx:if="{{item.supply.chart}}"
-				>
-				<block wx:if="{{showCharts}}">
-					<view class="charts-tagMessage">
-						<view class="charts-supply-number">
-							报价数量(条)
-						</view>
-	<!--
+      <view class="charts-inner" wx:if="{{item.supply.chart}}">
+        <block wx:if="{{showCharts}}">
+          <view class="charts-tagMessage">
+            <view class="charts-supply-number">
+              报价数量(条)
+            </view>
+            <!--
 						<view class="charts-tagMessage-inner">
 							<view class="tagname">{{item.supply.chart.tagName}}</view>
 							<view class="tagvalue">{{item.supply.chart.tagValue}}</view>
 						</view>
 	-->
-					</view>
-					<canvas
-						canvas-id="{{item.carModelId}}"
-						data-id="{{item.carModelId}}"
-						data-carmodelsinfo="{{item}}"
-						class="canvas"
-						bindtouchstart="handleCharttouch"
-						bindtouchmove="handletouchmove"
-            bindtouchend="handletouchend"
-						></canvas>
-				</block>
-				<block wx:else>
-				  <canvas></canvas>
-				</block>
-			</view>
-      <view
-       class="nodata"
-       wx:else
-       >
+          </view>
+          <canvas canvas-id="{{item.carModelId}}" data-id="{{item.carModelId}}" data-carmodelsinfo="{{item}}" class="canvas" bindtouchstart="handleCharttouch"
+            bindtouchmove="handletouchmove" bindtouchend="handletouchend"></canvas>
+        </block>
+        <block wx:else>
+          <canvas></canvas>
+        </block>
+      </view>
+      <view class="nodata" wx:else>
         <icon type="warn" size="60" color="#cccccc"></icon>
         <view class="icon-box__ctn">
           <view class="icon-box__desc">抱歉！没有相关车供货信息</view>
         </view>
       </view>
-		</view>
-
-		<!-- 暂无供货.-->
-		<view
-     class="nodata"
-     wx:else
-     >
-       <view>
-          <icon type="warn" size="50" color="#cccccc"></icon>
-          <view class="icon-box__desc">抱歉！没有相关车供货信息</view>
-       </view>
     </view>
-	</view>
+
+    <!-- 暂无供货.-->
+    <view class="nodata" wx:else>
+      <view>
+        <icon type="warn" size="50" color="#cccccc"></icon>
+        <view class="icon-box__desc">抱歉！没有相关车供货信息</view>
+      </view>
+    </view>
+  </view>
 </template>
 
 <template name="popupCharts">
-  <view
-    class="popup-charts-wrap"
-    wx:if="{{showPopCharts}}"
-    >
-    <view
-      class="popup-shade"
-      bindtap="handleClosePopup"
-      bindtouchstart="handleClosePopup"
-      bindtouchmove="handleClosePopup"
-      ></view>
+  <view class="popup-charts-wrap" wx:if="{{showPopCharts}}">
+    <view class="popup-shade" bindtap="handleClosePopup" bindtouchstart="handleClosePopup" bindtouchmove="handleClosePopup"></view>
     <view class="popup-charts-main">
       <view class="popup-charts-hd">
         <view>报价区间详情</view>
-        <view
-         class="close-popup"
-         bindtap="handleClosePopup"
-         >
+        <view class="close-popup" bindtap="handleClosePopup">
           <image src="../../images/icons/icon_close.png"></image>
         </view>
       </view>
       <view class="popup-charts-bd">
         <view class="popup-charts-scale">
           <view>报价数量(条)</view>
-          <view
-            class="button"
-            data-carmodelsinfo="{{carModelsInfo}}"
-		        bindtap="handlerToCarSources"
-            >查看详情</view>
+          <view class="button" data-carmodelsinfo="{{carModelsInfo}}" bindtap="handlerToCarSources">查看详情</view>
         </view>
-        <canvas
-          canvas-id="popCharts"
-          data-id="popCharts"
-          class="pop-canvas"
-          disable-scroll
-          disable-scroll="true"
-          bindtouchmove="popupChartstouchMove"
-          ></canvas>
+        <canvas canvas-id="popCharts" data-id="popCharts" class="pop-canvas" disable-scroll disable-scroll="true" bindtouchmove="popupChartstouchMove"></canvas>
       </view>
     </view>
   </view>
 </template>
 
 <template name="popupChangeCharts">
-  <view
-   class="popup-select-charts"
-   wx:if="{{selectChartsLabel}}"
-   >
+  <view class="popup-select-charts" wx:if="{{selectChartsLabel}}">
     <view class="popup-shade" bindtouchmove="handleClosePopupChange" bindtap="handleClosePopupChange"></view>
     <view class="popupSelect-main">
       <block wx:if="{{changeSelectTimes}}">
-        <view
-          wx:for="{{selectTimesData}}"
-          wx:key="*this"
-          class="popup-label {{item.selected}}"
-          bindtap="handleChangeTimesItem"
-          data-selectitem="{{item}}"
-          >
-          {{item.value}}<block wx:if="{{item.value !== '全部'}}">小时</block>
+        <view wx:for="{{selectTimesData}}" wx:key="*this" class="popup-label {{item.selected}}" bindtap="handleChangeTimesItem" data-selectitem="{{item}}">
+          {{item.value}}
+          <block wx:if="{{item.value !== '全部'}}">小时</block>
         </view>
       </block>
       <block wx:if="{{changeSelectColors}}">
-        <view
-          class="popup-label {{colorAllSelected}}"
-          bindtap="handleChangeColorItem"
-          data-selectitem="全部"
-          >全部</view>
-        <view
-          wx:for="{{selectColorData}}"
-          wx:key="*this"
-          class="popup-label {{item.selected}}"
-          bindtap="handleChangeColorItem"
-          data-selectitem="{{item}}"
-          data-selectcolors="{{selectColors}}"
-          >
-          <view
-            class="carcolor-item"
-            style="background:{{item.value}}; {{item.style}}"
-            ></view>
+        <view class="popup-label {{colorAllSelected}}" bindtap="handleChangeColorItem" data-selectitem="全部">全部</view>
+        <view wx:for="{{selectColorData}}" wx:key="*this" class="popup-label {{item.selected}}" bindtap="handleChangeColorItem" data-selectitem="{{item}}"
+          data-selectcolors="{{selectColors}}">
+          <view class="carcolor-item" style="background:{{item.value}}; {{item.style}}"></view>
           <view class="text">{{item.key}}</view>
         </view>
       </block>
@@ -226,26 +131,20 @@
 </template>
 
 <template name="popupMarketCharts">
-  <view
-   class="popup-select-charts"
-   wx:if="{{showPopupMarketCharts}}"
-   >
+  <view class="popup-select-charts" wx:if="{{showPopupMarketCharts}}">
     <view class="popup-shade" bindtouchmove="handleClosePopupMarket" bindtap="handleClosePopupMarket"></view>
     <view class="popup-charts-main">
-     <view class="popup-marketcharts-hd">
+      <view class="popup-marketcharts-hd">
         <view class="title">行情走势</view>
         <view class="text">（所有供应商报得最多的3个价格）</view>
-        <view
-         class="close-popup"
-         bindtap="handleClosePopupMarket"
-         >
+        <view class="close-popup" bindtap="handleClosePopupMarket">
           <image src="../../images/icons/icon_close.png"></image>
         </view>
       </view>
       <view class="popup-charts-bd">
         <view class="popup-charts-scale">
           <view class="charts-labels">
-            <view
+            <!-- <view
               wx:for="{{marketCharts.topnoData}}"
               wx:key="*this"
               class="charts-label label{{index+1}}"
@@ -253,26 +152,18 @@
               bindtap="handleMarketUpdateData"
               >
               <view class="label-icon {{item.style}}"></view>
-              {{item.text}}</view>
+              {{item.text}}</view> -->
+            <view class="charts-options {{ item.selected ? 'selected' : '' }}" wx:for="{{marketCharts.recentDaysOfData}}" wx:key="id" data-days="{{item.days}}" data-id="{{item.id}}" bindtap="handleMarketUpdateDataWithDays">
+              最近{{item.days}}天
+            </view>
           </view>
-          <view
-            class="button market-btn"
-            data-carmodelsinfo="{{carModelsInfo}}"
-		        bindtap="handlerToCarSources"
-            >查看详情</view>
+          <view class="button market-btn" data-carmodelsinfo="{{carModelsInfo}}" bindtap="handlerToCarSources">查看详情</view>
         </view>
         <view class="popup-charts-scale">
           <view>({{marketCharts.unit}})</view>
         </view>
-        <canvas
-          canvas-id="popMarketCharts"
-          data-id="popMarketCharts"
-          class="pop-canvas"
-          disable-scroll
-          disable-scroll="true"
-          bindtouchmove="handleMarketTouch"
-          bindtouchstart="handleMarketTouch"
-          ></canvas>
+        <canvas canvas-id="popMarketCharts" data-id="popMarketCharts" class="pop-canvas" disable-scroll disable-scroll="true" bindtouchmove="handleMarketTouch"
+          bindtouchstart="handleMarketTouch"></canvas>
       </view>
     </view>
   </view>

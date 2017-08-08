@@ -435,5 +435,23 @@
   background: #dcdce0;
 }
 
+.charts-options {
+  box-sizing: border-box;
+  margin-right: 16rpx;
+  margin-bottom: 8rpx;
+  height: 40rpx;
+  padding: 8rpx 9rpx;
+  background: rgba(228,228,228,0.3);
+  border-radius: 4rpx;
+  font-family: "PingFangSC-Regular";
+  font-size: 22rpx;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 22rpx;
+}
+
+.selected {
+  background: rgba(241,124,124,0.3)
+}
 
 

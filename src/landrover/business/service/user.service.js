@@ -123,6 +123,7 @@ export default class UserService extends Service {
           return this.refreshAccessToken(this.auth)
             .catch(err => {
               // 新失时发现 auth 过期, 或者调动接口失败
+              console.error(err)
             })
         } else {
           return Promise.resolve()
@@ -157,6 +158,7 @@ export default class UserService extends Service {
           })
           .catch(err => {
             // userInfo 权限失败，或者获取用户信息失败，也不影响流程
+            console.error(err)
           })
       })
       .then(() => {
