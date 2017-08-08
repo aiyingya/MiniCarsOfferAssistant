@@ -7,7 +7,7 @@
 //  Copyright (c) 2016年 yaomaiche. All rights reserved.
 //
 
-import UBTService from '../../services/ubt.service.js'
+import UBTService from '../../landrover/business/service/ubt.service'
 
 import { config, system, device, container } from '../../landrover/business/index'
 
@@ -84,6 +84,9 @@ export default {
     // data.lat = config.location.latitude
     // data.lng = config.location.longitude
 
-    this.UBTService.report(data)
+    this.UBTService.createReport(data)
+      .catch(function (reason) {
+        console.error(reason)
+      })
   }
 }

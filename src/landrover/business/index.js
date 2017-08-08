@@ -18,12 +18,15 @@ const
   versionCode = FMT_VERSION_CODE,
   build = FMT_BUILD
 
+const appId = 'wxd5d5bf6b593d886e'
+
 const config = {
   env,
   name,
   version,
   versionCode,
-  build
+  build,
+  appId
 }
 
 const keyWithNamespacePrefix = (key) => {

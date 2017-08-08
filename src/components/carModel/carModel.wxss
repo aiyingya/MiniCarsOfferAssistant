@@ -131,6 +131,23 @@
   position: relative;
   padding-right: 35rpx;
 }
+.carModels-info .bar{
+  padding: 0;
+  width: 100rpx;
+  height: 10rpx;
+  background-color: #E4E4E4;
+  border-radius: 100rpx;
+  margin-left: 10rpx;
+}
+.carModels-info .bar-inner{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: 10rpx;
+  background-color: #3377EE;
+  border-radius: 100rpx;
+}
 .carModels-info .chartstime-inner {
   height: 48rpx;
 	line-height: 48rpx;

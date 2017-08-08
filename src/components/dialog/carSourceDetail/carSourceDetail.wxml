@@ -8,7 +8,7 @@
     <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
       <block wx:if="{{page === 'sourceDetail'}}">
         <view class="header">
-          <view class="title">行情列表</view>
+          <view class="title">车源详情</view>
           <view class="close" bindtap="{{close}}">
             <image src="/images/icons/icon_close.png" />
           </view>

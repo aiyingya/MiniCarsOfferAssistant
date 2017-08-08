@@ -39,6 +39,7 @@
 				hover="true"
 				hover-class="active"
         bindtap="handleToQuoteRecord"
+        wx:if="{{isLogin}}"
 				>
 				<view class="weui-cell__hd">
 					<image src="../../images/icons/tab_icon_price_off.png" />
@@ -53,6 +54,7 @@
 				class="weui-cell weui-cell_access"
 				hover="true"
 				hover-class="active"
+        wx:if="{{isLogin}}"
 				>
 				<view class="weui-cell__hd">
 					<image src="../../images/icons/icon_collection.png" />
@@ -68,7 +70,8 @@
       <view
 				class="weui-cell weui-cell_access"
 				hover="true"
-				hover-class="active"
+        hover-class="active"
+        wx:if="{{isLogin && roleName === 'employee'}}"
 				>
 				<view class="weui-cell__hd">
 					<image src="../../images/icons/icon_activity_management.png" />
@@ -85,7 +88,7 @@
 				class="weui-cell weui-cell_access"
 				hover="true"
 				hover-class="active"
-				wx:if="{{manager}}"
+				wx:if="{{isLogin && manager}}"
 				>
 				<view class="weui-cell__hd">
 					<image src="../../images/icons/icon_potential_people.png" />
@@ -118,11 +121,9 @@
 -->
 	</view>
 
-<!--
   <view class="version">
     {{version}}
   </view>
--->
 	<view
 		class="users-logout"
 		hover="true"

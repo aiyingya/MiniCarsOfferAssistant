@@ -342,10 +342,32 @@
   padding: 15px 0;
 }
 
-
-
-
-
+.trial-times-wrap {
+  background: #ECF0F7;
+}
+.trial-times {
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  padding-left: 35rpx;
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+  color: #3377EE;
+  text-align: center;
+}
+.trial-times image {
+  width: 32rpx;
+  height: 32rpx;
+  position: absolute;
+  top: 4rpx;
+  left: 0;
+}
+.call-phone {
+  display: inline-block;
+  color: #333;
+  text-decoration: underline;
+}
 
 
 

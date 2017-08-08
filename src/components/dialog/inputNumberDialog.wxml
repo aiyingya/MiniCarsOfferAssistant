@@ -7,10 +7,16 @@
         <view class="weui-dialog__title">{{ title }}</view>
       </view>
 
-      <view class="weui-dialog__bd" style="display: flex; justify-content: center; align-items: center;" wx:if="{{ content }}">
-        <view style="margin-right: 10rpx;">￥</view>
-        <input style="width: 150rpx; border:1rpx solid #CCCCCC; border-radius: 8rpx; background: #EFEFEF;" type="number" placeholder="0" placeholder-class="" value="{{ content }}" bindinput="{{ inputPriceInput }}" />
-      </view>
+      <block wx:if="{{ content }}">
+        <view wx:if="{{ priceStyle }}" class="weui-dialog__bd" style="display: flex; justify-content: center; align-items: center;">
+          <view style="margin-right: 10rpx;">￥</view>
+          <input style="width: 150rpx; border:1rpx solid #CCCCCC; border-radius: 8rpx; background: #EFEFEF;color:#333;" type="number"
+            placeholder="0" placeholder-class="" value="{{ content }}" bindinput="{{ inputPriceInput }}" />
+        </view>
+        <view wx:else class="weui-dialog__bd">
+          <view class="weui-dialog__bd__centent">{{ content }}</view>
+        </view>
+      </block>
 
       <view wx:if="{{ priceStyle }}" class="weui-flex-wrp" >
         <view class="flex-item  weui-dialog__line" style="width:20%"></view>

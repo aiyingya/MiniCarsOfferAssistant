@@ -286,7 +286,7 @@ Page({
         showCharts: false
       })
       $wuxToast.show({
-        type: false,
+        type: 'text',
         timer: 2000,
         color: '#fff',
         text: '暂无供货'
