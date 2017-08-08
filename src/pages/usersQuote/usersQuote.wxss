@@ -1,7 +1,7 @@
 .users-topbar {
 	width: 100%;
 	padding: 40rpx 0;
-	background: #EDF7F9;
+	background: #ECF0F7;
 }
 .users-head {
 	width: 88rpx;
@@ -50,7 +50,7 @@
 	font-size: 22rpx;
 	color: #FFFFFF;
 	line-height: 22rpx;
-	background: #B9D9DF;
+	background: #475593;
 	border-radius: 100rpx;
 	margin-right: 10rpx;
 }
