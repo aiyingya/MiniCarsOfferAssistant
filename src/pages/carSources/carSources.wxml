@@ -74,14 +74,14 @@
     <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
       <view class="weui-media-box__title">【{{carModelsInfo.officialPriceStr}}】 {{carModelsInfo.carModelName}}</view>
     </view>
-    
-    <!-- 标签.-->
-    <view 
+
+    <!-- 口碑.-->
+    <view
       wx:if="{{praiseModels.length > 0}}"
-      class="carSources-label {{carModelLabel.unfold}}" 
+      class="carSources-label {{carModelLabel.unfold}}"
       bindtap="handleSwitchShow"
       >
-      <view 
+      <view
         wx:for="{{praiseModels}}"
         class="label {{item.style}}"
         >{{item.praiseLabel}}({{item.praiseCount}})</view>

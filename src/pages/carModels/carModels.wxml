@@ -19,7 +19,6 @@
 			</view>
 		</view>
 -->
-
 		<!-- 标签.-->
 		<view class="carModels-label-inner">
       <view class="carModels-label-wells">
@@ -42,6 +41,13 @@
       </view>
 		</view>
 
+    <!-- 口碑.-->
+    <view class="carModels-label-praise">
+      <view wx:if="{{praiseModels.length > 0}}" class="car-models-label {{carModelLabel.unfold}}" bindtap="handleSwitchShow">
+        <view wx:for="{{praiseModels}}" wx:key="*this" class="label {{item.praiseType ? 'goodlabel' : ''}}">{{item.praiseLabel}}({{item.praiseCount}})</view>
+        <image class="icon_arrow {{carModelLabel.unfold}}" src="../../images/icons/icon_arrow@2x@2x.png"></image>
+      </view>
+    </view>
 
 		<view wx:if="{{showRmendCarFacade}}" class="carModels-popup-select rmendCarFacade-popup-wrap">
 			<view
