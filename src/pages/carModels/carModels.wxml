@@ -1,11 +1,11 @@
 <!-- 车款.-->
 <import src="../../components/carModel/carModel.wxml" />
-<import src="../../components/toast/toast.wxml"/>
-<template is="toast" data="{{ ...$wux.toast }}"/>
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
 <view class="car-models container" style="{{scrollView}}">
 
-	<view class="carModels-topbar">
-<!--
+  <view class="carModels-topbar">
+    <!--
 		<view class="carModels-navbar">
 			<view
 				class="navbar-item"
@@ -19,83 +19,58 @@
 			</view>
 		</view>
 -->
-
-		<!-- 标签.-->
-		<view class="carModels-label-inner">
+    <!-- 标签.-->
+    <view class="carModels-label-inner">
       <view class="carModels-label-wells">
         <view class="carModels-label">
-          <view
-            class="label {{item.selected}}"
-            wx:for="{{filtersData}}"
-            wx:key="unique"
-            bindtap="handleSelectCarsModele"
-            data-select="{{item}}"
-            data-id="{{item.name}}"
-            >{{item.name}}</view>
+          <view class="label {{item.selected}}" wx:for="{{filtersData}}" wx:key="unique" bindtap="handleSelectCarsModele" data-select="{{item}}"
+            data-id="{{item.name}}">{{item.name}}</view>
         </view>
       </view>
       <view class="carModels-instore">
-        <view
-          class="label {{stockSeclect}}"
-          bindtap="handleSelectInstore"
-          >{{stockText}}</view>
+        <view class="label {{stockSeclect}}" bindtap="handleSelectInstore">{{stockText}}</view>
       </view>
-		</view>
+    </view>
 
+    <!-- 口碑.-->
+    <view class="carModels-label-praise">
+      <view wx:if="{{praiseModels.length > 0}}" class="car-models-label {{carModelLabel.unfold}}" bindtap="handleSwitchShow">
+        <view wx:for="{{praiseModels}}" wx:key="*this" class="label {{item.praiseType ? 'goodlabel' : ''}}">{{item.praiseLabel}}({{item.praiseCount}})</view>
+        <image class="icon_arrow {{carModelLabel.unfold}}" src="../../images/icons/icon_arrow@2x@2x.png"></image>
+      </view>
+    </view>
 
-		<view wx:if="{{showRmendCarFacade}}" class="carModels-popup-select rmendCarFacade-popup-wrap">
-			<view
-				class="rmendCarFacade-popup-mask showMask"
-				bindtap="headlerRemoveRmendCarFacade"
-				bindtouchstart = "headlerRemoveRmendCarFacade"
-				></view>
-			<view class="rmendCarFacade-inner topToBottom">
-				<view
-					class="weui-cell weui-cell_access"
-					hover="true"
-					hover-class="weui-cell_active"
-					wx:for="{{filtersData}}"
-					wx:key="unique"
-					bindtap="handleSelectCarsModele"
-					data-select="{{item}}"
-					data-id="{{index}}"
-					>
-						<view class="weui-cell__bd weui-cell_primary">
-								<view>{{item.name}}</view>
-						</view>
-						<view
-							wx:if="{{CarsModeleSelectId == index}}"
-							class="weui-cell__ft">
-							<image src="../../images/icons/icon_select_red.png"></image>
-						</view>
-				</view>
-			</view>
-		</view>
-	</view>
+    <view wx:if="{{showRmendCarFacade}}" class="carModels-popup-select rmendCarFacade-popup-wrap">
+      <view class="rmendCarFacade-popup-mask showMask" bindtap="headlerRemoveRmendCarFacade" bindtouchstart="headlerRemoveRmendCarFacade"></view>
+      <view class="rmendCarFacade-inner topToBottom">
+        <view class="weui-cell weui-cell_access" hover="true" hover-class="weui-cell_active" wx:for="{{filtersData}}" wx:key="unique"
+          bindtap="handleSelectCarsModele" data-select="{{item}}" data-id="{{index}}">
+          <view class="weui-cell__bd weui-cell_primary">
+            <view>{{item.name}}</view>
+          </view>
+          <view wx:if="{{CarsModeleSelectId == index}}" class="weui-cell__ft">
+            <image src="../../images/icons/icon_select_red.png"></image>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
 
-	<view
-	  class="carModels-cells"
-	  wx:if="{{carModelsList.length > 0}}"
-	  >
-		<view
-			wx:for="{{carModelsList}}"
-      wx:key="*this"
-      >
-			<template is="carModel" data="{{item,showCharts,selectTime,selectColors,selectColorsId}}" />
-		</view>
-	</view>
+  <view class="carModels-cells" wx:if="{{carModelsList.length > 0}}">
+    <view wx:for="{{carModelsList}}" wx:key="*this">
+      <template is="carModel" data="{{item,showCharts,selectTime,selectColors,selectColorsId}}" />
+    </view>
+  </view>
 
-	<view
-   class="nodata"
-   wx:if="{{carModelsList.length === 0 && showNodata}}"
-   >
+  <view class="nodata" wx:if="{{carModelsList.length === 0 && showNodata}}">
     <icon type="warn" size="60" color="#cccccc"></icon>
     <view class="icon-box__ctn">
       <view class="icon-box__desc">抱歉！没有相关车信息</view>
     </view>
-	</view>
+  </view>
 </view>
 <template is="popupCharts" data="{{showPopCharts, carModelsInfo}}" />
 <template is="popupMarketCharts" data="{{showPopupMarketCharts, marketCharts, carModelsInfo}}" />
 
-<template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime, carModelsInfo,selectTimesData}}" />
+<template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime, carModelsInfo,selectTimesData}}"
+/>
