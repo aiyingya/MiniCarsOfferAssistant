@@ -125,6 +125,7 @@ page {
 	-webkit-align-items:center;
 	align-items:center;
 	white-space: nowrap;
+  position: absolute;
   z-index: 10;
 }
 .filter-scroll-view:after {
@@ -320,7 +321,7 @@ page {
 	align-items: center;
 	background-color: #fff;
 	z-index: 10;
-  position: relative;
+  position: absolute;
 }
 .carSources-navbar:after  {
 	content: '';
