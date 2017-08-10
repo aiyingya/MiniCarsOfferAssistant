@@ -911,8 +911,8 @@ Page({
     this.drawCanvas(carModelsList)
     this.setData({
       'marketCharts.recentDaysOfData': [
-        { id: 0, days: 90, selected: true },
-        { id: 1, days: 60, selected: false },
+        { id: 0, days: 90, selected: false },
+        { id: 1, days: 60, selected: true },
         { id: 2, days: 30, selected: false }
       ],
       'marketCharts.res': {},
