@@ -65,8 +65,8 @@ Page({
       unit: '',
       // 天数计算
       recentDaysOfData: [
-        { id: 0, days: 90, selected: true },
-        { id: 1, days: 60, selected: false },
+        { id: 0, days: 90, selected: false },
+        { id: 1, days: 60, selected: true },
         { id: 2, days: 30, selected: false }
       ],
       res: {}
@@ -780,7 +780,7 @@ Page({
   */
   chartDataGenerator(
     res: SPUMarketTrendEntity,
-    days: number = 90,
+    days: number = 60,
     xScaleRange: number = 5
   ): {
     max: number,
