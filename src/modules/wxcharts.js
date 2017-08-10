@@ -1316,6 +1316,7 @@ function drawLineDataPoints(series, opts, config, context, process, categories) 
             if (index > 0) {
               var ctrlPoint = createCurveControlPoints(points, index - 1);
               context.bezierCurveTo(ctrlPoint.ctrA.x, ctrlPoint.ctrA.y, ctrlPoint.ctrB.x, ctrlPoint.ctrB.y, item.x, item.y);
+              context.arc(points[0].x, points[0].y, 1, 0, 2 * Math.PI);
             }
           });
         } else {
