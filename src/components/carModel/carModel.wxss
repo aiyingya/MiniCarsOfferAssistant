@@ -191,9 +191,12 @@
 }
 .charts-inner .canvas,
 .pop-canvas {
-	width: 100%;
-	height: 120px;
+  width: 100%;
+  height: 100%;
 	padding: 0;
+}
+.popup-select-charts .pop-canvas {
+  height: calc(100% - 50rpx);
 }
 .charts-inner .canvas {
   background: #fafafa;
@@ -241,8 +244,8 @@
   z-index: 99;
 }
 .popup-charts-main {
-  width: 97.3333%;
-  height: 240px;
+  width: 100%;
+  height: 100%;
   position: fixed;
   top: 0;
   left: 0;
@@ -250,7 +253,6 @@
   bottom: 0;
   margin: auto;
   background-color: #fff;
-  border-radius: 10rpx;
   z-index: 100;
 }
 .popup-charts-hd,
@@ -277,7 +279,9 @@
 }
 .popup-charts-bd {
   width: 100%;
+  height: calc(100% - 100rpx);
   margin: 20rpx auto;
+  box-sizing: border-box;
 }
 .close-popup {
   width: 50rpx;
@@ -301,6 +305,7 @@
 .popup-charts-scale {
   font-size: 24rpx;
   line-height: 50rpx;
+  height: 50rpx;
   padding: 0 15rpx;
   display: flex;
   -webkit-justify-content: space-between;

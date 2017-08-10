@@ -159,9 +159,6 @@
           </view>
           <view class="button market-btn" data-carmodelsinfo="{{carModelsInfo}}" bindtap="handlerToCarSources">查看详情</view>
         </view>
-        <view class="popup-charts-scale">
-          <view>({{marketCharts.unit}})</view>
-        </view>
         <canvas canvas-id="popMarketCharts" data-id="popMarketCharts" class="pop-canvas" disable-scroll disable-scroll="true" bindtouchmove="handleMarketTouch"
           bindtouchstart="handleMarketTouch"></canvas>
       </view>

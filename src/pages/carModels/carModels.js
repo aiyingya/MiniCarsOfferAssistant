@@ -556,12 +556,13 @@ Page({
       xScale: xScale,
       dataLabel: false,
       dataPointShape: false,
-      width: system.windowWidth,
-      height: 120,
+      width: (system.screenHeight - 106 - 15 * 2 - 12 * 2),
+      height: (system.screenWidth - 12 * 2),
       setPadding: setPadding,
       extra: {
         lineStyle: 'curve'
-      }
+      },
+      landscape: true
     })
   },
   handleClosePopup() {
