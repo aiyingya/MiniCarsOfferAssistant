@@ -292,7 +292,7 @@ page {
   justify-content: center;
 }
 .car-sources-reference-deal .topN {
-  height: 122rpx;
+  height: 132rpx;
 }
 .car-sources-reference-deal .topN .modes {
   width: 100%;
