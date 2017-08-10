@@ -815,11 +815,11 @@ Page({
       priceTrendList: Array<PriceTrendEntity>,
       days: number
     ): {
-      item: ChartDataItem,
+      item: ChartDataItem | null,
       max: number,
       min: number
     } => {
-      const item: ChartDataItem = {
+      let item: ChartDataItem | null = {
         days: days,
         topno: null,
         name: null,
@@ -831,6 +831,7 @@ Page({
       let i = 0
       let min = Number.MAX_VALUE
       let max = - Number.MAX_VALUE
+      let flag = false
       for (let priceTrendItem of priceTrendList) {
         i = i + 1
         if (i > 90 - days) {
@@ -840,6 +841,7 @@ Page({
             val = util.priceAbsStringWithUnitNumber(priceTrendItem.discount)
             if (Number(val) > max) { max = Number(val) }
             if (Number(val) < min) { min = Number(val) }
+            flag = true
           } else {
             val = null
           }
@@ -855,6 +857,11 @@ Page({
           }
         }
       }
+      if (flag != true) {
+        item = null
+        max= 0
+        min = 0
+      }
       return {
         item,
         max,
@@ -863,10 +870,12 @@ Page({
     }
 
     let { item, max, min } = chartItemGenerator(res.lowestPriceTrend, days)
-    item.color = "#ED4149"
-    item.name = ''
-    item.topno = 1
-    series.push(item)
+    if (item != null) {
+      item.color = "#ED4149"
+      item.name = ''
+      item.topno = 1
+      series.push(item)
+    }
 
     min = Number((min - (max - min) * 0.25).toFixed(2))
 
@@ -889,18 +898,28 @@ Page({
     container.saasService.gettingMarketTrend(spuId)
       .then((res: SPUMarketTrendEntity) => {
         const { max, min, categories, xScale, series } = this.chartDataGenerator(res)
-        const setPadding = max.toString().length >= 5 ? 13 : 10
 
-        this.setData({
-          showPopupMarketCharts: true,
-          showCharts: false,
-          carModelsInfo: carModelsInfo,
-          'marketCharts.res': res,
-          'marketCharts.unit': unitText,
-          'marketCharts.series': series
-        })
+        if (series.length > 0) {
+          const setPadding = max.toString().length >= 5 ? 13 : 10
 
-        this.drawMarketPopCharts(max, min, categories, xScale, series, setPadding)
+          this.setData({
+            showPopupMarketCharts: true,
+            showCharts: false,
+            carModelsInfo: carModelsInfo,
+            'marketCharts.res': res,
+            'marketCharts.unit': unitText,
+            'marketCharts.series': series
+          })
+
+          this.drawMarketPopCharts(max, min, categories, xScale, series, setPadding)
+        } else {
+          $wuxToast.show({
+            type: 'text',
+            timer: 2000,
+            color: '#fff',
+            text: '该车款暂无行情数据'
+          })
+        }
       })
   },
   /**
