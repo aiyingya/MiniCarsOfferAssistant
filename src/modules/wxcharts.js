@@ -1458,7 +1458,7 @@ function drawXAxis(categories, opts, config, context) {
     context.setFontSize(config.fontSize)
     context.setFillStyle(opts.yAxis.fontColor || '#666666');
     if (opts.xAxis.unitText) {
-      context.fillText(opts.xAxis.unitText, endX - measureText(opts.xAxis.unitText), startY + config.fontSize + 5);
+      context.fillText(opts.xAxis.unitText, endX - measureText(opts.xAxis.unitText) + 15, startY + config.fontSize + 5);
     }
     context.closePath();
     context.stroke();
