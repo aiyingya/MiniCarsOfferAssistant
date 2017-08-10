@@ -1127,12 +1127,12 @@ function drawColumnDataPoints(series, opts, config, context) {
   var maxRange = ranges.shift();
   var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
 
-  // MARK:
+  // MARK: points 会返回到外部函数
   var xWidth, wxData, points;
 
   series.forEach(function (eachSeries, seriesIndex) {
     var data = eachSeries.data;
-    var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+    points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
     points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config, opts);
 
     // 绘制柱状数据图
