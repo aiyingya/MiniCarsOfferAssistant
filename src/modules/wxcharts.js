@@ -366,7 +366,7 @@ function getToolTipData(seriesData, calPoints, index) {
 
       // MARK:
       // text: item.name + ': ' + item.data,
-      text: item.name + ': ' + item.data + '万,(' + item.companyCount + '报价公司数)',
+      text: item.name + ': ' + item.data + '万,(报价公司数:' + item.companyCount + ')',
 
       color: item.color
     };

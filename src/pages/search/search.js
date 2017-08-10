@@ -863,8 +863,8 @@ Page({
     }
 
     let { item, max, min } = chartItemGenerator(res.lowestPriceTrend, days)
-    item.color = "#000000"
-    item.name = '实例'
+    item.color = "#ED4149"
+    item.name = ''
     item.topno = 1
     series.push(item)
 
