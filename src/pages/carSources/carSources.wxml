@@ -90,7 +90,7 @@
   </view>
 
   <!--参考成交-->
-  <view class="car-sources-reference-deal"><!--style="height: {{topNOfCurrentModeHeight}}rpx"-->
+  <view class="car-sources-reference-deal" style="height: {{topNOfCurrentModeHeight}}rpx">
 
     <!--1.7.1 参考成交价移除-->
     <!--<view class="reference" wx:if="{{topNOfCurrentMode.reference}}">
@@ -122,7 +122,7 @@
   <block wx:if="{{nodata === 'data'}}">
     <view class="carSources-navbar-wrapper">
       <!-- 下拉框筛选 -->
-      <view class="carSources-navbar" hidden="{{hasOverLayDropdown}}"> <!-- style="top: {{ topNOfCurrentModeHeight + 132 }}rpx;"-->
+      <view class="carSources-navbar" hidden="{{hasOverLayDropdown}}" style="top: -1rpx;">
         <view class="navbar cars-facade" bindtap="handlerAmendCarFacade" data-selected-filter-index="0">
           <view class="navbar-text">
             外:{{selectedExternalCarColorName}} 内:{{selectedInternalCarColorName}}
@@ -133,8 +133,7 @@
       </view>
 
     <!-- 条件筛选 -->
-      <view class="rmendCarFacade-popup-wrap" wx:if="{{showRmendCarFacade}}" hidden="{{hasOverLayDropdown}}">
-       <!--style="top: {{ topNOfCurrentModeHeight + 220 }}rpx;"-->
+      <view class="rmendCarFacade-popup-wrap" wx:if="{{showRmendCarFacade}}" hidden="{{hasOverLayDropdown}}" style="top: 88rpx;" >
         <view class="showMask rmendCarFacade-popup-mask" bindtap="handlerRemoveRmendCarFacade" catchtouchmove="onTouchMoveWithCatch">
         </view>
         <view class="rmendCarFacade-inner topToBottom">
@@ -168,7 +167,7 @@
       </view>
 
       <!-- 标签选择 -->
-      <view class="filter-scroll-view" hidden="{{hasOverLayDropdown}}">
+      <view class="filter-scroll-view" hidden="{{hasOverLayDropdown}}" style="top: 88rpx;">
         <view wx:for="{{scrollFilters}}" wx:for-index="scrollFilterIndex" wx:for-item="scrollFilterItem" wx:key="name" class="scroll-filter">
           <view wx:for="{{scrollFilterItem.items}}" wx:for-index="filterIndex" wx:for-item="filterItem" wx:key="name" bindtap="handlerFilterSelected"
             data-scroll-filter-index="{{scrollFilterIndex}}" data-scroll-filter-item="{{scrollFilterItem}}" data-filter-Index="{{filterIndex}}"
@@ -179,10 +178,8 @@
       </view>
     </view>
     <!--为了实现展开悬停到头部-->
-<!--
     <view class="black-magic" id="x0">
     </view>
--->
 
     <block wx:if="{{searchnodata === 'none'}}">
       <view class="nodata">

@@ -56,8 +56,5 @@ declare type PriceTrendEntity = {
 };
 
 declare type SPUMarketTrendEntity = {
-  lowestPriceTrend: Array<PriceTrendEntity>,
-  maxPrice: number,
-  minPrice: number,
-  //priceTrendModels: Array<{ topNum: number, priceList: Array<PriceTrendEntity> }>
+  lowestPriceTrend: Array<PriceTrendEntity>
 };

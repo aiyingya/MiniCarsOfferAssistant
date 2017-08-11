@@ -1127,12 +1127,12 @@ function drawColumnDataPoints(series, opts, config, context) {
   var maxRange = ranges.shift();
   var endY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
 
-  // MARK:
+  // MARK: points 会返回到外部函数
   var xWidth, wxData, points;
 
   series.forEach(function (eachSeries, seriesIndex) {
     var data = eachSeries.data;
-    var points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
+    points = getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts, config, process);
     points = fixColumeData(points, eachSpacing, series.length, seriesIndex, config, opts);
 
     // 绘制柱状数据图
@@ -1316,6 +1316,7 @@ function drawLineDataPoints(series, opts, config, context, process, categories) 
             if (index > 0) {
               var ctrlPoint = createCurveControlPoints(points, index - 1);
               context.bezierCurveTo(ctrlPoint.ctrA.x, ctrlPoint.ctrA.y, ctrlPoint.ctrB.x, ctrlPoint.ctrB.y, item.x, item.y);
+              context.arc(item.x, item.y, 1, 0, 2 * Math.PI);
             }
           });
         } else {
@@ -1457,7 +1458,7 @@ function drawXAxis(categories, opts, config, context) {
     context.setFontSize(config.fontSize)
     context.setFillStyle(opts.yAxis.fontColor || '#666666');
     if (opts.xAxis.unitText) {
-      context.fillText(opts.xAxis.unitText, endX - measureText(opts.xAxis.unitText), startY + config.fontSize + 5);
+      context.fillText(opts.xAxis.unitText, endX - measureText(opts.xAxis.unitText) + 15, startY + config.fontSize + 5);
     }
     context.closePath();
     context.stroke();
