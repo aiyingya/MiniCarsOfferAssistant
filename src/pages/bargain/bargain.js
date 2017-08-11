@@ -36,7 +36,7 @@ Page({
   getBargainData(type) {
     let that = this
     let tenantId = container.userService.address.tenantId
-    let manager = container.userService.roleInfo.tenants[0].manager
+    let manager = container.userService.role.roleInfo.tenants[0].manager
     let userId = container.userService.auth.userId
     console.log(container.userService)
     function makeUpZero(s) {

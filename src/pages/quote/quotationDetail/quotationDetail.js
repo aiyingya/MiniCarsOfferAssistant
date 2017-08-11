@@ -127,7 +127,7 @@ console.log(quotation)
   },
   onShow() {
     this.setData({
-      roleName: container.userService.roleName
+      roleName: container.userService.role.roleName
     })
 
     const event = {
@@ -316,7 +316,7 @@ console.log(quotation)
    */
 
   handlerBargainActive(e) {
-    if (container.userService.roleName === 'guest') {
+    if (container.userService.role.roleName === 'guest') {
       $wuxToast.show({
         type: 'text',
         timer: 2000,

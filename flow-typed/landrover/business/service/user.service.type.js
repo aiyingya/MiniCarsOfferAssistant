@@ -24,66 +24,6 @@ declare type UserInfo = {
   idCard: string
 };
 
-declare type UserInfoForWeixin = {
-  customerId: number,
-  userId: string,
-  weixinName: string,
-  portrait: string,
-  sex: number,
-  country: string,
-  province: string,
-  city: string
-};
-
-declare type Weixin = {
-  userInfo: UserInfoForWeixin,
-  sessionId: string
-};
-
-declare type UserInfoPlainEntityForWeixin = {
-  userInfo: UserInfoForWeixin,
-  rawData: string,
-  signature: string
-};
-
-declare type UserInfoEncryptedEntityForWeixin = {
-  encryptedData: string,
-  iv: string
-};
-
-declare type UserInfoEntityForWeixin = UserInfoPlainEntityForWeixin | UserInfoEncryptedEntityForWeixin;
-
-declare type RoleInfoForEmployee = {
-  userId: string,
-  mobile: string,
-  name: string,
-  tenants: Array<Tenant>
-};
-
-declare type Tenant = {
-  tenantId: number,
-  tenantName: string,
-  tenantDescription: string,
-  tenantTelephone: string,
-  tenantStatus: 'online' | '',
-  remark: string,
-  address: Address
-};
-
-declare type Address = {
-  addressId: number,
-  cityId: number,
-  cityName: string,
-  detailAddress: string,
-  districtId: number,
-  districtName: string,
-  lat: number,
-  lon: number,
-  provinceId: number,
-  provinceName: string,
-  tenantId: number
-};
-
 declare type RegisterType = 'mobile' | '';
 
 declare type AuthInfoType = {
@@ -98,21 +38,25 @@ declare type AuthInfoType = {
 
 declare type UseCaseType = 'register' | 'access' | 'registerOrAccess' | 'resetPassword';
 
-declare type AuthType = 'code' | 'password';
-
-declare type AuthEntity = Passport | VCode;
+declare type AuthEntity = AuthPassport | AuthVCode;
 
 declare type VCodeType = 'SMS' | 'Voice';
 
-declare type Passport = {
-  loginName: string,
-  password: string
+declare type AuthPassport = {
+  type: 'password',
+  passport: {
+    loginName: string,
+    password: string
+  }
 };
 
-declare type VCode = {
-  mobile: string,
-  code: string,
-  useCase: UseCaseType
+declare type AuthVCode = {
+  type: 'code',
+  vcode: {
+    mobile: string,
+    code: string,
+    useCase: UseCaseType
+  }
 };
 
 declare type TokenType = 'bearer' | 'mac';

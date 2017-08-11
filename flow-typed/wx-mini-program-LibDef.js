@@ -3,6 +3,7 @@ declare module "fmt-wxapp-promise" {
   declare module.exports: any;
 };
 declare var wx: any;
+declare var Page: any;
 
 declare type UserInfoPlainFromMiniProgram = {
   nickName: string,
