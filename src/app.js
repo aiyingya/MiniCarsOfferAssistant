@@ -16,7 +16,7 @@ container.userService = userService
 container.tradeService = tradeService
 container.saasService = saasService
 
-
+container.chart = wxcharts
 
 const amap = new amapFile.AMapWX({key:'63572efadd84fa26c86bd62f78fe0152'});
 
@@ -37,8 +37,6 @@ App({
   },
   globalData: {
   },
-  wxcharts: wxcharts,
-
   amap: amap,
 
   // FIXME: 这个地方的逻辑是存放即需要跨页面跳转的报价单数据

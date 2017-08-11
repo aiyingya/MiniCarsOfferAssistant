@@ -110,52 +110,52 @@ Page({
         'topNOfCurrentMode.topNStatus': '加载中'
       })
       container.saasService.getTopNOfCurrentMode(carModelsInfo.carModelId)
-      .then(res => {
-        const reference = res.reference
+        .then(res => {
+          const reference = res.reference
 
-        // 1.7.1 参考成交价移除
-        // if (reference) {
-        //   this.setData({
-        //     topNOfCurrentModeHeight: 288,
-        //     overLayDropdownOffset: 288 + 60
-        //   })
-        //   reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-reference.discount, reference.guidePrice, this.isShowDownPrice)
-        //   reference.viewModelQuoted.price = reference.price
-        //   reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
-        // } else {
-        //   res.referenceStatus = '暂无'
-        // }
+          // 1.7.1 参考成交价移除
+          // if (reference) {
+          //   this.setData({
+          //     topNOfCurrentModeHeight: 288,
+          //     overLayDropdownOffset: 288 + 60
+          //   })
+          //   reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-reference.discount, reference.guidePrice, this.isShowDownPrice)
+          //   reference.viewModelQuoted.price = reference.price
+          //   reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
+          // } else {
+          //   res.referenceStatus = '暂无'
+          // }
 
-        if (res.priceList && res.priceList.length) {
-          for (let topMode of res.priceList) {
-            topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-topMode.discount, topMode.guidePrice, this.isShowDownPrice)
-            topMode.viewModelQuoted.price = topMode.price
-            topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
+          if (res.priceList && res.priceList.length) {
+            for (let topMode of res.priceList) {
+              topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-topMode.discount, topMode.guidePrice, this.isShowDownPrice)
+              topMode.viewModelQuoted.price = topMode.price
+              topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
+            }
+          } else {
+            res.topNStatus = '暂无'
           }
-        } else {
-          res.topNStatus = '暂无'
-        }
 
-        this.setData({
-          topNOfCurrentMode: res
+          this.setData({
+            topNOfCurrentMode: res
+          })
+          console.log(res)
         })
-        console.log(res)
-      })
-      .catch(err => {
-        this.setData({
-          'topNOfCurrentMode.referenceStatus': '加载失败',
-          'topNOfCurrentMode.topNStatus': '加载失败'
+        .catch(err => {
+          this.setData({
+            'topNOfCurrentMode.referenceStatus': '加载失败',
+            'topNOfCurrentMode.topNStatus': '加载失败'
+          })
         })
-      })
 
       container.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
         success: function (res) {
           let filters = res.filters
-          
+
           let dropDownFilters = []
           let scrollFilters = []
           let scrollFiltersSelectedIndexes = []
-            
+
           let sourcePublishDateFilterId
           let seatNum = res.seatNums
           let praiseModels = []
@@ -174,20 +174,20 @@ Page({
               scrollFiltersSelectedIndexes.push(-1)
             }
           }
-          if(res && res.praiseModels) {
+          if (res && res.praiseModels) {
             praiseModels = res.praiseModels
-            
-            if(praiseModels.length > 0) {
-              for(let item of praiseModels) {
+
+            if (praiseModels.length > 0) {
+              for (let item of praiseModels) {
                 item.style = ''
-                if(item.praiseType) {
+                if (item.praiseType) {
                   item.style = 'goodlabel'
                 }
               }
             }
           }
-          
-          
+
+
           const carSourcesBySkuInSpuList = that.bakeTheRawCarSourcesBySkuInSpuList(res.carSourcesBySkuInSpuList)
 
           that.setData({
@@ -524,25 +524,25 @@ Page({
       // 价格低和到货快 同时存在
       if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length > 0) {
         carSourceItem.viewModelTabs = [{
-            name: '价格低',
-            value: carSourcePlaceLowest
-          },
-          {
-            name: '到货快',
-            value: carSourcePlaceFastest
-          }
+          name: '价格低',
+          value: carSourcePlaceLowest
+        },
+        {
+          name: '到货快',
+          value: carSourcePlaceFastest
+        }
         ]
         carSourceItem.viewModelTabMore = carSourceItem.viewModelOthers
         selectedCarSourcePlace = carSourcePlaceLowest
       } else {
         carSourceItem.viewModelTabs = [{
-            name: '价格低',
-            value: carSourcePlaceLowest
-          },
-          {
-            name: '到货快',
-            value: carSourcePlaceFastest
-          }
+          name: '价格低',
+          value: carSourcePlaceLowest
+        },
+        {
+          name: '到货快',
+          value: carSourcePlaceFastest
+        }
         ]
         carSourceItem.viewModelTabMore = null
         selectedCarSourcePlace = carSourcePlaceLowest
@@ -620,7 +620,7 @@ Page({
   },
   selectCarSku(selectedCarSkuIndex) {
     let section = null
-    if (selectedCarSkuIndex === -1) {} else {
+    if (selectedCarSkuIndex === -1) { } else {
       section = this.currentCarSourcesBySkuInSpuList[selectedCarSkuIndex]
       //this.updateTheCarSku(selectedCarSkuIndex, section)
     }
@@ -924,8 +924,8 @@ Page({
       from,
       (supplier) => {
         const
-        supplierId = supplier.supplierId,
-        supplierPhone = supplier.supplierPhone
+          supplierId = supplier.supplierId,
+          supplierPhone = supplier.supplierPhone
         contactPhone = supplier.supplierPhone
 
         container.saasService.pushCallRecord(supplierId, supplierPhone, contactPhone)
@@ -944,7 +944,7 @@ Page({
          * 上报
          */
         const
-        supplierId = supplier.supplierId
+          supplierId = supplier.supplierId
         supplierPhone = supplier.supplierPhone
         messageResultId = carSourceItem.carSourceId
         contactPhone = carSourceItem.contact || supplier.supplierPhone
@@ -1009,43 +1009,43 @@ Page({
       title: '提示',
       content: '发起定车后， 将会有工作人员与您联系',
       buttons: [{
-          text: '发起订车',
-          type: 'weui-dialog__btn_primary',
-          onTap: function () {
-            const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
-            const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
+        text: '发起订车',
+        type: 'weui-dialog__btn_primary',
+        onTap: function () {
+          const spec = skuItem.carSku.externalColorName + '/' + skuItem.carSku.internalColorName
+          const itemPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
 
-            container.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
-              success(res) {
-                wx.showModal({
-                  title: '提示',
-                  content: '提交成功，请保持通话畅通',
-                  success: function (res) {
-                    if (res.confirm) {}
-                  }
-                })
-              },
-              fail(err) {
-                wx.showModal({
-                  title: '提示',
-                  content: err.alertMessage,
-                  success: function (res) {
-                    if (res.confirm) {}
-                  }
-                })
-              },
-              complete() {
+          container.saasService.requestBookCar(carModelsInfo.carModelName, spec, itemPrice, 1, {
+            success(res) {
+              wx.showModal({
+                title: '提示',
+                content: '提交成功，请保持通话畅通',
+                success: function (res) {
+                  if (res.confirm) { }
+                }
+              })
+            },
+            fail(err) {
+              wx.showModal({
+                title: '提示',
+                content: err.alertMessage,
+                success: function (res) {
+                  if (res.confirm) { }
+                }
+              })
+            },
+            complete() {
 
-              }
-            })
-          }
-        },
-        {
-          text: '取消',
-          onTap: function () {
-
-          }
+            }
+          })
         }
+      },
+      {
+        text: '取消',
+        onTap: function () {
+
+        }
+      }
       ]
     })
   },
@@ -1424,16 +1424,16 @@ Page({
   /**
    * 切换label.
    */
-  
+
   handleSwitchShow() {
-    let that = this 
+    let that = this
     let carModelLabel = that.data.carModelLabel
-    
-    if(carModelLabel.unfold !== '') {
+
+    if (carModelLabel.unfold !== '') {
       that.setData({
         'carModelLabel.unfold': ''
       })
-    }else {
+    } else {
       that.setData({
         'carModelLabel.unfold': 'show'
       })

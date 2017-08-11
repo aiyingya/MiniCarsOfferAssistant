@@ -1,10 +1,11 @@
+// @flow
 import {
-  $wuxTrack
+  $wuxTrack,
+  $wuxToast
 } from '../../components/wux'
 import util from '../../utils/util'
-import { container } from '../../landrover/business/index'
+import { container, system } from '../../landrover/business/index'
 
-let app = getApp()
 var columnCharts = null
 var columnChartsList = []
 
@@ -16,8 +17,6 @@ Page({
     carModelsList: [],
     inStockData: [],
     cacheCarModelsList: [],
-    windowHeight: '',
-    windowWidth: '',
     showRmendCarFacade: false,
     filtersData: [],
     CarsModeleText: '全部',
@@ -43,7 +42,7 @@ Page({
     selectColors: [],
     colorAllSelected: '',
     selectColorsId: '',
-    selectColorTime: [{value: 12}, {value: 24}],
+    selectColorTime: [{ value: 12 }, { value: 24 }],
     timesAllSelected: '',
     selectTimes: '',
     selectTimesId: '',
@@ -54,49 +53,49 @@ Page({
     pageShare: false,
     options: '',
     showPopupMarketCharts: false,
-    marketCharts:{
+    marketCharts: {
       series: [],
       topnoData: [
-        {text: 'Top.1',style: ''},
-        {text: 'Top.2',style: ''},
-        {text: 'Top.3',style: ''}
+        { text: 'Top.1', style: '' },
+        { text: 'Top.2', style: '' },
+        { text: 'Top.3', style: '' }
       ],
       switchTopno1: true,
       switchTopno2: true,
       switchTopno3: true,
-      unit: ''
-    }
-
+      unit: '',
+      // 天数计算
+      recentDaysOfData: [
+        { id: 0, days: 90, selected: false },
+        { id: 1, days: 60, selected: true },
+        { id: 2, days: 30, selected: false }
+      ],
+      res: {}
+    },
+    carModelLabel: {
+      unfold: ''
+    },
+    praiseModels: []
   },
-  onLoad (options) {
+  onLoad(options) {
     let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
     let that = this
-    try {
-      let res = wx.getSystemInfoSync()
-      this.pixelRatio = res.pixelRatio
-      this.apHeight = 16
-      this.offsetTop = 80
-      this.windowWidth = res.windowWidth - 30
-      this.setData({windowHeight: (res.windowHeight - 44) + 'px'})
-    } catch (e) {
-
-    }
 
     if (!container.userService.isLogin()) {
-      setTimeout(function(){
+      setTimeout(function () {
         that.data.pageShare = true
-      },1000)
-      this.setData({carsInfo: carsInfo, options: options})
+      }, 1000)
+      this.setData({ carsInfo: carsInfo, options: options })
       wx.navigateTo({
         url: '../login/login'
       })
-    }else {
+    } else {
       if (carsInfo) {
         // 设置NavigationBarTitle.
         wx.setNavigationBarTitle({
           title: carsInfo.name
         })
-        this.setData({carsInfo: carsInfo, options: options})
+        this.setData({ carsInfo: carsInfo, options: options })
         this.pagesloadRequest(carsInfo, true)
 
         if (wx.showShareMenu) {
@@ -105,7 +104,7 @@ Page({
       }
     }
   },
-  onShow () {
+  onShow() {
     const event = {
       eventAction: 'pageShow',
       eventLabel: `页面展开`
@@ -114,14 +113,14 @@ Page({
 
     let options = this.data.options
     let pageShare = this.data.pageShare
-    if(pageShare) {
+    if (pageShare) {
       this.onLoad(options)
     }
   },
   /**
    * 页面分享.
    */
-  onShareAppMessage () {
+  onShareAppMessage() {
     let carsInfo = this.data.carsInfo
     let carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', carsInfo)
     return {
@@ -137,13 +136,11 @@ Page({
     }
   },
   pagesloadRequest(carsInfo, inStock) {
-    let that = this
-    let stock = inStock ? 'in_stock' : 'all'
+    const stock = inStock ? 'in_stock' : 'all'
+    const stockSeclect = inStock ? 'selected' : ''
 
-    let stockSeclect = inStock ? 'selected' : ''
-
-    container.saasService.requestSearchSpuByCarSeriesId(carsInfo.id, inStock, {
-      success: function (res) {
+    container.saasService.requestSearchSpuByCarSeriesId(carsInfo.id, inStock)
+      .then((res: CarModelsResponse) => {
         if (res) {
           let carModelsList = res.content
           let filters = res.filters
@@ -151,10 +148,8 @@ Page({
           let showNodata = false
           let inStockData = []
 
-          that.drawCanvas(carModelsList)
-
+          this.drawCanvas(carModelsList)
           for (let item of carModelsList) {
-
             let colors = []
             let hours = [{
               value: '全部',
@@ -162,7 +157,6 @@ Page({
             }]
             if (item.supply.colors) {
               let newColorKey = Object.keys(item.supply.colors)
-
               for (let color of newColorKey) {
                 let colorItem = {
                   key: color,
@@ -171,22 +165,20 @@ Page({
                 colors.push(colorItem)
               }
             }
-            if(item.supply.hours.length > 0) {
-
-              for(let hour of item.supply.hours) {
+            if (item.supply.hours.length > 0) {
+              for (let hour of item.supply.hours) {
                 let time = {
                   value: hour,
                   selected: ''
                 }
-
                 hours.push(time)
               }
             }
+            // davidfu 这里的四个属性都是后期加入的
             item.colors = colors
             item.selectColors = []
             item.selectTimes = '全部' // 默认24
             item.hours = hours // 默认24
-
           }
 
           for (let item of filters) {
@@ -195,21 +187,21 @@ Page({
           if (carModelsList.length === 0) {
             showNodata = true
           }
-          console.log(carModelsList)
-          that.setData({
+          const praiseModels = res.praiseModels
+          this.setData({
             carModelsList: carModelsList,
             cacheCarModelsList: carModelsList,
             filtersData: filtersData,
             showNodata: showNodata,
             stock: stock,
-            stockSeclect: stockSeclect
+            stockSeclect: stockSeclect,
+            praiseModels: praiseModels
           })
         }
-      },
-      fail(err) {
+      })
+      .catch(err => {
         console.log(err)
-      }
-    })
+      })
   },
   handleCheckCarsModele() {
     let weitch = this.data.showRmendCarFacade
@@ -284,7 +276,7 @@ Page({
     }
 
   },
-  handlerToCarSources (e) {
+  handlerToCarSources(e) {
     let item = e.currentTarget.dataset.carmodelsinfo
     let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
     let status = item.supply.status
@@ -388,7 +380,7 @@ Page({
               })
               that.drawPopCharts(data)
               that.data.touchindex = ''
-            }else {
+            } else {
               wx.navigateTo({
                 url: '/pages/carSources/carSources?' + carModelsInfoKeyValueString
               })
@@ -403,27 +395,22 @@ Page({
   popupChartstouchMove(e) {
     console.log(e)
   },
+  /**
+   * 绘出第一层图表的内容
+   *
+   * @param {any} list
+   * @returns
+   */
   drawCanvas(list) {
     if (!list) {
       return
     }
     let data = list
-    let that = this
-    try {
-      let res = wx.getSystemInfoSync()
-      that.pixelRatio = res.pixelRatio
-      that.apHeight = 16
-      that.offsetTop = 80
-      that.windowWidth = res.windowWidth
-    } catch (e) {
-
-    }
     columnCharts = null
     columnChartsList = []
     for (let item of data) {
-
       if (item.supply.chart) {
-        columnCharts = new app.wxcharts({
+        columnCharts = new container.chart({
           canvasId: item.carModelId,
           type: 'column',
           categories: item.supply.chart.x,
@@ -456,7 +443,7 @@ Page({
           dataItem: {
             color: '#ECF0F7'
           },
-          width: that.windowWidth,
+          width: system.windowWidth,
           height: 120,
           dataLabel: false,
           dataPointShape: false,
@@ -477,20 +464,19 @@ Page({
       }
     }
   },
+  /**
+   * 绘出第二层弹出的图表的内容
+   *
+   * @param {any} data
+   * @returns
+   */
   drawPopCharts(data) {
     if (!data) {
       return
     }
     let popWindow = {}
-
-    try {
-      let res = wx.getSystemInfoSync()
-
-      popWindow.windowWidth = res.windowWidth
-    } catch (e) {
-
-    }
-    this.data.popCharts = new app.wxcharts({
+    popWindow.windowWidth = system.windowWidth
+    this.data.popCharts = new container.chart({
       canvasId: 'popCharts',
       type: 'column',
       categories: data.x,
@@ -529,6 +515,52 @@ Page({
       dataPointShape: false,
       extra: {
         area: ['风险', '适宜2.43~3.73', '偏贵']
+      }
+    })
+  },
+  drawMarketPopCharts(
+    maxPrice,
+    minPrice,
+    categories,
+    xScale,
+    series,
+    setPadding
+  ) {
+    this.data.popMarketCharts = new container.chart({
+      canvasId: 'popMarketCharts',
+      type: 'line',
+      categories: categories,
+      color: '#ECF0F7',
+      legend: false,
+      background: '#ECF0F7',
+      animation: false,
+      series: series,
+      xAxis: {
+        disableGrid: true,
+        fontColor: '#333333',
+        gridColor: '#333333',
+        unitText: '日期',
+        type: 'calibration'
+      },
+      yAxis: {
+        disabled: true,
+        fontColor: '#333333',
+        gridColor: '#333333',
+        unitText: '（个）',
+        min: minPrice,
+        max: maxPrice,
+        format(val) {
+          return val.toFixed(2)
+        }
+      },
+      xScale: xScale,
+      dataLabel: false,
+      dataPointShape: false,
+      width: system.windowWidth,
+      height: 120,
+      setPadding: setPadding,
+      extra: {
+        lineStyle: 'curve'
       }
     })
   },
@@ -662,9 +694,8 @@ Page({
     let that = this
     let changeCharts = this.data.changeCharts
     let newCarModelsList = []
-    let times = [{value: 24, selected: 'selected'}, {value: 12, selected: ''}]
+    let times = [{ value: 24, selected: 'selected' }, { value: 12, selected: '' }]
     requestData = {
-
       inStock: false
     }
 
@@ -677,7 +708,7 @@ Page({
     if (keys.length > 0) {
       requestData.colors = keys.join(',')
     }
-    if(item.selectTimes !== '全部') {
+    if (item.selectTimes !== '全部') {
       requestData.hours = item.selectTimes
     }
     for (let changeTime of times) {
@@ -745,150 +776,167 @@ Page({
       scrollView: 'overflow: auto;'
     })
   },
-
   /**
    * 查看行情走势.
   */
-  handleCheckMarket(e) {
-    let id = e.currentTarget.dataset.selectid
-    let carModelsInfo = e.target.dataset.carmodelsinfo
-    let that = this
-    let popWindow = {}
-    let xAxisName = carModelsInfo.supply.chart.xAxisName
-    let unitText = xAxisName.indexOf('万') >= 0 ? '万' : '点'
-    try {
-      let res = wx.getSystemInfoSync()
-
-      popWindow.windowWidth = res.windowWidth
-    } catch (e) {
-
+  chartDataGenerator(
+    res: SPUMarketTrendEntity,
+    days: number = 60,
+    xScaleRange: number = 5
+  ): {
+    max: number,
+    min: number,
+    categories: Array<string>,
+    xScale: Array<string>,
+    series: Array<ChartDataItem>
+  } {
+    const categories = []
+    const xScale = []
+    let i = 0
+    for (let priceTrendItem of res.lowestPriceTrend) {
+      i = i + 1
+      if (i > 90 - days) {
+        categories.push(priceTrendItem.priceDateString)
+        if (i == 0) {
+          xScale.push(priceTrendItem.priceDateString)
+        } else if (i % xScaleRange === 0) {
+          xScale.push(priceTrendItem.priceDateString)
+        } else if (i === (categories.length - 1)) {
+          xScale.push(priceTrendItem.priceDateString)
+        }
+      }
     }
 
-    return container.saasService.gettingMarketTrend({
-      spuId: id,
-    }).then((res) => {
-      let series = []
-      let categories = []
-      let xScale = []
-      let maxPrice = (Number(res.maxPrice)/10000).toFixed(2)
-      let minPrice = (Number(res.minPrice)/10000).toFixed(2)
-      let setPadding = maxPrice.toString().length >= 5 ? 13 : 10
-      if(res.priceTrendModels.length > 0) {
-        for(let numitems of res.priceTrendModels) {
-          let items = {}
-          items.data = []
-          items.color = ''
-          items.switch = true
-          items.companyCount = []
-          if(numitems.priceList.length > 0) {
-            for(let priceitems of numitems.priceList) {
-              if(numitems.topNum === 1) {
-                categories.push(priceitems.priceDateString)
-                items.color = '#ED4149'
-                items.name = 'Top1'
-                items.topno = 1
-              }
-              if(numitems.topNum === 2) {
-                items.color = '#3377EE'
-                items.name = 'Top2'
-                items.topno = 2
-              }
-              if(numitems.topNum === 3) {
-                items.color = '#B0CDFF'
-                items.name = 'Top3'
-                items.topno = 3
-              }
-              let val = ''
-              let companyCount = ''
-              if(priceitems && priceitems.discount) {
-                val = util.priceAbsStringWithUnitNumber(priceitems.discount)
-              }else {
-                val = null
-              }
-              if(priceitems && priceitems.companyCount) {
-                companyCount = priceitems.companyCount
-              }else {
-                companyCount = null
-              }
-              items.data.push(val)
-              items.companyCount.push(companyCount)
-            }
-            series.push(items)
+    const series = []
+
+    const chartItemGenerator = (
+      priceTrendList: Array<PriceTrendEntity>,
+      days: number
+    ): {
+      item: ChartDataItem | null,
+      max: number,
+      min: number
+    } => {
+      let item: ChartDataItem | null = {
+        days: days,
+        topno: null,
+        name: null,
+        color: null,
+        data: [],
+        switch: true,
+        companyCount: []
+      }
+      let i = 0
+      let min = Number.MAX_VALUE
+      let max = - Number.MAX_VALUE
+      let flag = false
+      for (let priceTrendItem of priceTrendList) {
+        i = i + 1
+        if (i > 90 - days) {
+          let val = ''
+          let companyCount = ''
+          if (priceTrendItem && priceTrendItem.discount) {
+            val = util.priceAbsStringWithUnitNumber(priceTrendItem.discount)
+            if (Number(val) > max) { max = Number(val) }
+            if (Number(val) < min) { min = Number(val) }
+            flag = true
+          } else {
+            val = null
+          }
+
+          if (priceTrendItem && priceTrendItem.companyCount) {
+            companyCount = priceTrendItem.companyCount
+          } else {
+            companyCount = null
+          }
+          item.data.push(val)
+          if (item.companyCount != null) {
+            item.companyCount.push(companyCount)
           }
         }
-
-        categories.forEach((item,index) => {
-          if(index == 0 ) {
-            xScale.push(item)
-          }else if(index % 5 === 0) {
-            xScale.push(item)
-          }else if(index == (categories.length-1)) {
-            xScale.push(item)
-          }
-        })
       }
-      console.log(series)
-      that.setData({
-        showPopupMarketCharts: true,
-        showCharts: false,
-        carModelsInfo: carModelsInfo,
-        'marketCharts.series': series,
-        'marketCharts.unit': unitText
+      if (flag != true) {
+        item = null
+        max = 0
+        min = 0
+      }
+      return {
+        item,
+        max,
+        min
+      }
+    }
+
+    let { item, max, min } = chartItemGenerator(res.lowestPriceTrend, days)
+    if (item != null) {
+      item.color = "#ED4149"
+      item.name = ''
+      item.topno = 1
+      series.push(item)
+    }
+
+    min = Number((min - (max - min) * 0.25).toFixed(2))
+
+    return {
+      max,
+      min,
+      categories,
+      xScale,
+      series
+    }
+  },
+  handleCheckMarket(e) {
+    let spuId = e.currentTarget.dataset.selectid
+    let carModelsInfo = e.target.dataset.carmodelsinfo
+    let popWindow = {}
+    popWindow.windowWidth = system.windowWidth
+    let xAxisName = carModelsInfo.supply.chart.xAxisName
+    let unitText = xAxisName.indexOf('万') >= 0 ? '万' : '点'
+
+    container.saasService.gettingMarketTrend(spuId)
+      .then((res: SPUMarketTrendEntity) => {
+        const { max, min, categories, xScale, series } = this.chartDataGenerator(res)
+
+        if (series.length > 0) {
+          const setPadding = max.toString().length >= 5 ? 13 : 10
+
+          this.setData({
+            showPopupMarketCharts: true,
+            showCharts: false,
+            carModelsInfo: carModelsInfo,
+            'marketCharts.res': res,
+            'marketCharts.unit': unitText,
+            'marketCharts.series': series
+          })
+
+          this.drawMarketPopCharts(max, min, categories, xScale, series, setPadding)
+        } else {
+          $wuxToast.show({
+            type: 'text',
+            timer: 2000,
+            color: '#fff',
+            text: '该车款暂无行情数据'
+          })
+        }
       })
-      this.data.popMarketCharts = new app.wxcharts({
-          canvasId: 'popMarketCharts',
-          type: 'line',
-          categories: categories,
-          color: '#ECF0F7',
-          legend: false,
-          background: '#ECF0F7',
-          animation: false,
-          series: series,
-          xAxis: {
-            disableGrid: true,
-            fontColor: '#333333',
-            gridColor: '#333333',
-            unitText: '日期',
-            type: 'calibration'
-          },
-          yAxis: {
-            disabled: true,
-            fontColor: '#333333',
-            gridColor: '#333333',
-            unitText: '（个）',
-            min: minPrice,
-            max: maxPrice,
-            format(val) {
-              return val.toFixed(2)
-            }
-          },
-          xScale: xScale,
-          dataLabel: false,
-          dataPointShape: false,
-          width: popWindow.windowWidth,
-          height: 120,
-          setPadding: setPadding,
-          extra: {
-              lineStyle: 'curve'
-          }
-      })
-    })
   },
   /**
    * 关闭行情走势.
   */
   handleClosePopupMarket() {
-    let carModelsList = this.data.carModelsList
-    let topnoData = this.data.marketCharts.topnoData
     columnCharts = null
     columnChartsList = []
-    for(let item of topnoData) {
-      item.style = ''
-    }
+
+    let carModelsList = this.data.carModelsList
     this.drawCanvas(carModelsList)
     this.setData({
+      'marketCharts.recentDaysOfData': [
+        { id: 0, days: 90, selected: false },
+        { id: 1, days: 60, selected: true },
+        { id: 2, days: 30, selected: false }
+      ],
+      'marketCharts.res': {},
       showPopupMarketCharts: false,
-      'marketCharts.topnoData': topnoData,
       showCharts: true
     })
     this.data.popMarketCharts = null
@@ -897,48 +945,88 @@ Page({
   handleMarketTouch(e) {
     let that = this
     let index = this.data.popMarketCharts.getCurrentDataIndex(e)
-    console.log(index,this.data.popMarketCharts);
+    console.log(index, this.data.popMarketCharts);
     this.data.popMarketCharts.showToolTip(e, {
       background: '#333333'
     });
   },
+  handleMarketUpdateDataWithDays(e) {
+    const id = e.currentTarget.dataset.id
+
+    const recentDaysOfData = this.data.marketCharts.recentDaysOfData
+    for (let item of recentDaysOfData) {
+      if (item.id == id) {
+        if (item.selected === true) {
+          return
+        } else {
+          item.selected = true
+        }
+      } else {
+        item.selected = false
+      }
+    }
+
+    const days = e.currentTarget.dataset.days
+    const res = this.data.marketCharts.res
+    const { max, min, categories, xScale, series } = this.chartDataGenerator(res, days)
+    const setPadding = max.toString().length >= 5 ? 13 : 10
+
+    this.setData({
+      'marketCharts.recentDaysOfData': recentDaysOfData,
+      'marketCharts.series': series
+    })
+
+    this.drawMarketPopCharts(max, min, categories, xScale, series, setPadding)
+  },
   handleMarketUpdateData(e) {
     let index = e.currentTarget.dataset.topno
-    let topno = index+1
+    let topno = index + 1
     let series = this.data.marketCharts.series
     let updata = []
     let topnoData = this.data.marketCharts.topnoData
     let isSwitch = false
-    for(let item of series) {
-      if(item.topno == topno) {
-        if(item.switch) {
+    for (let item of series) {
+      if (item.topno == topno) {
+        if (item.switch) {
           item.switch = false
-          topnoData[index].style="icon-nobg"
-        }else {
+          topnoData[index].style = "icon-nobg"
+        } else {
           item.switch = true
-          topnoData[index].style=""
+          topnoData[index].style = ""
         }
       }
     }
-    for(let item of series) {
-      if(item.switch) {
+    for (let item of series) {
+      if (item.switch) {
         updata.push(item)
-        for(let val of item.data) {
-          if(val != null) {
+        for (let val of item.data) {
+          if (val != null) {
             isSwitch = true
           }
         }
       }
     }
 
-    if(updata.length <= 0 || !isSwitch) { return }
+    if (updata.length <= 0 || !isSwitch) { return }
 
     this.data.marketCharts.series = series
     this.setData({
-      'marketCharts.topnoData':topnoData
+      'marketCharts.topnoData': topnoData
     })
     this.data.popMarketCharts.updateData({
-        series: updata
+      series: updata
     })
+  },
+  handleSwitchShow() {
+    let carModelLabel = this.data.carModelLabel
+    if (carModelLabel.unfold !== '') {
+      this.setData({
+        'carModelLabel.unfold': ''
+      })
+    } else {
+      this.setData({
+        'carModelLabel.unfold': 'show'
+      })
+    }
   }
 })

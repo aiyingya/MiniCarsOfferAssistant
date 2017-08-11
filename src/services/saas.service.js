@@ -485,24 +485,24 @@ console.log(quotationDraft)
   }
 
   /**
-   *
+   * 车系内的所有车款行情
    *
    * @param {number} carSeriesId
    * @param {boolean} inStock
    * @param {{}} object
    * @memberof SAASService
    */
-  requestSearchSpuByCarSeriesId (carSeriesId: number, inStock: boolean, object: any) {
-    this.sendMessage({
+  requestSearchSpuByCarSeriesId (
+    carSeriesId: number,
+    inStock: boolean
+  ): Promise<CarModelsResponse> {
+    return this.sendMessageByPromise({
       path: `supply/car/spu`,
       method: 'GET',
       data: {
         carSeriesId: carSeriesId,
         inStock: inStock
-      },
-      success: object.success,
-      fail: object.fail,
-      complete: object.complete
+      }
     })
   }
 
@@ -688,13 +688,19 @@ console.log(quotationDraft)
   }
 
   /**
-   * 行情走势.
-   * @param opts
+   * 获取某一个 spu 的行情走势.
+   *
+   * @param {number} spuId
+   * @returns {Promise<SPUMarketTrendEntity>}
+   * @memberof SAASService
    */
-  gettingMarketTrend(opts:any) {
+  gettingMarketTrend(spuId: number): Promise<SPUMarketTrendEntity> {
     return this.sendMessageByPromise({
-      path: `sale/quotation/getPriceTrend/new?spuId=${opts.spuId}`,
-      method: 'GET'
+      path: `sale/quotation/getPriceTrend`,
+      method: 'GET',
+      data: {
+        spuId
+      }
     })
   }
 
@@ -855,7 +861,7 @@ console.log(quotationDraft)
       data: opts.data || {}
     })
   }
-  
+
   /**
    * 获取报价记录详情列表
    * @param opts

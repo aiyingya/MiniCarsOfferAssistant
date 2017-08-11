@@ -34,7 +34,6 @@ page {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	border-bottom: 1rpx solid #ccc;
 }
 .navbar-quote-popup .navbar-quote-cell:last-child:after {
 	border: none;
@@ -126,6 +125,7 @@ page {
 	-webkit-align-items:center;
 	align-items:center;
 	white-space: nowrap;
+  position: absolute;
   z-index: 10;
 }
 .filter-scroll-view:after {
@@ -293,7 +293,7 @@ page {
   justify-content: center;
 }
 .car-sources-reference-deal .topN {
-  height: 122rpx;
+  height: 132rpx;
 }
 .car-sources-reference-deal .topN .modes {
   width: 100%;
@@ -321,7 +321,7 @@ page {
 	align-items: center;
 	background-color: #fff;
 	z-index: 10;
-  position: relative;
+  position: absolute;
 }
 .carSources-navbar:after  {
 	content: '';
@@ -1040,19 +1040,21 @@ page {
   height: auto;
 }
 .carSources-label .label {
-  margin: 0 10rpx 10rpx 0;
-  padding: 0 5rpx;
-  background: #FFFFFF;
-  border: 1rpx solid #999999;
-  border-radius: 10rpx;
+  box-sizing: border-box;
+  margin-right: 16rpx;
+  margin-bottom: 8rpx;
+  height: 40rpx;
+  padding: 8rpx 9rpx;
+  background: rgba(228,228,228,0.3);
+  border-radius: 4rpx;
   font-family: "PingFangSC-Regular";
   font-size: 22rpx;
-  color: #666666;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 22rpx;
 }
 .carSources-label .label.goodlabel {
-  background: #4dbfa0;
-  border: none;
-  color: #fff;
+  background: rgba(241,124,124,0.3)
 }
 .carSources-label .icon_arrow {
   position: absolute;
@@ -1062,12 +1064,12 @@ page {
   height: 24rpx;
   margin-top: -12rpx;
   transform:rotate(90deg);
-  -webkit-transform:rotate(90deg); 
+  -webkit-transform:rotate(90deg);
   z-index: 999;
 }
 .carSources-label .icon_arrow.show {
   transform:rotate(-90deg);
-  -webkit-transform:rotate(-90deg); 
+  -webkit-transform:rotate(-90deg);
 }
 .carSources-navbar-wrapper {
   position: relative;
