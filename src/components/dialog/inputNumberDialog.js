@@ -18,13 +18,13 @@ export default {
       longTapLock: false,
       longTapIntervalId: 0,
       params: {
-        sellingPrice : 0,
-        initSellingPrice : 0,
-        initIsPlus:false,//初始化的加减
-        isPlus :false,
-        isPoint:false,
-        hasInitPoint:0,
-        guidePrice:0
+        sellingPrice: 0,
+        initSellingPrice: 0,
+        initIsPlus: false,//初始化的加减
+        isPlus: false,
+        isPoint: false,
+        hasInitPoint: 0,
+        guidePrice: 0
       }
     }
   },
@@ -33,10 +33,10 @@ export default {
    */
   data() {
     return {
-      cancel() {},
+      cancel() { },
       cancelText: `取消`,
-      confirm() {},
-      close() {},
+      confirm() { },
+      close() { },
       confirmText: `确定`,
       validate() { return true }
     }
@@ -96,7 +96,7 @@ export default {
          * @param {any} e
          */
         inputNumberInput(e) {
-          options.inputNumber = (typeof(e) === 'object') ? e.detail.value :e
+          options.inputNumber = (typeof (e) === 'object') ? e.detail.value : e
 
           let disabled = false
           if (typeof options.validate === 'function') {
@@ -106,13 +106,13 @@ export default {
             [`${this.options.scope}.confirmDisabled`]: disabled
           })
 
-          if(options.priceStyle){
+          if (options.priceStyle) {
             const _isPlus = options.params.isPlus
             let price
-            if(options.params.isPoint && (options.params.initIsPlus === _isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+            if (options.params.isPoint && (options.params.initIsPlus === _isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))) {
               price = options.params.initSellingPrice
-            }else{
-              price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+            } else {
+              price = util.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
             }
             this.setData({
               [`${this.options.scope}.content`]: Math.floor(price)
@@ -126,13 +126,21 @@ export default {
          * @param {any} e
          */
         inputPriceInput(e) {
-          const sellingPrice = Number(e.detail.value)
+          let sellingPrice = Number(e.detail.value)
           if (sellingPrice > 99999999) {
-            return '99999999'
+            sellingPrice = 99999999
           }
           if (sellingPrice < 0) {
-            return '0'
+            sellingPrice = 0
           }
+
+          let disabled = false
+          if (typeof options.validate === 'function') {
+            disabled = !options.validate(e)
+          }
+          this.setData({
+            [`${this.options.scope}.confirmDisabled`]: disabled
+          })
 
           if (options.priceStyle) {
             const quotedMethod = options.params.isPoint ? 'POINTS' : 'PRICE'
@@ -147,6 +155,8 @@ export default {
               [`${this.options.scope}.inputNumber`]: quotedValueOrRange
             })
           }
+
+          return sellingPrice
         },
         /**
          * 确认行为
@@ -165,7 +175,7 @@ export default {
         cancel(e) {
           this.hide(options.cancel())
         },
-        close(){
+        close() {
           if (typeof options.close === 'function') {
             this.hide(options.close())
             return
@@ -185,22 +195,22 @@ export default {
           }
 
           var number = options.inputNumber;
-          if(!number ){
+          if (!number) {
             return
           }
           let text
-          if(!options.params.isPoint){
-            options.inputNumber = (Number(number)>=priceStep) ? (Number(number) - priceStep) : number
+          if (!options.params.isPoint) {
+            options.inputNumber = (Number(number) >= priceStep) ? (Number(number) - priceStep) : number
             text = Number(options.inputNumber)
-          }else{
-            options.inputNumber = (Number(number)>=pointsStep) ? (Number(number) - pointsStep) : number
+          } else {
+            options.inputNumber = (Number(number) >= pointsStep) ? (Number(number) - pointsStep) : number
             text = Number(options.inputNumber).toFixed(2)
           }
           let price
-          if(options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+          if (options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))) {
             price = options.params.initSellingPrice
-          }else{
-            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          } else {
+            price = util.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
           }
           this.setData({
             [`${this.options.scope}.inputNumber`]: text,
@@ -220,7 +230,7 @@ export default {
          *
          * @param {any} e
          */
-        buttonPlus(e, priceStep = 100, pointsStep = 1){
+        buttonPlus(e, priceStep = 100, pointsStep = 1) {
           console.log('buttonPlus')
           // 长按锁
           if (this.options.longTapSkipNextTap === true) {
@@ -229,22 +239,22 @@ export default {
           }
 
           var number = options.inputNumber;
-          if(!number && Number(number)!=0){
+          if (!number && Number(number) != 0) {
             return
           }
           let text
-          if(!options.params.isPoint){
+          if (!options.params.isPoint) {
             options.inputNumber = Number(number) + priceStep
             text = Number(options.inputNumber)
-          }else{
+          } else {
             options.inputNumber = Number(number) + pointsStep
             text = Number(options.inputNumber).toFixed(2)
           }
           let price
-          if(options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+          if (options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))) {
             price = options.params.initSellingPrice
-          }else{
-            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          } else {
+            price = util.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
           }
           this.setData({
             [`${this.options.scope}.inputNumber`]: text,
@@ -273,15 +283,15 @@ export default {
             this.options.longTapLock = false
           }
         },
-        changePush(){
+        changePush() {
           const _isPlus = options.params.isPlus
-          options.params.isPlus =!_isPlus
+          options.params.isPlus = !_isPlus
 
           let price
-          if(options.params.isPoint && (options.params.initIsPlus === !_isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))){
+          if (options.params.isPoint && (options.params.initIsPlus === !_isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))) {
             price = options.params.initSellingPrice
-          }else{
-            price = util.getChangeCarPrice(options.params.isPlus,options.params.isPoint,options.params.guidePrice,options.inputNumber)
+          } else {
+            price = util.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
           }
           this.setData({
             [`${this.options.scope}.content`]: Math.floor(price)
