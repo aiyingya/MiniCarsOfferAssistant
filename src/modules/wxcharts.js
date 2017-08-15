@@ -684,7 +684,7 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
   var process = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 1;
 
   var points = [];
-  var validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+  var validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight - config.paddingTop;
   data.forEach(function (item, index) {
     if (item === null) {
       points.push(null);
