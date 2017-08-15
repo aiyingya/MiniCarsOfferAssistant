@@ -1,3 +1,16 @@
+declare type Page<T> = {
+  totalElements: number,
+  totalPages: number,
+  number: number,
+  size: number,
+  content: Array<T>,
+  numberOfElements: number,
+  hasNext: boolean,
+  last: boolean,
+  first: boolean,
+  hasPrevious: boolean
+}
+
 declare type CarModelSupplyChart = {
   scale: Array<string>,       // '1.30~1.02'
   x: Array<string>,           // '1.30~1.02'
@@ -57,4 +70,33 @@ declare type PriceTrendEntity = {
 
 declare type SPUMarketTrendEntity = {
   lowestPriceTrend: Array<PriceTrendEntity>
+};
+
+declare type Company = {
+  companyId: number,
+  companyName: string
+};
+
+declare type Tag = {
+  userId: string,
+  label: string,
+  createdDate: string
+};
+
+declare type Comment = {
+  companyId: number,
+  tag: Array<Tag>, // 多个标签 ',' 号分割
+  content: string,
+  star: number,
+  createdDate: string,
+  userId: number,
+  phone: string
+};
+
+declare type SupplierSearchResult = {
+  company: Company,
+};
+
+declare type CompanyDetailResponse = {
+  content: Array<Comment>
 };

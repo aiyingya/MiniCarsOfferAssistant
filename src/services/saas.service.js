@@ -11,6 +11,13 @@ import UserService from './user.service'
 import util from '../utils/util'
 import { container } from '../landrover/business/index'
 
+/**
+ *
+ *
+ * @export
+ * @class SAASService
+ * @extends {Service}
+ */
 export default class SAASService extends Service {
 
   userService: UserService
@@ -893,6 +900,142 @@ export default class SAASService extends Service {
       {
         snsId,
         mobile
+      }
+    )
+  }
+
+  // 1.12.0 需求接口
+
+  /**
+   * 供应商模糊查找接口
+   *
+   * @param {string} searchText
+   * @param {(number | null)} [resultMaxCount=null]
+   * @returns {Promise<Array<SupplierSearchResult>>}
+   * @memberof SAASService
+   */
+  retrieveFuzzySupplierSearchResult(
+    searchText: string,
+    resultMaxCount: number | null = null
+  ): Promise<Array<SupplierSearchResult>> {
+    const
+      text = searchText,
+      n = resultMaxCount
+    return this.request(
+      'supply/company/index',
+      'GET',
+      {
+        text,
+        n
+      }
+    )
+  }
+
+  /**
+   * 供应商搜索结果接口
+   * 分页
+   *
+   * @param {string} searchText
+   * @param {(number | null)} [resultMaxCount=null]
+   * @param {number} pageIndex
+   * @param {number} pageSize
+   * @returns {Promise<Page<SupplierSearchResult>>}
+   * @memberof SAASService
+   */
+  retrieveSupplierSearchResult(
+    searchText: string,
+    resultMaxCount: number | null = null,
+    pageIndex: number,
+    pageSize: number
+  ): Promise<Page<SupplierSearchResult>> {
+    const
+      text = searchText,
+      n = resultMaxCount
+    return this.request(
+      'supply/company/search',
+      'GET',
+      {
+        text,
+        n,
+        pageIndex,
+        pageSize
+      }
+    )
+  }
+
+  /**
+   *
+   * 白名单接口
+   * @returns {Promise<Array<Company>>}
+   * @memberof SAASService
+   */
+  retrieveSupplierWhiteList(): Promise<Array<Company>> {
+    return this.request(
+      'supply/company/commend',
+      'GET'
+    )
+  }
+
+  /**
+   * 获取评论接口
+   *
+   * @param {number} companyId
+   * @param {string} tagLabel
+   * @param {number} pageIndex
+   * @param {number} pageSize
+   * @returns {Promise<Page<Comment>>}
+   * @memberof SAASService
+   */
+  retrieveComments(
+    companyId: number,
+    tagLabel: string,
+    pageIndex: number,
+    pageSize: number
+  ): Promise<Page<Comment>> {
+    const
+      cid = companyId,
+      label = tagLabel
+    return this.request(
+      'supply/company/comment/list',
+      'GET',
+      {
+        cid,
+        label,
+        pageIndex,
+        pageSize
+      }
+    )
+  }
+
+  /**
+   * 为某一个公司创建一个带标签的评论
+   *
+   * @param {number} companyId
+   * @param {string} userId
+   * @param {string} content
+   * @param {string} phone
+   * @param {Array<string>} tags
+   * @returns {Promise<Comment>}
+   * @memberof SAASService
+   */
+  createCommentsWithTagLabel(
+    companyId: number,
+    userId: string,
+    content: string,
+    phone: string,
+    tags: Array<string>
+  ): Promise<Comment> {
+    const
+      cid = companyId
+    return this.request(
+      'supply/company/comment',
+      'POST',
+      {
+        cid,
+        tags,
+        userId,
+        content,
+        phone,
       }
     )
   }
