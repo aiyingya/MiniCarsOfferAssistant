@@ -9,7 +9,9 @@ import Service from '../landrover/business/service/base.service'
 
 import UserService from './user.service'
 import util from '../utils/util'
-import { container } from '../landrover/business/index'
+import {
+  container
+} from '../landrover/business/index'
 
 /**
  *
@@ -21,6 +23,8 @@ import { container } from '../landrover/business/index'
 export default class SAASService extends Service {
 
   userService: UserService
+
+  responsePackFormat = 'old'
 
   baseUrl = {
     dev: 'https://test.yaomaiche.com/ymcdev/',
@@ -59,8 +63,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation',
-      'POST',
-      {
+      'POST', {
         draftId,
         customerMobile,
         customerName,
@@ -190,8 +193,8 @@ export default class SAASService extends Service {
       rateType: quotationDraft.rateType,
       marketPrice: quotationDraft.quotationItems[0].originalPrice,
       insuranceDetail: quotationDraft.insuranceDetail,
-      carCapacity: quotationDraft.carCapacity,//排量
-      electricCar: quotationDraft.electricCar,//是否纯电动
+      carCapacity: quotationDraft.carCapacity, //排量
+      electricCar: quotationDraft.electricCar, //是否纯电动
       snsId: snsId,
       loginChannel: this.userService.loginChannel
     }
@@ -221,8 +224,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/order',
-      'POST',
-      {
+      'POST', {
         userId: this.userService.auth.userId,
         itemName: itemName,
         spec: spec,
@@ -250,8 +252,7 @@ export default class SAASService extends Service {
     }
     return this.request(
       'sale/quotation/new',
-      'GET',
-      {
+      'GET', {
         channel: this.userService.loginChannel,
         snsId: snsId,
         pageIndex: pageIndex,
@@ -324,7 +325,9 @@ export default class SAASService extends Service {
       pid?: number,
       cid?: number,
       did?: number
-    } = { userId: this.userService.auth.userId }
+    } = {
+        userId: this.userService.auth.userId
+      }
 
     const locations = this.userService.location
     if (locations && locations.length > 0) {
@@ -371,8 +374,7 @@ export default class SAASService extends Service {
     const method = addOrRemove ? 'POST' : 'DELETE'
     return this.request(
       `product/car/spu/${spuId}/source/${carSourceId}/tag`,
-      method,
-      {
+      method, {
         tagName: tagName,
         userId: this.userService.auth.userId,
         supplierId: supplierId
@@ -413,8 +415,7 @@ export default class SAASService extends Service {
   ): Promise<> {
     return this.request(
       `search/car/spu`,
-      'GET',
-      {
+      'GET', {
         text: text,
         pageIndex: pageIndex,
         pageSize: pageSize
@@ -455,8 +456,7 @@ export default class SAASService extends Service {
   ): Promise<CarModelsResponse> {
     return this.request(
       `supply/car/spu`,
-      'GET',
-      {
+      'GET', {
         carSeriesId: carSeriesId,
         inStock: inStock
       }
@@ -511,8 +511,7 @@ export default class SAASService extends Service {
     const userPhone = this.userService.mobile
     return this.request(
       "api/user/addCallRecord",
-      'POST',
-      {
+      'POST', {
         userId,
         userPhone,
         supplierId,
@@ -535,8 +534,7 @@ export default class SAASService extends Service {
     const userId = this.userService.auth.userId
     return this.request(
       'sale/quotation/initQuotation',
-      'GET',
-      {
+      'GET', {
         userId,
         carPrice
       }
@@ -563,8 +561,7 @@ export default class SAASService extends Service {
     const userId = this.userService.auth.userId
     return this.request(
       "api/config/saveQuota",
-      'POST',
-      {
+      'POST', {
         userId,
         ...data
       }
@@ -610,8 +607,7 @@ export default class SAASService extends Service {
     const userId = this.userService.auth.userId
     return this.request(
       'sale/quotation/queryProfit',
-      'GET',
-      {
+      'GET', {
         userId,
         loanNum,
         insuranceNum,
@@ -649,8 +645,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/getCarTax',
-      'GET',
-      {
+      'GET', {
         capacity,
         place
       }
@@ -669,8 +664,7 @@ export default class SAASService extends Service {
   ): Promise<SPUMarketTrendEntity> {
     return this.request(
       `sale/quotation/getPriceTrend`,
-      'GET',
-      {
+      'GET', {
         spuId
       }
     )
@@ -688,8 +682,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       `sale/quotation/getCurrentPrice`,
-      'GET',
-      {
+      'GET', {
         spuId: spuId
       }
     )
@@ -698,28 +691,98 @@ export default class SAASService extends Service {
   /**
    * 获取某一个公司内部对一个 spu 报价为 quotationPrice 的所有联系方式
    *
-   * @param {number} spuId
-   * @param {number} quotationPrice
    * @param {number} companyId
-   * @param {number} supplierId
-   * @returns {Promise<any>}
+   * @param {(number | null)} supplierId
+   * @param {(number | null)} spuId
+   * @param {(number | null)} quotationPrice
+   * @returns {Promise<Array<Supplier>>}
    * @memberof SAASService
    */
   getContacts(
-    spuId: number,
-    quotationPrice: number,
     companyId: number,
-    supplierId: number
-  ): Promise<any> {
+    supplierId: number | null,
+    spuId: number | null,
+    quotationPrice: number | null
+  ): Promise<Array<{
+    companyId: number | null,
+    companyName: string | null,
+    supplierModels: Array<Supplier>
+  }>> {
+    if (supplierId == null && spuId == null && quotationPrice == null) {
+      return this.retrieveContactsByCompany(companyId)
+        .then(res => {
+          return [
+            {
+              companyId: null,
+              companyName: null,
+              supplierModels: res
+            }
+          ]
+        })
+    } else {
+      const userId = this.userService.auth.userId
+      return this.retrieveContactsForCarSource(
+        userId,
+        companyId,
+        supplierId,
+        spuId,
+        quotationPrice
+      )
+    }
+  }
+
+  /**
+   * 查找某个公司某个供应商某个 spuId 某个报价下的联系人列表
+   *
+   * @param {string} userId
+   * @param {number} companyId
+   * @param {number} supplierId
+   * @param {number} spuId
+   * @param {number} quotationPrice
+   * @returns {Promise<Array<Supplier>>}
+   * @memberof SAASService
+   */
+  retrieveContactsForCarSource(
+    userId: string,
+    companyId: number,
+    supplierId: number,
+    spuId: number,
+    quotationPrice: number
+  ): Promise<Array<{
+    companyId: number | null,
+    companyName: string | null,
+    supplierModels: Array<Supplier>
+  }>> {
+    const price = quotationPrice
     return this.request(
       'sale/quotation/callRecord',
       'GET',
       {
-        userId: this.userService.auth.userId,
-        spuId: spuId,
-        companyId: companyId || '',
-        supplierId: supplierId || '',
-        price: quotationPrice || ''
+        userId,
+        companyId,
+        supplierId,
+        spuId,
+        price
+      }
+    )
+  }
+
+  /**
+   * 查找某个公司下的供应商联系人列表
+   *
+   * @param {number} companyId
+   * @returns {Promise<Array<Supplier>>}
+   * @memberof SAASService
+   */
+  retrieveContactsByCompany(
+    companyId: number
+  ): Promise<Array<Supplier>> {
+    const cid = companyId
+    return this.request(
+      'supply/company/call',
+      'GET',
+      {
+        cid
       }
     )
   }
@@ -750,8 +813,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/getCompanyList',
-      'GET',
-      {
+      'GET', {
         spuId: spuId,
         price: quotationPrice || ''
       }
@@ -767,8 +829,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'api/user/getViewRecord',
-      'GET',
-      {
+      'GET', {
         quotationId
       }
     )
@@ -784,8 +845,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/modifyValidTime',
-      'POST',
-      {
+      'POST', {
         quotationId,
         times
       }
@@ -804,8 +864,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/cutPriceActivities',
-      'GET',
-      {
+      'GET', {
         targetId,
         salePersonId,
         status,
@@ -824,8 +883,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/finishActivity',
-      'POST',
-      {
+      'POST', {
         activityId,
         targetId
       }
@@ -841,8 +899,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/exchangeCoupon',
-      'POST',
-      {
+      'POST', {
         couponCode
       }
     )
@@ -857,8 +914,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/cutPriceLeads',
-      'GET',
-      {
+      'GET', {
         targetId
       }
     )
@@ -876,8 +932,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/makeQRCode',
-      'GET',
-      {
+      'GET', {
         quotationId,
         targetId,
         width,
@@ -896,8 +951,7 @@ export default class SAASService extends Service {
   ): Promise<any> {
     return this.request(
       'sale/quotation/getQuotationByPhone',
-      'GET',
-      {
+      'GET', {
         snsId,
         mobile
       }
@@ -911,20 +965,19 @@ export default class SAASService extends Service {
    *
    * @param {string} searchText
    * @param {(number | null)} [resultMaxCount=null]
-   * @returns {Promise<Array<SupplierSearchResult>>}
+   * @returns {Promise<Array<Company>>}
    * @memberof SAASService
    */
   retrieveFuzzySupplierSearchResult(
     searchText: string,
     resultMaxCount: number | null = null
-  ): Promise<Array<SupplierSearchResult>> {
+  ): Promise<Array<Company>> {
     const
       text = searchText,
       n = resultMaxCount
     return this.request(
       'supply/company/index',
-      'GET',
-      {
+      'GET', {
         text,
         n
       }
@@ -939,22 +992,21 @@ export default class SAASService extends Service {
    * @param {(number | null)} [resultMaxCount=null]
    * @param {number} pageIndex
    * @param {number} pageSize
-   * @returns {Promise<Page<SupplierSearchResult>>}
+   * @returns {Promise<Pagination<Company>>}
    * @memberof SAASService
    */
   retrieveSupplierSearchResult(
     searchText: string,
     resultMaxCount: number | null = null,
-    pageIndex: number,
-    pageSize: number
-  ): Promise<Page<SupplierSearchResult>> {
+    pageIndex: number | null = 1,
+    pageSize: number | null = 10
+  ): Promise<Pagination<Company>> {
     const
       text = searchText,
       n = resultMaxCount
     return this.request(
       'supply/company/search',
-      'GET',
-      {
+      'GET', {
         text,
         n,
         pageIndex,
@@ -983,22 +1035,21 @@ export default class SAASService extends Service {
    * @param {string} tagLabel
    * @param {number} pageIndex
    * @param {number} pageSize
-   * @returns {Promise<Page<Comment>>}
+   * @returns {Promise<Pagination<UserComment>>}
    * @memberof SAASService
    */
-  retrieveComments(
+  retrieveUserComments(
     companyId: number,
-    tagLabel: string,
-    pageIndex: number,
-    pageSize: number
-  ): Promise<Page<Comment>> {
+    tagLabel: string | null = null,
+    pageIndex: number | null = 1,
+    pageSize: number | null = 10
+  ): Promise<Pagination<UserComment>> {
     const
       cid = companyId,
       label = tagLabel
     return this.request(
       'supply/company/comment/list',
-      'GET',
-      {
+      'GET', {
         cid,
         label,
         pageIndex,
@@ -1015,16 +1066,16 @@ export default class SAASService extends Service {
    * @param {string} content
    * @param {string} phone
    * @param {Array<string>} tags
-   * @returns {Promise<Comment>}
+   * @returns {Promise<UserComment>}
    * @memberof SAASService
    */
-  createCommentsWithTagLabel(
+  createUserCommentsWithTagLabel(
     companyId: number,
     userId: string,
     content: string,
     phone: string,
     tags: Array<string>
-  ): Promise<Comment> {
+  ): Promise<UserComment> {
     const
       cid = companyId
     return this.request(
@@ -1039,4 +1090,18 @@ export default class SAASService extends Service {
       }
     )
   }
+
+  /**
+   * 获取筛选标签
+   *
+   * @returns {Promise<Array<Filter>>}
+   * @memberof SAASService
+   */
+  retrieveFiltersOfCompanyUserComments(): Promise<Array<Filter>> {
+    return this.request(
+      'supply/company/comment/filter',
+      'GET'
+    )
+  }
 }
+

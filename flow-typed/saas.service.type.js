@@ -1,4 +1,4 @@
-declare type Page<T> = {
+declare type Pagination<T> = {
   totalElements: number,
   totalPages: number,
   number: number,
@@ -45,12 +45,18 @@ declare type PraiseModel = {
 };
 
 declare type Filter = {
+  id: number,
+  name: string,
   items: Array<Item>
 };
 
 declare type Item = {
-  name: string
-};
+  id: number,
+  name: string,
+  value: string,
+  items: Array<Item>,
+  selected: boolean
+}
 
 declare type CarModelsResponse = {
   content: Array<CarModelChart>,
@@ -74,7 +80,14 @@ declare type SPUMarketTrendEntity = {
 
 declare type Company = {
   companyId: number,
-  companyName: string
+  companyName: string,
+  showLabel: string,
+};
+
+declare type Supplier = {
+  supplierId: number,
+  supplierName: string,
+  supplierPhone: string
 };
 
 declare type Tag = {
@@ -83,7 +96,8 @@ declare type Tag = {
   createdDate: string
 };
 
-declare type Comment = {
+declare type UserComment = {
+  commentId: number,
   companyId: number,
   tag: Array<Tag>, // 多个标签 ',' 号分割
   content: string,
@@ -91,12 +105,4 @@ declare type Comment = {
   createdDate: string,
   userId: number,
   phone: string
-};
-
-declare type SupplierSearchResult = {
-  company: Company,
-};
-
-declare type CompanyDetailResponse = {
-  content: Array<Comment>
 };

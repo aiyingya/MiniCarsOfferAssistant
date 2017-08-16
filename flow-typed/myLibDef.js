@@ -7,3 +7,9 @@ declare type ChartDataItem = {
   companyCount?: Array<number | null>,
   days: number | null
 };
+
+declare type PaginationList<T> = {
+  list: Array<T> | null,
+  pagination: Pagination<T> | null,
+  loadingMore: boolean
+};
