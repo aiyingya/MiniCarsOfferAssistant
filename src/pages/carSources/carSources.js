@@ -148,8 +148,8 @@ Page({
           })
         })
 
-      container.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
-        success: function (res) {
+      container.saasService.requestCarSourcesList(carModelsInfo.carModelId)
+        .then(res => {
           let filters = res.filters
 
           let dropDownFilters = []
@@ -187,7 +187,6 @@ Page({
             }
           }
 
-
           const carSourcesBySkuInSpuList = that.bakeTheRawCarSourcesBySkuInSpuList(res.carSourcesBySkuInSpuList)
 
           that.setData({
@@ -215,10 +214,7 @@ Page({
           that.setData({
             carModelsInfo: carModelsInfo
           })
-
-        }
-      })
-
+        })
 
       if (wx.showShareMenu) {
         wx.showShareMenu()

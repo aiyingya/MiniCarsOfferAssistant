@@ -719,9 +719,8 @@ Page({
         changeTime.selected = ''
       }
     }
-    container.saasService.requestSearchSpuBySpuId(sid, requestData, {
-      success: function (res) {
-
+    container.saasService.requestSearchSpuBySpuId(sid, requestData)
+      .then(res => {
         if (res.content.length > 0) {
 
           for (let change of carModelsList) {
@@ -732,7 +731,7 @@ Page({
               requestItem.selectColors = item.selectColors
               requestItem.hours = item.hours
               requestItem.selectTimes = item.selectTimes
-              requestItem.selectColorsId = sid,
+              requestItem.selectColorsId = sid
               requestItem.supply.status = item.supply.status
               requestItem.supply.supplierCount = item.supply.supplierCount
               requestItem.supply.colors = item.supply.colors
@@ -753,8 +752,7 @@ Page({
           selectChartsLabel: false,
           showCharts: true
         })
-      }
-    })
+      })
   },
   handleClosePopupChange() {
     console.log('colse')

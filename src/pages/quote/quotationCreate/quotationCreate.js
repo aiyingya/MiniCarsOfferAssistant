@@ -416,7 +416,7 @@ Page({
       })
       console.log(quotation.insuranceDetail)
       //获取报价单接口
-      container.saasService.getCreatCarRecordInfo({ carPrice: 0 }) // 随便传一个金额，该接口我不需要加价后的裸车价
+      container.saasService.getCreatCarRecordInfo(0) // 随便传一个金额，该接口我不需要加价后的裸车价
         .then(res => {
           res.interestType = quotation.rateType;
           that.setData({
@@ -476,7 +476,7 @@ Page({
         })
 
         //获取报价单接口
-        container.saasService.getCreatCarRecordInfo({ carPrice: originalPrice })
+        container.saasService.getCreatCarRecordInfo(originalPrice)
           .then(res => {
             this.setData({
               'requestResult': res
@@ -1348,7 +1348,8 @@ Page({
         that.setData({
           getProfitResult: res
         })
-      }, err => {
+      })
+      .catch(err => {
         console.log("查看收益失败")
       })
   },
@@ -1430,14 +1431,10 @@ Page({
     }
     var user = container.userService;
 
-    return container.saasService.gettingVehicleAndVesselTax({
-      data: {
-        capacity: capacity,
-        place: user.address.provinceName//provinceId
-      }
-    }).then(data => {
-      that.setData({ 'quotation.requiredExpensesAll.vehicleAndVesselTax': data })
-    })
+    return container.saasService.gettingVehicleAndVesselTax(capacity, user.address.provinceName)
+      .then(data => {
+        that.setData({ 'quotation.requiredExpensesAll.vehicleAndVesselTax': data })
+      })
 
   },
   /**

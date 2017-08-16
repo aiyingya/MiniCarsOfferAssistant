@@ -188,8 +188,8 @@ export default {
         [`${this.component.options.scope}.carSourceItem.viewModelLoading`]: '原文加载中...'
       })
 
-      container.saasService.requestCarSourceContent(options.carSourceItem.id, {
-        success: function (res) {
+      container.saasService.requestCarSourceContent(options.carSourceItem.id)
+        .then(res => {
           console.log(res)
           if (res) {
             /// 原文基本数据
@@ -227,13 +227,12 @@ export default {
               [`${that.component.options.scope}.carSourceItem.viewModelLoading`]: '加载失败'
             })
           }
-        },
-        fail: function () {
+        })
+        .catch(err => {
           that.component.setData({
             [`${that.component.options.scope}.carSourceItem.viewModelLoading`]: '加载失败'
           })
-        }
-      })
+        })
     }
 
     return this.component.hide

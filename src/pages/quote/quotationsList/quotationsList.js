@@ -26,11 +26,11 @@ Page({
     empty: false,
     windowHeight: '',
     lastX: '',
-		lastY: '',
-		startX: '',
-		moveX: '',
-		touchElement: {},
-		delBtnWidth: 150,
+    lastY: '',
+    startX: '',
+    moveX: '',
+    touchElement: {},
+    delBtnWidth: 150,
     checkMoreNumber: 2,
     hasPagesNext: ''
   },
@@ -42,7 +42,7 @@ Page({
       this.pixelRatio = res.pixelRatio;
       this.apHeight = 16;
       this.offsetTop = 80;
-      this.setData({windowHeight: res.windowHeight + 'px'})
+      this.setData({ windowHeight: res.windowHeight + 'px' })
     } catch (e) {
 
     }
@@ -123,18 +123,20 @@ Page({
   },
   onReachBottom() {
     // 上拉加载更多
-    if(!this.data.hasPagesNext) return;
+    if (!this.data.hasPagesNext) return;
     let that = this
 
     let originPageIndex = this.data.pageIndex
     let newPageIndex = this.data.pageIndex + 1
 
-    container.saasService.requestQuotationsList(newPageIndex, this.data.pageSize, {
-      loadingType: 'none',
-      success: function (res) {
+    container.saasService.requestQuotationsList(
+      newPageIndex,
+      this.data.pageSize
+    )
+      .then(res => {
         if (res.content.length !== 0) {
           that.data.pageIndex = newPageIndex
-          for(let item of res.content) {
+          for (let item of res.content) {
             item.checkMoreNumber = 2
           }
           that.setData({
@@ -144,14 +146,10 @@ Page({
         } else {
           that.data.pageIndex = originPageIndex
         }
-      },
-      fail: function () {
+      })
+      .catch(err => {
         that.data.pageIndex = originPageIndex
-      },
-      complete: function () {
-
-      }
-    });
+      })
   },
   onPullDownRefresh() {
     // 下拉刷新
@@ -192,9 +190,11 @@ Page({
   getData(object) {
     let that = this
     this.data.pageIndex = 1
-    container.saasService.requestQuotationsList(this.data.pageIndex, this.data.pageSize, {
-      loadingType: 'none',
-      success: function (res) {
+    container.saasService.requestQuotationsList(
+      this.data.pageIndex,
+      this.data.pageSize
+    )
+      .then(res => {
         let empty = res.content.length === 0
         console.log(res.content)
         that.setData({
@@ -207,23 +207,22 @@ Page({
         app.fuckingLarryNavigatorTo.quotation = null
         app.fuckingLarryNavigatorTo.source = null
         typeof object.complete === 'function' && object.complete()
-      },
-      fail: function () {
+      })
+      .catch(err => {
         wx.hideToast()
         app.fuckingLarryNavigatorTo.quotation = null
         app.fuckingLarryNavigatorTo.source = null
-      },
-      complete: function () {
+      })
+      .finally(() => {
         wx.hideToast()
         app.fuckingLarryNavigatorTo.quotation = null
         app.fuckingLarryNavigatorTo.source = null
-      }
-    })
+      })
   },
   handlerSelectQuotation(e) {
-    let valueString = e.currentTarget.dataset.quotation 
+    let valueString = e.currentTarget.dataset.quotation
     let current = e.currentTarget.dataset.current
-   
+
     wx.navigateTo({
       url: `/pages/details/details?current=${current}&mobile=${valueString.customerPhone}`,
       success: function (res) {
@@ -236,57 +235,57 @@ Page({
 
       }
     })
-   
+
   },
   handletouchmove(event) {
-		let currentX = event.changedTouches[0].clientX
-		let moveX = this.data.startX - currentX
-		let delBtnWidth = this.data.delBtnWidth
-		let index = event.currentTarget.dataset.index
-		let quotationsList = this.data.quotationsList
+    let currentX = event.changedTouches[0].clientX
+    let moveX = this.data.startX - currentX
+    let delBtnWidth = this.data.delBtnWidth
+    let index = event.currentTarget.dataset.index
+    let quotationsList = this.data.quotationsList
 
-		let X = ''
-		let Style = ""
+    let X = ''
+    let Style = ""
 
-		if(Math.abs(moveX) < (delBtnWidth/2) ) {
-			X = moveX
-		}else {
-			X = delBtnWidth
-		}
+    if (Math.abs(moveX) < (delBtnWidth / 2)) {
+      X = moveX
+    } else {
+      X = delBtnWidth
+    }
 
-		if(moveX > 30){
-			Style = `left:-${X}rpx`
-		}
-		for(let item of quotationsList) {
-			item.Style = 'left:0'
-		}
-		quotationsList[index].Style = Style
-		//更新列表的状态
-		this.setData({
-		 quotationsList: quotationsList
-		})
-	},
-	handletouchtart:function(event) {
-		if(event.touches.length === 1){
+    if (moveX > 30) {
+      Style = `left:-${X}rpx`
+    }
+    for (let item of quotationsList) {
+      item.Style = 'left:0'
+    }
+    quotationsList[index].Style = Style
+    //更新列表的状态
+    this.setData({
+      quotationsList: quotationsList
+    })
+  },
+  handletouchtart: function (event) {
+    if (event.touches.length === 1) {
       this.data.startX = event.touches[0].clientX
     }
   },
-	handletouchend:function(e){
-		let that = this
-		let quotationsList = this.data.quotationsList
+  handletouchend: function (e) {
+    let that = this
+    let quotationsList = this.data.quotationsList
     let delBtnWidth = this.data.delBtnWidth
-		let endX = e.changedTouches[0].clientX
-		let moveX = that.data.startX - endX
+    let endX = e.changedTouches[0].clientX
+    let moveX = that.data.startX - endX
 
-		if(moveX < (delBtnWidth/2)) {
-			for(let item of quotationsList) {
-				item.Style = 'left:0'
-			}
-      console.log(moveX,quotationsList)
-			this.setData({
-			 quotationsList: quotationsList
-			})
-		}
+    if (moveX < (delBtnWidth / 2)) {
+      for (let item of quotationsList) {
+        item.Style = 'left:0'
+      }
+      console.log(moveX, quotationsList)
+      this.setData({
+        quotationsList: quotationsList
+      })
+    }
   },
   handleDeleteRecord(e) {
     const that = this
@@ -294,45 +293,43 @@ Page({
     const quotationId = record.quotationId
     const quotationsList = this.data.quotationsList
     const newQuotationsList = []
-    container.saasService.requestDeleteRecotd(quotationId,{
-      loadingType: 'true',
-      success(res) {
+    container.saasService.requestDeleteRecotd(quotationId)
+      .then(res => {
         console.log(res)
-        if(res) {
-          for(let item of quotationsList) {
-            if(item.quotationId != quotationId) {
+        if (res) {
+          for (let item of quotationsList) {
+            if (item.quotationId != quotationId) {
               newQuotationsList.push(item)
             }
           }
-//          wx.showModal({
-//            title: '提示',
-//            content: '这是一个模态弹窗',
-//            success: function(res) {
-//              if (res.confirm) {
-//                that.setData({
-//                  quotationsList: newQuotationsList
-//                })
-//              } else if (res.cancel) {
-//                console.log('用户点击取消')
-//              }
-//            }
-//          })
+          //          wx.showModal({
+          //            title: '提示',
+          //            content: '这是一个模态弹窗',
+          //            success: function(res) {
+          //              if (res.confirm) {
+          //                that.setData({
+          //                  quotationsList: newQuotationsList
+          //                })
+          //              } else if (res.cancel) {
+          //                console.log('用户点击取消')
+          //              }
+          //            }
+          //          })
           that.setData({
             quotationsList: newQuotationsList
           })
         }
-      }
-    })
+      })
   },
   handleCheckMore(e) {
     const more = e.currentTarget.dataset.more
     const quotationsList = this.data.quotationsList
-    console.log(e,more)
-    for(let item of quotationsList) {
-      if(more.customerPhone === item.customerPhone) {
-        if(item.checkMoreNumber < more.quotationCount) {
-         item.checkMoreNumber = more.quotationCount
-        }else {
+    console.log(e, more)
+    for (let item of quotationsList) {
+      if (more.customerPhone === item.customerPhone) {
+        if (item.checkMoreNumber < more.quotationCount) {
+          item.checkMoreNumber = more.quotationCount
+        } else {
           item.checkMoreNumber = 2
         }
       }

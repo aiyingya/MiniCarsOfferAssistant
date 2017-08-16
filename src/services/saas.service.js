@@ -1,4 +1,3 @@
-
 // @flow
 /**
  *
@@ -6,7 +5,7 @@
  * Created by David on 28/03/2017.
  */
 
-import Service from './base.service'
+import Service from '../landrover/business/service/base.service'
 
 import UserService from './user.service'
 import util from '../utils/util'
@@ -16,7 +15,7 @@ export default class SAASService extends Service {
 
   userService: UserService
 
-  urls = {
+  baseUrl = {
     dev: 'https://test.yaomaiche.com/ymcdev/',
     gqc: 'https://test.yaomaiche.com/ymcgqc/',
     prd: 'https://ymcapi.yaomaiche.com/ymc/'
@@ -26,32 +25,9 @@ export default class SAASService extends Service {
     super()
   }
 
-  setup() {
-    super.setup()
+  setup(): Promise<void> {
     this.userService = container.userService
-  }
-
-  /**
-   *
-   *
-   * @param {*} opts
-   * @returns {Promise<any>}
-   * @memberof SAASService
-   */
-  sendMessageByPromise(opts: any): Promise<any> {
-    return super.sendMessageByPromise(opts)
-  }
-
-  /**
-   * 该方法已经废弃，请勿在使用该方法
-   *
-   * @param {*} opts
-   * @param {('none'|'toast'|'navigation')} [loadingType='toast']
-   * @memberof SAASService
-   */
-  sendMessage(opts: any, loadingType: 'none'|'toast'|'navigation' = 'toast') {
-    opts.loadingType = loadingType
-    super.sendMessage(opts)
+    return super.setup()
   }
 
   /**
@@ -74,18 +50,18 @@ export default class SAASService extends Service {
     sendMessage: boolean = true,
     validTime: number
   ): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'sale/quotation',
-      data: {
+    return this.request(
+      'sale/quotation',
+      'POST',
+      {
         draftId,
         customerMobile,
         customerName,
         customerSex,
         sendMessage,
         validTime
-      },
-      method: 'POST'
-    })
+      }
+    )
   }
 
   /**
@@ -132,94 +108,94 @@ export default class SAASService extends Service {
    * @memberof SAASService
    */
   requestSaveQuotationDraft(quotationDraft: any): Promise<any> {
-      // FIXME: 直接将提交对象转换为正常的提交对象
-      let data_part_1: any = {}
-      if (quotationDraft.hasLoan) {
-        data_part_1 = {
-          quotationName: quotationDraft.quotationName,
-          quotationItems: [{
-            itemType: quotationDraft.quotationItems[0].itemType,
-            itemName: quotationDraft.quotationItems[0].itemName,
-            itemPic: quotationDraft.quotationItems[0].itemPic,
-            specifications: quotationDraft.quotationItems[0].specifications,
-            guidePrice: quotationDraft.quotationItems[0].guidePrice,
-            sellingPrice: quotationDraft.quotationItems[0].sellingPrice,
-            spuId: quotationDraft.spuId
-          }],
-          hasLoan: quotationDraft.hasLoan,
-          paymentRatio: quotationDraft.paymentRatio,
-          stages: quotationDraft.stages,
-          expenseRate: quotationDraft.expenseRate,
-          requiredExpenses: quotationDraft.requiredExpenses,
-          otherExpenses: quotationDraft.otherExpenses,
-          advancePayment: quotationDraft.advancePayment,
-          monthlyPayment: quotationDraft.monthlyPayment,
-          totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark,
-          carPrice : quotationDraft.quotationItems[0].sellingPrice,
-          purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
-          carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
-          carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
-          metallicPaintFee:quotationDraft.requiredExpensesAll.metallicPaintFee,
-          boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
-          serviceFee:quotationDraft.otherExpensesAll.serverFee,
-          installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee
-        }
-      } else {
-        data_part_1 = {
-          quotationName: quotationDraft.quotationName,
-          quotationItems: [{
-            itemType: quotationDraft.quotationItems[0].itemType,
-            itemName: quotationDraft.quotationItems[0].itemName,
-            itemPic: quotationDraft.quotationItems[0].itemPic,
-            specifications: quotationDraft.quotationItems[0].specifications,
-            guidePrice: quotationDraft.quotationItems[0].guidePrice,
-            sellingPrice: quotationDraft.quotationItems[0].sellingPrice
-          }],
-          hasLoan: quotationDraft.hasLoan,
-          requiredExpenses: quotationDraft.requiredExpenses,
-          otherExpenses: quotationDraft.otherExpenses,
-          advancePayment: quotationDraft.advancePayment,
-          totalPayment: quotationDraft.totalPayment,
-          remark: quotationDraft.remark,
-          carPrice : quotationDraft.quotationItems[0].sellingPrice,
-          purchaseTax:quotationDraft.requiredExpensesAll.purchaseTax,
-          carTax:quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
-          carNumFee:quotationDraft.requiredExpensesAll.licenseFee,
-          metallicPaintFee:quotationDraft.requiredExpensesAll.metallicPaintFee,
-          boutiqueFee:quotationDraft.otherExpensesAll.boutiqueCost,
-          serviceFee:quotationDraft.otherExpensesAll.serverFee,
-          installFee:quotationDraft.otherExpensesAll.installationFee,
-          otherFee:quotationDraft.otherExpensesAll.otherFee
-        }
+    // FIXME: 直接将提交对象转换为正常的提交对象
+    let data_part_1: any = {}
+    if (quotationDraft.hasLoan) {
+      data_part_1 = {
+        quotationName: quotationDraft.quotationName,
+        quotationItems: [{
+          itemType: quotationDraft.quotationItems[0].itemType,
+          itemName: quotationDraft.quotationItems[0].itemName,
+          itemPic: quotationDraft.quotationItems[0].itemPic,
+          specifications: quotationDraft.quotationItems[0].specifications,
+          guidePrice: quotationDraft.quotationItems[0].guidePrice,
+          sellingPrice: quotationDraft.quotationItems[0].sellingPrice,
+          spuId: quotationDraft.spuId
+        }],
+        hasLoan: quotationDraft.hasLoan,
+        paymentRatio: quotationDraft.paymentRatio,
+        stages: quotationDraft.stages,
+        expenseRate: quotationDraft.expenseRate,
+        requiredExpenses: quotationDraft.requiredExpenses,
+        otherExpenses: quotationDraft.otherExpenses,
+        advancePayment: quotationDraft.advancePayment,
+        monthlyPayment: quotationDraft.monthlyPayment,
+        totalPayment: quotationDraft.totalPayment,
+        remark: quotationDraft.remark,
+        carPrice: quotationDraft.quotationItems[0].sellingPrice,
+        purchaseTax: quotationDraft.requiredExpensesAll.purchaseTax,
+        carTax: quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
+        carNumFee: quotationDraft.requiredExpensesAll.licenseFee,
+        metallicPaintFee: quotationDraft.requiredExpensesAll.metallicPaintFee,
+        boutiqueFee: quotationDraft.otherExpensesAll.boutiqueCost,
+        serviceFee: quotationDraft.otherExpensesAll.serverFee,
+        installFee: quotationDraft.otherExpensesAll.installationFee,
+        otherFee: quotationDraft.otherExpensesAll.otherFee
       }
-console.log(quotationDraft)
-      let snsId = null
-      if (this.userService.auth != null) {
-        snsId = this.userService.auth.userId
-      } else if (this.userService.weixin.userInfo != null) {
-        snsId = this.userService.weixin.userInfo.customerId
+    } else {
+      data_part_1 = {
+        quotationName: quotationDraft.quotationName,
+        quotationItems: [{
+          itemType: quotationDraft.quotationItems[0].itemType,
+          itemName: quotationDraft.quotationItems[0].itemName,
+          itemPic: quotationDraft.quotationItems[0].itemPic,
+          specifications: quotationDraft.quotationItems[0].specifications,
+          guidePrice: quotationDraft.quotationItems[0].guidePrice,
+          sellingPrice: quotationDraft.quotationItems[0].sellingPrice
+        }],
+        hasLoan: quotationDraft.hasLoan,
+        requiredExpenses: quotationDraft.requiredExpenses,
+        otherExpenses: quotationDraft.otherExpenses,
+        advancePayment: quotationDraft.advancePayment,
+        totalPayment: quotationDraft.totalPayment,
+        remark: quotationDraft.remark,
+        carPrice: quotationDraft.quotationItems[0].sellingPrice,
+        purchaseTax: quotationDraft.requiredExpensesAll.purchaseTax,
+        carTax: quotationDraft.requiredExpensesAll.vehicleAndVesselTax,
+        carNumFee: quotationDraft.requiredExpensesAll.licenseFee,
+        metallicPaintFee: quotationDraft.requiredExpensesAll.metallicPaintFee,
+        boutiqueFee: quotationDraft.otherExpensesAll.boutiqueCost,
+        serviceFee: quotationDraft.otherExpensesAll.serverFee,
+        installFee: quotationDraft.otherExpensesAll.installationFee,
+        otherFee: quotationDraft.otherExpensesAll.otherFee
       }
-      const data_part_2: any = {
-        loanFee: quotationDraft.loanFee,
-        saleMobile: quotationDraft.saleMobile,
-        rateType: quotationDraft.rateType,
-        marketPrice: quotationDraft.quotationItems[0].originalPrice,
-        insuranceDetail: quotationDraft.insuranceDetail,
-        carCapacity: quotationDraft.carCapacity,//排量
-        electricCar: quotationDraft.electricCar,//是否纯电动
-        snsId: snsId,
-        loginChannel: this.userService.loginChannel
-      }
+    }
+    console.log(quotationDraft)
+    let snsId = null
+    if (this.userService.auth != null) {
+      snsId = this.userService.auth.userId
+    } else if (this.userService.weixin.userInfo != null) {
+      snsId = this.userService.weixin.userInfo.customerId
+    }
+    const data_part_2: any = {
+      loanFee: quotationDraft.loanFee,
+      saleMobile: quotationDraft.saleMobile,
+      rateType: quotationDraft.rateType,
+      marketPrice: quotationDraft.quotationItems[0].originalPrice,
+      insuranceDetail: quotationDraft.insuranceDetail,
+      carCapacity: quotationDraft.carCapacity,//排量
+      electricCar: quotationDraft.electricCar,//是否纯电动
+      snsId: snsId,
+      loginChannel: this.userService.loginChannel
+    }
 
-      const data = Object.assign({}, data_part_1, data_part_2)
+    const data = Object.assign({}, data_part_1, data_part_2)
 
-      return this.sendMessageByPromise({
-        path: 'sale/quotation/draft',
-        data: data,
-        method: 'POST'
-      })
+    return this.request(
+      'sale/quotation/draft',
+      'POST',
+      data
+    )
   }
 
   /**
@@ -230,27 +206,23 @@ console.log(quotationDraft)
    * @param customerMobile  可选
    * @param object
    */
-  requestBookCar(itemName: string, spec: string, itemPrice: number, itemCount: number, object: any) {
-    this.sendMessage({
-      path: 'sale/quotation/order',
-      data: {
+  requestBookCar(
+    itemName: string,
+    spec: string,
+    itemPrice: number,
+    itemCount: number
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/order',
+      'POST',
+      {
         userId: this.userService.auth.userId,
         itemName: itemName,
         spec: spec,
         itemPrice: itemPrice,
         itemCount: itemCount
       },
-      method: 'POST',
-      success: function (res) {
-        object.success()
-      },
-      fail: function (err) {
-        object.fail(err)
-      },
-      complete: function () {
-        object.complete()
-      }
-    })
+    )
   }
 
   /**
@@ -259,75 +231,65 @@ console.log(quotationDraft)
    * @param pageIndex 页面索引号
    * @param pageSize  页面大小
    */
-  requestQuotationsList(pageIndex: number, pageSize: number, object: any) {
-    if (pageIndex > 0 && pageSize > 0) {
-      let snsId = null
-      if (this.userService.auth != null) {
-        snsId = this.userService.auth.userId
-      } else if (this.userService.weixin.userInfo != null) {
-        snsId = this.userService.weixin.userInfo.customerId
+  requestQuotationsList(
+    pageIndex: number,
+    pageSize: number,
+  ): Promise<any> {
+    let snsId = null
+    if (this.userService.auth != null) {
+      snsId = this.userService.auth.userId
+    } else if (this.userService.weixin.userInfo != null) {
+      snsId = this.userService.weixin.userInfo.customerId
+    }
+    return this.request(
+      'sale/quotation/new',
+      'GET',
+      {
+        channel: this.userService.loginChannel,
+        snsId: snsId,
+        pageIndex: pageIndex,
+        pageSize: pageSize
       }
-      this.sendMessage({
-        path: 'sale/quotation/new',
-        data: {
-          channel: this.userService.loginChannel,
-          snsId: snsId,
-          pageIndex: pageIndex,
-          pageSize: pageSize
-        },
-        method: 'GET',
-        success: function(res){
+    )
+      .then(res => {
+        for (let item of res.content) {
+          item.checkTime = util.getTimeDifferenceString(item.viewTime)
+          item.checkMoreNumber = 2
 
-          for(let item of res.content) {
-            item.checkTime = util.getTimeDifferenceString(item.viewTime)
-            item.checkMoreNumber = 2
+          if (item.quotationList.length > 0) {
+            for (let qitem of item.quotationList) {
+              let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
+              let sellingPrice = util.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
+              let guidePrice = util.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
 
-            if(item.quotationList.length > 0) {
-              for(let qitem of item.quotationList) {
-                let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
-                let sellingPrice = util.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
-                let guidePrice = util.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
+              /// 实时计算优惠点数
+              let downPrice = util.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
+              let downPriceFlag = util.downPriceFlag(downPrice);
+              let downPriceString = ''
+              if (downPriceFlag !== 0) {
+                downPriceString = util.priceStringWithUnit(downPrice)
+              }
 
-                /// 实时计算优惠点数
-                let downPrice = util.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
-                let downPriceFlag = util.downPriceFlag(downPrice);
-                let downPriceString = ''
-                if (downPriceFlag !== 0) {
-                  downPriceString = util.priceStringWithUnit(downPrice)
-                }
-
-                /**
-                 * 计算时间.
-                 */
-                item.shared = qitem.shared
-                qitem.createdTime = util.getTimeDifferenceString(qitem.quotationTime)
-                qitem.viewModel = {
-                  totalPayment: totalPayment,
-                  sellingPrice: sellingPrice,
-                  guidePrice: guidePrice,
-                  itemName: `【${qitem.quotationItems[0].guidePrice/100}】${qitem.quotationItems[0].itemName}`,
-                  priceChange: {
-                    flag: downPriceFlag,
-                    price: downPriceString
-                  }
+              /**
+               * 计算时间.
+               */
+              item.shared = qitem.shared
+              qitem.createdTime = util.getTimeDifferenceString(qitem.quotationTime)
+              qitem.viewModel = {
+                totalPayment: totalPayment,
+                sellingPrice: sellingPrice,
+                guidePrice: guidePrice,
+                itemName: `【${qitem.quotationItems[0].guidePrice / 100}】${qitem.quotationItems[0].itemName}`,
+                priceChange: {
+                  flag: downPriceFlag,
+                  price: downPriceString
                 }
               }
             }
           }
-          console.log(res.content)
-          object.success(res);
-        },
-        fail: function() {
-          object.fail();
-        },
-        complete: function() {
-          object.complete();
         }
-      }, object.loadingType)
-    } else {
-      object.fail();
-      object.complete();
-    }
+        return res
+      })
   }
 
   /**
@@ -336,32 +298,26 @@ console.log(quotationDraft)
    * @param id 报价单ID
    * @param opts
    */
-  requestDeleteRecotd(id: number, opts: any) {
-    this.sendMessage({
-      path: `sale/quotation/delete/${id}`,
-      data: opts.data,
-      method: 'POST',
-      success: opts.success,
-      fail: opts.fail,
-      complete: opts.complete
-    }, opts.loadingType)
+  requestDeleteRecotd(quotationId: number) {
+    return this.request(
+      `sale/quotation/delete/${quotationId}`,
+      'POST'
+    )
   }
+
   /**
    * 获取车源列表
    * @param carModelId
    * @param object
    */
-  requestCarSourcesList(carModelId: number, object: any) {
+  requestCarSourcesList(carModelId: number) {
     // MARK： 目前只取地址列表中的第一个
-
     const data: {
       userId: string,
       pid?: number,
       cid?: number,
       did?: number
-    } = {
-      userId: this.userService.auth.userId
-    }
+    } = { userId: this.userService.auth.userId }
 
     const locations = this.userService.location
     if (locations && locations.length > 0) {
@@ -379,14 +335,11 @@ console.log(quotationDraft)
       }
     }
 
-    this.sendMessage({
-      path: `product/car/spu/${carModelId}/sources`,
-      method: 'GET',
-      data: data,
-      success: object.success,
-      fail:object.fail,
-      complete:object.complete
-    })
+    return this.request(
+      `product/car/spu/${carModelId}/sources`,
+      'GET',
+      data
+    )
   }
 
   /**
@@ -400,44 +353,42 @@ console.log(quotationDraft)
    * @param {{}} object
    * @memberof SAASService
    */
-  requestAddOrRemoveTagnameForASupplier (spuId: number, carSourceId: number, tagName: string, supplierId: number, addOrRemove: boolean, object: any) {
-    if (spuId && carSourceId  && tagName && supplierId) {
-      const method = addOrRemove ? 'POST' : 'DELETE'
-      this.sendMessage({
-        path: `product/car/spu/${spuId}/source/${carSourceId}/tag`,
-        data: {
-          tagName: tagName,
-          userId: this.userService.auth.userId,
-          supplierId: supplierId
-        },
-        loadingType: 'none',
-        method: method,
-        success: object.success,
-        fail: object.fail,
-        complete: object.complete
-      }, 'none')
-    } else {
-      object.fail()
-      object.complete()
-    }
+  requestAddOrRemoveTagnameForASupplier(
+    spuId: number,
+    carSourceId: number,
+    tagName: string,
+    supplierId: number,
+    addOrRemove: boolean,
+    object: any
+  ) {
+    const method = addOrRemove ? 'POST' : 'DELETE'
+    return this.request(
+      `product/car/spu/${spuId}/source/${carSourceId}/tag`,
+      method,
+      {
+        tagName: tagName,
+        userId: this.userService.auth.userId,
+        supplierId: supplierId
+      }
+    )
   }
 
   /**
    * 获取三方车源信息的原文
    *
    * @param {number} carSourceId
-   * @param {{}} object
    * @memberof SAASService
    */
-  requestCarSourceContent (carSourceId: number, object: any) {
-    this.sendMessage({
-      path: `product/car/source/${carSourceId}/content`,
-      loadingType: 'none',
-      method: 'GET',
-      success: object.success,
-      fail: object.fail,
-      complete: object.complete
-    }, 'none')
+  requestCarSourceContent(
+    carSourceId: number,
+  ): Promise<{
+    content: string,
+    indexOf: Array<number>
+  }> {
+    return this.request(
+      `product/car/source/${carSourceId}/content`,
+      'GET'
+    )
   }
 
   /**
@@ -446,23 +397,22 @@ console.log(quotationDraft)
    * @param {string} text
    * @param {number} pageIndex
    * @param {number} pageSize
-   * @param {{}} object
    * @memberof SAASService
    */
-  requestSearchCarSpu (text: string, pageIndex: number, pageSize: number, object: any) {
-    this.sendMessage({
-      path: `search/car/spu`,
-      loadingType: 'none',
-      method: 'GET',
-      data: {
+  requestSearchCarSpu(
+    text: string,
+    pageIndex: number,
+    pageSize: number
+  ): Promise<> {
+    return this.request(
+      `search/car/spu`,
+      'GET',
+      {
         text: text,
         pageIndex: pageIndex,
         pageSize: pageSize
-      },
-      success: object.success,
-      fail: object.fail,
-      complete: object.complete
-    })
+      }
+    )
   }
 
   /**
@@ -473,15 +423,15 @@ console.log(quotationDraft)
    * @param {{}} object
    * @memberof SAASService
    */
-  requestSearchSpuBySpuId (spuId: number, data: any, object: any) {
-    this.sendMessage({
-      path: `supply/car/spu/${spuId}`,
-      method: 'GET',
-      data: data || {},
-      success: object.success,
-      fail: object.fail,
-      complete: object.complete
-    })
+  requestSearchSpuBySpuId(
+    spuId: number,
+    data: any
+  ): Promise<any> {
+    return this.request(
+      `supply/car/spu/${spuId}`,
+      'GET',
+      data || {},
+    )
   }
 
   /**
@@ -492,18 +442,18 @@ console.log(quotationDraft)
    * @param {{}} object
    * @memberof SAASService
    */
-  requestSearchSpuByCarSeriesId (
+  requestSearchSpuByCarSeriesId(
     carSeriesId: number,
     inStock: boolean
   ): Promise<CarModelsResponse> {
-    return this.sendMessageByPromise({
-      path: `supply/car/spu`,
-      method: 'GET',
-      data: {
+    return this.request(
+      `supply/car/spu`,
+      'GET',
+      {
         carSeriesId: carSeriesId,
         inStock: inStock
       }
-    })
+    )
   }
 
   /**
@@ -513,24 +463,25 @@ console.log(quotationDraft)
    * @param {any} data
    * @param {('CAR_SPU'|string)} type
    * @param {boolean} inStock
-   * @param {{}} object
    * @memberof SAASService
    */
-  requireCarSpu(sid: number, data: any, type: 'CAR_SPU'|'CAR_SERIES', inStock: boolean, object: any) {
+  requireCarSpu(
+    sid: number,
+    data: any,
+    type: 'CAR_SPU' | 'CAR_SERIES',
+    inStock: boolean
+  ): Promise<any> {
     let path = type === 'CAR_SPU' ? `supply/car/spu/${sid}` : 'supply/car/spu/'
     let resdata = {
       carSeriesId: sid,
       inStock: inStock
     }
     data = type === 'CAR_SPU' ? data : resdata
-    this.sendMessage({
-      path: path,
-      method: 'GET',
-      data: resdata,
-      success: object.success,
-      fail: object.fail,
-      complete: object.complete
-    })
+    return this.request(
+      path,
+      'GET',
+      resdata
+    )
   }
 
   /**
@@ -543,13 +494,18 @@ console.log(quotationDraft)
    * @returns {Promise<any>}
    * @memberof SAASService
    */
-  pushCallRecord(supplierId: number, supplierPhone: string, messageResultId: number, contactPhone: string): Promise<any> {
+  pushCallRecord(
+    supplierId: number,
+    supplierPhone: string,
+    messageResultId: number,
+    contactPhone: string
+  ): Promise<any> {
     const userId = this.userService.auth.userId
     const userPhone = this.userService.mobile
-    return this.sendMessageByPromise({
-      path: "api/user/addCallRecord",
-      method: 'POST',
-      data: {
+    return this.request(
+      "api/user/addCallRecord",
+      'POST',
+      {
         userId,
         userPhone,
         supplierId,
@@ -557,55 +513,55 @@ console.log(quotationDraft)
         messageResultId,
         contactPhone
       }
-    })
+    )
   }
 
   /**
    * 获取创建报价单的信息
    *
-   * @param {Object} opts
-   * @param {Number} opts.carPrice
    * @returns
    * @memberof SAASService
    */
-  getCreatCarRecordInfo(opts: any){
+  getCreatCarRecordInfo(
+    carPrice: number
+  ): Promise<any> {
     const userId = this.userService.auth.userId
-    return this.sendMessageByPromise({
-      path: 'sale/quotation/initQuotation',
-      data: Object.assign({ userId }, opts),
-      method: 'GET',
-      success: opts.success,
-      fail: opts.fail
-    })
+    return this.request(
+      'sale/quotation/initQuotation',
+      'GET',
+      {
+        userId,
+        carPrice
+      }
+    )
   }
 
   /**
    * 查询报价偏好设置.
    * @param opts
    */
-  gettingPreference(opts: any) {
+  gettingPreference() {
     let userId = this.userService.auth.userId
-    return this.sendMessageByPromise({
-      path:`api/config/getQuotaSet/${userId}`,
-      method: 'GET',
-      data: {}
-    })
+    return this.request(
+      `api/config/getQuotaSet/${userId}`,
+      'GET'
+    )
   }
 
   /**
    * 报价偏好设置.
    * @param opts
    */
-  settingPreference(opts: any) {
-    let userId = this.userService.auth.userId
-    opts.data.userId = userId
-    this.sendMessage({
-      path: "api/config/saveQuota",
-      method: 'POST',
-      data: opts.data || {},
-      success: opts.success,
-      fail: opts.fail
-    })
+  settingPreference(data: any) {
+    const userId = this.userService.auth.userId
+    return this.request(
+      "api/config/saveQuota",
+      'POST',
+      {
+        userId,
+        ...data
+      }
+    )
   }
 
   /**
@@ -638,17 +594,17 @@ console.log(quotationDraft)
     installFee: number,
     otherFee: number,
     serviceFee: number
-    ): Promise<{
-      totalProfit: number,
-      profit: number,
-      insuranceProfit: number,
-      loanProfit: number
-    }> {
+  ): Promise<{
+    totalProfit: number,
+    profit: number,
+    insuranceProfit: number,
+    loanProfit: number
+  }> {
     const userId = this.userService.auth.userId
-    return this.sendMessageByPromise({
-      path: 'sale/quotation/queryProfit',
-      method: 'GET',
-      data: {
+    return this.request(
+      'sale/quotation/queryProfit',
+      'GET',
+      {
         userId,
         loanNum,
         insuranceNum,
@@ -660,7 +616,7 @@ console.log(quotationDraft)
         otherFee,
         serviceFee
       }
-    })
+    )
   }
 
   /**
@@ -668,11 +624,11 @@ console.log(quotationDraft)
    * @param opts
    */
   gettingInsurance() {
-    let userId = this.userService.auth.userId
-    return this.sendMessageByPromise({
-      path: `api/config/getInsurance/${userId}`,
-      method: 'GET'
-    })
+    const userId = this.userService.auth.userId
+    return this.request(
+      `api/config/getInsurance/${userId}`,
+      'GET'
+    )
   }
 
   /**
@@ -680,11 +636,18 @@ console.log(quotationDraft)
    * @param data.capacity 排量
    * @param data.place 门店所在省
    */
-  gettingVehicleAndVesselTax(opts: any) {
-    return this.sendMessageByPromise({
-      path: `sale/quotation/getCarTax?capacity=${opts.data.capacity}&place=${opts.data.place}`,
-      method: 'GET'
-    })
+  gettingVehicleAndVesselTax(
+    capacity: number,
+    place: string
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/getCarTax',
+      'GET',
+      {
+        capacity,
+        place
+      }
+    )
   }
 
   /**
@@ -694,14 +657,16 @@ console.log(quotationDraft)
    * @returns {Promise<SPUMarketTrendEntity>}
    * @memberof SAASService
    */
-  gettingMarketTrend(spuId: number): Promise<SPUMarketTrendEntity> {
-    return this.sendMessageByPromise({
-      path: `sale/quotation/getPriceTrend`,
-      method: 'GET',
-      data: {
+  gettingMarketTrend(
+    spuId: number
+  ): Promise<SPUMarketTrendEntity> {
+    return this.request(
+      `sale/quotation/getPriceTrend`,
+      'GET',
+      {
         spuId
       }
-    })
+    )
   }
 
   /**
@@ -711,14 +676,16 @@ console.log(quotationDraft)
    * @returns {Promise<any>}
    * @memberof SAASService
    */
-  getTopNOfCurrentMode(spuId: number): Promise<any> {
-    return this.sendMessageByPromise({
-      path: `sale/quotation/getCurrentPrice`,
-      data: {
+  getTopNOfCurrentMode(
+    spuId: number
+  ): Promise<any> {
+    return this.request(
+      `sale/quotation/getCurrentPrice`,
+      'GET',
+      {
         spuId: spuId
-      },
-      method: 'GET'
-    })
+      }
+    )
   }
 
   /**
@@ -731,18 +698,23 @@ console.log(quotationDraft)
    * @returns {Promise<any>}
    * @memberof SAASService
    */
-  getContacts(spuId: number, quotationPrice: number, companyId: number, supplierId: number): Promise<any> {
-    return this.sendMessageByPromise({
-      path: `sale/quotation/callRecord`,
-      data: {
+  getContacts(
+    spuId: number,
+    quotationPrice: number,
+    companyId: number,
+    supplierId: number
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/callRecord',
+      'GET',
+      {
         userId: this.userService.auth.userId,
         spuId: spuId,
         companyId: companyId || '',
         supplierId: supplierId || '',
         price: quotationPrice || ''
-      },
-      method: 'GET'
-    })
+      }
+    )
   }
 
   /**
@@ -765,113 +737,163 @@ console.log(quotationDraft)
    * @returns {Promise<any>}
    * @memberof SAASService
    */
-  getCompanies(spuId: number, quotationPrice: number): Promise<any> {
-    return this.sendMessageByPromise({
-      path: `sale/quotation/getCompanyList`,
-      data: {
+  getCompanies(
+    spuId: number,
+    quotationPrice: number
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/getCompanyList',
+      'GET',
+      {
         spuId: spuId,
         price: quotationPrice || ''
-      },
-      method: 'GET'
-    })
+      }
+    )
   }
 
   /**
    * 获取历史浏览记录.
    * @param opts
    */
-  getCheckHistory(opts: any): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'api/user/getViewRecord',
-      method: 'GET',
-      data: opts.data || {}
-    })
+  getCheckHistory(
+    quotationId: number
+  ): Promise<any> {
+    return this.request(
+      'api/user/getViewRecord',
+      'GET',
+      {
+        quotationId
+      }
+    )
   }
 
   /**
    * 修改订单有效时长.
    * @param opts
    */
-  postValidTime(opts: any): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'sale/quotation/modifyValidTime',
-      method: 'POST',
-      data: opts.data || {}
-    })
+  postValidTime(
+    quotationId: number,
+    times: number
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/modifyValidTime',
+      'POST',
+      {
+        quotationId,
+        times
+      }
+    )
   }
 
   /**
    * 获取砍价记录.
    * @param opts
    */
-  getBargainData(opts: any): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'sale/quotation/cutPriceActivities',
-      method: 'GET',
-      data: opts.data || {}
-    })
+  getBargainData(
+    targetId: number,
+    salePersonId: number,
+    status: 'used' | 'running',
+    isStoreLead: boolean
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/cutPriceActivities',
+      'GET',
+      {
+        targetId,
+        salePersonId,
+        status,
+        isStoreLead
+      }
+    )
   }
 
   /**
    * 结束砍价活动.
    * @param opts
    */
-  finishActivity(opts: any): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'sale/quotation/finishActivity?activityId='+opts.data.activityId+'&targetId='+opts.data.targetId,
-      method: 'POST',
-      loadingType: 'show'
-    })
+  finishActivity(
+    activityId: number,
+    targetId: number
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/finishActivity',
+      'POST',
+      {
+        activityId,
+        targetId
+      }
+    )
   }
 
   /**
    * 核销优惠券.
    * @param opts
    */
-  cancelCoupon(opts: any): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'sale/quotation/exchangeCoupon?couponCode='+opts.data.couponCode,
-      method: 'POST',
-      loadingType: 'show'
-    })
+  cancelCoupon(
+    couponCode: string
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/exchangeCoupon',
+      'POST',
+      {
+        couponCode
+      }
+    )
   }
 
   /**
    * 获取潜客列表.
    * @param opts
    */
-  getPotentialData(opts: any): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'sale/quotation/cutPriceLeads',
-      method: 'GET',
-      loadingType: 'show',
-      data: opts.data || {}
-    })
+  getPotentialData(
+    targetId: number
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/cutPriceLeads',
+      'GET',
+      {
+        targetId
+      }
+    )
   }
 
   /**
    * 获取砍价二维码.
    * @param opts
    */
-  getBargainQRcode(opts: any): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'sale/quotation/makeQRCode',
-      method: 'GET',
-      loadingType: 'show',
-      data: opts.data || {}
-    })
+  getBargainQRcode(
+    quotationId: string,
+    targetId: string,
+    width: number,
+    height: number
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/makeQRCode',
+      'GET',
+      {
+        quotationId,
+        targetId,
+        width,
+        height
+      }
+    )
   }
 
   /**
    * 获取报价记录详情列表
    * @param opts
    */
-  getQuoteDateilList(opts: any): Promise<any> {
-    return this.sendMessageByPromise({
-      path: 'sale/quotation/getQuotationByPhone',
-      method: 'GET',
-      loadingType: 'show',
-      data: opts.data || {}
-    })
+  getQuoteDateilList(
+    snsId: string,
+    mobile: string
+  ): Promise<any> {
+    return this.request(
+      'sale/quotation/getQuotationByPhone',
+      'GET',
+      {
+        snsId,
+        mobile
+      }
+    )
   }
 }
