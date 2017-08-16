@@ -82,8 +82,19 @@ export default class Service {
 
         if (wx_statusCode < 400) {
           // 2XX, 3XX 成功
-          const data = wx_data.data
-          return data
+
+          // 目前有种情况就是 状态码 返回为 200 的时候, 服务端还是会返回出错
+          const error = wx_data.error
+          if (error != null) {
+            // 如果 error 字段有不为空
+            const errorMessage = error.message
+            console.error(error.debugInfo)
+            return Promise.reject(new Error(errorMessage)) //to -> fail
+          } else {
+            // 如果 error 字段为空
+            const data = wx_data.data
+            return data
+          }
         } else {
           if (wx_statusCode === 401) {
             // 接口无权限
