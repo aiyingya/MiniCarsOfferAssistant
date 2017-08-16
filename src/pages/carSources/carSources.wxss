@@ -232,8 +232,9 @@ page {
 	width: 100%;
   background: #3377EE;
   margin-top: 20rpx;
-  padding: 0rpx 20rpx;
+  padding: 0 20rpx 20rpx 20rpx;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .car-sources-reference-deal .title {
