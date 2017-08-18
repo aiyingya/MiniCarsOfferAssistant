@@ -11,6 +11,7 @@
     "pages/carList/carList",
     "pages/usersQuote/usersQuote",
     "pages/supplier/supplier",
+    "pages/supplierDetail/supplierDetail",
     "pages/setCost/setCost",
     "pages/insurance/insurance",
     "pages/insurance/insuranceDetail/insuranceDetail",
@@ -40,6 +41,12 @@
         "iconPath": "images/icons/tab_icon_findcar_off.png",
         "selectedIconPath": "images/icons/tab_icon_findcar_on.png",
         "text": "找车"
+      },
+      {
+        "pagePath": "pages/supplier/supplier",
+        "iconPath": "images/icons/tab_icon_supplier_off.png",
+        "selectedIconPath": "images/icons/tab_icon_supplier_on.png",
+        "text": "供应商"
       },
       {
         "pagePath": "pages/usersQuote/usersQuote",

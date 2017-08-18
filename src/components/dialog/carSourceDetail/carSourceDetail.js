@@ -1,7 +1,11 @@
+// @flow
 import Component from '../../component'
 import * as wxapi from 'fmt-wxapp-promise'
 
 import { container } from '../../../landrover/business/index'
+import SAASService from '../../../services/saas.service'
+
+const saasService: SAASService = container.saasService
 
 export default {
 
@@ -9,7 +13,7 @@ export default {
 
   data() {
     return {
-      close() {}
+      close() { }
     }
   },
 
@@ -188,8 +192,8 @@ export default {
         [`${this.component.options.scope}.carSourceItem.viewModelLoading`]: '原文加载中...'
       })
 
-      container.saasService.requestCarSourceContent(options.carSourceItem.id, {
-        success: function (res) {
+      saasService.requestCarSourceContent(options.carSourceItem.id)
+        .then(res => {
           console.log(res)
           if (res) {
             /// 原文基本数据
@@ -227,13 +231,12 @@ export default {
               [`${that.component.options.scope}.carSourceItem.viewModelLoading`]: '加载失败'
             })
           }
-        },
-        fail: function () {
+        })
+        .catch(err => {
           that.component.setData({
             [`${that.component.options.scope}.carSourceItem.viewModelLoading`]: '加载失败'
           })
-        }
-      })
+        })
     }
 
     return this.component.hide
@@ -252,7 +255,7 @@ export default {
   companyList(opts) {
     const that = this
 
-    const setDefaults = function() {
+    const setDefaults = function () {
       return {
         page: 'companyList',
 
@@ -273,9 +276,9 @@ export default {
       scope: `$wux.carSourceDetailDialog`,
       data: options,
       methods: {
-                /**
-         * 隐藏
-         */
+        /**
+ * 隐藏
+ */
         hide(cb) {
           if (this.removed) return !1
           this.removed = !0
@@ -306,7 +309,7 @@ export default {
         handlerCompanyClick(e) {
           const companyName = e.currentTarget.dataset.companyName
           const companyId = e.currentTarget.dataset.companyId
-          typeof options.contact === 'function' && options.contact({companyId, companyName})
+          typeof options.contact === 'function' && options.contact({ companyId, companyName })
         },
         handlerCreateQuoted(e) {
           typeof options.handlerCreateQuoted === `function` && options.handlerCreateQuoted(e)
@@ -319,7 +322,7 @@ export default {
     that.component.setData({
       [`${that.component.options.scope}.status`]: "加载中"
     })
-    container.saasService.getCompanies(options.spuId, options.quotationPrice)
+    saasService.getCompanies(options.spuId, options.quotationPrice)
       .then(res => {
         that.component.setData({
           [`${that.component.options.scope}.companyList`]: res,
@@ -351,17 +354,17 @@ export default {
   contactList(opts) {
     const that = this
 
-    const setDefaults = function() {
+    const setDefaults = function () {
       return {
         page: 'contactList',
         // 必要参数
-        spuId: '',
-        quotationPrice: 0,
-        companyId: '',
-        companyName: '',
+        spuId: null,
+        quotationPrice: null,
+        companyId: null,
+        companyName: null,
         from: null,
         // 返回数据
-        contactList: {}
+        companyModel: {}
       }
     }
 
@@ -422,7 +425,7 @@ export default {
         },
         handlerContactClick(e) {
           const supplier = e.currentTarget.dataset.supplier,
-          phoneNumber = supplier.supplierPhone
+            phoneNumber = supplier.supplierPhone
           const contactPromise = wxapi.makePhoneCall({ phoneNumber })
 
           typeof options.contact === 'function' && options.contact(contactPromise, supplier)
@@ -432,19 +435,27 @@ export default {
 
     this.component.show()
 
-    that.component.setData({
+    this.component.setData({
       [`${that.component.options.scope}.status`]: '加载中'
     })
-    container.saasService.getContacts(options.spuId, options.quotationPrice, options.companyId, options.supplierId)
+    saasService.getContacts(
+      options.companyId,
+      options.supplierId,
+      options.spuId,
+      options.quotationPrice
+    )
       .then(res => {
-        that.component.setData({
-          [`${that.component.options.scope}.contactList`]: res[0],
-          [`${that.component.options.scope}.status`]: '没有供应商联系方式'
+        const companyModel = res.shift()
+        companyModel.companyId = companyModel.companyId || options.companyId
+        companyModel.companyName = companyModel.companyName || options.companyName
+        this.component.setData({
+          [`${this.component.options.scope}.companyModel`]: companyModel,
+          [`${this.component.options.scope}.status`]: '没有供应商联系方式'
         })
       })
       .catch(err => {
-        that.component.setData({
-          [`${that.component.options.scope}.status`]: '加载失败'
+        this.component.setData({
+          [`${this.component.options.scope}.status`]: '加载失败'
         })
       })
 

@@ -95,32 +95,34 @@ Page({
    */
   getDefaultPreference() {
     const that = this
-    return container.saasService.gettingPreference().then((res) => {
-      if (res) {
-        console.log(res)
-        that.setData({
-          "raisePrice.freight": res.freight,
-          "raisePrice.profit": res.profit,
-          "loan.interest.oneInterest": res.oneInterest,
-          "loan.interest.twoInterest": res.twoInterest,
-          "loan.interest.threeInterest": res.threeInterest,
-          "loan.coefficient.oneInterest": res.oneWYXS,
-          "loan.coefficient.twoInterest": res.twoWYXS,
-          "loan.coefficient.threeInterest": res.threeWYXS,
-          "loan.rebates": res.loanRebate,
-          "loan.service": res.loanFee,
-          "loan.billingwayValue": res.interestType -1,
-          "othersCost.registration": res.carNumberFee,
-          "othersCost.service": res.serviceFee,
-          "insurances.rebates": res.insuranceRebate,
-          "selectedAging.agingValue[0]":res.validTime.firstChoose,
-          "selectedAging.agingValue[1]":res.validTime.secondChoose,
-          "selectedAging.agingIndex":(Number(res.validTime.chooseWho) - 1) //1,2,3 - 0,1,2
-        })
-      }
-    }, (err) => {
+    return container.saasService.gettingPreference()
+      .then((res) => {
+        if (res) {
+          console.log(res)
+          that.setData({
+            "raisePrice.freight": res.freight,
+            "raisePrice.profit": res.profit,
+            "loan.interest.oneInterest": res.oneInterest,
+            "loan.interest.twoInterest": res.twoInterest,
+            "loan.interest.threeInterest": res.threeInterest,
+            "loan.coefficient.oneInterest": res.oneWYXS,
+            "loan.coefficient.twoInterest": res.twoWYXS,
+            "loan.coefficient.threeInterest": res.threeWYXS,
+            "loan.rebates": res.loanRebate,
+            "loan.service": res.loanFee,
+            "loan.billingwayValue": res.interestType - 1,
+            "othersCost.registration": res.carNumberFee,
+            "othersCost.service": res.serviceFee,
+            "insurances.rebates": res.insuranceRebate,
+            "selectedAging.agingValue[0]": res.validTime.firstChoose,
+            "selectedAging.agingValue[1]": res.validTime.secondChoose,
+            "selectedAging.agingIndex": (Number(res.validTime.chooseWho) - 1) //1,2,3 - 0,1,2
+          })
+        }
+      })
+      .catch(err => {
 
-    })
+      })
   },
   /**
    * 获取保险信息.
@@ -398,9 +400,8 @@ Page({
       }
     }
     // console.log(data)
-    container.saasService.settingPreference({
-      data: data,
-      success(res) {
+    container.saasService.settingPreference(data)
+      .then(res => {
         /**
          * 报价设置已设置.
          */
@@ -410,12 +411,10 @@ Page({
         } catch (e) {
 
         }
-      },
-      fail(res) {
+      })
+      .catch(err => {
         console.log(res)
-      }
-    })
-
+      })
   },
   /**
    * 处理单选事件

@@ -23,7 +23,7 @@ Page({
       quotationId: '0',
       draftId: '0',
       quotationName: '',
-      loanInterest:0,
+      loanInterest: 0,
       quotationItems: [{
         itemName: '',
         itemPic: '',
@@ -47,7 +47,7 @@ Page({
       read: false,
       source: 'quotationDetail',
       pageShare: false,
-      rateType:1, //"费率类型 1 月息 2 万元系数",
+      rateType: 1, //"费率类型 1 月息 2 万元系数",
       metallicPaintFee: 0
     },
     priceChange: {
@@ -57,49 +57,49 @@ Page({
     },
     cutPriceCount: '',
     cutPriceCountStyle: '',
-    isSpecialBranch:false //宝马、奥迪、MINI展示下xx点
+    isSpecialBranch: false //宝马、奥迪、MINI展示下xx点
   },
   onLoad(options) {
     let that = this;
     let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
     let carPrice = quotation.quotationItems[0].sellingPrice
     let officialPrice = quotation.quotationItems[0].guidePrice
-console.log(quotation)
+    console.log(quotation)
     /// 实时计算优惠点数
     let downPrice = util.downPrice(carPrice, officialPrice)
     let downPriceFlag = util.downPriceFlag(downPrice);
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
-    let cutPriceCount , cutPriceCountStyle
+    let cutPriceCount, cutPriceCountStyle
     const isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
     if (!container.userService.isLogin()) {
-      setTimeout(function(){
+      setTimeout(function () {
         that.setData({
           pageShare: true
         })
-      },1000)
+      }, 1000)
 
-      this.setData({options: options})
+      this.setData({ options: options })
       wx.navigateTo({
         url: '../../login/login'
       })
     } else {
-      if(that.data.quotation.hasLoan){
-        const isMonth = (quotation.rateType===1)
+      if (that.data.quotation.hasLoan) {
+        const isMonth = (quotation.rateType === 1)
         const expenseRate = quotation.expenseRate
         const stages = quotation.stages
         const paymentRatio = quotation.paymentRatio
-        const monthRate = isMonth ? expenseRate : util.tranWToMonth(expenseRate,stages)//万元系数
-        const loanInterest = util.loanPaymentInterest(carPrice,paymentRatio,monthRate,stages * 12)
+        const monthRate = isMonth ? expenseRate : util.tranWToMonth(expenseRate, stages)//万元系数
+        const loanInterest = util.loanPaymentInterest(carPrice, paymentRatio, monthRate, stages * 12)
         quotation.loanInterest = Math.floor(loanInterest)
       }
-      if(quotation.cutPriceCount || quotation.cutPriceCount === 0) {
+      if (quotation.cutPriceCount || quotation.cutPriceCount === 0) {
         cutPriceCount = true
         cutPriceCountStyle = 'cutPriceCountStyle'
-      }else {
+      } else {
         cutPriceCount = false
         cutPriceCountStyle = ''
       }
@@ -141,14 +141,14 @@ console.log(quotation)
      */
     let options = this.data.options
     console.log(`pageShare:${this.data.pageShare}`)
-    if(this.data.pageShare === true) {
+    if (this.data.pageShare === true) {
       this.onLoad(options)
     }
   },
   /**
    * 页面分享.
    */
-  onShareAppMessage () {
+  onShareAppMessage() {
     let quotation = this.data.quotation
     let quotationInfoKeyValueString = util.urlEncodeValueForKey('quotation', quotation)
     return {
@@ -256,21 +256,27 @@ console.log(quotation)
     $wuxDialog.open({
       title: '提示',
       content: '发起定车后， 将会有工作人员与您联系',
-      buttons: [{
+      buttons: [
+        {
           text: '发起订车',
           type: 'weui-dialog__btn_primary',
           onTap: function () {
             const quotationItem = that.data.quotation.quotationItems[0]
-            container.saasService.requestBookCar(quotationItem.itemName, quotationItem.specifications, quotationItem.guidePrice, 1, {
-              success: (res) => {
+            container.saasService.requestBookCar(
+              quotationItem.itemName,
+              quotationItem.specifications,
+              quotationItem.guidePrice,
+              1
+            )
+              .then(res => {
                 wx.showModal({
                   content: '提交成功，请保持通话畅通',
                   success: function (res) {
-                    if (res.confirm) {}
+                    if (res.confirm) { }
                   }
                 })
-              },
-              fail: (err) => {
+              })
+              .catch(err => {
                 wx.showModal({
                   title: '提示',
                   content: err.alertMessage,
@@ -280,11 +286,7 @@ console.log(quotation)
                     }
                   }
                 })
-              },
-              complete: () => {
-
-              }
-            })
+              })
           }
         },
         {
@@ -296,8 +298,8 @@ console.log(quotation)
       ]
     })
   },
-  lookDetail(){
-    if(!this.data.quotation.insuranceDetail.showDetail){
+  lookDetail() {
+    if (!this.data.quotation.insuranceDetail.showDetail) {
       return
     }
     let insuranceDetail = util.urlEncodeValueForKey('insuranceDetail', this.data.quotation.insuranceDetail)
@@ -305,8 +307,8 @@ console.log(quotation)
       url: `../../insurance/insuranceDetail/insuranceDetail?${insuranceDetail}`
     })
   },
-  isShowDownDot(name){
-    if(name.indexOf('宝马') >-1 || name.indexOf('奥迪')>-1 || name.indexOf('MINI')>-1){
+  isShowDownDot(name) {
+    if (name.indexOf('宝马') > -1 || name.indexOf('奥迪') > -1 || name.indexOf('MINI') > -1) {
       return true;
     }
     return false;
@@ -334,14 +336,12 @@ console.log(quotation)
     const cutPriceCount = this.data.cutPriceCount
 
     if (cutPriceCount) return
-    container.saasService.getBargainQRcode({
-      data: {
-        quotationId: quotationItem.quotationId,
-        targetId: tenantId,
-        width: 300,
-        height: 300
-      }
-    }).then((res) => {
+    container.saasService.getBargainQRcode(
+      quotationItem.quotationId,
+      tenantId,
+      300,
+      300
+    ).then((res) => {
       console.log(res)
       $qrCodeDialog.open({
         content: res

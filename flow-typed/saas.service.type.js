@@ -1,3 +1,16 @@
+declare type Pagination<T> = {
+  totalElements: number,
+  totalPages: number,
+  number: number,
+  size: number,
+  content: Array<T>,
+  numberOfElements: number,
+  hasNext: boolean,
+  last: boolean,
+  first: boolean,
+  hasPrevious: boolean
+}
+
 declare type CarModelSupplyChart = {
   scale: Array<string>,       // '1.30~1.02'
   x: Array<string>,           // '1.30~1.02'
@@ -32,12 +45,18 @@ declare type PraiseModel = {
 };
 
 declare type Filter = {
+  id: number,
+  name: string,
   items: Array<Item>
 };
 
 declare type Item = {
-  name: string
-};
+  id: number,
+  name: string,
+  value: string,
+  items: Array<Item>,
+  selected: boolean
+}
 
 declare type CarModelsResponse = {
   content: Array<CarModelChart>,
@@ -57,4 +76,33 @@ declare type PriceTrendEntity = {
 
 declare type SPUMarketTrendEntity = {
   lowestPriceTrend: Array<PriceTrendEntity>
+};
+
+declare type Company = {
+  companyId: number,
+  companyName: string,
+  showLabel: string,
+};
+
+declare type Supplier = {
+  supplierId: number,
+  supplierName: string,
+  supplierPhone: string
+};
+
+declare type Tag = {
+  userId: string,
+  label: string,
+  createdDate: string
+};
+
+declare type UserComment = {
+  commentId: number,
+  companyId: number,
+  tag: Array<Tag>, // 多个标签 ',' 号分割
+  content: string,
+  star: number,
+  createdDate: string,
+  userId: number,
+  phone: string
 };

@@ -107,8 +107,8 @@ Page({
     let carModelsList = []
     let searchNodata = false
     console.log(results)
-    container.saasService.requireCarSpu(results.id, {}, results.type, false, {
-      success(res) {
+    container.saasService.requireCarSpu(results.id, {}, results.type, false)
+      .then(res => {
         carModelsList = res.content
         searchNodata = carModelsList.length > 0 ? false : true
         for (let item of carModelsList) {
@@ -160,8 +160,7 @@ Page({
           console.log(carModelsList)
           that.postUserSearchHistory(results.content)
         }
-      }
-    })
+      })
   },
   getSearchConfirm(pageIndex) {
     let val = this.data.cacheSearchValue
@@ -169,8 +168,8 @@ Page({
     let searchNodata = false
     let searchResults = []
 
-    container.saasService.requestSearchCarSpu(val, pageIndex, 10, {
-      success: function (res) {
+    container.saasService.requestSearchCarSpu(val, pageIndex, 10)
+      .then(res => {
         if (res.first) {
           searchNodata = res.content.length > 0 ? false : true
           searchResults = res.content
@@ -236,8 +235,7 @@ Page({
           showSearchHistory: false
         })
         that.postUserSearchHistory(val)
-      }
-    })
+      })
   },
   handleSearchConfirm(e) {
     let val = this.data.cacheSearchValue
@@ -659,9 +657,8 @@ Page({
       }
     }
 
-    container.saasService.requestSearchSpuBySpuId(sid, requestData, {
-      success: function (res) {
-
+    container.saasService.requestSearchSpuBySpuId(sid, requestData)
+      .then(res => {
         if (res.content.length > 0) {
           for (let change of carModelsList) {
             if (change.carModelId === res.content[0].carModelId) {
@@ -671,7 +668,7 @@ Page({
               requestItem.selectColors = item.selectColors
               requestItem.hours = item.hours
               requestItem.selectTimes = item.selectTimes
-              requestItem.selectColorsId = sid,
+              requestItem.selectColorsId = sid
               requestItem.supply.status = item.supply.status
               requestItem.supply.supplierCount = item.supply.supplierCount
               requestItem.supply.colors = item.supply.colors
@@ -691,8 +688,7 @@ Page({
           selectChartsLabel: false,
           showCharts: true
         })
-      }
-    })
+      })
   },
   handleClosePopupChange() {
 
