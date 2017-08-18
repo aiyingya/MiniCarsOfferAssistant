@@ -50,28 +50,20 @@ Page({
   },
   onLoad(options) {
     const company = util.urlDecodeValueForKeyFromOptions('company', options)
-    this.setData({
-      company
-    })
+    this.setData({ company })
 
-    if (!userService.isLogin()) {
-      wx.navigateTo({
-        url: '../login/login'
-      })
-    } else {
-      // 初次进入加载
-      wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
-        .then(() => {
-          return this.refresh()
-            .then((res: PaginationList<UserComment>) => {
-              this.setData({
-                comments: res.list
-              })
+    // 初次进入加载
+    wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
+      .then(() => {
+        return this.refresh()
+          .then((res: PaginationList<UserComment>) => {
+            this.setData({
+              comments: res.list
             })
-        })
-        .then(() => { wxapi.hideToast() })
-        .catch(() => { wxapi.hideToast() })
-    }
+          })
+      })
+      .then(() => { wxapi.hideToast() })
+      .catch(() => { wxapi.hideToast() })
   },
   onShow() { },
   onPullDownRefresh() {

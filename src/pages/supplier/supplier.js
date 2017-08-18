@@ -6,9 +6,10 @@ import {
 import { container } from '../../landrover/business/index'
 import util from '../../utils/util'
 import SAASService from '../../services/saas.service'
-import * as wxapi from 'fmt-wxapp-promise'
+import UserService from '../../services/user.service'
 
 const saasService: SAASService = container.saasService
+const userService: UserService = container.userService
 
 let whiteListRows: Array<Company> | null = null
 
@@ -211,8 +212,12 @@ Page({
     this.routeToSupplierDetail(company)
   },
   routeToSupplierDetail(company: Company) {
-    const companyKeyValueString = util.urlEncodeValueForKey('company', company)
-    wxapi.navigateTo({ url: '/pages/supplierDetail/supplierDetail?' + companyKeyValueString })
+    if (userService.isLogin()) {
+      const companyKeyValueString = util.urlEncodeValueForKey('company', company)
+      wx.navigateTo({ url: '/pages/supplierDetail/supplierDetail?' + companyKeyValueString })
+    } else {
+      wx.navigateTo({ url: '../login/login' })
+    }
   },
   actionContact(companyId, companyName, completeHandler) {
     $wuxCarSourceDetailDialog.contactList({
