@@ -144,7 +144,6 @@
   border: 1rpx solid #999999;
   border-radius: 65rpx;
   letter-spacing: 0;
-  line-height: 24rpx;
   margin-left: 20rpx;
   padding: 0 0;
   height: 48rpx;
@@ -225,7 +224,6 @@
   font-family: PingFangSC-Regular;
   font-size: 24rpx;
   letter-spacing: 0;
-  line-height: 24rpx;
 }
 
 .comment .title .profile .phone {
@@ -258,8 +256,8 @@
   font-size: 24rpx;
   color: #666666;
   letter-spacing: 0;
-  line-height: 24rpx;
   margin-left: 6rpx;
+  box-sizing: border-box;
 }
 
 .comment .title .tag .highlight {
@@ -293,7 +291,6 @@
   font-size: 30rpx;
   color: #333333;
   letter-spacing: 0rpx;
-  line-height: 30rpx;
   box-sizing: border-box;
 }
 
@@ -305,7 +302,6 @@
   font-size: 24rpx;
   color: #3377EE;
   letter-spacing: 0;
-  line-height: 24rpx;
 }
 
 .supplier-search-result .profile .tag-label image {

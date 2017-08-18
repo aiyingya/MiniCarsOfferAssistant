@@ -164,7 +164,6 @@
   font-size: 30rpx;
   color: #333333;
   letter-spacing: 0rpx;
-  line-height: 30rpx;
   box-sizing: border-box;
 }
 
@@ -176,7 +175,6 @@
   font-size: 24rpx;
   color: #3377EE;
   letter-spacing: 0;
-  line-height: 24rpx;
 }
 
 .supplier-search-result .profile .tag-label image{
