@@ -1,3 +1,4 @@
+@import '../../components/dialog/carSourceDetail/carSourceDetail.wxss';
 .supplier-detail {}
 
 .supplier-detail .header {
