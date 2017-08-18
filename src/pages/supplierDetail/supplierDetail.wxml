@@ -55,11 +55,11 @@
     <view class="title">
       <view class="profile">
         <view class="phone"> {{ item.phone }} </view>
-        <view class="create-date"> {{ item.createdDate }} </view>
+        <view class="create-date"> {{ item.createDate }} </view>
       </view>
       <view class="tag">
-        <image src="{{ item.tag === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}"></image>
-        <view class="tag-label {{ item.tag === '靠谱' ? 'highlight' : '' }}"> {{ item.tag }} </view>
+        <image src="{{ item.tags[0].label === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}"></image>
+        <view class="tag-label {{ item.tags[0].label === '靠谱' ? 'highlight' : '' }}"> {{ item.tags[0].label }} </view>
       </view>
     </view>
     <view class="content">
