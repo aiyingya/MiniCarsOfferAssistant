@@ -57,9 +57,11 @@
         <view class="phone"> {{ item.phone }} </view>
         <view class="create-date"> {{ item.createDate }} </view>
       </view>
-      <view class="tag">
+      <view wx:if="{{ item.tags && item.tags.length }}" class="tag">
         <image src="{{ item.tags[0].label === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}"></image>
         <view class="tag-label {{ item.tags[0].label === '靠谱' ? 'highlight' : '' }}"> {{ item.tags[0].label }} </view>
+      </view>
+      <view wx:else class="tag">
       </view>
     </view>
     <view class="content">
