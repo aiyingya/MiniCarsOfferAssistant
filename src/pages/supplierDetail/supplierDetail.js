@@ -25,18 +25,7 @@ Page({
     filtersSelectedIndexes: null,
 
     company: null,
-    comments: [
-      {
-        commentId: 0,
-        companyId: 0,
-        tag: '靠谱',
-        content: "阿凡达发放的三方的发发发发送发送发送发送发送发送答复是否三方三多发的发发发地方的发发发的方",
-        star: 3,
-        createdDate: "2017-9-10",
-        userId: 1,
-        phone: '1582321****'
-      }
-    ],
+    comments: [],
 
     submitTags: [
       {
