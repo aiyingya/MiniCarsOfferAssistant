@@ -91,6 +91,7 @@
         <template is="commentView" data="{{ item }}" />
       </view>
     </view>
+    <view style="height: 210rpx; width: 100%"/>
   </view>
   <view class="footer">
     <template is="commentBoardView" data="{{ submitTags, submitTextareaValue, submitSelectedTagIndex, submitButtonValid, submitButtonTagValid }}" />

@@ -39,7 +39,7 @@
   left: 30rpx;
   right: 30rpx;
   bottom: 0;
-  background: #E5E5E5;
+  border-bottom:1rpx solid #E5E5E5;
 }
 
 .supplier-detail .footer {
