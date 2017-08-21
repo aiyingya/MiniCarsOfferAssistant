@@ -3,7 +3,7 @@
   <import src="../../../components/price/quotedPrice.wxml" />
 
   <view class="carSourceDetailDialog">
-    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" bindtap="{{close}}" catchtouchmove="{{onTouchMoveWithCatch}}">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" bindtap="{{close}}" catchtouchmove>
     </view>
     <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
       <block wx:if="{{page === 'sourceDetail'}}">
