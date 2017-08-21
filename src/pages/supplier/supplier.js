@@ -104,14 +104,15 @@ Page({
           const searchText2 = this.formatSearchText(searchText)
           sectionTitle = `与 '${searchText2}' 相关的记录 ${res.number}/${res.totalPages}页 共${res.totalElements}个`
           searchPaginationList = { list: res.content, pagination: res, loadingMore: false }
+          this.setData({ sectionTitle, sectionRows: searchPaginationList.list })
         } else {
           sectionTitle = `没有搜索结果`
+          this.setData({ sectionTitle })
         }
-
-        this.setData({
-          sectionTitle,
-          sectionRows: searchPaginationList.list
-        })
+      })
+      .catch(err => {
+        sectionTitle = `搜索出错...`
+        this.setData({ sectionTitle })
       })
   },
   searchLoadMore(): Promise<any> {
@@ -173,7 +174,9 @@ Page({
         }
       })
       .catch(err => {
-        searchPaginationList.loadingMore = false
+        if (searchPaginationList != null) {
+          searchPaginationList.loadingMore = false
+        }
         return Promise.reject(err)
       })
   },
