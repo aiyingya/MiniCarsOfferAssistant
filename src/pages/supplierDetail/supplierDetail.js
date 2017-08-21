@@ -55,7 +55,10 @@ Page({
     // 初次进入加载
     wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
       .then(() => {
-        return this.refresh()
+        return this.filters()
+          .then(res => {
+            return this.refresh(company.companyId)
+          })
           .then((res: PaginationList<UserComment>) => {
             this.setData({
               comments: res.list
@@ -67,7 +70,9 @@ Page({
   },
   onShow() { },
   onPullDownRefresh() {
-    this.refresh()
+    const companyId = this.data.company.companyId
+
+    this.refresh(companyId)
       .then((res: PaginationList<UserComment>) => {
         wx.stopPullDownRefresh()
         this.setData({
@@ -83,11 +88,14 @@ Page({
         })
       })
   },
-  refresh(): Promise<PaginationList<UserComment>> {
-    return this.filters()
-      .then(res => {
-        return this.commentsRefresh()
+  refresh(companyId: number): Promise<PaginationList<UserComment>> {
+    // 更新公司数据
+    saasService.retrieveSupplyCompany(companyId)
+      .then((res: Company) => {
+        this.setData({ company: res })
       })
+
+    return this.commentsRefresh()
   },
   filters(): Promise<void> {
     return saasService.retrieveFiltersOfCompanyUserComments()
@@ -253,11 +261,13 @@ Page({
           [tagString]
         )
           .then(res => {
+            // 重置评论输入板
             this.setData({
               submitSelectedTagIndex: -1,
               submitTextareaValue: ''
             })
-            return this.commentsRefresh()
+
+            return this.refresh(companyId)
           })
           .then(res => {
             this.setData({ comments: res.list })

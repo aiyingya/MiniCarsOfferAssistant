@@ -1103,5 +1103,19 @@ export default class SAASService extends Service {
       'GET'
     )
   }
+
+  /**
+   * 根据供应商 id 查询供应商公司信息
+   *
+   * @param {number} companyId
+   * @returns {Promise<Company>}
+   * @memberof SAASService
+   */
+  retrieveSupplyCompany(companyId: number): Promise<Company> {
+    return this.request(
+      `supply/company/${companyId}`,
+      'GET'
+    )
+  }
 }
 
