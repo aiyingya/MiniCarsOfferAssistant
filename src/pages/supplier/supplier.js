@@ -29,23 +29,23 @@ Page({
     fuzzySearchResultViews: null,
   },
   onLoad() {
-    this.whiteList()
+    wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
+      .then(() => {
+        return this.whiteList()
+      })
+      .then(() => { wxapi.hideToast() })
+      .catch(() => { wxapi.hideToast() })
   },
   onShow() {
   },
   onPullDownRefresh() {
-    wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
-      .then(() => {
-        return this.whiteList()
-          .then(res => {
-            this.setData({
-              searchBarValue: ''
-            })
-            wx.stopPullDownRefresh()
-          })
+    this.whiteList()
+      .then(res => {
+        this.setData({
+          searchBarValue: ''
+        })
+        wx.stopPullDownRefresh()
       })
-      .then(() => { wxapi.hideToast() })
-      .catch(() => { wxapi.hideToast() })
   },
   onReachBottom() {
     this.searchLoadMore()
