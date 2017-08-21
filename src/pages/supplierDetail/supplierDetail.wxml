@@ -42,7 +42,7 @@
     </view>
     <form bindsubmit="onFormSubmitClick">
       <view class="comment-textarea">
-        <textarea name="content" value="{{ submitTextareaValue }}" class="textarea" fixed="true" placeholder="输入评论" placeholder-class="textarea-placeholder" bindconfirm="onTextareaConfirm"
+        <textarea name="content" value="{{ submitTextareaValue }}" class="textarea" fixed placeholder="输入评论" placeholder-class="textarea-placeholder" bindconfirm="onTextareaConfirm"
           bindinput="onTextareaInput" />
         <button formType="submit" class="submit-input {{ (submitButtonValid && submitButtonTagValid) ? 'valid' : '' }}">提交</button>
       </view>
