@@ -213,8 +213,12 @@ Page({
     }
   },
   onCallButtonClick(e) {
-    const company = e.currentTarget.dataset.company
-    this.actionContact(company.companyId, company.companyName)
+    if (userService.isLogin()) {
+      const company = e.currentTarget.dataset.company
+      this.actionContact(company.companyId, company.companyName)
+    } else {
+      wx.navigateTo({ url: '../login/login' })
+    }
   },
   onRowClick(e) {
     const company = e.currentTarget.dataset.company
