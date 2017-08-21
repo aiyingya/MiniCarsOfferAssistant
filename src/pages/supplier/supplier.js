@@ -3,6 +3,7 @@ import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/c
 import {
   $wuxToast
 } from "../../components/wux"
+import * as wxapi from 'fmt-wxapp-promise'
 import { container } from '../../landrover/business/index'
 import util from '../../utils/util'
 import SAASService from '../../services/saas.service'
@@ -33,13 +34,18 @@ Page({
   onShow() {
   },
   onPullDownRefresh() {
-    this.whiteList()
-      .then(res => {
-        this.setData({
-          searchBarValue: ''
-        })
-        wx.stopPullDownRefresh()
+    wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
+      .then(() => {
+        return this.whiteList()
+          .then(res => {
+            this.setData({
+              searchBarValue: ''
+            })
+            wx.stopPullDownRefresh()
+          })
       })
+      .then(() => { wxapi.hideToast() })
+      .catch(() => { wxapi.hideToast() })
   },
   onReachBottom() {
     this.searchLoadMore()
