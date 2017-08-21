@@ -199,11 +199,9 @@ Page({
 
     this.setData({ filtersSelectedIndexes })
 
-    const item = filters[filterId].items[itemId]
-
     wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
       .then(() => {
-        return this.commentsRefresh(item.value)
+        return this.commentsRefresh()
           .then((res: PaginationList<UserComment>) => {
             this.setData({
               comments: res.list
@@ -259,6 +257,10 @@ Page({
               submitSelectedTagIndex: -1,
               submitTextareaValue: ''
             })
+            return this.commentsRefresh()
+          })
+          .then(res => {
+            this.setData({ comments: res.list })
           })
       })
       .then(() => {
