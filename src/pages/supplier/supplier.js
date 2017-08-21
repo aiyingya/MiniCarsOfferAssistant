@@ -191,11 +191,15 @@ Page({
 
     if (searchText != null && searchText.length > 0) {
       if (searchText !== searchCurrentText) {
+        // 将分页器移除
+        searchPaginationList = null
         this.fuzzySearch(searchText)
       } else {
         // do nothing
       }
     } else {
+      // 将分页器移除
+      searchPaginationList = null
       this.whiteList()
     }
   },
