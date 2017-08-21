@@ -16,7 +16,7 @@
     <view class='profile'>
       {{ item.companyName }}
       <view class="tag-label">
-        <image class="reliable-face" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}" /> {{ item.showLabel }}
+        <image class="reliable-face" wx:if="{{ item.showLabel }}" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}" /> {{ item.showLabel }}
       </view>
     </view>
     <image class="call-line" src="/images/icons/icon_call_line.png" data-company="{{ item }}" catchtap="onCallButtonClick" />
