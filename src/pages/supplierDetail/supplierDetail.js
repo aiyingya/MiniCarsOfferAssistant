@@ -140,16 +140,19 @@ Page({
       return Promise.reject(new Error('正在获取更多数据'))
     }
 
-    paginationList.loadingMore = true
-
-    const companyId = this.data.company.companyId
-
-    const item = this.getCurrentFilterItem()
+    if (pagination.last) {
+      return Promise.reject(new Error('已经最后一页了'))
+    }
 
     let pageIndex = pagination.number
     if (pagination.hasNext) {
       pageIndex = pageIndex + 1
     }
+
+    const companyId = this.data.company.companyId
+    const item = this.getCurrentFilterItem()
+
+    paginationList.loadingMore = true
     return saasService.retrieveUserComments(companyId, item.value, pageIndex)
       .then((res: Pagination<UserComment>) => {
         if (paginationList == null) {
@@ -167,7 +170,7 @@ Page({
         } else {
           paginationList.pagination = res
           if (paginationList.list != null) {
-            paginationList.list.concat(res.content)
+            paginationList.list = paginationList.list.concat(res.content)
           } else {
             paginationList.list = res.content
           }

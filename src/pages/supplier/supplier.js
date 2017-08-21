@@ -74,10 +74,10 @@ Page({
   formatSearchText(searchText: string): string {
     if (searchText.length > 5) {
       let index = 0
-      const string = ''
+      let string = ''
       for (let char of searchText) {
         if (index < 5) {
-          string.concat(char)
+          string = string.concat(char)
         } else {
           break
         }
@@ -128,14 +128,20 @@ Page({
       return Promise.reject(new Error('正在获取更多数据'))
     }
 
-    const searchText = searchCurrentText
 
     let pageIndex = pagination.number
+    if (pagination.last) {
+      return Promise.reject(new Error('已经最后一页了'))
+    }
+
     if (pagination.hasNext) {
       pageIndex = pageIndex + 1
     }
 
-    return saasService.retrieveSupplierSearchResult(searchText, pageIndex)
+    const searchText = searchCurrentText
+
+    searchPaginationList.loadingMore = true
+    return saasService.retrieveSupplierSearchResult(searchText, null, pageIndex)
       .then((res: Pagination<Company>) => {
         if (searchPaginationList == null) {
           return Promise.reject(new Error('缺少第一页'))
@@ -152,7 +158,7 @@ Page({
         } else {
           searchPaginationList.pagination = res
           if (searchPaginationList.list != null) {
-            searchPaginationList.list.concat(res.content)
+            searchPaginationList.list = searchPaginationList.list.concat(res.content)
           } else {
             searchPaginationList.list = res.content
           }
