@@ -282,18 +282,21 @@
   height: 100%;
   background: #ffffff;
 }
-
 .supplier-search-result .profile {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
+  max-width: calc(100% - 100rpx);
+}
+.supplier-search-result .profile .name {
   font-family: "PingFangSC-Medium";
   font-size: 30rpx;
   color: #333333;
   letter-spacing: 0rpx;
-  box-sizing: border-box;
+  max-width: calc(100% - 110rpx);
+  overflow: hidden;
 }
-
 .supplier-search-result .profile .tag-label {
   display: flex;
   justify-content: space-between;
@@ -302,8 +305,8 @@
   font-size: 24rpx;
   color: #3377EE;
   letter-spacing: 0;
+  width: 110rpx;
 }
-
 .supplier-search-result .profile .tag-label image {
   margin-left: 20rpx;
   margin-right: 6rpx;

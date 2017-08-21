@@ -14,7 +14,7 @@
 <template name="supplierSearchResultView">
   <view class="supplier-search-result" data-company="{{ item }}" bindtap="onRowClick">
     <view class='profile'>
-      {{ item.companyName }}
+      <view class='name'>{{ item.companyName }}</view>
       <view class="tag-label">
         <image class="reliable-face" wx:if="{{ item.showLabel }}" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}" /> {{ item.showLabel }}
       </view>
