@@ -33,6 +33,7 @@ Page({
         name: '靠谱',
         imageNormal: '/images/icons/icon_reliable_face_off.png',
         imageHighlight: '/images/icons/icon_reliable_face.png',
+        highlightClass: 'reliable_highlight',
         value: '靠谱'
       },
       {
@@ -40,6 +41,7 @@ Page({
         name: '不靠谱',
         imageNormal: '/images/icons/icon_unreliable_face_off.png',
         imageHighlight: '/images/icons/icon_unreliable_face.png',
+        highlightClass: 'unreliable_highlight',
         value: '不靠谱'
       }
     ],

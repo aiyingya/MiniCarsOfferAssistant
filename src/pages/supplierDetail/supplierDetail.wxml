@@ -29,7 +29,7 @@
       选择该供应商是否靠谱?
       <view class="tag-selection">
         <button
-          class="tag {{ index == submitSelectedTagIndex ? 'selected' : '' }}"
+          class="tag {{ index == submitSelectedTagIndex ? item.highlightClass : '' }}"
           wx:for="{{ submitTags }}"
           wx:key="id"
           bindtap="onTagButtonClick"
@@ -41,7 +41,7 @@
     </view>
     <form bindsubmit="onFormSubmitClick">
       <view class="comment-textarea">
-        <textarea fixed="true" name="content" value="{{ submitTextareaValue }}" class="textarea"  placeholder="输入评论" placeholder-class="textarea-placeholder" bindconfirm="onTextareaConfirm"
+        <textarea name="content" value="{{ submitTextareaValue }}" class="textarea"  placeholder="输入评论" placeholder-class="textarea-placeholder" bindconfirm="onTextareaConfirm"
           bindinput="onTextareaInput" />
         <button formType="submit" class="submit-input {{ (submitButtonValid && submitButtonTagValid) ? 'valid' : '' }}">提交</button>
       </view>

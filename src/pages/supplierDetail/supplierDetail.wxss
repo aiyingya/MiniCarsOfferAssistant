@@ -154,9 +154,13 @@
   width: 24rpx;
   padding-right: 10rpx;
 }
-.comment-board .tag-board .tag-selection .selected {
+.comment-board .tag-board .tag-selection .reliable_highlight {
   border: 1rpx solid #3377EE;
   color: #3377EE;
+}
+.comment-board .tag-board .tag-selection .unreliable_highlight {
+  border: 1rpx solid #333333;
+  color: #333333;
 }
 .comment-board .comment-textarea {
   box-sizing: border-box;
