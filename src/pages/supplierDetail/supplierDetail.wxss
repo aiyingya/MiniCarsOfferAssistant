@@ -305,7 +305,7 @@
   font-size: 24rpx;
   color: #3377EE;
   letter-spacing: 0;
-  width: 110rpx;
+  width: 120rpx;
 }
 .supplier-search-result .profile .tag-label image {
   margin-left: 20rpx;
