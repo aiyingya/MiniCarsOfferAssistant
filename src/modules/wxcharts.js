@@ -49,7 +49,7 @@ var config = {
 
   // 自定义参数
   paddingRight: 30,
-  paddingTop: 30
+  paddingTop: 0
 };
 
 // Object.assign polyfill
@@ -2099,6 +2099,8 @@ var Charts = function Charts(opts) {
   config$$1.yAxisTitleWidth = opts.yAxis.disabled !== true && opts.yAxis.title ? config$$1.yAxisTitleWidth : 0;
   config$$1.pieChartLinePadding = opts.dataLabel === false ? 0 : config$$1.pieChartLinePadding;
   config$$1.pieChartTextPadding = opts.dataLabel === false ? 0 : config$$1.pieChartTextPadding;
+  // 布局兼容
+  config$$1.paddingTop = opts.landscape === true ? config$$1.paddingTop + 30 : config$$1.paddingTop;
 
   this.opts = opts;
   this.config = config$$1;
@@ -2462,7 +2464,8 @@ function drawYAxisCoordLine(series, opts, config, context) {
 
   var points = [];
   for (var i = 0; i < config.yAxisSplit; i++) {
-    points.push(config.padding + config.paddingTop + eachSpacing * i);
+      // 特殊设置
+      points.push(config.padding + config.paddingTop + eachSpacing * i);
   }
 
   // 坐标轴.
