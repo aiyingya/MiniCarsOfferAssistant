@@ -168,7 +168,6 @@
   font-size: 30rpx;
   color: #333333;
   letter-spacing: 0rpx;
-  max-width: calc(100% - 110rpx);
   overflow: hidden;
 }
 
