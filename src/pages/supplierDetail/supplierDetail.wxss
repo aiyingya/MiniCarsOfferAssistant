@@ -22,7 +22,9 @@
   padding: 0rpx 30rpx;
 }
 
-.supplier-detail .rows {}
+.supplier-detail .rows {
+  width: 100%;
+}
 
 .supplier-detail .row {
   position: relative;
@@ -43,7 +45,6 @@
 }
 
 .supplier-detail .footer {
-  position: fixed;
   bottom: 0rpx;
   height: 210rpx;
   width: 100%;

@@ -85,12 +85,11 @@
     <view class="filter-section">
       <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />
     </view>
-    <view class="rows">
+    <scroll-view scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
       <view class="row" wx:for="{{ comments }}" wx:key="commentId">
         <template is="commentView" data="{{ item }}" />
       </view>
-    </view>
-    <view style="height: 210rpx; width: 100%"/>
+    </scroll-view>
   </view>
   <view class="footer">
     <template is="commentBoardView" data="{{ submitTags, submitTextareaValue, submitSelectedTagIndex, submitButtonValid, submitButtonTagValid }}" />

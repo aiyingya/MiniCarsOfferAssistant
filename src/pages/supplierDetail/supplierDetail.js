@@ -3,7 +3,7 @@
 
 import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/carSourceDetail'
 import {
-  container
+  container, system, util
 } from '../../landrover/business/index'
 
 import {
@@ -13,7 +13,7 @@ import {
 import * as wxapi from 'fmt-wxapp-promise'
 import SAASService from '../../services/saas.service'
 import UserService from '../../services/user.service'
-import util from '../../utils/util'
+import utils from '../../utils/util'
 
 const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
@@ -51,10 +51,12 @@ Page({
     submitButtonTagValid: false
   },
   onLoad(options) {
-    const company = util.urlDecodeValueForKeyFromOptions('company', options)
-    this.setData({ company })
-
-    // 初次进入加载
+    const system = wxapi.getSystemInfoSync()
+    const company = utils.urlDecodeValueForKeyFromOptions('company', options)
+    this.setData({
+      company,
+      scrollViewHeight: system.windowHeight - util.px(100 + 20 + 96 + 210)
+    })
     wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
       .then(() => {
         return this.filters()
@@ -70,19 +72,10 @@ Page({
       .then(() => { wxapi.hideToast() })
       .catch(() => { wxapi.hideToast() })
   },
-  onShow() { },
-  onPullDownRefresh() {
-    const companyId = this.data.company.companyId
+  onShow() {
 
-    this.refresh(companyId)
-      .then((res: PaginationList<UserComment>) => {
-        wx.stopPullDownRefresh()
-        this.setData({
-          comments: res.list
-        })
-      })
   },
-  onReachBottom() {
+  onScrollToLower() {
     this.commentsLoadMore()
       .then((res: PaginationList<UserComment>) => {
         this.setData({
