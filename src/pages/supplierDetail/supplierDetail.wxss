@@ -146,9 +146,11 @@
   border-radius: 65rpx;
   letter-spacing: 0;
   margin-left: 20rpx;
-  padding: 0 0;
   height: 48rpx;
   width: 140rpx;
+
+  background-color: #ffffff;
+  padding: 0 0;
 }
 .comment-board .tag-board .tag-selection .tag image{
   height: 24rpx;
