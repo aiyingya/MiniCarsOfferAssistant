@@ -2494,22 +2494,31 @@ function drawYAxisCoordLine(series, opts, config, context) {
   context.stroke();
 
   // Y 轴 刻度上的值
+  if (opts.landscape === true) {
+    rangesFormat.splice((rangesFormat.length - 1), 1)
+    rangesFormat.forEach(function (item, index) {
+      const pos = points[index] ? points[index] : endY;
+      const startX = config.padding + config.yAxisTitleWidth
+      const startY = pos + config.fontSize / 2 - 1
 
-  rangesFormat.splice((rangesFormat.length - 1), 1)
-  rangesFormat.forEach(function (item, index) {
-    const pos = points[index] ? points[index] : endY;
-    const startX = config.padding + config.yAxisTitleWidth
-    const startY = pos + config.fontSize / 2 - 1
+      context.save();
+      context.setFontSize(config.fontSize);
+      context.setFillStyle(opts.yAxis.fontColor || '#666666');
 
-    context.save();
-    context.setFontSize(config.fontSize);
-    context.setFillStyle(opts.yAxis.fontColor || '#666666');
-
-    context.translate((config.padding + config.yAxisTitleWidth), pos + config.fontSize / 2 - 1)
-    context.rotate(0);
-    context.original_fillText(item, 0, 0);
-    context.restore();
-  });
+      context.translate((config.padding + config.yAxisTitleWidth), pos + config.fontSize / 2 - 1)
+      context.rotate(0);
+      context.original_fillText(item, 0, 0);
+      context.restore();
+    });
+  } else {
+    rangesFormat.splice((rangesFormat.length - 1), 1)
+    rangesFormat.forEach(function (item, index) {
+      var pos = points[index] ? points[index] : endY;
+      context.fillText(item, (config.padding + config.yAxisTitleWidth), pos + config.fontSize / 2 - 1);
+    });
+    context.closePath();
+    context.stroke();
+  }
 
   // Y 轴 标题
   if (opts.yAxis.title) {
