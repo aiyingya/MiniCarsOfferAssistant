@@ -71,6 +71,5 @@
 </view>
 <template is="popupCharts" data="{{showPopCharts, carModelsInfo}}" />
 <template is="popupMarketCharts" data="{{showPopupMarketCharts, marketCharts, carModelsInfo}}" />
-
 <template is="popupChangeCharts" data="{{selectChartsLabel, changeSelectColors, colorAllSelected, selectColorData, selectColors, changeSelectTimes, timesAllSelected, selectColorTime, carModelsInfo,selectTimesData}}"
 />
