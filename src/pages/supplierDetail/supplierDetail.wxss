@@ -35,6 +35,16 @@
   width: 100%;
 }
 
+.supplier-detail .no-row {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+	color: #999999;
+	letter-spacing: -0.56rpx;
+	line-height: 28rpx;
+	text-align: center;
+}
+
 .supplier-detail .row::after {
   content: '';
   position: absolute;

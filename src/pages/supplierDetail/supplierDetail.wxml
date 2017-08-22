@@ -86,9 +86,14 @@
       <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />
     </view>
     <scroll-view scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
+      <block wx:if="{{ comments && comments.length }}">
       <view class="row" wx:for="{{ comments }}" wx:key="commentId">
         <template is="commentView" data="{{ item }}" />
       </view>
+      </block>
+      <block wx:else>
+        <view class="no-row">暂无相关评论</view>
+      </block>
     </scroll-view>
   </view>
   <view class="footer">
