@@ -120,7 +120,13 @@ export default class UserService extends BaseUserService {
           })
       })
       .then(res => {
-        return this.getRoleInformation()
+        if (this.auth == null) {
+          console.info('没有登录, 无需获取用户角色信息')
+          return Promise.resolve()
+        } else {
+          console.info('已经登录, 获取用户角色信息')
+          return this.getRoleInformation()
+        }
       })
       .then(() => {
         console.info('微信小程序 user.service 启动完毕')
