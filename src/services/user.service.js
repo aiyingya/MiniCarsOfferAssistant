@@ -119,6 +119,9 @@ export default class UserService extends BaseUserService {
             console.error(err)
           })
       })
+      .then(res => {
+        return this.getRoleInformation()
+      })
       .then(() => {
         console.info('微信小程序 user.service 启动完毕')
       })
