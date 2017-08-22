@@ -570,11 +570,13 @@ export default class UserService extends BaseUserService {
     }
 
     return this.retrieveRoleInformation(this.weixin.sessionId, this.auth.userId)
-      .then(res => {
+      .then((res: RoleEntity)=> {
         this.role = res
 
         if (res.roleName === 'guest') {
           // 当用户信息为 guest 时做什么操作
+          const roleInfo = res.roleInfo
+          this.mobile = roleInfo.mobile
           return res
         } else if (res.roleName === 'employee') {
           const roleInfo = res.roleInfo
