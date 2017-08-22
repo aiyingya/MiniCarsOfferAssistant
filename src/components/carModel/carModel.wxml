@@ -131,7 +131,7 @@
 </template>
 
 <template name="popupMarketCharts">
-  <view class="popup-select-charts" wx:if="{{showPopupMarketCharts}}">
+  <view class="popup-select-charts" wx:if="{{showPopupMarketCharts}}" catchtouchmove>
     <view class="popup-shade" bindtouchmove="handleClosePopupMarket" bindtap="handleClosePopupMarket"></view>
     <view class="popup-charts-main">
       <view class="popup-marketcharts-hd">
