@@ -57,7 +57,7 @@
   </view>
 
   <view class="carModels-cells" wx:if="{{carModelsList.length > 0}}">
-    <view wx:for="{{carModelsList}}" wx:key="*this">
+    <view wx:for="{{carModelsList}}" wx:key="{{ index }}">
       <template is="carModel" data="{{item,showCharts,selectTime,selectColors,selectColorsId}}" />
     </view>
   </view>
