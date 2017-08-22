@@ -1477,19 +1477,7 @@ function drawXAxis(categories, opts, config, context) {
       const textWidth = measureText(opts.xAxis.unitText)
       context.translate(endX + textWidth / 2, startY + config.fontSize + 5 + config.fontSize / 2);
       context.rotate(0);
-
-      const x = - textWidth / 2,
-        y = config.fontSize / 2,
-        x0 = 0,
-        y0 = 0
-      let x1 = - textWidth / 2,
-        y1 = - config.fontSize / 2
-
-      const angle = - 1 / 2 * Math.PI
-      x1 = x * Math.cos(angle) + y * Math.sin(angle)
-      y1 = - (x * Math.sin(angle) + y * Math.cos(angle))
-
-      context.original_fillText(opts.xAxis.unitText, 0, 0);
+      context.original_fillText(opts.xAxis.unitText, -config.fontSize / 2, textWidth / 2);
     }
     context.restore();
   } else {
