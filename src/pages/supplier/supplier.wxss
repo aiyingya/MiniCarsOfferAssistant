@@ -160,23 +160,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
+  max-width: calc(100% - 100rpx);
+}
+.supplier-search-result .profile .name {
   font-family: "PingFangSC-Medium";
   font-size: 30rpx;
   color: #333333;
   letter-spacing: 0rpx;
-  line-height: 30rpx;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .supplier-search-result .profile .tag-label {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   font-family: "PingFangSC-Regular";
   font-size: 24rpx;
   color: #3377EE;
   letter-spacing: 0;
-  line-height: 24rpx;
+  width: 120rpx;
 }
 
 .supplier-search-result .profile .tag-label image{
@@ -188,6 +190,7 @@
 
 .supplier-search-result .call-line {
   padding: 40rpx 20rpx;
+  margin-left: 20rpx;
   width: 40rpx;
   height: 40rpx
 }

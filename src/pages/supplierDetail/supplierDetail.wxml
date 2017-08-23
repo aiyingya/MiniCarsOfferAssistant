@@ -13,10 +13,9 @@
 <template name="supplierSearchResultView">
   <view class="supplier-search-result" data-company="{{ item }}" bindtap="onRowClick">
     <view class='profile'>
-      {{ item.companyName }}
-      <view class="tag-label">
-        <image class="reliable-face" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}"
-        /> {{ item.showLabel }}
+      <view class='name'>{{ item.companyName }}</view>
+      <view class="tag-label" wx:if="{{ item.showLabel }}">
+        <image class="reliable-face" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : item.showLabel === '不靠谱' ? '/images/icons/icon_unreliable_face.png' : '' }}" /> {{ item.showLabel }}
       </view>
     </view>
 
@@ -30,7 +29,7 @@
       选择该供应商是否靠谱?
       <view class="tag-selection">
         <button
-          class="tag {{ index == submitSelectedTagIndex ? 'selected' : '' }}"
+          class="tag {{ index == submitSelectedTagIndex ? item.highlightClass : '' }}"
           wx:for="{{ submitTags }}"
           wx:key="id"
           bindtap="onTagButtonClick"
@@ -42,7 +41,7 @@
     </view>
     <form bindsubmit="onFormSubmitClick">
       <view class="comment-textarea">
-        <textarea name="content" value="{{ submitTextareaValue }}" class="textarea" fixed="true" placeholder="输入评论" placeholder-class="textarea-placeholder" bindconfirm="onTextareaConfirm"
+        <textarea name="content" value="{{ submitTextareaValue }}" class="textarea"  placeholder="输入评论" placeholder-class="textarea-placeholder" bindconfirm="onTextareaConfirm"
           bindinput="onTextareaInput" />
         <button formType="submit" class="submit-input {{ (submitButtonValid && submitButtonTagValid) ? 'valid' : '' }}">提交</button>
       </view>
@@ -55,11 +54,13 @@
     <view class="title">
       <view class="profile">
         <view class="phone"> {{ item.phone }} </view>
-        <view class="create-date"> {{ item.createdDate }} </view>
+        <view class="create-date"> {{ item.createDate }} </view>
       </view>
-      <view class="tag">
-        <image src="{{ item.tag === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}"></image>
-        <view class="tag-label {{ item.tag === '靠谱' ? 'highlight' : '' }}"> {{ item.tag }} </view>
+      <view wx:if="{{ item.tags && item.tags.length }}" class="tag">
+        <image src="{{ item.tags[0].label === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}"></image>
+        <view class="tag-label {{ item.tags[0].label === '靠谱' ? 'highlight' : '' }}"> {{ item.tags[0].label }} </view>
+      </view>
+      <view wx:else class="tag">
       </view>
     </view>
     <view class="content">
@@ -84,11 +85,16 @@
     <view class="filter-section">
       <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />
     </view>
-    <view class="rows">
+    <scroll-view scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
+      <block wx:if="{{ comments && comments.length }}">
       <view class="row" wx:for="{{ comments }}" wx:key="commentId">
         <template is="commentView" data="{{ item }}" />
       </view>
-    </view>
+      </block>
+      <block wx:else>
+        <view class="no-row">暂无相关评论</view>
+      </block>
+    </scroll-view>
   </view>
   <view class="footer">
     <template is="commentBoardView" data="{{ submitTags, submitTextareaValue, submitSelectedTagIndex, submitButtonValid, submitButtonTagValid }}" />

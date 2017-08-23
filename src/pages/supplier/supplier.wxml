@@ -14,9 +14,9 @@
 <template name="supplierSearchResultView">
   <view class="supplier-search-result" data-company="{{ item }}" bindtap="onRowClick">
     <view class='profile'>
-      {{ item.companyName }}
-      <view class="tag-label">
-        <image class="reliable-face" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}" /> {{ item.showLabel }}
+      <view class='name'>{{ item.companyName }}</view>
+      <view class="tag-label" wx:if="{{ item.showLabel }}">
+        <image class="reliable-face" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : item.showLabel === '不靠谱' ? '/images/icons/icon_unreliable_face.png' : '' }}" /> {{ item.showLabel }}
       </view>
     </view>
     <image class="call-line" src="/images/icons/icon_call_line.png" data-company="{{ item }}" catchtap="onCallButtonClick" />

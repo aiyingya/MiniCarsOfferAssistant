@@ -29,11 +29,17 @@ App({
     const logs = storage.getItemSync('logs') || []
     logs.unshift(Date.now())
     storage.setItemSync('logs', logs)
+  },
+  onShow () {
+    userService.setup()
+    tradeService.setup()
+    saasService.setup()
+  },
+  onHide () {
 
-    container.userService.setup()
-    container.tradeService.setup()
-    container.saasService.setup()
-
+  },
+  onError (e) {
+    console.error(e)
   },
   globalData: {
   },

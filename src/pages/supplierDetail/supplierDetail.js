@@ -3,7 +3,7 @@
 
 import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/carSourceDetail'
 import {
-  container
+  container, system, util
 } from '../../landrover/business/index'
 
 import {
@@ -13,7 +13,7 @@ import {
 import * as wxapi from 'fmt-wxapp-promise'
 import SAASService from '../../services/saas.service'
 import UserService from '../../services/user.service'
-import util from '../../utils/util'
+import utils from '../../utils/util'
 
 const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
@@ -25,18 +25,7 @@ Page({
     filtersSelectedIndexes: null,
 
     company: null,
-    comments: [
-      {
-        commentId: 0,
-        companyId: 0,
-        tag: '靠谱',
-        content: "阿凡达发放的三方的发发发发送发送发送发送发送发送答复是否三方三多发的发发发地方的发发发的方",
-        star: 3,
-        createdDate: "2017-9-10",
-        userId: 1,
-        phone: '1582321****'
-      }
-    ],
+    comments: [],
 
     submitTags: [
       {
@@ -44,6 +33,7 @@ Page({
         name: '靠谱',
         imageNormal: '/images/icons/icon_reliable_face_off.png',
         imageHighlight: '/images/icons/icon_reliable_face.png',
+        highlightClass: 'reliable_highlight',
         value: '靠谱'
       },
       {
@@ -51,6 +41,7 @@ Page({
         name: '不靠谱',
         imageNormal: '/images/icons/icon_unreliable_face_off.png',
         imageHighlight: '/images/icons/icon_unreliable_face.png',
+        highlightClass: 'unreliable_highlight',
         value: '不靠谱'
       }
     ],
@@ -60,41 +51,31 @@ Page({
     submitButtonTagValid: false
   },
   onLoad(options) {
-    const company = util.urlDecodeValueForKeyFromOptions('company', options)
+    const system = wxapi.getSystemInfoSync()
+    const company = utils.urlDecodeValueForKeyFromOptions('company', options)
     this.setData({
-      company
+      company,
+      scrollViewHeight: system.windowHeight - util.px(100 + 20 + 96 + 210)
     })
-
-    if (!userService.isLogin()) {
-      wx.navigateTo({
-        url: '../login/login'
-      })
-    } else {
-      // 初次进入加载
-      wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
-        .then(() => {
-          return this.refresh()
-            .then((res: PaginationList<UserComment>) => {
-              this.setData({
-                comments: res.list
-              })
+    wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
+      .then(() => {
+        return this.filters()
+          .then(res => {
+            return this.refresh(company.companyId)
+          })
+          .then((res: PaginationList<UserComment>) => {
+            this.setData({
+              comments: res.list
             })
-        })
-        .then(() => { wxapi.hideToast() })
-        .catch(() => { wxapi.hideToast() })
-    }
-  },
-  onShow() { },
-  onPullDownRefresh() {
-    this.refresh()
-      .then((res: PaginationList<UserComment>) => {
-        wx.stopPullDownRefresh()
-        this.setData({
-          comments: res.list
-        })
+          })
       })
+      .then(() => { wxapi.hideToast() })
+      .catch(() => { wxapi.hideToast() })
   },
-  onReachBottom() {
+  onShow() {
+
+  },
+  onScrollToLower() {
     this.commentsLoadMore()
       .then((res: PaginationList<UserComment>) => {
         this.setData({
@@ -102,11 +83,14 @@ Page({
         })
       })
   },
-  refresh(): Promise<PaginationList<UserComment>> {
-    return this.filters()
-      .then(res => {
-        return this.commentsRefresh()
+  refresh(companyId: number): Promise<PaginationList<UserComment>> {
+    // 更新公司数据
+    saasService.retrieveSupplyCompany(companyId)
+      .then((res: Company) => {
+        this.setData({ company: res })
       })
+
+    return this.commentsRefresh()
   },
   filters(): Promise<void> {
     return saasService.retrieveFiltersOfCompanyUserComments()
@@ -159,16 +143,19 @@ Page({
       return Promise.reject(new Error('正在获取更多数据'))
     }
 
-    paginationList.loadingMore = true
-
-    const companyId = this.data.company.companyId
-
-    const item = this.getCurrentFilterItem()
+    if (pagination.last) {
+      return Promise.reject(new Error('已经最后一页了'))
+    }
 
     let pageIndex = pagination.number
     if (pagination.hasNext) {
       pageIndex = pageIndex + 1
     }
+
+    const companyId = this.data.company.companyId
+    const item = this.getCurrentFilterItem()
+
+    paginationList.loadingMore = true
     return saasService.retrieveUserComments(companyId, item.value, pageIndex)
       .then((res: Pagination<UserComment>) => {
         if (paginationList == null) {
@@ -186,7 +173,7 @@ Page({
         } else {
           paginationList.pagination = res
           if (paginationList.list != null) {
-            paginationList.list.concat(res.content)
+            paginationList.list = paginationList.list.concat(res.content)
           } else {
             paginationList.list = res.content
           }
@@ -215,11 +202,9 @@ Page({
 
     this.setData({ filtersSelectedIndexes })
 
-    const item = filters[filterId].items[itemId]
-
     wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
       .then(() => {
-        return this.commentsRefresh(item.value)
+        return this.commentsRefresh()
           .then((res: PaginationList<UserComment>) => {
             this.setData({
               comments: res.list
@@ -271,10 +256,16 @@ Page({
           [tagString]
         )
           .then(res => {
+            // 重置评论输入板
             this.setData({
               submitSelectedTagIndex: -1,
               submitTextareaValue: ''
             })
+
+            return this.refresh(companyId)
+          })
+          .then(res => {
+            this.setData({ comments: res.list })
           })
       })
       .then(() => {

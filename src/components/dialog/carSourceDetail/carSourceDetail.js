@@ -88,13 +88,6 @@ export default {
           if (this.removed) return !1
           this.setVisible()
         },
-        /**
-         * 防止事件透传
-         *
-         * @param {any} e
-         */
-        onTouchMoveWithCatch(e) { },
-
         close(e) {
           if (typeof options.close === 'function') {
             this.hide(options.close())
@@ -292,13 +285,6 @@ export default {
           if (this.removed) return !1
           this.setVisible()
         },
-        /**
-         * 防止事件透传
-         *
-         * @param {any} e
-         */
-        onTouchMoveWithCatch(e) { },
-
         close(e) {
           if (typeof options.close === 'function') {
             this.hide(options.close())
@@ -399,13 +385,6 @@ export default {
           if (this.removed) return !1
           this.setVisible()
         },
-        /**
-         * 防止事件透传
-         *
-         * @param {any} e
-         */
-        onTouchMoveWithCatch(e) { },
-
         close(e) {
           if (typeof options.close === 'function') {
             this.hide(options.close())

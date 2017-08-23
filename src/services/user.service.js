@@ -119,6 +119,15 @@ export default class UserService extends BaseUserService {
             console.error(err)
           })
       })
+      .then(res => {
+        if (this.auth == null) {
+          console.info('没有登录, 无需获取用户角色信息')
+          return Promise.resolve()
+        } else {
+          console.info('已经登录, 获取用户角色信息')
+          return this.getRoleInformation()
+        }
+      })
       .then(() => {
         console.info('微信小程序 user.service 启动完毕')
       })
@@ -570,11 +579,13 @@ export default class UserService extends BaseUserService {
     }
 
     return this.retrieveRoleInformation(this.weixin.sessionId, this.auth.userId)
-      .then(res => {
+      .then((res: RoleEntity)=> {
         this.role = res
 
         if (res.roleName === 'guest') {
           // 当用户信息为 guest 时做什么操作
+          const roleInfo = res.roleInfo
+          this.mobile = roleInfo.mobile
           return res
         } else if (res.roleName === 'employee') {
           const roleInfo = res.roleInfo

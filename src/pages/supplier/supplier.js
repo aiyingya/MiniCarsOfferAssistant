@@ -3,12 +3,14 @@ import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/c
 import {
   $wuxToast
 } from "../../components/wux"
+import * as wxapi from 'fmt-wxapp-promise'
 import { container } from '../../landrover/business/index'
 import util from '../../utils/util'
 import SAASService from '../../services/saas.service'
-import * as wxapi from 'fmt-wxapp-promise'
+import UserService from '../../services/user.service'
 
 const saasService: SAASService = container.saasService
+const userService: UserService = container.userService
 
 let whiteListRows: Array<Company> | null = null
 
@@ -27,7 +29,12 @@ Page({
     fuzzySearchResultViews: null,
   },
   onLoad() {
-    this.whiteList()
+    wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
+      .then(() => {
+        return this.whiteList()
+      })
+      .then(() => { wxapi.hideToast() })
+      .catch(() => { wxapi.hideToast() })
   },
   onShow() {
   },
@@ -73,10 +80,10 @@ Page({
   formatSearchText(searchText: string): string {
     if (searchText.length > 5) {
       let index = 0
-      const string = ''
+      let string = ''
       for (let char of searchText) {
         if (index < 5) {
-          string.concat(char)
+          string = string.concat(char)
         } else {
           break
         }
@@ -103,14 +110,15 @@ Page({
           const searchText2 = this.formatSearchText(searchText)
           sectionTitle = `与 '${searchText2}' 相关的记录 ${res.number}/${res.totalPages}页 共${res.totalElements}个`
           searchPaginationList = { list: res.content, pagination: res, loadingMore: false }
+          this.setData({ sectionTitle, sectionRows: searchPaginationList.list })
         } else {
           sectionTitle = `没有搜索结果`
+          this.setData({ sectionTitle })
         }
-
-        this.setData({
-          sectionTitle,
-          sectionRows: searchPaginationList.list
-        })
+      })
+      .catch(err => {
+        sectionTitle = `搜索出错...`
+        this.setData({ sectionTitle })
       })
   },
   searchLoadMore(): Promise<any> {
@@ -127,14 +135,20 @@ Page({
       return Promise.reject(new Error('正在获取更多数据'))
     }
 
-    const searchText = searchCurrentText
 
     let pageIndex = pagination.number
+    if (pagination.last) {
+      return Promise.reject(new Error('已经最后一页了'))
+    }
+
     if (pagination.hasNext) {
       pageIndex = pageIndex + 1
     }
 
-    return saasService.retrieveSupplierSearchResult(searchText, pageIndex)
+    const searchText = searchCurrentText
+
+    searchPaginationList.loadingMore = true
+    return saasService.retrieveSupplierSearchResult(searchText, null, pageIndex)
       .then((res: Pagination<Company>) => {
         if (searchPaginationList == null) {
           return Promise.reject(new Error('缺少第一页'))
@@ -151,7 +165,7 @@ Page({
         } else {
           searchPaginationList.pagination = res
           if (searchPaginationList.list != null) {
-            searchPaginationList.list.concat(res.content)
+            searchPaginationList.list = searchPaginationList.list.concat(res.content)
           } else {
             searchPaginationList.list = res.content
           }
@@ -166,7 +180,9 @@ Page({
         }
       })
       .catch(err => {
-        searchPaginationList.loadingMore = false
+        if (searchPaginationList != null) {
+          searchPaginationList.loadingMore = false
+        }
         return Promise.reject(err)
       })
   },
@@ -190,17 +206,25 @@ Page({
 
     if (searchText != null && searchText.length > 0) {
       if (searchText !== searchCurrentText) {
+        // 将分页器移除
+        searchPaginationList = null
         this.fuzzySearch(searchText)
       } else {
         // do nothing
       }
     } else {
+      // 将分页器移除
+      searchPaginationList = null
       this.whiteList()
     }
   },
   onCallButtonClick(e) {
-    const company = e.currentTarget.dataset.company
-    this.actionContact(company.companyId, company.companyName)
+    if (userService.isLogin()) {
+      const company = e.currentTarget.dataset.company
+      this.actionContact(company.companyId, company.companyName)
+    } else {
+      wx.navigateTo({ url: '../login/login' })
+    }
   },
   onRowClick(e) {
     const company = e.currentTarget.dataset.company
@@ -211,8 +235,12 @@ Page({
     this.routeToSupplierDetail(company)
   },
   routeToSupplierDetail(company: Company) {
-    const companyKeyValueString = util.urlEncodeValueForKey('company', company)
-    wxapi.navigateTo({ url: '/pages/supplierDetail/supplierDetail?' + companyKeyValueString })
+    if (userService.isLogin()) {
+      const companyKeyValueString = util.urlEncodeValueForKey('company', company)
+      wx.navigateTo({ url: '/pages/supplierDetail/supplierDetail?' + companyKeyValueString })
+    } else {
+      wx.navigateTo({ url: '../login/login' })
+    }
   },
   actionContact(companyId, companyName, completeHandler) {
     $wuxCarSourceDetailDialog.contactList({

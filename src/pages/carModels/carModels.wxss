@@ -250,7 +250,7 @@ page {
   margin-top: -12rpx;
   transform:rotate(90deg);
   -webkit-transform:rotate(90deg);
-  z-index: 999;
+  z-index: 99;
 }
 .car-models-label .icon_arrow.show {
   transform:rotate(-90deg);
