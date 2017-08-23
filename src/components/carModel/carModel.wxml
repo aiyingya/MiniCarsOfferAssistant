@@ -36,7 +36,7 @@
           <view class="carcolor-label label">外饰：</view>
           <view class="carcolor-inner">
             <block wx:if="{{item.selectColors.length > 0 && item.selectColorsId == item.carModelId}}">
-              <view class="carcolor-item" wx:for="{{item.selectColors}}" wx:for-item="cell" wx:for-index="cellIndex" wx:key="*this" wx:if="{{cellIndex < 4}}"
+              <view class="carcolor-item" wx:for="{{item.selectColors}}" wx:for-item="cell" wx:for-index="cellIndex" wx:key="{{ cellIndex }}" wx:if="{{cellIndex < 4}}"
                 style="background:{{cell.value}}; {cell.style}"></view>
             </block>
 
@@ -113,14 +113,14 @@
     <view class="popup-shade" bindtouchmove="handleClosePopupChange" bindtap="handleClosePopupChange"></view>
     <view class="popupSelect-main">
       <block wx:if="{{changeSelectTimes}}">
-        <view wx:for="{{selectTimesData}}" wx:key="*this" class="popup-label {{item.selected}}" bindtap="handleChangeTimesItem" data-selectitem="{{item}}">
+        <view wx:for="{{selectTimesData}}" wx:key="{{ index }}" class="popup-label {{item.selected}}" bindtap="handleChangeTimesItem" data-selectitem="{{item}}">
           {{item.value}}
           <block wx:if="{{item.value !== '全部'}}">小时</block>
         </view>
       </block>
       <block wx:if="{{changeSelectColors}}">
         <view class="popup-label {{colorAllSelected}}" bindtap="handleChangeColorItem" data-selectitem="全部">全部</view>
-        <view wx:for="{{selectColorData}}" wx:key="*this" class="popup-label {{item.selected}}" bindtap="handleChangeColorItem" data-selectitem="{{item}}"
+        <view wx:for="{{selectColorData}}" wx:key="{{ index }}" class="popup-label {{item.selected}}" bindtap="handleChangeColorItem" data-selectitem="{{item}}"
           data-selectcolors="{{selectColors}}">
           <view class="carcolor-item" style="background:{{item.value}}; {{item.style}}"></view>
           <view class="text">{{item.key}}</view>
@@ -131,7 +131,7 @@
 </template>
 
 <template name="popupMarketCharts">
-  <view class="popup-select-charts" wx:if="{{showPopupMarketCharts}}">
+  <view class="popup-select-charts" wx:if="{{showPopupMarketCharts}}" catchtouchmove>
     <view class="popup-shade" bindtouchmove="handleClosePopupMarket" bindtap="handleClosePopupMarket"></view>
     <view class="popup-charts-main">
       <view class="popup-marketcharts-hd">
@@ -158,9 +158,6 @@
             </view>
           </view>
           <view class="button market-btn" data-carmodelsinfo="{{carModelsInfo}}" bindtap="handlerToCarSources">查看详情</view>
-        </view>
-        <view class="popup-charts-scale">
-          <view>({{marketCharts.unit}})</view>
         </view>
         <canvas canvas-id="popMarketCharts" data-id="popMarketCharts" class="pop-canvas" disable-scroll disable-scroll="true" bindtouchmove="handleMarketTouch"
           bindtouchstart="handleMarketTouch"></canvas>

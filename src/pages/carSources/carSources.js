@@ -126,20 +126,23 @@ Page({
           //   res.referenceStatus = '暂无'
           // }
 
+          let topNOfCurrentModeHeight = 0
           if (res.priceList && res.priceList.length) {
+            topNOfCurrentModeHeight = 178
             for (let topMode of res.priceList) {
               topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-topMode.discount, topMode.guidePrice, this.isShowDownPrice)
               topMode.viewModelQuoted.price = topMode.price
               topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
             }
           } else {
+            topNOfCurrentModeHeight = 0
             res.topNStatus = '暂无'
           }
 
           this.setData({
-            topNOfCurrentMode: res
+            topNOfCurrentMode: res,
+            topNOfCurrentModeHeight
           })
-          console.log(res)
         })
         .catch(err => {
           this.setData({
@@ -148,8 +151,8 @@ Page({
           })
         })
 
-      container.saasService.requestCarSourcesList(carModelsInfo.carModelId, {
-        success: function (res) {
+      container.saasService.requestCarSourcesList(carModelsInfo.carModelId)
+        .then(res => {
           let filters = res.filters
 
           let dropDownFilters = []
@@ -187,7 +190,6 @@ Page({
             }
           }
 
-
           const carSourcesBySkuInSpuList = that.bakeTheRawCarSourcesBySkuInSpuList(res.carSourcesBySkuInSpuList)
 
           that.setData({
@@ -215,10 +217,7 @@ Page({
           that.setData({
             carModelsInfo: carModelsInfo
           })
-
-        }
-      })
-
+        })
 
       if (wx.showShareMenu) {
         wx.showShareMenu()

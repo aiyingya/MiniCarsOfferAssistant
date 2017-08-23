@@ -1,4 +1,5 @@
 
+// @flow
 export default class Util {
 
   static formatTime(date) {
@@ -29,7 +30,7 @@ export default class Util {
    * @returns {number}    月供金额, 元
    */
   static monthlyLoanPaymentByLoan(carPrice, paymentRatio, expenseRate) {
-    let loanPayment = ((carPrice * (100 - paymentRatio) * 0.01)/10000 * expenseRate)
+    let loanPayment = ((carPrice * (100 - paymentRatio) * 0.01) / 10000 * expenseRate)
     return loanPayment;
   }
 
@@ -80,8 +81,8 @@ export default class Util {
    *
    * @returns {number}    贷款利息总额
    */
-  static loanPaymentInterest(carPrice,paymentRatio,monthRate, stages) {
-    return carPrice * (100 - paymentRatio) * 0.01 * stages * monthRate *0.001
+  static loanPaymentInterest(carPrice, paymentRatio, monthRate, stages) {
+    return carPrice * (100 - paymentRatio) * 0.01 * stages * monthRate * 0.001
   }
 
   /**
@@ -93,7 +94,7 @@ export default class Util {
    * @returns {number}    万元系数（元）
    */
   static tranMonthToW(monthRate, stages) {
-    return ((10000/(stages*12) + monthRate * 10))
+    return ((10000 / (stages * 12) + monthRate * 10))
   }
 
 
@@ -106,7 +107,7 @@ export default class Util {
    * @returns {number}    月息（厘）
    */
   static tranWToMonth(wRate, stages) {
-    return  ((wRate - 10000/(stages*12)) / 10)
+    return ((wRate - 10000 / (stages * 12)) / 10)
   }
 
 
@@ -157,7 +158,7 @@ export default class Util {
    */
   static totalPaymentByLoan(carPrice, paymentRatio, monthRate, stages, requiredExpenses, otherExpenses) {
     let _totle = carPrice + otherExpenses + requiredExpenses //全款落地总额+贷款手续费
-    let _lixi =  Util.loanPaymentInterest(carPrice,paymentRatio,monthRate,stages) //贷款利息
+    let _lixi = Util.loanPaymentInterest(carPrice, paymentRatio, monthRate, stages) //贷款利息
     return _totle + _lixi
   }
 
@@ -166,14 +167,19 @@ export default class Util {
    * larry：购置税有一个逻辑需要加一下，排量1.6及以上的车型购置税不变，1.6（含）以下的购置税*0.75
    * 车价
    * 排量
+   *
+   * @static
+   * @param {number} officialPrice
+   * @param {number} capacity
+   * @returns {number}
+   * @memberof Util
    */
-  static purchaseTax(carPrice,capacity) {
-    const  price = Number(carPrice/1.17*0.1);
-    if(capacity){
-      return (Number(capacity) > 1.6 ) ? price : (price*0.75)
+  static purchaseTax(officialPrice: number, capacity: number): number {
+    const price = Number(officialPrice / 1.17 * 0.1);
+    if (capacity) {
+      return (Number(capacity) > 1.6) ? price : (price * 0.75)
     }
     return price
-
   }
 
   /**
@@ -191,7 +197,7 @@ export default class Util {
    *
    * @memberOf Util
    */
-static quotedPriceByMethod(price, originPrice, quotedMethod = 'PRICE', pretty = true) {
+  static quotedPriceByMethod(price, originPrice, quotedMethod = 'PRICE', pretty = true) {
     let quotedSymbol
     const priceDiff = Util.downPrice(price, originPrice)
 
@@ -225,7 +231,7 @@ static quotedPriceByMethod(price, originPrice, quotedMethod = 'PRICE', pretty = 
     }
   }
 
-static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE', pretty = true) {
+  static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE', pretty = true) {
     let quotedSymbol
     let quotedValue
     let quotedRange
@@ -383,7 +389,7 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
    * @return {number}
    */
   static carPrice(point, originPrice) {
-    return  originPrice * (1 + point*0.01)
+    return originPrice * (1 + point * 0.01)
   }
 
   static dateCompatibility(dateString) {
@@ -404,12 +410,12 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
    * @param contentNum   要变更的金额
    * @return {number}
    */
-  static getChangeCarPrice(isPlus, isPoint,guidePrice,contentNum) {
-    let _contentNum =  isPlus ? Number(contentNum) : Number(-Number(contentNum))
+  static getChangeCarPrice(isPlus, isPoint, guidePrice, contentNum) {
+    let _contentNum = isPlus ? Number(contentNum) : Number(-Number(contentNum))
     let price
-    if(isPoint){
-        price = Util.carPrice(_contentNum,guidePrice)
-    }else{
+    if (isPoint) {
+      price = Util.carPrice(_contentNum, guidePrice)
+    } else {
       price = Math.floor(guidePrice + _contentNum)
     }
     return price
@@ -500,18 +506,18 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
     let endTime = new Date(stime)
     let difference = Util.getTimeDifference(endTime)
 
-    let month = (endTime.getMonth()+1) > 9 ? (endTime.getMonth()+1) : `0${endTime.getMonth()+1}`
+    let month = (endTime.getMonth() + 1) > 9 ? (endTime.getMonth() + 1) : `0${endTime.getMonth() + 1}`
     let days = endTime.getDate() > 9 ? endTime.getDate() : `0${endTime.getDate()}`
     let hours = endTime.getHours() > 9 ? endTime.getHours() : `0${endTime.getHours()}`
     let minutes = endTime.getMinutes() > 9 ? endTime.getMinutes() : `0${endTime.getMinutes()}`
 
-    if(difference.days >= 2) {
+    if (difference.days >= 2) {
       return `${month}/${days} ${hours}:${minutes}`
-    }else if(0 < difference.days && difference.days < 2) {
+    } else if (0 < difference.days && difference.days < 2) {
       return `一天前 ${hours}:${minutes}`
-    }else if(difference.days == 0 && difference.hours > 0) {
+    } else if (difference.days == 0 && difference.hours > 0) {
       return `${difference.hours}小时前 ${hours}:${minutes}`
-    }else if(difference.days == 0 && difference.hours == 0) {
+    } else if (difference.days == 0 && difference.hours == 0) {
       return `刚刚 ${hours}:${minutes}`
     }
 
@@ -521,6 +527,6 @@ static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = '
    * 时间不足10返回0X格式.
    */
   static makeUpZero(s) {
-    return s < 10 ? `0${s}`: s;
+    return s < 10 ? `0${s}` : s;
   }
 }

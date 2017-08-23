@@ -107,7 +107,7 @@ gulp.task('styles:watch', () => {
 /**
  * js 文件处理
  */
-gulp.task('scripts', ['eslint'], () => {
+gulp.task('scripts', () => {
   return gulp.src(['./src/**/*.js'])
     .pipe($.babel())
     .pipe(gwcn(args))

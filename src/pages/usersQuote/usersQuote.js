@@ -52,22 +52,24 @@ Page({
       const userInfo = container.userService.auth
       const weixinUsersInfo = container.userService.weixin.userInfo
 
-      if (container.userService.roleName === 'employee') {
-        this.setData({
-          isLogin: true,
-          roleName: container.userService.roleName,
-          manager: container.userService.roleInfo.tenants[0].manager,
-          userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
-          userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
-        })
-      } else if (container.userService.roleName === 'guest') {
-        this.setData({
-          isLogin: true,
-          roleName: container.userService.roleName,
-          manager: false,
-          userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
-          userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
-        })
+      if (container.userService.role != null) {
+        if (container.userService.role.roleName === 'employee') {
+          this.setData({
+            isLogin: true,
+            roleName: container.userService.role.roleName,
+            manager: container.userService.role.roleInfo.tenants[0].manager,
+            userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
+            userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
+          })
+        } else if (container.userService.role.roleName === 'guest') {
+          this.setData({
+            isLogin: true,
+            roleName: container.userService.role.roleName,
+            manager: false,
+            userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
+            userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
+          })
+        }
       }
 
       container.userService.getRoleInformation()

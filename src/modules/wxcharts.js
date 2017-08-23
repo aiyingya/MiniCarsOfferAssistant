@@ -26,14 +26,16 @@ var config = {
   // columePadding: 3,
   columePadding: 0,
 
-  fontSize: 10,
+  fontSize: 8,
   dataPointShape: ['diamond', 'circle', 'triangle', 'rect'],
   colors: ['#7cb5ec', '#f7a35c', '#434348', '#90ed7d', '#f15c80', '#8085e9'],
   pieChartLinePadding: 25,
   pieChartTextPadding: 15,
+
   // MARK:
   //xAxisTextPadding: 3,
   xAxisTextPadding: 0,
+
   titleColor: '#333333',
   titleFontSize: 20,
   subtitleColor: '#999999',
@@ -47,7 +49,7 @@ var config = {
 
   // 自定义参数
   paddingRight: 30,
-  paddingTop: 0,
+  paddingTop: 0
 };
 
 // Object.assign polyfill
@@ -91,7 +93,7 @@ var util = {
     return Math.abs(num1 - num2) < 1e-10;
   },
   isSameSign: function isSameSign(num1, num2) {
-    return Math.abs(num1) === num1 && Math.abs(num2) === num2 || Math.abs(num1) !== num1 && Math.abs(num2) !== num2;
+    return (Math.abs(num1) === num1 && Math.abs(num2) === num2) || (Math.abs(num1) !== num1 && Math.abs(num2) !== num2);
   },
   isSameXCoordinateArea: function isSameXCoordinateArea(p1, p2) {
     return this.isSameSign(p1.x, p2.x);
@@ -382,8 +384,10 @@ function getToolTipData(seriesData, calPoints, index) {
     }
   });
   validCalPoints.forEach(function (item) {
-    offset.x = Math.round(item.x);
-    offset.y += item.y;
+    if (item != null) {
+      offset.x = Math.round(item.x);
+      offset.y += item.y;
+    }
   });
 
   offset.y /= validCalPoints.length;
@@ -680,7 +684,7 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
   var process = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : 1;
 
   var points = [];
-  var validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight;
+  var validHeight = opts.height - 2 * config.padding - config.xAxisHeight - config.legendHeight - config.paddingTop;
   data.forEach(function (item, index) {
     if (item === null) {
       points.push(null);
@@ -1072,9 +1076,6 @@ function drawToolTip(textList, offset, opts, config, context, categoriesValue) {
   });
 
   // draw text list
-  context.beginPath();
-  context.setFontSize(config.fontSize);
-  context.setFillStyle('#ffffff');
   textList.forEach(function (item, index) {
     var startX = offset.x + arrowWidth + 2 * config.toolTipPadding + legendWidth + legendMarginRight;
     if (isOverRightBorder) {
@@ -1086,10 +1087,14 @@ function drawToolTip(textList, offset, opts, config, context, categoriesValue) {
     // context.fillText(item.text, startX, startY + config.fontSize);
     var startY = offset.y + (config.toolTipLineHeight - config.fontSize) / 2 + config.toolTipLineHeight * index + config.toolTipPadding - 14;
     var text = typeof (item) === 'object' ? item.text : item;
-    context.fillText(text, startX, startY + config.fontSize);
+    context.save();
+    context.setFontSize(config.fontSize);
+    context.setFillStyle('#FFFFFF');
+    context.translate(startX, startY + config.fontSize);
+    context.rotate(0);
+    context.original_fillText(text, 0, 0);
+    context.restore();
   });
-  context.stroke();
-  context.closePath();
 }
 
 function drawYAxisTitle(title, opts, config, context) {
@@ -1370,6 +1375,7 @@ function drawXAxis(categories, opts, config, context) {
   var startY = opts.height - config.padding - config.xAxisHeight - config.legendHeight;
   var endY = startY + config.xAxisLineHeight;
 
+  // X 轴坐标轴
   context.beginPath();
   context.setStrokeStyle(opts.xAxis.gridColor || "#cccccc");
   context.setLineWidth(1);
@@ -1380,8 +1386,10 @@ function drawXAxis(categories, opts, config, context) {
   context.closePath();
   context.stroke();
 
+  // 是否开启表格模式
   if (opts.xAxis.disableGrid !== true) {
     if (opts.xAxis.type === 'calibration') {
+      // 表格模式为 刻度
       xAxisPoints.forEach(function (item, index) {
         if (index > 0) {
 
@@ -1399,6 +1407,7 @@ function drawXAxis(categories, opts, config, context) {
         }
       });
     } else {
+      // 表格模式为垂直线
       xAxisPoints.forEach(function (item, index) {
         context.moveTo(item, startY);
         context.lineTo(item, endY);
@@ -1421,36 +1430,89 @@ function drawXAxis(categories, opts, config, context) {
     return index % ratio !== 0 ? '' : item;
   });
 
-  if (config._xAxisTextAngle_ === 0) {
-    context.beginPath();
-    context.setFontSize(config.fontSize);
-    context.setFillStyle(opts.xAxis.fontColor || '#666666');
+  if (opts.landscape === true) {
+    // 横屏版本
     categories.forEach(function (item, index) {
-      var offset = eachSpacing / 2 - measureText(item) / 2;
-      context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
-    });
-    context.closePath();
-    context.stroke();
+      context.save()
+      context.setFontSize(config.fontSize);
+      context.setFillStyle(opts.xAxis.fontColor || '#666666');
+
+      const textWidth = measureText(item)
+      const offset = eachSpacing / 2 - textWidth / (config._xAxisTextAngle_ === 0 ? 2 : 1)
+      const originX = xAxisPoints[index] + offset
+      const originY = startY + config.fontSize + 5
+
+      const centerX = xAxisPoints[index] + offset + textWidth / 2
+      const centerY = startY + config.fontSize + 5 - config.fontSize / 2
+
+      context.translate(originX, originY)
+      context.rotate(- config._xAxisTextAngle_)
+
+      if (config._xAxisTextAngle_ === 0) {
+        context.original_fillText(item, 15, 0)
+      } else {
+        context.original_fillText(item, -config.fontSize / 2, 30)
+      }
+
+      context.restore()
+
+      // 绘制中心
+      // context.save();
+      // context.beginPath();
+      // context.setStrokeStyle("#ED4149");
+      // context.setLineWidth(1);
+      // context.arc(centerX, centerY, 1, 0, 2 * Math.PI);
+      // context.arc(originX, originY, 1, 0, 2 * Math.PI);
+      // context.closePath();
+      // context.stroke();
+      // context.restore();
+    })
+
+    // MARK:
+    // 标尺
+    context.save();
+    context.setFontSize(config.fontSize)
+    context.setFillStyle(opts.yAxis.fontColor || '#666666');
+    if (opts.xAxis.unitText) {
+      const textWidth = measureText(opts.xAxis.unitText)
+      context.translate(endX + textWidth / 2, startY + config.fontSize + 5 + config.fontSize / 2);
+      context.rotate(0);
+      context.original_fillText(opts.xAxis.unitText, -config.fontSize / 2, textWidth / 2);
+    }
+    context.restore();
   } else {
-    categories.forEach(function (item, index) {
-      context.save();
+    // 原来的版本
+    if (config._xAxisTextAngle_ === 0) {
       context.beginPath();
       context.setFontSize(config.fontSize);
       context.setFillStyle(opts.xAxis.fontColor || '#666666');
-      var textWidth = measureText(item);
-      var offset = eachSpacing / 2 - textWidth;
-
-      var _calRotateTranslate = calRotateTranslate(xAxisPoints[index] + eachSpacing / 2, startY + config.fontSize / 2 + 5, opts.height),
-        transX = _calRotateTranslate.transX,
-        transY = _calRotateTranslate.transY;
-
-      context.rotate(-1 * config._xAxisTextAngle_);
-      context.translate(transX, transY);
-      context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
+      categories.forEach(function (item, index) {
+        var offset = eachSpacing / 2 - measureText(item) / 2;
+        context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
+      });
       context.closePath();
       context.stroke();
-      context.restore();
-    });
+    } else {
+      categories.forEach(function (item, index) {
+        context.save();
+        context.beginPath();
+        context.setFontSize(config.fontSize);
+        context.setFillStyle(opts.xAxis.fontColor || '#666666');
+        var textWidth = measureText(item);
+        var offset = eachSpacing / 2 - textWidth;
+
+        var _calRotateTranslate = calRotateTranslate(xAxisPoints[index] + eachSpacing / 2, startY + config.fontSize / 2 + 5, opts.height),
+          transX = _calRotateTranslate.transX,
+          transY = _calRotateTranslate.transY;
+
+        context.rotate(-1 * config._xAxisTextAngle_);
+        context.translate(transX, transY);
+        context.fillText(item, xAxisPoints[index] + offset, startY + config.fontSize + 5);
+        context.closePath();
+        context.stroke();
+        context.restore();
+      });
+    }
 
     // MARK:
     // 标尺
@@ -1588,6 +1650,7 @@ function drawLegend(series, opts, config, context) {
     });
   });
 }
+
 function drawPieDataPoints(series, opts, config, context) {
   var process = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 1;
 
@@ -1876,7 +1939,7 @@ function drawCharts(type, opts, config, context, clickData, callback) {
         timing: 'easeIn',
         duration: duration,
         onProcess: function onProcess(process) {
-          drawYAxis(series, opts, config, context);
+          // drawYAxis(series, opts, config, context);
 
           // MARK:
           //drawXAxis(categories, opts, config, context);
@@ -1903,7 +1966,7 @@ function drawCharts(type, opts, config, context, clickData, callback) {
         timing: 'easeIn',
         duration: duration,
         onProcess: function onProcess(process) {
-          drawYAxis(series, opts, config, context);
+          // drawYAxis(series, opts, config, context);
 
           // MARK:
           //drawXAxis(categories, opts, config, context);
@@ -2019,14 +2082,86 @@ var Charts = function Charts(opts) {
   opts.extra = opts.extra || {};
   opts.legend = opts.legend === false ? false : true;
   opts.animation = opts.animation === false ? false : true;
+  opts.landscape = opts.landscape === true ? true : false;
   var config$$1 = assign({}, config);
   config$$1.yAxisTitleWidth = opts.yAxis.disabled !== true && opts.yAxis.title ? config$$1.yAxisTitleWidth : 0;
   config$$1.pieChartLinePadding = opts.dataLabel === false ? 0 : config$$1.pieChartLinePadding;
   config$$1.pieChartTextPadding = opts.dataLabel === false ? 0 : config$$1.pieChartTextPadding;
+  // 布局兼容
+  config$$1.paddingTop = opts.landscape === true ? config$$1.paddingTop + 30 : config$$1.paddingTop;
 
   this.opts = opts;
   this.config = config$$1;
   this.context = wx.createCanvasContext(opts.canvasId);
+
+  const originalMoveTo = this.context.moveTo
+  this.context.moveTo = (x, y) => {
+    if (opts.landscape === true) {
+      originalMoveTo.call(this.context, y, opts.width - x)
+    } else {
+      originalMoveTo.call(this.context, x, y)
+    }
+  }
+  const originalLineTo = this.context.lineTo
+  this.context.lineTo = (x, y) => {
+    if (opts.landscape === true) {
+      originalLineTo.call(this.context, y, opts.width - x)
+    } else {
+      originalLineTo.call(this.context, x, y)
+    }
+  }
+  const originalFillText = this.context.fillText
+  this.context.fillText = (text, x, y) => {
+    if (opts.landscape === true) {
+      originalFillText.call(this.context, text, y, opts.width - x)
+    } else {
+      originalFillText.call(this.context, text, x, y)
+    }
+  }
+  this.context.original_fillText = originalFillText
+
+  const originalArc = this.context.arc
+  this.context.arc = (x, y, r, sAngle, eAngle, counterclockwise) => {
+    if (opts.landscape === true) {
+      originalArc.call(this.context, y, opts.width - x, r, sAngle, eAngle, counterclockwise)
+    } else {
+      originalArc.call(this.context, x, y, r, sAngle, eAngle, counterclockwise)
+    }
+  }
+  const originalBezierCurveTo = this.context.bezierCurveTo
+  this.context.bezierCurveTo = (cp1x, cp1y, cp2x, cp2y, x, y) => {
+    if (opts.landscape === true) {
+      originalBezierCurveTo.call(this.context, cp1y, opts.width - cp1x, cp2y, opts.width - cp2x, y, opts.width - x)
+    } else {
+      originalBezierCurveTo.call(this.context, cp1x, cp1y, cp2x, cp2y, x, y)
+    }
+  }
+  const originalRotate = this.context.rotate
+  this.context.rotate = (rotate) => {
+    if (opts.landscape === true) {
+      originalRotate.call(this.context, (-1 / 2) * Math.PI + rotate)
+    } else {
+      originalRotate.call(this.context, rotate)
+    }
+  }
+
+  const originalTranslate = this.context.translate
+  this.context.translate = (x, y) => {
+    if (opts.landscape === true) {
+      originalTranslate.call(this.context, y, opts.width - x)
+    } else {
+      originalTranslate.call(this.context, x, y)
+    }
+  }
+  const originalFillRect = this.context.fillRect
+  this.context.fillRect = (x, y, width, height) => {
+    if (opts.landscape === true) {
+      originalFillRect.call(this.context, y, opts.width - x - width, height, width)
+    } else {
+      originalFillRect.call(this.context, x, y, width, height)
+    }
+  }
+
   // store calcuated chart data
   // such as chart point coordinate
   this.chartData = {};
@@ -2036,6 +2171,13 @@ var Charts = function Charts(opts) {
       var _e$touches$ = e.touches[0],
         x = _e$touches$.x,
         y = _e$touches$.y;
+
+      if (this.opts.landscape === true) {
+        let temp = x;
+        x = this.opts.width - y;
+        y = temp;
+      }
+
       if (this.opts.type === 'pie' || this.opts.type === 'ring') {
         return findPieChartCurrentIndex({ x: x, y: y }, this.chartData.pieData);
       } else {
@@ -2286,6 +2428,15 @@ function drawYAxisDividingLine(categories, opts, config, context) {
   });
 }
 
+/**
+ * 原生方法 drawYAxis 是通过 Y 轴的刻度拉横线来表示的,
+ * 所以新建这个方法来话专门的 Y 轴
+ *
+ * @param {any} series
+ * @param {any} opts
+ * @param {any} config
+ * @param {any} context
+ */
 function drawYAxisCoordLine(series, opts, config, context) {
   var _calYAxisData4 = calYAxisData(series, opts, config),
     rangesFormat = _calYAxisData4.rangesFormat;
@@ -2301,7 +2452,8 @@ function drawYAxisCoordLine(series, opts, config, context) {
 
   var points = [];
   for (var i = 0; i < config.yAxisSplit; i++) {
-    points.push(config.padding + config.paddingTop + eachSpacing * i);
+      // 特殊设置
+      points.push(config.padding + config.paddingTop + eachSpacing * i);
   }
 
   // 坐标轴.
@@ -2312,6 +2464,7 @@ function drawYAxisCoordLine(series, opts, config, context) {
   context.lineTo(startX, endY);
   context.closePath();
   context.stroke();
+
   // 标尺
   //    context.beginPath();
   //    context.setFontSize(config.fontSize)
@@ -2320,6 +2473,7 @@ function drawYAxisCoordLine(series, opts, config, context) {
   //    context.closePath();
   //    context.stroke();
 
+  // Y 轴 刻度
   context.beginPath();
   context.setStrokeStyle(opts.yAxis.gridColor || "#cccccc");
   context.setLineWidth(1);
@@ -2329,17 +2483,35 @@ function drawYAxisCoordLine(series, opts, config, context) {
   });
   context.closePath();
   context.stroke();
-  context.beginPath();
-  context.setFontSize(config.fontSize);
-  context.setFillStyle(opts.yAxis.fontColor || '#666666');
-  rangesFormat.splice((rangesFormat.length - 1), 1)
-  rangesFormat.forEach(function (item, index) {
-    var pos = points[index] ? points[index] : endY;
-    context.fillText(item, (config.padding + config.yAxisTitleWidth), pos + config.fontSize / 2 - 1);
-  });
-  context.closePath();
-  context.stroke();
 
+  // Y 轴 刻度上的值
+  if (opts.landscape === true) {
+    rangesFormat.splice((rangesFormat.length - 1), 1)
+    rangesFormat.forEach(function (item, index) {
+      const pos = points[index] ? points[index] : endY;
+      const startX = config.padding + config.yAxisTitleWidth
+      const startY = pos + config.fontSize / 2 - 1
+
+      context.save();
+      context.setFontSize(config.fontSize);
+      context.setFillStyle(opts.yAxis.fontColor || '#666666');
+
+      context.translate((config.padding + config.yAxisTitleWidth), pos + config.fontSize / 2 - 1)
+      context.rotate(0);
+      context.original_fillText(item, 0, 0);
+      context.restore();
+    });
+  } else {
+    rangesFormat.splice((rangesFormat.length - 1), 1)
+    rangesFormat.forEach(function (item, index) {
+      var pos = points[index] ? points[index] : endY;
+      context.fillText(item, (config.padding + config.yAxisTitleWidth), pos + config.fontSize / 2 - 1);
+    });
+    context.closePath();
+    context.stroke();
+  }
+
+  // Y 轴 标题
   if (opts.yAxis.title) {
     drawYAxisTitle(opts.yAxis.title, opts, config, context);
   }

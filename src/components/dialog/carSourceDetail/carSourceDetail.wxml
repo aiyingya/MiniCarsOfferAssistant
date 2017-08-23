@@ -3,7 +3,7 @@
   <import src="../../../components/price/quotedPrice.wxml" />
 
   <view class="carSourceDetailDialog">
-    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" bindtap="{{close}}" catchtouchmove="{{onTouchMoveWithCatch}}">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" bindtap="{{close}}" catchtouchmove>
     </view>
     <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
       <block wx:if="{{page === 'sourceDetail'}}">
@@ -219,12 +219,12 @@
 
         <view class="body">
           <view class="brief-infomation">
-            {{contactList.companyName}}
+            {{companyModel.companyName}}
           </view>
           <scroll-view scroll-y="true" style="height: 400rpx">
-            <block wx:if="{{contactList.supplierModels.length}}">
+            <block wx:if="{{companyModel.supplierModels.length}}">
               <view class="contact-list">
-                <view wx:for="{{contactList.supplierModels}}" wx:key="supplierId" class="contact-cell" data-supplier="{{item}}"
+                <view wx:for="{{companyModel.supplierModels}}" wx:key="supplierId" class="contact-cell" data-supplier="{{item}}"
                   bindtap="{{handlerContactClick}}">
                   <view wx:if="{{item.callCount}}" class="left active">{{item.supplierName}}({{item.callCount}})</view>
                   <view wx:else class="left active">{{item.supplierName}}</view>
