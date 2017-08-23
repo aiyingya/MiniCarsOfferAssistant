@@ -39,6 +39,7 @@ Page({
   onShow() {
   },
   onPullDownRefresh() {
+    searchPaginationList = null
     this.whiteList()
       .then(res => {
         this.setData({
