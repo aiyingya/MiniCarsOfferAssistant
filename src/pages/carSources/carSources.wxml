@@ -8,7 +8,7 @@
 <import src="../../components/dialog/inputNumberDialog.wxml" />
 <template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}" />
 
-<import src="../../components/price/quotedPrice.wxml" />
+<import src="../../components/common/price/quotedPrice.wxml" />
 
 <!-- 下拉框筛选 -->
 <view class="carSources-navbar" hidden="{{!hasOverLayDropdown}}" style="top: -1rpx;">

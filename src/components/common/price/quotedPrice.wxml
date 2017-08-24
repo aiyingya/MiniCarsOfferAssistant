@@ -1,3 +1,4 @@
+<!-- 报价展示视图 -->
 <template name="quotedPrice">
   <view class="quoted-price">
     <image wx:if="{{ quotedSymbol === 'DOWN' }}" class="discount-icon" src="/images/icons/icon_price_down.png"> </image>

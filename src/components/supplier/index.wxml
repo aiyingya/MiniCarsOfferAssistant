@@ -1,0 +1,82 @@
+<!--page:supplier 顶部搜索栏 -->
+<template name="searchBar">
+  <view class="search-bar">
+    <view class="search-input">
+      <input value="{{ searchBarValue }}" placeholder-class="placeholder" placeholder="{{ searchBarPlaceholder }}" bindinput="onSearchInputEdit"
+        bindfocus="onSearchInputFocus" bindconfirm="onSearchInputConfirm" bindblur="onSearchInputBlur" />
+    </view>
+  </view>
+</template>
+
+<!--page:supplier 精准供应商行 -->
+<template name="supplierSearchResultView">
+  <view class="supplier-search-result" data-company="{{ item }}" bindtap="onRowClick">
+    <view class='profile'>
+      <view class='name'>{{ item.companyName }}</view>
+      <view class="tag-label" wx:if="{{ item.showLabel }}">
+        <image class="reliable-face" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : item.showLabel === '不靠谱' ? '/images/icons/icon_unreliable_face.png' : '' }}"
+        /> {{ item.showLabel }}
+      </view>
+    </view>
+    <image class="call-line" src="/images/icons/icon_call_line.png" data-company="{{ item }}" catchtap="onCallButtonClick" />
+  </view>
+</template>
+
+<!--page:supplier 模糊查询结果 -->
+<template name="fuzzySearchResultView">
+  <view class="supplier-fuzzy-search-result" data-company="{{ item }}" bindtap="onFuzzyRowClick">
+    {{ item.companyName }}
+  </view>
+</template>
+
+<!--page: supplier 供应商分区 -->
+<template name="section">
+  <view class="section-board">
+    <view class="line" />
+    <view class="title"> {{ sectionTitle }} </view>
+    <view class="line" />
+  </view>
+</template>
+
+<!-- page: supplierDetail 评论输入板 -->
+<template name="commentBoardView">
+  <view class="comment-board">
+    <view class="tag-board">
+      选择该供应商是否靠谱?
+      <view class="tag-selection">
+        <button class="tag {{ index == submitSelectedTagIndex ? item.highlightClass : '' }}" wx:for="{{ submitTags }}" wx:key="id"
+          bindtap="onTagButtonClick" data-id="{{ item.id }}">
+          <image src="{{ index == submitSelectedTagIndex ? item.imageHighlight : item.imageNormal }}" /> {{ item.name }}
+        </button>
+      </view>
+    </view>
+    <form bindsubmit="onFormSubmitClick">
+      <view class="comment-textarea">
+        <textarea name="content" value="{{ submitTextareaValue }}" class="textarea" placeholder="输入评论" placeholder-class="textarea-placeholder"
+          bindconfirm="onTextareaConfirm" bindinput="onTextareaInput" />
+        <button formType="submit" class="submit-input {{ (submitButtonValid && submitButtonTagValid) ? 'valid' : '' }}">提交</button>
+      </view>
+    </form>
+  </view>
+</template>
+
+<!-- page: supplierDetail 评论视图 -->
+<template name="commentView">
+  <view class="comment">
+    <view class="title">
+      <view class="profile">
+        <view class="phone"> {{ item.phone }} </view>
+        <view class="create-date"> {{ item.createDate }} </view>
+      </view>
+      <view wx:if="{{ item.tags && item.tags.length }}" class="tag">
+        <image src="{{ item.tags[0].label === '靠谱' ? '/images/icons/icon_reliable_face.png' : '/images/icons/icon_unreliable_face.png' }}"></image>
+        <view class="tag-label {{ item.tags[0].label === '靠谱' ? 'highlight' : '' }}"> {{ item.tags[0].label }} </view>
+      </view>
+      <view wx:else class="tag">
+      </view>
+    </view>
+    <view class="content">
+      {{ item.content }}
+    </view>
+  </view>
+</template>
