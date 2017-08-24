@@ -1,5 +1,5 @@
 <!-- 报价展示视图 -->
-<template name="quotedPrice">
+<template name="quotedPriceView">
   <view class="quoted-price">
     <image wx:if="{{ quotedSymbol === 'DOWN' }}" class="discount-icon" src="/images/icons/icon_price_down.png"> </image>
     <image wx:if="{{ quotedSymbol === 'PLUS' }}" class="discount-icon" src="/images/icons/icon_price_up.png"> </image>
