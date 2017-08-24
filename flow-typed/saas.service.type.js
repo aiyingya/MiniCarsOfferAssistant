@@ -106,3 +106,24 @@ declare type UserComment = {
   userId: number,
   phone: string
 };
+
+// 货源详情
+declare type CarSource = {
+  id: string, // 车源 id
+  publishDate: string,
+  publishChannel: "",
+  supplierSelfSupport: boolean,
+  supplier: SupplierForCarSource,
+  lowestPrice: number,
+  externalColor: string,
+  internalColor: string,
+  contact: string
+};
+
+declare type SupplierForCarSource = {
+  id: string,
+  name: string,
+  contact: string,
+  companyId: number,
+  companyName: string
+}
