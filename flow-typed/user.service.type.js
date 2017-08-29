@@ -58,7 +58,8 @@ declare type Tenant = {
   tenantTelephone: string,
   tenantStatus: 'online' | '',
   remark: string,
-  address: Address
+  address: Address,
+  manager: boolean
 };
 
 declare type Address = {

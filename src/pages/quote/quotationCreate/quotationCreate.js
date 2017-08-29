@@ -1120,7 +1120,7 @@ Page({
             })
           } else {
             wx.switchTab({
-              url: '/pages/usersQuote/usersQuote',
+              url: '/pages/userCenter/userCenter',
               success: (res) => {
 
               },

@@ -9,7 +9,7 @@
     "pages/quote/quotationsList/quotationsList",
     "pages/login/login",
     "pages/carList/carList",
-    "pages/usersQuote/usersQuote",
+    "pages/userCenter/userCenter",
     "pages/supplier/supplier",
     "pages/supplierDetail/supplierDetail",
     "pages/setCost/setCost",
@@ -49,7 +49,7 @@
         "text": "供应商"
       },
       {
-        "pagePath": "pages/usersQuote/usersQuote",
+        "pagePath": "pages/userCenter/userCenter",
         "iconPath": "images/icons/tab_icon_price_off.png",
         "selectedIconPath": "images/icons/tab_icon_price_on.png",
         "text": "我的"
