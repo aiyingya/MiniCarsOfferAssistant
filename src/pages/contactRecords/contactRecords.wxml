@@ -21,6 +21,12 @@
   </view>
 </template>
 
+<template name="recordDateView">
+  <view class="record-date">
+    上次拨打时间:{{ lastCallDate }}
+  </view>
+</template>
+
 <view class="container contact-records">
   <header>
   </header>
@@ -40,6 +46,7 @@
                     <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="{{ index }}">
                       <template is="carSourceView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex }}"
                       />
+                      <template is="recordDateView" data="{{ lastCallDate: item.lastCallDate }}"/>
                     </block>
                   </view>
                 </view>
