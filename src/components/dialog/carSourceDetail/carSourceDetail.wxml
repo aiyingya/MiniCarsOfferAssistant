@@ -48,7 +48,7 @@
               <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
                 class="logistics-list">
                 <view wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList}}" wx:for-item="logisticsItem" wx:for-index="logisticsItemIndex"
-                  wx:key="*this" class="logistics-block {{logisticsItemIndex == carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex ? 'selected' : ''}}"
+                  wx:key="{{ logisticsItemIndex }}" class="logistics-block {{logisticsItemIndex == carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex ? 'selected' : ''}}"
                   bindtap="{{selectLogisticsBlock}}" data-car-source="{{carSourceItem}}" data-logistics-index="{{logisticsItemIndex}}"
                   data-logistics="{{logisticsItem}}">
                   <view class="title">
