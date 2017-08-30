@@ -1,3 +1,4 @@
+// @flow
 import {
   $wuxInputNumberDialog,
   $wuxContentDialog,
@@ -442,8 +443,8 @@ Page({
         })
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
-        var carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
-        var carSkuInfo = {}
+        const carModelInfo: CarSPUForQuotation = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
+        let carSkuInfo: CarSKUForQuotation | null = null
         if (carSkuInfoJSONString && carSkuInfoJSONString.length) {
           /**
            * 页面来自于车源列表
@@ -456,7 +457,14 @@ Page({
            * lowestPriceSku 字段来设置 carSKUInfo 字段
            */
           this.data.source = 'carModels'
-          carSkuInfo = carModelInfo.lowestPriceSku
+          if (carModelInfo.lowestPriceSku != null) {
+            carSkuInfo = carModelInfo.lowestPriceSku
+          }
+        }
+
+        if (carSkuInfo == null) {
+          console.error('carSkuInfo is null')
+          return
         }
 
         const itemNumber = carSkuInfo.skuId || ''

@@ -13,3 +13,24 @@ declare type PaginationList<T> = {
   pagination: Pagination<T> | null,
   loadingMore: boolean
 };
+
+
+declare type CarSPUForQuotation = {
+  officialPrice: number,
+  carModelName: string,
+  capacity: number,
+  isElectricCar: boolean,
+  pic?: string,
+  lowestPriceSku?: CarSKUForQuotation
+};
+
+declare type CarSKUForQuotation = {
+  externalColorName: string,
+  internalColorName: string,
+  showPrice: number,
+  supplierSelfSupport: boolean,
+  skuId?: string,
+  officialPrice?: number,
+  skuPic?: string,
+  metallicPaintAmount?: number,
+};

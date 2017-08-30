@@ -80,13 +80,18 @@ Page({
         carSourceManger.processCarSourceItem(callRecord.carSource)
       }
 
-      this.setData({ selectedIndex: subIndex })
+      this.setData({
+        selectedIndex: subIndex,
+        [`records[${index}].callRecordBySpu[${subIndex}]`]: spuItem
+      })
     }
   },
   handlerCarSourceMore(e) { },
   handlerCarSourceDetail(e) {
+    const selectedIndex = this.data.selectedIndex
     const spuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
+    // const carSourcePlaceItem = e.currentTarget.dataset.carSourcePlace
 
     if (selectedDateSection === null) {
       console.error('没有选中')
@@ -94,8 +99,15 @@ Page({
     }
 
     const spuItem = selectedDateSection.callRecordBySpu[spuItemIndex]
+    const carModelsInfo = spuItem.spuSummary
     const carSourceItem = spuItem.callRecordList[carSourceItemIndex].carSource
     const contact = carSourceItem.supplier.contact
+
+    /// 判断有没有需要设置的 car source place， 没有则使用默认设置好的
+    // if (carSourcePlaceItem) {
+    // this.selectCarSourcePlace(carSourcePlaceItem, carSourceItem)
+    // this.updateTheCarSource(spuItemIndex, carSourceItemIndex, carSourceItem)
+    // }
 
     /**
      * 1.4.0 埋点
@@ -116,28 +128,34 @@ Page({
     $wuxTrack.push(event)
 
     $wuxCarSourceDetailDialog.sourceDetail({
-      carModel: spuItem,
+      carModel: carModelsInfo,
       carSourceItem: carSourceItem,
-      bookCar: function (updateCarSourceItem) {
+      bookCar: (updateCarSourceItem) => {
         this.actionBookCar(spuItem, null, updateCarSourceItem)
       },
-      contact: function () {
-        this.actionContactWithCarSourceItem(spuItem.carModelId, spuItem, carSourceItemIndex, carSourceItem, 'sourceDetail')
+      contact: () => {
+        this.actionContactWithCarSourceItem(carModelsInfo.carModelId, spuItemIndex, carSourceItemIndex, carSourceItem, 'sourceDetail')
       },
-      handlerCreateQuoted(e) {
-        // skuItem.carSku.showPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
-        // const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
-        // const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', skuItem.carSku)
-        // wx.navigateTo({
-        // url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
-        // })
+      handlerCreateQuoted: (e) => {
+        const carSku = {
+          externalColorName: carSourceItem.externalColor,
+          internalColorName: carSourceItem.internalColor,
+          showPrice: carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
+        }
+        const carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+        const carSkuInfoKeyValueString = utils.urlEncodeValueForKey('carSkuInfo', carSku)
+        wx.navigateTo({
+          url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
+        })
       },
-      close: function () {
-        // this.setData({
-        // [`carSourcesBySkuInSpuList[${skuItemIndex}].viewMdoelCarSourcesList[${carSourceItemIndex}]`]: carSourceItem
-        // })
+      close: () => {
+        if (selectedIndex != -1) {
+          this.setData({
+            [`records[${selectedIndex}].callRecordBySpu[${spuItemIndex}].callRecordList[${carSourceItemIndex}].carSource`]: carSourceItem
+          })
+        }
       },
-      reportError: function (e) {
+      reportError: (e) => {
         console.log('report error')
       }
     })
@@ -155,7 +173,7 @@ Page({
     const spuItem = selectedDateSection.callRecordBySpu[spuItemIndex]
     const carSourceItem = spuItem.callRecordList[carSourceItemIndex].carSource
 
-    this.actionContactWithCarSourceItem(spuItem.carModelId, spuItemIndex, carSourceItemIndex, carSourceItem, null)
+    this.actionContactWithCarSourceItem(spuItem.spuSummary.carModelId, spuItemIndex, carSourceItemIndex, carSourceItem, null)
   },
   actionContactWithCarSourceItem(spuId, spuItemIndex, carSourceItemIndex, carSourceItem, from) {
 

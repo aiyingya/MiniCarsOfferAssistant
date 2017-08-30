@@ -39,13 +39,9 @@
 .users-label {
   padding: 0 30rpx;
   display: flex;
-  -webkit-justify-content: center;
   justify-content: center;
-  -webkit-flex-direction: row;
   flex-direction: row;
-  -webkit-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-align-content: flex-start;
   align-content: flex-start;
   margin-top: 12rpx;
 }
@@ -93,7 +89,6 @@
   line-height: 88rpx;
   font-family: "PingFangSC-Regular";
   background: #ED4149;
-  border-radius: 8px;
   font-size: 32rpx;
   color: #FFFFFF;
   text-align: center;

@@ -19,21 +19,21 @@ export default class CarSourceManager {
    */
   processCarSourceItem(carSourceItem: CarSource) {
     // 价格最低
-    const carSourcePlaceLowest = carSourceItem.viewModelLowest
+    const carSourcePlaceLowest = carSourceItem.lowest
     if (carSourcePlaceLowest) {
       // FIXME: 初始化状态下，无法得知某一货源地下的最低报价就是从第一个物流方案得来的，很可能压根就没有物流方案
       this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceLowest, 0)
     }
 
     // 到货快
-    const carSourcePlaceFastest = carSourceItem.viewModelFastest
+    const carSourcePlaceFastest = carSourceItem.fastest
     if (carSourcePlaceFastest) {
       this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceFastest, 0)
     }
 
     // 更多项目
-    if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length > 0) {
-      for (let carSourcePlaceItem of carSourceItem.viewModelOthers) {
+    if (carSourceItem.others && carSourceItem.others.length > 0) {
+      for (let carSourcePlaceItem of carSourceItem.others) {
         this.selectLogisticsDestinationForCarSourcePlaceOfCarSource(carSourceItem, carSourcePlaceItem, 0)
       }
     }
@@ -44,7 +44,7 @@ export default class CarSourceManager {
     let selectedCarSourcePlace = null
     if (carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低和到货快 同时存在
-      if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length > 0) {
+      if (carSourceItem.others && carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [{
           name: '价格低',
           value: carSourcePlaceLowest
@@ -54,7 +54,7 @@ export default class CarSourceManager {
           value: carSourcePlaceFastest
         }
         ]
-        carSourceItem.viewModelTabMore = carSourceItem.viewModelOthers
+        carSourceItem.viewModelTabMore = carSourceItem.others
         selectedCarSourcePlace = carSourcePlaceLowest
       } else {
         carSourceItem.viewModelTabs = [{
@@ -71,26 +71,26 @@ export default class CarSourceManager {
       }
     } else if (!carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低和到货快 同时不存在
-      if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length === 1) {
+      if (carSourceItem.others && carSourceItem.others.length === 1) {
         carSourceItem.viewModelTabs = null
         carSourceItem.viewModelTabMore = null
-        selectedCarSourcePlace = carSourceItem.viewModelOthers[0]
+        selectedCarSourcePlace = carSourceItem.others[0]
       } else {
         carSourceItem.viewModelTabs = [{
           name: '推荐',
-          value: carSourceItem.viewModelOthers[0]
+          value: carSourceItem.others[0]
         }]
-        carSourceItem.viewModelTabMore = carSourceItem.viewModelOthers.shift()
-        selectedCarSourcePlace = carSourceItem.viewModelOthers[0]
+        carSourceItem.viewModelTabMore = carSourceItem.others.shift()
+        selectedCarSourcePlace = carSourceItem.others[0]
       }
     } else if (carSourcePlaceFastest && !carSourcePlaceLowest) {
       // 价格低不存在， 到货快存在
-      if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length > 0) {
+      if (carSourceItem.others && carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [{
           name: '到货快',
           value: carSourcePlaceFastest
         }]
-        carSourceItem.viewModelTabMore = carSourceItem.viewModelOthers
+        carSourceItem.viewModelTabMore = carSourceItem.others
         selectedCarSourcePlace = carSourcePlaceFastest
       } else {
         carSourceItem.viewModelTabs = [{
@@ -102,12 +102,12 @@ export default class CarSourceManager {
       }
     } else if (!carSourcePlaceFastest && carSourcePlaceLowest) {
       // 价格低存在， 到货快不存在
-      if (carSourceItem.viewModelOthers && carSourceItem.viewModelOthers.length > 0) {
+      if (carSourceItem.others && carSourceItem.others.length > 0) {
         carSourceItem.viewModelTabs = [{
           name: '价格低',
           value: carSourcePlaceLowest
         }]
-        carSourceItem.viewModelTabMore = carSourceItem.viewModelOthers
+        carSourceItem.viewModelTabMore = carSourceItem.others
         selectedCarSourcePlace = carSourcePlaceLowest
       } else {
         carSourceItem.viewModelTabs = [{
@@ -208,7 +208,7 @@ export default class CarSourceManager {
 
   updateTheLogisticsDestination(logisticsDestination: Logistics | null, carSourcePlaceItem: CarSourcePlace, carSourceItem: CarSource) {
     if (logisticsDestination != null) {
-      const quoted = util.quotedPriceByMethod(logisticsDestination.discount, this.spuOfficialPrice, this.quotedMethod)
+      const quoted = util.quotedPriceWithPriceDiffByMethod(logisticsDestination.discount, this.spuOfficialPrice, this.quotedMethod)
       carSourcePlaceItem.viewModelQuoted = quoted
       carSourcePlaceItem.viewModelQuoted.price = logisticsDestination.totalPrice
       carSourcePlaceItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(logisticsDestination.totalPrice)
@@ -222,7 +222,7 @@ export default class CarSourceManager {
         carSourcePlaceItem.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc = util.priceStringWithUnit(logisticsDestination.logisticsFee)
       }
     } else {
-      const quoted = util.quotedPriceByMethod(carSourcePlaceItem.discount, this.spuOfficialPrice, this.quotedMethod)
+      const quoted = util.quotedPriceWithPriceDiffByMethod(carSourcePlaceItem.discount, this.spuOfficialPrice, this.quotedMethod)
       carSourcePlaceItem.viewModelQuoted = quoted
       carSourcePlaceItem.viewModelQuoted.price = carSourcePlaceItem.totalPrice
       carSourcePlaceItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcePlaceItem.totalPrice)

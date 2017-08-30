@@ -13,22 +13,11 @@ import CarSourceManager from '../../components/carSource/carSource.manager'
 import SAASService from '../../services/saas.service'
 import UserService from '../../services/user.service'
 
-type Section = {
-  carSku: CarSKU,
-  carSourcesList: Array<CarSource>
-};
-type SectionWithViewModel = {
-  carSku: CarSKU,
-  carSourcesList: Array<CarSource>,
-  viewModelPageData: Pagination<CarSource>,
-  viewModelCarSourcesList: Array<CarSource>
-};
-
 const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
 const carSourceManger: CarSourceManager = new CarSourceManager()
-let cacheCarSourcesBySkuInSpuList: Array<Section> | null = null
-let currentCarSourcesBySkuInSpuList: Array<SectionWithViewModel> | null = null
+let cacheCarSourcesBySkuInSpuList: Array<{ carSku: CarSKU, carSourcesList: Array<CarSource> }> | null = null
+let currentCarSourcesBySkuInSpuList: Array<{ carSku: CarSKU, viewModelPageData: Pagination<CarSource>, carSourcesList: Array<CarSource> }> | null = null
 
 Page({
   data: {
@@ -445,7 +434,7 @@ Page({
   },
   handlerPullReresh(e) {
     const skuItemIndex = e.currentTarget.dataset.skuIndex
-    const carSourcesBySkuInSpuItem = this.skuItemByIndex(skuItemIndex)
+    const carSourcesBySkuInSpuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
 
     this.actionPullRefresh(carSourcesBySkuInSpuItem)
     this.setData({
@@ -454,7 +443,7 @@ Page({
   },
   handlerLoadMore(e) {
     const skuItemIndex = e.currentTarget.dataset.skuIndex
-    const carSourcesBySkuInSpuItem = this.skuItemByIndex(skuItemIndex)
+    const carSourcesBySkuInSpuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
 
     this.actionLoadMore(carSourcesBySkuInSpuItem)
     this.setData({
@@ -479,20 +468,20 @@ Page({
   processCarSourceItemOnlyOnce(carSourceItem) {
     let carSourcePlaceArray = []
 
-    const carSourcePlaceLowest = carSourceItem.viewModelLowest
+    const carSourcePlaceLowest = carSourceItem.lowest
     if (carSourcePlaceLowest) {
       // FIXME: 初始化状态下，无法得知某一货源地下的最低报价就是从第一个物流方案得来的，很可能压根就没有物流方案
       carSourcePlaceArray.push(carSourcePlaceLowest)
     }
 
     // 到货快
-    const carSourcePlaceFastest = carSourceItem.viewModelFastest
+    const carSourcePlaceFastest = carSourceItem.fastest
     if (carSourcePlaceFastest) {
       carSourcePlaceArray.push(carSourcePlaceFastest)
     }
 
     // 其他
-    const moreArray = carSourceItem.viewModelOthers
+    const moreArray = carSourceItem.others
     if (moreArray) {
       carSourcePlaceArray = carSourcePlaceArray.concat(moreArray)
     }
@@ -513,11 +502,12 @@ Page({
   selectCarSku(selectedCarSkuIndex) {
     let section = null
     if (selectedCarSkuIndex === -1) { } else {
-      section = this.skuItemByIndex(selectedCarSkuIndex)
+      section = this.currentCarSourcesBySkuInSpuList[selectedCarSkuIndex]
       //this.updateTheCarSku(selectedCarSkuIndex, section)
     }
     return section
   },
+
 
   /**
    * 由于更新一个二维数组中的 carSource 对象暂时没有更好的办法，所以只能通过全量
@@ -538,10 +528,9 @@ Page({
     if (carSourceItem) {
       actualCarSourceItem = carSourceItem
     } else {
-      actualCarSourceItem = this.carSourceItemBySkuItemIndexAndIndex(carSkuIndex, carSourceIndex)
+      actualCarSourceItem = this.currentCarSourcesBySkuInSpuList[carSkuIndex].carSourcesList[carSourceIndex]
     }
-
-    this.setCarSourceItemBySkuItemIndexAndIndex(carSkuIndex, carSourceIndex, actualCarSourceItem)
+    this.currentCarSourcesBySkuInSpuList[carSkuIndex].carSourcesList[carSourceIndex] = actualCarSourceItem
   },
   /**
    * 更新 sku 分区数据
@@ -552,7 +541,8 @@ Page({
     if (carSkuItem) {
       actualCarSkuItem = carSkuItem
     } else {
-      actualCarSkuItem = this.skuItemByIndex(carSkuIndex)
+      const list = this.currentCarSourcesBySkuInSpuList
+      actualCarSkuItem = list[carSkuIndex]
     }
 
     this.preprocessCarSourcesBySkuInSpuItem(actualCarSkuItem)
@@ -564,9 +554,9 @@ Page({
   updateSearchResult(
     object
   ): Array<{
-    carSku: CarSKU,
-    viewModelPageData: Pagination<CarSource>,
-    viewModelCarSourcesList: Array<CarSource>
+    carSku: CarSKUViewModel,
+    viewModelPageData: Pagination<CarSourceViewModel>,
+    viewModelCarSourceList: Array<CarSourceViewModel>
   }> {
     wx.showToast({
       title: '正在处理',
@@ -601,21 +591,16 @@ Page({
 
     const selectedLogisticsFilter = function (filterId, carSourceItem) {
       if (filterId === '-1') {
-        carSourceItem.viewModelLowest = carSourceItem.lowest
-        carSourceItem.viewModelFastest = carSourceItem.fastest
-        carSourceItem.viewModelOthers = carSourceItem.others
         return true
       } else if (filterId === '0') {
         if (carSourceItem.lowest && carSourceItem.lowest.logisticsFree) {
-          carSourceItem.viewModelLowest = carSourceItem.lowest
         } else {
-          carSourceItem.viewModelLowest = null
+          carSourceItem.lowest = null
         }
 
         if (carSourceItem.fastest && carSourceItem.fastest.logisticsFree) {
-          carSourceItem.viewModelFastest = carSourceItem.fastest
         } else {
-          carSourceItem.viewModelFastest = null
+          carSourceItem.fastest = null
         }
 
         if (carSourceItem.others && carSourceItem.others.length > 0) {
@@ -626,14 +611,14 @@ Page({
             }
           }
           if (othersWithLogisticsFree.length > 0) {
-            carSourceItem.viewModelOthers = othersWithLogisticsFree
+            carSourceItem.others = othersWithLogisticsFree
           } else {
-            carSourceItem.viewModelOthers = null
+            carSourceItem.others = null
           }
         } else {
-          carSourceItem.viewModelOthers = null
+          carSourceItem.others = null
         }
-        return (carSourceItem.viewModelLowest || carSourceItem.viewModelFastest || carSourceItem.viewModelOthers)
+        return (carSourceItem.lowest || carSourceItem.fastest || carSourceItem.others)
       }
       return true
     }
@@ -690,16 +675,18 @@ Page({
       return null
     }
 
-    const tempCurrentCarSourcesBySkuInSpuList = []
+    const currentCarSourcesBySkuInSpuList = []
     const carSourcesBySkuInSpuList = []
     for (let carSourcesBySkuItem of cacheCarSourcesBySkuInSpuList) {
       const newCarSourcesList = []
       if (selectedExternalColorFilter(selectedExternalCarColorName, carSourcesBySkuItem)) {
         for (let carSourceItem of carSourcesBySkuItem.carSourcesList) {
-          if (selectedLogisticsFilter(selectedLogistics, carSourceItem) &&
-            selectedSourcePublishDateFilter(selectedSourcePublishDate, carSourceItem) &&
-            selectedInternalColorFilter(selectedInternalCarColorName, carSourceItem)) {
-            newCarSourcesList.push(carSourceItem)
+          const tempCarSourceItem = {}
+          Object.assign(tempCarSourceItem, carSourceItem)
+          if (selectedLogisticsFilter(selectedLogistics, tempCarSourceItem) &&
+            selectedSourcePublishDateFilter(selectedSourcePublishDate, tempCarSourceItem) &&
+            selectedInternalColorFilter(selectedInternalCarColorName, tempCarSourceItem)) {
+            newCarSourcesList.push(tempCarSourceItem)
           }
         }
 
@@ -712,14 +699,14 @@ Page({
           this.preprocessCarSourcesBySkuInSpuItem(newCarSourcesBySkuItem)
 
           const new2CarSourcesBySkuItem = {}
-          new2CarSourcesBySkuItem.carSku = { externalColorName: '',  internalColorName: '' }
+          new2CarSourcesBySkuItem.carSku = {}
           new2CarSourcesBySkuItem.viewModelPageData = {}
           new2CarSourcesBySkuItem.viewModelCarSourcesList = []
           Object.assign(new2CarSourcesBySkuItem.carSku, newCarSourcesBySkuItem.carSku)
           Object.assign(new2CarSourcesBySkuItem.viewModelPageData, newCarSourcesBySkuItem.viewModelPageData)
           Object.assign(new2CarSourcesBySkuItem.viewModelCarSourcesList, newCarSourcesBySkuItem.viewModelCarSourcesList)
 
-          tempCurrentCarSourcesBySkuInSpuList.push(newCarSourcesBySkuItem)
+          currentCarSourcesBySkuInSpuList.push(newCarSourcesBySkuItem)
           carSourcesBySkuInSpuList.push(new2CarSourcesBySkuItem)
         }
       }
@@ -728,7 +715,7 @@ Page({
     setTimeout(function () {
       wx.hideToast()
     }, 300)
-    currentCarSourcesBySkuInSpuList = tempCurrentCarSourcesBySkuInSpuList;
+    this.currentCarSourcesBySkuInSpuList = currentCarSourcesBySkuInSpuList;
 
     return carSourcesBySkuInSpuList
   },
@@ -782,7 +769,7 @@ Page({
           supplierPhone = supplier.supplierPhone,
           messageResultId = carSourceItem.id,
           contactPhone = carSourceItem.contact || supplier.supplierPhone,
-          skuItem = this.skuItemByIndex(skuItemIndex)
+          skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
 
         saasService.pushCallRecord(supplierId, supplierPhone, messageResultId, contactPhone)
 
@@ -1124,7 +1111,7 @@ Page({
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
     const carModelsInfo = this.data.carModelsInfo
-    const skuItem = this.skuItemByIndex(skuItemIndex)
+    const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
 
     this.actionContactWithCarSourceItem(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, null)
@@ -1134,7 +1121,7 @@ Page({
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
-    const skuItem = this.skuItemByIndex(skuItemIndex)
+    const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
 
     carSourceItem.viewModelSelectedTab = -1
@@ -1155,7 +1142,7 @@ Page({
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
-    const skuItem = this.skuItemByIndex(skuItemIndex)
+    const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
 
     carSourceItem.viewModelSelectedTab = tabItemIndex
@@ -1177,7 +1164,7 @@ Page({
     const carSourcePlaceItem = e.currentTarget.dataset.carSourcePlace
 
     const carModelsInfo = this.data.carModelsInfo
-    const skuItem = this.skuItemByIndex(skuItemIndex)
+    const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.carSourcesList[carSourceItemIndex]
     const contact = carSourceItem.supplier.contact
 
@@ -1193,7 +1180,7 @@ Page({
      * davidfu
      */
     this.data.pageParameters = {
-      productId: this.data.carModelsInfo.carModelId,
+      productId: carModelsInfo.carModelId,
       color: skuItem.carSku.externalColorName,
       parameters: {
         carSourceId: carSourceItem.id
@@ -1206,15 +1193,15 @@ Page({
     $wuxTrack.push(event)
 
     $wuxCarSourceDetailDialog.sourceDetail({
-      carModel: this.data.carModelsInfo,
+      carModel: carModelsInfo,
       carSourceItem: carSourceItem,
-      bookCar: function (updateCarSourceItem) {
+      bookCar: (updateCarSourceItem) => {
         this.actionBookCar(carModelsInfo, skuItem, updateCarSourceItem)
       },
-      contact: function () {
+      contact: () => {
         this.actionContactWithCarSourceItem(carModelsInfo.carModelId, skuItemIndex, carSourceItemIndex, carSourceItem, 'sourceDetail')
       },
-      handlerCreateQuoted(e) {
+      handlerCreateQuoted: (e) => {
         skuItem.carSku.showPrice = carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
         const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
         const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', skuItem.carSku)
@@ -1222,7 +1209,7 @@ Page({
           url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
         })
       },
-      selectLogisticsBlock: function (e) {
+      selectLogisticsBlock: (e) => {
         console.log(e)
         let carSource = e.currentTarget.dataset.carSource
         const logisticsIndex = e.currentTarget.dataset.logisticsIndex
@@ -1236,12 +1223,12 @@ Page({
         }
         return carSource
       },
-      close: function () {
+      close: () => {
         this.setData({
           [`carSourcesBySkuInSpuList[${skuItemIndex}].viewMdoelCarSourcesList[${carSourceItemIndex}]`]: carSourceItem
         })
       },
-      reportError: function (e) {
+      reportError: (e) => {
         console.log('report error')
       }
     })
@@ -1265,38 +1252,6 @@ Page({
       that.setData({
         'carModelLabel.unfold': 'show'
       })
-    }
-  },
-  skuItemByIndex(index: number): SectionWithViewModel | null {
-    if (currentCarSourcesBySkuInSpuList != null) {
-      const skuItem = currentCarSourcesBySkuInSpuList[index]
-      if (skuItem != null) {
-        return skuItem
-      } else {
-        return null
-      }
-    } else {
-      return null
-    }
-  },
-  carSourceItemBySkuItemIndexAndIndex(skuItemIndex: number, index: number): CarSource | null {
-    const skuItem = this.skuItemByIndex(skuItemIndex)
-    if (skuItem != null) {
-      const carSourceItem = skuItem.carSourcesList[index]
-      if (carSourceItem != null) {
-        return carSourceItem
-      } else {
-        return null
-      }
-    } else {
-      return null
-    }
-  },
-  setCarSourceItemBySkuItemIndexAndIndex(skuItemIndex: number, index: number, carSourceItem: CarSource): void {
-    if (currentCarSourcesBySkuInSpuList != null) {
-      currentCarSourcesBySkuInSpuList[skuItemIndex].carSourcesList[index] = carSourceItem
-    } else {
-      console.info('currentCarSourcesBySkuInSpuList is null')
     }
   }
 })
