@@ -17,6 +17,7 @@
 .contact-records .record-row {
   position: relative;
   padding: 0 10rpx 10rpx 10rpx;
+  box-sizing: border-box;
 }
 
 .contact-records .record-row:last-child {
@@ -87,15 +88,14 @@
 
 .record-date {
   font-family: "PingFangSC-Regular";
-  font-size: 20rpx;
-  color: #333333;
-  background: #F6F7F8;
+  font-size: 26rpx;
+  color: #666666;
+  background: #ffffff;
   height: 30rpx;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   width: 100%;
   box-sizing: border-box;
-  padding: 20rpx;
 }
 
