@@ -107,6 +107,16 @@ declare type UserComment = {
   phone: string
 };
 
+declare type CarSKU = {
+  externalColorName: string,
+  internalColorName: string,
+
+  viewModelTags?: Array<string>,
+  viewModelLowestCarSource?: CarSource,
+  viewModelQuoted?: PriceQuoted,
+  viewModelSupplierSelfSupport?: boolean
+};
+
 // 货源详情
 declare type CarSource = {
   id: string, // 车源 id
@@ -116,8 +126,65 @@ declare type CarSource = {
   supplier: SupplierForCarSource,
   lowestPrice: number,
   externalColor: string,
+  standardExternalColor: string,
   internalColor: string,
-  contact: string
+  contact: string,
+  others: Array<CarSourcePlace>,
+  lowest: CarSourcePlace,
+  fastest: CarSourcePlace,
+
+  viewModelLowest?: CarSourcePlace | null,
+  viewModelFastest?: CarSourcePlace | null,
+  viewModelOthers?: Array<CarSourcePlace> | null,
+  viewModelTags?: Array<string>,
+  viewModelTabs?: Array<{ name: string, value: CarSourcePlace }> | null,
+  viewModelSelectedTab?: number,
+  viewModelTabMore?: Array<CarSourcePlace> | null,
+  viewModelSelectedCarSourcePlace?: CarSourcePlace,
+  viewModelPublishDateDesc?: string,
+  viewModelInternalColor?: string
+};
+
+declare type CarSourcePlace = {
+  totalPrice: number,
+  discount: number,
+  priceFixed: boolean,
+  logisticsFree: boolean,
+  destinationList?: Array<Logistics>,
+
+  viewModelSelectedLogisticsDestination?: Logistics | null,
+  viewModelSelectedLogisticsDestinationIndex?: number,
+  viewModelQuoted?: PriceQuoted,
+  viewModelExpectedDeliveryDaysDesc?: string | null,
+  viewModelEqualWithOfficialPrice?: boolean,
+  viewModelTags?: Array<string>
+};
+
+declare type Logistics = {
+  discount: number,
+  totalPrice: number,
+  expectedDeliveryDays: number,
+  logisticsFee: number,
+
+  viewModelLogisticsFeeDesc: string | null
+};
+
+declare type QuotedMethod = 'POINTS' | 'PRICE';
+
+declare type PriceQuoted = {
+  quotedMethod: QuotedMethod,
+  quotedValue: number,
+  quotedSymbol: 'DOWN' | 'PLUS' | 'NONE',
+  quotedRange: number,
+  quotedRangeUnit: string
+};
+
+
+declare type CarModel = {
+  carModelId: number,
+  carModelName: string,
+  officialPrice: number,
+  officialPriceStr: string
 };
 
 declare type SupplierForCarSource = {
@@ -126,4 +193,4 @@ declare type SupplierForCarSource = {
   contact: string,
   companyId: number,
   companyName: string
-}
+};

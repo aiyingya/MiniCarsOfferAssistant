@@ -318,7 +318,20 @@ export default class SAASService extends Service {
    * @param carModelId
    * @param object
    */
-  requestCarSourcesList(carModelId: number) {
+  requestCarSourcesList(
+    carModelId: number
+  ): Promise<{
+    capacity: number,
+    carModelId: number,
+    carModelName: string,
+    carSourcesBySkuInSpuList: Array<{ carSku: CarSKUForCarSource, carSourcesList: Array<CarSource> }>,
+    electricCar: boolean,
+    filters: Array<Filter>,
+    officialPrice: number,
+    officialPriceStr: string,
+    seatNums: Array<number>,
+    praiseModels: Array<PraiseModel>
+  }> {
     // MARK： 目前只取地址列表中的第一个
     const data: {
       userId: string,
@@ -1115,6 +1128,28 @@ export default class SAASService extends Service {
     return this.request(
       `supply/company/${companyId}`,
       'GET'
+    )
+  }
+
+  /**
+   * 获取基于行情的通话记录, 结果依据车型分区
+   *
+   * @param {string} userId
+   * @returns {Promise<Array<{
+   *     spuSummary: CarModel,
+   *     callRecordList: Array<{ lastCallDate: string, carSource: CarSource }>
+   *   }>>}
+   * @memberof SAASService
+   */
+  retrieveContactRecordWithCarSourceByCarModel(
+    userId: string
+  ): Promise<Array<{
+    callDateStr: string,
+    callRecordBySpu: Array<{ spuSummary: CarModel, callRecordList: Array<{ lastCallDate: string, carSource: CarSource }> }>
+  }>> {
+    return this.request(
+      `api/user/${userId}/callRecords`,
+      `GET`
     )
   }
 }

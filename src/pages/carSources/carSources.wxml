@@ -92,7 +92,7 @@
           <view wx:if="{{skuItem.viewModelCarSourcesList.length > 0}}" class="car-source-rows">
             <view wx:for="{{skuItem.viewModelCarSourcesList}}" wx:for-item="carSourceItem" wx:for-index="carSourceItemIndex" wx:key="id"
               class="car-source-row">
-              <template is="carSourceView" data="{{ carSourceItem, carSourceItemIndex, skuItem, skuItemIndex }}" />
+              <template is="carSourceView" data="{{ carSourceItem, carSourceItemIndex, skuItemIndex }}" />
             </view>
             <view wx:if="{{!skuItem.viewModelPageData.last}}" data-sku-index="{{skuItemIndex}}" bindtap="handlerLoadMore" class="load-more">
               点击更多

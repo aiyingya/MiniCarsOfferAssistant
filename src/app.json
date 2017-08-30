@@ -18,11 +18,12 @@
     "pages/details/details",
     "pages/bargain/bargain",
     "pages/potential/potential",
-    "pages/amap/amap"
+    "pages/amap/amap",
+    "pages/contactRecords/contactRecords"
   ],
   "window": {
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTitleText": "要卖车",
     "navigationBarTextStyle": "black"
   },

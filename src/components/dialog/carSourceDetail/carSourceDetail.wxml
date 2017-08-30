@@ -130,7 +130,7 @@
         <view class="footer">
           <!-- 供货价格 -->
           <view class="footer1">
-            <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice}}">
+            <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
               <view class="price-tips-small">价格电议</view>
             </block>
             <block wx:else>
@@ -141,7 +141,7 @@
               (含运费)
             </view>
             <view wx:else>
-              <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice}}">
+              <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
                 <!--为空-->
               </view>
               <view wx:else class="bare-price">

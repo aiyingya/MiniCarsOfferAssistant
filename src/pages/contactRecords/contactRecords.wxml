@@ -1,0 +1,49 @@
+<import src="../../components/carSource/carSourceView.wxml" />
+
+<import src="../../components/dialog/carSourceDetail/carSourceDetail.wxml" />
+<template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />
+
+<!-- 时间分区 -->
+<template name="timeSection">
+  <view class="time-section">
+    {{ callDateStr }}
+  </view>
+</template>
+
+<!-- spu分区 -->
+<template name="spuSection">
+  <view bindtap="onSectionClick" class="spu-section" data-index="{{ index }}" data-sub-index="{{ subIndex }}" >
+    <view class="title">[{{ item.officialPriceStr }}] {{ item.carModelName }}</view>
+    <image class="dropdown-arrow" src="{{index === selectedIndex? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
+    />
+  </view>
+</template>
+
+<view class="container contact-records">
+  <header>
+  </header>
+
+  <body class="body">
+    <view class="rows">
+      <block wx:for="{{ records }}" wx:key="{{ recordByTimeIndex }}" wx:for-index="recordByTimeIndex" wx:for-item="recordByTimeItem">
+        <view class="row">
+          <template is="timeSection" data="{{ callDateStr: recordByTimeItem.callDateStr }}" />
+          <block wx:for="{{ recordByTimeItem.callRecordBySpu }}" wx:key="{{ recordBySpuIndex }}" wx:for-index="recordBySpuIndex" wx:for-item="recordBySpuItem">
+            <template is="spuSection" data="{{ item: recordBySpuItem.spuSummary, index: recordByTimeIndex, subIndex: recordBySpuIndex, selectedIndex }}" />
+            <block wx:if="{{ selectedIndex == recordByTimeIndex }}">
+              <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="id">
+                <template is="carSourceView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex }}" />
+              </block>
+            </block>
+            <block wx:else>
+              <!-- 啥都没有 -->
+            </block>
+          </block>
+        </view>
+      </block>
+    </view>
+  </body>
+
+  <footer>
+  </footer>
+</view>
