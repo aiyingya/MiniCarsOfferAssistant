@@ -1,0 +1,26 @@
+.quoted-price {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.quoted-price .price {
+  font-family: "SFUIDisplay-Regular";
+  font-size: 34rpx;
+  color: #ED4149;
+  letter-spacing: 0rpx;
+  line-height: 32rpx;
+}
+
+.quoted-price .discount-icon {
+  width: 20rpx;
+  height: 24rpx;
+  position: relative;
+}
+
+.quoted-price .discount {
+  font-family: "PingFangSC-Regular";
+  font-size: 26rpx;
+  color: #333333;
+  line-height: 26rpx;
+}

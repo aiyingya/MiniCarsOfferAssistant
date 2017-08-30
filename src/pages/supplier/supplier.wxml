@@ -1,3 +1,4 @@
+<import src="../../components/common/search/searchBarView.wxml"/>
 <import src="../../components/supplier/index.wxml"/>
 
 <import src="../../components/toast/toast.wxml"/>
@@ -10,7 +11,7 @@
 <view class="container supplier">
   <!-- 搜索车型.-->
   <view class="header">
-    <template is="searchBar" data="{{ searchBarPlaceholder, searchBarValue }}" />
+    <template is="searchBarView" data="{{ searchBarPlaceholder, searchBarValue }}" />
   </view>
   <view class="body">
     <block wx:if="{{ fuzzyShow }}">

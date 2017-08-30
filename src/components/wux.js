@@ -7,7 +7,7 @@ import $wuxToast from './toast/toast'
 import $wuxTrack from './track/track'
 import $wuxContentDialog from './dialog/contentDialog'
 import $wuxSpecialUploadDialog from './dialog/specialUploadDialog/specialUploadDialog'
-import $wuxPricePickerDialog from './dialog/pricePickerDialog/pricePickerDialog'
+import $wuxPricePickerDialog from './dialog/pricePickerDialog/pricePickerDialog'
 import $bargainCancelDialog from './dialog/bargainCancelDialog/bargainCancelDialog'
 import $qrCodeDialog from './dialog/qrCodeDialog/qrCodeDialog'
 

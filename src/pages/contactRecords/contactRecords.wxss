@@ -1,0 +1,31 @@
+@import '../../components/carSource/carSourceView.wxss';
+@import '../../components/dialog/carSourceDetail/carSourceDetail.wxss';
+
+.contact-records {}
+
+/* 时间分区 */
+.time-section {
+  box-sizing: border-box;
+  height: 44rpx;
+  background-color: #f6f7f8;
+  text-align: center;
+}
+
+/* 车辆spu分区 */
+.spu-section {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 86rpx;
+  padding: 25rpx 30rpx;
+}
+.spu-section .title {
+  font-family:"PingFangSC-Medium";
+  font-size:30rpx;
+  color:#333333;
+}
+.spu-section .dropdown-arrow {
+  width: 16rpx;
+  height: 16rpx;
+}

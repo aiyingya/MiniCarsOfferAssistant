@@ -1,5 +1,4 @@
 @import '../../components/supplier/index.wxss';
-@import '../../components/common/filter/filterBarView.wxss';
 @import '../../components/dialog/carSourceDetail/carSourceDetail.wxss';
 .supplier-detail {}
 

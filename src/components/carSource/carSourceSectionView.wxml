@@ -1,0 +1,37 @@
+
+<import src="../../components/common/price/quotedPriceView.wxml" />
+
+<template name="carSourceSectionView">
+  <view class="car-source-section" bindtap="handlerSelectCarSku" data-sku-index="{{skuItemIndex}}">
+    <!-- 库存分区列表 -->
+    <view class="first-part">
+      <view class="title">
+        {{skuItem.carSku.externalColorName}}
+        <view wx:if="{{skuItem.carSku.metallicPaint.length}}" class="note">
+          {{skuItem.carSku.metallicPaint}}
+        </view>
+      </view>
+    </view>
+
+    <view class="second-part">
+      <template is="quotedPriceView" data="{{ ...skuItem.carSku.viewModelQuoted }}" />
+      <view>起</view>
+    </view>
+
+    <view wx:if="{{skuItem.carSku.viewModelTags.length > 0}}" class="third-part tag-collection">
+      <view wx:for="{{skuItem.carSku.viewModelTags}}" wx:key="*this" class="tag">
+        {{item}}
+      </view>
+    </view>
+    <!-- 货源右侧的展开标记 -->
+    <view class="dropdownarrow">
+      <view class="carsource-count">
+        <view class="carsource-count-text">
+          {{skuItem.viewModelPageData.totalElements}}
+        </view>
+      </view>
+      <image class="icon-dropdownarrow" src="{{skuItemIndex === selectedSectionIndex? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}">
+      </image>
+    </view>
+  </view>
+</template>

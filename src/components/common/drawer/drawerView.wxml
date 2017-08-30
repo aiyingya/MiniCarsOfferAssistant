@@ -1,0 +1,30 @@
+<template name="drawerView">
+  <view class="drawer-mask" wx:if="{{showCarSeries != ''}}" bindtap="removeCarSeriesInner" catchtouchmove> </view>
+  <scroll-view scroll-y="true" animation="{{animationData}}" class="drawer-box">
+    <scroll-view scroll-y="true " class="drawer-content ">
+      <view class="carSeries-logo weui-flex">
+        <image class="" src="{{showCarSeriesImageUrl}}"></image>
+      </view>
+      <view wx:if="{{carManufacturerSeriesList.length > 0}}">
+        <view wx:for="{{carManufacturerSeriesList}}" wx:key="title" data-id="{{item.id}}" class="viewCarsList-calls">
+          <view class="viewCarsList-index carSeries-title">{{item.title}}</view>
+          <view class="weui-cells weui-cells_in-small-appmsg">
+            <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active" wx:for="{{item.items}}" wx:key="id"
+              wx:for-item="cell" wx:for-index="cellIndex" bindtap="handlerToCarsModels" data-carsInfo="{{cell}}" url="../carModels/carModels?carsInfo={{cell}}">
+              <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+                <image class="weui-media-box__thumb" src="{{cell.imgUrl}}"></image>
+              </view>
+              <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+                <view class="weui-media-box__title">{{cell.name}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{carManufacturerSeriesList.length === 0 && showNodata}}" class="nodata">
+        暂无数据
+      </view>
+      <view class="placeholder"></view>
+    </scroll-view>
+  </scroll-view>
+</template>

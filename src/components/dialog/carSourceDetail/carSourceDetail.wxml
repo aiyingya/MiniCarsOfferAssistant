@@ -1,6 +1,6 @@
 <template name="carSourceDetailDialog">
 
-  <import src="../../../components/common/price/quotedPrice.wxml" />
+  <import src="../../../components/common/price/quotedPriceView.wxml" />
 
   <view class="carSourceDetailDialog">
     <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" bindtap="{{close}}" catchtouchmove>
@@ -130,18 +130,18 @@
         <view class="footer">
           <!-- 供货价格 -->
           <view class="footer1">
-            <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice}}">
+            <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
               <view class="price-tips-small">价格电议</view>
             </block>
             <block wx:else>
-              <template is="quotedPrice" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />
+              <template is="quotedPriceView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />
             </block>
 
             <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}" class="logistics-information-tips">
               (含运费)
             </view>
             <view wx:else>
-              <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEquelWithOfficialPrice}}">
+              <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
                 <!--为空-->
               </view>
               <view wx:else class="bare-price">
@@ -196,7 +196,7 @@
         <view class="footer">
           <!-- 供货价格 -->
           <view class="footer1">
-            <template is="quotedPrice" data="{{ ...mode.viewModelQuoted }}" />
+            <template is="quotedPriceView" data="{{ ...mode.viewModelQuoted }}" />
           </view>
           <!--立即订车-->
           <view>

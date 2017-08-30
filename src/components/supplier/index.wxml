@@ -1,12 +1,4 @@
-<!--page:supplier 顶部搜索栏 -->
-<template name="searchBar">
-  <view class="search-bar">
-    <view class="search-input">
-      <input value="{{ searchBarValue }}" placeholder-class="placeholder" placeholder="{{ searchBarPlaceholder }}" bindinput="onSearchInputEdit"
-        bindfocus="onSearchInputFocus" bindconfirm="onSearchInputConfirm" bindblur="onSearchInputBlur" />
-    </view>
-  </view>
-</template>
+
 
 <!--page:supplier 精准供应商行 -->
 <template name="supplierSearchResultView">

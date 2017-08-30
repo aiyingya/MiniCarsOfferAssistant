@@ -197,7 +197,7 @@ export default class Util {
    *
    * @memberOf Util
    */
-  static quotedPriceByMethod(price, originPrice, quotedMethod = 'PRICE', pretty = true) {
+  static quotedPriceByMethod(price, originPrice, quotedMethod = 'PRICE', pretty = true): PriceQuoted {
     let quotedSymbol
     const priceDiff = Util.downPrice(price, originPrice)
 
@@ -231,7 +231,7 @@ export default class Util {
     }
   }
 
-  static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE', pretty = true) {
+  static quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod = 'PRICE', pretty = true): PriceQuoted {
     let quotedSymbol
     let quotedValue
     let quotedRange
@@ -281,7 +281,7 @@ export default class Util {
     }
   }
 
-  static quotedPriceWithDownPriceByFlag(priceDiff, originPrice, priceOrPoints = true) {
+  static quotedPriceWithDownPriceByFlag(priceDiff, originPrice, priceOrPoints = true): PriceQuoted {
     const quotedMethod = priceOrPoints ? 'PRICE' : 'POINTS'
     return Util.quotedPriceWithPriceDiffByMethod(priceDiff, originPrice, quotedMethod)
   }
