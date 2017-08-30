@@ -8,6 +8,12 @@ import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialo
 import util from '../../../utils/util'
 import { container } from '../../../landrover/business/index'
 
+import SAASService from '../../../services/saas.service'
+import UserService from '../../../services/user.service'
+
+const saasService: SAASService = container.saasService
+const userService: UserService = container.userService
+
 const app = getApp()
 
 Page({
@@ -324,7 +330,6 @@ Page({
     getProfitResult: {}
   },
   onLoad(options) {
-    let that = this
     try {
       let res = wx.getSystemInfoSync();
       let tabHeight = res.windowHeight - 44;
@@ -346,12 +351,12 @@ Page({
     let carSkuInfoJSONString = options.carSkuInfo
     let carModelInfoJSONString = options.carModelsInfo
 
-    function activeIndexCss() {
+    const activeIndexCss = () => {
       wx.getSystemInfo({
-        success: function (res) {
-          that.setData({
+        success: (res) => {
+          this.setData({
             sliderLeft: 0,
-            sliderOffset: res.windowWidth / 2 * that.data.activeIndex
+            sliderOffset: res.windowWidth / 2 * this.data.activeIndex
           });
         }
       });
@@ -368,7 +373,7 @@ Page({
         let stagesIndex = this.data.stagesArray.indexOf(quotation.stages)
         let paymentRatiosIndex = this.data.paymentRatiosArray.indexOf(quotation.paymentRatio)
 
-        that.setExpenseRate(that.data.stagesArray[stagesIndex])
+        this.setExpenseRate(this.data.stagesArray[stagesIndex])
         // 需要初始化设置已经设置的还款周期和首付比率
         this.setData({
           activeIndex: quotation.hasLoan ? 0 : 1,
@@ -401,7 +406,7 @@ Page({
         otherFee: quotation.otherFee || 0
       }
 
-      const isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
+      const isShow = this.isShowDownDot(quotation.quotationItems[0].itemName)
 
       // 保险相关.
       const insuranceDetail = quotation.insuranceDetail
@@ -417,10 +422,10 @@ Page({
       })
       console.log(quotation.insuranceDetail)
       //获取报价单接口
-      container.saasService.getCreatCarRecordInfo(0) // 随便传一个金额，该接口我不需要加价后的裸车价
+      saasService.getCreatCarRecordInfo(0) // 随便传一个金额，该接口我不需要加价后的裸车价
         .then(res => {
           res.interestType = quotation.rateType;
-          that.setData({
+          this.setData({
             'requestResult': res
           })
           if (!quotation.hasLoan) {
@@ -429,16 +434,17 @@ Page({
               'quotation.loanFee': res.loanFee
             })
           }
-          that.updateForSomeReason()
+          this.updateForSomeReason()
           activeIndexCss()
         })
 
-      const promise1 = that.getDefaultInsurance()
+      const promise1 = this.getDefaultInsurance()
       const promise = Promise.race([promise1])
       promise
         .then(res => {
           //wx.hideToast()
-        }, err => {
+        })
+        .catch(err => {
           //wx.hideToast()
         })
     } else {
@@ -475,16 +481,15 @@ Page({
 
         const originalPrice = carSkuInfo.showPrice || carSkuInfo.viewModelQuoted.price// || carModelInfo.officialPrice
 
-        const isShow = that.isShowDownDot(carModelInfo.carModelName)
-        var user = container.userService;
+        const isShow = this.isShowDownDot(carModelInfo.carModelName)
         this.setData({
           'quotation.requiredExpensesAll.metallicPaintFee': carSkuInfo.metallicPaintAmount || 0,
-          'quotation.saleMobile': user.mobile,
+          'quotation.saleMobile': userService.mobile,
           isSpecialBranch: isShow
         })
 
         //获取报价单接口
-        container.saasService.getCreatCarRecordInfo(originalPrice)
+        saasService.getCreatCarRecordInfo(originalPrice)
           .then(res => {
             this.setData({
               'requestResult': res
@@ -520,21 +525,27 @@ Page({
             })
             console.log(carModelInfo)
 
-            that.initVehicleAndVesselTax().then(data => {
-              // 计算默认保险.
-              const promise1 = that.getDefaultInsurance()
-              const promise = Promise.race([promise1])
-              promise.then(res => {
-                //wx.hideToast()
-                that.updateForSomeReason()
-              }, err => {
-                //wx.hideToast()
+            this.initVehicleAndVesselTax()
+              .then(data => {
+                // 计算默认保险.
+                const promise1 = this.getDefaultInsurance()
+                const promise = Promise.race([promise1])
+                promise
+                  .then(res => {
+                    //wx.hideToast()
+                    this.updateForSomeReason()
+                  })
+                  .catch(err => {
+                    console.error(err)
+                    //wx.hideToast()
+                  })
               })
-            })
+              .catch(err => {
+                console.error(err)
+              })
 
             activeIndexCss()
             this.setExpenseRate(this.data.stagesArray[this.data.stagesIndex])
-
           })
       }
     }
@@ -543,9 +554,9 @@ Page({
   onShow() {
     //判断是否需要显示报价偏好设置
     this.setData({
-      showPreferenceSetting: (container.userService.isSetPreference() === "false")
+      showPreferenceSetting: (userService.isSetPreference() === "false")
     })
-    console.log(container.userService.isSetPreference())
+    console.log(userService.isSetPreference())
     if (this.data.isOnLoad) {
       this.setData({
         isOnLoad: false
@@ -1102,7 +1113,7 @@ Page({
      */
     function isSendRequest(quotationDraft, mobile, name, sex, isSend, validTime) {
 
-      container.saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime)
+      saasService.requestPublishQuotation(quotationDraft.draftId, mobile, name, sex, isSend, validTime)
         .then(res => {
           let quotation1 = res
 
@@ -1178,7 +1189,7 @@ Page({
         const effectiveness = Number(res.inputEffectiveness)
         //保存报价单
 
-        container.saasService.requestSaveQuotationDraft(quotation)
+        saasService.requestSaveQuotationDraft(quotation)
           .then(res => {
             let quotationDraft = res
             //发送报价单
@@ -1195,7 +1206,7 @@ Page({
         const customerName = res.inputName
         const customerSex = Number(res.inputSex)
         const effectiveness = Number(res.inputEffectiveness)
-        container.saasService.requestSaveQuotationDraft(quotation)
+        saasService.requestSaveQuotationDraft(quotation)
           .then(res => {
             let quotationDraft = res
             /// 暂不发送, 不带电话号码发送（发布当前报价草稿到某个用户） 保留1.5以前的逻辑
@@ -1338,10 +1349,9 @@ Page({
     let that = this
     let carPrice = this.data.quotation.quotationItems[0].sellingPrice
     let paymentRatio = this.data.quotation.paymentRatio
-    var user = container.userService;
 
     let _insuranceAmount = that.data.quotation.requiredExpensesAll.insuranceAmount - that.data.quotation.insuranceDetail.iJQX
-    container.saasService.getProfit(
+    saasService.getProfit(
       util.loanPaymentByLoan1(carPrice, paymentRatio),
       _insuranceAmount,
       carPrice,
@@ -1427,7 +1437,7 @@ Page({
     })
   },
   initVehicleAndVesselTax() {
-    let that = this
+    debugger
     //初始化车船税
     const isElectricCar = this.data.carModelInfo.isElectricCar
     const capacity = this.data.carModelInfo.capacity
@@ -1437,11 +1447,10 @@ Page({
       }
       return;
     }
-    var user = container.userService;
 
-    return container.saasService.gettingVehicleAndVesselTax(capacity, user.address.provinceName)
+    return saasService.gettingVehicleAndVesselTax(capacity, userService.address.provinceName)
       .then(data => {
-        that.setData({ 'quotation.requiredExpensesAll.vehicleAndVesselTax': data })
+        this.setData({ 'quotation.requiredExpensesAll.vehicleAndVesselTax': data })
       })
 
   },
@@ -1455,7 +1464,7 @@ Page({
     const checkedValues = []
     const source = this.data.source
     const quotation = this.data.quotation
-    return container.saasService.gettingInsurance().then((res) => {
+    return saasService.gettingInsurance().then((res) => {
       if (res) {
         if (source === 'quotationDetail') {
           for (let item of res.insurances) {

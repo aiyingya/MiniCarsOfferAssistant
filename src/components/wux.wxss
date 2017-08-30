@@ -1,4 +1,4 @@
-@import '../components/dialog/pricePickerDialog/pricePickerDialog.wxss';
+@import '../components/dialog/pricePickerDialog/pricePickerDialog.wxss';
 
 .weui-mask {
 	background: rgba(0,0,0,.6)

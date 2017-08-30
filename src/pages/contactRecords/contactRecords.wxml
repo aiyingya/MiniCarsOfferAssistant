@@ -31,7 +31,7 @@
           <block wx:for="{{ recordByTimeItem.callRecordBySpu }}" wx:key="{{ recordBySpuIndex }}" wx:for-index="recordBySpuIndex" wx:for-item="recordBySpuItem">
             <template is="spuSection" data="{{ item: recordBySpuItem.spuSummary, index: recordByTimeIndex, subIndex: recordBySpuIndex, selectedIndex }}" />
             <block wx:if="{{ selectedIndex == recordByTimeIndex }}">
-              <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="id">
+              <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="{{ index }}">
                 <template is="carSourceView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex }}" />
               </block>
             </block>
