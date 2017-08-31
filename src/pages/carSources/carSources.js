@@ -60,6 +60,8 @@ Page({
     // 当前 spuId 众数 top N
     topNOfCurrentModeHeight: 178,
     topNOfCurrentMode: {},
+    topNOfCurrentModeHidden: false,
+
     showDetailTitle: false,
     hasOverLayDropdown: false,
     overLayDropdownOffset: 178 + 60,
@@ -135,22 +137,22 @@ Page({
           //   res.referenceStatus = '暂无'
           // }
 
-          let topNOfCurrentModeHeight = 0
+          let topNOfCurrentModeHidden = false
           if (res.priceList && res.priceList.length) {
-            topNOfCurrentModeHeight = 178
+            topNOfCurrentModeHidden = false
             for (let topMode of res.priceList) {
               topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-topMode.discount, topMode.guidePrice, this.isShowDownPrice)
               topMode.viewModelQuoted.price = topMode.price
               topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
             }
           } else {
-            topNOfCurrentModeHeight = 0
+            topNOfCurrentModeHidden = false
             res.topNStatus = '暂无'
           }
 
           this.setData({
             topNOfCurrentMode: res,
-            topNOfCurrentModeHeight
+            topNOfCurrentModeHidden
           })
         })
         .catch(err => {
