@@ -16,7 +16,7 @@
 <template name="spuSection">
   <view bindtap="onSectionClick" class="spu-section" data-index="{{ index }}" data-sub-index="{{ subIndex }}">
     <view class="title">[{{ item.officialPriceStr }}] {{ item.carModelName }}</view>
-    <image class="dropdown-arrow" src="{{index === selectedIndex? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
+    <image class="dropdown-arrow" src="{{index === selectedIndex && subIndex === selectedSubIndex ? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
     />
   </view>
 </template>
@@ -38,9 +38,9 @@
           <view class="row">
             <template is="timeSection" data="{{ callDateStr: recordByTimeItem.callDateStr }}" />
             <block wx:for="{{ recordByTimeItem.callRecordBySpu }}" wx:key="{{ recordBySpuIndex }}" wx:for-index="recordBySpuIndex" wx:for-item="recordBySpuItem">
-              <template is="spuSection" data="{{ item: recordBySpuItem.spuSummary, index: recordByTimeIndex, subIndex: recordBySpuIndex, selectedIndex }}"
+              <template is="spuSection" data="{{ item: recordBySpuItem.spuSummary, index: recordByTimeIndex, subIndex: recordBySpuIndex, selectedIndex, selectedSubIndex }}"
               />
-              <block wx:if="{{ selectedIndex == recordByTimeIndex }}">
+              <block wx:if="{{ recordByTimeIndex == selectedIndex && recordBySpuIndex == selectedSubIndex }}">
                 <view class="record-rows">
                   <view class="record-row">
                     <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="{{ index }}">
