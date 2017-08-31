@@ -8,15 +8,14 @@
 
 .contact-records .record-rows {
   padding: 10rpx 0rpx;
-  position: relative;
   width: 100%;
   overflow: hidden;
   background: #DCE1E6;
+  box-sizing: border-box;
 }
 
 .contact-records .record-row {
-  position: relative;
-  padding: 0 10rpx 10rpx 10rpx;
+  padding: 0rpx 10rpx;
   box-sizing: border-box;
 }
 
