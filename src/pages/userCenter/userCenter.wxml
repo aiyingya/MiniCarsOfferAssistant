@@ -12,8 +12,8 @@
 <template name="userCenterEntryView">
   <block wx:if="{{ item.loginNeeded === true }}">
     <block wx:if="{{ item.loginNeeded === isLogin }}">
-      <block wx:if="{{ roleNameNeeded === 'employee' }}">
-        <block wx:if="{{ roleNameNeeded === roleName }}">
+      <block wx:if="{{ item.roleNameNeeded === 'employee' }}">
+        <block wx:if="{{ item.roleNameNeeded === roleName }}">
           <block wx:if="{{ item.managerNeeded === true }}">
             <block wx:if="{{ item.managerNeeded === manager }}">
               <template is="entryView" data="{{ item }}" />
