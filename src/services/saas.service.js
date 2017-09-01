@@ -509,19 +509,24 @@ export default class SAASService extends Service {
    *
    * @param {number} supplierId
    * @param {string} supplierPhone
-   * @param {number} messageResultId
    * @param {string} contactPhone
+   * @param {(number | null)} [carSourceId=null]
+   * @param {(number | null)} [spuId=null]
+   * @param {(number | null)} [quotedPrice=null]
    * @returns {Promise<any>}
    * @memberof SAASService
    */
   pushCallRecord(
     supplierId: number,
     supplierPhone: string,
-    messageResultId: number,
-    contactPhone: string
+    contactPhone: string,
+    carSourceId: number | null = null,
+    spuId: number | null = null,
+    quotedPrice: number | null = null
   ): Promise<any> {
     const userId = this.userService.auth.userId
     const userPhone = this.userService.mobile
+    const messageResultId = carSourceId
     return this.request(
       "api/user/addCallRecord",
       'POST', {
@@ -529,10 +534,31 @@ export default class SAASService extends Service {
         userPhone,
         supplierId,
         supplierPhone,
+        contactPhone,
         messageResultId,
-        contactPhone
+        spuId,
+        quotedPrice
       }
     )
+  }
+
+  pushCallRecordForCarSource(
+    supplierId: number,
+    supplierPhone: string,
+    contactPhone: string,
+    carSourceId: number
+  ) {
+    return this.pushCallRecord(supplierId, supplierPhone, contactPhone, carSourceId, null, null)
+  }
+
+  pushCallRecordForMode(
+    supplierId: number,
+    supplierPhone: string,
+    contactPhone: string,
+    spuId: number,
+    quotedPrice: number
+  ) {
+    return this.pushCallRecord(supplierId, supplierPhone, contactPhone, null, spuId, quotedPrice)
   }
 
   /**
@@ -1142,7 +1168,7 @@ export default class SAASService extends Service {
    * @memberof SAASService
    */
   retrieveContactRecordWithCarSourceByCarModel(
-    userId: string
+    userId: string,
   ): Promise<Array<{
     callDateStr: string,
     callRecordBySpu: Array<{ spuSummary: CarModel, callRecordList: Array<{ lastCallDate: string, carSource: CarSource }> }>
