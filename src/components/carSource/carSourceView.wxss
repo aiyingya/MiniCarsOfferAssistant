@@ -1,7 +1,7 @@
 /* 供货 车源 cell样式 */
 
 .car-source-cell {
-  background: #FFFFFF;
+  background-color: #FFFFFF;
   box-shadow: 0 1rpx 3rpx 0 rgba(0, 0, 0, 0.10);
   border-radius: 8rpx;
 }

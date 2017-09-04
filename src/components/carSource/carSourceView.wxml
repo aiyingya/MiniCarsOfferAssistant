@@ -5,7 +5,7 @@
     <!-- 头部选择部分 -->
     <view wx:if="{{carSourceItem.viewModelTabs || carSourceItem.viewModelTabMore}}" class="header">
       <view class="tab {{carSourceItem.viewModelSelectedTab == index ? 'selected' : ''}}" wx:for="{{carSourceItem.viewModelTabs}}"
-        wx:key="*this" bindtap="handlerCarSourceTabClick" data-tab-item="{{item}}" data-tab-item-index="{{index}}" data-sku-index="{{skuItemIndex}}"
+        wx:key="{{ index }}" bindtap="handlerCarSourceTabClick" data-tab-item="{{item}}" data-tab-item-index="{{index}}" data-sku-index="{{skuItemIndex}}"
         data-car-source-index="{{carSourceItemIndex}}">
         {{item.name}}
         <image src="/images/icons/icon_triangle_nav.png"></image>
@@ -54,7 +54,7 @@
 
       <view wx:if="{{carSourceItem.viewModelSelectedTab == -1}}" class="more">
         <!--更多选项卡-->
-        <view wx:for="{{carSourceItem.viewModelTabMore}}" wx:key="*this" wx:for-item="carSourcePlaceItem" wx:for-index="carSourcePlaceItemIndex"
+        <view wx:for="{{carSourceItem.viewModelTabMore}}" wx:key="{{ carSourcePlaceItemIndex }}" wx:for-item="carSourcePlaceItem" wx:for-index="carSourcePlaceItemIndex"
           wx:if="{{carSourcePlaceItemIndex % 2 === 0}}" class="line">
           <!--左边-->
           <view wx:if="{{carSourcePlaceItemIndex % 2 === 0}}" bindtap="handlerCarSourceDetail" data-sku-index="{{skuItemIndex}}" data-car-source="{{carSourceItem}}"
@@ -137,7 +137,7 @@
         <!-- 第三部分 标签 -->
         <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags.length > 0}}" class="forth-part">
           <view class="tag-collection">
-            <view wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags}}" wx:key="*this" class="tag">
+            <view wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelTags}}" wx:key="{{ index }}" class="tag">
               {{item}}
             </view>
           </view>

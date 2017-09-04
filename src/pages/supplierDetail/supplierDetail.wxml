@@ -1,7 +1,7 @@
-<import src="../../components/supplier/index.wxml"/>
+<import src="../../components/supplier/index.wxml" />
 
-<import src="../../components/toast/toast.wxml"/>
-<template is="toast" data="{{ ...$wux.toast }}"/>
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
 
 <import src="../../components/dialog/carSourceDetail/carSourceDetail.wxml" />
 <template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />
@@ -20,9 +20,9 @@
     </view>
     <scroll-view scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
       <block wx:if="{{ comments && comments.length }}">
-      <view class="row" wx:for="{{ comments }}" wx:key="commentId">
-        <template is="commentView" data="{{ item }}" />
-      </view>
+        <view class="row" wx:for="{{ comments }}" wx:key="commentId">
+          <template is="commentView" data="{{ item }}" />
+        </view>
       </block>
       <block wx:else>
         <view class="no-row">暂无相关评论</view>
@@ -30,6 +30,7 @@
     </scroll-view>
   </view>
   <view class="footer">
-    <template is="commentBoardView" data="{{ submitTags, submitTextareaValue, submitSelectedTagIndex, submitButtonValid, submitButtonTagValid }}" />
+    <template is="commentBoardView" data="{{ submitTags, submitTextareaValue, submitSelectedTagIndex, submitButtonValid, submitButtonTagValid }}"
+    />
   </view>
 </view>

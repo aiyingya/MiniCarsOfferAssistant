@@ -48,7 +48,7 @@
               <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
                 class="logistics-list">
                 <view wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList}}" wx:for-item="logisticsItem" wx:for-index="logisticsItemIndex"
-                  wx:key="*this" class="logistics-block {{logisticsItemIndex == carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex ? 'selected' : ''}}"
+                  wx:key="{{ logisticsItemIndex }}" class="logistics-block {{logisticsItemIndex == carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex ? 'selected' : ''}}"
                   bindtap="{{selectLogisticsBlock}}" data-car-source="{{carSourceItem}}" data-logistics-index="{{logisticsItemIndex}}"
                   data-logistics="{{logisticsItem}}">
                   <view class="title">
@@ -113,7 +113,7 @@
               <scroll-view scroll-y style="height: 270rpx">
                 <view class="line-content">
                   <view wx:if="{{carSourceItem.viewModelContentItems}}">
-                    <text wx:for="{{carSourceItem.viewModelContentItems}}" wx:key="*this" class="{{item.b ? 'content-highlight' : 'content-text'}}">{{item.a}}</text>
+                    <text wx:for="{{carSourceItem.viewModelContentItems}}" wx:key="{{ index }}" class="{{item.b ? 'content-highlight' : 'content-text'}}">{{item.a}}</text>
                     <view wx:if="{{showCopyOrignalText}}" class="copy-orignal-text" bindtap="{{copyOrignalText}}">
                       复制原文
                     </view>

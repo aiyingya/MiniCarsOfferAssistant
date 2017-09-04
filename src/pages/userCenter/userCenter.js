@@ -23,16 +23,16 @@ Page({
       {
         name: '报价记录',
         loginNeeded: true,
-        roleNameNeeded: null,
-        managerNeeded: false,
+        roleNameNeeded: 'guest',
+        managerNeeded: null,
         iconPath: '/images/icons/tab_icon_price_off.png',
         route: 'quotationsList'
       },
       {
         name: '报价偏好设置',
         loginNeeded: true,
-        roleNameNeeded: null,
-        managerNeeded: false,
+        roleNameNeeded: 'guest',
+        managerNeeded: null,
         iconPath: '/images/icons/icon_collection.png',
         route: 'setCost'
       },
@@ -55,8 +55,8 @@ Page({
       {
         name: '联系记录',
         loginNeeded: true,
-        roleNameNeeded: null,
-        managerNeeded: false,
+        roleNameNeeded: 'guest',
+        managerNeeded: null,
         iconPath: '/images/icons/icon_contact_note.png',
         route: 'contactRecords'
       }

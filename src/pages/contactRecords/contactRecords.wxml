@@ -6,16 +6,24 @@
 <!-- 时间分区 -->
 <template name="timeSection">
   <view class="time-section">
-    {{ callDateStr }}
+    <view class="line" />
+    <view class="title">{{ callDateStr }}</view>
+    <view class="line" />
   </view>
 </template>
 
 <!-- spu分区 -->
 <template name="spuSection">
-  <view bindtap="onSectionClick" class="spu-section" data-index="{{ index }}" data-sub-index="{{ subIndex }}" >
+  <view bindtap="onSectionClick" class="spu-section" data-index="{{ index }}" data-sub-index="{{ subIndex }}">
     <view class="title">[{{ item.officialPriceStr }}] {{ item.carModelName }}</view>
-    <image class="dropdown-arrow" src="{{index === selectedIndex? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
+    <image class="dropdown-arrow" src="{{index === selectedIndex && subIndex === selectedSubIndex ? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
     />
+  </view>
+</template>
+
+<template name="recordDateView">
+  <view class="record-date">
+    上次拨打时间:{{ lastCallDate }}
   </view>
 </template>
 
@@ -25,21 +33,33 @@
 
   <body class="body">
     <view class="rows">
-      <block wx:for="{{ records }}" wx:key="{{ recordByTimeIndex }}" wx:for-index="recordByTimeIndex" wx:for-item="recordByTimeItem">
-        <view class="row">
-          <template is="timeSection" data="{{ callDateStr: recordByTimeItem.callDateStr }}" />
-          <block wx:for="{{ recordByTimeItem.callRecordBySpu }}" wx:key="{{ recordBySpuIndex }}" wx:for-index="recordBySpuIndex" wx:for-item="recordBySpuItem">
-            <template is="spuSection" data="{{ item: recordBySpuItem.spuSummary, index: recordByTimeIndex, subIndex: recordBySpuIndex, selectedIndex }}" />
-            <block wx:if="{{ selectedIndex == recordByTimeIndex }}">
-              <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="{{ index }}">
-                <template is="carSourceView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex }}" />
+      <block wx:if="{{ records && records.length > 0 }}">
+        <block wx:for="{{ records }}" wx:key="{{ recordByTimeIndex }}" wx:for-index="recordByTimeIndex" wx:for-item="recordByTimeItem">
+          <view class="row">
+            <template is="timeSection" data="{{ callDateStr: recordByTimeItem.callDateStr }}" />
+            <block wx:for="{{ recordByTimeItem.callRecordBySpu }}" wx:key="{{ recordBySpuIndex }}" wx:for-index="recordBySpuIndex" wx:for-item="recordBySpuItem">
+              <template is="spuSection" data="{{ item: recordBySpuItem.spuSummary, index: recordByTimeIndex, subIndex: recordBySpuIndex, selectedIndex, selectedSubIndex }}"
+              />
+              <block wx:if="{{ recordByTimeIndex == selectedIndex && recordBySpuIndex == selectedSubIndex }}">
+                <view class="record-rows">
+                  <view class="record-row">
+                    <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="{{ index }}">
+                      <template is="carSourceView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex }}"
+                      />
+                      <template is="recordDateView" data="{{ lastCallDate: item.lastCallDate }}"/>
+                    </block>
+                  </view>
+                </view>
+              </block>
+              <block wx:else>
+                <!-- 啥都没有 -->
               </block>
             </block>
-            <block wx:else>
-              <!-- 啥都没有 -->
-            </block>
-          </block>
-        </view>
+          </view>
+        </block>
+      </block>
+      <block wx:else>
+        <view class="no-row">暂无联系记录</view>
       </block>
     </view>
   </body>

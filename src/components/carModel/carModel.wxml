@@ -16,7 +16,7 @@
           <view
             class="chartstime-inner {{times.selected}}"
             wx:for="{{item.selectTimesData}}"
-            wx:key="*this"
+            wx:key="{{ index }}"
             wx:for-item="times"
             wx:for-index="timesIndex"
             bindtap="handleChangeTimesItem"
@@ -146,7 +146,7 @@
           <view class="charts-labels">
             <!-- <view
               wx:for="{{marketCharts.topnoData}}"
-              wx:key="*this"
+              wx:key="{{ index }}"
               class="charts-label label{{index+1}}"
               data-topno="{{index}}"
               bindtap="handleMarketUpdateData"

@@ -1,7 +1,9 @@
 // @flow
 import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/carSourceDetail'
 import {
-  container, system, util
+  container,
+  system,
+  util
 } from '../../landrover/business/index'
 
 import {
@@ -19,7 +21,13 @@ const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
 let selectedDateSection: {
   callDateStr: string,
-  callRecordBySpu: Array<{ spuSummary: CarModel, callRecordList: Array<{ lastCallDate: string, carSource: CarSource }> }>
+  callRecordBySpu: Array<{
+    spuSummary: CarModel,
+    callRecordList: Array<{
+      lastCallDate: string,
+      carSource: CarSource
+    }>
+  }>
 } | null = null
 let carSourceManger: CarSourceManager | null = null
 
@@ -28,6 +36,7 @@ Page({
 
     // 时间分区
     selectedIndex: -1,
+    selectedSubIndex: -1,
 
     records: null
   },
@@ -42,8 +51,12 @@ Page({
             })
           })
       })
-      .then(() => { wxapi.hideToast() })
-      .catch(() => { wxapi.hideToast() })
+      .then(() => {
+        wxapi.hideToast()
+      })
+      .catch(() => {
+        wxapi.hideToast()
+      })
 
   },
   onShow() { },
@@ -62,29 +75,45 @@ Page({
   onSectionClick(e) {
     const index = e.currentTarget.dataset.index
     const subIndex = e.currentTarget.dataset.subIndex
-    if (this.data.selectedIndex === subIndex) {
-      selectedDateSection = null
-      carSourceManger = null
-      this.setData({ selectedIndex: -1 })
-    } else {
-      selectedDateSection = this.data.records[index]
-      const spuItem = selectedDateSection.callRecordBySpu[subIndex]
 
-      // 构建车源管理器
-      const carModelsInfo = spuItem.spuSummary
-      const isShowDownPrice = !(carModelsInfo.carModelName.includes('宝马') || carModelsInfo.carModelName.includes('奥迪') || carModelsInfo.carModelName.toLowerCase().includes('mini'))
-      const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
-      carSourceManger = new CarSourceManager(carModelsInfo.officialPrice, quotedMethod)
-
-      for (let callRecord of spuItem.callRecordList) {
-        carSourceManger.processCarSourceItem(callRecord.carSource)
+    if (this.data.selectedIndex == index) {
+      // 如果还是点击当前分区内的值
+      if (this.data.selectedSubIndex == subIndex) {
+        // 点击已经选中的分区
+        selectedDateSection = null
+        carSourceManger = null
+        this.setData({
+          selectedIndex: -1,
+          selectedSubIndex: -1
+        })
+        return
+      } else {
+        // 点击未选中的分区
       }
-
-      this.setData({
-        selectedIndex: subIndex,
-        [`records[${index}].callRecordBySpu[${subIndex}]`]: spuItem
-      })
+    } else {
+      // 如果点击其他分区内的值
     }
+
+    // 点击其他分区
+    const records = this.data.records
+    selectedDateSection = records[index]
+    const spuItem = selectedDateSection.callRecordBySpu[subIndex]
+
+    // 构建车源管理器
+    const carModelsInfo = spuItem.spuSummary
+    const isShowDownPrice = !(carModelsInfo.carModelName.includes('宝马') || carModelsInfo.carModelName.includes('奥迪') || carModelsInfo.carModelName.toLowerCase().includes('mini'))
+    const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
+    carSourceManger = new CarSourceManager(carModelsInfo.officialPrice, quotedMethod)
+
+    for (let callRecord of spuItem.callRecordList) {
+      carSourceManger.processCarSourceItem(callRecord.carSource)
+    }
+
+    this.setData({
+      selectedIndex: index,
+      selectedSubIndex: subIndex,
+      [`records[${index}].callRecordBySpu[${subIndex}]`]: spuItem
+    })
   },
   handlerCarSourceMore(e) { },
   handlerCarSourceDetail(e) {
@@ -195,11 +224,11 @@ Page({
         const
           supplierId = supplier.supplierId,
           supplierPhone = supplier.supplierPhone,
-          messageResultId = carSourceItem.id,
+          carSourceId = carSourceItem.id,
           contactPhone = carSourceItem.contact || supplier.supplierPhone,
           spuItem = selectedDateSection.callRecordBySpu[spuItemIndex]
 
-        container.saasService.pushCallRecord(supplierId, supplierPhone, messageResultId, contactPhone)
+        saasService.pushCallRecordForCarSource(supplierId, supplierPhone, contactPhone, carSourceId,)
 
         /**
          * 1.4.0 埋点 拨打供货方电话
@@ -253,3 +282,4 @@ Page({
   }
 
 })
+

@@ -1,17 +1,66 @@
 @import '../../components/carSource/carSourceView.wxss';
 @import '../../components/dialog/carSourceDetail/carSourceDetail.wxss';
-
 .contact-records {}
 
-/* 时间分区 */
-.time-section {
+.contact-records .rows {}
+
+.contact-records .row {}
+
+.contact-records .record-rows {
+  padding: 10rpx 0rpx;
+  width: 100%;
+  overflow: hidden;
+  background: #DCE1E6;
   box-sizing: border-box;
-  height: 44rpx;
-  background-color: #f6f7f8;
+}
+
+.contact-records .record-row {
+  padding: 0rpx 10rpx;
+  box-sizing: border-box;
+}
+
+.contact-records .record-row:last-child {
+  padding-bottom: 0rpx;
+}
+
+.contact-records .no-row {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  font-size: 28rpx;
+  color: #999999;
+  letter-spacing: -0.56rpx;
+  line-height: 28rpx;
   text-align: center;
 }
 
+
+/* 时间分区 */
+
+.time-section {
+  background: #ffffff;
+  height: 44rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.time-section .title {
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+  color: #666666;
+  margin: 0rpx 20rpx;
+}
+
+.time-section .line {
+  height: 1rpx;
+  width: 20rpx;
+  background: #7A6D6E;
+}
+
+
 /* 车辆spu分区 */
+
 .spu-section {
   box-sizing: border-box;
   display: flex;
@@ -19,13 +68,33 @@
   align-items: center;
   height: 86rpx;
   padding: 25rpx 30rpx;
+  background-color: #F6F7F8;
 }
+
 .spu-section .title {
-  font-family:"PingFangSC-Medium";
-  font-size:30rpx;
-  color:#333333;
+  font-family: "PingFangSC-Medium";
+  font-size: 30rpx;
+  color: #333333;
 }
+
 .spu-section .dropdown-arrow {
   width: 16rpx;
   height: 16rpx;
 }
+
+
+/* 记录时间 */
+
+.record-date {
+  font-family: "PingFangSC-Regular";
+  font-size: 26rpx;
+  color: #666666;
+  background: #ffffff;
+  height: 30rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+

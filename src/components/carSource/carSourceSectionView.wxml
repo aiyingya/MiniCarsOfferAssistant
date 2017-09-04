@@ -19,7 +19,7 @@
     </view>
 
     <view wx:if="{{skuItem.carSku.viewModelTags.length > 0}}" class="third-part tag-collection">
-      <view wx:for="{{skuItem.carSku.viewModelTags}}" wx:key="*this" class="tag">
+      <view wx:for="{{skuItem.carSku.viewModelTags}}" wx:key="{{ index }}" class="tag">
         {{item}}
       </view>
     </view>

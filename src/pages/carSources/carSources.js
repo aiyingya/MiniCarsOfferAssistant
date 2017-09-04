@@ -60,6 +60,8 @@ Page({
     // 当前 spuId 众数 top N
     topNOfCurrentModeHeight: 178,
     topNOfCurrentMode: {},
+    topNOfCurrentModeHidden: false,
+
     showDetailTitle: false,
     hasOverLayDropdown: false,
     overLayDropdownOffset: 178 + 60,
@@ -135,22 +137,22 @@ Page({
           //   res.referenceStatus = '暂无'
           // }
 
-          let topNOfCurrentModeHeight = 0
+          let topNOfCurrentModeHidden = false
           if (res.priceList && res.priceList.length) {
-            topNOfCurrentModeHeight = 178
+            topNOfCurrentModeHidden = false
             for (let topMode of res.priceList) {
               topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-topMode.discount, topMode.guidePrice, this.isShowDownPrice)
               topMode.viewModelQuoted.price = topMode.price
               topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
             }
           } else {
-            topNOfCurrentModeHeight = 0
+            topNOfCurrentModeHidden = false
             res.topNStatus = '暂无'
           }
 
           this.setData({
             topNOfCurrentMode: res,
-            topNOfCurrentModeHeight
+            topNOfCurrentModeHidden
           })
         })
         .catch(err => {
@@ -749,7 +751,7 @@ Page({
           supplierPhone = supplier.supplierPhone,
           contactPhone = supplier.supplierPhone
 
-        saasService.pushCallRecord(supplierId, supplierPhone, null, contactPhone)
+        saasService.pushCallRecordForMode(supplierId, supplierPhone, contactPhone, spuId, mode.viewModelQuoted.price)
       })
   },
   actionContactWithCarSourceItem(spuId, skuItemIndex, carSourceItemIndex, carSourceItem, from) {
@@ -767,11 +769,11 @@ Page({
         const
           supplierId = supplier.supplierId,
           supplierPhone = supplier.supplierPhone,
-          messageResultId = carSourceItem.id,
+          carSourceId = carSourceItem.id,
           contactPhone = carSourceItem.contact || supplier.supplierPhone,
           skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
 
-        saasService.pushCallRecord(supplierId, supplierPhone, messageResultId, contactPhone)
+        saasService.pushCallRecordForCarSource(supplierId, supplierPhone, contactPhone, carSourceId)
 
         /**
          * 1.4.0 埋点 拨打供货方电话
