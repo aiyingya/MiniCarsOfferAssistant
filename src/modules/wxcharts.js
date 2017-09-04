@@ -1001,7 +1001,13 @@ function drawToolTip(textList, offset, opts, config, context, categoriesValue) {
   var isOverRightBorder = false;
 
   // MARK:
-  var categoriesDate = categoriesValue.replace(/-/g, '.');
+  var categoriesDate
+  if (categoriesValue != null) {
+    categoriesDate = categoriesValue.replace(/-/g, '.');
+  } else {
+    return
+  }
+
 
   offset = assign({
     x: 0,
@@ -2293,8 +2299,11 @@ Charts.prototype.showToolTip = function (e) {
 // MARK: 自定义方法
 function drawChartShade(index, data, config, opts, context, callback) {
   var clickData = data.xAxisPoints.points[index];
+  if (clickData == null) {
+    return
+  }
   var xWidth = data.xAxisPoints.xWidth;
-  var seriesValue = opts.series[0].data[index]
+  var seriesValue = opts.series[0].data[index];
   clickData.index = index;
   clickData.seriesValue = seriesValue;
   clickData.points = data.xAxisPoints.points;
