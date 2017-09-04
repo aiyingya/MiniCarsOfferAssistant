@@ -59,7 +59,7 @@
         </block>
       </block>
       <block wx:else>
-        <view class="no-row">暂无联系记录</view>
+        <view class="no-row">暂无行情备忘</view>
       </block>
     </view>
   </body>
