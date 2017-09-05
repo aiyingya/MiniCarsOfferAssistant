@@ -7,8 +7,9 @@
 <template name="supplierNameView">
   <view class="supplier-name">
     <view class="name">
-      {{ supplier.companyName.length? supplier.companyName : supplier.name }}
-      <image wx:if="{{ supplierSelfSupport }}" src="/images/icons/icon_label_ymc_certification.png" class="certification"/>
+      <view class="name-text {{ supplier.supplierType === '' ? 'ymc': ''}} {{ supplier.supplierType === '' ? 'cooperation': ''}} ">{{ supplier.companyName.length? supplier.companyName : supplier.name }}</view>
+      <image wx:if="{{ supplier.supplierType === '' }}" src="/images/icons/icon_label_line_ymc.png" class="supplier-type"/>
+      <image wx:if="{{ supplier.supplierType === '' }}" src="/images/icons/icon_label_line_cooperation.png" class="supplier-type"/>
     </view>
     <image class="contact" src="/images/icons/icon_call_line.png" catchtap="onContactButtonClick" data-car-source-index="{{ carSourceItemIndex }}"
       data-sku-index="{{ skuItemIndex }}" />

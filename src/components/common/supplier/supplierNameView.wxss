@@ -2,30 +2,44 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  max-width: 320rpx;
+  max-width: 350rpx;
 }
 
 .supplier-name .name {
-  font-family: "PingFangSC-Medium";
-  font-size: 30rpx;
-  color: #333333;
-  letter-spacing: 0rpx;
-  line-height: 30rpx;
-  margin-right: 8rpx;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 280rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.supplier-name .name .certification {
-  width: 23rpx;
-  height: 21rpx;
-  margin-right: 16rpx;
+.supplier-name .name-text {
+  font-family: "PingFangSC-Medium";
+  max-width: 200rpx;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 30rpx;
+  letter-spacing: 0rpx;
+  color: #333333;
+  font-size: 30rpx;
+}
+
+.supplier-name .ymc {
+  color: #ED4149;
+}
+
+.supplier-name .cooperation {
+
+}
+
+.supplier-name .name .supplier-type {
+  width: 80rpx;
+  height: 32rpx;
+  margin-left: 10rpx;
 }
 
 .supplier-name .contact {
   width: 40rpx;
   height: 40rpx;
+  margin-left: 20rpx;
 }
