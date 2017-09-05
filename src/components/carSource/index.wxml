@@ -1,0 +1,87 @@
+<template name="dropDownView">
+  <!-- 下拉框筛选 -->
+  <view class="carSources-navbar">
+    <view class="navbar cars-facade" bindtap="handlerAmendCarFacade" data-selected-filter-index="0">
+      <view class="navbar-text">
+        外:{{selectedExternalCarColorName}} 内:{{selectedInternalCarColorName}}
+        <image class="icon-dropdownarrow" src="{{showRmendCarFacade && selectedFilterIndex === '0'? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}">
+        </image>
+      </view>
+    </view>
+  </view>
+
+  <!-- 条件筛选. 288 + 86-->
+  <view class="rmendCarFacade-popup-wrap" wx:if="{{showRmendCarFacade}}">
+    <view class="showMask rmendCarFacade-popup-mask" bindtap="handlerRemoveRmendCarFacade" catchtouchmove="onTouchMoveWithCatch">
+    </view>
+    <view class="rmendCarFacade-inner topToBottom">
+      <view class="dropdown">
+        <view class="dd dropdown-left">
+          <view hover="true" hover-class="weui-cell_active" wx:for="{{dropDownFiltersData}}" wx:for-item="filterItem" wx:for-index="filterIndex"
+            wx:key="name" class="weui-cell weui-cell_access" bindtap="handlerSelectItem" data-filter-position="left" data-filter-Index="{{filterIndex}}"
+            data-filter-item="{{filterItem}}" data-super-filter-item="{{}}">
+            <view class="weui-cell__bd weui-cell_primary">
+              <view>{{filterItem.name}}</view>
+            </view>
+            <view wx:if="{{ selectedExternalCarColorName == filterItem.name }}" class="weui-cell__ft">
+              <image src="/images/icons/icon_select_red.png"></image>
+            </view>
+          </view>
+        </view>
+        <view class="dd dropdown-right">
+          <view class="weui-cell weui-cell_access" hover="true" hover-class="weui-cell_active" wx:for="{{dropDownSubFiltersData}}"
+            wx:key="name" wx:for-item="filterItem" wx:for-index="filterIndex" bindtap="handlerSelectItem" data-filter-position="right"
+            data-filter-Index="{{filterIndex}}" data-filter-item="{{filterItem}}" data-super-filter-item="{{dropDownFiltersData[selectedExternalCarColorIndex]}}">
+            <view class="weui-cell__bd weui-cell_primary">
+              <view>{{filterItem.name}}</view>
+            </view>
+            <view wx:if="{{ selectedInternalCarColorName == filterItem.name }}" class="weui-cell__ft">
+              <image src="/images/icons/icon_select_red.png"></image>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<template name="filterScrollView">
+  <!-- 标签选择 -->
+  <view class="filter-scroll-view">
+    <view wx:for="{{scrollFilters}}" wx:for-index="scrollFilterIndex" wx:for-item="scrollFilterItem" wx:key="name" class="scroll-filter">
+      <view wx:for="{{scrollFilterItem.items}}" wx:for-index="filterIndex" wx:for-item="filterItem" wx:key="name" bindtap="handlerFilterSelected"
+        data-scroll-filter-index="{{scrollFilterIndex}}" data-scroll-filter-item="{{scrollFilterItem}}" data-filter-Index="{{filterIndex}}"
+        data-filter-item="{{filterItem}}" class="filter {{filterIndex == scrollFiltersSelectedIndexes[scrollFilterIndex] ? 'selected': 'unselected'}}">
+        {{filterItem.name}}
+      </view>
+    </view>
+  </view>
+</template>
+
+<import src="../../components/common/price/quotedPriceView.wxml" />
+<template name="topNOfModeView">
+  <view class="car-sources-reference-deal" style="height: {{topNOfCurrentModeHeight}}rpx" hidden="{{ topNOfCurrentModeHidden }}">
+
+    <!--1.7.1 参考成交价移除-->
+    <!--<view class="reference" wx:if="{{topNOfCurrentMode.reference}}">
+              <view class="title">参考成交</view>
+              <view class="mode-item" bindtap="handlerModeClick" data-mode="{{topNOfCurrentMode.reference}}">
+                <template is="quotedPriceView" data="{{ ...topNOfCurrentMode.reference.viewModelQuoted }}" />
+                <view class="company">至少{{topNOfCurrentMode.reference.companyCount}}家供应商</view>
+              </view>
+            </view>-->
+
+    <view class="topN">
+      <view class="title">报价最多</view>
+      <view wx:if="{{topNOfCurrentMode.priceList}}" class="modes">
+        <view class="mode-item" wx:for="{{topNOfCurrentMode.priceList}}" wx:key="{{ index }}" bindtap="handlerModeClick" data-mode="{{item}}">
+          <template is="quotedPriceView" data="{{ ...item.viewModelQuoted }}" />
+          <view class="company">{{item.companyCount}}家供应商</view>
+        </view>
+      </view>
+      <view wx:else class="nodata">
+        {{topNOfCurrentMode.topNStatus}}
+      </view>
+    </view>
+  </view>
+</template>

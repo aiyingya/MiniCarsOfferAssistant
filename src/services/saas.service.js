@@ -318,7 +318,20 @@ export default class SAASService extends Service {
    * @param carModelId
    * @param object
    */
-  requestCarSourcesList(carModelId: number) {
+  requestCarSourcesList(
+    carModelId: number
+  ): Promise<{
+    capacity: number,
+    carModelId: number,
+    carModelName: string,
+    carSourcesBySkuInSpuList: Array<{ carSku: CarSKUForCarSource, carSourcesList: Array<CarSource> }>,
+    electricCar: boolean,
+    filters: Array<Filter>,
+    officialPrice: number,
+    officialPriceStr: string,
+    seatNums: Array<number>,
+    praiseModels: Array<PraiseModel>
+  }> {
     // MARK： 目前只取地址列表中的第一个
     const data: {
       userId: string,
@@ -496,19 +509,24 @@ export default class SAASService extends Service {
    *
    * @param {number} supplierId
    * @param {string} supplierPhone
-   * @param {number} messageResultId
    * @param {string} contactPhone
+   * @param {(number | null)} [carSourceId=null]
+   * @param {(number | null)} [spuId=null]
+   * @param {(number | null)} [quotedPrice=null]
    * @returns {Promise<any>}
    * @memberof SAASService
    */
   pushCallRecord(
     supplierId: number,
     supplierPhone: string,
-    messageResultId: number,
-    contactPhone: string
+    contactPhone: string,
+    carSourceId: number | null = null,
+    spuId: number | null = null,
+    quotedPrice: number | null = null
   ): Promise<any> {
     const userId = this.userService.auth.userId
     const userPhone = this.userService.mobile
+    const messageResultId = carSourceId
     return this.request(
       "api/user/addCallRecord",
       'POST', {
@@ -516,10 +534,31 @@ export default class SAASService extends Service {
         userPhone,
         supplierId,
         supplierPhone,
+        contactPhone,
         messageResultId,
-        contactPhone
+        spuId,
+        quotedPrice
       }
     )
+  }
+
+  pushCallRecordForCarSource(
+    supplierId: number,
+    supplierPhone: string,
+    contactPhone: string,
+    carSourceId: number
+  ) {
+    return this.pushCallRecord(supplierId, supplierPhone, contactPhone, carSourceId, null, null)
+  }
+
+  pushCallRecordForMode(
+    supplierId: number,
+    supplierPhone: string,
+    contactPhone: string,
+    spuId: number,
+    quotedPrice: number
+  ) {
+    return this.pushCallRecord(supplierId, supplierPhone, contactPhone, null, spuId, quotedPrice)
   }
 
   /**
@@ -1115,6 +1154,28 @@ export default class SAASService extends Service {
     return this.request(
       `supply/company/${companyId}`,
       'GET'
+    )
+  }
+
+  /**
+   * 获取基于行情的通话记录, 结果依据车型分区
+   *
+   * @param {string} userId
+   * @returns {Promise<Array<{
+   *     spuSummary: CarModel,
+   *     callRecordList: Array<{ lastCallDate: string, carSource: CarSource }>
+   *   }>>}
+   * @memberof SAASService
+   */
+  retrieveContactRecordWithCarSourceByCarModel(
+    userId: string,
+  ): Promise<Array<{
+    callDateStr: string,
+    callRecordBySpu: Array<{ spuSummary: CarModel, callRecordList: Array<{ lastCallDate: string, carSource: CarSource }> }>
+  }>> {
+    return this.request(
+      `api/user/${userId}/callRecords`,
+      `GET`
     )
   }
 }

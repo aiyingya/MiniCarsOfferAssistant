@@ -1,6 +1,8 @@
-<!--index.wxml-->
-<import src="../../components/toast/toast.wxml"/>
-<template is="toast" data="{{ ...$wux.toast }}"/>
+<import src="../../components/common/drawer/drawerView.wxml" />
+<import src="../../components/toast/toast.wxml" />
+<import src="../../components/common/search/searchBarView.wxml" />
+
+<template is="toast" data="{{ ...$wux.toast }}" />
 
 <scroll-view scroll-y="true" style="height: {{windowHeight}}px" class="container">
   <!-- 试用时间.-->
@@ -12,11 +14,7 @@
       <block wx:elif="{{visitorInfo.times.hours > 0}}">{{visitorInfo.times.hours}}小时</block>
       <block wx:else>1小时</block>
       ，若想继续试用，请联系何先生电话
-      <view
-        class="call-phone"
-        data-phone="15821849025"
-        bindtap="handlerMakePhoneCall"
-        >15821849025</view>
+      <view class="call-phone" data-phone="15821849025" bindtap="handlerMakePhoneCall">15821849025</view>
     </view>
   </view>
 
@@ -26,19 +24,13 @@
       <view class="topbar-ad">
         <image src="../../images/pages/home/home_slogan_pic.png"></image>
       </view>
-      <view class="search-wrap">
-        <view class="search-inner">
-          <view class="search-icon">
-            <image class="search-img" src="../../images/icons/icon_find.png"></image>
-          </view>
-          <input class="search-input" placeholder-class="search-placeholder" disabled placeholder="输入指导价/车款名 如朗逸1099" />
-          <view class="bindtap" bindtap="searchCarType"></view>
-        </view>
+      <view class="topbar-search-view">
+        <template is="searchBarView" data="{{ searchBarPlaceholder, searchBarValue, disabled: true }}" />
+        <view class="bindtap" bindtap="searchCarType"></view>
       </view>
     </view>
     <image class="topbar-bg" src="../../images/pages/home/home_bg_pic.png"></image>
   </view>
-
 
   <!-- 热门品牌.-->
   <view class="hot-carsbrand-wrap">
@@ -86,32 +78,5 @@
   </view>
 </scroll-view>
 
-<!-- 车系.-->
-<view class="drawer-mask" wx:if="{{showCarSeries != ''}}" bindtap="removeCarSeriesInner" catchtouchmove> </view>
-<scroll-view scroll-y="true" animation="{{animationData}}" class="drawer-box">
-  <scroll-view scroll-y="true " class="drawer-content ">
-    <view class="carSeries-logo weui-flex">
-      <image class="" src="{{showCarSeriesImageUrl}}"></image>
-    </view>
-    <view wx:if="{{carManufacturerSeriesList.length > 0}}">
-      <view wx:for="{{carManufacturerSeriesList}}" wx:key="title" data-id="{{item.id}}" class="viewCarsList-calls">
-        <view class="viewCarsList-index carSeries-title">{{item.title}}</view>
-        <view class="weui-cells weui-cells_in-small-appmsg">
-          <view class="weui-media-box weui-media-box_appmsg" hover="true" hover-class="weui-cell_active" wx:for="{{item.items}}" wx:key="id"
-            wx:for-item="cell" wx:for-index="cellIndex" bindtap="handlerToCarsModels" data-carsInfo="{{cell}}" url="../carModels/carModels?carsInfo={{cell}}">
-            <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
-              <image class="weui-media-box__thumb" src="{{cell.imgUrl}}"></image>
-            </view>
-            <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
-              <view class="weui-media-box__title">{{cell.name}}</view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-    <view wx:if="{{carManufacturerSeriesList.length === 0 && showNodata}}" class="nodata">
-      暂无数据
-    </view>
-    <view class="placeholder"></view>
-  </scroll-view>
-</scroll-view>
+<template is="drawerView" data="{{ showCarSeries, animationData, showCarSeriesImageUrl, carManufacturerSeriesList, showNodata }}"
+/>

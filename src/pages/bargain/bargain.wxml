@@ -6,8 +6,8 @@
   <!-- tab 切换.-->
   <view class="tabmenu">
     <view
-      wx:for="{{tabmenu.menu}}" 
-      wx:key="*this"
+      wx:for="{{tabmenu.menu}}"
+      wx:key="{{ index }}"
       class="tabitem {{item.active}}"
       data-tabmenu="{{item}}"
       bindtap="handleTabmenu"
@@ -16,16 +16,16 @@
     </view>
     <view class="tabline {{tabmenu.lineActive}}"></view>
   </view>
-  
+
   <!-- bargain list.-->
-  <view 
+  <view
     class="bargain-cells"
     wx:if="{{bargainListData.length > 0}}"
     >
-    <view 
+    <view
       class="bargain-cell"
       wx:for="{{bargainListData}}"
-      wx:key="*this"
+      wx:key="{{ index }}"
       >
       <view class="bargain-hd">
         <view class="bargain-username">{{item.customer.mobile}} / {{item.customer.name || '暂无'}}</view>
@@ -41,9 +41,9 @@
           <view class="bargain-ft_cancel">
             <view class="label">已核销：</view>核销时间 {{item.usedTimeStr}}
           </view>
-        </block> 
+        </block>
         <block wx:else>
-          <view 
+          <view
             class="btn {{item.overStyle}}"
             data-activity="{{item}}"
             bindtap="handleFinishActivity"
@@ -51,14 +51,14 @@
             <block wx:if="{{item.overStyle == ''}}">已结束该活动</block>
             <block wx:else>结束该活动</block>
           </view>
-          <view 
+          <view
             class="btn {{item.cancelStyle}}"
             data-activity="{{item}}"
             bindtap="handleCancelCoupon"
             >
             核销优惠券
           </view>
-        </block>       
+        </block>
       </view>
     </view>
   </view>

@@ -46,6 +46,14 @@ export default class UserService extends Service {
    */
   userInfo: UserInfo | null = null;
 
+  /**
+   * clientId 获取异步 promise
+   *
+   * @type {(Promise<{ clientId: string }> | null)}
+   * @memberof UserService
+   */
+  promiseForClientId: Promise<{ clientId: string }> | null = null;
+
   constructor() {
     super()
   }
@@ -75,12 +83,27 @@ export default class UserService extends Service {
     console.log('载入持久化的数据')
     this.loadUserInfo()
 
+    let promiseResolveForClientId = null
+    let promiseRejectForClientId = null
+    this.promiseForClientId = new Promise((resolve, reject) => {
+      promiseResolveForClientId = resolve
+      promiseRejectForClientId = reject
+    })
+
     return super.setup()
       .then(() => {
         console.log('获取 clientId')
         return this.getClientId(false)
           .then(res => {
+            if (promiseResolveForClientId != null) {
+              promiseResolveForClientId(res)
+            }
             console.log(res)
+          }, err => {
+            if (promiseRejectForClientId != null) {
+              promiseRejectForClientId(err)
+            }
+            return Promise.reject(err)
           })
       })
       .then(() => {

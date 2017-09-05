@@ -1,8 +1,12 @@
+// @flow
 import {
   $wuxToast
-} from "../../components/wux"
+} from '../../components/wux'
+
+import UserService from '../../services/user.service'
 import { container, config } from '../../landrover/business/index'
 
+const userService: UserService = container.userService
 const app = getApp()
 
 Page({
@@ -14,7 +18,49 @@ Page({
     userPortrait: '../../images/icons/icon_head_default_44.png',
     userTenants: '',
     version: config.version,
-    manager: false
+    manager: false,
+    userCenterEntries: [
+      {
+        name: '报价记录',
+        loginNeeded: true,
+        roleNameNeeded: 'guest',
+        managerNeeded: null,
+        iconPath: '/images/icons/tab_icon_price_off.png',
+        route: 'quotationsList'
+      },
+      {
+        name: '报价偏好设置',
+        loginNeeded: true,
+        roleNameNeeded: 'guest',
+        managerNeeded: null,
+        iconPath: '/images/icons/icon_collection.png',
+        route: 'setCost'
+      },
+      {
+        name: '砍价活动管理',
+        loginNeeded: true,
+        roleNameNeeded: 'employee',
+        managerNeeded: false,
+        iconPath: '/images/icons/icon_activity_management.png',
+        route: 'bargain'
+      },
+      {
+        name: '潜客',
+        loginNeeded: true,
+        roleNameNeeded: 'employee',
+        managerNeeded: true,
+        iconPath: '/images/icons/icon_potential_people.png',
+        route: 'potential'
+      },
+      {
+        name: '行情备忘',
+        loginNeeded: true,
+        roleNameNeeded: 'guest',
+        managerNeeded: null,
+        iconPath: '/images/icons/icon_contact_note.png',
+        route: 'carSourceNotes'
+      }
+    ]
   },
   onLoad() {
     let version = null
@@ -52,19 +98,19 @@ Page({
       const userInfo = container.userService.auth
       const weixinUsersInfo = container.userService.weixin.userInfo
 
-      if (container.userService.role != null) {
-        if (container.userService.role.roleName === 'employee') {
+      if (userService.role != null) {
+        if (userService.role.roleName === 'employee') {
           this.setData({
             isLogin: true,
-            roleName: container.userService.role.roleName,
-            manager: container.userService.role.roleInfo.tenants[0].manager,
+            roleName: userService.role.roleName,
+            manager: userService.role.roleInfo.tenants[0].manager,
             userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
             userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
           })
-        } else if (container.userService.role.roleName === 'guest') {
+        } else if (userService.role.roleName === 'guest') {
           this.setData({
             isLogin: true,
-            roleName: container.userService.role.roleName,
+            roleName: userService.role.roleName,
             manager: false,
             userName: weixinUsersInfo ? weixinUsersInfo.weixinName : '匿名用户',
             userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png'
@@ -72,13 +118,17 @@ Page({
         }
       }
 
-      container.userService.getRoleInformation()
+      userService.getRoleInformation()
         .then(res => {
+          if (res == null) {
+            return
+          }
+
           if (res.roleName === 'employee') {
             const userInfoForEmployee = res.roleInfo
             this.setData({
               isLogin: true,
-              roleName: userInfoForEmployee.roleName,
+              roleName: res.roleName,
               userMobile: userInfoForEmployee.mobile,
               userName: weixinUsersInfo ? weixinUsersInfo.weixinName || userInfoForEmployee.mobile : '匿名用户',
               userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
@@ -89,7 +139,7 @@ Page({
             const userInfoForGuest = res.roleInfo
             this.setData({
               isLogin: true,
-              roleName: userInfoForGuest.roleName,
+              roleName: res.roleName,
               userMobile: userInfoForGuest.mobile,
               userName: weixinUsersInfo ? weixinUsersInfo.weixinName || userInfoForGuest.mobile : '匿名用户',
               userPortrait: weixinUsersInfo ? weixinUsersInfo.portrait : '../../images/icons/icon_head_default_44.png',
@@ -118,7 +168,7 @@ Page({
     })
   },
   handleUserLogout() {
-    container.userService.logout()
+    userService.logout()
       .then(res => {
         this.setData({
           isLogin: false,
@@ -129,22 +179,31 @@ Page({
           userTenants: '',
           manager: false
         })
-      }, err => {
+      })
+      .catch(err => {
       })
   },
-  handleToNewPages(e) {
-    const page = e.currentTarget.dataset.page
-    if (container.userService.isLogin()) {
-      wx.navigateTo({
-        url: `../${page}/${page}`
-      })
+  onEntryRowClick(e) {
+    const entry = e.currentTarget.dataset.item
+
+    if (userService.role == null) {
+      console.error('登陆后没有角色信息')
+      return
     }
-  },
-  handleToQuoteRecord() {
-    if (container.userService.isLogin()) {
-      wx.navigateTo({
-        url: '../quote/quotationsList/quotationsList'
-      })
+
+    if (!(
+      entry.loginNeeded === true &&
+      entry.loginNeeded === userService.isLogin &&
+      entry.roleNameNeeded != null &&
+      entry.roleNameNeeded === userService.role.roleName
+    )) {
+      const route = entry.route
+      let url = '..'
+      if (route === 'quotationsList') {
+        url = `${url}/quote`
+      }
+      url = `${url}/${route}/${route}`
+      wx.navigateTo({ url })
     }
   }
 })

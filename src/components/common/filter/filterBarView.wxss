@@ -1,0 +1,54 @@
+.filter-view {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.filter-view .filter {
+  float: left;
+  white-space: nowrap;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+.filter-view .filter :last-child :after {
+  border-right: 1rpx solid #FFFFFF;
+}
+
+.filter-view .filter .item {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid #333333;
+  color: #333333;
+  border-radius: 65rpx;
+  font-size: 24rpx;
+  height: 48rpx;
+  margin-right: 10rpx;
+  font-family: "PingFangSC-Regular";
+  letter-spacing: 0;
+  line-height: 48rpx;
+  min-width: 125rpx;
+
+  background-color: #ffffff;
+  padding-left: 0rpx;
+  padding-right: 0rpx;
+}
+
+.filter-view .filter .item :last-child {
+  margin-right: 0rpx;
+}
+
+.filter-view .filter .selected {
+  border: 1rpx solid #ED4149;
+  color: #ED4149;
+}

@@ -1,0 +1,253 @@
+/* 供应商分区 */
+.section-board {
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.section-board .title {
+  font-family: "PingFangSC-Regular";
+  font-size: 28rpx;
+  color: #666666;
+  letter-spacing: 0;
+  line-height: 28rpx;
+  text-align: center;
+  margin: 0rpx 30rpx;
+}
+
+.section-board .line {
+  height: 1rpx;
+  width: 60rpx;
+  background: #7A6D6E;
+}
+
+/* 模糊供应商行 */
+.supplier-fuzzy-search-result {
+  position: relative;
+  height: 100%;
+  width:100%;
+  line-height:88rpx;
+  font-family:"PingFangSC-Regular";
+  font-size:30rpx;
+  color:#333333;
+  background: #ffffff;
+}
+
+/* 精准供应商行 */
+.supplier-search-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+
+.supplier-search-result .profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  max-width: calc(100% - 100rpx);
+}
+.supplier-search-result .profile .name {
+  font-family: "PingFangSC-Medium";
+  font-size: 30rpx;
+  color: #333333;
+  letter-spacing: 0rpx;
+  overflow: hidden;
+}
+
+.supplier-search-result .profile .tag-label {
+  display: flex;
+  align-items: center;
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+  color: #3377EE;
+  letter-spacing: 0;
+  width: 120rpx;
+}
+
+.supplier-search-result .profile .tag-label image{
+  margin-left: 20rpx;
+  margin-right: 6rpx;
+  width: 24rpx;
+  height: 24rpx;
+}
+
+.supplier-search-result .call-line {
+  padding: 40rpx 20rpx;
+  margin-left: 20rpx;
+  width: 40rpx;
+  height: 40rpx
+}
+
+/* 评论板 */
+
+.comment-board {
+  width: 100%;
+  height: 100%;
+}
+.comment-board .tag-board {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 90rpx;
+  width: 100%;
+  font-family: 'PingFangSC-Regular';
+  font-size: 28rpx;
+  color: #666666;
+  letter-spacing: 0;
+  line-height: 28rpx;
+}
+.comment-board .tag-board .tag-selection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.comment-board .tag-board .tag-selection .tag {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #999999;
+  border: 1rpx solid #999999;
+  border-radius: 65rpx;
+  letter-spacing: 0;
+  margin-left: 20rpx;
+  height: 48rpx;
+  width: 140rpx;
+
+  background-color: #ffffff;
+  padding: 0 0;
+}
+.comment-board .tag-board .tag-selection .tag image{
+  height: 24rpx;
+  width: 24rpx;
+  padding-right: 10rpx;
+}
+.comment-board .tag-board .tag-selection .reliable_highlight {
+  border: 1rpx solid #3377EE;
+  color: #3377EE;
+}
+.comment-board .tag-board .tag-selection .unreliable_highlight {
+  border: 1rpx solid #333333;
+  color: #333333;
+}
+.comment-board .comment-textarea {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100rpx;
+  width: 100%;
+  margin-bottom: 20rpx;
+}
+.comment-board .comment-textarea .textarea {
+  background: #FAFAFA;
+  border: 1px solid #CCCCCC;
+  font-family: PingFangSC-Regular;
+  font-size: 28rpx;
+  color: #333333;
+  letter-spacing: 0;
+  border-radius: 8rpx;
+  width: 100%;
+  height: 100rpx;
+  margin-right: 10rpx;
+}
+.comment-board .comment-textarea .textarea-placeholder {
+  font-family: PingFangSC-Regular;
+  font-size: 28rpx;
+  color: #999999;
+  letter-spacing: 0;
+  line-height: 28rpx;
+  margin-top: 20rpx;
+  margin-left: 20rpx;
+}
+.comment-board .comment-textarea .submit-input {
+  background: #CCCCCC;
+  border-radius: 8rpx;
+  font-family: PingFangSC-Regular;
+  font-size: 28rpx;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  line-height: 100rpx;
+  height: 100rpx;
+  width: 100rpx;
+  margin: 0 0;
+  padding: 0 0;
+  vertical-align: middle;
+}
+.comment-board .comment-textarea .valid {
+  background: #ED4149;
+}
+
+/* 评论视图 */
+
+.comment {}
+
+.comment .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70rpx;
+}
+
+.comment .title .profile {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  letter-spacing: 0;
+}
+
+.comment .title .profile .phone {
+  margin-right: 30rpx;
+  color: #666666;
+}
+
+.comment .title .profile .create-date {
+  color: #999999;
+}
+
+.comment .content {
+  padding-bottom: 30rpx;
+  box-sizing: border-box;
+}
+
+.comment .title .tag {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.comment .title .tag image {
+  height: 24rpx;
+  width: 24rpx;
+}
+
+.comment .title .tag .tag-label {
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #666666;
+  letter-spacing: 0;
+  margin-left: 6rpx;
+  box-sizing: border-box;
+}
+
+.comment .title .tag .highlight {
+  color: #3377EE;
+}
+
+.comment .content {
+  font-family: PingFangSC-Regular;
+  font-size: 28rpx;
+  color: #333333;
+  letter-spacing: 0;
+}

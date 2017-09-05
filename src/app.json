@@ -9,7 +9,7 @@
     "pages/quote/quotationsList/quotationsList",
     "pages/login/login",
     "pages/carList/carList",
-    "pages/usersQuote/usersQuote",
+    "pages/userCenter/userCenter",
     "pages/supplier/supplier",
     "pages/supplierDetail/supplierDetail",
     "pages/setCost/setCost",
@@ -18,11 +18,12 @@
     "pages/details/details",
     "pages/bargain/bargain",
     "pages/potential/potential",
-    "pages/amap/amap"
+    "pages/amap/amap",
+    "pages/carSourceNotes/carSourceNotes"
   ],
   "window": {
     "backgroundTextStyle": "dark",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#ffffff",
     "navigationBarTitleText": "要卖车",
     "navigationBarTextStyle": "black"
   },
@@ -49,7 +50,7 @@
         "text": "供应商"
       },
       {
-        "pagePath": "pages/usersQuote/usersQuote",
+        "pagePath": "pages/userCenter/userCenter",
         "iconPath": "images/icons/tab_icon_price_off.png",
         "selectedIconPath": "images/icons/tab_icon_price_on.png",
         "text": "我的"

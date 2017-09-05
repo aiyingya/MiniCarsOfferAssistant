@@ -1,0 +1,11 @@
+<!-- 横向滚动的 filter bar view  -->
+<template name="filterBarView">
+  <view class="filter-view">
+    <view wx:for="{{ filters }}" wx:for-item="filterItem" wx:for-index="filterIndex" wx:key="id" class="filter">
+      <button wx:for="{{ filterItem.items }}" wx:for-index="itemIndex" wx:key="id" data-filter-id="{{ filterItem.id }}" data-item-id="{{ item.id }}"
+        bindtap="onFilterItemButtonClick" class="item {{ itemIndex == filtersSelectedIndexes[filterIndex] ? 'selected' : ''}}">
+      {{ item.name }}
+    </button>
+    </view>
+  </view>
+</template>

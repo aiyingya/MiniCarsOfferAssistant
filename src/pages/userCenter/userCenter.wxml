@@ -1,0 +1,84 @@
+<template name="entryView">
+  <view class="weui-cell weui-cell_access" hover="true" hover-class="active" data-item="{{ item }}" bindtap="onEntryRowClick">
+    <view class="weui-cell__hd">
+      <image src="{{ item.iconPath }}" />
+    </view>
+    <view class="weui-cell__bd weui-cell_primary">
+      <view>{{ item.name }}</view>
+    </view>
+  </view>
+</template>
+
+<template name="userCenterEntryView">
+  <block wx:if="{{ item.loginNeeded === true }}">
+    <block wx:if="{{ item.loginNeeded === isLogin }}">
+      <block wx:if="{{ item.roleNameNeeded === 'employee' }}">
+        <block wx:if="{{ item.roleNameNeeded === roleName }}">
+          <block wx:if="{{ item.managerNeeded === true }}">
+            <block wx:if="{{ item.managerNeeded === manager }}">
+              <template is="entryView" data="{{ item }}" />
+            </block>
+            <block wx:else>
+              <!-- 需要店长权限但不满足, 不显示 -->
+            </block>
+          </block>
+          <block wx:else>
+            <!-- 不需要需要店长权限, 显示 -->
+            <template is="entryView" data="{{ item }}" />
+          </block>
+        </block>
+        <block wx:else>
+          <!-- 需要角色但不满足, 不显示 -->
+        </block>
+      </block>
+      <block wx:else>
+        <!-- 不需要角色 -->
+        <template is="entryView" data="{{ item }}" />
+      </block>
+    </block>
+    <block wx:else>
+      <!-- 需要登录权限但不满足, 不显示 -->
+    </block>
+  </block>
+  <block wx:else>
+    <!-- 不需要登录权限 -->
+    <template is="entryView" data="{{ item }}" />
+  </block>
+</template>
+
+<view class="container users-quote">
+
+  <view class="users-topbar">
+    <view class="users-head">
+      <image src="{{userPortrait}}"></image>
+    </view>
+
+    <block wx:if="{{isLogin}}">
+      <!-- name.-->
+      <view class="users-name">
+        {{userName}}
+      </view>
+      <!-- phone-->
+      <view class="users-phone">
+        {{userMobile}}
+      </view>
+
+      <!-- 标签.-->
+      <view class="users-label">
+        <view class="label" wx:for="{{userTenants}}" wx:key="tenantId">{{item.tenantName}}</view>
+      </view>
+    </block>
+    <view wx:else class="users-login" bindtap="handleToLogin">登录/注册</view>
+  </view>
+
+  <view class="users-cells weui-cells weui-cells_in-small-appmsg">
+    <block wx:for="{{ userCenterEntries }}" wx:key="{{ index }}">
+      <template is="userCenterEntryView" data="{{ item, index, isLogin, manager, roleName }}" />
+    </block>
+  </view>
+
+  <view class="version">
+    {{version}}
+  </view>
+  <view class="users-logout" hover="true" hover-class="users-logout_active" bindtap="handleUserLogout" wx:if="{{isLogin}}">退出登录</view>
+</view>

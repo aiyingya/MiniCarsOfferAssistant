@@ -1,0 +1,115 @@
+.car-source-section {
+  padding: 25rpx 30rpx;
+  min-height: 86rpx;
+  position: relative;
+  display: block;
+}
+
+.car-source-section .first-part {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.car-source-section .title {
+  font-family: "PingFangSC-Regular";
+  font-size: 30rpx;
+  color: #333333;
+  letter-spacing: 0rpx;
+  line-height: 30rpx;
+  display: flex;
+}
+
+.car-source-section .note {
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #475593;
+  letter-spacing: 0;
+  line-height: 24rpx;
+  margin-left: 20rpx;
+}
+
+.car-source-section .second-part {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline
+}
+
+.car-source-section .quoted-price {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+
+.car-source-section .quoted-price .discount-icon {
+  width: 20rpx;
+  height: 24rpx;
+  position: relative;
+}
+
+.car-source-section .quoted-price .discount {
+  font-family: "PingFangSC-Regular";
+  font-size: 26rpx;
+  color: #333333;
+  line-height: 26rpx;
+}
+
+.car-source-section .quoted-price .price {
+  font-family: "SFUIDisplay-Regular";
+  font-size: 34rpx;
+  color: #ED4149;
+  letter-spacing: 0rpx;
+  line-height: 32rpx;
+}
+
+.car-source-section .third-part {
+  display: flex;
+  margin-top: 20rpx;
+}
+
+.car-source-section .tag-collection {
+  display: flex;
+}
+
+.car-source-section .tag {
+  background: rgba(241, 124, 124, 0.08);
+  border-radius: 4rpx;
+  font-family: "PingFangSC-Regular";
+  font-size: 22rpx;
+  color: #F17C7C;
+  line-height: 24rpx;
+  margin-right: 10rpx;
+  padding: 8rpx 27rpx;
+}
+
+.car-source-section .dropdownarrow {
+  display: flex;
+  align-items: flex-end;
+  position: absolute;
+  right: 30rpx;
+  bottom: 20rpx;
+}
+
+.car-source-section .carsource-count {
+  height: 32rpx;
+  min-width: 32rpx;
+  background: rgba(241, 124, 124, 0.1);
+  border-radius: 16rpx;
+  margin-right: 15rpx;
+}
+
+.car-source-section .carsource-count-text {
+  font-family: "PingFangSC-Regular";
+  font-size: 20rpx;
+  color: #F17C7C;
+  line-height: 24rpx;
+  padding: 4rpx 6rpx;
+  text-align: center;
+}
+
+.car-source-section .icon-dropdownarrow {
+  width: 16rpx;
+  height: 16rpx;
+  margin-top: -8rpx;
+}
