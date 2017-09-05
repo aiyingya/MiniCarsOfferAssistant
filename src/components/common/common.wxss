@@ -2,3 +2,5 @@
 @import './price/quotedPriceView.wxss';
 @import './drawer/drawerView.wxss';
 @import './search/searchBarView.wxss';
+@import './supplier/supplierNameView.wxss';
+@import './specifications/carColorView.wxss';

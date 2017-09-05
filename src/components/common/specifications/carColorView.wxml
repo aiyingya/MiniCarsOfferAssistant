@@ -1,0 +1,8 @@
+<!-- {
+  externalColorName: string
+  internalColorName: string
+} -->
+
+<template name="carColorView">
+    {{ externalColorName }}/{{ internalColorName }}
+</template>

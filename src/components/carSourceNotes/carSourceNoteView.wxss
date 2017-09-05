@@ -1,0 +1,25 @@
+.car-source-note {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 20rpx 18rpx;
+
+  background: #F6F7F8;
+  box-shadow: 0 1rpx 3rpx 0 rgba(0,0,0,0.10);
+  border-radius: 8rpx;
+
+  height: 100%;
+  width: 100%;
+}
+
+.car-source-note .left {
+
+}
+
+.car-source-note .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
