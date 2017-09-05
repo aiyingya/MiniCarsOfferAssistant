@@ -1,0 +1,28 @@
+.empty-status {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.empty-status image{
+  height: 160rpx;
+  width: 160rpx;
+  margin-bottom: 33rpx;
+}
+
+.empty-status .title {
+  font-family: "PingFangSC-Regular";
+  font-size: 28rpx;
+  color: #666666;
+  letter-spacing: -0.56rpx;
+  line-height: 28rpx;
+  margin-bottom: 21rpx;
+}
+
+.empty-status .description {
+  font-family: "PingFangSC-Regular";
+  font-size: 26rpx;
+  color: #999999;
+  line-height: 28rpx;
+}

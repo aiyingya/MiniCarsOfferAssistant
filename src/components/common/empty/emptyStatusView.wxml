@@ -1,0 +1,12 @@
+<!-- {
+  iconPath: string,
+  title: string,
+  description: string
+} -->
+<template name="emptyStatusView">
+  <view class="empty-status">
+    <image src="{{ iconPath }}" />
+    <view class="title">{{ title }}</view>
+    <view wx:if="{{ description && description.length > 0 }}" class="">{{ description }}</view>
+  </view>
+</template>

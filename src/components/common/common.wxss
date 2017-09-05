@@ -4,3 +4,4 @@
 @import './search/searchBarView.wxss';
 @import './supplier/supplierNameView.wxss';
 @import './specifications/carColorView.wxss';
+@import './empty/emptyStatusView.wxss';
