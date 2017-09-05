@@ -2,7 +2,6 @@
 import { config, container, request, ui } from '../index'
 
 export default class Service {
-
   baseUrl: { ['dev' | 'gqc' | 'prd']: string }
 
   responsePackFormat: ResponsePackFormat
@@ -15,13 +14,16 @@ export default class Service {
     return Promise.resolve()
   }
 
+  url(path: string): string {
+    return `${this.baseUrl[config.env]}${path}`
+  }
+
   request(
     path: string,
     method: RequestMethod,
     data: ?{ [string]: any } = null,
     header?: ?{ [string]: string } = null,
   ): Promise<any> {
-
     const ClientId = container.userService.clientId
     const ClientVersion = config.versionCode
     const SystemCode = 60
@@ -36,10 +38,10 @@ export default class Service {
     const finalData = Object.assign({}, data)
     const finalHeader = Object.assign(defaultHeader, header)
 
-    Object.keys(finalData).forEach((key) => (finalData[key] == null) && delete finalData[key]);
-    Object.keys(finalHeader).forEach((key) => (finalHeader[key] == null) && delete finalHeader[key]);
+    Object.keys(finalData).forEach((key) => (finalData[key] == null) && delete finalData[key])
+    Object.keys(finalHeader).forEach((key) => (finalHeader[key] == null) && delete finalHeader[key])
 
-    const url = `${this.baseUrl[config.env]}${path}`
+    const url = this.url(path)
     const promise = request.request(
       url,
       method,
@@ -89,7 +91,7 @@ export default class Service {
             // 如果 error 字段有不为空
             const errorMessage = error.message
             console.error(error.debugInfo)
-            return Promise.reject(new Error(errorMessage)) //to -> fail
+            return Promise.reject(new Error(errorMessage))
           } else {
             // 如果 error 字段为空
             const data = wx_data.data
@@ -106,14 +108,14 @@ export default class Service {
           if (error != null) {
             const errorMessage = error.message
             console.error(error.debugInfo)
-            return Promise.reject(new Error(errorMessage)) //to -> fail
+            return Promise.reject(new Error(errorMessage))
           } else {
             return Promise.reject(new Error('404 or other error'))
           }
         }
       })
       .catch(err => {
-        if (err.message === "request:fail response data convert to UTF8 fail") {
+        if (err.message === 'request:fail response data convert to UTF8 fail') {
           // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
           return
         }
@@ -142,19 +144,18 @@ export default class Service {
           }
 
           // 4XX, 5XX 失败
-          let err
           const error = wx_data.error
           if (error != null) {
             const errorMessage = error.alertMessage
             ui.showToast(errorMessage)
-            return Promise.reject(new Error(errorMessage)) //to -> fail
+            return Promise.reject(new Error(errorMessage)) // to -> fail
           } else {
             return Promise.reject(new Error('404 or other error'))
           }
         }
       })
       .catch(err => {
-        if (err.message === "request:fail response data convert to UTF8 fail") {
+        if (err.message === 'request:fail response data convert to UTF8 fail') {
           // davidfu 这里是小程序 iOS 的一个 bug， 如果返回体无法被 json 解析，就会抛出这个异常
           return
         }
@@ -167,5 +168,4 @@ export default class Service {
   ): Promise<any> {
     return new Promise((resolve, reject) => { })
   }
-
 }

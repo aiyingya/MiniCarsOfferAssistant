@@ -60,7 +60,7 @@ Page({
     // 当前 spuId 众数 top N
     topNOfCurrentModeHeight: 178,
     topNOfCurrentMode: {},
-    topNOfCurrentModeHidden: false,
+    topNOfCurrentModeHidden: true,
 
     showDetailTitle: false,
     hasOverLayDropdown: false,
@@ -137,7 +137,7 @@ Page({
           //   res.referenceStatus = '暂无'
           // }
 
-          let topNOfCurrentModeHidden = false
+          let topNOfCurrentModeHidden = true
           if (res.priceList && res.priceList.length) {
             topNOfCurrentModeHidden = false
             for (let topMode of res.priceList) {
@@ -146,7 +146,7 @@ Page({
               topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
             }
           } else {
-            topNOfCurrentModeHidden = false
+            topNOfCurrentModeHidden = true
             res.topNStatus = '暂无'
           }
 

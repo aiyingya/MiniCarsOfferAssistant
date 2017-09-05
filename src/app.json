@@ -19,7 +19,7 @@
     "pages/bargain/bargain",
     "pages/potential/potential",
     "pages/amap/amap",
-    "pages/contactRecords/contactRecords"
+    "pages/carSourceNotes/carSourceNotes"
   ],
   "window": {
     "backgroundTextStyle": "dark",

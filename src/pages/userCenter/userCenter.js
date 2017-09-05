@@ -53,12 +53,12 @@ Page({
         route: 'potential'
       },
       {
-        name: '联系记录',
+        name: '行情备忘',
         loginNeeded: true,
         roleNameNeeded: 'guest',
         managerNeeded: null,
         iconPath: '/images/icons/icon_contact_note.png',
-        route: 'contactRecords'
+        route: 'carSourceNotes'
       }
     ]
   },
