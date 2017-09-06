@@ -13,9 +13,9 @@
 <import src="../../../components/dialog/pricePickerDialog/pricePickerDialog.wxml" />
 <template is="pricePickerDialog" data="{{ ...$wux.pricePickerDialog }}" />
 
+<import src="../../../components/quotation/index.wxml" />
+
 <view class="container page">
-
-
   <block wx:if="{{canIUse.movablearea}}">
     <movable-area class="weui-layer-movable">
       <movable-view class="weui-layer-movable-in {{(touchStatus === 3 || touchStatus === 4) ? 'weui-layer-movable__hover' :'' }}"
@@ -76,6 +76,7 @@
               <view class="weui-cell__ft weui-cell__ft_in-access">{{ paymentRatiosArray[paymentRatiosIndex] }}%</view>
             </view>
           </picker>
+          <template is="additionalCellView" data="{{ ...nakedCarPriceItems, nakedCarPriceItemsEdit }}"/>
           <picker class="weui-cell_picker" bindchange="handlerStagesChange" value="{{stagesIndex}}" range="{{stagesArray}}">
             <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
               <view class="weui-cell__bd">还款周期</view>

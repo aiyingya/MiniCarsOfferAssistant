@@ -1,3 +1,5 @@
+
+@import '../../../components/quotation/index.wxss';
 .pad-bt{
     padding-bottom: 40px;
 }
@@ -76,7 +78,7 @@
   box-sizing: border-box;
   text-align: center;
 }
-.btn-group image{ 
+.btn-group image{
   position: absolute;
   width: 54rpx;
   height: 54rpx;
