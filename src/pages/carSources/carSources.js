@@ -1108,7 +1108,7 @@ Page({
    * 联系电话
    * @param e
    */
-  handlerContact(e) {
+  onContactButtonClick(e) {
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
@@ -1160,7 +1160,7 @@ Page({
    * 点击供货列表项目得到的供货详情
    * @param e
    */
-  handlerCarSourceDetail(e) {
+  onCarSourceCellClick(e) {
     const skuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
     const carSourcePlaceItem = e.currentTarget.dataset.carSourcePlace

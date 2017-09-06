@@ -1,4 +1,6 @@
 <import src="../../components/common/price/quotedPriceView.wxml" />
+<import src="../../components/common/specifications/carColorView.wxml" />
+<import src="../../components/common/supplier/supplierNameView.wxml" />
 
 <template name="carSourceView">
   <view class="car-source-cell">
@@ -16,21 +18,13 @@
         <image src="/images/icons/icon_triangle_nav.png"></image>
       </view>
     </view>
+
     <view class="body">
       <!-- 第一部分 -供应商名称 + 渠道来源-->
       <view class="first-part">
         <!-- 供应商名称 -->
         <view class="first-first-part">
-          <view class="supplier-name">
-            <view class="name">
-              {{carSourceItem.supplier.companyName.length? carSourceItem.supplier.companyName : carSourceItem.supplier.name}}
-              <image wx:if="{{carSourceItem.supplierSelfSupport}}" src="/images/icons/icon_label_ymc_certification.png" class="certification">
-              </image>
-            </view>
-            <image class="contact" src="/images/icons/icon_call_line.png" catchtap="handlerContact" data-car-source-index="{{carSourceItemIndex}}"
-              data-sku-index="{{skuItemIndex}}">
-            </image>
-          </view>
+          <template is="supplierNameView" data="{{ supplier: carSourceItem.supplier, supplierSelfSupport: carSourceItem.supplierSelfSupport, skuItemIndex, carSourceItemIndex }}"/>
         </view>
 
         <!-- 货源渠道信息 -->
@@ -73,19 +67,21 @@
           </view>
         </view>
       </view>
-      <view wx:else bindtap="handlerCarSourceDetail" data-sku-index="{{skuItemIndex}}" data-car-source-index="{{carSourceItemIndex}}"
+      <view wx:else bindtap="onCarSourceCellClick" data-sku-index="{{skuItemIndex}}" data-car-source-index="{{carSourceItemIndex}}"
         class="normal-part">
         <!--最近，最便宜-->
         <view class="second-part">
           <!-- 车源基本信息 -->
           <view class="basic-infomation">
-            <view class="basic-label">{{carSourceItem.externalColor}}/{{carSourceItem.viewModelInternalColor}}</view>
+            <view class="basic-label">
+              <template is="carColorView" data="{{ externalColorName: carSourceItem.externalColor, internalColorName: carSourceItem.viewModelInternalColor }}" />
+            </view>
             <view wx:if="{{carSourceItem.storeInsurance}}" class="basic-label">店保</view>
             <view wx:if="{{carSourceItem.sourceRegionsDesc && carSourceItem.sourceRegionsDesc.length}}" class="basic-label">{{carSourceItem.sourceRegionsDesc}}</view>
             <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
           </view>
           <!-- 供货价格 -->
-          <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
+          <block wx:if="{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
             <view class="price-tips-small">价格电议</view>
           </block>
           <block wx:else>

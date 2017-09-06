@@ -1,15 +1,8 @@
 // @flow
 import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/carSourceDetail'
-import {
-  container,
-  system,
-  util
-} from '../../landrover/business/index'
+import { container } from '../../landrover/business/index'
 
-import {
-  $wuxToast,
-  $wuxTrack
-} from "../../components/wux"
+import { $wuxToast, $wuxTrack } from "../../components/wux"
 
 import * as wxapi from 'fmt-wxapp-promise'
 import SAASService from '../../services/saas.service'
@@ -57,7 +50,6 @@ Page({
       .catch(() => {
         wxapi.hideToast()
       })
-
   },
   onShow() { },
   onHide() { },
@@ -115,8 +107,7 @@ Page({
       [`records[${index}].callRecordBySpu[${subIndex}]`]: spuItem
     })
   },
-  handlerCarSourceMore(e) { },
-  handlerCarSourceDetail(e) {
+  onCarSourceCellClick(e) {
     const selectedIndex = this.data.selectedIndex
     const spuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
@@ -189,8 +180,7 @@ Page({
       }
     })
   },
-  handlerCarSourceTabClick(e) { },
-  handlerContact(e) {
+  onContactButtonClick(e) {
     const spuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
@@ -205,7 +195,6 @@ Page({
     this.actionContactWithCarSourceItem(spuItem.spuSummary.carModelId, spuItemIndex, carSourceItemIndex, carSourceItem, null)
   },
   actionContactWithCarSourceItem(spuId, spuItemIndex, carSourceItemIndex, carSourceItem, from) {
-
     this.actionContact(spuId,
       carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price,
       carSourceItem.supplier.companyId,
@@ -228,7 +217,7 @@ Page({
           contactPhone = carSourceItem.contact || supplier.supplierPhone,
           spuItem = selectedDateSection.callRecordBySpu[spuItemIndex]
 
-        saasService.pushCallRecordForCarSource(supplierId, supplierPhone, contactPhone, carSourceId,)
+        saasService.pushCallRecordForCarSource(supplierId, supplierPhone, contactPhone, carSourceId)
 
         /**
          * 1.4.0 埋点 拨打供货方电话
@@ -278,8 +267,6 @@ Page({
             console.error(err, '拨打电话' + supplier.supplierPhone + '失败')
           })
       }
-    });
+    })
   }
-
 })
-

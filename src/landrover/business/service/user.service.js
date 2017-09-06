@@ -1,9 +1,8 @@
 // @flow
 import Service from './base.service'
-import { config, storage, request, device, ui } from '../index'
+import { config, storage, device, ui } from '../index'
 
 export default class UserService extends Service {
-
   baseUrl = {
     dev: 'https://test.yaomaiche.com/ucdev/',
     gqc: 'https://test.yaomaiche.com/ucgqc/',
@@ -118,6 +117,15 @@ export default class UserService extends Service {
         }
       })
       .then(() => {
+        if (this.auth == null) {
+          console.info('没有登录, 无需获取用户角色信息')
+          return Promise.resolve(null)
+        } else {
+          console.info('已经登录, 获取用户角色信息')
+          return this.getUserInfo()
+        }
+      })
+      .then(() => {
         console.info('user.service 启动完毕')
       })
       .catch(err => {
@@ -138,7 +146,6 @@ export default class UserService extends Service {
     const expirationTime = currentTime + delta
     return expirationTime
   }
-
 
   /**
    * 获取 clientId
@@ -368,6 +375,30 @@ export default class UserService extends Service {
     )
   }
 
+  /**
+   * 用户信息 API
+   */
+
+  /**
+   * 获取用户信息
+   *
+   * @param {string} userId
+   * @returns {Promise<UserInfo>}
+   * @memberof UserService
+   */
+  retrieveUserInformation(
+    userId: string
+  ): Promise<UserInfo> {
+    return this.request(
+      `cgi/user/${userId}/info`,
+      'GET'
+    )
+  }
+
+  /**
+   * 包装方法
+   */
+
   login(
     authEntity: AuthEntity,
     channel: string
@@ -385,7 +416,7 @@ export default class UserService extends Service {
           return auth
         })
         .catch(err => {
-          console.info('登录后刷新失败')
+          console.info('登录后刷新失败' + err)
           return authNeedRefresh
         })
     }
@@ -401,8 +432,8 @@ export default class UserService extends Service {
         return promiseForUpdateAuthentication(auth)
       })
       .catch(err => {
-        console.error('登录失败')
-        return Promise.reject()
+        console.error('登录失败' + err)
+        return Promise.reject(err)
       })
   }
 
@@ -442,6 +473,16 @@ export default class UserService extends Service {
         return Promise.reject(new Error('access token 过期'))
       }
     }
+  }
+
+  getUserInfo(): Promise<UserInfo> {
+    const userId = this.auth != null ? this.auth.userId : null
+
+    return this.retrieveUserInformation(userId)
+      .then((res: UserInfo) => {
+        this.userInfo = res
+        return res
+      })
   }
 
   getClientId(force: boolean): Promise<{ clientId: string }> {
@@ -503,7 +544,7 @@ export default class UserService extends Service {
 
   loadUserInfo(): void {
     const userInfoJSONString = storage.getItemSync('auth')
-    console.log("获得 auth" + userInfoJSONString)
+    console.log('获得 auth' + userInfoJSONString)
     if (userInfoJSONString != null && userInfoJSONString.length > 0) {
       const userInfo = JSON.parse(userInfoJSONString)
       const originalVersionCode = userInfo.versionCode

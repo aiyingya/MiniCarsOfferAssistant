@@ -1,0 +1,17 @@
+  <!-- {
+    supplier: Supplier,
+    supplierSelfSupport: boolean,
+    skuItemIndex: number,
+    carSourceItemIndex: number
+  } -->
+<template name="supplierNameView">
+  <view class="supplier-name">
+    <view class="name">
+      <view class="name-text {{ supplier.supplierType === 'IN' ? 'ymc': ''}} {{ supplier.supplierType === 'PARTNER' ? 'cooperation': ''}} ">{{ supplier.companyName.length? supplier.companyName : supplier.name }}</view>
+      <image wx:if="{{ supplier.supplierType === 'IN' }}" src="/images/icons/icon_label_line_ymc.png" class="supplier-type"/>
+      <image wx:if="{{ supplier.supplierType === 'PARTNER' }}" src="/images/icons/icon_label_line_cooperation.png" class="supplier-type"/>
+    </view>
+    <image class="contact" src="/images/icons/icon_call_line.png" catchtap="onContactButtonClick" data-car-source-index="{{ carSourceItemIndex }}"
+      data-sku-index="{{ skuItemIndex }}" />
+  </view>
+</template>

@@ -1,0 +1,20 @@
+<import src="../common/price/quotedPriceView.wxml" />
+<import src="../common/specifications/carColorView.wxml" />
+<import src="../common/supplier/supplierNameView.wxml" />
+
+<!-- {
+  carSourceItem: CarSource,
+  carSourceItemIndex: number,
+  skuItemIndex: number
+} -->
+<template name="carSourceNoteView">
+  <view class="car-source-note" bindtap="onCarSourceCellClick" data-sku-index="{{ skuItemIndex }}" data-car-source-index="{{ carSourceItemIndex }}">
+    <view class="left">
+      <template is="supplierNameView" data="{{ supplier: carSourceItem.supplier, supplierSelfSupport: carSourceItem.supplierSelfSupport, carSourceItemIndex, skuItemIndex }}" />
+    </view>
+    <view class="right">
+      <template is="carColorView" data="{{ externalColorName: carSourceItem.externalColor, internalColorName: carSourceItem.viewModelInternalColor }}" />
+      <template is="quotedPriceView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />
+    </view>
+  </view>
+</template>

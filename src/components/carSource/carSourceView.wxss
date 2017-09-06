@@ -176,38 +176,6 @@
   margin-top: 20rpx;
 }
 
-.car-source-cell .supplier-name {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  max-width: 320rpx;
-}
-
-.car-source-cell .supplier-name .name {
-  font-family: "PingFangSC-Medium";
-  font-size: 30rpx;
-  color: #333333;
-  letter-spacing: 0rpx;
-  line-height: 30rpx;
-  margin-right: 8rpx;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 280rpx;
-}
-
-.car-source-cell .supplier-name .name .certification {
-  width: 23rpx;
-  height: 21rpx;
-  margin-right: 16rpx;
-}
-
-.car-source-cell .supplier-name .contact {
-  width: 40rpx;
-  height: 40rpx;
-}
-
 .car-source-cell .second-part .quoted-price {
   display: flex;
   justify-content: flex-end;

@@ -1,0 +1,45 @@
+.supplier-name {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  max-width: 350rpx;
+}
+
+.supplier-name .name {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.supplier-name .name-text {
+  font-family: "PingFangSC-Medium";
+  max-width: 200rpx;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 30rpx;
+  letter-spacing: 0rpx;
+  color: #333333;
+  font-size: 30rpx;
+}
+
+.supplier-name .ymc {
+  color: #ED4149;
+}
+
+.supplier-name .cooperation {
+
+}
+
+.supplier-name .name .supplier-type {
+  width: 80rpx;
+  height: 32rpx;
+  margin-left: 10rpx;
+}
+
+.supplier-name .contact {
+  width: 40rpx;
+  height: 40rpx;
+  margin-left: 20rpx;
+}

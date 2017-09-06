@@ -36,7 +36,7 @@
     <view class="carModels-label-praise">
       <view wx:if="{{praiseModels.length > 0}}" class="car-models-label {{carModelLabel.unfold}}" bindtap="handleSwitchShow">
         <view wx:for="{{praiseModels}}" wx:key="{{ index }}" class="label {{item.praiseType ? 'goodlabel' : ''}}">{{item.praiseLabel}}({{item.praiseCount}})</view>
-        <image class="icon_arrow {{carModelLabel.unfold}}" src="../../images/icons/icon_arrow@2x@2x.png"></image>
+        <image class="icon_arrow {{carModelLabel.unfold}}" src="../../images/icons/icon_arrow.png"></image>
       </view>
     </view>
 
