@@ -189,5 +189,5 @@ declare type SupplierForCarSource = {
   contact: string,
   companyId: number,
   companyName: string,
-  supplierType: '' | '' | ''
+  supplierType: 'IN' | 'PARTNER' | ''
 };
