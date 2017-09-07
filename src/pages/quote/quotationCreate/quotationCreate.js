@@ -988,7 +988,7 @@ Page({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
           'carModelInfo.sellingPrice': Math.floor(price),
           'quotation.carPrice': Math.floor(price),
-          'quotation.requiredExpensesAll.purchaseTax': Math.floor(util.purchaseTax(_guidePrice, isElectricCar ? null : capacity))
+          'quotation.requiredExpensesAll.purchaseTax': Math.floor(calculate.purchaseTax(_guidePrice, isElectricCar ? null : capacity))
         })
         let businessRisks = this.data.businessRisks
         let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
