@@ -35,7 +35,7 @@ Page({
         sellingPrice: ''
       }],
       hasLoan: true, // 必传，true/false，boolean，是否贷款
-      paymentRatio: 30, // 首付比例（%），decimal，全款时不传，取值范围0~100
+      paymentRatio: 3, // 首付比例（%），decimal，全款时不传，取值范围0~100
       stages: 3, // 贷款期数，int，全款时不传
       expenseRate: 4,
       requiredExpenses: 0, // 必需费用（元），deciaml，取值范围0~999999999,
@@ -110,7 +110,7 @@ Page({
 
         calculate.nakedCarPrice = carPrice
         calculate.stages = stages * 12
-        calculate.downPaymentRate = paymentRatio
+        calculate.downPaymentRate = paymentRatio * 10
         calculate.monthlyLoanPaymentRate = monthRate
         calculate.run()
 

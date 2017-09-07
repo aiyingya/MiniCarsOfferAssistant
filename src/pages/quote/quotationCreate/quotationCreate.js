@@ -989,7 +989,13 @@ Page({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
           'carModelInfo.sellingPrice': Math.floor(price),
           'quotation.carPrice': Math.floor(price),
-          'quotation.requiredExpensesAll.purchaseTax': Math.floor(calculate.purchaseTax(_guidePrice, isElectricCar ? null : capacity))
+          'quotation.requiredExpensesAll.purchaseTax': Math.floor(calculate.purchaseTax(_guidePrice, isElectricCar ? null : capacity)),
+          // 重置相关的首付比例和金额参数
+          'quotation.paymentRatio': 3,
+          'quotation.downPaymentAmount': 0,
+          'quotation.loanPaymentAmount': 0,
+          'paymentRatiosIndex': 2,
+          'paymentRatiosValue': 3,
         })
         let businessRisks = this.data.businessRisks
         let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
@@ -1001,10 +1007,8 @@ Page({
               case '第三者责任险':
                 if (quotation.insuranceDetail.iDSZZRX > 0) {
                   item.checked = true
-
                 } else {
                   item.checked = false
-
                 }
                 break
               case '车辆损失险':
@@ -1061,7 +1065,6 @@ Page({
                   item.checked = true
                 } else {
                   item.checked = false
-
                 }
                 break
               default:
@@ -1079,7 +1082,6 @@ Page({
 
         that.updateForSomeReason()
         that.showInput()
-
       },
       cancel: () => {
         that.showInput()
