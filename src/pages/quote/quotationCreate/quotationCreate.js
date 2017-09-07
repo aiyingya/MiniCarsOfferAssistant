@@ -44,7 +44,7 @@ Page({
         baseSellingPrice: 0 // 加了利润的原始最低价格
       }], // skuId
       hasLoan: true, // 必传，true/false，boolean，是否贷款
-      paymentRatio: 30, // 首付比例（%），decimal，全款时不传，取值范围0~100
+      paymentRatio: 3, // 首付比例（%），decimal，全款时不传，取值范围0~100
       downPaymentAmount: 0,
       loanPaymentAmount: 0,
       stages: 3, // 贷款期数，int，全款时不传
@@ -178,9 +178,9 @@ Page({
     initPoint: '',
     initSellingPrice: 0,
     /// 表单相关
-    paymentRatiosArray: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90],
-    paymentRatiosIndex: 3,
-    paymentRatiosValue: 30,
+    paymentRatiosArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    paymentRatiosIndex: 2,
+    paymentRatiosValue: 3,
     stagesArray: [1, 2, 3],
     stagesIndex: 2,
     /// SKU 数据
@@ -707,7 +707,7 @@ Page({
     // 官价
     const officialPrice = this.data.quotation.quotationItems[0].guidePrice
     // 首付比例
-    const paymentRatio = this.data.quotation.paymentRatio
+    const paymentRatio = this.data.quotation.paymentRatio * 10
     let downPaymentAmount = this.data.quotation.downPaymentAmount
     let loanPaymentAmount = this.data.quotation.loanPaymentAmount
     // 分期年
@@ -821,7 +821,7 @@ Page({
         }
 
         // 计算首付率
-        const downPaymentRate = Number((downPaymentAmount / calculate.nakedCarPrice * 100).toFixed(0))
+        const downPaymentRate = Number((downPaymentAmount / calculate.nakedCarPrice * 10).toFixed(3))
         this.setPaymentRatiosWithIndexAndValue(null, downPaymentRate)
 
         this.setData({
@@ -859,7 +859,7 @@ Page({
       finalIndex = index
       finalValue = this.data.paymentRatiosArray[finalIndex]
     } else {
-      finalIndex = Number((value / 10).toFixed(0))
+      finalIndex = Math.ceil(value) - 1
       finalValue = value
     }
     this.setData({

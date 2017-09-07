@@ -116,7 +116,7 @@ Page({
 
         quotation.loanInterest = calculate.totalInterestAmount
 
-        paymentRatiosValue = Number((paymentRatio / 10).toFixed(0)) * 10
+        paymentRatiosValue = (Math.ceil(paymentRatio))
       }
       if (quotation.cutPriceCount || quotation.cutPriceCount === 0) {
         cutPriceCount = true
