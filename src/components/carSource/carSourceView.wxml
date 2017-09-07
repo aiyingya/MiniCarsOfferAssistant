@@ -81,7 +81,7 @@
             <view wx:if="{{carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length}}" class="basic-label">{{carSourceItem.salableRegionsDesc}}</view>
           </view>
           <!-- 供货价格 -->
-          <block wx:if="{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
+          <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
             <view class="price-tips-small">价格电议</view>
           </block>
           <block wx:else>
