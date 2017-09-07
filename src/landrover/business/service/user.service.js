@@ -27,6 +27,14 @@ export default class UserService extends Service {
   clientId: string | null = null;
 
   /**
+   * 用户账号关联的手机号码
+   *
+   * @type {(string | null)}
+   * @memberof UserService
+   */
+  mobile: string | null = null;
+
+  /**
    * 登录渠道，目前支持 guest 游客， weixin 微信，yuntu 运图
    * 用户第一次进入界面默认状态就是 游客
    * 通过微信登录后即为 微信登录
@@ -122,7 +130,7 @@ export default class UserService extends Service {
           return Promise.resolve(null)
         } else {
           console.info('已经登录, 获取用户角色信息')
-          return this.getUserInfo()
+          return this.getUserMobile()
         }
       })
       .then(() => {
@@ -376,6 +384,26 @@ export default class UserService extends Service {
   }
 
   /**
+   *
+   *
+   * @param {string} userId
+   * @returns {Promise<{ mobile: string }>}
+   * @memberof UserService
+   */
+  retrieveUserMobile(
+    userId: string
+  ): Promise<{ mobile: string }> {
+    const uid = userId
+    return this.request(
+      `cgi/user/mobile`,
+      'GET',
+      {
+        uid
+      }
+    )
+  }
+
+  /**
    * 用户信息 API
    */
 
@@ -431,6 +459,9 @@ export default class UserService extends Service {
         this.saveUserInfo()
         return promiseForUpdateAuthentication(auth)
       })
+      .then(auth => {
+        return this.getUserMobile()
+      })
       .catch(err => {
         console.error('登录失败' + err)
         return Promise.reject(err)
@@ -473,6 +504,15 @@ export default class UserService extends Service {
         return Promise.reject(new Error('access token 过期'))
       }
     }
+  }
+
+  getUserMobile(): Promise<{ mobile: string }> {
+    const userId = this.auth != null ? this.auth.userId : null
+    return this.retrieveUserMobile(userId)
+      .then(res => {
+        this.mobile = res.mobile
+        return res
+      })
   }
 
   getUserInfo(): Promise<UserInfo> {
