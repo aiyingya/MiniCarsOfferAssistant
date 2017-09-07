@@ -35,7 +35,7 @@
         <view class="weui-cells weui-cells_after-title ymc-cell-box">
           <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
             <view class="weui-cell__bd">首付比例</view>
-            <view class="weui-cell__ft">{{ quotation.paymentRatio }}%</view>
+            <view class="weui-cell__ft">{{ paymentRatiosValue }}%</view>
           </view>
           <template is="additionalCellView" data="{{ ...nakedCarPriceItems, nakedCarPriceItemsEdit}}" />
           <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">

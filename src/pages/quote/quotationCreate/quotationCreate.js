@@ -382,7 +382,8 @@ Page({
 
       if (quotation.hasLoan) {
         let stagesIndex = this.data.stagesArray.indexOf(quotation.stages)
-        let paymentRatiosIndex = this.data.paymentRatiosArray.indexOf(quotation.paymentRatiosValue)
+        this.setPaymentRatiosWithIndexAndValue(null, quotation.paymentRatio)
+        let paymentRatiosIndex = this.data.paymentRatiosIndex
 
         this.setExpenseRate(this.data.stagesArray[stagesIndex])
         // 需要初始化设置已经设置的还款周期和首付比率
