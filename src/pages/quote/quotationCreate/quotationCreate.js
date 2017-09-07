@@ -44,7 +44,7 @@ Page({
         baseSellingPrice: 0 // 加了利润的原始最低价格
       }], // skuId
       hasLoan: true, // 必传，true/false，boolean，是否贷款
-      paymentRatio: 3, // 首付比例（%），decimal，全款时不传，取值范围0~100
+      paymentRatio: 30, // 首付比例（%），decimal，全款时不传，取值范围0~100
       downPaymentAmount: 0,
       loanPaymentAmount: 0,
       stages: 3, // 贷款期数，int，全款时不传
@@ -707,7 +707,7 @@ Page({
     // 官价
     const officialPrice = this.data.quotation.quotationItems[0].guidePrice
     // 首付比例
-    const paymentRatio = this.data.quotation.paymentRatio * 10
+    const paymentRatio = this.data.quotation.paymentRatio
     let downPaymentAmount = this.data.quotation.downPaymentAmount
     let loanPaymentAmount = this.data.quotation.loanPaymentAmount
     // 分期年
@@ -821,7 +821,7 @@ Page({
         }
 
         // 计算首付率
-        const downPaymentRate = Number((downPaymentAmount / calculate.nakedCarPrice * 10).toFixed(3))
+        const downPaymentRate = Number((downPaymentAmount / calculate.nakedCarPrice * 100).toFixed(2))
         this.setPaymentRatiosWithIndexAndValue(null, downPaymentRate)
 
         this.setData({
@@ -859,7 +859,7 @@ Page({
       finalIndex = index
       finalValue = this.data.paymentRatiosArray[finalIndex]
     } else {
-      finalIndex = Math.ceil(value) - 1
+      finalIndex = Math.ceil(value * 0.1) - 1
       finalValue = value
     }
     this.setData({
@@ -991,14 +991,14 @@ Page({
           'quotation.carPrice': Math.floor(price),
           'quotation.requiredExpensesAll.purchaseTax': Math.floor(calculate.purchaseTax(_guidePrice, isElectricCar ? null : capacity)),
           // 重置相关的首付比例和金额参数
-          'quotation.paymentRatio': 3,
+          'quotation.paymentRatio': 30,
           'quotation.downPaymentAmount': 0,
           'quotation.loanPaymentAmount': 0,
           'paymentRatiosIndex': 2,
           'paymentRatiosValue': 3,
         })
         let businessRisks = this.data.businessRisks
-        let insurancesAll = wx.getStorageSync("insurancesAll") ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
+        let insurancesAll = wx.getStorageSync('insurancesAll') ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
 
         if (source == 'quotationDetail') {
           console.log(quotation)

@@ -110,13 +110,13 @@ Page({
 
         calculate.nakedCarPrice = carPrice
         calculate.stages = stages * 12
-        calculate.downPaymentRate = paymentRatio * 10
+        calculate.downPaymentRate = paymentRatio
         calculate.monthlyLoanPaymentRate = monthRate
         calculate.run()
 
         quotation.loanInterest = calculate.totalInterestAmount
 
-        paymentRatiosValue = (Math.ceil(paymentRatio))
+        paymentRatiosValue = Math.ceil((paymentRatio * 0.1).toFixed(3))
       }
       if (quotation.cutPriceCount || quotation.cutPriceCount === 0) {
         cutPriceCount = true
