@@ -111,7 +111,7 @@ Page({
         calculate.monthlyLoanPaymentRate = monthRate
         calculate.run()
 
-        quotation.loanInterest = calculate.interestAmountOfLoanPayment
+        quotation.loanInterest = calculate.totalInterestAmount
       }
       if (quotation.cutPriceCount || quotation.cutPriceCount === 0) {
         cutPriceCount = true
