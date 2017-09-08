@@ -10,8 +10,6 @@ import { container } from '../../../landrover/business/index'
 import Calculate from '../../../utils/calculate'
 const app = getApp()
 
-const calculate = new Calculate()
-
 Page({
   data: {
     pageId: 'quotationsDetail',
@@ -35,7 +33,7 @@ Page({
         sellingPrice: ''
       }],
       hasLoan: true, // 必传，true/false，boolean，是否贷款
-      paymentRatio: 3, // 首付比例（%），decimal，全款时不传，取值范围0~100
+      paymentRatio: 30, // 首付比例（%），decimal，全款时不传，取值范围0~100
       stages: 3, // 贷款期数，int，全款时不传
       expenseRate: 4,
       requiredExpenses: 0, // 必需费用（元），deciaml，取值范围0~999999999,
@@ -100,6 +98,8 @@ Page({
         url: '../../login/login'
       })
     } else {
+      const calculate = new Calculate()
+
       let paymentRatiosValue = 0
       if (that.data.quotation.hasLoan) {
         const isMonth = (quotation.rateType === 1)
@@ -116,7 +116,7 @@ Page({
 
         quotation.loanInterest = calculate.totalInterestAmount
 
-        paymentRatiosValue = Math.ceil((paymentRatio * 0.1).toFixed(0))
+        paymentRatiosValue = Math.ceil((paymentRatio * 0.1))
       }
       if (quotation.cutPriceCount || quotation.cutPriceCount === 0) {
         cutPriceCount = true

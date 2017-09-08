@@ -16,9 +16,9 @@ const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
 
 const app = getApp()
-let calculate: Calculate = new Calculate()
 
 Page({
+  calculate: new Calculate(),
   data: {
     // 导航头部数据
     activeIndex: 0,
@@ -524,7 +524,7 @@ Page({
               'quotation.requiredExpensesAll.licenseFee': res.carNumberFee || 0,
               'quotation.loanFee': res.loanFee || 0,
               'quotation.otherExpensesAll.serverFee': res.serviceFee || 0,
-              'quotation.requiredExpensesAll.purchaseTax': Math.floor(calculate.purchaseTax(officialPrice, isElectricCar ? null : capacity))
+              'quotation.requiredExpensesAll.purchaseTax': Math.floor(this.calculate.purchaseTax(officialPrice, isElectricCar ? null : capacity))
             })
 
             // 设置报价表单数据
@@ -735,31 +735,31 @@ Page({
         expenseRate = this.setExpenseRate(stages)
       }
 
-      const wRate = isMonth ? calculate.tenThousandYuanRateFrom(expenseRate, stages) : expenseRate // 万元系数
-      const monthRate = isMonth ? expenseRate : calculate.monthlyLoanPaymentRateFrom(expenseRate, stages) // 万元系数
+      const wRate = isMonth ? this.calculate.tenThousandYuanRateFrom(expenseRate, stages) : expenseRate // 万元系数
+      const monthRate = isMonth ? expenseRate : this.calculate.monthlyLoanPaymentRateFrom(expenseRate, stages) // 万元系数
 
-      calculate.nakedCarPrice = carPrice
-      calculate.downPaymentRate = paymentRatio
-      calculate.monthlyLoanPaymentRate = monthRate
-      calculate.tenThousandYuanRate = wRate
-      calculate.stages = stages * 12
-      calculate.downPaymentAmount = downPaymentAmount
-      calculate.loanPaymentAmount = loanPaymentAmount
+      this.calculate.nakedCarPrice = carPrice
+      this.calculate.downPaymentRate = paymentRatio
+      this.calculate.monthlyLoanPaymentRate = monthRate
+      this.calculate.tenThousandYuanRate = wRate
+      this.calculate.stages = stages * 12
+      this.calculate.downPaymentAmount = downPaymentAmount
+      this.calculate.loanPaymentAmount = loanPaymentAmount
 
-      calculate.run()
+      this.calculate.run()
 
       // 贷款判断
-      if (calculate.loanPaymentAmount !== 0) {
+      if (this.calculate.loanPaymentAmount !== 0) {
         loanFee = this.data.requestResult.loanFee
       }
       otherExpenses += loanFee
 
-      totalPayment = calculate.totalPaymentAmount + requiredExpenses + otherExpenses
-      advancePayment = calculate.downPaymentAmount + requiredExpenses + otherExpenses
-      monthlyPayment = calculate.monthlyLoanPaymentAmount
-      loanInterest = calculate.totalInterestAmount
-      downPaymentAmount = calculate.downPaymentAmount
-      loanPaymentAmount = calculate.loanPaymentAmount
+      totalPayment = this.calculate.totalPaymentAmount + requiredExpenses + otherExpenses
+      advancePayment = this.calculate.downPaymentAmount + requiredExpenses + otherExpenses
+      monthlyPayment = this.calculate.monthlyLoanPaymentAmount
+      loanInterest = this.calculate.totalInterestAmount
+      downPaymentAmount = this.calculate.downPaymentAmount
+      loanPaymentAmount = this.calculate.loanPaymentAmount
     } else {
       // 全款
       totalPayment = carPrice + otherExpenses + requiredExpenses
@@ -816,7 +816,7 @@ Page({
       confirmText: '确定',
       cancelText: '取消',
       validate: (e) => {
-        if (e.detail.value >= 0 && e.detail.value <= calculate.nakedCarPrice) {
+        if (e.detail.value >= 0 && e.detail.value <= this.calculate.nakedCarPrice) {
           return true
         } else {
           return false
@@ -829,14 +829,14 @@ Page({
         let loanPaymentAmount = 0
         if (item.keyPath === 'left') {
           downPaymentAmount = amount
-          loanPaymentAmount = calculate.nakedCarPrice - downPaymentAmount
+          loanPaymentAmount = this.calculate.nakedCarPrice - downPaymentAmount
         } else if (item.keyPath === 'right') {
           loanPaymentAmount = amount
-          downPaymentAmount = calculate.nakedCarPrice - loanPaymentAmount
+          downPaymentAmount = this.calculate.nakedCarPrice - loanPaymentAmount
         }
 
         // 计算首付率
-        const downPaymentRate = Number((downPaymentAmount / calculate.nakedCarPrice * 100).toFixed(6))
+        const downPaymentRate = Number((downPaymentAmount / this.calculate.nakedCarPrice * 100).toFixed(6))
         this.setPaymentRatiosWithIndexAndValue(null, downPaymentRate)
 
         this.setData({
@@ -1004,7 +1004,7 @@ Page({
           'quotation.quotationItems[0].sellingPrice': Math.floor(price),
           'carModelInfo.sellingPrice': Math.floor(price),
           'quotation.carPrice': Math.floor(price),
-          'quotation.requiredExpensesAll.purchaseTax': Math.floor(calculate.purchaseTax(_guidePrice, isElectricCar ? null : capacity)),
+          'quotation.requiredExpensesAll.purchaseTax': Math.floor(this.calculate.purchaseTax(_guidePrice, isElectricCar ? null : capacity)),
           // 重置相关的首付比例和金额参数
           'quotation.paymentRatio': 30,
           'quotation.downPaymentAmount': 0,
@@ -1467,7 +1467,7 @@ Page({
 
     let _insuranceAmount = that.data.quotation.requiredExpensesAll.insuranceAmount - that.data.quotation.insuranceDetail.iJQX
     saasService.getProfit(
-      calculate.loanPaymentAmount,
+      this.calculate.loanPaymentAmount,
       _insuranceAmount,
       carPrice,
       that.data.quotation.quotationItems[0].originalPrice,
