@@ -816,7 +816,7 @@ Page({
       confirmText: '确定',
       cancelText: '取消',
       validate: (e) => {
-        if (e.detail.value >= 0 && e.detail.value <= this.calculate.nakedCarPrice) {
+        if (e.detail.value > 0 && e.detail.value <= this.calculate.nakedCarPrice) {
           return true
         } else {
           return false
