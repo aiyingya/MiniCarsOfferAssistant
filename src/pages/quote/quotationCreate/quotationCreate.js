@@ -821,7 +821,7 @@ Page({
         }
 
         // 计算首付率
-        const downPaymentRate = Number((downPaymentAmount / calculate.nakedCarPrice * 100).toFixed(2))
+        const downPaymentRate = Number((downPaymentAmount / calculate.nakedCarPrice * 100).toFixed(6))
         this.setPaymentRatiosWithIndexAndValue(null, downPaymentRate)
 
         this.setData({
