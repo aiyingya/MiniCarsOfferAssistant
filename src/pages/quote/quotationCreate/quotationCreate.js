@@ -703,15 +703,11 @@ Page({
     }
 
     // 其他花费
-    // 贷款服务费用
-    const loanServerFee = this.data.quotation.loanFee
-
     let otherExpenses = 0
     const _temp2 = this.data.quotation.otherExpensesAll
     for (let key of Object.keys(_temp2)) {
       otherExpenses += Number(_temp2[key])
     }
-    otherExpenses += loanServerFee
 
     // 裸车价
     const carPrice = this.data.quotation.quotationItems[0].sellingPrice
@@ -730,6 +726,7 @@ Page({
     let totalPayment = 0
     let advancePayment = 0
     let loanInterest = 0
+    let loanFee = 0
 
     if (this.isLoanTabActive()) {
       // 贷款计算
@@ -751,6 +748,12 @@ Page({
 
       calculate.run()
 
+      // 贷款判断
+      if (calculate.loanPaymentAmount !== 0) {
+        loanFee = this.data.requestResult.loanFee
+      }
+      otherExpenses += loanFee
+
       totalPayment = calculate.totalPaymentAmount + requiredExpenses + otherExpenses
       advancePayment = calculate.downPaymentAmount + requiredExpenses + otherExpenses
       monthlyPayment = calculate.monthlyLoanPaymentAmount
@@ -759,7 +762,7 @@ Page({
       loanPaymentAmount = calculate.loanPaymentAmount
     } else {
       // 全款
-      totalPayment = carPrice + otherExpenses + requiredExpenses - loanServerFee
+      totalPayment = carPrice + otherExpenses + requiredExpenses
       advancePayment = carPrice
       monthlyPayment = 0
     }
@@ -779,6 +782,7 @@ Page({
     var diffPrice = Number(carPrice - officialPrice)
 
     this.setData({
+      'quotation.loanFee': loanFee,
       'quotation.totalPayment': totalPayment,
       'quotation.loanInterest': loanInterest,
       'quotation.advancePayment': advancePayment,
