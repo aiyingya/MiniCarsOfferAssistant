@@ -1,10 +1,10 @@
 // @flow
-import container from './adaptor/container'
-import Request from './adaptor/request'
-import Storage from './adaptor/storage'
-import UI from './adaptor/ui'
+import container from '../platform/container'
+import Request from '../platform/request'
+import Storage from '../platform/storage'
+import UI from '../platform/ui'
 
-import { system, px, rpx } from './adaptor/system'
+import { system, px, rpx } from '../platform/system'
 
 const request = new Request()
 const storage = new Storage()
