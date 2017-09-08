@@ -178,9 +178,20 @@ Page({
     initPoint: '',
     initSellingPrice: 0,
     /// 表单相关
-    paymentRatiosArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    paymentRatiosArray: [
+      { value: 10, name: '1成' },
+      { value: 20, name: '2成' },
+      { value: 30, name: '3成' },
+      { value: 40, name: '4成' },
+      { value: 50, name: '5成' },
+      { value: 60, name: '6成' },
+      { value: 70, name: '7成' },
+      { value: 80, name: '8成' },
+      { value: 90, name: '9成' },
+      { value: 100, name: '10成' }
+    ],
     paymentRatiosIndex: 2,
-    paymentRatiosValue: 3,
+    paymentRatiosValue: 30,
     stagesArray: [1, 2, 3],
     stagesIndex: 2,
     /// SKU 数据
@@ -857,14 +868,14 @@ Page({
     let finalValue = null
     if (value == null) {
       finalIndex = index
-      finalValue = this.data.paymentRatiosArray[finalIndex]
+      finalValue = this.data.paymentRatiosArray[finalIndex].value
     } else {
       finalIndex = Math.ceil(value * 0.1) - 1
       finalValue = value
     }
     this.setData({
       'paymentRatiosIndex': finalIndex,
-      'paymentRatiosValue': this.data.paymentRatiosArray[finalIndex],
+      'paymentRatiosValue': this.data.paymentRatiosArray[finalIndex].value,
       'quotation.paymentRatio': finalValue
     })
   },
@@ -995,7 +1006,7 @@ Page({
           'quotation.downPaymentAmount': 0,
           'quotation.loanPaymentAmount': 0,
           'paymentRatiosIndex': 2,
-          'paymentRatiosValue': 3,
+          'paymentRatiosValue': 30,
         })
         let businessRisks = this.data.businessRisks
         let insurancesAll = wx.getStorageSync('insurancesAll') ? JSON.parse(wx.getStorageSync("insurancesAll")) : null
