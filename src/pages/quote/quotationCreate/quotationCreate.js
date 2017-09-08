@@ -735,8 +735,8 @@ Page({
         expenseRate = this.setExpenseRate(stages)
       }
 
-      const wRate = isMonth ? this.calculate.tenThousandYuanRateFrom(expenseRate, stages) : expenseRate // 万元系数
-      const monthRate = isMonth ? expenseRate : this.calculate.monthlyLoanPaymentRateFrom(expenseRate, stages) // 万元系数
+      const wRate = isMonth ? this.calculate.tenThousandYuanRateFrom(expenseRate, stages * 12) : expenseRate // 万元系数
+      const monthRate = isMonth ? expenseRate : this.calculate.monthlyLoanPaymentRateFrom(expenseRate, stages * 12) // 万元系数
 
       this.calculate.nakedCarPrice = carPrice
       this.calculate.downPaymentRate = paymentRatio
