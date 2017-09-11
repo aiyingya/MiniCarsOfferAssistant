@@ -1,8 +1,17 @@
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
 .empty-status {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  margin: 0 auto;
 }
 
 .empty-status image{
