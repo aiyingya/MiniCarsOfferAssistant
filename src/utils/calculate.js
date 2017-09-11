@@ -165,19 +165,11 @@ export default class Calculate {
   }
 
   percentageFrom(ratio: number): number {
-    if (ratio > 1) {
-      return Number(ratio.toFixed(4))
-    } else {
-      return Number((ratio * 100).toFixed(4))
-    }
+    return Number((ratio * 100).toFixed(4))
   }
 
   rateFrom(percentage: number): number {
-    if (percentage > 1) {
-      return Number((percentage * 0.01).toFixed(6))
-    } else {
-      return Number(percentage.toFixed(6))
-    }
+    return Number((percentage * 0.01).toFixed(6))
   }
 
   /**
