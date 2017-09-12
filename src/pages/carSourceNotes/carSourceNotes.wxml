@@ -1,29 +1,21 @@
-<import src="../../components/carSource/carSourceView.wxml" />
-
 <import src="../../components/dialog/carSourceDetail/carSourceDetail.wxml" />
 <template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />
+
+<import src="../../components/carSourceNotes/carSourceNoteView.wxml" />
 
 <!-- 时间分区 -->
 <template name="timeSection">
   <view class="time-section">
-    <view class="line" />
     <view class="title">{{ callDateStr }}</view>
-    <view class="line" />
   </view>
 </template>
 
 <!-- spu分区 -->
 <template name="spuSection">
   <view bindtap="onSectionClick" class="spu-section" data-index="{{ index }}" data-sub-index="{{ subIndex }}">
-    <view class="title">[{{ item.officialPriceStr }}] {{ item.carModelName }}</view>
+    <view class="title">【{{ item.officialPriceStr }}】{{ item.carModelName }}</view>
     <image class="dropdown-arrow" src="{{index === selectedIndex && subIndex === selectedSubIndex ? '/images/icons/icon_dropdownarrow_up_gray.png': '/images/icons/icon_dropdownarrow_down_gray.png'}}"
     />
-  </view>
-</template>
-
-<template name="recordDateView">
-  <view class="record-date">
-    上次拨打时间:{{ lastCallDate }}
   </view>
 </template>
 
@@ -42,13 +34,12 @@
               />
               <block wx:if="{{ recordByTimeIndex == selectedIndex && recordBySpuIndex == selectedSubIndex }}">
                 <view class="record-rows">
-                  <view class="record-row">
-                    <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="{{ index }}">
-                      <template is="carSourceView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex }}"
+                  <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="{{ index }}">
+                    <view class="record-row">
+                      <template is="carSourceNoteView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex }}"
                       />
-                      <template is="recordDateView" data="{{ lastCallDate: item.lastCallDate }}"/>
-                    </block>
-                  </view>
+                    </view>
+                  </block>
                 </view>
               </block>
               <block wx:else>

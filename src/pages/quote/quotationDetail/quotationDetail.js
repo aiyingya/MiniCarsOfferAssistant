@@ -7,6 +7,7 @@ import {
 } from "../../../components/wux"
 import util from '../../../utils/util'
 import { container } from '../../../landrover/business/index'
+import Calculate from '../../../utils/calculate'
 const app = getApp()
 
 Page({
@@ -15,7 +16,7 @@ Page({
     pageName: '报价详情',
     // 导航头部数据
     activeIndex: 0,
-    slderOffset: 0,
+    sliderOffset: 0,
     sliderLeft: 0,
     roleName: null,
     /* 报价单主体数据 */
@@ -40,6 +41,8 @@ Page({
       advancePayment: 0, // 必传，首次支付金额，如果全款则为全款金额",
       monthlyPayment: 0, // 月供金额，每月还款金额，全款时不传",
       totalPayment: 0, // 总落地价格
+      downPaymentAmount: 0,
+      loanPaymentAmount: 0,
       remark: '',
       loginChannel: '',
       snsId: '',
@@ -57,7 +60,15 @@ Page({
     },
     cutPriceCount: '',
     cutPriceCountStyle: '',
-    isSpecialBranch: false //宝马、奥迪、MINI展示下xx点
+    isSpecialBranch: false, //宝马、奥迪、MINI展示下xx点
+    // 支付比率的显示值
+    paymentRatiosValue: 0,
+    // 1.14.0 增加的首付和贷款金额
+    nakedCarPriceItems: {
+      left: { name: '首付款', value: 0, keyPath: 'left' },
+      right: { name: '贷款金额', value: 0, keyPath: 'right' }
+    },
+    nakedCarPriceItemsEdit: false
   },
   onLoad(options) {
     let that = this;
@@ -67,7 +78,7 @@ Page({
     console.log(quotation)
     /// 实时计算优惠点数
     let downPrice = util.downPrice(carPrice, officialPrice)
-    let downPriceFlag = util.downPriceFlag(downPrice);
+    let downPriceFlag = util.downPriceFlag(downPrice)
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
     let cutPriceCount, cutPriceCountStyle
@@ -87,14 +98,25 @@ Page({
         url: '../../login/login'
       })
     } else {
+      const calculate = new Calculate()
+
+      let paymentRatiosValue = 0
       if (that.data.quotation.hasLoan) {
         const isMonth = (quotation.rateType === 1)
         const expenseRate = quotation.expenseRate
         const stages = quotation.stages
         const paymentRatio = quotation.paymentRatio
-        const monthRate = isMonth ? expenseRate : util.tranWToMonth(expenseRate, stages)//万元系数
-        const loanInterest = util.loanPaymentInterest(carPrice, paymentRatio, monthRate, stages * 12)
-        quotation.loanInterest = Math.floor(loanInterest)
+        const monthRate = isMonth ? expenseRate : calculate.monthlyLoanPaymentRateFrom(expenseRate, stages * 12) // 万元系数
+
+        calculate.nakedCarPrice = carPrice
+        calculate.stages = stages * 12
+        calculate.downPaymentRate = paymentRatio
+        calculate.monthlyLoanPaymentRate = monthRate
+        calculate.run()
+
+        quotation.loanInterest = calculate.totalInterestAmount
+
+        paymentRatiosValue = Math.ceil((paymentRatio * 0.1))
       }
       if (quotation.cutPriceCount || quotation.cutPriceCount === 0) {
         cutPriceCount = true
@@ -114,7 +136,10 @@ Page({
           flag: downPriceFlag,
           price: downPriceString,
           point: downPoint
-        }
+        },
+        paymentRatiosValue: paymentRatiosValue,
+        [`nakedCarPriceItems.left.value`]: calculate.downPaymentAmount,
+        [`nakedCarPriceItems.right.value`]: calculate.loanPaymentAmount
       })
 
       if (wx.showShareMenu) {

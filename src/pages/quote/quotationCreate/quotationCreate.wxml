@@ -13,9 +13,9 @@
 <import src="../../../components/dialog/pricePickerDialog/pricePickerDialog.wxml" />
 <template is="pricePickerDialog" data="{{ ...$wux.pricePickerDialog }}" />
 
+<import src="../../../components/quotation/index.wxml" />
+
 <view class="container page">
-
-
   <block wx:if="{{canIUse.movablearea}}">
     <movable-area class="weui-layer-movable">
       <movable-view class="weui-layer-movable-in {{(touchStatus === 3 || touchStatus === 4) ? 'weui-layer-movable__hover' :'' }}"
@@ -67,15 +67,16 @@
       <view class="weui-create_page">
         <!--费用计算列表-->
         <view class="weui-cells weui-cells_after-title ymc-cell-box">
-          <picker class="weui-cell_picker" bindchange="handlerPaymentRatioChange" value="{{paymentRatiosIndex}}" range="{{paymentRatiosArray}}">
+          <picker class="weui-cell_picker" bindchange="handlerPaymentRatioChange" value="{{paymentRatiosIndex}}" range="{{paymentRatiosArray}}" range-key="name">
             <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
               <!--<view class="picker">-->
               <!--当前选择：{{array[index]}}-->
               <!--</view>-->
               <view class="weui-cell__bd">首付比例</view>
-              <view class="weui-cell__ft weui-cell__ft_in-access">{{ paymentRatiosArray[paymentRatiosIndex] }}%</view>
+              <view class="weui-cell__ft weui-cell__ft_in-access">{{ paymentRatiosValue !== quotation.paymentRatio ? '约':'' }}{{ paymentRatiosArray[paymentRatiosIndex].value / 10 }}成</view>
             </view>
           </picker>
+          <template is="additionalCellView" data="{{ ...nakedCarPriceItems, nakedCarPriceItemsEdit }}"/>
           <picker class="weui-cell_picker" bindchange="handlerStagesChange" value="{{stagesIndex}}" range="{{stagesArray}}">
             <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
               <view class="weui-cell__bd">还款周期</view>

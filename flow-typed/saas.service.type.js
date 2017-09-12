@@ -176,7 +176,6 @@ declare type PriceQuoted = {
   quotedRangeUnit: string
 };
 
-
 declare type CarModel = {
   carModelId: number,
   carModelName: string,
@@ -189,5 +188,6 @@ declare type SupplierForCarSource = {
   name: string,
   contact: string,
   companyId: number,
-  companyName: string
+  companyName: string,
+  supplierType: 'IN' | 'PARTNER' | ''
 };

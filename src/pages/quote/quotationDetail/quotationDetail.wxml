@@ -1,162 +1,169 @@
-<import src="../../../components/toast/toast.wxml"/>
-<template is="toast" data="{{ ...$wux.toast }}"/>
+<import src="../../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
 
-<import src="../../../components/dialog/inputNumberDialog.wxml"/>
-<template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}"/>
+<import src="../../../components/dialog/inputNumberDialog.wxml" />
+<template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}" />
 
-<import src="../../../components/dialog/dialog.wxml"/>
-<template is="dialog" data="{{ ...$wux.dialog }}"/>
+<import src="../../../components/dialog/dialog.wxml" />
+<template is="dialog" data="{{ ...$wux.dialog }}" />
 
-<import src="../../../components/dialog/qrCodeDialog/qrCodeDialog.wxml"/>
-<template is="qrCodeDialog" data="{{ ...$wux.qrCodeDialog }}"/>
+<import src="../../../components/dialog/qrCodeDialog/qrCodeDialog.wxml" />
+<template is="qrCodeDialog" data="{{ ...$wux.qrCodeDialog }}" />
+
+<import src="../../../components/quotation/index.wxml" />
+
 <view class="page pad-bt">
-    <view class="page__bd">
-        <view class="weui-tab">
-            <view wx:if="{{ quotation.hasLoan }}" >
-                <!--费用计算色块-->
-                <view class="weui-flex loan-payment-block">
-                    <view class="weui-flex__item advance-payment-block">
-                        <view class="payment-price">￥{{ quotation.advancePayment }}</view>
-                        <view>首付(元)</view>
-                </view>
-                    <view class="weui-flex__item monthly-payment-block">
-                        <view class="payment-price">￥{{ quotation.monthlyPayment }}</view>
-                        <view>月供(元)</view>
-                    </view>
-                </view>
-
-                <view class="weui-detail-title">
-                  落地总额约￥{{quotation.totalPayment }} / 利息约￥{{quotation.loanInterest}}
-                </view>
-                <!--费用计算列表-->
-                <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                    <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                        <view class="weui-cell__bd">首付比例</view>
-                        <view class="weui-cell__ft">{{ quotation.paymentRatio }}%</view>
-                    </view>
-                    <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                        <view class="weui-cell__bd">还款周期</view>
-                        <view class="weui-cell__ft">{{ quotation.stages }}年</view>
-                    </view>
-                    <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                      <block wx:if="{{quotation.rateType ==1}}">
-                        <view  class="weui-cell__bd">月息</view>
-                        <view class="weui-cell__ft">{{ quotation.expenseRate }}厘</view>
-                      </block>
-                      <block wx:else >
-                        <view class="weui-cell__bd">万元系数</view>
-                        <view class="weui-cell__ft">{{ quotation.expenseRate }}元</view>
-                      </block>
-                    </view>
-                  <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                    <view class="weui-cell__bd">贷款手续费</view>
-                    <view class="weui-cell__ft">￥{{ quotation.loanFee }}</view>
-                  </view>
-                </view>
-            </view>
-            <view class="weui-flex loan-payment-block" wx:else>
-                <view class="weui-flex__item advance-payment-block">
-                        <view class="payment-price">￥{{ quotation.totalPayment }}</view>
-                        <view>落地总额约(元)</view>
-                </view>
-            </view>
-
-            <!--基础信息-->
-            <view class="h-cell-gray">基础信息</view>
-            <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                <view class="weui-cell weui-cell_access carsQuote-cell" hover-class="weui-cell_active">
-                    <view class="carsQuote-pic">
-                        <image class="cell-img" src="{{ quotation.quotationItems[0].itemPic }}"></image>
-                    </view>
-                    <view class="weui-cell__ft">
-                        <view class="text-left carsQuote-title">{{ quotation.quotationItems[0].itemName }}</view>
-                        <view class="text-left carsQuote-label">指导价： {{ quotation.quotationItems[0].guidePrice }}元</view>
-                    </view>
-                </view>
-                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                    <view class="weui-cell__bd">配色</view>
-                    <view class="weui-cell__ft"> {{ quotation.quotationItems[0].specifications }} </view>
-                </view>
-                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                    <view class="weui-cell__bd">裸车价</view>
-                    <view class="weui-cell__ft">
-                      <view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>
-                        <view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}<block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>￥{{quotation.quotationItems[0].sellingPrice}}
-                    </view>
-                </view>
-            </view>
-
-            <!--必要花费-->
-            <view class="h-cell-gray">必要花费</view>
-            <view class="weui-cells weui-cells_after-title ymc-cell-box">
-                <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                    <view class="weui-cell__bd">购置税</view>
-                    <view class="weui-cell__ft">￥{{ quotation.purchaseTax || 0 }} </view>
-                </view>
-              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <view class="weui-cell__bd">代收上牌费</view>
-                <view class="weui-cell__ft">￥{{ quotation.carNumFee || 0}} </view>
-              </view>
-              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <view class="weui-cell__bd">车船税</view>
-                <view class="weui-cell__ft">￥{{ quotation.carTax || 0}} </view>
-              </view>
-              <view class="weui-cell weui-cell_access {{quotation.insuranceDetail.showDetail ? 'weui-arrow-padding':''}}" hover-class="weui-cell_active" bindtap="lookDetail">
-                <view class="weui-cell__bd">保险金额</view>
-                <view class="weui-cell__ft">￥{{(quotation.insuranceDetail && quotation.insuranceDetail.iTotal || 0)||0}}</view>
-                <image wx:if ="{{quotation.insuranceDetail.showDetail}}" class="icon_arrow" src="../../../images/icons/icon_arrow.png"></image>
-              </view>
-              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <view class="weui-cell__bd">金属漆加价</view>
-                <view class="weui-cell__ft">￥{{quotation.metallicPaintFee ||0}}</view>
-              </view>
-            </view>
-            <!--其他花费-->
-            <view class="h-cell-gray">其他花费</view>
-            <view class="weui-cells weui-cells_after-title ymc-cell-box">
-              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <view class="weui-cell__bd">精品费用</view>
-                <view class="weui-cell__ft">￥{{ quotation.boutiqueFee || 0}} </view>
-              </view>
-              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <view class="weui-cell__bd">安装费</view>
-                <view class="weui-cell__ft">￥{{ quotation.installFee || 0}} </view>
-              </view>
-              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <view class="weui-cell__bd">服务费</view>
-                <view class="weui-cell__ft">￥{{ quotation.serviceFee || 0}} </view>
-              </view>
-              <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-                <view class="weui-cell__bd">其它</view>
-                <view class="weui-cell__ft">￥{{ quotation.otherFee || 0}} </view>
-              </view>
-            </view>
-            <!--备   注-->
-            <view class="h-cell-gray">备注</view>
-            <view class="white-box">
-               <view wx:if="{{ quotation.remark.length }}" class="textarea-box">{{ quotation.remark }}</view>
-               <view wx:else class="textarea-box">无备注</view>
-            </view>
+  <view class="page__bd">
+    <view class="weui-tab">
+      <view wx:if="{{ quotation.hasLoan }}">
+        <!--费用计算色块-->
+        <view class="weui-flex loan-payment-block">
+          <view class="weui-flex__item advance-payment-block">
+            <view class="payment-price">￥{{ quotation.advancePayment }}</view>
+            <view>首付(元)</view>
+          </view>
+          <view class="weui-flex__item monthly-payment-block">
+            <view class="payment-price">￥{{ quotation.monthlyPayment }}</view>
+            <view>月供(元)</view>
+          </view>
         </view>
 
-        <!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/发送报价/联系客户/立即定车-->
-        <view class="btn-group fix-bt" >
-            <view class='flex-item-1 btn' bindtap='handlerEditQuotation'>
-             <image src="../../../images/icons/tab_icon_edit.png"></image>
-              编辑
-            </view>
-            <view class='flex-item-2 btn' wx:if="{{quotation.sendMessage}}" bindtap='handlerContactWithCustomer'>
-             <image src="../../../images/icons/tab_icon_call.png"></image>
-              联系客户
-            </view>
-            <view class='flex-item-2 btn' wx:else bindtap='handlerShareToCustomer'>
-              <image src="../../../images/icons/tab_icon_send_price.png"></image>
-              发送报价</view>
-<!--            <button class='flex-item-3 btn' bindtap='handlerBookCar'>发起砍价活动</button>-->
-            <view class='flex-item-3 btn {{cutPriceCountStyle}}' bindtap='handlerBargainActive'>
-              <block wx:if="{{cutPriceCountStyle != ''}}">已发起砍价活动</block>
-              <block wx:else>发起砍价活动</block>
-            </view>
+        <view class="weui-detail-title">
+          落地总额约￥{{quotation.totalPayment }} / 利息约￥{{quotation.loanInterest}}
         </view>
+        <!--费用计算列表-->
+        <view class="weui-cells weui-cells_after-title ymc-cell-box">
+          <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__bd">首付比例</view>
+            <view class="weui-cell__ft">{{ paymentRatiosValue * 10 != quotation.paymentRatio ? '约' : ''}}{{ paymentRatiosValue }}成</view>
+          </view>
+          <template is="additionalCellView" data="{{ ...nakedCarPriceItems, nakedCarPriceItemsEdit}}" />
+          <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__bd">还款周期</view>
+            <view class="weui-cell__ft">{{ quotation.stages }}年</view>
+          </view>
+          <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <block wx:if="{{quotation.rateType ==1}}">
+              <view class="weui-cell__bd">月息</view>
+              <view class="weui-cell__ft">{{ quotation.expenseRate }}厘</view>
+            </block>
+            <block wx:else>
+              <view class="weui-cell__bd">万元系数</view>
+              <view class="weui-cell__ft">{{ quotation.expenseRate }}元</view>
+            </block>
+          </view>
+          <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+            <view class="weui-cell__bd">贷款手续费</view>
+            <view class="weui-cell__ft">￥{{ quotation.loanFee }}</view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-flex loan-payment-block" wx:else>
+        <view class="weui-flex__item advance-payment-block">
+          <view class="payment-price">￥{{ quotation.totalPayment }}</view>
+          <view>落地总额约(元)</view>
+        </view>
+      </view>
+
+      <!--基础信息-->
+      <view class="h-cell-gray">基础信息</view>
+      <view class="weui-cells weui-cells_after-title ymc-cell-box">
+        <view class="weui-cell weui-cell_access carsQuote-cell" hover-class="weui-cell_active">
+          <view class="carsQuote-pic">
+            <image class="cell-img" src="{{ quotation.quotationItems[0].itemPic }}"></image>
+          </view>
+          <view class="weui-cell__ft">
+            <view class="text-left carsQuote-title">{{ quotation.quotationItems[0].itemName }}</view>
+            <view class="text-left carsQuote-label">指导价： {{ quotation.quotationItems[0].guidePrice }}元</view>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">配色</view>
+          <view class="weui-cell__ft"> {{ quotation.quotationItems[0].specifications }} </view>
+        </view>
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">裸车价</view>
+          <view class="weui-cell__ft">
+            <view wx:if="{{priceChange.flag === 1}}" class="min-gray-font">(下{{ priceChange.price }}
+              <block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>
+            <view wx:if="{{priceChange.flag === -1}}" class="min-gray-font">(上{{ priceChange.price }}
+              <block wx:if="{{isSpecialBranch}}">/{{priceChange.point}}点</block>)</view>￥{{quotation.quotationItems[0].sellingPrice}}
+          </view>
+        </view>
+      </view>
+
+      <!--必要花费-->
+      <view class="h-cell-gray">必要花费</view>
+      <view class="weui-cells weui-cells_after-title ymc-cell-box">
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">购置税</view>
+          <view class="weui-cell__ft">￥{{ quotation.purchaseTax || 0 }} </view>
+        </view>
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">代收上牌费</view>
+          <view class="weui-cell__ft">￥{{ quotation.carNumFee || 0}} </view>
+        </view>
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">车船税</view>
+          <view class="weui-cell__ft">￥{{ quotation.carTax || 0}} </view>
+        </view>
+        <view class="weui-cell weui-cell_access {{quotation.insuranceDetail.showDetail ? 'weui-arrow-padding':''}}" hover-class="weui-cell_active"
+          bindtap="lookDetail">
+          <view class="weui-cell__bd">保险金额</view>
+          <view class="weui-cell__ft">￥{{(quotation.insuranceDetail && quotation.insuranceDetail.iTotal || 0)||0}}</view>
+          <image wx:if="{{quotation.insuranceDetail.showDetail}}" class="icon_arrow" src="../../../images/icons/icon_arrow.png"></image>
+        </view>
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">金属漆加价</view>
+          <view class="weui-cell__ft">￥{{quotation.metallicPaintFee ||0}}</view>
+        </view>
+      </view>
+      <!--其他花费-->
+      <view class="h-cell-gray">其他花费</view>
+      <view class="weui-cells weui-cells_after-title ymc-cell-box">
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">精品费用</view>
+          <view class="weui-cell__ft">￥{{ quotation.boutiqueFee || 0}} </view>
+        </view>
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">安装费</view>
+          <view class="weui-cell__ft">￥{{ quotation.installFee || 0}} </view>
+        </view>
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">服务费</view>
+          <view class="weui-cell__ft">￥{{ quotation.serviceFee || 0}} </view>
+        </view>
+        <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+          <view class="weui-cell__bd">其它</view>
+          <view class="weui-cell__ft">￥{{ quotation.otherFee || 0}} </view>
+        </view>
+      </view>
+      <!--备   注-->
+      <view class="h-cell-gray">备注</view>
+      <view class="white-box">
+        <view wx:if="{{ quotation.remark.length }}" class="textarea-box">{{ quotation.remark }}</view>
+        <view wx:else class="textarea-box">无备注</view>
+      </view>
     </view>
+
+    <!--底部按钮， 编辑态显示 完成， 非编辑态显示 编辑/发送报价/联系客户/立即定车-->
+    <view class="btn-group fix-bt">
+      <view class='flex-item-1 btn' bindtap='handlerEditQuotation'>
+        <image src="../../../images/icons/tab_icon_edit.png"></image>
+        编辑
+      </view>
+      <view class='flex-item-2 btn' wx:if="{{quotation.sendMessage}}" bindtap='handlerContactWithCustomer'>
+        <image src="../../../images/icons/tab_icon_call.png"></image>
+        联系客户
+      </view>
+      <view class='flex-item-2 btn' wx:else bindtap='handlerShareToCustomer'>
+        <image src="../../../images/icons/tab_icon_send_price.png"></image>
+        发送报价</view>
+      <!--            <button class='flex-item-3 btn' bindtap='handlerBookCar'>发起砍价活动</button>-->
+      <view class='flex-item-3 btn {{cutPriceCountStyle}}' bindtap='handlerBargainActive'>
+        <block wx:if="{{cutPriceCountStyle != ''}}">已发起砍价活动</block>
+        <block wx:else>发起砍价活动</block>
+      </view>
+    </view>
+  </view>
 </view>

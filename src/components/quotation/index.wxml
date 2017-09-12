@@ -1,0 +1,15 @@
+<template name="additionalCellView">
+  <view class="additional-cell">
+    <template is="subCellView" data="{{ item: left, edit: nakedCarPriceItemsEdit }}" />
+    <template is="subCellView" data="{{ item: right, edit: nakedCarPriceItemsEdit }}" />
+  </view>
+</template>
+
+<template name="subCellView">
+  <view class="sub-cell" data-item="{{ item }}" bindtap="{{ edit ? 'onSubCellViewClick' : ''}}">
+    <view class="weui-cell weui-cell_access" hover-class="weui-cell_active">
+      <view class="weui-cell__bd">{{ item.name }}</view>
+      <view class="weui-cell__ft {{ edit ? 'weui-cell__ft_in-access' : '' }} ">￥{{ item.value }}</view>
+    </view>
+  </view>
+</template>

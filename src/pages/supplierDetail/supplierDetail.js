@@ -48,7 +48,12 @@ Page({
     submitSelectedTagIndex: -1,
     submitTextareaValue: '',
     submitButtonValid: false,
-    submitButtonTagValid: false
+    submitButtonTagValid: false,
+    emptyStatus: {
+      iconPath: '/images/icons/icon_evaluate_empty.png',
+      title: '该供应商暂无评论信息',
+      description: '如果您与供应商有过成交或沟通， 请尽快评价哦'
+    }
   },
   onLoad(options) {
     const system = wxapi.getSystemInfoSync()

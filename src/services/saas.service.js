@@ -569,7 +569,24 @@ export default class SAASService extends Service {
    */
   getCreatCarRecordInfo(
     carPrice: number
-  ): Promise<any> {
+  ): Promise<{
+    carNumberFee: number,
+    carPrice: number,
+    interestType: 1,
+    loanFee: number,
+    serviceFee: number,
+    oneInterest: number,
+    oneWYXS: number,
+    twoInterest: number,
+    twoWYXS: number,
+    threeInterest: number,
+    threeWYXS: number,
+    validTime: {
+      chooseWho: number,
+      firstChoose: number,
+      secondChoose: number
+    }
+  }> {
     const userId = this.userService.auth.userId
     return this.request(
       'sale/quotation/initQuotation',

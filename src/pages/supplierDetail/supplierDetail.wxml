@@ -1,4 +1,5 @@
 <import src="../../components/supplier/index.wxml" />
+<import src="../../components/common/empty/emptyStatusView.wxml" />
 
 <import src="../../components/toast/toast.wxml" />
 <template is="toast" data="{{ ...$wux.toast }}" />
@@ -25,7 +26,7 @@
         </view>
       </block>
       <block wx:else>
-        <view class="no-row">暂无相关评论</view>
+        <template is="emptyStatusView" data="{{ ...emptyStatus }}" />
       </block>
     </scroll-view>
   </view>

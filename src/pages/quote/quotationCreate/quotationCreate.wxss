@@ -1,3 +1,4 @@
+@import '../../../components/quotation/index.wxss';
 @import '../../../components/dialog/specialUploadDialog/specialUploadDialog.wxss';
 page {
 	background-color: #fff;
