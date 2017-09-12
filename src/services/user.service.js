@@ -66,8 +66,6 @@ export default class UserService extends BaseUserService {
 
   address: any = {};
 
-  mobile: ? string;
-
   constructor() {
     super()
   }
@@ -585,7 +583,6 @@ export default class UserService extends BaseUserService {
         if (res.roleName === 'guest') {
           // 当用户信息为 guest 时做什么操作
           const roleInfo = res.roleInfo
-          this.mobile = roleInfo.mobile
           return res
         } else if (res.roleName === 'employee') {
           const roleInfo = res.roleInfo
@@ -599,7 +596,6 @@ export default class UserService extends BaseUserService {
             }
           }
           this.location = location
-          this.mobile = roleInfo.mobile
           this.address = roleInfo.tenants ? roleInfo.tenants[0].address : {}
           return res
         } else {
@@ -728,6 +724,9 @@ export default class UserService extends BaseUserService {
         this.getClientId(true)
         this.saveUserInfo()
         return promiseForUpdateAuthentication(auth)
+      })
+      .then(auth => {
+        return this.getUserMobile()
       })
       .catch(err => {
         console.error('登录失败')

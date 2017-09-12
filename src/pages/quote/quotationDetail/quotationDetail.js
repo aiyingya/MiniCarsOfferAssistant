@@ -10,8 +10,6 @@ import { container } from '../../../landrover/business/index'
 import Calculate from '../../../utils/calculate'
 const app = getApp()
 
-const calculate = new Calculate()
-
 Page({
   data: {
     pageId: 'quotationsDetail',
@@ -63,6 +61,8 @@ Page({
     cutPriceCount: '',
     cutPriceCountStyle: '',
     isSpecialBranch: false, //宝马、奥迪、MINI展示下xx点
+    // 支付比率的显示值
+    paymentRatiosValue: 0,
     // 1.14.0 增加的首付和贷款金额
     nakedCarPriceItems: {
       left: { name: '首付款', value: 0, keyPath: 'left' },
@@ -78,7 +78,7 @@ Page({
     console.log(quotation)
     /// 实时计算优惠点数
     let downPrice = util.downPrice(carPrice, officialPrice)
-    let downPriceFlag = util.downPriceFlag(downPrice);
+    let downPriceFlag = util.downPriceFlag(downPrice)
     let downPriceString = util.priceStringWithUnit(downPrice)
     let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
     let cutPriceCount, cutPriceCountStyle
@@ -98,6 +98,9 @@ Page({
         url: '../../login/login'
       })
     } else {
+      const calculate = new Calculate()
+
+      let paymentRatiosValue = 0
       if (that.data.quotation.hasLoan) {
         const isMonth = (quotation.rateType === 1)
         const expenseRate = quotation.expenseRate
@@ -111,7 +114,9 @@ Page({
         calculate.monthlyLoanPaymentRate = monthRate
         calculate.run()
 
-        quotation.loanInterest = calculate.interestAmountOfLoanPayment
+        quotation.loanInterest = calculate.totalInterestAmount
+
+        paymentRatiosValue = Math.ceil((paymentRatio * 0.1))
       }
       if (quotation.cutPriceCount || quotation.cutPriceCount === 0) {
         cutPriceCount = true
@@ -132,6 +137,7 @@ Page({
           price: downPriceString,
           point: downPoint
         },
+        paymentRatiosValue: paymentRatiosValue,
         [`nakedCarPriceItems.left.value`]: calculate.downPaymentAmount,
         [`nakedCarPriceItems.right.value`]: calculate.loanPaymentAmount
       })

@@ -51,8 +51,8 @@ Page({
     submitButtonTagValid: false,
     emptyStatus: {
       iconPath: '/images/icons/icon_evaluate_empty.png',
-      title: '暂无评价信息',
-      description: '如果你与供应商有过成交或沟通， 请尽快评价哦'
+      title: '该供应商暂无评论信息',
+      description: '如果您与供应商有过成交或沟通， 请尽快评价哦'
     }
   },
   onLoad(options) {

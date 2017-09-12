@@ -1,6 +1,6 @@
 
 import * as wxapi from 'fmt-wxapp-promise'
-import $wuxToast from '../../../components/toast/toast'
+import $wuxToast from '../../components/toast/toast'
 
 export default class UI {
 
