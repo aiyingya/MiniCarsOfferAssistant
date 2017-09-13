@@ -58,10 +58,13 @@ Page({
   onLoad(options) {
     const system = wxapi.getSystemInfoSync()
     const company = utils.urlDecodeValueForKeyFromOptions('company', options)
+    // TODO:这里的218数值 需要根据主营品牌的数量判断 <=3个则为 218 - 60
+    // 以下数值通通为页面元素的高度  scrollViewHeight：为获取滚动元素的高度数值
     this.setData({
       company,
-      scrollViewHeight: system.windowHeight - util.px(100 + 20 + 96 + 210)
+      scrollViewHeight: system.windowHeight - util.px(100 + 20 + 96 + 210 + 218 + 10 + 142 + 10)
     })
+
     wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
       .then(() => {
         return this.filters()

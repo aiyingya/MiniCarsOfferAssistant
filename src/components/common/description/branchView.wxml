@@ -1,0 +1,39 @@
+<!-- 主营品牌 主营车系 -->
+<template name="branchView">
+  <view class="branch-desc">
+      <view class="branch-desc__title">主营品牌</view>
+    <view class="branch-desc__list">
+      <view class="branch-desc__content">
+        <image mode="aspectFit" class="branch-desc__logo" src="http://produce.oss-cn-hangzhou.aliyuncs.com/ops/upload/image/original/201508/171345113964.png"></image>
+        <view class="branch-desc__name">北汽新能源</view>
+      </view>
+      <view class="branch-desc__content">
+        <image mode="aspectFit" class="branch-desc__logo" src="http://produce.oss-cn-hangzhou.aliyuncs.com/ops/upload/image/original/201508/171345113964.png"></image>
+        <view class="branch-desc__name">北汽新能源</view>
+      </view>
+      <view class="branch-desc__content">
+        <image mode="aspectFit" class="branch-desc__logo" src="http://produce.oss-cn-hangzhou.aliyuncs.com/ops/upload/image/original/201508/171345113964.png"></image>
+        <view class="branch-desc__name">峰峰风光</view>
+      </view>
+      <view class="branch-desc__content">
+        <image mode="aspectFit" class="branch-desc__logo" src="http://produce.oss-cn-hangzhou.aliyuncs.com/ops/upload/image/original/201508/171345113964.png"></image>
+        <view class="branch-desc__name">北汽新能源</view>
+      </view><view class="branch-desc__content">
+        <image mode="aspectFit" class="branch-desc__logo" src="http://produce.oss-cn-hangzhou.aliyuncs.com/ops/upload/image/original/201508/171345113964.png"></image>
+        <view class="branch-desc__name">北汽新能源</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="branch-desc branch-desc_h">
+    <view class="branch-desc__title">主营车系</view>
+    <view class="branch-desc__listT">
+      <view class="branch-desc__contentT">宝马1系</view>
+      <view class="branch-desc__contentT">宝马1系</view>
+      <view class="branch-desc__contentT">宝马1系</view>
+      <view class="branch-desc__contentT">宝马1系</view>
+      <view class="branch-desc__contentT">宝马1系</view>
+
+    </view>
+  </view>
+</template>

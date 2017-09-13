@@ -8,6 +8,8 @@
 <template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />
 
 <import src="../../components/common/filter/filterBarView.wxml" />
+<import src="../../components/common/description/branchView.wxml" />
+
 
 <!-- 主页面 -->
 <view class="container supplier-detail">
@@ -16,6 +18,9 @@
     <template is="supplierSearchResultView" data="{{ index: 0, item: company }}" />
   </view>
   <view class="body">
+    <view class="branch-section">
+      <template is="branchView" data="{{ filters, filtersSelectedIndexes }}" />
+    </view>
     <view class="filter-section">
       <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />
     </view>

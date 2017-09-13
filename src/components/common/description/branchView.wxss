@@ -1,0 +1,61 @@
+.branch-desc{
+  max-height:218rpx;
+  border-top:1rpx solid #E4E4E4;
+  border-bottom:1rpx solid #E4E4E4;
+  padding:0 30rpx;
+  margin-bottom:10rpx;
+  background:#ffffff;
+}
+.branch-desc_h{
+  height: 142rpx;
+}
+.branch-desc__title{
+  border-bottom:1rpx solid #E4E4E4;
+  font-family:PingFangSC-Regular;
+  font-size:26rpx;
+  color:#666666;
+  letter-spacing:0;
+  line-height:64rpx;
+  height:64rpx;
+
+}
+.branch-desc__list{
+  padding: 10rpx 0 20rpx;
+  max-height:120rpx;
+}
+
+.branch-desc__content{
+  width: 33.3%;
+  height:60rpx;
+  display:inline-flex;
+  justify-content:flex-start;
+  align-items:center;
+  font-family:PingFangSC-Regular;
+}
+.branch-desc__name{
+  height: 60rpx;
+  line-height: 60rpx;
+  font-family: PingFangSC-Regular;
+  font-size: 26rpx;
+  color: #352627;
+  letter-spacing: 0;
+}
+.branch-desc__logo{
+  width:90rpx;
+  height:60rpx;
+}
+
+.branch-desc__listT{
+  padding: 10rpx 0;
+  height:58rpx;
+  line-height:58rpx;
+}
+.branch-desc__contentT{
+  margin-right: 10rpx;
+  display:inline-flex;
+  justify-content:flex-start;
+  align-items:center;
+  font-family:PingFangSC-Regular;
+  color: #352627;
+  font-size:26rpx;
+}
