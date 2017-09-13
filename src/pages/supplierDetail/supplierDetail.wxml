@@ -19,7 +19,7 @@
   </view>
   <view class="body">
     <view class="branch-section">
-      <template is="branchView" data="{{ filters, filtersSelectedIndexes }}" />
+      <template is="branchView" data="{{ mainBrands:company.mainBrand, mainSeries:company.mainSeries }}" />
     </view>
     <view class="filter-section">
       <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />

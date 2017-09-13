@@ -81,7 +81,20 @@ declare type SPUMarketTrendEntity = {
 declare type Company = {
   companyId: number,
   companyName: string,
-  showLabel: string,
+  showLabel: string | null,
+  mainBrand: Array<BrandInfo> | [],
+  mainSeries: Array<SeriesInfo> | []
+};
+
+declare type BrandInfo = {
+  brandId: string,
+  brandName: string,
+  brandLogoUrl:string
+};
+
+declare type SeriesInfo = {
+  seriesId: string,
+  seriesName: string
 };
 
 declare type Supplier = {
