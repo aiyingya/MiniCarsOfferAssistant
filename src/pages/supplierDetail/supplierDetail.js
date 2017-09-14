@@ -97,13 +97,13 @@ Page({
     saasService.retrieveSupplyCompany(companyId)
       .then((res: Company) => {
         // 218 + 10 + 142 + 10：为主营品牌和主营车系的高度和margin
-        // 这里需要根据主营品牌的数量判断 <=3个判断心的高度为 218 - 60（为一行品牌的高度60）
+        // 这里需要根据主营品牌的数量判断 <=3个判断心的高度为 218 - 50（60为一行品牌的高度,padding为10）
         // 主营品牌和主营车系为空时 高度为0
         let companyH = 0
 
         if (res.mainBrand && res.mainBrand.length > 0) {
           if (res.mainBrand.length <= 3) {
-            companyH += 218 - 60 + 10
+            companyH += 218 - 50 + 10
           } else {
             companyH += 218 + 10
           }
