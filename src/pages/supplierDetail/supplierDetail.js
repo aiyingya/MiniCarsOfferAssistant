@@ -26,7 +26,6 @@ Page({
 
     company: null,
     comments: [],
-
     submitTags: [
       {
         id: 0,
@@ -53,14 +52,16 @@ Page({
       iconPath: '/images/icons/icon_evaluate_empty.png',
       title: '该供应商暂无评论信息',
       description: '如果您与供应商有过成交或沟通， 请尽快评价哦'
-    }
+    },
+    firstWindowHeight : 0 //记录第一次进入页面的window的高度
   },
   onLoad(options) {
     const system = wxapi.getSystemInfoSync()
     const company = utils.urlDecodeValueForKeyFromOptions('company', options)
-    // TODO:这里的218数值 需要根据主营品牌的数量判断 <=3个则为 218 - 60
+
     // 以下数值通通为页面元素的高度  scrollViewHeight：为获取滚动元素的高度数值
     this.setData({
+      firstWindowHeight: system.windowHeight,
       company,
       scrollViewHeight: system.windowHeight - util.px(100 + 20 + 96 + 210 + 218 + 10 + 142 + 10)
     })
@@ -95,7 +96,26 @@ Page({
     // 更新公司数据
     saasService.retrieveSupplyCompany(companyId)
       .then((res: Company) => {
-        this.setData({ company: res })
+        // 218 + 10 + 142 + 10：为主营品牌和主营车系的高度和margin
+        // 这里需要根据主营品牌的数量判断 <=3个判断心的高度为 218 - 60（为一行品牌的高度60）
+        // 主营品牌和主营车系为空时 高度为0
+        let companyH = 0
+
+        if (res.mainBrand && res.mainBrand.length > 0) {
+          if (res.mainBrand.length <= 3) {
+            companyH += 218 - 60 + 10
+          } else {
+            companyH += 218 + 10
+          }
+        }
+
+        if (res.mainSeries && res.mainSeries.length > 0) {
+          companyH += 142 + 10
+        }
+        this.setData({
+          company: res,
+          scrollViewHeight: this.data.firstWindowHeight - util.px(100 + 20 + 96 + 210 + 218 + 10 + 142 + 10)
+        })
       })
 
     return this.commentsRefresh()

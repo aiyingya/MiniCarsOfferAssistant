@@ -51,7 +51,7 @@
   line-height:58rpx;
 }
 .branch-desc__contentT{
-  margin-right: 10rpx;
+  margin-right: 16rpx;
   display:inline-flex;
   justify-content:flex-start;
   align-items:center;
