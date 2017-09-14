@@ -114,7 +114,7 @@ Page({
         }
         this.setData({
           company: res,
-          scrollViewHeight: this.data.firstWindowHeight - util.px(100 + 20 + 96 + 210 + 218 + 10 + 142 + 10)
+          scrollViewHeight: this.data.firstWindowHeight - util.px(100 + 20 + 96 + 210 + companyH)
         })
       })
 
