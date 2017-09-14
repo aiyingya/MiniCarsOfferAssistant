@@ -53,7 +53,7 @@ Page({
       title: '该供应商暂无评论信息',
       description: '如果您与供应商有过成交或沟通， 请尽快评价哦'
     },
-    firstWindowHeight : 0 //记录第一次进入页面的window的高度
+    firstWindowHeight: 0 // 记录第一次进入页面的window的高度
   },
   onLoad(options) {
     const system = wxapi.getSystemInfoSync()
