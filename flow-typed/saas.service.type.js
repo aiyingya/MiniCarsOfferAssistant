@@ -82,8 +82,8 @@ declare type Company = {
   companyId: number,
   companyName: string,
   showLabel: string | null,
-  mainBrand: Array<BrandInfo> | [],
-  mainSeries: Array<SeriesInfo> | []
+  mainBrand: Array<BrandInfo>,
+  mainSeries: Array<SeriesInfo>
 };
 
 declare type BrandInfo = {
