@@ -1,4 +1,4 @@
-<!-- 主营品牌 主营车系 -->
+<!-- 主营品牌 优势车系 -->
 <template name="branchView">
   <view  wx:if="{{ mainBrands && mainBrands.length > 0 }}" class="branch-desc">
       <view class="branch-desc__title">主营品牌</view>
@@ -12,7 +12,7 @@
   </view>
 
   <view wx:if="{{ mainSeries && mainSeries.length > 0 }}" class="branch-desc branch-desc_h">
-    <view class="branch-desc__title">主营车系</view>
+    <view class="branch-desc__title">优势车系</view>
     <view class="branch-desc__listT">
       <view wx:for="{{ mainSeries }}" wx:for-item="item" wx:for-index="index" wx:key="seriesId" class="branch-desc__contentT">{{item.seriesName}}</view>
     </view>
