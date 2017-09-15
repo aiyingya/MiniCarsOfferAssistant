@@ -7,14 +7,13 @@
         <image mode="aspectFit" class="branch-desc__logo" src="{{item.brandLogoUrl}}"></image>
         <view class="branch-desc__name">{{item.brandName}}</view>
       </view>
-
     </view>
   </view>
 
   <view wx:if="{{ mainSeries && mainSeries.length > 0 }}" class="branch-desc branch-desc_h">
     <view class="branch-desc__title">优势车系</view>
     <view class="branch-desc__listT">
-      <view wx:for="{{ mainSeries }}" wx:for-item="item" wx:for-index="index" wx:key="seriesId" class="branch-desc__contentT">{{item.seriesName}}</view>
+      <text wx:for="{{ mainSeries }}" wx:for-item="item" wx:for-index="index" wx:key="seriesId" class="branch-desc__contentT">{{item.seriesName}}</text>
     </view>
   </view>
 </template>
