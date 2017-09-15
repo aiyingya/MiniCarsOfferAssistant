@@ -1,9 +1,7 @@
 .branch-desc{
   max-height:218rpx;
-  border-top:1rpx solid #E4E4E4;
-  border-bottom:1rpx solid #E4E4E4;
   padding:0 30rpx;
-  margin-bottom:10rpx;
+  margin-bottom:15rpx;
   background:#ffffff;
 }
 .branch-desc_h{
@@ -52,12 +50,14 @@
 .branch-desc__contentT{
   margin-right:0.3%;
   display:inline-flex;
-  justify-content:flex-start;
+  justify-content:space-around;
   align-items:center;
+  text-align:center;
+  flex-direction:column;
   font-family:PingFangSC-Regular;
   color:#352627;
   font-size:24rpx;
-  line-height:58rpx;
+  line-height:25rpx;
   height:58rpx;
   width:33%;
 

@@ -104,7 +104,7 @@ Page({
 
         if (res.mainBrand && res.mainBrand.length > 0) {
           if (res.mainBrand.length <= 3) {
-            companyH += 218 - 60 + 10
+            companyH += 218 - 60 + 15
           } else {
             companyH += 218 + 10
           }
@@ -112,9 +112,9 @@ Page({
 
         if (res.mainSeries && res.mainSeries.length > 0) {
           if (res.mainSeries.length <= 3) {
-            companyH += 200 - 58 + 10
+            companyH += 200 - 58 + 15
           } else {
-            companyH += 200 + 10
+            companyH += 200 + 15
           }
         }
 
