@@ -1,0 +1,64 @@
+.branch-desc{
+  max-height:218rpx;
+  padding:0 30rpx;
+  margin-bottom:15rpx;
+  background:#ffffff;
+}
+.branch-desc_h{
+  max-height:220rpx;/*实际上js中使用200rpx*/
+}
+.branch-desc__title{
+  border-bottom:1rpx solid #E4E4E4;
+  font-family:PingFangSC-Regular;
+  font-size:26rpx;
+  color:#666666;
+  letter-spacing:0;
+  line-height:64rpx;
+  height:64rpx;
+
+}
+.branch-desc__list{
+  padding: 10rpx 0 20rpx;
+  max-height:120rpx;
+}
+
+.branch-desc__content{
+  width: 33.3%;
+  height:60rpx;
+  display:inline-table;
+  justify-content:flex-start;
+  align-items:center;
+  font-family:PingFangSC-Regular;
+}
+.branch-desc__name{
+  height: 60rpx;
+  line-height: 60rpx;
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #352627;
+  letter-spacing: 0;
+}
+.branch-desc__logo{
+  float: left;
+  width:90rpx;
+  height:60rpx;
+}
+
+.branch-desc__listT{
+  padding: 10rpx 0;
+}
+.branch-desc__contentT{
+  margin-right:0.3%;
+  display:inline-flex;
+  justify-content:space-around;
+  align-items:center;
+  text-align:center;
+  flex-direction:column;
+  font-family:PingFangSC-Regular;
+  color:#352627;
+  font-size:24rpx;
+  line-height:25rpx;
+  height:58rpx;
+  width:33%;
+
+}
