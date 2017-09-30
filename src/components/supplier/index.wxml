@@ -1,13 +1,18 @@
-
+<!--TODO：v1.20 靠谱供应商需更新页面-->
 
 <!--page:supplier 精准供应商行 -->
 <template name="supplierSearchResultView">
   <view class="supplier-search-result" data-company="{{ item }}" bindtap="onRowClick">
-    <view class='profile'>
-      <view class='name'>{{ item.companyName }}</view>
-      <view class="tag-label" wx:if="{{ item.showLabel }}">
-        <image class="reliable-face" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : item.showLabel === '不靠谱' ? '/images/icons/icon_unreliable_face.png' : '' }}"
-        /> {{ item.showLabel }}
+    <view class="supplier-search-noflex">
+      <view class='profile'>
+        <view class='name'>{{ item.companyName }}</view>
+        <view class="tag-label" wx:if="{{ item.showLabel }}">
+          <image class="reliable-face" src="{{ item.showLabel === '靠谱' ? '/images/icons/icon_reliable_face.png' : item.showLabel === '不靠谱' ? '/images/icons/icon_unreliable_face.png' : '' }}"
+          /> {{ item.showLabel }}
+        </view>
+      </view>
+      <view class="brand-icon">
+        <image wx:for="{{item.mainBrand}}" wx:for-item="branch" src="{{branch.brandLogoUrl}}"></image>
       </view>
     </view>
     <image class="call-line" src="/images/icons/icon_call_line.png" data-company="{{ item }}" catchtap="onCallButtonClick" />

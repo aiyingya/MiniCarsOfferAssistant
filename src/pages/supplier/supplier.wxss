@@ -22,7 +22,7 @@
 
 .supplier .row-1 {
   position: relative;
-  height: 120rpx;
+  max-height: 168rpx;
   width: 100%;
   box-sizing: border-box;
   background: #ffffff;
