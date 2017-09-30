@@ -1,6 +1,9 @@
 <import src="../../components/dialog/carSourceDetail/carSourceDetail.wxml" />
 <template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />
 
+<import src="../../components/dialog/settingRemarkLabelDialog/settingRemarkLabelDialog.wxml" />
+<template is="settingRemarkLabelDialog" data="{{ ...$wux.settingRemarkLabelDialog }}" />
+
 <import src="../../components/carSourceNotes/carSourceNoteView.wxml" />
 
 <!-- 时间分区 -->

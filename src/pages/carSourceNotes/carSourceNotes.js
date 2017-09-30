@@ -1,6 +1,7 @@
 // @flow
 import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/carSourceDetail'
 import { container } from '../../landrover/business/index'
+import $settingRemarkLabelDialog from '../../components/dialog/settingRemarkLabelDialog/settingRemarkLabelDialog'
 
 import { $wuxToast, $wuxTrack } from "../../components/wux"
 
@@ -31,11 +32,17 @@ Page({
     selectedIndex: -1,
     selectedSubIndex: -1,
 
-    records: null
+    records: null,
+    currentTag: {
+      comment:"", // 备注内容
+      price:110,
+      mileage: [], // 公里数标签
+      condition: [], // 特殊条件标签
+      sourceArea: [], // 货源地标签
+    }
   },
   onLoad(options) {
-
-    wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
+    wxapi.showToast({title: '加载中...', icon: 'loading', mask: true})
       .then(() => {
         return this.records()
           .then((res) => {
@@ -168,6 +175,15 @@ Page({
           url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
         })
       },
+      handlerGoMore(e) {
+        // TODO:2.0 需要注意国庆以后下面的参数取值可能有变化，因为会更新历史返回的数据结构，这里需要十分注意、十分注意、十分注意
+        let _showCarModelName = '【' + carModelsInfo.officialPriceStr + '】' + carModelsInfo.carModelName
+        let _showColorName = carSourceItem.externalColor + ' / ' + carSourceItem.viewModelInternalColor
+        let _carSourceItemKeyValueString = utils.urlEncodeValueForKey('carSourceItem', carSourceItem)
+        let _itemId = 2 // TODO:2.0 itemId为临时Id，接口需要国庆后提供
+        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&itemId=${_itemId}`
+        wx.navigateTo({ url })
+      },
       close: () => {
         if (selectedIndex != -1) {
           this.setData({
@@ -267,6 +283,46 @@ Page({
             console.error(err, '拨打电话' + supplier.supplierPhone + '失败')
           })
       }
+    })
+  },
+  /**
+   * 获取商品所有标签
+   *
+   * @param itemId 商品id
+   */
+  getTags(itemId) {
+    const userId = userService.auth.userId
+    return saasService.getQueryCompanyRemark(userId, itemId).then((res) => {
+      this.setData({
+        'currentTag': res
+      })
+      return res
+    })
+  },
+  handleUpdate() {
+    console.log('修改标签和备注')
+    // TODO:1.20 2为临时参数
+    const itemId = 2
+    const userId = userService.auth.userId
+    const mobile = userService.mobile
+    this.getTags(itemId).then((res) => {
+      // 本来想组装数据，怕不稳定还是不装了
+      $settingRemarkLabelDialog.open({
+        currentTag: res,
+        handlerSettingTags: (tags, comment, price) => {
+          saasService.settingCompanyTags(
+            itemId,
+            comment,
+            price,
+            userId,
+            tags,
+            mobile
+          ).then((res) => {})
+        },
+        close: () => {
+
+        }
+      })
     })
   }
 })

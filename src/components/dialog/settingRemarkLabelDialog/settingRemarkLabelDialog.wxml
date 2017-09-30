@@ -1,0 +1,73 @@
+<template name="settingRemarkLabelDialog">
+  <view class="settingRemarkLabelDialog">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} " bindtap="{{ close }}">
+    </view>
+    <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
+
+      <form bindsubmit="{{ confirm }}" >
+        <!--TODO: 实际价格的效果图还没有-->
+        <view></view>
+
+        <!--货源地、公里数、特殊条件、备注-->
+        <view class="setting-content">
+          <scroll-view scroll-y style="height: 670rpx">
+
+            <view wx:if="{{currentTag.sourceArea}}" class="line-content">
+                <view class="left">货源地</view>
+                <view class="right">
+                  <checkbox-group bindchange="{{handlerSourceAreaTagChange}}">
+                    <label wx:for="{{currentTag.sourceArea}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}" >
+                      <checkbox value="{{item.name}}" checked="{{item.selected}}" />{{item.name}}
+                    </label>
+                  </checkbox-group>
+                </view>
+            </view>
+            <!--分割线-->
+            <view class="weui-dialog__line" style="width:100%;"></view>
+
+            <view wx:if="{{currentTag.mileage}}" class="line-content">
+              <view class="left">公里数</view>
+              <view class="right">
+                <checkbox-group bindchange="{{handlerMileageTagChange}}" >
+                  <label wx:for="{{currentTag.mileage}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}" >
+                    <checkbox value="{{item.name}}" checked="{{item.selected}}" />{{item.name}}
+                  </label>
+                </checkbox-group>
+              </view>
+            </view>
+            <!--分割线-->
+            <view class="weui-dialog__line" style="margin-top:15px; width:100%;"></view>
+            <view wx:if="{{currentTag.condition}}" class="line-content">
+              <view class="left">特殊条件（多选）</view>
+              <view class="right">
+                <checkbox-group bindchange="{{handlerConditionTagChange}}" >
+                  <label wx:for="{{currentTag.condition}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}" >
+                    <checkbox value="{{item.name}}" checked="{{item.selected}}" style="display:none"/>{{item.name}}
+                  </label>
+                </checkbox-group>
+              </view>
+            </view>
+
+            <view class="weui-dialog__line" style="margin-top:15px; width:100%;"></view>
+            <view class="line-content">
+              <view class="left">备注</view>
+              <view class="right">
+                <textarea name="comment" value="{{ currentTag.comment }}" class="textarea" cursor-spacing="40px" placeholder="输入备注"  placeholder-class="textarea-placeholder"/>
+              </view>
+            </view>
+
+          </scroll-view>
+        </view>
+
+        <!--按钮-->
+        <view class="weui-dialog__ft">
+          <button class="weui-dialog__btn weui-dialog__btn_default"  bindtap="{{ cancel }}" >{{ cancelText }}
+          </button>
+          <button class="weui-dialog__btn weui-dialog__btn_primary" formType="submit" disabled="{{ confirmDisabled }}">{{ confirmText }}
+          </button>
+        </view>
+      </form>
+
+    </view>
+  </view>
+</template>
