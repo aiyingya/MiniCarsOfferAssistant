@@ -100,7 +100,8 @@ declare type SeriesInfo = {
 declare type Supplier = {
   supplierId: number,
   supplierName: string,
-  supplierPhone: string
+  supplierPhone: string,
+  callCount: number //v1.20 add 联系次数
 };
 
 declare type Tag = {
@@ -203,4 +204,107 @@ declare type SupplierForCarSource = {
   companyId: number,
   companyName: string,
   supplierType: 'IN' | 'PARTNER' | ''
+};
+
+declare type CompanyTag = {
+  name: string,
+  type: string
+};
+
+declare type CompanyTagInfo = {
+  id: number,
+  name: string,
+  type: string,
+  selected?: boolean // 在CarSourceComment里是空的
+};
+
+declare type CompanyRemark = {
+  comment: string,
+  price: number,
+  mileage: Array<CompanyTagInfo>, //  公里数标签列表
+  condition: Array<CompanyTagInfo>, // 特殊条件标签列表
+  sourceArea: Array<CompanyTagInfo> // 货源地条件列表
+};
+
+declare type CarSourceComment = {
+  id: number,
+  price: number,
+  content: string,
+  userPhone: string,
+  itemId: number,
+  updateTime: string,
+  tags: Array<CompanyTagInfo> // remove selected
+};
+
+// TODO v2.0 国庆节以后需要确认各字段的描述 和是否为空
+// 供应商行情信息
+declare type CompanyMarket = {
+  spuSummary: Array<CompanyMarketSpuSummary>,
+  itemDetail: Array<CompanyMarketItemDetail>,
+};
+declare type CompanyMarketSpuSummary = {
+  carModelId: number,
+  carModelName: string,
+  officialPrice: number,
+  officialPriceStr: string,
+  seatNums: Array<number>,
+  capacity: number,
+  electricCar: boolean
+};
+declare type CompanyMarketItemDetail = {
+  companyId: number,            // 公司ID
+  companyName: string,          // 公司名称
+  companyType: string,          // 公司类型
+  simpleExteriorColor: string,  // 外饰颜色
+  simpleInteriorColor: string,  // 内饰颜色
+  salePrice: string,            // 售价
+  sourceRegion: string,         // 货源地
+  saleArea: string,             // 可售地区
+  publishTime: string,          // 发布时间戳
+  messageResultId: number       // 消息结果id
+};
+
+
+
+// from api /search/car/spu
+// TODO: v2.0 历史接口返回，现在加了模型，但是还没有注释，国庆后要补充滴~
+declare type CarSpu = {
+  totalElements: number,
+  totalPages: number,
+  number: number,
+  size: number,
+  content: Array<CarSpuContent>,
+  first: boolean,
+  last: boolean,
+  numberOfElements: number,
+  hasNext: boolean,
+  hasPrevious: boolean
+};
+
+declare type CarSpuContent = {
+  brandId: number, // 1358,
+  brandName: string, // "上汽大众",
+  yearStyle: string, // "2017款",
+  carModelId: number, // 114080,
+  carModelName: string, // "朗逸 2017款 1.6L 手动风尚版",
+  officialPrice: number,
+  officialPriceStr: string, // "1099",
+  pic: string, // "http://produce.oss-cn-hangzhou.aliyuncs.com/ops/upload/image/original/20151210/668b7c25-7dab-49d7-a345-00390f4109f1.jpg",
+  hot: number, // 80,
+  supply : CarSpuContentSupply
+};
+declare type CarSpuContentSupply = {
+  supplierCount: number,
+  colors: {
+    黑: string, // "#000000",
+    白: string, // "#FFFFFF"
+  },
+  hours: Array<number>,
+  status: number, // "供货充足",
+  chart: {
+    x: Array<string>,
+    y: Array<number>,
+    scale: Array<string>,
+    xAxisName: string
+  }
 };

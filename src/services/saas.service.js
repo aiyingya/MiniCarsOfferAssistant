@@ -414,6 +414,10 @@ export default class SAASService extends Service {
   }
 
   /**
+   * TODO: v2.0 这里是已经存在的接口，供应商行情搜索调用的第一个接口 为什么这个接口没人写模型咧~~~~~~
+   * TODO: v2.0 贤达说没有改变接口，但是接口输入如今多了个userId参数 ，国庆后找贤达确认下~~~~~~
+   * udpata Promise返回中写入了CarSpu模型对象，2.0以前没有
+   *
    * 搜索结果
    *
    * @param {string} text
@@ -424,14 +428,16 @@ export default class SAASService extends Service {
   requestSearchCarSpu(
     text: string,
     pageIndex: number,
-    pageSize: number
-  ): Promise<> {
+    pageSize: number,
+    userId?: number
+  ): Promise<CarSpu> {
     return this.request(
       `search/car/spu`,
       'GET', {
         text: text,
         pageIndex: pageIndex,
-        pageSize: pageSize
+        pageSize: pageSize,
+        userId
       }
     )
   }
@@ -506,6 +512,7 @@ export default class SAASService extends Service {
 
   /**
    * 车源上报
+   * // TODO v2.0 add 请求字段itemId
    *
    * @param {number} supplierId
    * @param {string} supplierPhone
@@ -522,7 +529,8 @@ export default class SAASService extends Service {
     contactPhone: string,
     carSourceId: number | null = null,
     spuId: number | null = null,
-    quotedPrice: number | null = null
+    quotedPrice: number | null = null,
+    itemId: number | null = null
   ): Promise<any> {
     const userId = this.userService.auth.userId
     const userPhone = this.userService.mobile
@@ -537,7 +545,8 @@ export default class SAASService extends Service {
         contactPhone,
         messageResultId,
         spuId,
-        quotedPrice
+        quotedPrice,
+        itemId
       }
     )
   }
@@ -824,6 +833,8 @@ export default class SAASService extends Service {
   }
 
   /**
+   * TODO:v1.20 接口 增加了联系次数
+   *
    * 查找某个公司下的供应商联系人列表
    *
    * @param {number} companyId
@@ -1072,8 +1083,9 @@ export default class SAASService extends Service {
   }
 
   /**
-   *
-   * 白名单接口
+   * TODO:v1.20 接口
+   * 推荐公司接口
+   * oldname 白名单接口
    * @returns {Promise<Array<Company>>}
    * @memberof SAASService
    */
@@ -1195,5 +1207,100 @@ export default class SAASService extends Service {
       `GET`
     )
   }
+
+  /**
+   * TODO:v2.0 接口
+   * 给商品写入标签
+   *
+   * @param itemId 商品id
+   * @param content 备注内容
+   * @param price 页面填入的价格(元)
+   * @param userId 用户id
+   * @param tags [{"name","标签名字","type":"type"}]
+   * @returns {Promise.<any>}
+   */
+  settingCompanyTags(
+    itemId: number,
+    content: string,
+    price: string,
+    userId: string,
+    tags: Array<CompanyTag>,
+    phone: string): Promise<any> {
+    return this.request(
+      `api/user/item/addComment`,
+      'POST',
+      {
+        itemId,
+        content,
+        price,
+        userId,
+        tags,
+        phone
+      }
+    )
+  }
+
+  /**
+   * TODO:v2.0 接口
+   * 获得商品所有标签
+   *
+   * @param userId 用户id
+   * @param itemId 商品id
+   * @returns {Promise.<any>}
+   */
+  getQueryCompanyRemark(
+    userId: string,
+    itemId: string): Promise<CompanyRemark> {
+    return this.request(
+      `api/user/item/comment`,
+      'GET',
+      {
+        userId,
+        itemId
+      }
+    )
+  }
+
+  /**
+   * TODO:v2.0 接口
+   *
+   * 获取车源信息中更多标签，备注
+   *
+   * @param itemId
+   * @param pageIndex
+   * @param pageSize
+   * @returns {Promise.<any>}
+   */
+  getCarSourceMore(
+    itemId: string,
+    pageIndex: number,
+    pageSize: number
+  ): Promise<CarSourceComment> {
+    return this.request(
+      `supply/car/${itemId}/comment`,
+      'GET', {
+        pageIndex: pageIndex,
+        pageSize: pageSize
+      }
+    )
+  }
+
+  getCompanyMarketlist(
+    companyId: number,
+    pageIndex: number,
+    pageSize: number,
+    spuId: number // 虽然没有告诉我，我觉得这里就是number类型
+  ): Promise<Array<CompanyMarket>> {
+    return this.request(
+      `/supply/company/${companyId}/items`,
+      'GET', {
+        pageIndex,
+        pageSize,
+        spuId
+      }
+    )
+  }
+
+
 }
 
