@@ -19,6 +19,11 @@
             【{{carModel.officialPriceStr}}】 {{carModel.carModelName}}
           </view>
           <view class="first-part">
+            <!--TODO:2.0 更多的文字要改Robin-->
+            <view class="first-part__more" bindtap="{{handlerGoMore}}">
+              更多
+              <image class="first-part__more_icon" src="/images/icons/icon_arrow.png"></image>
+            </view>
             <view class="line-item">
               <view class="line-title">车辆配色:</view>
               <view class="car-color">{{carSourceItem.externalColor}} / {{carSourceItem.viewModelInternalColor}} </view>

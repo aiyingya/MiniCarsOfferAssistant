@@ -114,6 +114,9 @@ export default {
         handlerCreateQuoted(e) {
           typeof options.handlerCreateQuoted === `function` && options.handlerCreateQuoted(e)
         },
+        handlerGoMore(e) {
+          typeof options.handlerGoMore === `function` && options.handlerGoMore(e)
+        },
         /**
          * 跳转行为
          *
@@ -264,7 +267,6 @@ export default {
       animateCss: undefined,
       visible: !1
     }, setDefaults(), opts)
-
     this.component = new Component({
       scope: `$wux.carSourceDetailDialog`,
       data: options,
