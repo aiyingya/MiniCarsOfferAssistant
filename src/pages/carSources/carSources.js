@@ -1225,6 +1225,15 @@ Page({
         }
         return carSource
       },
+      handlerGoMore(e) {
+        // TODO:2.0 需要注意国庆以后下面的参数取值可能有变化，因为会更新历史返回的数据结构，这里需要十分注意、十分注意、十分注意
+        let _showCarModelName = '【' + carModelsInfo.officialPriceStr + '】' + carModelsInfo.carModelName
+        let _showColorName = carSourceItem.externalColor + ' / ' + carSourceItem.viewModelInternalColor
+        let _carSourceItemKeyValueString = util.urlEncodeValueForKey('carSourceItem', carSourceItem)
+        let _itemId = 1 // TODO:2.0 itemId为临时Id，接口需要国庆后提供
+        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&itemId=${_itemId}`
+        wx.navigateTo({ url })
+      },
       close: () => {
         this.setData({
           [`carSourcesBySkuInSpuList[${skuItemIndex}].viewMdoelCarSourcesList[${carSourceItemIndex}]`]: carSourceItem
