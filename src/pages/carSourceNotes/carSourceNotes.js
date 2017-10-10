@@ -180,7 +180,7 @@ Page({
         let _showCarModelName = '【' + carModelsInfo.officialPriceStr + '】' + carModelsInfo.carModelName
         let _showColorName = carSourceItem.externalColor + ' / ' + carSourceItem.viewModelInternalColor
         let _carSourceItemKeyValueString = utils.urlEncodeValueForKey('carSourceItem', carSourceItem)
-        let _itemId = 2 // TODO:2.0 itemId为临时Id，接口需要国庆后提供
+        let _itemId = 1 // TODO:2.0 itemId为临时Id，接口需要国庆后提供
         let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&itemId=${_itemId}`
         wx.navigateTo({ url })
       },
