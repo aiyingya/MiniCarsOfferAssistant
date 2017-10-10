@@ -37,10 +37,12 @@ Page({
       this.data.pageIndex,
       this.data.pageSize
     ).then(res => {
-      this.setData({
-        comments: res,
+      res.content.length && res.content.forEach(({updateTime}, index) => {
+        res.content[index].updateTimeStr = util.getTimeStr(updateTime, 'YYYY/MM/DD hh:mm') // util.getTimeStr(updateTime, "yyyy-MM-dd")
       })
-      console.log("车源更多标签信息", this.data.comments)
+      this.setData({
+        comments: res.content
+      })
     })
   }
 })

@@ -22,11 +22,9 @@
   </view>
 
   <view class="carSourcesMore-container">
-
-    <view wx:for="{{comments}}" class="carSourcesMore-head__list">
+    <view wx:for="{{comments}}" wx:key="id" class="carSourcesMore-head__list">
       <view class="top">
-        <!--TODO: v2.0 这里要格式化时间updateTime = 2017/09/11  23:27-->
-        <span class="left">{{item.userPhone}}</span><span class="right">{{item.updateTime}}</span>
+        <span class="left">{{item.userPhone}}</span><span class="right">{{item.updateTimeStr}}</span>
       </view>
       <!--TODO:v2.0 参数-->
       <template is="remarkView" data="{{ tags:item.tags ,content:item.content}}" />
