@@ -1203,7 +1203,8 @@ export default class SAASService extends Service {
     callRecordBySpu: Array<{ spuSummary: CarModel, callRecordList: Array<{ lastCallDate: string, carSource: CarSource }> }>
   }>> {
     return this.request(
-      `api/user/${userId}/callRecords`,
+      // `api/user/${userId}/callRecords`, 废弃接口
+      `api/user/${userId}/sourceMemo`,
       `GET`
     )
   }
