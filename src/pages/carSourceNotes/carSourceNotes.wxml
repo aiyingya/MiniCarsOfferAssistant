@@ -39,7 +39,7 @@
                 <view class="record-rows">
                   <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="{{ index }}">
                     <view class="record-row">
-                      <template is="carSourceNoteView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex }}"
+                      <template is="carSourceNoteView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex, comment: item.comment}}"
                       />
                     </view>
                   </block>

@@ -20,8 +20,8 @@
       </view>
     </view>
     <view class="text">
-      <!--TODO:v2.0 这里需要传参数 参考carSourcesMore.wxml 这里接口没有好-->
-      <template is="remarkView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />
+      <!--TODO:v2.0 ，接口返回数据改版以后的参数已传递好，需要测试-->
+      <template is="remarkView" data="{{ tags: comment.tags, content: comment.remark}}"  />
 
       <view class="box" bindtap="handleUpdate">
         <view><image src="/images/icons/icon_edit_circular.png" /></view>
