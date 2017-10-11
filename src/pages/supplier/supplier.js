@@ -54,7 +54,7 @@ Page({
   whiteList(): Promise<Array<Company>> {
     const sectionTitle = '靠谱的供应商推荐'
     this.setData({ sectionTitle })
-    return saasService.retrieveSupplierWhiteList()
+    return saasService.getAllRecommendedCompanies()
       .then((res: Array<Company>) => {
         const sectionRows = res
         this.setData({
