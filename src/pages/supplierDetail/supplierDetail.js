@@ -300,17 +300,15 @@ Page({
     }
   },
   onCallButtonClickToMobile(e) {
-    // TODO:v2.0这里的参数还没有对接
     const supplier = e.currentTarget.dataset.supplier
-    const contactPhone = supplier.supplierPhone
-    wxapi.makePhoneCall({ contactPhone })
+    const supplierPhone = supplier.supplierPhone
+    wxapi.makePhoneCall({ supplierPhone })
     /**
-     * 联系电话弹层，统一上报位置
+     * 上报 TODO:这里联系电话上报
      */
     const supplierId = supplier.supplierId,
-      supplierPhone = supplier.supplierPhone
-    const itemId = 1 // TODO:v2.0 新接口对接完以后这里要获取itemId的值
-    saasService.pushCallRecord(supplierId, supplierPhone, contactPhone, itemId)
+          carSourceId = 1 // TODO: 待接口对接完以后，写入参数
+    saasService.pushCallRecord(supplierId, supplierPhone, carSourceId)
   },
   onCallButtonClick(e) {
     const company = e.currentTarget.dataset.company
