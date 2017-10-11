@@ -631,27 +631,21 @@ export default class SAASService extends Service {
    *
    * @param {number} supplierId
    * @param {string} supplierPhone
-   * @param {string} contactPhone
-   * @param {(number | null)} [carSourceId=null]
-   * @param {(number | null)} [spuId=null]
-   * @param {(number | null)} [quotedPrice=null]
    * @returns {Promise<any>}
    * @memberof SAASService
    */
   pushCallRecord(
     supplierId: number,
     supplierPhone: string,
-    contactPhone: string,
-    // carSourceId: number | null = null, v2.0 删除
-    // spuId: number | null = null, v2.0 删除
-    // quotedPrice: number | null = null, v2.0 删除
-    itemId: number | null = null
+    carSourceId: number
   ): Promise<any> {
     const userId = this.userService.auth.userId
     const userPhone = this.userService.mobile
+    const itemId = carSourceId
+    const contactPhone = supplierPhone
     // 每次拨打电话都会上报，在上报的时候增加拨打记录
     return this.request(
-      "api/user/addCallRecord",
+      'api/user/addCallRecord',
       'POST', {
         userId,
         userPhone,

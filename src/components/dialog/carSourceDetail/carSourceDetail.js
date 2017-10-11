@@ -124,14 +124,7 @@ export default {
           const contact = e.currentTarget.dataset.contact
           wxapi.makePhoneCall({ phoneNumber: contact })
             .then()
-          /**
-           * 上报 TODO:v2.0 新接口对接完以后这里要获取好多的值
-           */
-          var supplierId = 1, // supplier.supplierId,
-            supplierPhone = 2, // supplier.supplierPhone,
-            contactPhone = contact // carSourceItem.contact || supplier.supplierPhone;
-          var itemId = 1
-          saasService.pushCallRecord(supplierId, supplierPhone, contactPhone, itemId)
+          // 这里打给客服 不需要上报手机
         },
         /**
          * 选择不同的物流终点
@@ -408,12 +401,9 @@ export default {
           /**
            * 联系电话弹层，统一上报位置
            */
-          const
-            supplierId = supplier.supplierId,
-            supplierPhone = supplier.supplierPhone,
-            contactPhone = supplier.supplierPhone
-          const itemId = 1 // TODO:v2.0 新接口对接完以后这里要获取itemId的值
-          saasService.pushCallRecord(supplierId, supplierPhone, contactPhone, itemId)
+          const supplierId = supplier.supplierId,
+            carSourceId = options.carSourceId
+          saasService.pushCallRecord(supplierId, phoneNumber, carSourceId)
 
           typeof options.contact === 'function' && options.contact(contactPromise, supplier)
         }
