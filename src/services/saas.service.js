@@ -375,7 +375,7 @@ export default class SAASService extends Service {
    *     capacity: number,
    *     electricCar: boolean,
    *     praiseModels: Array<PraiseModel>,
-   *     items: Array<CarSourceItemsBySKU>
+   *     items: Array<CarSourcesBySKU>
    *   }>}
    * @memberof SAASService
    */
@@ -389,7 +389,7 @@ export default class SAASService extends Service {
     capacity: number,
     electricCar: boolean,
     praiseModels: Array<PraiseModel>,
-    items: Array<CarSourceItemsBySKU>
+    items: Array<CarSourcesBySKU>
   }> {
     return this.request(
       `car/spu/${spuId}/items`,

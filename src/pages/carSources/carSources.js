@@ -18,7 +18,7 @@ const userService: UserService = container.userService
 const carSourceManger: CarSourceManager = new CarSourceManager()
 
 Page({
-  // 车源行情商品缓存最原始的数据 Array<CarSourceItemsBySKU>
+  // 车源行情商品缓存最原始的数据 Array<CarSourcesBySKU>
   cacheCarSourcesBySkuInSpuList: [],
   // 车源行情商品当前筛选条件下的全量数据 Array<{ carSku: CarSKU, viewModelPageData: Pagination<CarSource>, viewModelCarSourceItemList: Array<CarSource> }>
   currentCarSourcesBySkuInSpuList: [],
@@ -292,7 +292,7 @@ Page({
    * 预处理车源集合对象
    * @param carSourcesBySkuInSpuItem
    */
-  preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem: CarSourceItemsBySKU) {
+  preprocessCarSourcesBySkuInSpuItem(carSourcesBySkuInSpuItem: CarSourcesBySKU) {
     // 分页数据
     this.actionPullRefresh(carSourcesBySkuInSpuItem)
 
@@ -309,7 +309,7 @@ Page({
    * @param {any} number
    * @param {any} size
    */
-  pageData(carSourcesBySkuInSpuItem: CarSourceItemsBySKU, number, size) {
+  pageData(carSourcesBySkuInSpuItem: CarSourcesBySKU, number, size) {
     const totalElements = carSourcesBySkuInSpuItem.itemDetails.length
     const totalPages = Math.ceil(carSourcesBySkuInSpuItem.itemDetails.length / size)
 
@@ -467,7 +467,7 @@ Page({
          */
         this.data.pageParameters = {
           productId: this.data.carModelsInfo.carModelId,
-          color: carSourceItem.title,
+          color: skuItem.title,
           parameters: {
             carSourceId: carSourceItem.id,
             supplierId: supplier.supplierId
@@ -589,7 +589,7 @@ Page({
   onContactButtonClick(e) {
     const skuItemIndex: number = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex: number = e.currentTarget.dataset.carSourceIndex
-    const skuItem: CarSourceItemsBySKU = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
+    const skuItem: CarSourcesBySKU = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.itemDetails[carSourceItemIndex]
 
     this.actionContactWithCarSourceItem(skuItemIndex, carSourceItemIndex, carSourceItem, null)
@@ -601,7 +601,7 @@ Page({
   onCarSourceCellClick(e) {
     const skuItemIndex: number = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex: number = e.currentTarget.dataset.carSourceIndex
-    const skuItem: CarSourceItemsBySKU = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
+    const skuItem: CarSourcesBySKU = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.itemDetails[carSourceItemIndex]
     const carModelsInfo = this.data.carModelsInfo
 
@@ -612,7 +612,7 @@ Page({
      */
     this.data.pageParameters = {
       productId: this.data.carModelsInfo.carModelId,
-      color: carSourceItem.title,
+      color: skuItem.title,
       parameters: {
         carSourceId: carSourceItem.id
       }
