@@ -20,7 +20,7 @@ const carSourceManger: CarSourceManager = new CarSourceManager()
 Page({
   // 车源行情商品缓存最原始的数据 Array<CarSourceItemsBySKU>
   cacheCarSourcesBySkuInSpuList: [],
-  // 车源行情商品当前筛选条件下的全量数据 Array<{ carSku: CarSKU, viewModelPageData: Pagination<CarSourceItem>, viewModelCarSourceItemList: Array<CarSourceItem> }>
+  // 车源行情商品当前筛选条件下的全量数据 Array<{ carSku: CarSKU, viewModelPageData: Pagination<CarSource>, viewModelCarSourceItemList: Array<CarSource> }>
   currentCarSourcesBySkuInSpuList: [],
   data: {
     // ubt 相关
@@ -451,7 +451,7 @@ Page({
       (supplier) => {
       })
   },
-  actionContactWithCarSourceItem(skuItemIndex, carSourceItemIndex, carSourceItem: CarSourceItem, from) {
+  actionContactWithCarSourceItem(skuItemIndex, carSourceItemIndex, carSourceItem: CarSource, from) {
     this.actionContact(
       null,
       null,
@@ -460,6 +460,7 @@ Page({
       carSourceItem.companyName,
       from,
       (supplier) => {
+        const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
         /**
          * 1.4.0 埋点 拨打供货方电话
          * davidfu

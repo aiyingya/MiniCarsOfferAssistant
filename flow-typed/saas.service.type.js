@@ -123,55 +123,6 @@ declare type CarSKU = {
   viewModelSupplierSelfSupport?: boolean
 };
 
-// 货源详情
-declare type CarSource = {
-  id: string, // 车源 id
-  publishDate: string,
-  publishChannel: "",
-  supplierSelfSupport: boolean,
-  supplier: SupplierForCarSource,
-  lowestPrice: number,
-  externalColor: string,
-  standardExternalColor: string,
-  internalColor: string,
-  contact: string,
-  others: Array<CarSourcePlace> | null,
-  lowest: CarSourcePlace | null,
-  fastest: CarSourcePlace | null,
-
-  viewModelTags?: Array<string>,
-  viewModelTabs?: Array<{ name: string, value: CarSourcePlace }> | null,
-  viewModelSelectedTab?: number,
-  viewModelTabMore?: Array<CarSourcePlace> | null,
-  viewModelSelectedCarSourcePlace?: CarSourcePlace,
-  viewModelPublishDateDesc?: string,
-  viewModelInternalColor?: string
-};
-
-declare type CarSourcePlace = {
-  totalPrice: number,
-  discount: number,
-  priceFixed: boolean,
-  logisticsFree: boolean,
-  destinationList?: Array<Logistics>,
-
-  viewModelSelectedLogisticsDestination?: Logistics | null,
-  viewModelSelectedLogisticsDestinationIndex?: number,
-  viewModelQuoted?: PriceQuoted,
-  viewModelExpectedDeliveryDaysDesc?: string | null,
-  viewModelEqualWithOfficialPrice?: boolean,
-  viewModelTags?: Array<string>
-};
-
-declare type Logistics = {
-  discount: number,
-  totalPrice: number,
-  expectedDeliveryDays: number,
-  logisticsFee: number,
-
-  viewModelLogisticsFeeDesc: string | null
-};
-
 declare type QuotedMethod = 'POINTS' | 'PRICE';
 
 declare type PriceQuoted = {
@@ -187,15 +138,6 @@ declare type CarModel = {
   carModelName: string,
   officialPrice: number,
   officialPriceStr: string
-};
-
-declare type SupplierForCarSource = {
-  id: string,
-  name: string,
-  contact: string,
-  companyId: number,
-  companyName: string,
-  supplierType: 'IN' | 'PARTNER' | ''
 };
 
 declare type CompanyTag = {
@@ -228,13 +170,6 @@ declare type CarSourceComment = {
   tags: Array<CompanyTagInfo> // remove selected
 };
 
-// TODO v2.0 国庆节以后需要确认各字段的描述 和是否为空
-// 供应商行情信息
-// declare type CompanyMarket = {
-  // spuSummary: Array<CompanyMarketSpuSummary>,
-  // itemDetail: Array<CompanyMarketItemDetail>,
-// };
-
 declare type SpuSummary = {
   carModelId: number,
   carModelName: string,
@@ -245,21 +180,7 @@ declare type SpuSummary = {
   electricCar: boolean
 };
 
-// declare type CompanyMarketItemDetail = {
-//   companyId: number,            // 公司ID
-//   companyName: string,          // 公司名称
-//   companyType: string,          // 公司类型
-//   simpleExteriorColor: string,  // 外饰颜色
-//   simpleInteriorColor: string,  // 内饰颜色
-//   salePrice: string,            // 售价
-//   sourceRegion: string,         // 货源地
-//   saleArea: string,             // 可售地区
-//   publishTime: string,          // 发布时间戳
-//   messageResultId: number       // 消息结果id
-// };
-
 // from api /search/car/spu
-// TODO: v2.0 历史接口返回，现在加了模型，但是还没有注释，国庆后要补充滴~
 declare type CarSpu = {
   totalElements: number,
   totalPages: number,
@@ -317,17 +238,17 @@ declare type Company = {
 /// 车辆行情相关
 
 // 按照 SKU 来聚合的车辆货源商品集合
-declare type CarSourceItemsBySKU = {
+declare type CarSourcesBySKU = {
   title: string,
   lowestSalePrice: number,
   count: number,
   metallicPaint: string,
   metallicPaintAmount: number,
-  itemDetails: Array<CarSourceItem>
+  itemDetails: Array<CarSource>
 };
 
 // 车辆货源商品实体
-declare type CarSourceItem = {
+declare type CarSource = {
   id: number,
   companyId: string,
   companyName: string,

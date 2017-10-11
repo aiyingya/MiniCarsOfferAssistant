@@ -22,7 +22,7 @@ export default {
    *
    * @param {Object} opts 配置项
    * @param {String} opts.carModel
-   * @param {CarSourceItem} opts.carSourceItem
+   * @param {CarSource} opts.carSourceItem
    * @param {Function} opts.close
    * @param {Function} opts.bookCar
    * @param {Function} opts.Contact

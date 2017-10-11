@@ -405,7 +405,7 @@ export default class SAASService extends Service {
    * @param {number} companyId
    * @returns {Promise<Array<{
    *     spuSummary: SpuSummary,
-   *     itemDetail: CarSourceItem
+   *     itemDetail: CarSource
    *   }>>}
    * @memberof SAASService
    */
@@ -416,7 +416,7 @@ export default class SAASService extends Service {
     pageSize: number
   ): Promise<Pagination<{
     spuSummary: SpuSummary,
-    itemDetail: CarSourceItem
+    itemDetail: CarSource
   }>> {
     return this.request(
       `supply/company/${companyId}/items`,

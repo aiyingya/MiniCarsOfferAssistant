@@ -17,7 +17,7 @@ export default class CarSourceManager {
    * 处理车源对象
    * @param carSourceItem
    */
-  processCarSourceItem(carSourceItem: CarSourceItem) {
+  processCarSourceItem(carSourceItem: CarSource) {
     // 更新发布时间
     const publishDate = util.dateCompatibility(carSourceItem.publishTime)
     carSourceItem.viewModelPublishDateDesc = util.dateDiff(publishDate)
