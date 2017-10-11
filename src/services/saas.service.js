@@ -1331,6 +1331,7 @@ export default class SAASService extends Service {
   /**
    * 获取基于行情的通话记录, 结果依据车型分区
    *
+   * @description 2.0.0 接口地址更换
    * @param {string} userId
    * @returns {Promise<Array<{
    *     spuSummary: CarModel,
@@ -1345,30 +1346,33 @@ export default class SAASService extends Service {
     callRecordBySpu: Array<{ spuSummary: CarModel, callRecordList: Array<{ lastCallDate: string, carSource: CarSource }> }>
   }>> {
     return this.request(
-      // `api/user/${userId}/callRecords`, // v2.0接口废弃
       `api/user/${userId}/sourceMemo`,
       `GET`
     )
   }
 
   /**
-   * TODO:v2.0 接口
    * 给商品写入标签
    *
-   * @param itemId 商品id
-   * @param content 备注内容
-   * @param price 页面填入的价格(元)
-   * @param userId 用户id
-   * @param tags [{"name","标签名字","type":"type"}]
-   * @returns {Promise.<any>}
+   * @description 2.0.0 新增
+   * @param {number} carSourceId 车辆行情的商品 id
+   * @param {string} content  备注内容
+   * @param {string} price  页面填入的价格(元)
+   * @param {string} userId 用户 id
+   * @param {Array<CompanyTag>}
+   * @param {string} phone
+   * @returns {Promise<any>}
+   * @memberof SAASService
    */
   settingCompanyTags(
-    itemId: number,
+    carSourceId: number,
     content: string,
     price: string,
     userId: string,
     tags: Array<CompanyTag>,
-    phone: string): Promise<any> {
+    phone: string
+  ): Promise<any> {
+    const itemId = carSourceId
     return this.request(
       `api/user/item/addComment`,
       'POST',
@@ -1384,16 +1388,19 @@ export default class SAASService extends Service {
   }
 
   /**
-   * TODO:v2.0 接口
    * 获得商品所有标签
    *
-   * @param userId 用户id
-   * @param itemId 商品id
-   * @returns {Promise.<any>}
+   * @description 2.0.0 新增
+   * @param {string} userId 用户 id
+   * @param {string} carSourceId  车辆行情的商品 id
+   * @returns {Promise<CompanyRemark>}
+   * @memberof SAASService
    */
   getQueryCompanyRemark(
     userId: string,
-    itemId: string): Promise<CompanyRemark> {
+    carSourceId: number
+  ): Promise<CompanyRemark> {
+    const itemId = carSourceId
     return this.request(
       `api/user/item/comment`,
       'GET',
@@ -1405,41 +1412,27 @@ export default class SAASService extends Service {
   }
 
   /**
-   * TODO:v2.0 接口
-   *
    * 获取车源信息中更多标签，备注
    *
-   * @param itemId
-   * @param pageIndex
-   * @param pageSize
-   * @returns {Promise.<any>}
+   * @description 2.0.0 新增
+   * @param {number} carSourceId 车辆行情的商品 id
+   * @param {number} pageIndex
+   * @param {number} pageSize
+   * @returns {Promise<CarSourceComment>}
+   * @memberof SAASService
    */
   getCarSourceMore(
-    itemId: string,
+    carSourceId: number,
     pageIndex: number,
     pageSize: number
   ): Promise<CarSourceComment> {
+    const itemId = carSourceId
     return this.request(
       `supply/car/${itemId}/comment`,
-      'GET', {
-        pageIndex: pageIndex,
-        pageSize: pageSize
-      }
-    )
-  }
-
-  getCompanyMarketlist(
-    companyId: number,
-    pageIndex: number,
-    pageSize: number,
-    spuId: number // 虽然没有告诉我，我觉得这里就是number类型
-  ): Promise<Array<CompanyMarket>> {
-    return this.request(
-      `/supply/company/${companyId}/items`,
-      'GET', {
+      'GET',
+      {
         pageIndex,
-        pageSize,
-        spuId
+        pageSize
       }
     )
   }
