@@ -12,7 +12,7 @@
         </view>
       </view>
       <view class="brand-icon">
-        <image wx:for="{{item.mainBrand}}" wx:for-item="branch" src="{{branch.brandLogoUrl}}"></image>
+        <image wx:if="{{isShowBranch}}" wx:key="brandId" wx:for="{{item.mainBrand}}" wx:for-item="branch" src="{{branch.brandLogoUrl}}"></image>
       </view>
     </view>
     <image class="call-line" src="/images/icons/icon_call_line.png" data-company="{{ item }}" catchtap="onCallButtonClick" />

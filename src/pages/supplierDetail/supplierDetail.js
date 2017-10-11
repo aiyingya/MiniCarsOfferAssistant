@@ -53,7 +53,7 @@ Page({
       title: '该供应商暂无评论信息',
       description: '如果您与供应商有过成交或沟通， 请尽快评价哦'
     },
-    firstWindowHeight: 0 // 记录第一次进入页面的window的高度
+    activeIndex: 0
   },
   onLoad(options) {
     const system = wxapi.getSystemInfoSync()
@@ -61,9 +61,9 @@ Page({
 
     // 以下数值通通为页面元素的高度  scrollViewHeight：为获取滚动元素的高度数值
     this.setData({
-      firstWindowHeight: system.windowHeight,
       company,
-      scrollViewHeight: system.windowHeight - util.px(100 + 20 + 96 + 210 + 218 + 10 + 200 + 10)
+      scrollViewHeight: system.windowHeight - util.px(188 + 96 + 210),
+      linkmanViewHeight: system.windowHeight - util.px(188),
     })
 
     wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
@@ -96,31 +96,8 @@ Page({
     // 更新公司数据
     saasService.retrieveSupplyCompany(companyId)
       .then((res: Company) => {
-        // 218 + 10 + 200 + 10：为主营品牌和优势车系的高度和margin
-        // 这里需要根据主营品牌的数量判断 <=3个判断心的高度为 218 - 60
-        // 这里需要根据优势车系的数量判断 <=3个判断心的高度为 200 - 58
-        // 主营品牌和优势车系为空时 高度为0
-        let companyH = 0
-
-        if (res.mainBrand && res.mainBrand.length > 0) {
-          if (res.mainBrand.length <= 3) {
-            companyH += 218 - 60 + 15
-          } else {
-            companyH += 218 + 10
-          }
-        }
-
-        if (res.mainSeries && res.mainSeries.length > 0) {
-          if (res.mainSeries.length <= 3) {
-            companyH += 200 - 58 + 15
-          } else {
-            companyH += 200 + 15
-          }
-        }
-
         this.setData({
-          company: res,
-          scrollViewHeight: this.data.firstWindowHeight - util.px(100 + 20 + 96 + 210 + companyH)
+          company: res
         })
       })
 
@@ -322,6 +299,19 @@ Page({
       })
     }
   },
+  onCallButtonClickToMobile(e) {
+    // TODO:v2.0这里的参数还没有对接
+    const supplier = e.currentTarget.dataset.supplier
+    const contactPhone = supplier.supplierPhone
+    wxapi.makePhoneCall({ contactPhone })
+    /**
+     * 联系电话弹层，统一上报位置
+     */
+    const supplierId = supplier.supplierId,
+      supplierPhone = supplier.supplierPhone
+    const itemId = 1 // TODO:v2.0 新接口对接完以后这里要获取itemId的值
+    saasService.pushCallRecord(supplierId, supplierPhone, contactPhone, itemId)
+  },
   onCallButtonClick(e) {
     const company = e.currentTarget.dataset.company
     this.actionContact(company.companyId, company.companyName)
@@ -341,5 +331,11 @@ Page({
           })
       }
     });
+  },
+  // event handler
+  handlerTabClick(e) {
+    this.setData({
+      activeIndex: e.currentTarget.id
+    })
   }
 })

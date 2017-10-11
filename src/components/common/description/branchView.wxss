@@ -13,9 +13,9 @@
   font-size:26rpx;
   color:#666666;
   letter-spacing:0;
-  line-height:64rpx;
-  height:64rpx;
-
+  line-height:80rpx;
+  height:80rpx;
+  text-align: center;
 }
 .branch-desc__list{
   padding: 10rpx 0 20rpx;

@@ -27,7 +27,7 @@
       </view>
       <view class="rows">
         <view class="row-1" wx:for="{{ sectionRows }}" wx:key="companyId">
-          <template is="supplierSearchResultView" data="{{ index, item }}" />
+          <template is="supplierSearchResultView" data="{{ index, item , isShowBranch:true}}" />
         </view>
       </view>
     </block>

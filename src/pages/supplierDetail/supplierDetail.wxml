@@ -15,27 +15,64 @@
 <view class="container supplier-detail">
   <!-- 搜索车型.-->
   <view class="header">
-    <template is="supplierSearchResultView" data="{{ index: 0, item: company }}" />
+    <view class="header-title">
+    <template is="supplierSearchResultView" data="{{ index: 0, item: company, isShowBranch:false }}" />
+    </view>
+    <view class="header-tab">
+      <view class="header-tab__item  {{activeIndex == 0 ? 'header-tab__item_on' : ''}}" bindtap="handlerTabClick" id="0">
+        行情信息
+      </view>
+      <view class="header-tab__item  {{activeIndex == 1 ? 'header-tab__item_on' : ''}}" bindtap="handlerTabClick" id="1">
+        联系方式
+      </view>
+      <view class="header-tab__item  {{activeIndex == 2 ? 'header-tab__item_on' : ''}}" bindtap="handlerTabClick" id="2">
+        评价内容
+      </view>
+    </view>
+
   </view>
   <view class="body">
-    <view class="branch-section">
+    <view wx:if="{{activeIndex == 0}}" class="branch-section">
       <template is="branchView" data="{{ mainBrands:company.mainBrand, mainSeries:company.mainSeries }}" />
     </view>
-    <view class="filter-section">
-      <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />
-    </view>
-    <scroll-view scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
-      <block wx:if="{{ comments && comments.length }}">
-        <view class="row" wx:for="{{ comments }}" wx:key="commentId">
-          <template is="commentView" data="{{ item }}" />
+
+    <view wx:if="{{activeIndex == 1}}" class="linkman" style="height: {{linkmanViewHeight}}px;">
+      <view class="linkman__title">— 全部联系人 —</view>
+      <view class="linkman__item">
+        <view class="left">A赣州宜家 仲景</view>
+        <view class="right">
+          共被联系9次
+          <image class="call-line" src="/images/icons/icon_call_line.png" catchtap="onCallButtonClickToMobile" data-supplier="{{ aiyingya }}"/>
         </view>
-      </block>
-      <block wx:else>
-        <template is="emptyStatusView" data="{{ ...emptyStatus }}" />
-      </block>
-    </scroll-view>
+      </view>
+      <view class="linkman__item">
+        <view class="left">A赣州宜家 仲景</view>
+        <view class="right">
+          共被联系9次
+          <image class="call-line" src="/images/icons/icon_call_line.png" catchtap="onCallButtonClickToMobile" data-supplier="{{ aiyingya }}"/>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{activeIndex == 2}}">
+      <view class="filter-section">
+        <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />
+      </view>
+
+      <scroll-view scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
+        <block wx:if="{{ comments && comments.length }}">
+          <view class="row" wx:for="{{ comments }}" wx:key="commentId">
+            <template is="commentView" data="{{ item }}" />
+          </view>
+        </block>
+        <block wx:else>
+          <template is="emptyStatusView" data="{{ ...emptyStatus }}" />
+        </block>
+      </scroll-view>
+    </view>
+
   </view>
-  <view class="footer">
+  <view wx:if="{{activeIndex == 2}}" class="footer">
     <template is="commentBoardView" data="{{ submitTags, submitTextareaValue, submitSelectedTagIndex, submitButtonValid, submitButtonTagValid }}"
     />
   </view>
