@@ -363,6 +363,8 @@ Page({
     wx.makePhoneCall({
       phoneNumber: phone
     })
+    // 这里打给客户 不需要上报手机
+
   },
   /**
    * 长按复制手机号.

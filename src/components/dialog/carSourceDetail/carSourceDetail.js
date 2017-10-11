@@ -137,6 +137,14 @@ export default {
           const contact = e.currentTarget.dataset.contact
           wxapi.makePhoneCall({ phoneNumber: contact })
             .then()
+          /**
+           * 上报 TODO:v2.0 新接口对接完以后这里要获取好多的值
+           */
+          var supplierId = 1, // supplier.supplierId,
+            supplierPhone = 2, // supplier.supplierPhone,
+            contactPhone = contact // carSourceItem.contact || supplier.supplierPhone;
+          var itemId = 1
+          saasService.pushCallRecord(supplierId, supplierPhone, contactPhone, itemId)
         },
         /**
          * 选择不同的物流终点
@@ -408,6 +416,15 @@ export default {
           const supplier = e.currentTarget.dataset.supplier,
             phoneNumber = supplier.supplierPhone
           const contactPromise = wxapi.makePhoneCall({ phoneNumber })
+          /**
+           * 联系电话弹层，统一上报位置
+           */
+          const
+            supplierId = supplier.supplierId,
+            supplierPhone = supplier.supplierPhone,
+            contactPhone = supplier.supplierPhone
+          const itemId = 1 // TODO:v2.0 新接口对接完以后这里要获取itemId的值
+          saasService.pushCallRecord(supplierId, supplierPhone, contactPhone, itemId)
 
           typeof options.contact === 'function' && options.contact(contactPromise, supplier)
         }

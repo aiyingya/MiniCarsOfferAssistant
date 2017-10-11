@@ -5,8 +5,6 @@ import {
 import util from '../../utils/util'
 import { system, container } from '../../landrover/business/index'
 
-// import moment from 'moment'
-
 Page({
   data: {
     hotCarLists: [],
@@ -383,5 +381,6 @@ Page({
     wx.makePhoneCall({
       phoneNumber: phone
     })
+    // 这里打给何先生 不需要上报手机
   }
 })

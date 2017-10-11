@@ -746,12 +746,7 @@ Page({
       null,
       from,
       (supplier) => {
-        const
-          supplierId = supplier.supplierId,
-          supplierPhone = supplier.supplierPhone,
-          contactPhone = supplier.supplierPhone
 
-        saasService.pushCallRecordForMode(supplierId, supplierPhone, contactPhone, spuId, mode.viewModelQuoted.price)
       })
   },
   actionContactWithCarSourceItem(spuId, skuItemIndex, carSourceItemIndex, carSourceItem, from) {
@@ -763,18 +758,6 @@ Page({
       carSourceItem.supplier.id,
       from,
       (supplier) => {
-        /**
-         * 上报
-         */
-        const
-          supplierId = supplier.supplierId,
-          supplierPhone = supplier.supplierPhone,
-          carSourceId = carSourceItem.id,
-          contactPhone = carSourceItem.contact || supplier.supplierPhone,
-          skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
-
-        saasService.pushCallRecordForCarSource(supplierId, supplierPhone, contactPhone, carSourceId)
-
         /**
          * 1.4.0 埋点 拨打供货方电话
          * davidfu

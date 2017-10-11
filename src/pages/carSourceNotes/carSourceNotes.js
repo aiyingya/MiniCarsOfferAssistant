@@ -223,17 +223,6 @@ Page({
           return
         }
 
-        /**
-         * 上报
-         */
-        const
-          supplierId = supplier.supplierId,
-          supplierPhone = supplier.supplierPhone,
-          carSourceId = carSourceItem.id,
-          contactPhone = carSourceItem.contact || supplier.supplierPhone,
-          spuItem = selectedDateSection.callRecordBySpu[spuItemIndex]
-
-        saasService.pushCallRecordForCarSource(supplierId, supplierPhone, contactPhone, carSourceId)
 
         /**
          * 1.4.0 埋点 拨打供货方电话
