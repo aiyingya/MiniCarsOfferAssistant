@@ -850,6 +850,7 @@ export default class SAASService extends Service {
   /**
    * 获取某一个公司内部对一个 spu 报价为 quotationPrice 的所有联系方式
    *
+   * @deprecated 2.0.0
    * @param {number} companyId
    * @param {(number | null)} supplierId
    * @param {(number | null)} spuId
@@ -898,6 +899,7 @@ export default class SAASService extends Service {
   /**
    * 查找某个公司某个供应商某个 spuId 某个报价下的联系人列表
    *
+   * @deprecated 2.0.0
    * @param {string} userId
    * @param {number} companyId
    * @param {number} supplierId
@@ -990,30 +992,37 @@ export default class SAASService extends Service {
   /**
    * 获取对一个 spu 报价为 quotationPrice 的所有公司列表
    *
-   * response [Model]
-   *
-   * companyId
-   * companyName
-   * price
-   * spuId
-   * spuName
-   * sourceId
-   * mesNum
-   * principalPhone
-   * wechatCount
-   *
    * @param {number} spuId
    * @param {number} quotationPrice
-   * @returns {Promise<any>}
+   * @returns {Promise<Array<{
+   *     companyId: number,
+   *     companyName: string,
+   *     mesNum: number,
+   *     price: number,
+   *     principalPhone: string,
+   *     sourceId: string,
+   *     spuId: string,
+   *     wechatCount: number
+   *   }>>}
    * @memberof SAASService
    */
   getCompanies(
     spuId: number,
     quotationPrice: number
-  ): Promise<any> {
+  ): Promise<Array<{
+    companyId: number,
+    companyName: string,
+    mesNum: number,
+    price: number,
+    principalPhone: string,
+    sourceId: string,
+    spuId: string,
+    wechatCount: number
+  }>> {
     return this.request(
       'sale/quotation/getCompanyList',
-      'GET', {
+      'GET',
+      {
         spuId: spuId,
         price: quotationPrice || ''
       }

@@ -321,6 +321,8 @@ declare type CarSourceItemsBySKU = {
   title: string,
   lowestSalePrice: number,
   count: number,
+  metallicPaint: string,
+  metallicPaintAmount: number,
   itemDetails: Array<CarSourceItem>
 };
 

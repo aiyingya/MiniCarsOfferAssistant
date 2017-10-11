@@ -1,6 +1,5 @@
   <!-- {
     supplier: Supplier,
-    supplierSelfSupport: boolean,
     skuItemIndex: number,
     carSourceItemIndex: number
   } -->

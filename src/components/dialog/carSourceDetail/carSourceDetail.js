@@ -22,7 +22,7 @@ export default {
    *
    * @param {Object} opts 配置项
    * @param {String} opts.carModel
-   * @param {String} opts.carSourceItem
+   * @param {CarSourceItem} opts.carSourceItem
    * @param {Function} opts.close
    * @param {Function} opts.bookCar
    * @param {Function} opts.Contact
@@ -50,19 +50,6 @@ export default {
       animateCss: undefined,
       visible: !1
     }, setDefaults(), opts)
-
-    // 将物流门店逻辑处理修复
-    if (options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
-      for (let logisticsDestination of options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
-        if (logisticsDestination.destType === 'store') {
-          logisticsDestination.viewModelDestTypeDesc = '门店'
-        } else if (logisticsDestination.destType === 'station') {
-          logisticsDestination.viewModelDestTypeDesc = '驿站'
-        } else if (logisticsDestination.destType === 'mainline') {
-          logisticsDestination.viewModelDestTypeDesc = '干线自提'
-        }
-      }
-    }
 
     // 判断是否该显示 复制原文 按钮
     options.showCopyOrignalText = wx.setClipboardData != null ? true : false
@@ -191,12 +178,12 @@ export default {
     this.component.show()
 
     // 加载原文数据
-    if (!options.carSourceItem.supplierSelfSupport && !options.carSourceItem.viewModelContentItems) {
+    if (!options.carSourceItem.viewModelContentItems) {
       this.component.setData({
         [`${this.component.options.scope}.carSourceItem.viewModelLoading`]: '原文加载中...'
       })
 
-      saasService.requestCarSourceContent(options.carSourceItem.id)
+      saasService.getCarSourceOriginalMessage(options.carSourceItem.id)
         .then(res => {
           console.log(res)
           if (res) {
@@ -338,11 +325,11 @@ export default {
    * 电话确认界面展示
    *
    * @param {Object} opts
-   * @param {String} opts.spuId
-   * @param {Number} opts.quotationPrice
-   * @param {String} opts.companyId
+   * @param {Number} opts.spuId
+   * @param {Number} opts.quotedPrice
+   * @param {Number} opts.carSourceId
+   * @param {Number} opts.companyId
    * @param {String} opts.companyName
-   * @param {String} opts.supplierId
    * @param {String} opts.from
    * @param {Function} opts.contact
    * @returns
@@ -355,7 +342,8 @@ export default {
         page: 'contactList',
         // 必要参数
         spuId: null,
-        quotationPrice: null,
+        quotedPrice: null,
+        carSourceId: null,
         companyId: null,
         companyName: null,
         from: null,
@@ -413,7 +401,8 @@ export default {
           }
         },
         handlerContactClick(e) {
-          const supplier = e.currentTarget.dataset.supplier,
+          const
+            supplier = e.currentTarget.dataset.supplier,
             phoneNumber = supplier.supplierPhone
           const contactPromise = wxapi.makePhoneCall({ phoneNumber })
           /**
@@ -436,18 +425,17 @@ export default {
     this.component.setData({
       [`${that.component.options.scope}.status`]: '加载中'
     })
-    saasService.getContacts(
-      options.companyId,
-      options.supplierId,
-      options.spuId,
-      options.quotationPrice
-    )
+
+    let promise = null
+    if (opts.carSourceId != null) {
+      promise = saasService.retrieveContactsByCarSourceItem(opts.carSourceId)
+    } else {
+      promise = saasService.getAllSuppliersByCompanyAndPriceForSPU(opts.spuId, opts.companyId, opts.quotedPrice)
+    }
+    promise
       .then(res => {
-        const companyModel = res.shift()
-        companyModel.companyId = companyModel.companyId || options.companyId
-        companyModel.companyName = companyModel.companyName || options.companyName
         this.component.setData({
-          [`${this.component.options.scope}.companyModel`]: companyModel,
+          [`${this.component.options.scope}.supplierModels`]: res,
           [`${this.component.options.scope}.status`]: '没有供应商联系方式'
         })
       })

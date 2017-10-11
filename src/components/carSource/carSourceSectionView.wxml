@@ -1,4 +1,3 @@
-
 <import src="../../components/common/price/quotedPriceView.wxml" />
 
 <template name="carSourceSectionView">
@@ -6,23 +5,18 @@
     <!-- 库存分区列表 -->
     <view class="first-part">
       <view class="title">
-        {{skuItem.carSku.externalColorName}}
-        <view wx:if="{{skuItem.carSku.metallicPaint.length}}" class="note">
-          {{skuItem.carSku.metallicPaint}}
+        {{skuItem.title}}
+        <view wx:if="{{skuItem.metallicPaint.length}}" class="note">
+          {{skuItem.metallicPaint}}
         </view>
       </view>
     </view>
 
     <view class="second-part">
-      <template is="quotedPriceView" data="{{ ...skuItem.carSku.viewModelQuoted }}" />
+      <template is="quotedPriceView" data="{{ ...skuItem.viewModelQuoted }}" />
       <view>起</view>
     </view>
 
-    <view wx:if="{{skuItem.carSku.viewModelTags.length > 0}}" class="third-part tag-collection">
-      <view wx:for="{{skuItem.carSku.viewModelTags}}" wx:key="{{ index }}" class="tag">
-        {{item}}
-      </view>
-    </view>
     <!-- 货源右侧的展开标记 -->
     <view class="dropdownarrow">
       <view class="carsource-count">
