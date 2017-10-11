@@ -105,7 +105,7 @@ Page({
     carSourceManger = new CarSourceManager(carModelsInfo.officialPrice, quotedMethod)
 
     for (let callRecord of spuItem.callRecordList) {
-      carSourceManger.processCarSourceItem(callRecord.carSource)
+      carSourceManger.processCarSourceItem(callRecord.itemDetail)
     }
 
     this.setData({
