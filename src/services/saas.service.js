@@ -488,6 +488,7 @@ export default class SAASService extends Service {
   /**
    * 获取三方车源信息的原文
    *
+   * @deprecated 2.0.0
    * @param {number} carSourceId
    * @memberof SAASService
    */
@@ -499,6 +500,30 @@ export default class SAASService extends Service {
   }> {
     return this.request(
       `product/car/source/${carSourceId}/content`,
+      'GET'
+    )
+  }
+
+  /**
+   * 获取车辆行情的原文
+   *
+   * @description 2.0.0 新增
+   * @param {number} carSourceId
+   * @returns {Promise<{
+   *     content: string,
+   *     indexOf: Array<number>
+   *   }>}
+   * @memberof SAASService
+   */
+  getCarSourceOriginalMessage(
+    carSourceId: number
+  ): Promise<{
+    content: string,
+    indexOf: Array<number>
+  }> {
+    const itemId = carSourceId
+    return this.request(
+      `car/item/${itemId}/message`,
       'GET'
     )
   }
