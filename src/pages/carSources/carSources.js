@@ -466,7 +466,7 @@ Page({
          */
         this.data.pageParameters = {
           productId: this.data.carModelsInfo.carModelId,
-          color: skuItem.title,
+          color: carSourceItem.title,
           parameters: {
             carSourceId: carSourceItem.id,
             supplierId: supplier.supplierId
@@ -611,7 +611,7 @@ Page({
      */
     this.data.pageParameters = {
       productId: this.data.carModelsInfo.carModelId,
-      color: skuItem.title,
+      color: carSourceItem.title,
       parameters: {
         carSourceId: carSourceItem.id
       }
