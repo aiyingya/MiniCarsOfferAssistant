@@ -527,14 +527,14 @@ export default class SAASService extends Service {
     supplierId: number,
     supplierPhone: string,
     contactPhone: string,
-    carSourceId: number | null = null,
-    spuId: number | null = null,
-    quotedPrice: number | null = null,
+    // carSourceId: number | null = null, v2.0 删除
+    // spuId: number | null = null, v2.0 删除
+    // quotedPrice: number | null = null, v2.0 删除
     itemId: number | null = null
   ): Promise<any> {
     const userId = this.userService.auth.userId
     const userPhone = this.userService.mobile
-    const messageResultId = carSourceId
+    // 每次拨打电话都会上报，在上报的时候增加拨打记录
     return this.request(
       "api/user/addCallRecord",
       'POST', {
@@ -543,32 +543,11 @@ export default class SAASService extends Service {
         supplierId,
         supplierPhone,
         contactPhone,
-        messageResultId,
-        spuId,
-        quotedPrice,
         itemId
       }
     )
   }
 
-  pushCallRecordForCarSource(
-    supplierId: number,
-    supplierPhone: string,
-    contactPhone: string,
-    carSourceId: number
-  ) {
-    return this.pushCallRecord(supplierId, supplierPhone, contactPhone, carSourceId, null, null)
-  }
-
-  pushCallRecordForMode(
-    supplierId: number,
-    supplierPhone: string,
-    contactPhone: string,
-    spuId: number,
-    quotedPrice: number
-  ) {
-    return this.pushCallRecord(supplierId, supplierPhone, contactPhone, null, spuId, quotedPrice)
-  }
 
   /**
    * 获取创建报价单的信息
@@ -1203,7 +1182,7 @@ export default class SAASService extends Service {
     callRecordBySpu: Array<{ spuSummary: CarModel, callRecordList: Array<{ lastCallDate: string, carSource: CarSource }> }>
   }>> {
     return this.request(
-      // `api/user/${userId}/callRecords`, 废弃接口
+      // `api/user/${userId}/callRecords`, // v2.0接口废弃
       `api/user/${userId}/sourceMemo`,
       `GET`
     )
