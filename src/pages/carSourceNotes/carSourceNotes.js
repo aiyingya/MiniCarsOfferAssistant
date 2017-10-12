@@ -41,7 +41,13 @@ Page({
       sourceArea: [], // 货源地标签
     }
   },
+  quotedMethod(brandName){
+    const isShowDownPrice = !(brandName.includes('宝马') || brandName.includes('奥迪') || brandName.toLowerCase().includes('mini'))
+    const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
+    carSourceManger.quotedMethod = quotedMethod
+  },
   onLoad(options) {
+
     wxapi.showToast({title: '加载中...', icon: 'loading', mask: true})
       .then(() => {
         return this.records()
@@ -49,6 +55,24 @@ Page({
             this.setData({
               records: res
             })
+
+            let _records = res
+
+            for (let mode of _records) {
+              for (let spuItem of mode.callRecordBySpu) {
+
+                // 构建车源管理器
+                const carModelsInfo = spuItem.spuSummary
+                const isShowDownPrice = !(carModelsInfo.carModelName.includes('宝马') || carModelsInfo.carModelName.includes('奥迪') || carModelsInfo.carModelName.toLowerCase().includes('mini'))
+                const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
+                carSourceManger = new CarSourceManager(carModelsInfo.officialPrice, quotedMethod)
+
+                for (let callRecord of spuItem.callRecordList) {
+                  carSourceManger.processCarSourceItem(callRecord.itemDetail)
+                }
+              }
+            }
+            console.log(_records)
           })
       })
       .then(() => {
@@ -115,6 +139,7 @@ Page({
     })
   },
   onCarSourceCellClick(e) {
+
     const selectedIndex = this.data.selectedIndex
     const spuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
@@ -127,15 +152,13 @@ Page({
 
     const spuItem = selectedDateSection.callRecordBySpu[spuItemIndex]
     const carModelsInfo = spuItem.spuSummary
-    const carSourceItem = spuItem.callRecordList[carSourceItemIndex].carSource
-    const contact = carSourceItem.supplier.contact
+    const carSourceItem = spuItem.callRecordList[carSourceItemIndex].itemDetail
 
     /// 判断有没有需要设置的 car source place， 没有则使用默认设置好的
     // if (carSourcePlaceItem) {
     // this.selectCarSourcePlace(carSourcePlaceItem, carSourceItem)
     // this.updateTheCarSource(spuItemIndex, carSourceItemIndex, carSourceItem)
     // }
-
     /**
      * 1.4.0 埋点
      * 用户选择行情
@@ -161,7 +184,7 @@ Page({
         this.actionBookCar(spuItem, null, updateCarSourceItem)
       },
       contact: () => {
-        this.actionContactWithCarSourceItem(carModelsInfo.carModelId, spuItemIndex, carSourceItemIndex, carSourceItem, 'sourceDetail')
+        this.actionContactWithCarSourceItem(carModelsInfo.carModelId, carSourceItem, 'sourceDetail')
       },
       handlerCreateQuoted: (e) => {
         const carSku = {
@@ -197,6 +220,7 @@ Page({
     })
   },
   onContactButtonClick(e) {
+
     const spuItemIndex = e.currentTarget.dataset.skuIndex
     const carSourceItemIndex = e.currentTarget.dataset.carSourceIndex
 
@@ -206,16 +230,17 @@ Page({
     }
 
     const spuItem = selectedDateSection.callRecordBySpu[spuItemIndex]
-    const carSourceItem = spuItem.callRecordList[carSourceItemIndex].carSource
+    const carSourceItem = spuItem.callRecordList[carSourceItemIndex].itemDetail
 
-    this.actionContactWithCarSourceItem(spuItem.spuSummary.carModelId, spuItemIndex, carSourceItemIndex, carSourceItem, null)
+    this.actionContactWithCarSourceItem(spuItem.spuSummary.carModelId, carSourceItem, null)
   },
-  actionContactWithCarSourceItem(spuId, spuItemIndex, carSourceItemIndex, carSourceItem, from) {
-    this.actionContact(spuId,
-      carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price,
-      carSourceItem.supplier.companyId,
-      carSourceItem.supplier.companyName,
-      carSourceItem.supplier.id,
+  actionContactWithCarSourceItem(spuId, carSourceItem, from) {
+      this.actionContact(
+      spuId,
+      carSourceItem.viewModelQuoted.price,
+      carSourceItem.id,
+      carSourceItem.companyId,
+      carSourceItem.companyName,
       from,
       (supplier) => {
         if (selectedDateSection === null) {
@@ -233,7 +258,7 @@ Page({
           color: carSourceItem.externalColorName,
           parameters: {
             carSourceId: carSourceItem.id,
-            supplierId: carSourceItem.supplier.id
+            supplierId: supplier.supplierId
           }
         }
         const event = {
@@ -246,21 +271,19 @@ Page({
   /**
    * 包装的联系人接口
    *
-   * @param {Number} spuId
-   * @param {Number} quotationPrice
-   * @param {Number} companyId
-   * @param {String} companyName
-   * @param {Number} supplierId
-   * @param {String} from
-   * @param {Function} completeHandler
+   * @param {any} carSourceId
+   * @param {any} companyId
+   * @param {any} companyName
+   * @param {any} from
+   * @param {any} completeHandler
    */
-  actionContact(spuId, quotationPrice, companyId, companyName, supplierId, from, completeHandler) {
+  actionContact(spuId, quotedPrice, carSourceId, companyId, companyName, from, completeHandler) {
     $wuxCarSourceDetailDialog.contactList({
       spuId: spuId,
-      quotationPrice: quotationPrice,
+      quotedPrice: quotedPrice,
+      carSourceId: carSourceId,
       companyId: companyId,
       companyName: companyName,
-      supplierId: supplierId,
       from: from,
       contact: (makePhonePromise, supplier) => {
         makePhonePromise
