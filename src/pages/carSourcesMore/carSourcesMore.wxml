@@ -7,14 +7,12 @@
     <view class="carSourcesMore-head__desc">
       <span class="left">{{showColorName}}</span>
       <span class="right">
-        <!--<image wx:if="{{ 1 === 1 }}" class="discount-icon" src="/images/icons/icon_price_down.png"> </image>-->
-        <!--2万/<em>19.38万</em>-->
-        <!--TODO: v.2.0 接口国庆后才通，调通以后看看这里的样式是否有变化 ，这里是copy过来的价格显示-->
-        <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
+        <!--TODO: v.2.0 viewModelEqualWithOfficialPrice 参数被删除需要david加上以后我这里跟着做修改-->
+        <block wx:if="{{carSourceItem.viewModelEqualWithOfficialPrice}}">
           <view class="price-tips-small">价格电议</view>
         </block>
         <block wx:else>
-          <template is="quotedPriceView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />
+          <template is="quotedPriceView" data="{{ ...carSourceItem.viewModelQuoted }}" />
         </block>
 
       </span>
@@ -26,7 +24,6 @@
       <view class="top">
         <span class="left">{{item.userPhone}}</span><span class="right">{{item.updateTimeStr}}</span>
       </view>
-      <!--TODO:v2.0 参数-->
       <template is="remarkView" data="{{ tags:item.tags ,content:item.content}}" />
     </view>
 
@@ -35,7 +32,6 @@
       <!--<view class="top">-->
         <!--<span class="left">15000******</span><span class="right">2017/09/11  23:27</span>-->
       <!--</view>-->
-      <!--&lt;!&ndash;TODO:1.60 参数&ndash;&gt;-->
       <!--<template is="remarkView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />-->
     <!--</view>-->
 

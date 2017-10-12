@@ -5,12 +5,23 @@
     <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
 
       <form bindsubmit="{{ confirm }}" >
-        <!--TODO: 实际价格的效果图还没有-->
-        <view></view>
-
-        <!--货源地、公里数、特殊条件、备注-->
+        <!--实际价格、货源地、公里数、特殊条件、备注-->
         <view class="setting-content">
           <scroll-view scroll-y style="height: 670rpx">
+
+            <view class="line-content">
+              <view class="left">实际价格</view>
+              <view class="right price">
+                <span class="down" bindtap="{{handleDown}}">-</span>
+                <view class="box">
+                  <span class="yen">￥</span>
+                  <input name="price" value="{{currentTag.price ? currentTag.price : 0}}" bindchange="{{handlePriceChange}}"></input>
+                </view>
+                <span class="up" bindtap="{{handleUp}}">+</span>
+              </view>
+            </view>
+            <!--分割线-->
+            <view class="weui-dialog__line" style="width:100%;"></view>
 
             <view wx:if="{{currentTag.sourceArea}}" class="line-content">
                 <view class="left">货源地</view>
@@ -52,7 +63,7 @@
             <view class="line-content">
               <view class="left">备注</view>
               <view class="right">
-                <textarea name="comment" value="{{ currentTag.comment }}" class="textarea" cursor-spacing="40px" placeholder="输入备注"  placeholder-class="textarea-placeholder"/>
+                <textarea name="comment" value="{{ currentTag.content }}" class="textarea" cursor-spacing="40px" placeholder="输入备注"  placeholder-class="textarea-placeholder"/>
               </view>
             </view>
 

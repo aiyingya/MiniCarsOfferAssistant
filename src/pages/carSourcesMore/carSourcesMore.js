@@ -17,23 +17,23 @@ Page({
     }],
     showCarModelName: '', // 要显示的车款标题
     showColorName: '', // 要显示的内外饰颜色
-    itemId: 0, // 商品id
+    carSourceId: 0, // 商品id
     carSourceItem: {} // 车源信息吧
   },
   onLoad(options) {
     this.setData({
-      carSourceItem : util.urlDecodeValueForKeyFromOptions('carSourceItem', options),
-      showCarModelName : options.showCarModelName,
-      showColorName : options.showColorName,
-      itemId : options.itemId
+      carSourceItem: util.urlDecodeValueForKeyFromOptions('carSourceItem', options),
+      showCarModelName: options.showCarModelName,
+      showColorName: options.showColorName,
+      carSourceId: options.carSourceId
     })
-    this.getData(options.itemId)
+    this.getData(options.carSourceId)
   },
   onShow() {
   },
-  getData(itemId) {
+  getData(carSourceId) {
     saasService.getCarSourceMore(
-      itemId,
+      carSourceId,
       this.data.pageIndex,
       this.data.pageSize
     ).then(res => {

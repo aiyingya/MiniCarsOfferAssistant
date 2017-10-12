@@ -153,7 +153,7 @@ declare type CompanyTagInfo = {
 };
 
 declare type CompanyRemark = {
-  comment: string,
+  content: string,
   price: number,
   mileage: Array<CompanyTagInfo>, //  公里数标签列表
   condition: Array<CompanyTagInfo>, // 特殊条件标签列表

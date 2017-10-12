@@ -7,12 +7,11 @@ export default {
    */
   setDefaults() {
     return {
-      title: "334423",
       cancelText: `取消`,
       confirmText: `确定`,
       currentTag: {
-        comment: "", // 备注内容
-        price: 110,
+        content: '', // 备注内容
+        price: 0, // 实际价格
         mileage: [], // 公里数标签
         condition: [], // 特殊条件标签
         sourceArea: [] // 货源地标签
@@ -83,6 +82,7 @@ export default {
           let _sourceArea = options.currentTag.sourceArea
           let _mileage = options.currentTag.mileage
           options.currentTag.comment = e.detail.value.comment
+          options.currentTag.price = e.detail.value.price
           let _list = []
           _condition.forEach((item, index) => {
             if (item.selected) {
@@ -180,8 +180,27 @@ export default {
           this.setData({
             [`${this.options.scope}.currentTag.sourceArea`]: _sourceArea,
           })
-        }
-
+        },
+        handleDown(e) {
+          let price = options.currentTag.price || 0
+          price = --price
+          this.setData({
+            [`${this.options.scope}.currentTag.price`]: price,
+          })
+        },
+        handleUp(e) {
+          let price = options.currentTag.price || 0
+          price = ++price
+          this.setData({
+            [`${this.options.scope}.currentTag.price`]: price,
+          })
+        },
+        handlePriceChange(e) {
+          let price = e.detail.value || 0
+          this.setData({
+            [`${this.options.scope}.currentTag.price`]: price,
+          })
+        },
       }
     })
 

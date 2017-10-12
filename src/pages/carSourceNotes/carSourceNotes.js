@@ -34,8 +34,8 @@ Page({
 
     records: null,
     currentTag: {
-      comment:"", // 备注内容
-      price:110,
+      comment: '', // 备注内容
+      price: 110,
       mileage: [], // 公里数标签
       condition: [], // 特殊条件标签
       sourceArea: [], // 货源地标签
@@ -190,7 +190,7 @@ Page({
         const carSku = {
           externalColorName: carSourceItem.externalColor,
           internalColorName: carSourceItem.internalColor,
-          showPrice: carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted.price
+          showPrice: carSourceItem.viewModelQuoted.price
         }
         const carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
         const carSkuInfoKeyValueString = utils.urlEncodeValueForKey('carSkuInfo', carSku)
@@ -201,10 +201,10 @@ Page({
       handlerGoMore(e) {
         // TODO:2.0 需要注意国庆以后下面的参数取值可能有变化，因为会更新历史返回的数据结构，这里需要十分注意、十分注意、十分注意
         let _showCarModelName = '【' + carModelsInfo.officialPriceStr + '】' + carModelsInfo.carModelName
-        let _showColorName = carSourceItem.externalColor + ' / ' + carSourceItem.viewModelInternalColor
+        let _showColorName = carSourceItem.exteriorColor + ' / ' + carSourceItem.viewModelInternalColor
         let _carSourceItemKeyValueString = utils.urlEncodeValueForKey('carSourceItem', carSourceItem)
-        let _itemId = 1 // TODO:2.0 itemId为临时Id，接口需要国庆后提供
-        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&itemId=${_itemId}`
+        let _carSourceId = carSourceItem.id
+        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&carSourceId=${_carSourceId}`
         wx.navigateTo({ url })
       },
       close: () => {
@@ -311,25 +311,25 @@ Page({
       return res
     })
   },
-  handleUpdate() {
-    console.log('修改标签和备注')
-    // TODO:1.20 2为临时参数
-    const itemId = 2
+  handleUpdate(e) {
+    const carSourceId = e.currentTarget.dataset.carsourceid
     const userId = userService.auth.userId
     const mobile = userService.mobile
-    this.getTags(itemId).then((res) => {
+    this.getTags(carSourceId).then((res) => {
       // 本来想组装数据，怕不稳定还是不装了
       $settingRemarkLabelDialog.open({
         currentTag: res,
         handlerSettingTags: (tags, comment, price) => {
           saasService.settingCompanyTags(
-            itemId,
+            carSourceId,
             comment,
             price,
             userId,
             tags,
             mobile
-          ).then((res) => {})
+          ).then((res) => {
+            // 新增一条标签记录
+          })
         },
         close: () => {
 
