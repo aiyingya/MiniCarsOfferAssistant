@@ -341,7 +341,8 @@ export default {
         companyName: null,
         from: null,
         // 返回数据
-        companyModel: {}
+        companyModel: {},
+        fromPage: 'CarSource' // Supplier | CarSource
       }
     }
 
@@ -404,7 +405,6 @@ export default {
           const supplierId = supplier.supplierId,
             carSourceId = options.carSourceId
           saasService.pushCallRecord(supplierId, phoneNumber, carSourceId)
-
           typeof options.contact === 'function' && options.contact(contactPromise, supplier)
         }
       }
@@ -420,7 +420,14 @@ export default {
     if (opts.carSourceId != null) {
       promise = saasService.retrieveContactsByCarSourceItem(opts.carSourceId)
     } else {
-      promise = saasService.getAllSuppliersByCompanyAndPriceForSPU(opts.spuId, opts.companyId, opts.quotedPrice)
+
+      if(opts.fromPage === 'Supplier') {
+        promise = saasService.getAllSuppliersByCompanyAndPriceForCompanyId(opts.companyId)
+      }
+      else if(opts.fromPage === 'CarSource') {
+        promise = saasService.getAllSuppliersByCompanyAndPriceForSPU(opts.spuId, opts.companyId, opts.quotedPrice)
+      }
+      // ...或许还有其他未开发类型的电话列表接口
     }
     promise
       .then(res => {

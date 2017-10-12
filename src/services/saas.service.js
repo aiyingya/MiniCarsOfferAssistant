@@ -432,6 +432,7 @@ export default class SAASService extends Service {
   /**
    * 获取特定 spu 下的特定公司特定报价的供应商联系列表
    *
+   * 来源 车源详情中众数页面中的电话列表调用
    * @description 2.0.0 新增
    * @param {number} spuId
    * @param {number} companyId
@@ -452,6 +453,24 @@ export default class SAASService extends Service {
         salePrice,
         spuId
       }
+    )
+  }
+
+  /**
+   * 获取特定 companyId 下的特定公司特定报价的供应商联系列表
+   *
+   *  来源 供应商列表调用
+   * @description 2.0.0 新增
+   * @param {number} companyId
+   * @returns {Promise<Array<Supplier>>}
+   * @memberof SAASService
+   */
+  getAllSuppliersByCompanyAndPriceForCompanyId(
+    companyId: number
+  ): Promise<Array<Supplier>> {
+    return this.request(
+      `/supply/company/call?cid=${companyId}`,
+      `GET`
     )
   }
 

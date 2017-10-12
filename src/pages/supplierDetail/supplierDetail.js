@@ -318,6 +318,7 @@ Page({
     $wuxCarSourceDetailDialog.contactList({
       companyId: companyId,
       companyName: companyName,
+      fromPage: 'Supplier',
       contact: (makePhonePromise, supplier) => {
         makePhonePromise
           .then(res => {
