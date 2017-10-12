@@ -420,11 +420,9 @@ export default {
     if (opts.carSourceId != null) {
       promise = saasService.retrieveContactsByCarSourceItem(opts.carSourceId)
     } else {
-
-      if(opts.fromPage === 'Supplier') {
+      if (opts.fromPage === 'Supplier') {
         promise = saasService.getAllSuppliersByCompanyAndPriceForCompanyId(opts.companyId)
-      }
-      else if(opts.fromPage === 'CarSource') {
+      } else if (opts.fromPage === 'CarSource') {
         promise = saasService.getAllSuppliersByCompanyAndPriceForSPU(opts.spuId, opts.companyId, opts.quotedPrice)
       }
       // ...或许还有其他未开发类型的电话列表接口
