@@ -199,7 +199,6 @@ Page({
         })
       },
       handlerGoMore(e) {
-        // TODO:2.0 需要注意国庆以后下面的参数取值可能有变化，因为会更新历史返回的数据结构，这里需要十分注意、十分注意、十分注意
         let _showCarModelName = '【' + carModelsInfo.officialPriceStr + '】' + carModelsInfo.carModelName
         let _showColorName = carSourceItem.exteriorColor + ' / ' + carSourceItem.viewModelInternalColor
         let _carSourceItemKeyValueString = utils.urlEncodeValueForKey('carSourceItem', carSourceItem)
@@ -285,15 +284,8 @@ Page({
       companyId: companyId,
       companyName: companyName,
       from: from,
-      contact: (makePhonePromise, supplier) => {
-        makePhonePromise
-          .then(res => {
-            console.log('拨打电话' + supplier.supplierPhone + '成功')
-            typeof completeHandler === 'function' && completeHandler(supplier)
-          })
-          .catch(err => {
-            console.error(err, '拨打电话' + supplier.supplierPhone + '失败')
-          })
+      contact: (supplier) => {
+        typeof completeHandler === 'function' && completeHandler(supplier)
       }
     })
   },
@@ -302,9 +294,9 @@ Page({
    *
    * @param itemId 商品id
    */
-  getTags(itemId) {
+  getTags(carSourceId) {
     const userId = userService.auth.userId
-    return saasService.getQueryCompanyRemark(userId, itemId).then((res) => {
+    return saasService.getQueryCompanyRemark(userId, carSourceId).then((res) => {
       this.setData({
         'currentTag': res
       })

@@ -4,9 +4,11 @@ import * as wxapi from 'fmt-wxapp-promise'
 
 import { container } from '../../../landrover/business/index'
 import SAASService from '../../../services/saas.service'
+import $settingRemarkLabelDialog from '../settingRemarkLabelDialog/settingRemarkLabelDialog'
+
 
 const saasService: SAASService = container.saasService
-
+const userService: UserService = container.userService
 export default {
 
   component: null,
@@ -394,18 +396,64 @@ export default {
             that.open(from, oldOptions)
           }
         },
+        /**
+         * 获取商品所有标签
+         *
+         * @param itemId 商品id
+         */
+        getTags(carSourceId) {
+          const userId = userService.auth.userId
+          return saasService.getQueryCompanyRemark(userId, carSourceId).then((res) => {
+            return res
+          })
+        },
         handlerContactClick(e) {
           const
             supplier = e.currentTarget.dataset.supplier,
-            phoneNumber = supplier.supplierPhone
+            phoneNumber = supplier.supplierPhone,
+            carSourceId = options.carSourceId
           const contactPromise = wxapi.makePhoneCall({ phoneNumber })
           /**
            * 联系电话弹层，统一上报位置
            */
-          const supplierId = supplier.supplierId,
-            carSourceId = options.carSourceId
+          const supplierId = supplier.supplierId
           saasService.pushCallRecord(supplierId, phoneNumber, carSourceId)
-          typeof options.contact === 'function' && options.contact(contactPromise, supplier)
+
+          /**
+           * 拨打电话成功后
+           * 1.推送成功事件
+           * 2.有carSourceId就提示用户打标签
+           */
+          contactPromise
+            .then(res => {
+              console.log('拨打电话' + supplier.supplierPhone + '成功')
+              // 推送成功事件
+              typeof options.contact === 'function' && options.contact(supplier)
+              // 有carSourceId就提示用户打标签
+              const userId = userService.auth.userId
+              const mobile = userService.mobile
+              carSourceId && this.getTags(carSourceId).then((res) => {
+                $settingRemarkLabelDialog.open({
+                  currentTag: res,
+                  handlerSettingTags: (tags, comment, price) => {
+                    saasService.settingCompanyTags(
+                      carSourceId,
+                      comment,
+                      price,
+                      userId,
+                      tags,
+                      mobile
+                    ).then((res) => {
+                      // 成功新增一条标签记录
+                    })
+                  },
+                  close: () => {}
+                })
+              })
+            })
+            .catch(err => {
+              console.error(err, '拨打电话' + supplier.supplierPhone + '失败')
+            })
         }
       }
     })

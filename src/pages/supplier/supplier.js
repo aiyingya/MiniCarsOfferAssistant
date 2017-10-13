@@ -248,16 +248,9 @@ Page({
       companyId: companyId,
       companyName: companyName,
       fromPage: 'Supplier',
-      contact: (makePhonePromise, supplier) => {
-        makePhonePromise
-          .then(res => {
-            console.log('拨打电话' + supplier.supplierPhone + '成功')
-            typeof completeHandler === 'function' && completeHandler(supplier)
-          })
-          .catch(err => {
-            console.error(err, '拨打电话' + supplier.supplierPhone + '失败')
-          })
+      contact: (supplier) => {
+        typeof completeHandler === 'function' && completeHandler(supplier)
       }
-    });
+    })
   }
 })
