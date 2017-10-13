@@ -1,3 +1,5 @@
+@import '../settingRemarkLabelDialog/settingRemarkLabelDialog.wxss';
+
 .carSourceDetailDialog .weui-dialog {
   position: fixed;
   z-index: 999;
@@ -53,7 +55,7 @@
 }
 
 .carSourceDetailDialog .body .first-part {
-  position: relative; /**TODO:2.0 add*/
+  position: relative; /**v2.0 add*/
   display: flex;
   flex-direction: column;
   border-bottom: 1rpx solid #E4E4E4;
@@ -62,7 +64,7 @@
   margin: 0rpx 30rpx 0rpx 30rpx;
 }
 
-/**TODO:2.0 add*/
+/**v2.0 add*/
 .carSourceDetailDialog .body .first-part .first-part__more{
   position:absolute;
   right:10rpx;
@@ -76,7 +78,7 @@
   padding-right:24rpx;
 }
 
-/**TODO:2.0 add*/
+/**v2.0 add*/
 .carSourceDetailDialog .body .first-part .first-part__more_icon{
   position:absolute;
   right:8rpx;
