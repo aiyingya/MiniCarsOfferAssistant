@@ -1,6 +1,8 @@
 <template name="carSourceDetailDialog">
 
   <import src="../../../components/common/price/quotedPriceView.wxml" />
+  <import src="../settingRemarkLabelDialog/settingRemarkLabelDialog.wxml" />
+  <template is="settingRemarkLabelDialog" data="{{ ...$wux.settingRemarkLabelDialog }}" />
 
   <view class="carSourceDetailDialog">
     <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" bindtap="{{close}}" catchtouchmove>
@@ -19,7 +21,6 @@
             【{{carModel.officialPriceStr}}】 {{carModel.carModelName}}
           </view>
           <view class="first-part">
-            <!--TODO:2.0 更多的文字要改Robin-->
             <view class="first-part__more" bindtap="{{handlerGoMore}}">
               更多
               <image class="first-part__more_icon" src="/images/icons/icon_arrow.png"></image>
