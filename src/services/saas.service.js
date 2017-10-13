@@ -548,23 +548,20 @@ export default class SAASService extends Service {
   }
 
   /**
-   * TODO: v2.0 这里是已经存在的接口，供应商行情搜索调用的第一个接口 为什么这个接口没人写模型咧~~~~~~
-   * TODO: v2.0 贤达说没有改变接口，但是接口输入如今多了个userId参数 ，国庆后找贤达确认下~~~~~~
-   * udpata Promise返回中写入了CarSpu模型对象，2.0以前没有
-   *
-   * 搜索结果
+   * v2.0 供应商行情搜索调用的第一个接口
    *
    * @param {string} text
    * @param {number} pageIndex
    * @param {number} pageSize
+   * @ return 搜索结果
    * @memberof SAASService
    */
   requestSearchCarSpu(
     text: string,
     pageIndex: number,
     pageSize: number,
-    userId?: number
-  ): Promise<CarSpu> {
+    userId?: number // 贤达确认：userid从来就没用到过
+  ): Promise<Pagination<CarSpuContent>> {
     return this.request(
       `search/car/spu`,
       'GET', {
@@ -646,7 +643,6 @@ export default class SAASService extends Service {
 
   /**
    * 车源上报
-   * // TODO v2.0 add 请求字段itemId
    *
    * @param {number} supplierId
    * @param {string} supplierPhone

@@ -180,20 +180,8 @@ declare type SpuSummary = {
   electricCar: boolean
 };
 
-// from api /search/car/spu
-declare type CarSpu = {
-  totalElements: number,
-  totalPages: number,
-  number: number,
-  size: number,
-  content: Array<CarSpuContent>,
-  first: boolean,
-  last: boolean,
-  numberOfElements: number,
-  hasNext: boolean,
-  hasPrevious: boolean
-};
 
+// Pagination<CarSpuContent> from api /search/car/spu
 declare type CarSpuContent = {
   brandId: number, // 1358,
   brandName: string, // "上汽大众",
