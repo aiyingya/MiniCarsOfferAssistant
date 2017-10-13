@@ -429,6 +429,7 @@ export default {
               console.log('拨打电话' + supplier.supplierPhone + '成功')
               // 推送成功事件
               typeof options.contact === 'function' && options.contact(supplier)
+
               // 有carSourceId就提示用户打标签
               const userId = userService.auth.userId
               const mobile = userService.mobile
@@ -445,6 +446,8 @@ export default {
                       mobile
                     ).then((res) => {
                       // 成功新增一条标签记录
+                      // 推送成功事件
+                      typeof options.lableSuccess === 'function' && options.lableSuccess(supplier)
                     })
                   },
                   close: () => {}

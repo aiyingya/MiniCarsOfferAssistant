@@ -26,6 +26,7 @@
   <header>
   </header>
 
+
   <body class="body">
     <view class="rows">
       <block wx:if="{{ records && records.length > 0 }}">

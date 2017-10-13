@@ -1379,7 +1379,7 @@ export default class SAASService extends Service {
     price: string,
     userId: string,
     tags: Array<CompanyTag>,
-    phone: string
+    userPhone: string
   ): Promise<any> {
     const itemId = carSourceId
     return this.request(
@@ -1391,7 +1391,7 @@ export default class SAASService extends Service {
         price,
         userId,
         tags,
-        phone
+        userPhone
       }
     )
   }

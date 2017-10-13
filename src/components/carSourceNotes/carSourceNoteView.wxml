@@ -20,7 +20,7 @@
       </view>
     </view>
     <view class="text" wx:if="{{comment}}">
-      <template is="remarkView" data="{{ tags: comment.tags, content: comment.remark}}"  />
+      <template is="remarkView" data="{{ tags: comment.tags, content: comment.content}}"  />
       <view class="box" bindtap="handleUpdate" data-carsourceid="{{carSourceItem.id}}">
         <view><image src="/images/icons/icon_edit_circular.png" /></view>
         <view>修改</view>

@@ -47,7 +47,15 @@ Page({
     carSourceManger.quotedMethod = quotedMethod
   },
   onLoad(options) {
-
+    this.getLoad()
+  },
+  onShow() { },
+  onHide() { },
+  getLoad() {
+    this.setData({
+      selectedIndex: -1,
+      selectedSubIndex: -1
+    })
     wxapi.showToast({title: '加载中...', icon: 'loading', mask: true})
       .then(() => {
         return this.records()
@@ -82,8 +90,6 @@ Page({
         wxapi.hideToast()
       })
   },
-  onShow() { },
-  onHide() { },
   records() {
     if (userService.auth != null) {
       const userId = userService.auth.userId
@@ -234,6 +240,7 @@ Page({
     this.actionContactWithCarSourceItem(spuItem.spuSummary.carModelId, carSourceItem, null)
   },
   actionContactWithCarSourceItem(spuId, carSourceItem, from) {
+    console.log("kkkkkkk")
       this.actionContact(
       spuId,
       carSourceItem.viewModelQuoted.price,
@@ -246,7 +253,6 @@ Page({
           console.error('没有选中')
           return
         }
-
 
         /**
          * 1.4.0 埋点 拨打供货方电话
@@ -265,6 +271,10 @@ Page({
           eventLabel: '拨打供货方电话'
         }
         $wuxTrack.push(event)
+      },
+      () => {
+        // 刷新页面
+        this.getLoad()
       })
   },
   /**
@@ -276,7 +286,7 @@ Page({
    * @param {any} from
    * @param {any} completeHandler
    */
-  actionContact(spuId, quotedPrice, carSourceId, companyId, companyName, from, completeHandler) {
+  actionContact(spuId, quotedPrice, carSourceId, companyId, companyName, from, completeHandler, lableSuccessHandler) {
     $wuxCarSourceDetailDialog.contactList({
       spuId: spuId,
       quotedPrice: quotedPrice,
@@ -286,7 +296,10 @@ Page({
       from: from,
       contact: (supplier) => {
         typeof completeHandler === 'function' && completeHandler(supplier)
-      }
+      },
+      lableSuccess: () => {
+        typeof lableSuccessHandler === 'function' && lableSuccessHandler()
+      },
     })
   },
   /**
@@ -320,7 +333,8 @@ Page({
             tags,
             mobile
           ).then((res) => {
-            // 新增一条标签记录
+            // 成功新增一条标签记录
+            this.getLoad()
           })
         },
         close: () => {
