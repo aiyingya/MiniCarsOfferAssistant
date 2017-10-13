@@ -181,25 +181,28 @@ export default {
             [`${this.options.scope}.currentTag.sourceArea`]: _sourceArea,
           })
         },
-        handleDown(e) {
-          let price = options.currentTag.price || 0
+        handleDown() {
+          let price = Number(options.currentTag.price) || 0
           price = --price
           this.setData({
-            [`${this.options.scope}.currentTag.price`]: price,
+            [`${this.options.scope}.currentTag.price`]: price
           })
+          options.currentTag.price = price
         },
-        handleUp(e) {
-          let price = options.currentTag.price || 0
+        handleUp() {
+          let price = Number(options.currentTag.price) || 0
           price = ++price
           this.setData({
-            [`${this.options.scope}.currentTag.price`]: price,
+            [`${this.options.scope}.currentTag.price`]: price
           })
+          options.currentTag.price = price
         },
         handlePriceChange(e) {
-          let price = e.detail.value || 0
+          let price = Number(e.detail.value) || 0
           this.setData({
-            [`${this.options.scope}.currentTag.price`]: price,
+            [`${this.options.scope}.currentTag.price`]: price
           })
+          options.currentTag.price = price
         },
       }
     })

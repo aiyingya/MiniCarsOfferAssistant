@@ -10,6 +10,7 @@
   float: left;
   width: 20%;
   line-height: 48rpx;
+  font-size:26rpx;
 }
 
 .setting-content .line-content .right {
@@ -31,14 +32,13 @@
 .setting-content .line-content .right.price .up,
 .setting-content .line-content .right.price .box .yen
 {
-  width: 49rpx;
+  width: 48rpx;
   border: 1px solid #CCCCCC;
   border-radius: 100rpx;
 }
 
 
 .setting-content .line-content .right.price .box{
-  position:relative;
   width:50%;
   align-items:center;
   border:1px solid #CCCCCC;
@@ -46,32 +46,33 @@
 }
 
 .setting-content .line-content .right.price .box input{
-  padding-left: 48rpx;
-  width: 80%;
+  float:left;
+  width:70%;
   border:0;
+  display:block;
 }
 
 .setting-content .line-content .right.price .box .yen{
-  position:absolute;
-  line-height:48rpx;
-  left:0;
-  top:4rpx;
+  float:left;
+  width:19%;
   border:0;
   font-family:PingFangSC-Regular;
   color:#666666;
   letter-spacing:0;
+  display:block;
 }
-.setting-content .line-content .right.price .down{
-  margin-right:13rpx;
+.setting-content .line-content .right.price .down,
+.setting-content .line-content .right.price .up{
   color:#ED4149;
   font-weight: 900;
   font-size: 50rpx;
+  line-height:44rpx;
+}
+.setting-content .line-content .right.price .down{
+  margin-right:13rpx;
 }
 .setting-content .line-content .right.price .up{
   margin-left: 13rpx;
-  color: #ED4149;
-  font-weight: 900;
-  font-size: 50rpx;
 }
 
 
@@ -92,6 +93,7 @@
   height: 48rpx;
   line-height: 48rpx;
   border-radius: 100rpx;
+  
 }
 .setting-content .line-content .right label.selected {
   border: 1px solid #ED4149;

@@ -7,15 +7,14 @@
       <form bindsubmit="{{ confirm }}" >
         <!--实际价格、货源地、公里数、特殊条件、备注-->
         <view class="setting-content">
-          <scroll-view scroll-y style="height: 670rpx">
-
+          <view style="height: 800rpx; overflow:auto">
             <view class="line-content">
               <view class="left">实际价格</view>
               <view class="right price">
                 <span class="down" bindtap="{{handleDown}}">-</span>
                 <view class="box">
                   <span class="yen">￥</span>
-                  <input name="price" value="{{currentTag.price ? currentTag.price : 0}}" bindchange="{{handlePriceChange}}"></input>
+                  <input name="price" type="number" value="{{currentTag.price ? currentTag.price : 0}}" bindchange="{{handlePriceChange}}"></input>
                 </view>
                 <span class="up" bindtap="{{handleUp}}">+</span>
               </view>
@@ -63,11 +62,11 @@
             <view class="line-content">
               <view class="left">备注</view>
               <view class="right">
-                <textarea name="comment" value="{{ currentTag.content }}" class="textarea" cursor-spacing="40px" placeholder="输入备注"  placeholder-class="textarea-placeholder"/>
+                <textarea name="comment" value="{{ currentTag.content }}" class="textarea" cursor-spacing="40px" placeholder-class="textarea-placeholder"/>
               </view>
             </view>
 
-          </scroll-view>
+          </view>
         </view>
 
         <!--按钮-->
