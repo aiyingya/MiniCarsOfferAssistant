@@ -1,7 +1,7 @@
 // @flow
 import Component from '../../component'
 import * as wxapi from 'fmt-wxapp-promise'
-
+import { $wuxToast } from "../../wux"
 import { container } from '../../../landrover/business/index'
 import SAASService from '../../../services/saas.service'
 import $settingRemarkLabelDialog from '../settingRemarkLabelDialog/settingRemarkLabelDialog'
@@ -446,8 +446,16 @@ export default {
                       mobile
                     ).then((res) => {
                       // 成功新增一条标签记录
-                      // 推送成功事件
-                      typeof options.lableSuccess === 'function' && options.lableSuccess(supplier)
+                      wx.showToast({
+                        title: '设置成功',
+                        icon: 'success',
+                        duration: 2000,
+                        success:() => {
+                          // 推送成功事件
+                          typeof options.lableSuccess === 'function' && options.lableSuccess(supplier)
+                        }
+                      })
+
                     })
                   },
                   close: () => {}

@@ -47,7 +47,17 @@ Page({
     carSourceManger.quotedMethod = quotedMethod
   },
   onLoad(options) {
-    this.getLoad()
+    wxapi.showToast({title: '加载中...', icon: 'loading', mask: true})
+      .then(() => {
+        return this.getLoad()
+      })
+      .then(() => {
+        wxapi.hideToast()
+      })
+      .catch(() => {
+        wxapi.hideToast()
+      })
+
   },
   onShow() { },
   onHide() { },
@@ -56,38 +66,29 @@ Page({
       selectedIndex: -1,
       selectedSubIndex: -1
     })
-    wxapi.showToast({title: '加载中...', icon: 'loading', mask: true})
-      .then(() => {
-        return this.records()
-          .then((res) => {
-            this.setData({
-              records: res
-            })
+    return this.records()
+      .then((res) => {
+        this.setData({
+          records: res
+        })
 
-            let _records = res
+        let _records = res
 
-            for (let mode of _records) {
-              for (let spuItem of mode.callRecordBySpu) {
+        for (let mode of _records) {
+          for (let spuItem of mode.callRecordBySpu) {
 
-                // 构建车源管理器
-                const carModelsInfo = spuItem.spuSummary
-                const isShowDownPrice = !(carModelsInfo.carModelName.includes('宝马') || carModelsInfo.carModelName.includes('奥迪') || carModelsInfo.carModelName.toLowerCase().includes('mini'))
-                const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
-                carSourceManger = new CarSourceManager(carModelsInfo.officialPrice, quotedMethod)
+            // 构建车源管理器
+            const carModelsInfo = spuItem.spuSummary
+            const isShowDownPrice = !(carModelsInfo.carModelName.includes('宝马') || carModelsInfo.carModelName.includes('奥迪') || carModelsInfo.carModelName.toLowerCase().includes('mini'))
+            const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
+            carSourceManger = new CarSourceManager(carModelsInfo.officialPrice, quotedMethod)
 
-                for (let callRecord of spuItem.callRecordList) {
-                  carSourceManger.processCarSourceItem(callRecord.itemDetail)
-                }
-              }
+            for (let callRecord of spuItem.callRecordList) {
+              carSourceManger.processCarSourceItem(callRecord.itemDetail)
             }
-            console.log(_records)
-          })
-      })
-      .then(() => {
-        wxapi.hideToast()
-      })
-      .catch(() => {
-        wxapi.hideToast()
+          }
+        }
+        console.log(_records)
       })
   },
   records() {
@@ -334,7 +335,14 @@ Page({
             mobile
           ).then((res) => {
             // 成功新增一条标签记录
-            this.getLoad()
+            wx.showToast({
+              title: '设置成功',
+              icon: 'success',
+              duration: 3000,
+              success: () => {
+                this.getLoad()
+              }
+            })
           })
         },
         close: () => {
