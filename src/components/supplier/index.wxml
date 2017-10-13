@@ -1,5 +1,3 @@
-<!--TODO：v1.20 靠谱供应商需更新页面-->
-
 <!--page:supplier 精准供应商行 -->
 <template name="supplierSearchResultView">
   <view class="supplier-search-result" data-company="{{ item }}" bindtap="onRowClick">

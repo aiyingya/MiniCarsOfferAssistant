@@ -399,7 +399,7 @@ export default {
         /**
          * 获取商品所有标签
          *
-         * @param itemId 商品id
+         * @param carSourceId 商品id
          */
         getTags(carSourceId) {
           const userId = userService.auth.userId

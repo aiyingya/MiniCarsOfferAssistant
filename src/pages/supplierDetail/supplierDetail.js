@@ -304,10 +304,10 @@ Page({
     const supplierPhone = supplier.supplierPhone
     wxapi.makePhoneCall({ supplierPhone })
     /**
-     * 上报 TODO:这里联系电话上报
+     * 上报 TODO:v2.0 这里联系电话上报
      */
     const supplierId = supplier.supplierId,
-          carSourceId = 1 // TODO: 待接口对接完以后，写入参数
+          carSourceId = 1 // TODO:v2.0 待接口对接完以后，写入参数
     saasService.pushCallRecord(supplierId, supplierPhone, carSourceId)
   },
   onCallButtonClick(e) {
