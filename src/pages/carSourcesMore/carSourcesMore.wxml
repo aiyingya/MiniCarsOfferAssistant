@@ -35,5 +35,8 @@
       <!--<template is="remarkView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />-->
     <!--</view>-->
 
+    <view wx:if="{{!infoItem.last}}" bindtap="handlerLoadMore" class="load-more">
+      点击更多
+    </view>
   </view>
 </view>
