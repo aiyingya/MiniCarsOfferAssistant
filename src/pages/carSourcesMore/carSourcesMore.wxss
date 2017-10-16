@@ -107,9 +107,14 @@ page {
   line-height: 32rpx
 }
 
-.carSourcesMore-container .load-more {
+.carSourcesMore-container .load-more,
+.carSourcesMore-container .no-more
+{
   height: 42rpx;
   font-family: "PingFangSC-Regular";
   font-size: 24rpx;
   text-align: center;
+}
+.carSourcesMore-container .no-more{
+  color:#999999;
 }
