@@ -1,5 +1,6 @@
 {
   "enablePullDownRefresh": true,
-  "navigationBarBackgroundColor": "#ECF0F7",
-  "navigationBarTitleText": "供应商"
+  "navigationBarBackgroundColor": "#4D5767",
+  "navigationBarTitleText": "供应商",
+  "navigationBarTextStyle": "#FFFFFF"
 }
