@@ -32,7 +32,7 @@ Page({
       }
     },
     guestTimeIntervalHandler: null,
-    searchBarPlaceholder: '🔍 输入指导价/车款名 如朗逸1099',
+    searchBarPlaceholder: '🔍 输入指导价/车款名 快速查找',
     searchBarValue: '',
   },
   //事件处理函数

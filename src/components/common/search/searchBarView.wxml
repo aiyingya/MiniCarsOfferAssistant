@@ -1,10 +1,10 @@
 <!--page:supplier 顶部搜索栏 -->
 <template name="searchBarView">
-  <view class="search-bar">
-    <view class="search-input__bg"></view>
-    <view class="search-input">
+  <view class="search-bar" style="background:{{bgcolor}}">
+    <view class="search-input__bg" style="background:{{bgcolor}}"></view>
+    <view class="search-input" style="height:{{inputH}}">
       <input value="{{ searchBarValue }}" disabled="{{ disabled }}" placeholder-class="search-placeholder" placeholder="{{ searchBarPlaceholder }}" bindinput="onSearchInputEdit"
-        bindfocus="onSearchInputFocus" bindconfirm="onSearchInputConfirm" bindblur="onSearchInputBlur" />
+        bindfocus="onSearchInputFocus" bindconfirm="onSearchInputConfirm" bindblur="onSearchInputBlur"/>
     </view>
   </view>
 </template>
