@@ -465,7 +465,7 @@ export default class SAASService extends Service {
    * @returns {Promise<Array<Supplier>>}
    * @memberof SAASService
    */
-  getAllSuppliersByCompanyAndPriceForCompanyId(
+  getAllSuppliersByCompany(
     companyId: number
   ): Promise<Array<Supplier>> {
     return this.request(

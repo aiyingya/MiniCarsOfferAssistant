@@ -246,7 +246,6 @@ Page({
     $wuxCarSourceDetailDialog.contactList({
       companyId: companyId,
       companyName: companyName,
-      fromPage: 'Supplier',
       contact: (supplier) => {
         typeof completeHandler === 'function' && completeHandler(supplier)
       }

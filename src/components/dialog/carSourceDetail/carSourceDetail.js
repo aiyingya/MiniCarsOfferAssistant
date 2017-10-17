@@ -343,8 +343,7 @@ export default {
         companyName: null,
         from: null,
         // 返回数据
-        companyModel: {},
-        fromPage: 'CarSource' // Supplier | CarSource
+        companyModel: {}
       }
     }
 
@@ -479,10 +478,13 @@ export default {
     if (opts.carSourceId != null) {
       promise = saasService.retrieveContactsByCarSourceItem(opts.carSourceId)
     } else {
-      if (opts.fromPage === 'Supplier') {
-        promise = saasService.getAllSuppliersByCompanyAndPriceForCompanyId(opts.companyId)
-      } else if (opts.fromPage === 'CarSource') {
+      // 傅斌 这个地方通过使用 spuId 是否存在来判断该用哪个接口
+      if (opts.spuId != null) {
+        // 车源列表的众数获取供应商列表
         promise = saasService.getAllSuppliersByCompanyAndPriceForSPU(opts.spuId, opts.companyId, opts.quotedPrice)
+      } else {
+        // 供应商页面中获取供应商列表
+        promise = saasService.getAllSuppliersByCompany(opts.companyId)
       }
       // ...或许还有其他未开发类型的电话列表接口
     }
