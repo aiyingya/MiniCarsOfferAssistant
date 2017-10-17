@@ -315,6 +315,7 @@ export default class SAASService extends Service {
 
   /**
    * 获取车源列表
+   * @deprecated 2.0.0
    * @param carModelId
    * @param object
    */
@@ -341,27 +342,135 @@ export default class SAASService extends Service {
     } = {
         userId: this.userService.auth.userId
       }
-
     const locations = this.userService.location
     if (locations && locations.length > 0) {
       const location = locations[0]
       if (location.provinceId) {
         data.pid = location.provinceId
       }
-
       if (location.cityId) {
         data.cid = location.cityId
       }
-
       if (location.districtId) {
         data.did = location.districtId
       }
     }
-
     return this.request(
       `product/car/spu/${carModelId}/sources`,
       'GET',
       data
+    )
+  }
+
+  /**
+   * 获取车辆行情商品列表接口
+   *
+   * @description 2.0.0 新增
+   * @param {number} spuId
+   * @returns {Promise<{
+   *     spuId: number,
+   *     spuName: string,
+   *     guidePrice: number,
+   *     seatNums: Array<number>,
+   *     capacity: number,
+   *     electricCar: boolean,
+   *     praiseModels: Array<PraiseModel>,
+   *     items: Array<CarSourcesBySKU>
+   *   }>}
+   * @memberof SAASService
+   */
+  getAllCarSourceItemsForSPU(
+    spuId: number
+  ): Promise<{
+    spuId: number,
+    spuName: string,
+    guidePrice: number,
+    seatNums: Array<number>,
+    capacity: number,
+    electricCar: boolean,
+    praiseModels: Array<PraiseModel>,
+    items: Array<CarSourcesBySKU>
+  }> {
+    return this.request(
+      `car/spu/${spuId}/items`,
+      `GET`
+    )
+  }
+
+  /**
+   * 获取某一个公司下的车辆行情列表
+   * 分页
+   *
+   * @description 2.0.0 新增
+   * @param {number} companyId
+   * @returns {Promise<Array<{
+   *     spuSummary: SpuSummary,
+   *     itemDetail: CarSource
+   *   }>>}
+   * @memberof SAASService
+   */
+  getCarSourceItemsByCompanyForSPU(
+    companyId: number,
+    spuId: number,
+    pageIndex: number | null = 1,
+    pageSize: number | null = 10
+  ): Promise<Pagination<{
+    spuSummary: SpuSummary,
+    itemDetail: CarSource
+  }>> {
+    return this.request(
+      `supply/company/${companyId}/items`,
+      `GET`,
+      {
+        spuId,
+        pageIndex,
+        pageSize
+      }
+    )
+  }
+
+  /**
+   * 获取特定 spu 下的特定公司特定报价的供应商联系列表
+   *
+   * 来源 车源详情中众数页面中的电话列表调用
+   * @description 2.0.0 新增
+   * @param {number} spuId
+   * @param {number} companyId
+   * @param {number} salePrice
+   * @returns {Promise<Array<Supplier>>}
+   * @memberof SAASService
+   */
+  getAllSuppliersByCompanyAndPriceForSPU(
+    spuId: number,
+    companyId: number,
+    quotedPrice: number
+  ): Promise<Array<Supplier>> {
+    const salePrice = quotedPrice
+    return this.request(
+      `supply/company/${companyId}/suppliers`,
+      `GET`,
+      {
+        salePrice,
+        spuId
+      }
+    )
+  }
+
+  /**
+   * 获取特定 companyId 下的特定公司特定报价的供应商联系列表
+   *
+   *  来源 供应商列表调用
+   * @description 2.0.0 新增
+   * @param {number} companyId
+   * @returns {Promise<Array<Supplier>>}
+   * @memberof SAASService
+   */
+  getAllSuppliersByCompanyAndPriceForCompanyId(
+    companyId: number
+  ): Promise<Array<Supplier>> {
+    return this.request(
+      `/supply/company/call?cid=${companyId}`,
+      `GET`
     )
   }
 
@@ -398,6 +507,7 @@ export default class SAASService extends Service {
   /**
    * 获取三方车源信息的原文
    *
+   * @deprecated 2.0.0
    * @param {number} carSourceId
    * @memberof SAASService
    */
@@ -414,36 +524,56 @@ export default class SAASService extends Service {
   }
 
   /**
-   * TODO: v2.0 这里是已经存在的接口，供应商行情搜索调用的第一个接口 为什么这个接口没人写模型咧~~~~~~
-   * TODO: v2.0 贤达说没有改变接口，但是接口输入如今多了个userId参数 ，国庆后找贤达确认下~~~~~~
-   * udpata Promise返回中写入了CarSpu模型对象，2.0以前没有
+   * 获取车辆行情的原文
    *
-   * 搜索结果
+   * @description 2.0.0 新增
+   * @param {number} carSourceId
+   * @returns {Promise<{
+   *     content: string,
+   *     indexOf: Array<number>
+   *   }>}
+   * @memberof SAASService
+   */
+  getCarSourceOriginalMessage(
+    carSourceId: number
+  ): Promise<{
+    content: string,
+    indexOf: Array<number>
+  }> {
+    const itemId = carSourceId
+    return this.request(
+      `car/item/${itemId}/message`,
+      'GET'
+    )
+  }
+
+  /**
+   * v2.0 供应商行情搜索调用的第一个接口
    *
    * @param {string} text
    * @param {number} pageIndex
    * @param {number} pageSize
+   * @ return 搜索结果
    * @memberof SAASService
    */
   requestSearchCarSpu(
     text: string,
-    pageIndex: number,
-    pageSize: number,
-    userId?: number
-  ): Promise<CarSpu> {
+    pageIndex: number | null = 1,
+    pageSize: number | null = 10,
+    userId?: number // 贤达确认：userid从来就没用到过
+  ): Promise<Pagination<CarSpuContent>> {
     return this.request(
       `search/car/spu`,
       'GET', {
         text: text,
+        userId,
         pageIndex: pageIndex,
-        pageSize: pageSize,
-        userId
+        pageSize: pageSize
       }
     )
   }
 
   /**
-   *
    *
    * @param {number} spuId
    * @param {{}} data
@@ -512,63 +642,35 @@ export default class SAASService extends Service {
 
   /**
    * 车源上报
-   * // TODO v2.0 add 请求字段itemId
    *
    * @param {number} supplierId
    * @param {string} supplierPhone
-   * @param {string} contactPhone
-   * @param {(number | null)} [carSourceId=null]
-   * @param {(number | null)} [spuId=null]
-   * @param {(number | null)} [quotedPrice=null]
    * @returns {Promise<any>}
    * @memberof SAASService
    */
   pushCallRecord(
     supplierId: number,
     supplierPhone: string,
-    contactPhone: string,
-    carSourceId: number | null = null,
-    spuId: number | null = null,
-    quotedPrice: number | null = null,
-    itemId: number | null = null
+    carSourceId: number
   ): Promise<any> {
     const userId = this.userService.auth.userId
     const userPhone = this.userService.mobile
-    const messageResultId = carSourceId
+    const itemId = carSourceId
+    const contactPhone = supplierPhone
+    // 每次拨打电话都会上报，在上报的时候增加拨打记录
     return this.request(
-      "api/user/addCallRecord",
+      'api/user/addCallRecord',
       'POST', {
         userId,
         userPhone,
         supplierId,
         supplierPhone,
         contactPhone,
-        messageResultId,
-        spuId,
-        quotedPrice,
         itemId
       }
     )
   }
 
-  pushCallRecordForCarSource(
-    supplierId: number,
-    supplierPhone: string,
-    contactPhone: string,
-    carSourceId: number
-  ) {
-    return this.pushCallRecord(supplierId, supplierPhone, contactPhone, carSourceId, null, null)
-  }
-
-  pushCallRecordForMode(
-    supplierId: number,
-    supplierPhone: string,
-    contactPhone: string,
-    spuId: number,
-    quotedPrice: number
-  ) {
-    return this.pushCallRecord(supplierId, supplierPhone, contactPhone, null, spuId, quotedPrice)
-  }
 
   /**
    * 获取创建报价单的信息
@@ -756,6 +858,7 @@ export default class SAASService extends Service {
   /**
    * 获取某一个公司内部对一个 spu 报价为 quotationPrice 的所有联系方式
    *
+   * @deprecated 2.0.0
    * @param {number} companyId
    * @param {(number | null)} supplierId
    * @param {(number | null)} spuId
@@ -771,7 +874,12 @@ export default class SAASService extends Service {
   ): Promise<Array<{
     companyId: number | null,
     companyName: string | null,
-    supplierModels: Array<Supplier>
+    supplierModels: Array<{
+      supplierId: number,
+      supplierName: string,
+      supplierPhone: string,
+      callCount: number
+    }>
   }>> {
     if (supplierId == null && spuId == null && quotationPrice == null) {
       return this.retrieveContactsByCompany(companyId)
@@ -799,6 +907,7 @@ export default class SAASService extends Service {
   /**
    * 查找某个公司某个供应商某个 spuId 某个报价下的联系人列表
    *
+   * @deprecated 2.0.0
    * @param {string} userId
    * @param {number} companyId
    * @param {number} supplierId
@@ -806,6 +915,7 @@ export default class SAASService extends Service {
    * @param {number} quotationPrice
    * @returns {Promise<Array<Supplier>>}
    * @memberof SAASService
+   *
    */
   retrieveContactsForCarSource(
     userId: string,
@@ -816,7 +926,12 @@ export default class SAASService extends Service {
   ): Promise<Array<{
     companyId: number | null,
     companyName: string | null,
-    supplierModels: Array<Supplier>
+    supplierModels: Array<{
+      supplierId: number,
+      supplierName: string,
+      supplierPhone: string,
+      callCount: number
+    }>
   }>> {
     const price = quotationPrice
     return this.request(
@@ -833,17 +948,22 @@ export default class SAASService extends Service {
   }
 
   /**
-   * TODO:v1.20 接口 增加了联系次数
    *
    * 查找某个公司下的供应商联系人列表
    *
+   * @description 2.0.0 接口返回字段增加了联系次数
    * @param {number} companyId
    * @returns {Promise<Array<Supplier>>}
    * @memberof SAASService
    */
-  retrieveContactsByCompany(
+  getAllContactsByCompany(
     companyId: number
-  ): Promise<Array<Supplier>> {
+  ): Promise<Array<{
+    supplierId: number,
+    supplierName: string,
+    supplierPhone: string,
+    callCount: number
+  }>> {
     const cid = companyId
     return this.request(
       'supply/company/call',
@@ -855,32 +975,57 @@ export default class SAASService extends Service {
   }
 
   /**
+   * 通过车辆行情商品来获取上架过相同商品的供应商联络方式
+   *
+   * @description 2.0.0 新增
+   * @param {number} carSourceItemId
+   * @returns {Promise<Array<Supplier>>}
+   * @memberof SAASService
+   */
+  retrieveContactsByCarSourceItem(
+    carSourceItemId: number
+  ): Promise<Array<ContactRecord>> {
+    const itemId = carSourceItemId
+    return this.request(
+      `car/item/${itemId}/suppliers`,
+      `GET`
+    )
+  }
+
+  /**
    * 获取对一个 spu 报价为 quotationPrice 的所有公司列表
-   *
-   * response [Model]
-   *
-   * companyId
-   * companyName
-   * price
-   * spuId
-   * spuName
-   * sourceId
-   * mesNum
-   * principalPhone
-   * wechatCount
    *
    * @param {number} spuId
    * @param {number} quotationPrice
-   * @returns {Promise<any>}
+   * @returns {Promise<Array<{
+   *     companyId: number,
+   *     companyName: string,
+   *     mesNum: number,
+   *     price: number,
+   *     principalPhone: string,
+   *     sourceId: string,
+   *     spuId: string,
+   *     wechatCount: number
+   *   }>>}
    * @memberof SAASService
    */
   getCompanies(
     spuId: number,
     quotationPrice: number
-  ): Promise<any> {
+  ): Promise<Array<{
+    companyId: number,
+    companyName: string,
+    mesNum: number,
+    price: number,
+    principalPhone: string,
+    sourceId: string,
+    spuId: string,
+    wechatCount: number
+  }>> {
     return this.request(
       'sale/quotation/getCompanyList',
-      'GET', {
+      'GET',
+      {
         spuId: spuId,
         price: quotationPrice || ''
       }
@@ -1083,13 +1228,13 @@ export default class SAASService extends Service {
   }
 
   /**
-   * TODO:v1.20 接口
    * 推荐公司接口
-   * oldname 白名单接口
+   *
+   * @description 2.0.0 接口更新, 增加 mainBrand(主营品牌) 和 mainSeries(主营车系) 两个字段, 接口名称由"白名单接口"改为"推荐公司接口"
    * @returns {Promise<Array<Company>>}
    * @memberof SAASService
    */
-  retrieveSupplierWhiteList(): Promise<Array<Company>> {
+  getAllRecommendedCompanies(): Promise<Array<Company>> {
     return this.request(
       'supply/company/commend',
       'GET'
@@ -1189,6 +1334,7 @@ export default class SAASService extends Service {
   /**
    * 获取基于行情的通话记录, 结果依据车型分区
    *
+   * @description 2.0.0 接口地址更换
    * @param {string} userId
    * @returns {Promise<Array<{
    *     spuSummary: CarModel,
@@ -1203,29 +1349,33 @@ export default class SAASService extends Service {
     callRecordBySpu: Array<{ spuSummary: CarModel, callRecordList: Array<{ lastCallDate: string, carSource: CarSource }> }>
   }>> {
     return this.request(
-      `api/user/${userId}/callRecords`,
+      `api/user/${userId}/sourceMemo`,
       `GET`
     )
   }
 
   /**
-   * TODO:v2.0 接口
    * 给商品写入标签
    *
-   * @param itemId 商品id
-   * @param content 备注内容
-   * @param price 页面填入的价格(元)
-   * @param userId 用户id
-   * @param tags [{"name","标签名字","type":"type"}]
-   * @returns {Promise.<any>}
+   * @description 2.0.0 新增
+   * @param {number} carSourceId 车辆行情的商品 id
+   * @param {string} content  备注内容
+   * @param {string} price  页面填入的价格(元)
+   * @param {string} userId 用户 id
+   * @param {Array<CompanyTag>}
+   * @param {string} phone
+   * @returns {Promise<any>}
+   * @memberof SAASService
    */
   settingCompanyTags(
-    itemId: number,
+    carSourceId: number,
     content: string,
     price: string,
     userId: string,
     tags: Array<CompanyTag>,
-    phone: string): Promise<any> {
+    userPhone: string
+  ): Promise<any> {
+    const itemId = carSourceId
     return this.request(
       `api/user/item/addComment`,
       'POST',
@@ -1235,22 +1385,25 @@ export default class SAASService extends Service {
         price,
         userId,
         tags,
-        phone
+        userPhone
       }
     )
   }
 
   /**
-   * TODO:v2.0 接口
    * 获得商品所有标签
    *
-   * @param userId 用户id
-   * @param itemId 商品id
-   * @returns {Promise.<any>}
+   * @description 2.0.0 新增
+   * @param {string} userId 用户 id
+   * @param {string} carSourceId  车辆行情的商品 id
+   * @returns {Promise<CompanyRemark>}
+   * @memberof SAASService
    */
   getQueryCompanyRemark(
     userId: string,
-    itemId: string): Promise<CompanyRemark> {
+    carSourceId: number
+  ): Promise<CompanyRemark> {
+    const itemId = carSourceId
     return this.request(
       `api/user/item/comment`,
       'GET',
@@ -1262,45 +1415,28 @@ export default class SAASService extends Service {
   }
 
   /**
-   * TODO:v2.0 接口
-   *
    * 获取车源信息中更多标签，备注
    *
-   * @param itemId
-   * @param pageIndex
-   * @param pageSize
-   * @returns {Promise.<any>}
+   * @description 2.0.0 新增
+   * @param {number} carSourceId 车辆行情的商品 id
+   * @param {number} pageIndex
+   * @param {number} pageSize
+   * @returns {Promise<CarSourceComment>}
+   * @memberof SAASService
    */
   getCarSourceMore(
-    itemId: string,
+    carSourceId: number,
     pageIndex: number,
     pageSize: number
   ): Promise<CarSourceComment> {
+    const itemId = carSourceId
     return this.request(
       `supply/car/${itemId}/comment`,
-      'GET', {
-        pageIndex: pageIndex,
-        pageSize: pageSize
-      }
-    )
-  }
-
-  getCompanyMarketlist(
-    companyId: number,
-    pageIndex: number,
-    pageSize: number,
-    spuId: number // 虽然没有告诉我，我觉得这里就是number类型
-  ): Promise<Array<CompanyMarket>> {
-    return this.request(
-      `/supply/company/${companyId}/items`,
-      'GET', {
+      'GET',
+      {
         pageIndex,
-        pageSize,
-        spuId
+        pageSize
       }
     )
   }
-
-
 }
-

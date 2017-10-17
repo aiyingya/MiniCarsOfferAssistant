@@ -15,32 +15,52 @@ Page({
       updateTime: '', // 更新时间
       tags: [] // 标签列表
     }],
+    infoItem: {},
     showCarModelName: '', // 要显示的车款标题
     showColorName: '', // 要显示的内外饰颜色
-    itemId: 0, // 商品id
+    carSourceId: 0, // 商品id
     carSourceItem: {} // 车源信息吧
   },
   onLoad(options) {
     this.setData({
-      carSourceItem : util.urlDecodeValueForKeyFromOptions('carSourceItem', options),
-      showCarModelName : options.showCarModelName,
-      showColorName : options.showColorName,
-      itemId : options.itemId
+      carSourceItem: util.urlDecodeValueForKeyFromOptions('carSourceItem', options),
+      showCarModelName: options.showCarModelName,
+      showColorName: options.showColorName,
+      carSourceId: options.carSourceId
     })
-    this.getData(options.itemId)
+    this.getData(options.carSourceId)
   },
   onShow() {
   },
-  getData(itemId) {
+  getData(carSourceId) {
     saasService.getCarSourceMore(
-      itemId,
+      carSourceId,
       this.data.pageIndex,
       this.data.pageSize
     ).then(res => {
-      this.setData({
-        comments: res,
+      res.content.length && res.content.forEach(({updateTime}, index) => {
+        res.content[index].updateTimeStr = util.getTimeStr(updateTime, 'YYYY/MM/DD hh:mm') // util.getTimeStr(updateTime, "yyyy-MM-dd")
       })
-      console.log("车源更多标签信息", this.data.comments)
+      this.setData({
+        infoItem: res,
+        comments: res.content
+      })
     })
-  }
+  },
+  handlerLoadMore() {
+    let newPageIndex = this.data.pageIndex + 1
+    saasService.getCarSourceMore(
+      this.data.carSourceId,
+      newPageIndex,
+      this.data.pageSize
+    ).then(res => {
+      res.content.length && res.content.forEach(({updateTime}, index) => {
+        res.content[index].updateTimeStr = util.getTimeStr(updateTime, 'YYYY/MM/DD hh:mm') // util.getTimeStr(updateTime, "yyyy-MM-dd")
+      })
+      this.setData({
+        infoItem: res,
+        comments: this.data.comments.concat(res.content)
+      })
+    })
+  },
 })

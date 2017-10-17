@@ -2,22 +2,25 @@
 <template name="remarkView">
   <view class="remark-view">
     <!--需要测试-->
-    <!--<view class="content">-->
-      <!--<span>标签：</span><text>-->
-        <!--<block wx:for="{{tags}}" wx:if="{{index < tags.length-1}}">{{item.name}} / </block>-->
-      <!--<block wx:for="{{tags}}" wx:if="{{index === tags.length-1}}">{{item.name}}</block>-->
-      <!--</text>-->
-    <!--</view>-->
-    <!--<view class="content">-->
-      <!--<span>备注：</span><text>{{content}}</text>-->
-    <!--</view>-->
+    <view class="content">
+      <span>标签：</span><text>
+        <block wx:if="{{!tags.length}}">无 </block>
+        <block wx:if="{{tags.length}}">
+          <block wx:for="{{tags}}" wx:key="id" wx:if="{{index < tags.length-1}}">{{item.name}} / </block>
+          <block wx:for="{{tags}}" wx:key="id" wx:if="{{index === tags.length-1}}">{{item.name}}</block>
+        </block>
+      </text>
+    </view>
+    <view class="content">
+      <span>备注：</span><text>{{content ? content : '无'}}</text>
+    </view>
 
     <!--Demo-->
-    <view class="content">
-      <span>标签：</span><text>这里是假数据 / 没有电话和日期是接口不通 / 300公里 / 交强 / 加装车 / 期货</text>
-    </view>
-    <view class="content">
-      <span>备注：</span><text>这里是假数据 / 备注是一个汉语词汇，读音为bèi zhù。词语的一般解释表册上供填写附注的栏目；第二种意思指在备注栏内所加的注解说明</text>
-    </view>
+    <!--<view class="content">-->
+      <!--<span>标签：</span><text>这里是假数据 / 没有电话和日期是接口不通 / 300公里 / 交强 / 加装车 / 期货</text>-->
+    <!--</view>-->
+    <!--<view class="content">-->
+      <!--<span>备注：</span><text>这里是假数据 / 备注是一个汉语词汇，读音为bèi zhù。词语的一般解释表册上供填写附注的栏目；第二种意思指在备注栏内所加的注解说明</text>-->
+    <!--</view>-->
   </view>
 </template>

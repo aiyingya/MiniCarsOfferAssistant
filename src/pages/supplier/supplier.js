@@ -2,7 +2,7 @@
 import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/carSourceDetail'
 import {
   $wuxToast
-} from "../../components/wux"
+} from '../../components/wux'
 import * as wxapi from 'fmt-wxapp-promise'
 import { container } from '../../landrover/business/index'
 import util from '../../utils/util'
@@ -12,7 +12,7 @@ import UserService from '../../services/user.service'
 const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
 
-let whiteListRows: Array<Company> | null = null
+// let recommendListRows: Array<Company> | null = null
 
 let searchPaginationList: PaginationList<Company> | null = null
 let searchCurrentText: string = ''
@@ -31,7 +31,7 @@ Page({
   onLoad() {
     wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
       .then(() => {
-        return this.whiteList()
+        return this.recommendList()
       })
       .then(() => { wxapi.hideToast() })
       .catch(() => { wxapi.hideToast() })
@@ -40,7 +40,7 @@ Page({
   },
   onPullDownRefresh() {
     searchPaginationList = null
-    this.whiteList()
+    this.recommendList()
       .then(res => {
         this.setData({
           searchBarValue: ''
@@ -51,10 +51,10 @@ Page({
   onReachBottom() {
     this.searchLoadMore()
   },
-  whiteList(): Promise<Array<Company>> {
+  recommendList(): Promise<Array<Company>> {
     const sectionTitle = '靠谱的供应商推荐'
     this.setData({ sectionTitle })
-    return saasService.retrieveSupplierWhiteList()
+    return saasService.getAllRecommendedCompanies()
       .then((res: Array<Company>) => {
         const sectionRows = res
         this.setData({
@@ -136,7 +136,6 @@ Page({
       return Promise.reject(new Error('正在获取更多数据'))
     }
 
-
     let pageIndex = pagination.number
     if (pagination.last) {
       return Promise.reject(new Error('已经最后一页了'))
@@ -216,7 +215,7 @@ Page({
     } else {
       // 将分页器移除
       searchPaginationList = null
-      this.whiteList()
+      this.recommendList()
     }
   },
   onCallButtonClick(e) {
@@ -247,16 +246,10 @@ Page({
     $wuxCarSourceDetailDialog.contactList({
       companyId: companyId,
       companyName: companyName,
-      contact: (makePhonePromise, supplier) => {
-        makePhonePromise
-          .then(res => {
-            console.log('拨打电话' + supplier.supplierPhone + '成功')
-            typeof completeHandler === 'function' && completeHandler(supplier)
-          })
-          .catch(err => {
-            console.error(err, '拨打电话' + supplier.supplierPhone + '失败')
-          })
+      fromPage: 'Supplier',
+      contact: (supplier) => {
+        typeof completeHandler === 'function' && completeHandler(supplier)
       }
-    });
+    })
   }
 })

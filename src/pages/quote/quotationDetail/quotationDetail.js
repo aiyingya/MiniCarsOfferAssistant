@@ -231,6 +231,7 @@ Page({
         console.log('拨打电话' + that.data.quotation.customerMobile + '成功');
       }
     })
+    // 这里打给客户 不需要上报手机
   },
   //
   handlerShareToCustomer(e) {

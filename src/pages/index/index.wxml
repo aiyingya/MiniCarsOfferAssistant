@@ -5,31 +5,36 @@
 <template is="toast" data="{{ ...$wux.toast }}" />
 
 <scroll-view scroll-y="true" style="height: {{windowHeight}}px" class="container">
-  <!-- 试用时间.-->
-  <view class="trial-times-wrap" wx:if="{{visitorInfo.status === 'normal'}}">
-    <view class="trial-times">
-      <image src="../../images/icons/icon_prompt.png"></image>
-      你还可以试用
-      <block wx:if="{{visitorInfo.times.days > 0}}">{{visitorInfo.times.days}}天</block>
-      <block wx:elif="{{visitorInfo.times.hours > 0}}">{{visitorInfo.times.hours}}小时</block>
-      <block wx:else>1小时</block>
-      ，若想继续试用，请联系何先生电话
-      <view class="call-phone" data-phone="15821849025" bindtap="handlerMakePhoneCall">15821849025</view>
-    </view>
-  </view>
+
 
   <!-- 搜索车型.-->
   <view class="topbar">
+
+    <!-- 试用时间.-->
+    <view class="trial-times-wrap" wx:if="{{visitorInfo.status === 'normal'}}">
+      <view class="trial-times">
+        <view class="top">
+          <image src="../../images/icons/icon_prompt.png"></image>
+          你还可以试用
+          <block wx:if="{{visitorInfo.times.days > 0}}">{{visitorInfo.times.days}}天</block>
+          <block wx:elif="{{visitorInfo.times.hours > 0}}">{{visitorInfo.times.hours}}小时</block>
+          <block wx:else>1小时</block>
+        </view>
+        继续使用请联系何先生:
+        <view class="call-phone" data-phone="15821849025" bindtap="handlerMakePhoneCall">15821849025</view>
+      </view>
+    </view>
+
+    <image class="topbar-bg__car" src="../../images/pages/home/bg_home_top.png"></image>
     <view class="topbar-search">
       <view class="topbar-ad">
-        <image src="../../images/pages/home/home_slogan_pic.png"></image>
+        一站式的汽车供应链平台
       </view>
       <view class="topbar-search-view">
-        <template is="searchBarView" data="{{ searchBarPlaceholder, searchBarValue, disabled: true }}" />
+        <template is="searchBarView" data="{{ searchBarPlaceholder, searchBarValue, disabled: true, bgcolor:'none', inputH:'100rpx' }}" />
         <view class="bindtap" bindtap="searchCarType"></view>
       </view>
     </view>
-    <image class="topbar-bg" src="../../images/pages/home/home_bg_pic.png"></image>
   </view>
 
   <!-- 热门品牌.-->
@@ -64,8 +69,12 @@
         <view class="hotCarsType-title">
           <view class="hotCarsType-title-inner">【{{item.guidePriceSTR}}】{{item.name}}</view>
           <view class="hotCarsType-title-price" wx:if="{{item.depreciate != 0}}">
-            <block wx:if="{{item.depreciate > 0}}">下</block>
-            <block wx:else>上</block>
+            <block wx:if="{{item.depreciate > 0}}">
+              <image class="depreciate-icon"
+                src="../../images/icons/icon_price_down.png"></image>
+              </block>
+            <block wx:else><image class="depreciate-icon"
+              src="../../images/icons/icon_price_up.png"></image></block>
             {{item.depreciateSTR}}万
           </view>
         </view>

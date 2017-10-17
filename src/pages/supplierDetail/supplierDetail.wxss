@@ -1,17 +1,13 @@
 @import '../../components/supplier/index.wxss';
+@import '../../components/supplierDetail/index.wxss';
 @import '../../components/dialog/carSourceDetail/carSourceDetail.wxss';
 .supplier-detail {}
 
 .supplier-detail .header {
   box-sizing: border-box;
-  height: 100rpx;
+  height: 188rpx;
   width: 100%;
-  padding: 0rpx 30rpx;
   background: #ffffff;
-}
-
-.supplier-detail .body {
-  margin-top: 20rpx;
 }
 
 .supplier-detail .filter-section {
@@ -70,3 +66,48 @@
   padding: 0rpx 30rpx;
 }
 
+.supplier-detail .header-title{
+  height: 100rpx;
+  padding: 0rpx 30rpx;
+}
+.supplier-detail .header-tab{
+  height: 88rpx;
+  display:-webkit-box;
+  background:#FAFAFA;
+}
+
+.supplier-detail .header-tab .header-tab__item{
+  position:relative;
+  display:block;
+  -webkit-box-flex:1;
+  -webkit-flex:1;
+  flex:1;
+  text-align:center;
+  font-size:0;
+
+  opacity: 0.9;
+  font-family: PingFangSC-Regular;
+  font-size: 32rpx;
+  color: #888888;
+  letter-spacing: 0;
+  line-height: 88rpx;
+}
+
+.supplier-detail .header-tab .header-tab__item.header-tab__item_on {
+  color: #ED4149;
+  border-bottom: 6rpx solid #ED4149;
+}
+
+.supplier-detail .linkman {
+  background: #ffffff;
+}
+.supplier-detail .linkman .linkman__title {
+  border-bottom:1rpx solid #E4E4E4;
+  font-family:PingFangSC-Regular;
+  font-size:26rpx;
+  color:#666666;
+  letter-spacing:0;
+  line-height:80rpx;
+  height:80rpx;
+  text-align:center;
+}

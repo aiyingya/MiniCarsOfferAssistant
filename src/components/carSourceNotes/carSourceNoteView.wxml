@@ -12,18 +12,16 @@
   <view class="car-source-note-view">
     <view class="car-source-note" bindtap="onCarSourceCellClick" data-sku-index="{{ skuItemIndex }}" data-car-source-index="{{ carSourceItemIndex }}">
       <view class="left">
-        <template is="supplierNameView" data="{{ supplier: carSourceItem.supplier, supplierSelfSupport: carSourceItem.supplierSelfSupport, carSourceItemIndex, skuItemIndex }}" />
+        <template is="supplierNameView" data="{{ supplier: { supplierId: carSourceItem.companyId, name: carSourceItem.companyName, supplierType: carSourceItem.companyType }, carSourceItemIndex, skuItemIndex }}"/>
       </view>
       <view class="right">
-        <template is="carColorView" data="{{ externalColorName: carSourceItem.externalColor, internalColorName: carSourceItem.viewModelInternalColor }}" />
-        <template is="quotedPriceView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />
+        <template is="carColorView" data="{{ externalColorName: carSourceItem.exteriorColor, internalColorName: carSourceItem.viewModelInternalColor }}" />
+        <template is="quotedPriceView" data="{{ ...carSourceItem.viewModelQuoted }}"/>
       </view>
     </view>
-    <view class="text">
-      <!--TODO:v2.0 这里需要传参数 参考carSourcesMore.wxml 这里接口没有好-->
-      <template is="remarkView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />
-
-      <view class="box" bindtap="handleUpdate">
+    <view class="text" wx:if="{{comment}}">
+      <template is="remarkView" data="{{ tags: comment.tags, content: comment.content}}"  />
+      <view class="box" bindtap="handleUpdate" data-carsourceid="{{carSourceItem.id}}">
         <view><image src="/images/icons/icon_edit_circular.png" /></view>
         <view>修改</view>
       </view>
