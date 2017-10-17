@@ -117,7 +117,7 @@ Page({
 
     if (tabIndex == 0) {
       if (this.data.isSearching === true) {
-        this.spusLoadMore()
+        this.spuLoadMore()
           .then(res => {
             this.setData({ searchResults: res.list })
           })
@@ -367,11 +367,11 @@ Page({
     const text = this.data.searchViewModel.searchBarValue
     return saasService.requestSearchCarSpu(text)
       .then((res: Pagination<CarSpuContent>) => {
-        this.userCommentPaginationList = { list: res.content, pagination: res, loadingMore: false }
-        return this.userCommentPaginationList
+        this.spuPaginationList = { list: res.content, pagination: res, loadingMore: false }
+        return this.spuPaginationList
       })
   },
-  spusLoadMore(): Promise<PaginationList<CarSpuContent>> {
+  spuLoadMore(): Promise<PaginationList<CarSpuContent>> {
     if (this.spuPaginationList == null) {
       return Promise.reject(new Error('缺少第一页'))
     }
