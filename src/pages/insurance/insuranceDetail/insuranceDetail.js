@@ -1,4 +1,4 @@
-import util from '../../../utils/util'
+import utils from '../../../utils/util'
 
 Page({
   data: {
@@ -21,7 +21,7 @@ Page({
   },
   onLoad(options){
 
-    let insuranceDetail = util.urlDecodeValueForKeyFromOptions('insuranceDetail', options)
+    let insuranceDetail = utils.urlDecodeValueForKeyFromOptions('insuranceDetail', options)
     this.setData({
       insuranceDetail:insuranceDetail,
       otherSumAmount: (Number(insuranceDetail.iTotal) -  Number(insuranceDetail.iJQX)).toFixed(0)

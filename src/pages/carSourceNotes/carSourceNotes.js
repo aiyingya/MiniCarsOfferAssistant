@@ -187,11 +187,8 @@ Page({
     $wuxCarSourceDetailDialog.sourceDetail({
       carModel: carModelsInfo,
       carSourceItem: carSourceItem,
-      bookCar: (updateCarSourceItem) => {
-        this.actionBookCar(spuItem, null, updateCarSourceItem)
-      },
       contact: () => {
-        this.actionContactWithCarSourceItem(carModelsInfo.carModelId, carSourceItem, 'sourceDetail')
+        this.actionContactWithCarSourceItem(carModelsInfo, carSourceItem, 'sourceDetail')
       },
       handlerCreateQuoted: (e) => {
         const carSku = {
@@ -238,12 +235,11 @@ Page({
     const spuItem = selectedDateSection.callRecordBySpu[spuItemIndex]
     const carSourceItem = spuItem.callRecordList[carSourceItemIndex].itemDetail
 
-    this.actionContactWithCarSourceItem(spuItem.spuSummary.carModelId, carSourceItem, null)
+    this.actionContactWithCarSourceItem(spuItem.spuSummary, carSourceItem, null)
   },
-  actionContactWithCarSourceItem(spuId, carSourceItem, from) {
-    console.log("kkkkkkk")
-      this.actionContact(
-      spuId,
+  actionContactWithCarSourceItem(carModelsInfo, carSourceItem: CarSource, from) {
+    this.actionContact(
+      carModelsInfo.carModelId,
       carSourceItem.viewModelQuoted.price,
       carSourceItem.id,
       carSourceItem.companyId,
@@ -260,8 +256,8 @@ Page({
          * davidfu
          */
         this.data.pageParameters = {
-          productId: spuId,
-          color: carSourceItem.externalColorName,
+          productId: carModelsInfo.carModelId,
+          color: carSourceItem.exteriorColor,
           parameters: {
             carSourceId: carSourceItem.id,
             supplierId: supplier.supplierId

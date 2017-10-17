@@ -5,7 +5,7 @@ import {
 } from '../../components/wux'
 import * as wxapi from 'fmt-wxapp-promise'
 import { container } from '../../landrover/business/index'
-import util from '../../utils/util'
+import utils from '../../utils/util'
 import SAASService from '../../services/saas.service'
 import UserService from '../../services/user.service'
 
@@ -236,7 +236,7 @@ Page({
   },
   routeToSupplierDetail(company: Company) {
     if (userService.isLogin()) {
-      const companyKeyValueString = util.urlEncodeValueForKey('company', company)
+      const companyKeyValueString = utils.urlEncodeValueForKey('company', company)
       wx.navigateTo({ url: '/pages/supplierDetail/supplierDetail?' + companyKeyValueString })
     } else {
       wx.navigateTo({ url: '../login/login' })

@@ -2,7 +2,7 @@
 import {
   $wuxTrack
 } from '../../components/wux'
-import util from '../../utils/util'
+import utils from '../../utils/util'
 import { system, container } from '../../landrover/business/index'
 
 Page({
@@ -365,7 +365,7 @@ Page({
   },
   handlerToCarsModels(e) {
     if (container.userService.isLogin()) {
-      const carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
+      const carsInfoKeyValueString = utils.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
       wx.navigateTo({
         url: '../carModels/carModels?' + carsInfoKeyValueString
       })

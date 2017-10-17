@@ -7,13 +7,15 @@ import {
 } from '../../landrover/business/index'
 
 import {
-  $wuxToast
+  $wuxToast,
+  $wuxTrack
 } from "../../components/wux"
 
 import * as wxapi from 'fmt-wxapp-promise'
 import SAASService from '../../services/saas.service'
 import UserService from '../../services/user.service'
 import utils from '../../utils/util'
+import CarSourceManager from '../../components/carSource/carSource.manager'
 
 const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
@@ -23,7 +25,6 @@ Page({
   userCommentPaginationList: {},
   carSourcePaginationList: {},
   spuPaginationList: {},
-
   data: {
     // 行情信息
     company: null,
@@ -546,24 +547,18 @@ Page({
   },
   onCallButtonClick(e) {
     const company = e.currentTarget.dataset.company
-    this.actionContact(company.companyId, company.companyName)
+    this.actionContact(null, null, null, company.companyId, company.companyName)
   },
   processCarSourceWithSPU(carSourceWithSPU: {
     spuSummary: SpuSummary,
     itemDetail: CarSource
   }) {
-    carSourceWithSPU.viewModelQuoted = utils.quotedPriceByMethod(carSourceWithSPU.itemDetail.salePrice, carSourceWithSPU.spuSummary.officialPrice)
-    carSourceWithSPU.viewModelQuoted.priceDesc = utils.priceStringWithUnit(carSourceWithSPU.itemDetail.salePrice)
-    carSourceWithSPU.viewModelPublishTime = utils.dateDiff(carSourceWithSPU.itemDetail.publishTime)
-  },
-  actionContact(companyId, companyName, completeHandler) {
-    $wuxCarSourceDetailDialog.contactList({
-      companyId: companyId,
-      companyName: companyName,
-      contact: (supplier) => {
-        typeof completeHandler === 'function' && completeHandler(supplier)
-      }
-    })
+    const carModelsInfo = carSourceWithSPU.spuSummary
+    const isShowDownPrice = !(carModelsInfo.carModelName.includes('宝马') || carModelsInfo.carModelName.includes('奥迪') || carModelsInfo.carModelName.toLowerCase().includes('mini'))
+    const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
+    const carSourceManger = new CarSourceManager(carModelsInfo.officialPrice, quotedMethod)
+
+    carSourceManger.processCarSourceItem(carSourceWithSPU.itemDetail)
   },
   // event handler
   handlerTabClick(e) {
@@ -648,6 +643,51 @@ Page({
         this.setData({ isSearching: true })
       })
   },
+  onCarSourceWithSPUCellClick(e) {
+    const carSourceWithSPU: { spuSummary: SpuSummary, itemDetail: CarSource } = e.currentTarget.dataset.carSourceWithSpu
+    const carModelsInfo = carSourceWithSPU.spuSummary
+    const carSourceItem = carSourceWithSPU.itemDetail
+
+    $wuxCarSourceDetailDialog.sourceDetail({
+      carModel: carModelsInfo,
+      carSourceItem: carSourceItem,
+      contact: () => {
+        this.actionContactWithCarSourceItem(carModelsInfo, carSourceItem, 'sourceDetail')
+      },
+      handlerCreateQuoted: (e) => {
+        const carSKU = {
+          showPrice: carSourceItem.viewModelQuoted.price,
+          skuId: null,
+          skuPic: null,
+          externalColorId: null,
+          externalColorName: carSourceItem.exteriorColor,
+          internalColorId: null,
+          internalColorName: carSourceItem.simpleInteriorColor,
+          price: null,
+          priceStr: null,
+          discount: null,
+          status: null,
+          remark: null,
+          metallicPaint: carSourceItem.metallicPaint,
+          metallicPaintAmount: carSourceItem.metallicPaintAmount
+        }
+        this.jumpToCreateQuotation(carSKU, carModelsInfo)
+      },
+      handlerGoMore(e) {
+        let _showCarModelName = '【' + carModelsInfo.officialPriceStr + '】' + carModelsInfo.carModelName
+        let _showColorName = carSourceItem.exteriorColor + ' / ' + carSourceItem.viewModelInternalColor
+        let _carSourceItemKeyValueString = utils.urlEncodeValueForKey('carSourceItem', carSourceItem)
+        let _carSourceId = carSourceItem.id
+        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&carSourceId=${_carSourceId}`
+        wx.navigateTo({ url })
+      },
+      close: () => {
+      },
+      reportError: (e) => {
+        console.log('report error')
+      }
+    })
+  },
   onDefaultRecommendButtonClick(e) {
     if (this.data.isSearching === true) {
       this.data.spuForCarSources = null
@@ -667,5 +707,62 @@ Page({
     } else {
       // do nothing
     }
-  }
+  },
+  jumpToCreateQuotation(carSKU, carSPU) {
+    const carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', carSPU)
+    const carSkuInfoKeyValueString = utils.urlEncodeValueForKey('carSkuInfo', carSKU)
+    wx.navigateTo({
+      url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
+    })
+  },
+  actionContactWithCarSourceItem(carModelsInfo, carSourceItem: CarSource, from) {
+    this.actionContact(
+      null,
+      null,
+      carSourceItem.id,
+      carSourceItem.companyId,
+      carSourceItem.companyName,
+      from,
+      (supplier) => {
+        /**
+         * 1.4.0 埋点 拨打供货方电话
+         * davidfu
+         */
+        this.data.pageParameters = {
+          productId: carModelsInfo.carModelId,
+          color: carSourceItem.exteriorColor,
+          parameters: {
+            carSourceId: carSourceItem.id,
+            supplierId: supplier.supplierId
+          }
+        }
+        const event = {
+          eventAction: 'click',
+          eventLabel: '拨打供货方电话'
+        }
+        $wuxTrack.push(event)
+      })
+  },
+  /**
+   * 包装的联系人接口
+   *
+   * @param {any} carSourceId
+   * @param {any} companyId
+   * @param {any} companyName
+   * @param {any} from
+   * @param {any} completeHandler
+   */
+  actionContact(spuId, quotedPrice, carSourceId, companyId, companyName, from, completeHandler) {
+    $wuxCarSourceDetailDialog.contactList({
+      spuId: spuId,
+      quotedPrice: quotedPrice,
+      carSourceId: carSourceId,
+      companyId: companyId,
+      companyName: companyName,
+      from: from,
+      contact: (supplier) => {
+        typeof completeHandler === 'function' && completeHandler(supplier)
+      }
+    })
+  },
 })

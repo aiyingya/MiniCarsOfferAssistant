@@ -1,8 +1,9 @@
 // @flow
 import { container } from '../../landrover/business/index'
+import utils from '../../utils/util'
+
 const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
-import util from '../../utils/util'
 
 Page({
   data: {
@@ -23,7 +24,7 @@ Page({
   },
   onLoad(options) {
     this.setData({
-      carSourceItem: util.urlDecodeValueForKeyFromOptions('carSourceItem', options),
+      carSourceItem: utils.urlDecodeValueForKeyFromOptions('carSourceItem', options),
       showCarModelName: options.showCarModelName,
       showColorName: options.showColorName,
       carSourceId: options.carSourceId
@@ -39,7 +40,7 @@ Page({
       this.data.pageSize
     ).then(res => {
       res.content.length && res.content.forEach(({updateTime}, index) => {
-        res.content[index].updateTimeStr = util.getTimeStr(updateTime, 'YYYY/MM/DD hh:mm') // util.getTimeStr(updateTime, "yyyy-MM-dd")
+        res.content[index].updateTimeStr = utils.getTimeStr(updateTime, 'YYYY/MM/DD hh:mm') // utils.getTimeStr(updateTime, "yyyy-MM-dd")
       })
       this.setData({
         infoItem: res,
@@ -55,7 +56,7 @@ Page({
       this.data.pageSize
     ).then(res => {
       res.content.length && res.content.forEach(({updateTime}, index) => {
-        res.content[index].updateTimeStr = util.getTimeStr(updateTime, 'YYYY/MM/DD hh:mm') // util.getTimeStr(updateTime, "yyyy-MM-dd")
+        res.content[index].updateTimeStr = utils.getTimeStr(updateTime, 'YYYY/MM/DD hh:mm') // utils.getTimeStr(updateTime, "yyyy-MM-dd")
       })
       this.setData({
         infoItem: res,

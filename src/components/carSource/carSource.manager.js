@@ -1,6 +1,6 @@
 
 // @flow
-import util from '../../utils/util'
+import utils from '../../utils/util'
 
 export default class CarSourceManager {
 
@@ -19,8 +19,8 @@ export default class CarSourceManager {
    */
   processCarSourceItem(carSourceItem: CarSource) {
     // 更新发布时间
-    const publishDate = util.dateCompatibility(carSourceItem.publishTime)
-    carSourceItem.viewModelPublishDateDesc = util.dateDiff(publishDate)
+    const publishDate = utils.dateCompatibility(carSourceItem.publishTime)
+    carSourceItem.viewModelPublishDateDesc = utils.dateDiff(publishDate)
 
     // 内外饰颜色处理
     const internalColors = carSourceItem.simpleInteriorColor.split('/')
@@ -32,9 +32,9 @@ export default class CarSourceManager {
     carSourceItem.viewModelInternalColor = processedInternalColors.join('+')
 
     // 降价
-    const quoted = util.quotedPriceByMethod(carSourceItem.salePrice, this.spuOfficialPrice, this.quotedMethod)
+    const quoted = utils.quotedPriceByMethod(carSourceItem.salePrice, this.spuOfficialPrice, this.quotedMethod)
     carSourceItem.viewModelQuoted = quoted
     carSourceItem.viewModelQuoted.price = carSourceItem.salePrice
-    carSourceItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourceItem.salePrice)
+    carSourceItem.viewModelQuoted.priceDesc = utils.priceStringWithUnit(carSourceItem.salePrice)
   }
 }

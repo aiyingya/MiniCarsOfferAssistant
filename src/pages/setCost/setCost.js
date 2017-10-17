@@ -2,7 +2,7 @@ import { $wuxToast } from "../../components/wux"
 import { $wuxInputNumberDialog } from "../../components/wux"
 import { $flexInputDialog } from "../../components/wux"
 import { $checkboxDialog } from "../../components/wux"
-import util from '../../utils/util'
+import utils from '../../utils/util'
 import { container } from '../../landrover/business/index'
 
 let app = getApp()

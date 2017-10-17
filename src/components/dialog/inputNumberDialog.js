@@ -1,6 +1,6 @@
 
 import Component from '../component'
-import util from '../../utils/util'
+import utils from '../../utils/util'
 export default {
   /**
    * 默认参数
@@ -112,7 +112,7 @@ export default {
             if (options.params.isPoint && (options.params.initIsPlus === _isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))) {
               price = options.params.initSellingPrice
             } else {
-              price = util.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
+              price = utils.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
             }
             this.setData({
               [`${this.options.scope}.content`]: Math.floor(price)
@@ -145,7 +145,7 @@ export default {
           if (options.priceStyle) {
             const quotedMethod = options.params.isPoint ? 'POINTS' : 'PRICE'
 
-            const quoted = util.quotedPriceByMethod(sellingPrice, options.params.guidePrice, quotedMethod, false)
+            const quoted = utils.quotedPriceByMethod(sellingPrice, options.params.guidePrice, quotedMethod, false)
             const isPlus = quoted.quotedSymbol === 'PLUS'
             const quotedValueOrRange = options.params.isPoint ? quoted.quotedValue : quoted.quotedRange
 
@@ -210,7 +210,7 @@ export default {
           if (options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))) {
             price = options.params.initSellingPrice
           } else {
-            price = util.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
+            price = utils.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
           }
           this.setData({
             [`${this.options.scope}.inputNumber`]: text,
@@ -254,7 +254,7 @@ export default {
           if (options.params.isPoint && (Number(options.params.hasInitPoint) === Number(options.inputNumber))) {
             price = options.params.initSellingPrice
           } else {
-            price = util.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
+            price = utils.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
           }
           this.setData({
             [`${this.options.scope}.inputNumber`]: text,
@@ -291,7 +291,7 @@ export default {
           if (options.params.isPoint && (options.params.initIsPlus === !_isPlus) && (Number(options.params.hasInitPoint) === Number(options.inputNumber))) {
             price = options.params.initSellingPrice
           } else {
-            price = util.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
+            price = utils.getChangeCarPrice(options.params.isPlus, options.params.isPoint, options.params.guidePrice, options.inputNumber)
           }
           this.setData({
             [`${this.options.scope}.content`]: Math.floor(price)

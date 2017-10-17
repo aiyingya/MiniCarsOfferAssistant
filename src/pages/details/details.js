@@ -1,5 +1,5 @@
 import { $checkTimeDialog } from "../../components/wux"
-import util from '../../utils/util'
+import utils from '../../utils/util'
 import { container } from '../../landrover/business/index'
 
 let markersData = []
@@ -89,22 +89,22 @@ Page({
 
             if (res.quotationList.length > 0) {
               for (let qitem of res.quotationList) {
-                let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
-                let sellingPrice = util.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
-                let guidePrice = util.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
+                let totalPayment = utils.priceStringWithUnit(qitem.totalPayment);
+                let sellingPrice = utils.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
+                let guidePrice = utils.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
 
                 /// 实时计算优惠点数
-                let downPrice = util.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
-                let downPriceFlag = util.downPriceFlag(downPrice);
+                let downPrice = utils.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
+                let downPriceFlag = utils.downPriceFlag(downPrice);
                 let downPriceString = ''
                 if (downPriceFlag !== 0) {
-                  downPriceString = util.priceStringWithUnit(downPrice)
+                  downPriceString = utils.priceStringWithUnit(downPrice)
                 }
 
                 /**
                  * 计算时间.
                  */
-                qitem.createdTime = util.getTimeDifferenceString(qitem.quotationTime)
+                qitem.createdTime = utils.getTimeDifferenceString(qitem.quotationTime)
                 qitem.viewModel = {
                   totalPayment: totalPayment,
                   sellingPrice: sellingPrice,
@@ -283,7 +283,7 @@ Page({
         if (res.length > 0) {
           for (let item of res) {
 
-            item.checkTime = util.getTimeDifferenceString(item.createDate)
+            item.checkTime = utils.getTimeDifferenceString(item.createDate)
             item.markers = [{
               address: item.placeName,
               height: 32,
@@ -319,7 +319,7 @@ Page({
    * 跳转订单详情.
    */
   handleToquotationDetail(e) {
-    let quotationKeyValueString = util.urlEncodeValueForKey('quotation', e.currentTarget.dataset.quotation)
+    let quotationKeyValueString = utils.urlEncodeValueForKey('quotation', e.currentTarget.dataset.quotation)
     wx.navigateTo({
       url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
       success: function (res) {
@@ -341,7 +341,7 @@ Page({
     let quotationsList = this.data.quotationsList
     let quotationCurrent = quotationsList[showCurrent]
 
-    const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotationCurrent)
+    const quotationKeyValueString = utils.urlEncodeValueForKey('quotation', quotationCurrent)
     wx.navigateTo({
       url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
       success: function (res) {
