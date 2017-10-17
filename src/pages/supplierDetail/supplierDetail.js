@@ -541,9 +541,16 @@ Page({
     /**
      * 上报 TODO:v2.0 这里联系电话上报
      */
-    const supplierId = contactRecord.supplierId,
-          carSourceId = 1 // TODO:v2.0 待接口对接完以后，写入参数
-    saasService.pushCallRecord(supplierId, supplierPhone, carSourceId)
+    const supplierId = contactRecord.supplierId
+    saasService.pushCallRecord(supplierId, supplierPhone, null)
+      .then(res => {
+        return this.contactRecordsList()
+          .then((res: Array<ContactRecord>) => {
+            this.setData({
+              contactRecords: res
+            })
+          })
+      })
   },
   onCallButtonClick(e) {
     const company = e.currentTarget.dataset.company

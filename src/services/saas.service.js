@@ -651,7 +651,7 @@ export default class SAASService extends Service {
   pushCallRecord(
     supplierId: number,
     supplierPhone: string,
-    carSourceId: number
+    carSourceId: number | null
   ): Promise<any> {
     const userId = this.userService.auth.userId
     const userPhone = this.userService.mobile
@@ -670,7 +670,6 @@ export default class SAASService extends Service {
       }
     )
   }
-
 
   /**
    * 获取创建报价单的信息
