@@ -30,7 +30,7 @@
 <!-- page:supplierDetail 推荐输入框 -->
 <template name="recommendSearchInputView">
   <view class="recommend-search-input">
-    <button class="{{ isSearching ? '' : 'enabled' }} recommend-button" bindtap="onDefaultRecommendButtonClick">默认推荐</button>
+    <button class="recommend-button {{ isDefaultRecommend ? 'enabled' : 'disabled' }}">默认推荐</button>
     <input class="recommend-input" value="{{ searchBarValue }}" disabled="{{ disabled }}" placeholder-class="search-placeholder" placeholder="{{ searchBarPlaceholder }}" bindinput="onSearchInputEdit"
     bindfocus="onSearchInputFocus" bindconfirm="onSearchInputConfirm" bindblur="onSearchInputBlur" />
   </view>

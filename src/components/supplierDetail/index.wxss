@@ -84,10 +84,6 @@
   background: #FFFFFF;
 }
 
-.recommend-search-input .enabled {
-  background: #ED4149;
-}
-
 .recommend-search-input .recommend-button {
   height: 60rpx;
   width: 160rpx;
@@ -95,11 +91,18 @@
   margin-right: 20rpx;
   padding-left: 0rpx;
   padding-right: 0rpx;
-  background: #CCCCCC;
   border-radius: 100rpx;
   font-family: "PingFangSC-Regular";
   font-size: 26rpx;
   color: #FFFFFF;
+}
+
+.recommend-search-input .disabled {
+  background: #CCCCCC;
+}
+
+.recommend-search-input .enabled {
+  background: #ED4149;
 }
 
 .recommend-search-input .recommend-input {

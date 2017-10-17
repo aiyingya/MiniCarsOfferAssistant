@@ -24,7 +24,6 @@ Page({
   carSourcePaginationList: {},
   spuPaginationList: {},
 
-
   data: {
     // 行情信息
     company: null,
@@ -35,6 +34,7 @@ Page({
       title: '该供应商暂无联系人',
       description: '需要文案'
     },
+    isDefaultRecommend: true,
     isSearching: false,
     searchResults: [],
     searchViewModel: {
@@ -600,9 +600,13 @@ Page({
         this.spuRefresh()
           .then((res: PaginationList<CarSpuContent>) => {
             this.setData({
+              isDefaultRecommend: false,
               isSearching: true,
               searchResults: res.list
             })
+          })
+          .catch(err => {
+            this.setData({ isDefaultRecommend: true, isSearching: false })
           })
       } else {
         // do nothing
@@ -618,18 +622,19 @@ Page({
           itemDetail: CarSource
         }>) => {
           this.setData({
+            isDefaultRecommend: true,
             isSearching: false,
             carSources: res.list
           })
         })
         .catch(err => {
-          this.setData({ isSearching: true })
+          this.setData({ isDefaultRecommend: false, isSearching: true })
         })
     }
   },
   onSPUInfomationClick(e) {
     const spuInformation: CarSpuContent = e.currentTarget.dataset.spuInformation
-    this.setData({ spuForCarSources: spuInformation.carModelId })
+    this.data.spuForCarSources = spuInformation.carModelId
     this.carSourcesRefresh()
       .then((res: PaginationList<{
         spuSummary: SpuSummary,

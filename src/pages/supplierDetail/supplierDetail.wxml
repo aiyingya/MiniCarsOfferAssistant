@@ -36,7 +36,7 @@
     <!-- 行情信息 -->
     <view wx:if="{{activeIndex == 0}}" class="branch-section">
       <template is="branchView" data="{{ mainBrands: company.mainBrand, mainSeries: company.mainSeries }}" />
-      <template is="recommendSearchInputView" data="{{ ...searchViewModel }}" />
+      <template is="recommendSearchInputView" data="{{ isDefaultRecommend, ...searchViewModel }}" />
       <scroll-view data-tab-index="0" scroll-y="true" class="rows" style="height: {{ carSourceViewHeight }}px;" bindscrolltolower="onScrollToLower">
         <block wx:if="{{ isSearching }}">
           <view class="rows">
