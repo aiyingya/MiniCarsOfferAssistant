@@ -249,3 +249,9 @@ declare type CarSource = {
   publishTime: string,
   exteriorColor: string
 };
+declare type ContactRecord = {
+  supplierId: number,
+  supplierName: string,
+  supplierPhone: string,
+  callCount: number
+};

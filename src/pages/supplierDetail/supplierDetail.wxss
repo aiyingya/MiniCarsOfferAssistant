@@ -1,4 +1,5 @@
 @import '../../components/supplier/index.wxss';
+@import '../../components/supplierDetail/index.wxss';
 @import '../../components/dialog/carSourceDetail/carSourceDetail.wxss';
 .supplier-detail {}
 
@@ -97,9 +98,8 @@
   border-bottom: 6rpx solid #ED4149;
 }
 
-.supplier-detail .linkman{
+.supplier-detail .linkman {
   background: #ffffff;
-  padding:0 30rpx;
 }
 .supplier-detail .linkman .linkman__title {
   border-bottom:1rpx solid #E4E4E4;
@@ -111,28 +111,3 @@
   height:80rpx;
   text-align:center;
 }
-.supplier-detail .linkman .linkman__item .left {
-  float: left;
-}
-.supplier-detail .linkman .linkman__item .right {
-  float: right;
-  position: relative;
-  padding-right: 50rpx;
-}
-
-.supplier-detail .linkman .call-line {
-  width: 40rpx;
-  height: 40rpx
-}
-.supplier-detail .linkman .linkman__item{
-  height: 100rpx;
-  line-height: 100rpx;
-  border-bottom:1rpx solid #E4E4E4;
-}
-.supplier-detail .linkman .linkman__item .right .call-line{
-  position: absolute;
-  right:0;
-  top: 50%;
-  margin-top: -20rpx;
-}
-

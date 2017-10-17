@@ -9,6 +9,7 @@
   background:#FFFFFF;
 
 }
+
 .search-bar .search-input__bg{
   position:absolute;
   top:0;
@@ -24,7 +25,6 @@
   border-radius: 100px;
   margin:0rpx 25px;
 }
-
 
 .search-bar .search-input input {
   background: #FFFFFF;

@@ -1,4 +1,5 @@
 <import src="../../components/supplier/index.wxml" />
+<import src="../../components/supplierDetail/index.wxml" />
 <import src="../../components/common/empty/emptyStatusView.wxml" />
 
 <import src="../../components/toast/toast.wxml" />
@@ -29,51 +30,72 @@
         评价内容
       </view>
     </view>
-
   </view>
   <view class="body">
+
+    <!-- 行情信息 -->
     <view wx:if="{{activeIndex == 0}}" class="branch-section">
-      <template is="branchView" data="{{ mainBrands:company.mainBrand, mainSeries:company.mainSeries }}" />
+      <template is="branchView" data="{{ mainBrands: company.mainBrand, mainSeries: company.mainSeries }}" />
+      <template is="recommendSearchInputView" data="{{ ...searchViewModel }}" />
+      <scroll-view data-tab-index="0" scroll-y="true" class="rows" style="height: {{ carSourceViewHeight }}px;" bindscrolltolower="onScrollToLower">
+        <block wx:if="{{ isSearching }}">
+          <view class="rows">
+            <view class="row-2" wx:for="{{ searchResults }}" wx:key="carModelId">
+              <template is="spuInformationView" data="{{ item }}" />
+            </view>
+          </view>
+        </block>
+        <block wx:else>
+          <block wx:if="{{ carSources && carSources.length }}">
+            <view class="row" wx:for="{{ carSources }}" wx:key="id">
+              <template is="carSourceWithSPUView" data="{{ item }}" />
+            </view>
+          </block>
+          <block wx:else>
+            <template is="emptyStatusView" data="{{ ...carSourcesEmptyStatus }}" />
+          </block>
+        </block>
+      </scroll-view>
     </view>
 
-    <view wx:if="{{activeIndex == 1}}" class="linkman" style="height: {{linkmanViewHeight}}px;">
-      <view class="linkman__title">— 全部联系人 —</view>
-      <view class="linkman__item">
-        <view class="left">A赣州宜家 仲景</view>
-        <view class="right">
-          共被联系9次
-          <image class="call-line" src="/images/icons/icon_call_line.png" catchtap="onCallButtonClickToMobile" data-supplier="{{ aiyingya }}"/>
-        </view>
-      </view>
-      <view class="linkman__item">
-        <view class="left">A赣州宜家 仲景</view>
-        <view class="right">
-          共被联系9次
-          <image class="call-line" src="/images/icons/icon_call_line.png" catchtap="onCallButtonClickToMobile" data-supplier="{{ aiyingya }}"/>
-        </view>
-      </view>
+    <!-- 联系方式 -->
+    <view wx:if="{{activeIndex == 1}}" class="linkman">
+      <scroll-view data-tab-index="1" scroll-y="true" class="rows" style="height: {{ linkmanViewHeight }}px;" bindscrolltolower="onScrollToLower">
+        <block wx:if="{{ contactRecords && contactRecords.length }}">
+          <view class="linkman__title">— 全部联系人 —</view>
+          <view class="row" wx:for="{{ contactRecords }}" wx:key="supplierId">
+            <template is="contactRecordView" data="{{ item }}" />
+          </view>
+        </block>
+        <block wx:else>
+          <template is="emptyStatusView" data="{{ ...contactRecordsEmptyStatus }}" />
+        </block>
+      </scroll-view>
     </view>
 
+    <!-- 评价内容 -->
     <view wx:if="{{activeIndex == 2}}">
       <view class="filter-section">
         <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />
       </view>
 
-      <scroll-view scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
+      <scroll-view data-tab-index="2" scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
         <block wx:if="{{ comments && comments.length }}">
           <view class="row" wx:for="{{ comments }}" wx:key="commentId">
             <template is="commentView" data="{{ item }}" />
           </view>
         </block>
         <block wx:else>
-          <template is="emptyStatusView" data="{{ ...emptyStatus }}" />
+          <template is="emptyStatusView" data="{{ ...commentsEmptyStatus }}" />
         </block>
       </scroll-view>
     </view>
 
   </view>
+
   <view wx:if="{{activeIndex == 2}}" class="footer">
     <template is="commentBoardView" data="{{ submitTags, submitTextareaValue, submitSelectedTagIndex, submitButtonValid, submitButtonTagValid }}"
     />
   </view>
+
 </view>

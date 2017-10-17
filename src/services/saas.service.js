@@ -412,8 +412,8 @@ export default class SAASService extends Service {
   getCarSourceItemsByCompanyForSPU(
     companyId: number,
     spuId: number,
-    pageIndex: number,
-    pageSize: number
+    pageIndex: number | null = 1,
+    pageSize: number | null = 10
   ): Promise<Pagination<{
     spuSummary: SpuSummary,
     itemDetail: CarSource
@@ -558,23 +558,22 @@ export default class SAASService extends Service {
    */
   requestSearchCarSpu(
     text: string,
-    pageIndex: number,
-    pageSize: number,
+    pageIndex: number | null = 1,
+    pageSize: number | null = 10,
     userId?: number // 贤达确认：userid从来就没用到过
   ): Promise<Pagination<CarSpuContent>> {
     return this.request(
       `search/car/spu`,
       'GET', {
         text: text,
+        userId,
         pageIndex: pageIndex,
-        pageSize: pageSize,
-        userId
+        pageSize: pageSize
       }
     )
   }
 
   /**
-   *
    *
    * @param {number} spuId
    * @param {{}} data
@@ -957,7 +956,7 @@ export default class SAASService extends Service {
    * @returns {Promise<Array<Supplier>>}
    * @memberof SAASService
    */
-  retrieveContactsByCompany(
+  getAllContactsByCompany(
     companyId: number
   ): Promise<Array<{
     supplierId: number,
@@ -985,12 +984,7 @@ export default class SAASService extends Service {
    */
   retrieveContactsByCarSourceItem(
     carSourceItemId: number
-  ): Promise<Array<{
-    supplierId: number,
-    supplierName: string,
-    supplierPhone: string,
-    callCount: number
-  }>> {
+  ): Promise<Array<ContactRecord>> {
     const itemId = carSourceItemId
     return this.request(
       `car/item/${itemId}/suppliers`,

@@ -1,0 +1,44 @@
+<import src="../../components/common/price/quotedPriceView.wxml" />
+
+<!-- page:supplierDetail 联系人 cell -->
+<template name="contactRecordView">
+  <view class="contact-record">
+    <view class="left">{{ item.supplierName }}</view>
+    <view class="right">
+      <view wx:if="{{ item.callCount }}" class="call-count">共被联系 {{ item.callCount }} 次</view>
+      <image class="call-line" src="/images/icons/icon_call_line.png" catchtap="onCallButtonClickToMobile" data-contact-record="{{ item }}"/>
+    </view>
+  </view>
+</template>
+
+<!-- page:supplierDetail 车辆行情 cell -->
+<template name="carSourceWithSPUView">
+  <view class="car-source-spu">
+    <view class="car-source-spu-header">【{{ item.spuSummary.officialPriceStr }}】{{ item.spuSummary.carModelName }}</view>
+    <view class="car-source-spu-body">
+      <view class="left">
+        <template is="quotedPriceView" data="{{ ...item.viewModelQuoted }}" />
+        <view>/ {{ item.itemDetail.exteriorColor }} </view>
+      </view>
+      <view class="right">
+        {{ item.viewModelPublishTime }}
+      </view>
+    </view>
+  </view>
+</template>
+
+<!-- page:supplierDetail 推荐输入框 -->
+<template name="recommendSearchInputView">
+  <view class="recommend-search-input">
+    <button class="{{ isSearching ? '' : 'enabled' }} recommend-button" bindtap="onDefaultRecommendButtonClick">默认推荐</button>
+    <input class="recommend-input" value="{{ searchBarValue }}" disabled="{{ disabled }}" placeholder-class="search-placeholder" placeholder="{{ searchBarPlaceholder }}" bindinput="onSearchInputEdit"
+    bindfocus="onSearchInputFocus" bindconfirm="onSearchInputConfirm" bindblur="onSearchInputBlur" />
+  </view>
+</template>
+
+<!-- page:supplierDetail 车辆 spu cell -->
+<template name="spuInformationView">
+  <view class="spu-information" bindtap="onSPUInfomationClick" data-spu-information="{{ item }}">
+    【{{ item.officialPriceStr }}】{{ item.carModelName }}
+  </view>
+</template>
