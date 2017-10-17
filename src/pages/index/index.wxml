@@ -25,7 +25,7 @@
       </view>
     </view>
 
-    <image class="topbar-bg__car" src="../../images/pages/home/bg_home_top.png"></image>
+    <image class="topbar-bg__car" src="/images/icons/bg_home_top.png"></image>
     <view class="topbar-search">
       <view class="topbar-ad">
         一站式的汽车供应链平台
