@@ -21,7 +21,7 @@
         <view>/ {{ item.itemDetail.exteriorColor }} </view>
       </view>
       <view class="right">
-        {{ item.viewModelPublishTime }}
+        {{ item.itemDetail.viewModelPublishDateDesc }}
       </view>
     </view>
   </view>
