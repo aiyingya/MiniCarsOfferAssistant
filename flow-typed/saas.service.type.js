@@ -247,7 +247,9 @@ declare type CarSource = {
   salePrice: number,
   saleArea: string,
   publishTime: string,
-  exteriorColor: string
+  exteriorColor: string,
+  metallicPaint: string,
+  metallicPaintAmount: number,
 };
 declare type ContactRecord = {
   supplierId: number,

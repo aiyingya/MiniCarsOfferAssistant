@@ -3,7 +3,8 @@ import {
   $wuxTrack,
   $wuxToast
 } from '../../components/wux'
-import util from '../../utils/util'
+import * as wxapi from 'fmt-wxapp-promise'
+import utils from '../../utils/util'
 import { container, system } from '../../landrover/business/index'
 
 var columnCharts = null
@@ -78,7 +79,7 @@ Page({
     praiseModels: []
   },
   onLoad(options) {
-    let carsInfo = util.urlDecodeValueForKeyFromOptions('carsInfo', options)
+    let carsInfo = utils.urlDecodeValueForKeyFromOptions('carsInfo', options)
     let that = this
 
     if (!container.userService.isLogin()) {
@@ -96,7 +97,13 @@ Page({
           title: carsInfo.name
         })
         this.setData({ carsInfo: carsInfo, options: options })
-        this.pagesloadRequest(carsInfo, true)
+
+        wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
+          .then(() => {
+            return this.pagesloadRequest(carsInfo, true)
+          })
+          .then(() => { wxapi.hideToast() })
+          .catch(() => { wxapi.hideToast() })
 
         if (wx.showShareMenu) {
           wx.showShareMenu()
@@ -122,7 +129,7 @@ Page({
    */
   onShareAppMessage() {
     let carsInfo = this.data.carsInfo
-    let carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', carsInfo)
+    let carsInfoKeyValueString = utils.urlEncodeValueForKey('carsInfo', carsInfo)
     return {
       title: '要卖车，更好用的卖车助手',
       path: `pages/carModels/carModels?${carsInfoKeyValueString}`,
@@ -139,7 +146,7 @@ Page({
     const stock = inStock ? 'in_stock' : 'all'
     const stockSeclect = inStock ? 'selected' : ''
 
-    container.saasService.requestSearchSpuByCarSeriesId(carsInfo.id, inStock)
+    return container.saasService.requestSearchSpuByCarSeriesId(carsInfo.id, inStock)
       .then((res: CarModelsResponse) => {
         if (res) {
           let carModelsList = res.content
@@ -278,7 +285,7 @@ Page({
   },
   handlerToCarSources(e) {
     let item = e.currentTarget.dataset.carmodelsinfo
-    let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
+    let carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', item)
     let status = item.supply.status
     let that = this
     let carModelsList = this.data.carModelsList
@@ -348,7 +355,7 @@ Page({
   handletouchend(e) {
     let id = e.target.dataset.id
     let carModelsInfo = e.target.dataset.carmodelsinfo
-    let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+    let carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
     let that = this
     let index = that.data.touchindex
     this.setData({
@@ -835,7 +842,7 @@ Page({
           let val = ''
           let companyCount = ''
           if (priceTrendItem && priceTrendItem.discount) {
-            val = util.priceAbsStringWithUnitNumber(priceTrendItem.discount)
+            val = utils.priceAbsStringWithUnitNumber(priceTrendItem.discount)
             if (Number(val) > max) { max = Number(val) }
             if (Number(val) < min) { min = Number(val) }
             flag = true

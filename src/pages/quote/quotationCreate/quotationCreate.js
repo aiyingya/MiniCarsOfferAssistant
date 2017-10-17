@@ -5,7 +5,7 @@ import {
   $wuxSpecialUploadDialog
 } from '../../../components/wux'
 import $wuxSpecificationsDialog from './specificationsDialog/specificationsDialog'
-import util from '../../../utils/util'
+import utils from '../../../utils/util'
 import Calculate from '../../../utils/calculate'
 import { container } from '../../../landrover/business/index'
 
@@ -389,7 +389,7 @@ Page({
        * 来源页面来自于详情页面， 参数中有 quotation
        */
       this.data.source = 'quotationDetail'
-      var quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
+      var quotation = utils.urlDecodeValueForKeyFromOptions('quotation', options)
 
       if (quotation.hasLoan) {
         let stagesIndex = this.data.stagesArray.indexOf(quotation.stages)
@@ -471,14 +471,14 @@ Page({
         })
     } else {
       if (carModelInfoJSONString && carModelInfoJSONString.length) {
-        const carModelInfo: CarSPUForQuotation = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
+        const carModelInfo: CarSPUForQuotation = utils.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
         let carSkuInfo: CarSKUForQuotation | null = null
         if (carSkuInfoJSONString && carSkuInfoJSONString.length) {
           /**
            * 页面来自于车源列表
            */
           this.data.source = 'carSources'
-          carSkuInfo = util.urlDecodeValueForKeyFromOptions('carSkuInfo', options)
+          carSkuInfo = utils.urlDecodeValueForKeyFromOptions('carSkuInfo', options)
         } else {
           /**
            * 页面来自于车系列表, 是没有 carSKUInfo 字段的，所以必须使用 carModelInfo 中
@@ -768,10 +768,10 @@ Page({
     }
 
     /// 实时计算优惠点数
-    let downPrice = util.downPrice(carPrice, officialPrice)
-    let downPriceFlag = util.downPriceFlag(downPrice)
-    let downPriceString = util.priceStringWithUnit(downPrice)
-    let downPoint = util.downPoint(carPrice, officialPrice).toFixed(2)
+    let downPrice = utils.downPrice(carPrice, officialPrice)
+    let downPriceFlag = utils.downPriceFlag(downPrice)
+    let downPriceString = utils.priceStringWithUnit(downPrice)
+    let downPoint = utils.downPoint(carPrice, officialPrice).toFixed(2)
 
     if (!this.data.initPoint) {
       this.setData({
@@ -995,7 +995,7 @@ Page({
         if (_isPoint && ((_diffPrice > 0) === _isPlus) && (Number(_hasInitPoint) === Number(res.inputNumber))) {
           price = _initSellingPrice
         } else {
-          price = util.getChangeCarPrice(_isPlus, _isPoint, _guidePrice, res.inputNumber)
+          price = utils.getChangeCarPrice(_isPlus, _isPoint, _guidePrice, res.inputNumber)
         }
 
         const isElectricCar = this.data.carModelInfo.isElectricCar
@@ -1114,12 +1114,12 @@ Page({
     let carModelsInfoKeyValueString
     let pageSource = 'new'
     if (this.data.source === 'quotationDetail') {
-      carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.quotation)
+      carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelInfo', this.data.quotation)
       //编辑
       pageSource = 'editor'
     } else {
       //新建
-      carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
+      carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelInfo', this.data.carModelInfo)
       pageSource = 'new'
     }
 

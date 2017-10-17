@@ -2,7 +2,7 @@
 import {
   $wuxToast
 } from "../../components/wux"
-import util from '../../utils/util'
+import utils from '../../utils/util'
 import { container, system } from '../../landrover/business/index'
 
 var columnCharts = null
@@ -263,7 +263,7 @@ Page({
   },
   handlerToCarSources(e) {
     let item = e.currentTarget.dataset.carmodelsinfo
-    let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', item)
+    let carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', item)
     let status = item.supply.status
     let that = this
     let carModelsList = this.data.searchResults
@@ -290,7 +290,7 @@ Page({
     })
   },
   handlerPromptly(e) {
-    const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
+    const carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', e.currentTarget.dataset.carmodelsinfo)
     wx.navigateTo({
       url: '../quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString
     })
@@ -342,7 +342,7 @@ Page({
   handletouchend(e) {
     let id = e.target.dataset.id
     let carModelsInfo = e.target.dataset.carmodelsinfo
-    let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+    let carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
     let that = this
     this.setData({
       carModelsInfo: carModelsInfo
@@ -834,7 +834,7 @@ Page({
           let val = ''
           let companyCount = ''
           if (priceTrendItem && priceTrendItem.discount) {
-            val = util.priceAbsStringWithUnitNumber(priceTrendItem.discount)
+            val = utils.priceAbsStringWithUnitNumber(priceTrendItem.discount)
             if (Number(val) > max) { max = Number(val) }
             if (Number(val) < min) { min = Number(val) }
             flag = true

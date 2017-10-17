@@ -1,4 +1,4 @@
-import util from '../../utils/util'
+import utils from '../../utils/util'
 import { container } from '../../landrover/business/index'
 
 Page({
@@ -192,7 +192,7 @@ Page({
     carModelInfo: ''
   },
   onLoad(options) {
-    let carModelInfo = util.urlDecodeValueForKeyFromOptions('carModelInfo', options)
+    let carModelInfo = utils.urlDecodeValueForKeyFromOptions('carModelInfo', options)
     // 页面来源.
     let pageSource = options.pageSource
     let seatNums = carModelInfo.seatNums

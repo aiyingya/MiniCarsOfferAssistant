@@ -2,7 +2,6 @@
 
 import BaseUserService from '../landrover/business/service/user.service'
 
-import Util from '../utils/util'
 import {
   config,
   storage,

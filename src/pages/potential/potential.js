@@ -1,4 +1,4 @@
-import util from '../../utils/util'
+import utils from '../../utils/util'
 import { container } from '../../landrover/business/index'
 Page({
   data: {
@@ -14,7 +14,7 @@ Page({
       if (res.length > 0) {
         for (let item of res) {
           let time = new Date(item.joinTime)
-          let timeStr = `${time.getFullYear()}/${util.makeUpZero(time.getMonth() + 1)}/${util.makeUpZero(time.getDate())} ${util.makeUpZero(time.getHours())}:${util.makeUpZero(time.getMinutes())}`
+          let timeStr = `${time.getFullYear()}/${utils.makeUpZero(time.getMonth() + 1)}/${utils.makeUpZero(time.getDate())} ${utils.makeUpZero(time.getHours())}:${utils.makeUpZero(time.getMinutes())}`
 
           item.joinTimeStr = timeStr
         }

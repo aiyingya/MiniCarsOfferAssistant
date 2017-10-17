@@ -26,7 +26,6 @@ export default {
    * @param {String} opts.carModel
    * @param {CarSource} opts.carSourceItem
    * @param {Function} opts.close
-   * @param {Function} opts.bookCar
    * @param {Function} opts.Contact
    * @param {Function} opts.JumpTo
    * @param {Function} opts.SelectLogisticsBlock
@@ -83,14 +82,6 @@ export default {
             return
           }
           this.hide()
-        },
-        /**
-         * 订车行为
-         *
-         * @param {any} e
-         */
-        bookCar(e) {
-          typeof options.bookCar === `function` && options.bookCar(options.carSourceItem)
         },
         /**
          * 联络用户

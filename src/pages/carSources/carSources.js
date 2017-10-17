@@ -6,7 +6,7 @@ import {
 } from '../../components/wux'
 import $wuxCarSourceDetailDialog from '../../components/dialog/carSourceDetail/carSourceDetail'
 
-import util from '../../utils/util'
+import utils from '../../utils/util'
 import { container } from '../../landrover/business/index'
 
 import CarSourceManager from '../../components/carSource/carSource.manager'
@@ -56,7 +56,7 @@ Page({
   },
   onLoad(options) {
     console.log(options)
-    const carModelsInfo = util.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
+    const carModelsInfo = utils.urlDecodeValueForKeyFromOptions('carModelsInfo', options)
     /**
      * 分享进入页面，在未登录的情况下 跳转到登录页
      */
@@ -111,9 +111,9 @@ Page({
           //     topNOfCurrentModeHeight: 288,
           //     overLayDropdownOffset: 288 + 60
           //   })
-          //   reference.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-reference.discount, reference.guidePrice, this.isShowDownPrice)
+          //   reference.viewModelQuoted = utils.quotedPriceWithDownPriceByFlag(-reference.discount, reference.guidePrice, this.isShowDownPrice)
           //   reference.viewModelQuoted.price = reference.price
-          //   reference.viewModelQuoted.priceDesc = util.priceStringWithUnit(reference.price)
+          //   reference.viewModelQuoted.priceDesc = utils.priceStringWithUnit(reference.price)
           // } else {
           //   res.referenceStatus = '暂无'
           // }
@@ -122,9 +122,9 @@ Page({
           if (res.priceList && res.priceList.length) {
             topNOfCurrentModeHidden = false
             for (let topMode of res.priceList) {
-              topMode.viewModelQuoted = util.quotedPriceWithDownPriceByFlag(-topMode.discount, topMode.guidePrice, this.isShowDownPrice)
+              topMode.viewModelQuoted = utils.quotedPriceWithDownPriceByFlag(-topMode.discount, topMode.guidePrice, this.isShowDownPrice)
               topMode.viewModelQuoted.price = topMode.price
-              topMode.viewModelQuoted.priceDesc = util.priceStringWithUnit(topMode.price)
+              topMode.viewModelQuoted.priceDesc = utils.priceStringWithUnit(topMode.price)
             }
           } else {
             topNOfCurrentModeHidden = true
@@ -218,7 +218,7 @@ Page({
    */
   onShareAppMessage() {
     let carModelsInfo = this.data.carModelsInfo
-    let carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+    let carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
     return {
       title: '要卖车，更好用的卖车助手',
       path: `pages/carSources/carSources?${carModelsInfoKeyValueString}`,
@@ -297,9 +297,9 @@ Page({
     this.actionPullRefresh(carSourcesBySkuInSpuItem)
 
     // SKU 信息处理
-    carSourcesBySkuInSpuItem.viewModelQuoted = util.quotedPriceByMethod(carSourcesBySkuInSpuItem.lowestSalePrice, this.data.carModelsInfo.officialPrice, carSourceManger.quotedMethod)
+    carSourcesBySkuInSpuItem.viewModelQuoted = utils.quotedPriceByMethod(carSourcesBySkuInSpuItem.lowestSalePrice, this.data.carModelsInfo.officialPrice, carSourceManger.quotedMethod)
     carSourcesBySkuInSpuItem.viewModelQuoted.price = carSourcesBySkuInSpuItem.lowestSalePrice
-    carSourcesBySkuInSpuItem.viewModelQuoted.priceDesc = util.priceStringWithUnit(carSourcesBySkuInSpuItem.lowestSalePrice)
+    carSourcesBySkuInSpuItem.viewModelQuoted.priceDesc = utils.priceStringWithUnit(carSourcesBySkuInSpuItem.lowestSalePrice)
   },
 
   /**
@@ -451,7 +451,7 @@ Page({
       (supplier) => {
       })
   },
-  actionContactWithCarSourceItem(skuItemIndex, carSourceItemIndex, carSourceItem: CarSource, from) {
+  actionContactWithCarSourceItem(carModelsInfo, carSourceItem: CarSource, from) {
     this.actionContact(
       null,
       null,
@@ -460,14 +460,13 @@ Page({
       carSourceItem.companyName,
       from,
       (supplier) => {
-        const skuItem = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
         /**
          * 1.4.0 埋点 拨打供货方电话
          * davidfu
          */
         this.data.pageParameters = {
           productId: this.data.carModelsInfo.carModelId,
-          color: skuItem.title,
+          color: carSourceItem.exteriorColor,
           parameters: {
             carSourceId: carSourceItem.id,
             supplierId: supplier.supplierId
@@ -536,7 +535,7 @@ Page({
           metallicPaint: null,
           metallicPaintAmount: 0
         }
-        this.jumpToCreateQuotation(carSKU)
+        this.jumpToCreateQuotation(carSKU, this.data.carModelsInfo)
       }
     })
   },
@@ -585,7 +584,7 @@ Page({
     const skuItem: CarSourcesBySKU = this.currentCarSourcesBySkuInSpuList[skuItemIndex]
     const carSourceItem = skuItem.itemDetails[carSourceItemIndex]
 
-    this.actionContactWithCarSourceItem(skuItemIndex, carSourceItemIndex, carSourceItem, null)
+    this.actionContactWithCarSourceItem(this.data.carModelsInfo, carSourceItem, null)
   },
   /**
    * 点击供货列表项目得到的供货详情
@@ -619,11 +618,8 @@ Page({
     $wuxCarSourceDetailDialog.sourceDetail({
       carModel: carModelsInfo,
       carSourceItem: carSourceItem,
-      bookCar: (updateCarSourceItem) => {
-        this.actionBookCar(carModelsInfo, skuItem, updateCarSourceItem)
-      },
       contact: () => {
-        this.actionContactWithCarSourceItem(skuItemIndex, carSourceItemIndex, carSourceItem, 'sourceDetail')
+        this.actionContactWithCarSourceItem(carModelsInfo, carSourceItem, 'sourceDetail')
       },
       handlerCreateQuoted: (e) => {
         const carSKU = {
@@ -639,15 +635,15 @@ Page({
           discount: null,
           status: null,
           remark: null,
-          metallicPaint: skuItem.metallicPaint,
-          metallicPaintAmount: skuItem.metallicPaintAmount
+          metallicPaint: carSourceItem.metallicPaint,
+          metallicPaintAmount: carSourceItem.metallicPaintAmount
         }
-        this.jumpToCreateQuotation(carSKU)
+        this.jumpToCreateQuotation(carSKU, this.data.carModelsInfo)
       },
       handlerGoMore(e) {
         let _showCarModelName = '【' + carModelsInfo.officialPriceStr + '】' + carModelsInfo.carModelName
         let _showColorName = carSourceItem.exteriorColor + ' / ' + carSourceItem.viewModelInternalColor
-        let _carSourceItemKeyValueString = util.urlEncodeValueForKey('carSourceItem', carSourceItem)
+        let _carSourceItemKeyValueString = utils.urlEncodeValueForKey('carSourceItem', carSourceItem)
         let _carSourceId = carSourceItem.id
         let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&carSourceId=${_carSourceId}`
         wx.navigateTo({ url })
@@ -679,9 +675,9 @@ Page({
       })
     }
   },
-  jumpToCreateQuotation(carSKU) {
-    const carModelsInfoKeyValueString = util.urlEncodeValueForKey('carModelsInfo', this.data.carModelsInfo)
-    const carSkuInfoKeyValueString = util.urlEncodeValueForKey('carSkuInfo', carSKU)
+  jumpToCreateQuotation(carSKU, carSPU) {
+    const carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', carSPU)
+    const carSkuInfoKeyValueString = utils.urlEncodeValueForKey('carSkuInfo', carSKU)
     wx.navigateTo({
       url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
     })
