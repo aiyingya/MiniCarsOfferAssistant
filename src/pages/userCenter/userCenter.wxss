@@ -4,14 +4,11 @@ page {
 .users-topbar {
   width: 100%;
   height: 270rpx;
-  padding: 91rpx 40rpx;
+  padding: 25rpx 40rpx;
   background: #fff;
   display: flex;
-  display: -webkit-flex;
   justify-content: space-between;
-  -webkit-justify-content: space-between;
   align-items: center;
-  -webkit-align-items: center;
   box-sizing: border-box;
   border-bottom: 20rpx solid #EFEFEF;
 }
@@ -29,11 +26,9 @@ page {
 }
 .user-content {
   display: flex;
-  display: -webkit-flex;
   justify-content: space-between;
-  -webkit-justify-content: space-between;
   align-items: center;
-  -webkit-align-items: center;
+  max-width: 50%;
 }
 .users-info {
   margin-left: 30rpx;
@@ -44,6 +39,7 @@ page {
   font-size: 34rpx;
   color: #333333;
   line-height: 36rpx;
+  max-width: 300rpx;
 }
 
 .users-phone {
@@ -56,15 +52,17 @@ page {
 }
 
 .users-label {
-  padding: 0 30rpx;
+  box-sizing: border-box;
+  height: 100%;
+  max-width: 50%;
   display: flex;
   justify-content: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-content: flex-start;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .users-label .label {
+  box-sizing: border-box;
   padding: 10rpx 30rpx;
   font-family: "PingFangSC-Regular";
   font-size: 22rpx;
@@ -72,7 +70,9 @@ page {
   line-height: 22rpx;
   background: #475593;
   border-radius: 100rpx;
-  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+  max-width: 100%;
+  white-space:nowrap;
 }
 
 .users-cells {

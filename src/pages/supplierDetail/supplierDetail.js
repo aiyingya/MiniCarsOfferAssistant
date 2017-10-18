@@ -90,14 +90,30 @@ Page({
   },
   onLoad(options) {
     const system = wxapi.getSystemInfoSync()
-    const company = utils.urlDecodeValueForKeyFromOptions('company', options)
+    const company: Company = utils.urlDecodeValueForKeyFromOptions('company', options)
 
     // 以下数值通通为页面元素的高度  scrollViewHeight：为获取滚动元素的高度数值
+    let carSourceExistHeight = 100 /* 车辆描述高度 */ + 88 /* tab 高度 */ + 122 /* 默认推荐高度 */
+    if (company.mainBrand && company.mainBrand.length > 0) {
+      carSourceExistHeight += 80
+      if (company.mainBrand.length < 4) {
+        carSourceExistHeight += 90
+      } else {
+        carSourceExistHeight += 160
+      }
+      carSourceExistHeight += 10
+    }
+
+    if (company.mainSeries && company.mainSeries.length > 0) {
+      carSourceExistHeight += 160
+      carSourceExistHeight += 10
+    }
+
     this.setData({
       company,
-      scrollViewHeight: system.windowHeight - util.px(188 + 96 + 210),
-      linkmanViewHeight: system.windowHeight - util.px(188),
-      carSourceViewHeight: system.windowHeight - util.px(188 + 200)
+      scrollViewHeight: system.windowHeight - util.px(100 /* 车辆描述高度 */ + 88 /* tab 高度 */ + 96 /* 过滤高度 */ + 210 /* 评论输入板高度 */),
+      linkmanViewHeight: system.windowHeight - util.px(100 /* 车辆描述高度 */ + 88 /* tab 高度 */),
+      carSourceViewHeight: system.windowHeight - util.px(carSourceExistHeight)
     })
 
     wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
