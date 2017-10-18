@@ -48,7 +48,7 @@
             <!--分割线-->
             <view class="weui-dialog__line" style="margin-top:15px; width:100%;"></view>
             <view wx:if="{{currentTag.condition}}" class="line-content">
-              <view class="left">特殊条件（多选）</view>
+              <view class="left">特殊条件<view class="grey">（多选）</view></view>
               <view class="right">
                 <checkbox-group bindchange="{{handlerConditionTagChange}}" >
                   <label wx:for="{{currentTag.condition}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}" >
@@ -58,13 +58,13 @@
               </view>
             </view>
 
-            <view class="weui-dialog__line" style="margin-top:15px; width:100%;"></view>
-            <view class="line-content">
-              <view class="left">备注</view>
-              <view class="right">
-                <textarea name="comment" value="{{ currentTag.content }}" class="textarea" cursor-spacing="40px" placeholder-class="textarea-placeholder"/>
-              </view>
-            </view>
+            <!--<view class="weui-dialog__line" style="margin-top:15px; width:100%;"></view>-->
+            <!--<view class="line-content">-->
+              <!--<view class="left">备注</view>-->
+              <!--<view class="right">-->
+                <!--<textarea name="comment" value="{{ currentTag.content }}" class="textarea" cursor-spacing="40px" placeholder-class="textarea-placeholder"/>-->
+              <!--</view>-->
+            <!--</view>-->
 
           </view>
         </view>

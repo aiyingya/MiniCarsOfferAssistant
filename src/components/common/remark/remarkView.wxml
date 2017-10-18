@@ -11,9 +11,9 @@
         </block>
       </text>
     </view>
-    <view class="content">
-      <span>备注：</span><text>{{content ? content : '无'}}</text>
-    </view>
+    <!--<view class="content">-->
+      <!--<span>备注：</span><text>{{content ? content : '无'}}</text>-->
+    <!--</view>-->
 
     <!--Demo-->
     <!--<view class="content">-->
