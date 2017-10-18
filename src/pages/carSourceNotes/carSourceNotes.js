@@ -332,7 +332,7 @@ Page({
           ).then((res) => {
             // 成功新增一条标签记录
             wx.showToast({
-              title: '设置成功',
+              title: '备注成功',
               icon: 'success',
               duration: 3000,
               success: () => {
