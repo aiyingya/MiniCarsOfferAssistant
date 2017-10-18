@@ -66,7 +66,7 @@
   color:#ED4149;
   font-weight: 900;
   font-size: 50rpx;
-  line-height:44rpx;
+  line-height:38rpx;
 }
 .setting-content .line-content .right.price .down{
   margin-right:13rpx;
