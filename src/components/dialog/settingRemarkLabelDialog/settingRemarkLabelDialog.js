@@ -141,16 +141,22 @@ export default {
         tempSetCheck(_list, _checkedNames) {
           _list.forEach((item, index) => {
             item.selected = false
-            _checkedNames.forEach((name, _index) => {
-              if (name === item.name) {
+            if (typeof _checkedNames === 'object') {
+              _checkedNames.forEach((name, _index) => {
+                if (name === item.name) {
+                  item.selected = true
+                }
+              })
+            } else {
+              if (_checkedNames === item.name) {
                 item.selected = true
               }
-            })
+            }
           })
           return _list
         },
         handlerMileageTagChange(e) {
-          console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+          console.log('radio发生change事件，携带value值为：', e.detail.value)
           let _checkedNames = e.detail.value
           let _mileage = options.currentTag.mileage
           _mileage = this.tempSetCheck(_mileage, _checkedNames)
@@ -170,10 +176,9 @@ export default {
           })
         },
         handlerSourceAreaTagChange(e) {
-          console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+          console.log('radio发生change事件，携带value值为：', e.detail.value)
           let _checkedNames = e.detail.value
           let _sourceArea = options.currentTag.sourceArea
-
           _sourceArea = this.tempSetCheck(_sourceArea, _checkedNames)
           options.currentTag.sourceArea = _sourceArea
 

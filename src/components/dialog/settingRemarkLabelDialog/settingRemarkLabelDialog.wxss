@@ -76,7 +76,8 @@
 }
 
 
-.setting-content .line-content .right label checkbox{
+.setting-content .line-content .right label checkbox,
+.setting-content .line-content .right label radio{
   display: none;
 }
 .setting-content .line-content .right label {
@@ -93,7 +94,7 @@
   height: 48rpx;
   line-height: 48rpx;
   border-radius: 100rpx;
-  
+
 }
 .setting-content .line-content .right label.selected {
   border: 1px solid #ED4149;

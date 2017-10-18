@@ -25,11 +25,11 @@
             <view wx:if="{{currentTag.sourceArea}}" class="line-content">
                 <view class="left">货源地</view>
                 <view class="right">
-                  <checkbox-group bindchange="{{handlerSourceAreaTagChange}}">
-                    <label wx:for="{{currentTag.sourceArea}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}" >
-                      <checkbox value="{{item.name}}" checked="{{item.selected}}" />{{item.name}}
+                  <radio-group class="radio-group" bindchange="{{handlerSourceAreaTagChange}}">
+                    <label class="radio" wx:for="{{currentTag.sourceArea}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}">
+                      <radio value="{{item.name}}" checked="{{item.selected}}"/>{{item.name}}
                     </label>
-                  </checkbox-group>
+                  </radio-group>
                 </view>
             </view>
             <!--分割线-->
@@ -38,11 +38,11 @@
             <view wx:if="{{currentTag.mileage}}" class="line-content">
               <view class="left">公里数</view>
               <view class="right">
-                <checkbox-group bindchange="{{handlerMileageTagChange}}" >
-                  <label wx:for="{{currentTag.mileage}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}" >
-                    <checkbox value="{{item.name}}" checked="{{item.selected}}" />{{item.name}}
+                <radio-group class="radio-group" bindchange="{{handlerMileageTagChange}}">
+                  <label class="radio" wx:for="{{currentTag.mileage}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}">
+                    <radio value="{{item.name}}" checked="{{item.selected}}"/>{{item.name}}
                   </label>
-                </checkbox-group>
+                </radio-group>
               </view>
             </view>
             <!--分割线-->
