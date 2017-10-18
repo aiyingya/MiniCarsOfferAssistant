@@ -40,7 +40,7 @@ Page({
       this.data.pageSize
     ).then(res => {
       res.content.length && res.content.forEach(({updateTime}, index) => {
-        res.content[index].updateTimeStr = utils.getTimeStr(updateTime, 'YYYY/MM/DD hh:mm') // utils.getTimeStr(updateTime, "yyyy-MM-dd")
+        res.content[index].updateTimeStr = utils.getTimeStr(updateTime, 'YYYY/MM/DD HH:mm') // utils.getTimeStr(updateTime, "yyyy-MM-dd")
       })
       this.setData({
         infoItem: res,
