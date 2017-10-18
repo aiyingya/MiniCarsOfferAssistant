@@ -32,8 +32,8 @@ Page({
     spuForCarSources: null,
     carSourcesEmptyStatus: {
       iconPath: '/images/icons/icon_evaluate_empty.png',
-      title: '该供应商暂无联系人',
-      description: '需要文案'
+      title: '该供应商暂无车辆行情',
+      description: ''
     },
     isDefaultRecommend: true,
     isSearching: false,
@@ -48,8 +48,8 @@ Page({
     contactRecords: [],
     contactRecordsEmptyStatus: {
       iconPath: '/images/icons/icon_evaluate_empty.png',
-      title: '该供应商暂无联系人',
-      description: '需要文案'
+      title: '该供应商暂无联系方式',
+      description: ''
     },
 
     // 评价内容
@@ -538,15 +538,20 @@ Page({
     const contactRecord = e.currentTarget.dataset.contactRecord
     const supplierPhone = contactRecord.supplierPhone
     wxapi.makePhoneCall({ phoneNumber: supplierPhone })
-    const supplierId = contactRecord.supplierId
-    saasService.pushCallRecord(supplierId, supplierPhone, null)
+      .then(res => {
+      /**
+       * 上报 TODO:v2.0 这里联系电话上报
+       */
+        const supplierId = contactRecord.supplierId
+        return saasService.pushCallRecord(supplierId, supplierPhone, null)
+      })
       .then(res => {
         return this.contactRecordsList()
-          .then((res: Array<ContactRecord>) => {
-            this.setData({
-              contactRecords: res
-            })
-          })
+      })
+      .then((res: Array<ContactRecord>) => {
+        this.setData({
+          contactRecords: res
+        })
       })
   },
   onCallButtonClick(e) {
