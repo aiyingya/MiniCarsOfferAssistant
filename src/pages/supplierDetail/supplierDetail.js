@@ -32,8 +32,8 @@ Page({
     spuForCarSources: null,
     carSourcesEmptyStatus: {
       iconPath: '/images/icons/icon_evaluate_empty.png',
-      title: '该供应商暂无联系人',
-      description: '需要文案'
+      title: '该供应商暂无车辆行情',
+      description: ''
     },
     isDefaultRecommend: true,
     isSearching: false,
@@ -48,8 +48,8 @@ Page({
     contactRecords: [],
     contactRecordsEmptyStatus: {
       iconPath: '/images/icons/icon_evaluate_empty.png',
-      title: '该供应商暂无联系人',
-      description: '需要文案'
+      title: '该供应商暂无联系方式',
+      description: ''
     },
 
     // 评价内容
