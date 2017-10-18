@@ -14,6 +14,10 @@
 <import src="../../components/carSource/carSourceView.wxml" />
 <import src="../../components/carSource/carSourceSectionView.wxml" />
 
+<import src="../../components/dialog/settingRemarkLabelDialog/settingRemarkLabelDialog.wxml" />
+<template is="settingRemarkLabelDialog" data="{{ ...$wux.settingRemarkLabelDialog }}" />
+
+
 <!-- 货源列表 -->
 <scroll-view class="car-sources container" scroll-y="true" bindscroll="handlerScroll" bindtouchmove="handlerTouchMove" scroll-into-view="x{{selectedSectionId}}"
   upper-threshold="200" style="height: {{windowHeight}}">

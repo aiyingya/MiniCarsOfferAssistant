@@ -1,8 +1,6 @@
 <template name="carSourceDetailDialog">
 
   <import src="../../../components/common/price/quotedPriceView.wxml" />
-  <import src="../settingRemarkLabelDialog/settingRemarkLabelDialog.wxml" />
-  <template is="settingRemarkLabelDialog" data="{{ ...$wux.settingRemarkLabelDialog }}" />
 
   <view class="carSourceDetailDialog">
     <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" bindtap="{{close}}" catchtouchmove>

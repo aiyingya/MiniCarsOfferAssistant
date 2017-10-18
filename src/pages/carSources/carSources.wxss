@@ -2,6 +2,7 @@
 @import '../../components/carSource/carSourceView.wxss';
 @import '../../components/carSource/carSourceSectionView.wxss';
 @import '../../components/dialog/carSourceDetail/carSourceDetail.wxss';
+@import '../../components/dialog/settingRemarkLabelDialog/settingRemarkLabelDialog.wxss';
 
 /* 供货详情.*/
 

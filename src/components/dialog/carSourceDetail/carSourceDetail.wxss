@@ -1,5 +1,3 @@
-@import '../settingRemarkLabelDialog/settingRemarkLabelDialog.wxss';
-
 .carSourceDetailDialog .weui-dialog {
   position: fixed;
   z-index: 999;
