@@ -11,6 +11,7 @@
 <view class="container supplier">
   <!-- 搜索车型.-->
   <view class="header">
+    <view class="mask-layer"></view>
     <template is="searchBarView" data="{{ searchBarPlaceholder, searchBarValue }}" />
   </view>
   <view class="body">

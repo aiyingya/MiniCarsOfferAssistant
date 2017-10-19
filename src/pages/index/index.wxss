@@ -423,3 +423,8 @@
   width: 20rpx;
   height: 22rpx;
 }
+
+/* 覆盖组件中的高度 */
+.topbar-search .search-bar .search-input {
+  height: 100rpx;
+}
