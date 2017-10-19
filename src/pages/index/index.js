@@ -3,6 +3,7 @@ import {
   $wuxTrack
 } from '../../components/wux'
 import utils from '../../utils/util'
+import * as wxapi from 'fmt-wxapp-promise'
 import { system, container } from '../../landrover/business/index'
 
 Page({
@@ -377,8 +378,7 @@ Page({
   },
   handlerMakePhoneCall(e) {
     let phone =  e.currentTarget.dataset.phone //'18621016627'
-
-    wx.makePhoneCall({
+    wxapi.makePhoneCall({
       phoneNumber: phone
     })
     // 这里打给何先生 不需要上报手机
