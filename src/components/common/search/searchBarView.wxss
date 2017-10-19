@@ -6,32 +6,22 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  background:#FFFFFF;
-
-}
-
-.search-bar .search-input__bg{
-  position:absolute;
-  top:0;
-  height:50%;
-  width:100%;
-  background:#4D5767;
 }
 
 .search-bar .search-input {
-  height: 90rpx;
+  box-sizing: border-box;
+  padding: 0 20rpx;
+  height: 80rpx;
   width: 100%;
   box-shadow: 0 3px 10px 0 rgba(50,57,68,0.30);
   border-radius: 100px;
   margin:0rpx 25px;
+  background: #FFFFFF;
 }
 
 .search-bar .search-input input {
-  background: #FFFFFF;
   height: 100%;
   width: 100%;
-  box-shadow: 0 3px 10px 0 rgba(50,57,68,0.30);
-  border-radius: 100px;
 }
 
 .search-bar .search-input .search-placeholder {

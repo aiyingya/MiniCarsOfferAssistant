@@ -31,7 +31,7 @@
         一站式的汽车供应链平台
       </view>
       <view class="topbar-search-view">
-        <template is="searchBarView" data="{{ searchBarPlaceholder, searchBarValue, disabled: true, bgcolor:'none', inputH:'100rpx' }}" />
+        <template is="searchBarView" data="{{ searchBarPlaceholder, searchBarValue, disabled: true }}" />
         <view class="bindtap" bindtap="searchCarType"></view>
       </view>
     </view>
