@@ -93,7 +93,7 @@ Page({
 
               // 新复制车源，通过新的价格获取新的价格显示
               // callRecord.itemDetail.userViewModelQuoted 为用户打标签之后页面显示的实际价格
-              const newItemDetial = Object.assign({}, callRecord.itemDetail)
+              let newItemDetial = Object.assign({}, callRecord.itemDetail)
               if (callRecord.comment) {
                 carSourceManger.processCarSourceItem(newItemDetial, callRecord.comment.price)
                 callRecord.itemDetail.viewModelKUserQuoted = newItemDetial.viewModelQuoted
@@ -226,7 +226,9 @@ Page({
         let _showColorName = carSourceItem.exteriorColor + ' / ' + carSourceItem.viewModelInternalColor
         let _carSourceItemKeyValueString = utils.urlEncodeValueForKey('carSourceItem', carSourceItem)
         let _carSourceId = carSourceItem.id
-        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&carSourceId=${_carSourceId}`
+        let _carModelsInfo = utils.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&${_carModelsInfo}&showCarModelName=${_showCarModelName}
+        &showColorName=${_showColorName}&carSourceId=${_carSourceId}`
         wx.navigateTo({ url })
       },
       close: () => {

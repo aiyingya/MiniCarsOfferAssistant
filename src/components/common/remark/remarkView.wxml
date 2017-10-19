@@ -3,8 +3,8 @@
   <!-- 标签，备注 -->
 <template name="remarkView">
   <view class="remark-view">
-    <view class="content">
-    <span>实际价格：</span>
+    <view class="content item-center" wx:if="{{viewModelKUserQuoted.price}}">
+      <span>实际价格：</span>
       <view class="price">
         <template is="quotedPriceView" data="{{ ...viewModelKUserQuoted }}"/>
       </view>

@@ -23,7 +23,7 @@
       <view class="top">
         <span class="left">{{item.userPhone}}</span><span class="right">{{item.updateTimeStr}}</span>
       </view>
-      <template is="remarkView" data="{{ tags:item.tags ,content:item.content}}" />
+      <template is="remarkView" data="{{ tags: item.tags, content: item.content, viewModelKUserQuoted: item.viewModelKUserQuoted}}"  />
     </view>
 
     <!--Demo-->

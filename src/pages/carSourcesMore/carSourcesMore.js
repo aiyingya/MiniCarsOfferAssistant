@@ -1,9 +1,11 @@
 // @flow
 import { container } from '../../landrover/business/index'
 import utils from '../../utils/util'
+import CarSourceManager from '../../components/carSource/carSource.manager'
 
 const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
+let carSourceManger: CarSourceManager | null = null
 
 Page({
   data: {
@@ -27,13 +29,15 @@ Page({
       carSourceItem: utils.urlDecodeValueForKeyFromOptions('carSourceItem', options),
       showCarModelName: options.showCarModelName,
       showColorName: options.showColorName,
-      carSourceId: options.carSourceId
+      carSourceId: options.carSourceId,
+      carModelsInfo: utils.urlDecodeValueForKeyFromOptions('carModelsInfo', options),
     })
     this.getData(options.carSourceId)
   },
   onShow() {
   },
   getData(carSourceId) {
+    let carSourceItem = this.data.carSourceItem
     saasService.getCarSourceMore(
       carSourceId,
       this.data.pageIndex,
@@ -42,11 +46,30 @@ Page({
       res.content.length && res.content.forEach(({updateTime}, index) => {
         res.content[index].updateTimeStr = utils.getTimeStr(updateTime, 'YYYY/MM/DD HH:mm') // utils.getTimeStr(updateTime, "yyyy-MM-dd")
       })
+
+      if (res.content && res.content.length > 0) {
+        // 构建车源管理器
+        let carModelsInfo = this.data.carModelsInfo
+        const isShowDownPrice = !(carModelsInfo.carModelName.includes('宝马') || carModelsInfo.carModelName.includes('奥迪') || carModelsInfo.carModelName.toLowerCase().includes('mini'))
+        const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
+        carSourceManger = new CarSourceManager(carModelsInfo.officialPrice, quotedMethod)
+        res.content.forEach((content, index) => {
+          let newItemDetial = Object.assign({}, carSourceItem)
+          carSourceManger.processCarSourceItem(newItemDetial, content.price)
+          res.content[index].viewModelKUserQuoted = newItemDetial.viewModelQuoted
+        })
+      }
       this.setData({
         infoItem: res,
         comments: res.content
       })
+      console.log('eliya-data', res.content)
     })
+  },
+  quotedMethod(brandName){
+    const isShowDownPrice = !(brandName.includes('宝马') || brandName.includes('奥迪') || brandName.toLowerCase().includes('mini'))
+    const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
+    carSourceManger.quotedMethod = quotedMethod
   },
   handlerLoadMore() {
     let newPageIndex = this.data.pageIndex + 1

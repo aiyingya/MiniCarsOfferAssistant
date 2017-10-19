@@ -645,7 +645,8 @@ Page({
         let _showColorName = carSourceItem.exteriorColor + ' / ' + carSourceItem.viewModelInternalColor
         let _carSourceItemKeyValueString = utils.urlEncodeValueForKey('carSourceItem', carSourceItem)
         let _carSourceId = carSourceItem.id
-        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&carSourceId=${_carSourceId}`
+        let _carModelsInfo = utils.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&${_carModelsInfo}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&carSourceId=${_carSourceId}`
         wx.navigateTo({ url })
       },
       close: () => {
