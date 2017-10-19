@@ -24,7 +24,6 @@ export default class CarSourceManager {
     } else {
       salePrice = carSourceItem.salePrice
     }
-    console.log('eliya-itemid:'+carSourceItem.id,salePrice)
     // 更新发布时间
     const publishDate = utils.dateCompatibility(carSourceItem.publishTime)
     carSourceItem.viewModelPublishDateDesc = utils.dateDiff(publishDate)
