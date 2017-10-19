@@ -555,9 +555,6 @@ Page({
     const supplierPhone = contactRecord.supplierPhone
     wxapi.makePhoneCall({ phoneNumber: supplierPhone })
       .then(res => {
-      /**
-       * 上报 TODO:v2.0 这里联系电话上报
-       */
         const supplierId = contactRecord.supplierId
         return saasService.pushCallRecord(supplierId, supplierPhone, null)
       })
