@@ -27,18 +27,17 @@ let carSourceManger: CarSourceManager | null = null
 
 Page({
   data: {
-
     // 时间分区
     selectedIndex: -1,
     selectedSubIndex: -1,
-
     records: null,
     currentTag: {
-      comment: '', // 备注内容
-      price: 110,
+      content: '', // 备注内容
+      price: 0, // 实际价格
       mileage: [], // 公里数标签
       condition: [], // 特殊条件标签
       sourceArea: [], // 货源地标签
+      spuSummary: {} // 车款信息
     }
   },
   quotedMethod(brandName){
@@ -66,11 +65,17 @@ Page({
       selectedIndex: -1,
       selectedSubIndex: -1
     })
+
+    //
+    // settingPriceInfo: {
+    //   isPoint: false, // 是：点数 否：金额
+    //     isPlusPrice: false, // 是否加价/加点
+    //     differenceValue: 0, // 差异值
+    //     inputNumberMaxLength: 9 // 输入框最大数值
+    // },
     return this.records()
       .then((res) => {
-        this.setData({
-          records: res
-        })
+
 
         let _records = res
 
@@ -85,12 +90,26 @@ Page({
 
             for (let callRecord of spuItem.callRecordList) {
               carSourceManger.processCarSourceItem(callRecord.itemDetail)
+
+              // 新复制车源，通过新的价格获取新的价格显示
+              // callRecord.itemDetail.userViewModelQuoted 为用户打标签之后页面显示的实际价格
+              const newItemDetial = Object.assign({}, callRecord.itemDetail)
+              if (callRecord.comment) {
+                carSourceManger.processCarSourceItem(newItemDetial, callRecord.comment.price)
+                callRecord.itemDetail.viewModelKUserQuoted = newItemDetial.viewModelQuoted
+              } else {
+                callRecord.itemDetail.viewModelKUserQuoted = callRecord.itemDetail.viewModelQuoted
+              }
             }
           }
         }
-        console.log(_records)
+        this.setData({
+          records: res
+        })
+        console.log("eliya-result-data",_records)
       })
   },
+
   records() {
     if (userService.auth != null) {
       const userId = userService.auth.userId

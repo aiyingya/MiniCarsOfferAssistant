@@ -1,7 +1,15 @@
-<!-- 标签，备注 -->
+<import src="../../common/price/quotedPriceView.wxml" />
+
+  <!-- 标签，备注 -->
 <template name="remarkView">
   <view class="remark-view">
-    <!--需要测试-->
+    <view class="content">
+    <span>实际价格：</span>
+      <view class="price">
+        <template is="quotedPriceView" data="{{ ...viewModelKUserQuoted }}"/>
+      </view>
+    </view>
+
     <view class="content">
       <span>标签：</span><text>
         <block wx:if="{{!tags.length}}">无 </block>

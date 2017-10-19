@@ -17,7 +17,14 @@ export default class CarSourceManager {
    * 处理车源对象
    * @param carSourceItem
    */
-  processCarSourceItem(carSourceItem: CarSource) {
+  processCarSourceItem(carSourceItem: CarSource, otherSalePrice?: number = 0) {
+    let salePrice
+    if (otherSalePrice) {
+      salePrice = otherSalePrice
+    } else {
+      salePrice = carSourceItem.salePrice
+    }
+    console.log('eliya-itemid:'+carSourceItem.id,salePrice)
     // 更新发布时间
     const publishDate = utils.dateCompatibility(carSourceItem.publishTime)
     carSourceItem.viewModelPublishDateDesc = utils.dateDiff(publishDate)
@@ -32,10 +39,10 @@ export default class CarSourceManager {
     carSourceItem.viewModelInternalColor = processedInternalColors.join('+')
 
     // 降价
-    const quoted = utils.quotedPriceByMethod(carSourceItem.salePrice, this.spuOfficialPrice, this.quotedMethod)
+    const quoted = utils.quotedPriceByMethod(salePrice, this.spuOfficialPrice, this.quotedMethod)
     carSourceItem.viewModelQuoted = quoted
-    carSourceItem.viewModelQuoted.price = carSourceItem.salePrice
-    carSourceItem.viewModelQuoted.priceDesc = utils.priceStringWithUnit(carSourceItem.salePrice)
+    carSourceItem.viewModelQuoted.price = salePrice
+    carSourceItem.viewModelQuoted.priceDesc = utils.priceStringWithUnit(salePrice)
 
     // 如果货源不是一口价
     if (carSourceItem.viewModelQuoted.price === this.spuOfficialPrice) {

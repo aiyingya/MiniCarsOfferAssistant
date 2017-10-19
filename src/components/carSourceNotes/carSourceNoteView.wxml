@@ -1,11 +1,11 @@
 <import src="../common/price/quotedPriceView.wxml" />
 <import src="../common/specifications/carColorView.wxml" />
 <import src="../common/supplier/supplierNameView.wxml" />
-<import src="../../components/common/remark/remarkView.wxml" />
+<import src="../common/remark/remarkView.wxml" />
 
 <!-- {
   carSourceItem: CarSource,
-  carSourceItemIndex: number,
+  carSourceItemIndex: number ,
   skuItemIndex: number
 } -->
 <template name="carSourceNoteView">
@@ -20,7 +20,7 @@
       </view>
     </view>
     <view class="text" wx:if="{{comment}}">
-      <template is="remarkView" data="{{ tags: comment.tags, content: comment.content}}"  />
+      <template is="remarkView" data="{{ tags: comment.tags, content: comment.content, viewModelKUserQuoted: carSourceItem.viewModelKUserQuoted}}"  />
       <view class="box" bindtap="handleUpdate" data-carsourceid="{{carSourceItem.id}}">
         <view><image src="/images/icons/icon_edit_circular.png" /></view>
         <view>修改</view>
