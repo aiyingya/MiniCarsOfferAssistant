@@ -441,11 +441,10 @@ export default {
                         wxapi.showToast({
                           title: '备注成功',
                           icon: 'success',
-                          duration: 1000,
-                          success: () => {
-                            // 推送成功事件
-                            typeof options.lableSuccess === 'function' && options.lableSuccess(supplier)
-                          }
+                          duration: 2000
+                        }).then(() => {
+                          // 推送成功事件
+                          typeof options.lableSuccess === 'function' && options.lableSuccess(supplier)
                         })
                       })
                     },

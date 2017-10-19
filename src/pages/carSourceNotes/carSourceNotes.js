@@ -66,13 +66,6 @@ Page({
       selectedSubIndex: -1
     })
 
-    //
-    // settingPriceInfo: {
-    //   isPoint: false, // 是：点数 否：金额
-    //     isPlusPrice: false, // 是否加价/加点
-    //     differenceValue: 0, // 差异值
-    //     inputNumberMaxLength: 9 // 输入框最大数值
-    // },
     return this.records()
       .then((res) => {
 
@@ -106,7 +99,6 @@ Page({
         this.setData({
           records: res
         })
-        console.log("eliya-result-data",_records)
       })
   },
 
@@ -335,14 +327,16 @@ Page({
     })
   },
   handleUpdate(e) {
+    // 点击修改
     const carSourceId = e.currentTarget.dataset.carsourceid
     const userId = userService.auth.userId
     const mobile = userService.mobile
     this.getTags(carSourceId).then((res) => {
-      // 本来想组装数据，怕不稳定还是不装了
+      // 显示标签弹层
       $settingRemarkLabelDialog.open({
         currentTag: res,
         handlerSettingTags: (tags, comment, price) => {
+          // 确认修改操作
           saasService.settingCompanyTags(
             carSourceId,
             comment,
@@ -355,7 +349,7 @@ Page({
             wx.showToast({
               title: '备注成功',
               icon: 'success',
-              duration: 3000,
+              duration: 2000,
               success: () => {
                 this.getLoad()
               }
