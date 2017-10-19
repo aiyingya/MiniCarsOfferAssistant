@@ -1,4 +1,5 @@
 <import src="../../components/common/price/quotedPriceView.wxml" />
+<import src="../../components/common/search/searchBarView.wxml" />
 
 <!-- page:supplierDetail 联系人 cell -->
 <template name="contactRecordView">
@@ -31,8 +32,7 @@
 <template name="recommendSearchInputView">
   <view class="recommend-search-input">
     <button class="recommend-button {{ isDefaultRecommend ? 'enabled' : 'disabled' }}">默认推荐</button>
-    <input class="recommend-input" value="{{ searchBarValue }}" disabled="{{ disabled }}" placeholder-class="search-placeholder" placeholder="{{ searchBarPlaceholder }}" bindinput="onSearchInputEdit"
-    bindfocus="onSearchInputFocus" bindconfirm="onSearchInputConfirm" bindblur="onSearchInputBlur" />
+    <template is="searchBarView" data="{{ searchBarValue, searchBarPlaceholder }}"/>
   </view>
 </template>
 
