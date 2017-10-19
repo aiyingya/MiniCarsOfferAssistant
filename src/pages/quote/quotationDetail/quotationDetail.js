@@ -6,6 +6,7 @@ import {
   $wuxToast
 } from "../../../components/wux"
 import utils from '../../../utils/util'
+import * as wxapi from 'fmt-wxapp-promise'
 import { container } from '../../../landrover/business/index'
 import Calculate from '../../../utils/calculate'
 const app = getApp()
@@ -224,11 +225,10 @@ Page({
     })
   },
   handlerContactWithCustomer(e) {
-    let that = this;
-    wx.makePhoneCall({
+    wxapi.makePhoneCall({
       phoneNumber: this.data.quotation.customerMobile,
       success: (res) => {
-        console.log('拨打电话' + that.data.quotation.customerMobile + '成功');
+        console.log('拨打电话' + that.data.quotation.customerMobile + '成功')
       }
     })
     // 这里打给客户 不需要上报手机

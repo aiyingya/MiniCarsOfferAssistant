@@ -8,7 +8,7 @@ export default class CarSourceManager {
 
   quotedMethod: QuotedMethod
 
-  constructor (spuOfficialPrice: number = 0, quotedMethod?: QuotedMethod = 'PRICE') {
+  constructor(spuOfficialPrice: number = 0, quotedMethod?: QuotedMethod = 'PRICE') {
     this.spuOfficialPrice = spuOfficialPrice
     this.quotedMethod = quotedMethod
   }
@@ -36,5 +36,12 @@ export default class CarSourceManager {
     carSourceItem.viewModelQuoted = quoted
     carSourceItem.viewModelQuoted.price = carSourceItem.salePrice
     carSourceItem.viewModelQuoted.priceDesc = utils.priceStringWithUnit(carSourceItem.salePrice)
+
+    // 如果货源不是一口价
+    if (carSourceItem.viewModelQuoted.price === this.spuOfficialPrice) {
+      carSourceItem.viewModelEqualWithOfficialPrice = true
+    } else {
+      carSourceItem.viewModelEqualWithOfficialPrice = false
+    }
   }
 }

@@ -7,7 +7,6 @@
     <view class="carSourcesMore-head__desc">
       <span class="left">{{showColorName}}</span>
       <span class="right">
-        <!--TODO: v.2.0 viewModelEqualWithOfficialPrice 参数被删除需要david加上以后我这里跟着做修改-->
         <block wx:if="{{carSourceItem.viewModelEqualWithOfficialPrice}}">
           <view class="price-tips-small">价格电议</view>
         </block>

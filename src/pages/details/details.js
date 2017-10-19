@@ -1,5 +1,6 @@
 import { $checkTimeDialog } from "../../components/wux"
 import utils from '../../utils/util'
+import * as wxapi from 'fmt-wxapp-promise'
 import { container } from '../../landrover/business/index'
 
 let markersData = []
@@ -360,7 +361,7 @@ Page({
   handlePhoneCall(e) {
     let phone = e.currentTarget.dataset.phone
 
-    wx.makePhoneCall({
+    wxapi.makePhoneCall({
       phoneNumber: phone
     })
     // 这里打给客户 不需要上报手机
