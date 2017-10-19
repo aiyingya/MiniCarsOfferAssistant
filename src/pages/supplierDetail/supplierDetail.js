@@ -567,7 +567,9 @@ Page({
         })
       })
       .catch(err => {
-        console.error(err)
+        if (err.message === 'makePhoneCall:fail cancel') {
+          return Promise.reject(err)
+        }
         // 如果拨打电话出错， 则统一将电话号码写入黏贴板
         if (phoneNumber && phoneNumber.length) {
           if (wx.canIUse('setClipboardData')) {
@@ -596,6 +598,7 @@ Page({
               color: '#fff',
               text: '你的微信客户端版本太低， 请尝试更新'
             })
+            return Promise.reject(err)
           }
         }
       })
