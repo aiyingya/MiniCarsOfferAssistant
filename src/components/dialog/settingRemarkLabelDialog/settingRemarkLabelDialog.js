@@ -1,5 +1,7 @@
 
 import Component from '../../component'
+import service from '../../../utils/service'
+import util from '../../../utils/util'
 
 export default {
   /**
@@ -14,7 +16,14 @@ export default {
         price: 0, // 实际价格
         mileage: [], // 公里数标签
         condition: [], // 特殊条件标签
-        sourceArea: [] // 货源地标签
+        sourceArea: [], // 货源地标签
+        spuSummary: {} // 车款信息
+      },
+      settingPriceInfo: {
+        isPoint: false, // 是：点数 否：金额
+        isPlusPrice: false, // 是否加价/加点
+        differenceValue: 0, // 差异值
+        inputNumberMaxLength: 9 // 输入框最大数值
       },
       handlerSettingTags() {}, // 确定选中好的标签
     }
@@ -71,6 +80,31 @@ export default {
           if (this.removed) return !1
           this.setVisible()
           this.init()
+          this._initData()
+        },
+        _initData() {
+          const carPrice = options.currentTag.price,
+            officialPrice = options.currentTag.spuSummary.officialPrice,
+            carModelName = options.currentTag.spuSummary.carModelName
+          const _isPoint = service.isComputePointByCarBranch(carModelName)
+          let _downPrice = util.downPrice(carPrice, officialPrice)
+          const _isPlusPrice = (_downPrice < 0)
+          let _point = util.downPoint(carPrice, officialPrice).toFixed(2)
+          let _diffValue
+          if (_isPoint) {
+            _diffValue = _point
+          } else {
+            _diffValue = Math.abs(_downPrice)
+          }
+          this.setData({
+            [`${this.options.scope}.settingPriceInfo.isPoint`]: _isPoint,
+            [`${this.options.scope}.settingPriceInfo.isPlusPrice`]: _isPlusPrice,
+            [`${this.options.scope}.settingPriceInfo.differenceValue`]: _diffValue
+          })
+
+          options.settingPriceInfo.isPoint = _isPoint
+          options.settingPriceInfo.isPlusPrice = _isPlusPrice
+          options.settingPriceInfo.differenceValue = _diffValue
         },
         /**
          * 确认行为
@@ -78,11 +112,16 @@ export default {
          * @param {any} e
          */
         confirm(e) {
-          let _condition = options.currentTag.condition
-          let _sourceArea = options.currentTag.sourceArea
-          let _mileage = options.currentTag.mileage
+          let _condition = options.currentTag.condition,
+            _sourceArea = options.currentTag.sourceArea,
+            _mileage = options.currentTag.mileage,
+            _isPoint = options.settingPriceInfo.isPoint,
+            _officialPrice = options.currentTag.spuSummary.officialPrice,
+            _isPlus = options.settingPriceInfo.isPlusPrice,
+            _differenceValue = e.detail.value.differenceValue
+          let price = util.getChangeCarPrice(_isPlus, _isPoint, _officialPrice, _differenceValue)
           options.currentTag.comment = e.detail.value.comment
-          options.currentTag.price = e.detail.value.price
+          options.currentTag.price = price
           let _list = []
           _condition.forEach((item, index) => {
             if (item.selected) {
@@ -186,29 +225,64 @@ export default {
             [`${this.options.scope}.currentTag.sourceArea`]: _sourceArea,
           })
         },
-        handleDown() {
-          let price = Number(options.currentTag.price) || 0
-          price = --price
+        /**
+         * 处理输入事件
+         *
+         * @param {any} e
+         */
+        handlerinput(e) {
+          console.log('eliya-输入', e.detail.value || 0)
+          options.settingPriceInfo.differenceValue = e.detail.value || 0
           this.setData({
-            [`${this.options.scope}.currentTag.price`]: price
+            [`${this.options.scope}.settingPriceInfo.differenceValue`]: e.detail.value
           })
-          options.currentTag.price = price
         },
-        handleUp() {
-          let price = Number(options.currentTag.price) || 0
-          price = ++price
+        /**
+         * 减金额行为
+         *
+         * @param {any} e
+         */
+        buttonMinus(e, priceStep = 100, pointsStep = 1) {
+          var number = options.settingPriceInfo.differenceValue || 0
+          let text
+          if (!options.settingPriceInfo.isPoint) {
+            options.settingPriceInfo.differenceValue = (Number(number) >= priceStep) ? (Number(number) - priceStep) : number
+            text = Number(options.settingPriceInfo.differenceValue)
+          } else {
+            options.settingPriceInfo.differenceValue = (Number(number) >= pointsStep) ? (Number(number) - pointsStep) : number
+            text = Number(options.settingPriceInfo.differenceValue).toFixed(2)
+          }
           this.setData({
-            [`${this.options.scope}.currentTag.price`]: price
+            [`${this.options.scope}.settingPriceInfo.differenceValue`]: text
           })
-          options.currentTag.price = price
         },
-        handlePriceChange(e) {
-          let price = Number(e.detail.value) || 0
+        /**
+         * 加金额行为
+         *
+         * @param e
+         */
+        buttonPlus(e, priceStep = 100, pointsStep = 1) {
+          var number = options.settingPriceInfo.differenceValue || 0
+          let text
+          if (!options.settingPriceInfo.isPoint) {
+            options.settingPriceInfo.differenceValue = Number(number) + priceStep
+            text = Number(options.settingPriceInfo.differenceValue)
+          } else {
+            options.settingPriceInfo.differenceValue = Number(number) + pointsStep
+            text = Number(options.settingPriceInfo.differenceValue).toFixed(2)
+          }
+
           this.setData({
-            [`${this.options.scope}.currentTag.price`]: price
+            [`${this.options.scope}.settingPriceInfo.differenceValue`]: text
           })
-          options.currentTag.price = price
         },
+        changePush() {
+          const _isPlus = options.settingPriceInfo.isPlusPrice
+          options.settingPriceInfo.isPlusPrice = !_isPlus
+          this.setData({
+            [`${this.options.scope}.settingPriceInfo.isPlusPrice`]: !_isPlus
+          })
+        }
       }
     })
 

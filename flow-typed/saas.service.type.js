@@ -153,11 +153,12 @@ declare type CompanyTagInfo = {
 };
 
 declare type CompanyRemark = {
-  content: string,
-  price: number,
+  content: string, // 备注内容
+  price: number, // 实际价格
   mileage: Array<CompanyTagInfo>, //  公里数标签列表
   condition: Array<CompanyTagInfo>, // 特殊条件标签列表
-  sourceArea: Array<CompanyTagInfo> // 货源地条件列表
+  sourceArea: Array<CompanyTagInfo>, // 货源地条件列表
+  spuSummary: spuSummary // 车款信息
 };
 
 declare type CarSourceComment = {

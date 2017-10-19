@@ -393,7 +393,7 @@ export default {
          */
         getTags(carSourceId) {
           const userId = userService.auth.userId
-          return saasService.getQueryCompanyRemark(userId, carSourceId).then((res) => {
+          return saasService.getQueryCompanyRemark(userId, carSourceId).then((res: CompanyRemark) => {
             return res
           })
         },
@@ -423,7 +423,7 @@ export default {
               // 有carSourceId就提示用户打标签
               const userId = userService.auth.userId
               const mobile = userService.mobile
-              carSourceId && this.getTags(carSourceId).then((res) => {
+              carSourceId && this.getTags(carSourceId).then((res: CompanyRemark) => {
                 $settingRemarkLabelDialog.open({
                   currentTag: res,
                   handlerSettingTags: (tags, comment, price) => {

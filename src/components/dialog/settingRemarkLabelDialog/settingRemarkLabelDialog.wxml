@@ -1,3 +1,6 @@
+<import src="../../common/price/settingPriceView.wxml" />
+
+
 <template name="settingRemarkLabelDialog">
   <view class="settingRemarkLabelDialog">
     <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} " bindtap="{{ close }}">
@@ -11,12 +14,34 @@
             <view class="line-content">
               <view class="left">实际价格</view>
               <view class="right price">
-                <span class="down" bindtap="{{handleDown}}">-</span>
-                <view class="box">
-                  <span class="yen">￥</span>
-                  <input name="price" type="number" value="{{currentTag.price ? currentTag.price : 0}}" bindchange="{{handlePriceChange}}"></input>
+
+                <!--<template is="settingPriceView" data="{{ ...settingPriceInfo}}"/>-->
+                <view class="settingprice">
+                  <view class="settingprice-direction" style="flex:1" bindtap="{{changePush}}">
+                    <view class="settingprice-direction_text">{{settingPriceInfo.isPlusPrice? '上':'下'}}</view>
+                    <image class="settingprice-direction__icon_change" src="/images/icons/icon_change.png"></image>
+                  </view>
+
+                  <image class="settingprice-direction__icon_minus" src="/images/icons/icon_minus.png"
+                         bindtap="{{ buttonMinus }}" bindlongtap="{{ buttonLargeMinus }}" bindtouchcancel="{{buttonLargeCancel}}" bindtouchend="{{buttonLargeEnd}}"></image>
+
+                  <input type="number" name="differenceValue" placeholder="0" placeholder-class=""
+                         bindinput="{{ handlerinput }}"
+                         value="{{ settingPriceInfo.differenceValue }}"  maxlength="{{ settingPriceInfo.inputNumberMaxLength }}"/>
+
+                  <image class="settingprice-direction__icon_plus" src="/images/icons/icon_plus.png"
+                         bindtap="{{buttonPlus}}" bindlongtap="{{buttonLargePlus}}" bindtouchcancel="{{buttonLargeCancel}}" bindtouchend="{{buttonLargeEnd}}"></image>
+
+                  <text class="settingprice-type__text" wx:if="{{settingPriceInfo.isPoint}}">点</text>
+                  <text class="settingprice-type__text" wx:else >元</text>
                 </view>
-                <span class="up" bindtap="{{handleUp}}">+</span>
+
+                <!--<span class="down" bindtap="{{handleDown}}">-</span>-->
+                <!--<view class="box">-->
+                  <!--<span class="yen">￥</span>-->
+                  <!--<input name="price" type="number" value="{{currentTag.price ? currentTag.price : 0}}" bindchange="{{handlePriceChange}}"></input>-->
+                <!--</view>-->
+                <!--<span class="up" bindtap="{{handleUp}}">+</span>-->
               </view>
             </view>
             <!--分割线-->
