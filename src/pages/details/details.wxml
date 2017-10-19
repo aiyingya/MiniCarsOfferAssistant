@@ -1,6 +1,9 @@
 <import src="../../components/dialog/checkTimeDialog.wxml"/>
 <template is="checkTimeDialog" data="{{ ...$wux.checkTimeDialog }}"/>
 
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <view class="container {{noHistoryContainer}}">
   <view
     class="users-title"

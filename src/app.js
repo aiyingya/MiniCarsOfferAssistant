@@ -19,36 +19,6 @@ container.saasService = saasService
 
 container.chart = wxcharts
 
-const makePhoneCall = wxapi.makePhoneCall
-wxapi.makePhoneCall = function(options) {
-  return makePhoneCall(options)
-    .catch(err => {
-      // 如果拨打电话出错， 则统一将电话号码写入黏贴板
-      const phoneNumber = options.phoneNumber
-      if (phoneNumber && phoneNumber.length) {
-        wxapi.setClipBoardData({ data: phoneNumber })
-          .then(() => {
-            $wuxToast.show({
-              type: 'text',
-              timer: 3000,
-              color: '#fff',
-              text: '号码复制， 请自行粘贴拨打'
-            })
-          })
-          .catch(err => {
-            console.error(err)
-            $wuxToast.show({
-              type: 'text',
-              timer: 2000,
-              color: '#fff',
-              text: '号码复制失败， 请重试'
-            })
-          })
-      }
-      return Promise.reject(err)
-    })
-}
-
 const amap = new amapFile.AMapWX({key:'63572efadd84fa26c86bd62f78fe0152'});
 
 App({

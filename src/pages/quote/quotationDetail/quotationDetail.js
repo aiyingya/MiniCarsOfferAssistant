@@ -225,12 +225,42 @@ Page({
     })
   },
   handlerContactWithCustomer(e) {
-    wxapi.makePhoneCall({
-      phoneNumber: this.data.quotation.customerMobile,
-      success: (res) => {
-        console.log('拨打电话' + that.data.quotation.customerMobile + '成功')
-      }
-    })
+    const phoneNumber = this.data.quotation.customerMobile
+    wxapi.makePhoneCall({ phoneNumber: phoneNumber })
+      .catch(err => {
+        console.error(err)
+        // 如果拨打电话出错， 则统一将电话号码写入黏贴板
+        if (phoneNumber && phoneNumber.length) {
+          if (wx.canIUse('setClipboardData')) {
+            wxapi.setClipboardData({ data: phoneNumber })
+              .then(() => {
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 3000,
+                  color: '#fff',
+                  text: '号码已复制， 可粘贴拨打'
+                })
+              })
+              .catch(err => {
+                console.error(err)
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 2000,
+                  color: '#fff',
+                  text: '号码复制失败， 请重试'
+                })
+              })
+          } else {
+            $wuxToast.show({
+              type: 'text',
+              timer: 2000,
+              color: '#fff',
+              text: '你的微信客户端版本太低， 请尝试更新'
+            })
+          }
+        }
+      })
+
     // 这里打给客户 不需要上报手机
   },
   //

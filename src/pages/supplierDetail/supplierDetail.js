@@ -552,11 +552,11 @@ Page({
   },
   onCallButtonClickToMobile(e) {
     const contactRecord = e.currentTarget.dataset.contactRecord
-    const supplierPhone = contactRecord.supplierPhone
-    wxapi.makePhoneCall({ phoneNumber: supplierPhone })
+    const phoneNumber = contactRecord.supplierPhone
+    wxapi.makePhoneCall({ phoneNumber: phoneNumber })
       .then(res => {
         const supplierId = contactRecord.supplierId
-        return saasService.pushCallRecord(supplierId, supplierPhone, null)
+        return saasService.pushCallRecord(supplierId, phoneNumber, null)
       })
       .then(res => {
         return this.contactRecordsList()
@@ -565,6 +565,39 @@ Page({
         this.setData({
           contactRecords: res
         })
+      })
+      .catch(err => {
+        console.error(err)
+        // 如果拨打电话出错， 则统一将电话号码写入黏贴板
+        if (phoneNumber && phoneNumber.length) {
+          if (wx.canIUse('setClipboardData')) {
+            wxapi.setClipboardData({ data: phoneNumber })
+              .then(() => {
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 3000,
+                  color: '#fff',
+                  text: '号码已复制， 可粘贴拨打'
+                })
+              })
+              .catch(err => {
+                console.error(err)
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 2000,
+                  color: '#fff',
+                  text: '号码复制失败， 请重试'
+                })
+              })
+          } else {
+            $wuxToast.show({
+              type: 'text',
+              timer: 2000,
+              color: '#fff',
+              text: '你的微信客户端版本太低， 请尝试更新'
+            })
+          }
+        }
       })
   },
   onCallButtonClick(e) {
