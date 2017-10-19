@@ -424,32 +424,34 @@ export default {
               const userId = userService.auth.userId
               const mobile = userService.mobile
               carSourceId && this.getTags(carSourceId).then((res: CompanyRemark) => {
-                $settingRemarkLabelDialog.open({
-                  currentTag: res,
-                  handlerSettingTags: (tags, comment, price) => {
-                    saasService.settingCompanyTags(
-                      carSourceId,
-                      comment,
-                      price,
-                      userId,
-                      tags,
-                      mobile
-                    ).then((res) => {
-                      // 成功新增一条标签记录
-                      wx.showToast({
-                        title: '备注成功',
-                        icon: 'success',
-                        duration: 2000,
-                        success:() => {
-                          // 推送成功事件
-                          typeof options.lableSuccess === 'function' && options.lableSuccess(supplier)
-                        }
+                setTimeout(() => {
+                  $settingRemarkLabelDialog.open({
+                    currentTag: res,
+                    handlerSettingTags: (tags, comment, price) => {
+                      // 让用户打标签
+                      saasService.settingCompanyTags(
+                        carSourceId,
+                        comment,
+                        price,
+                        userId,
+                        tags,
+                        mobile
+                      ).then((res) => {
+                        // 成功新增一条标签记录
+                        wxapi.showToast({
+                          title: '备注成功',
+                          icon: 'success',
+                          duration: 1000,
+                          success: () => {
+                            // 推送成功事件
+                            typeof options.lableSuccess === 'function' && options.lableSuccess(supplier)
+                          }
+                        })
                       })
-
-                    })
-                  },
-                  close: () => {}
-                })
+                    },
+                    close: () => {}
+                  })
+                }, 2000)
               })
             })
             .catch(err => {
