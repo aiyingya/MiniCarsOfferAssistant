@@ -5,6 +5,9 @@
 <import src="../../components/dialog/dialog.wxml" />
 <template is="dialog" data="{{ ...$wux.dialog }}" />
 
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <import src="../../components/dialog/inputNumberDialog.wxml" />
 <template is="inputNumberDialog" data="{{ ...$wux.inputNumberDialog }}" />
 

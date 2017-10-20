@@ -1,3 +1,6 @@
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <view class="container insurance-wrapper">
   <!-- 保险总额.-->
   <view class="insurance-rental">

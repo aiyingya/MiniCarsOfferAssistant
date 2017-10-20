@@ -1,12 +1,15 @@
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <view class="map_container">
-  <map 
-    class="map" 
-    id="map"   
-    longitude="{{longitude}}"   
-    latitude="{{latitude}}"  
-    scale="14"   
-    show-location="true"  
-    markers="{{markers}}"    
+  <map
+    class="map"
+    id="map"
+    longitude="{{longitude}}"
+    latitude="{{latitude}}"
+    scale="14"
+    show-location="true"
+    markers="{{markers}}"
     bindmarkertap="makertap"
     ></map>
 </view>

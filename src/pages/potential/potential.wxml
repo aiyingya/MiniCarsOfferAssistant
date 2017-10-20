@@ -1,3 +1,6 @@
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <view class="container">
   <view wx:if="{{potentialListData.length > 0}}" class="potential-cells">
     <view

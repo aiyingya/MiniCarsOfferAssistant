@@ -1,8 +1,8 @@
-<import src="../../components/common/search/searchBarView.wxml"/>
-<import src="../../components/supplier/index.wxml"/>
+<import src="../../components/common/search/searchBarView.wxml" />
+<import src="../../components/supplier/index.wxml" />
 
-<import src="../../components/toast/toast.wxml"/>
-<template is="toast" data="{{ ...$wux.toast }}"/>
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
 
 <import src="../../components/dialog/carSourceDetail/carSourceDetail.wxml" />
 <template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />

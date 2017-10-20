@@ -1,3 +1,6 @@
+<import src="../../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <import src="../../../components/dialog/contentDialog.wxml" />
 <template is="contentDialog" data="{{ ...$wux.contentDialog }}" />
 

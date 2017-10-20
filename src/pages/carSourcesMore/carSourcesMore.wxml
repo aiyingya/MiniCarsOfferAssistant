@@ -1,6 +1,9 @@
 <import src="../../components/common/remark/remarkView.wxml" />
 <import src="../../components/common/price/quotedPriceView.wxml" />
 
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <view class="container">
   <view class="carSourcesMore-head">
     <view class="carSourcesMore-head__title">{{showCarModelName}}</view>
