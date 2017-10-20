@@ -1,12 +1,14 @@
 // @flow
 import Component from '../../component'
 import * as wxapi from 'fmt-wxapp-promise'
-
+import { $wuxToast } from "../../wux"
 import { container } from '../../../landrover/business/index'
 import SAASService from '../../../services/saas.service'
+import $settingRemarkLabelDialog from '../settingRemarkLabelDialog/settingRemarkLabelDialog'
+
 
 const saasService: SAASService = container.saasService
-
+const userService: UserService = container.userService
 export default {
 
   component: null,
@@ -22,9 +24,8 @@ export default {
    *
    * @param {Object} opts 配置项
    * @param {String} opts.carModel
-   * @param {String} opts.carSourceItem
+   * @param {CarSource} opts.carSourceItem
    * @param {Function} opts.close
-   * @param {Function} opts.bookCar
    * @param {Function} opts.Contact
    * @param {Function} opts.JumpTo
    * @param {Function} opts.SelectLogisticsBlock
@@ -50,19 +51,6 @@ export default {
       animateCss: undefined,
       visible: !1
     }, setDefaults(), opts)
-
-    // 将物流门店逻辑处理修复
-    if (options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
-      for (let logisticsDestination of options.carSourceItem.viewModelSelectedCarSourcePlace.destinationList) {
-        if (logisticsDestination.destType === 'store') {
-          logisticsDestination.viewModelDestTypeDesc = '门店'
-        } else if (logisticsDestination.destType === 'station') {
-          logisticsDestination.viewModelDestTypeDesc = '驿站'
-        } else if (logisticsDestination.destType === 'mainline') {
-          logisticsDestination.viewModelDestTypeDesc = '干线自提'
-        }
-      }
-    }
 
     // 判断是否该显示 复制原文 按钮
     options.showCopyOrignalText = wx.setClipboardData != null ? true : false
@@ -96,14 +84,6 @@ export default {
           this.hide()
         },
         /**
-         * 订车行为
-         *
-         * @param {any} e
-         */
-        bookCar(e) {
-          typeof options.bookCar === `function` && options.bookCar(options.carSourceItem)
-        },
-        /**
          * 联络用户
          *
          * @param {any} e
@@ -113,6 +93,9 @@ export default {
         },
         handlerCreateQuoted(e) {
           typeof options.handlerCreateQuoted === `function` && options.handlerCreateQuoted(e)
+        },
+        handlerGoMore(e) {
+          typeof options.handlerGoMore === `function` && options.handlerGoMore(e)
         },
         /**
          * 跳转行为
@@ -131,9 +114,45 @@ export default {
          * @param {any} e
          */
         contactStaff(e) {
-          const contact = e.currentTarget.dataset.contact
-          wxapi.makePhoneCall({ phoneNumber: contact })
-            .then()
+          const phoneNumber = e.currentTarget.dataset.contact
+          wxapi.makePhoneCall({ phoneNumber: phoneNumber })
+            .catch(err => {
+              if (err.message === 'makePhoneCall:fail cancel') {
+                return Promise.reject(err)
+              }
+              // 如果拨打电话出错， 则统一将电话号码写入黏贴板
+              if (phoneNumber && phoneNumber.length) {
+                if (wx.canIUse('setClipboardData')) {
+                  wxapi.setClipboardData({ data: phoneNumber })
+                    .then(() => {
+                      $wuxToast.show({
+                        type: 'text',
+                        timer: 3000,
+                        color: '#fff',
+                        text: '号码已复制， 可粘贴拨打'
+                      })
+                    })
+                    .catch(err => {
+                      console.error(err)
+                      $wuxToast.show({
+                        type: 'text',
+                        timer: 2000,
+                        color: '#fff',
+                        text: '号码复制失败， 请重试'
+                      })
+                    })
+                } else {
+                  $wuxToast.show({
+                    type: 'text',
+                    timer: 2000,
+                    color: '#fff',
+                    text: '你的微信客户端版本太低， 请尝试更新'
+                  })
+                  return Promise.reject(err)
+                }
+              }
+            })
+          // 这里打给客服 不需要上报手机
         },
         /**
          * 选择不同的物流终点
@@ -180,12 +199,12 @@ export default {
     this.component.show()
 
     // 加载原文数据
-    if (!options.carSourceItem.supplierSelfSupport && !options.carSourceItem.viewModelContentItems) {
+    if (!options.carSourceItem.viewModelContentItems) {
       this.component.setData({
         [`${this.component.options.scope}.carSourceItem.viewModelLoading`]: '原文加载中...'
       })
 
-      saasService.requestCarSourceContent(options.carSourceItem.id)
+      saasService.getCarSourceOriginalMessage(options.carSourceItem.id)
         .then(res => {
           console.log(res)
           if (res) {
@@ -264,7 +283,6 @@ export default {
       animateCss: undefined,
       visible: !1
     }, setDefaults(), opts)
-
     this.component = new Component({
       scope: `$wux.carSourceDetailDialog`,
       data: options,
@@ -328,11 +346,11 @@ export default {
    * 电话确认界面展示
    *
    * @param {Object} opts
-   * @param {String} opts.spuId
-   * @param {Number} opts.quotationPrice
-   * @param {String} opts.companyId
+   * @param {Number} opts.spuId
+   * @param {Number} opts.quotedPrice
+   * @param {Number} opts.carSourceId
+   * @param {Number} opts.companyId
    * @param {String} opts.companyName
-   * @param {String} opts.supplierId
    * @param {String} opts.from
    * @param {Function} opts.contact
    * @returns
@@ -345,7 +363,8 @@ export default {
         page: 'contactList',
         // 必要参数
         spuId: null,
-        quotationPrice: null,
+        quotedPrice: null,
+        carSourceId: null,
         companyId: null,
         companyName: null,
         from: null,
@@ -402,12 +421,113 @@ export default {
             that.open(from, oldOptions)
           }
         },
+        /**
+         * 获取商品所有标签
+         *
+         * @param carSourceId 商品id
+         */
+        getTags(carSourceId) {
+          const userId = userService.auth.userId
+          return saasService.getQueryCompanyRemark(userId, carSourceId).then((res: CompanyRemark) => {
+            return res
+          })
+        },
         handlerContactClick(e) {
-          const supplier = e.currentTarget.dataset.supplier,
-            phoneNumber = supplier.supplierPhone
+          const
+            supplier = e.currentTarget.dataset.supplier,
+            phoneNumber = supplier.supplierPhone,
+            carSourceId = options.carSourceId
           const contactPromise = wxapi.makePhoneCall({ phoneNumber })
+            .catch(err => {
+              if (err.message === 'makePhoneCall:fail cancel') {
+                return Promise.reject(err)
+              }
+              // 如果拨打电话出错， 则统一将电话号码写入黏贴板
+              if (phoneNumber && phoneNumber.length) {
+                if (wx.canIUse('setClipboardData')) {
+                  wxapi.setClipboardData({ data: phoneNumber })
+                    .then(() => {
+                      $wuxToast.show({
+                        type: 'text',
+                        timer: 3000,
+                        color: '#fff',
+                        text: '号码已复制， 可粘贴拨打'
+                      })
+                    })
+                    .catch(err => {
+                      console.error(err)
+                      $wuxToast.show({
+                        type: 'text',
+                        timer: 2000,
+                        color: '#fff',
+                        text: '号码复制失败， 请重试'
+                      })
+                    })
+                } else {
+                  $wuxToast.show({
+                    type: 'text',
+                    timer: 2000,
+                    color: '#fff',
+                    text: '你的微信客户端版本太低， 请尝试更新'
+                  })
+                  return Promise.reject(err)
+                }
+              }
+            })
 
-          typeof options.contact === 'function' && options.contact(contactPromise, supplier)
+          /**
+           * 联系电话弹层，统一上报位置
+           */
+          const supplierId = supplier.supplierId
+          saasService.pushCallRecord(supplierId, phoneNumber, carSourceId)
+
+          /**
+           * 拨打电话成功后
+           * 1.推送成功事件
+           * 2.有carSourceId就提示用户打标签
+           */
+          contactPromise
+            .then(res => {
+              console.log('拨打电话' + supplier.supplierPhone + '成功')
+              // 推送成功事件
+              typeof options.contact === 'function' && options.contact(supplier)
+
+              // 有carSourceId就提示用户打标签
+              const userId = userService.auth.userId
+              const mobile = userService.mobile
+              carSourceId && this.getTags(carSourceId).then((res: CompanyRemark) => {
+                setTimeout(() => {
+                  $settingRemarkLabelDialog.open({
+                    currentTag: res,
+                    handlerSettingTags: (tags, comment, price) => {
+                      // 让用户打标签
+                      saasService.settingCompanyTags(
+                        carSourceId,
+                        comment,
+                        price,
+                        userId,
+                        tags,
+                        mobile
+                      ).then((res) => {
+                        // 成功新增一条标签记录
+                        wxapi.showToast({
+                          title: '备注成功',
+                          icon: 'success',
+                          duration: 2000
+                        }).then(() => {
+                          // 推送成功事件
+                          typeof options.lableSuccess === 'function' && options.lableSuccess(supplier)
+                        })
+                      })
+                    },
+                    close: () => {}
+                  })
+                }, 2000)
+              })
+            })
+            .catch(err => {
+              console.error(err, '拨打电话' + supplier.supplierPhone + '失败')
+            })
         }
       }
     })
@@ -417,18 +537,25 @@ export default {
     this.component.setData({
       [`${that.component.options.scope}.status`]: '加载中'
     })
-    saasService.getContacts(
-      options.companyId,
-      options.supplierId,
-      options.spuId,
-      options.quotationPrice
-    )
+
+    let promise = null
+    if (opts.carSourceId != null) {
+      promise = saasService.retrieveContactsByCarSourceItem(opts.carSourceId)
+    } else {
+      // 傅斌 这个地方通过使用 spuId 是否存在来判断该用哪个接口
+      if (opts.spuId != null) {
+        // 车源列表的众数获取供应商列表
+        promise = saasService.getAllSuppliersByCompanyAndPriceForSPU(opts.spuId, opts.companyId, opts.quotedPrice)
+      } else {
+        // 供应商页面中获取供应商列表
+        promise = saasService.getAllSuppliersByCompany(opts.companyId)
+      }
+      // ...或许还有其他未开发类型的电话列表接口
+    }
+    promise
       .then(res => {
-        const companyModel = res.shift()
-        companyModel.companyId = companyModel.companyId || options.companyId
-        companyModel.companyName = companyModel.companyName || options.companyName
         this.component.setData({
-          [`${this.component.options.scope}.companyModel`]: companyModel,
+          [`${this.component.options.scope}.supplierModels`]: res,
           [`${this.component.options.scope}.status`]: '没有供应商联系方式'
         })
       })

@@ -230,7 +230,7 @@
 /* 众数视图 */
 .car-sources-reference-deal {
   width: 100%;
-  background: #3377EE;
+  background: #4D5767;
   padding: 0 20rpx 20rpx 20rpx;
   box-sizing: border-box;
   overflow: hidden;

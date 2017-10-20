@@ -6,4 +6,5 @@
 @import './specifications/carColorView.wxss';
 @import './empty/emptyStatusView.wxss';
 @import './description/branchView.wxss';
+@import './remark/remarkView.wxss';
 

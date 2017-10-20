@@ -1,0 +1,33 @@
+
+.remark-view .content{
+  margin: 10rpx 0;
+}
+
+.remark-view .content.item-center{
+  display:flex;
+  align-items:center;
+}
+.remark-view .content span{
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #666666;
+  letter-spacing: 0;
+  line-height: 24rpx;
+}
+
+.remark-view .content text{
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 24rpx;
+}
+
+.remark-view .content .quoted-price .price {
+  ffont-family: PingFangSC-Regular;
+  font-size: 32rpx;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 32rpx;
+}
+

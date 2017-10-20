@@ -1,11 +1,11 @@
 
 import {
-  $wuxTrack
+  $wuxTrack,
+  $wuxToast
 } from '../../components/wux'
-import util from '../../utils/util'
+import utils from '../../utils/util'
+import * as wxapi from 'fmt-wxapp-promise'
 import { system, container } from '../../landrover/business/index'
-
-// import moment from 'moment'
 
 Page({
   data: {
@@ -34,7 +34,7 @@ Page({
       }
     },
     guestTimeIntervalHandler: null,
-    searchBarPlaceholder: '🔍 输入指导价/车款名 如朗逸1099',
+    searchBarPlaceholder: '🔍 输入指导价/车款名 快速查找',
     searchBarValue: '',
   },
   //事件处理函数
@@ -367,7 +367,7 @@ Page({
   },
   handlerToCarsModels(e) {
     if (container.userService.isLogin()) {
-      const carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
+      const carsInfoKeyValueString = utils.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
       wx.navigateTo({
         url: '../carModels/carModels?' + carsInfoKeyValueString
       })
@@ -378,10 +378,44 @@ Page({
     }
   },
   handlerMakePhoneCall(e) {
-    let phone =  e.currentTarget.dataset.phone //'18621016627'
-
-    wx.makePhoneCall({
-      phoneNumber: phone
-    })
+    const phoneNumber = e.currentTarget.dataset.phone //'18621016627'
+    wxapi.makePhoneCall({ phoneNumber: phoneNumber })
+      .catch(err => {
+        if (err.message === 'makePhoneCall:fail cancel') {
+          return Promise.reject(err)
+        }
+        // 如果拨打电话出错， 则统一将电话号码写入黏贴板
+        if (phoneNumber && phoneNumber.length) {
+          if (wx.canIUse('setClipboardData')) {
+            wxapi.setClipboardData({ data: phoneNumber })
+              .then(() => {
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 3000,
+                  color: '#fff',
+                  text: '号码已复制， 可粘贴拨打'
+                })
+              })
+              .catch(err => {
+                console.error(err)
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 2000,
+                  color: '#fff',
+                  text: '号码复制失败， 请重试'
+                })
+              })
+          } else {
+            $wuxToast.show({
+              type: 'text',
+              timer: 2000,
+              color: '#fff',
+              text: '你的微信客户端版本太低， 请尝试更新'
+            })
+            return Promise.reject(err)
+          }
+        }
+      })
+    // 这里打给何先生 不需要上报手机
   }
 })

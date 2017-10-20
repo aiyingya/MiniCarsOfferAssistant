@@ -1,6 +1,7 @@
 import { storage, container } from './landrover/business/index'
-
+import * as wxapi from 'fmt-wxapp-promise'
 import wxcharts from './modules/wxcharts'
+import { $wuxToast } from './components/wux'
 
 import UserService from './services/user.service'
 import TradeService from './services/trade.service'

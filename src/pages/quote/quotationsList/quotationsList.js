@@ -1,7 +1,7 @@
 import {
   $wuxTrack
 } from "../../../components/wux"
-import util from '../../../utils/util'
+import utils from '../../../utils/util'
 import { container } from '../../../landrover/business/index'
 let app = getApp()
 
@@ -74,7 +74,7 @@ Page({
             that.delayNavigationTo({
               complete: function () {
                 /// 报价列表页面也换过来
-                const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotation)
+                const quotationKeyValueString = utils.urlEncodeValueForKey('quotation', quotation)
                 wx.navigateTo({
                   url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
                   success: function (res) {
@@ -96,7 +96,7 @@ Page({
             that.delayNavigationTo({
               complete: function () {
                 /// 找车路径切换过来
-                const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotation)
+                const quotationKeyValueString = utils.urlEncodeValueForKey('quotation', quotation)
                 wx.navigateTo({
                   url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
                   success: function (res) {

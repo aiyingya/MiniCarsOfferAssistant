@@ -1,4 +1,4 @@
-
+import moment from 'moment'
 // @flow
 export default class Util {
   /**
@@ -281,6 +281,16 @@ export default class Util {
       result = "刚刚"
     }
     return result;
+  }
+
+  /**
+   * 日期格式化
+   * @param timestr 时间字符串
+   * @param fmt 格式化样式 YYYY/MM/DD hh:mm
+   * @returns {string} 返回格式化以后的时间字符串
+   */
+  static getTimeStr(timestr, fmt) {
+    return moment(timestr).format(fmt)
   }
 
   static urlEncodeValueForKey(key, value) {

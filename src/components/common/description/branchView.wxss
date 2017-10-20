@@ -1,36 +1,40 @@
-.branch-desc{
-  max-height:218rpx;
-  padding:0 30rpx;
-  margin-bottom:15rpx;
-  background:#ffffff;
-}
-.branch-desc_h{
-  max-height:220rpx;/*实际上js中使用200rpx*/
-}
-.branch-desc__title{
-  border-bottom:1rpx solid #E4E4E4;
-  font-family:PingFangSC-Regular;
-  font-size:26rpx;
-  color:#666666;
-  letter-spacing:0;
-  line-height:64rpx;
-  height:64rpx;
-
-}
-.branch-desc__list{
-  padding: 10rpx 0 20rpx;
-  max-height:120rpx;
+.branch-desc {
+  box-sizing: border-box;
+  padding: 0 30rpx;
+  margin-bottom: 10rpx;
+  background: #ffffff;
 }
 
-.branch-desc__content{
+.branch-desc__title {
+  border-bottom: 1rpx solid #E4E4E4;
+  font-family: "PingFangSC-Regular";
+  font-size: 26rpx;
+  color: #666666;
+  letter-spacing: 0;
+  line-height: 80rpx;
+  height: 80rpx;
+  text-align: center;
+}
+
+.branch-desc__list {
+  box-sizing: border-box;
+  padding-top: 10rpx;
+  padding-bottom: 10rpx;
+  max-height: 160rpx;
+  min-height: 90rpx;
+}
+
+.branch-desc__content {
   width: 33.3%;
-  height:60rpx;
-  display:inline-table;
-  justify-content:flex-start;
-  align-items:center;
-  font-family:PingFangSC-Regular;
+  height: 60rpx;
+  display: inline-table;
+  justify-content: flex-start;
+  align-items: center;
+  font-family: "PingFangSC-Regular";
+  margin-bottom: 10rpx;
 }
-.branch-desc__name{
+
+.branch-desc__name {
   height: 60rpx;
   line-height: 60rpx;
   font-family: PingFangSC-Regular;
@@ -38,27 +42,29 @@
   color: #352627;
   letter-spacing: 0;
 }
-.branch-desc__logo{
+
+.branch-desc__logo {
   float: left;
-  width:90rpx;
-  height:60rpx;
+  width: 90rpx;
+  height: 60rpx;
 }
 
-.branch-desc__listT{
-  padding: 10rpx 0;
+.branch-desc__listT {
+  box-sizing: border-box;
+  padding: 26rpx 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 80rpx;
 }
-.branch-desc__contentT{
-  margin-right:0.3%;
-  display:inline-flex;
-  justify-content:space-around;
-  align-items:center;
-  text-align:center;
-  flex-direction:column;
-  font-family:PingFangSC-Regular;
-  color:#352627;
-  font-size:24rpx;
-  line-height:25rpx;
-  height:58rpx;
-  width:33%;
 
+.branch-desc__contentT {
+  margin-right: 0.3%;
+  font-family: PingFangSC-Regular;
+  color: #352627;
+  font-size: 24rpx;
+  line-height: 25rpx;
+  height: 28rpx;
+  text-align: center;
 }
+

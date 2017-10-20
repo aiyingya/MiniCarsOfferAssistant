@@ -1,0 +1,44 @@
+<import src="../../components/common/remark/remarkView.wxml" />
+<import src="../../components/common/price/quotedPriceView.wxml" />
+
+<view class="container">
+  <view class="carSourcesMore-head">
+    <view class="carSourcesMore-head__title">{{showCarModelName}}</view>
+    <view class="carSourcesMore-head__desc">
+      <span class="left">{{showColorName}}</span>
+      <span class="right">
+        <block wx:if="{{carSourceItem.viewModelEqualWithOfficialPrice}}">
+          <view class="price-tips-small">价格电议</view>
+        </block>
+        <block wx:else>
+          <template is="quotedPriceView" data="{{ ...carSourceItem.viewModelQuoted }}" />
+        </block>
+
+      </span>
+    </view>
+  </view>
+
+  <view class="carSourcesMore-container">
+    <view wx:for="{{comments}}" wx:key="id" class="carSourcesMore-head__list">
+      <view class="top">
+        <span class="left">{{item.userPhone}}</span><span class="right">{{item.updateTimeStr}}</span>
+      </view>
+      <template is="remarkView" data="{{ tags: item.tags, content: item.content, viewModelKUserQuoted: item.viewModelKUserQuoted}}"  />
+    </view>
+
+    <!--Demo-->
+    <!--<view class="carSourcesMore-head__list">-->
+      <!--<view class="top">-->
+        <!--<span class="left">15000******</span><span class="right">2017/09/11  23:27</span>-->
+      <!--</view>-->
+      <!--<template is="remarkView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />-->
+    <!--</view>-->
+
+    <view wx:if="{{infoItem.hasNext}}" bindtap="handlerLoadMore" class="load-more">
+      点击更多
+    </view>
+    <view wx:if="{{!comments.length}}" class="no-more">
+      没有更多信息
+    </view>
+  </view>
+</view>

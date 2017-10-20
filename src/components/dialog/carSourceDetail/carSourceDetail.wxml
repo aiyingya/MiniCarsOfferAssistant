@@ -19,9 +19,13 @@
             【{{carModel.officialPriceStr}}】 {{carModel.carModelName}}
           </view>
           <view class="first-part">
+            <view class="first-part__more" bindtap="{{handlerGoMore}}">
+              更多
+              <image class="first-part__more_icon" src="/images/icons/icon_arrow.png"></image>
+            </view>
             <view class="line-item">
               <view class="line-title">车辆配色:</view>
-              <view class="car-color">{{carSourceItem.externalColor}} / {{carSourceItem.viewModelInternalColor}} </view>
+              <view class="car-color">{{carSourceItem.exteriorColor}} / {{carSourceItem.viewModelInternalColor}} </view>
             </view>
             <view class="line-item">
               <view class="line-title">车源信息:</view>
@@ -33,42 +37,6 @@
                 <view wx:if="{{ !(carSourceItem.viewModelSelectedCarSourcePlace.name && carSourceItem.viewModelSelectedCarSourcePlace.name.length) && !(carSourceItem.salableRegionsDesc && carSourceItem.salableRegionsDesc.length) && !(carSourceItem.procedureTypeDesc && carSourceItem.procedureTypeDesc.length) }}"
                   class="basic-label">
                   暂无
-                </view>
-              </view>
-            </view>
-            <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length > 0}}"
-              class="line-item">
-              <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}" class="line-title">
-                包 邮 至:
-              </view>
-              <view wx:else class="line-title">
-                运 费 约: {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.viewModelLogisticsFeeDesc}}
-              </view>
-
-              <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length}}"
-                class="logistics-list">
-                <view wx:for="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList}}" wx:for-item="logisticsItem" wx:for-index="logisticsItemIndex"
-                  wx:key="{{ logisticsItemIndex }}" class="logistics-block {{logisticsItemIndex == carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestinationIndex ? 'selected' : ''}}"
-                  bindtap="{{selectLogisticsBlock}}" data-car-source="{{carSourceItem}}" data-logistics-index="{{logisticsItemIndex}}"
-                  data-logistics="{{logisticsItem}}">
-                  <view class="title">
-                    {{logisticsItem.viewModelDestTypeDesc}}
-                  </view>
-                  <view class="value">
-                    {{logisticsItem.name}}
-                  </view>
-                </view>
-              </view>
-            </view>
-            <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.destinationList && carSourceItem.viewModelSelectedCarSourcePlace.destinationList.length && carSourceItem.viewModelSelectedCarSourcePlace.viewModelSelectedLogisticsDestination.expectedDeliveryDays}}"
-              class="line-item">
-              <view class="line-title">物流时间:</view>
-              <view class="logistics-information">
-                <view class="logistics-date">
-                  {{carSourceItem.viewModelSelectedCarSourcePlace.viewModelExpectedDeliveryDaysDesc}}
-                </view>
-                <view class="logistics-tips">
-                  (物流信息仅供参考)
                 </view>
               </view>
             </view>
@@ -130,23 +98,18 @@
         <view class="footer">
           <!-- 供货价格 -->
           <view class="footer1">
-            <block wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
+            <block wx:if="{{carSourceItem.viewModelEqualWithOfficialPrice}}">
               <view class="price-tips-small">价格电议</view>
             </block>
             <block wx:else>
-              <template is="quotedPriceView" data="{{ ...carSourceItem.viewModelSelectedCarSourcePlace.viewModelQuoted }}" />
+              <template is="quotedPriceView" data="{{ ...carSourceItem.viewModelQuoted }}" />
             </block>
 
-            <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.logisticsFree}}" class="logistics-information-tips">
-              (含运费)
+            <view wx:if="{{carSourceItem.viewModelEqualWithOfficialPrice}}">
+              <!--为空-->
             </view>
-            <view wx:else>
-              <view wx:if="{{carSourceItem.viewModelSelectedCarSourcePlace.viewModelEqualWithOfficialPrice}}">
-                <!--为空-->
-              </view>
-              <view wx:else class="bare-price">
-                裸车价
-              </view>
+            <view wx:else class="bare-price">
+              裸车价
             </view>
           </view>
           <!--立即订车-->
@@ -154,15 +117,13 @@
             <view class="button1 confirm" bindtap="{{handlerCreateQuoted}}" data-car-source="{{carSourceItem}}">
               生成报价
             </view>
-            <view wx:if="{{carSourceItem.supplierSelfSupport}}" class="button1 confirm" bindtap="{{bookCar}}" data-car-source="{{carSourceItem}}">
-              立即定车
-            </view>
-            <view wx:else class="button1 confirm" bindtap="{{contact}}" data-car-source="{{carSourceItem}}">
+            <view class="button1 confirm" bindtap="{{contact}}" data-car-source="{{carSourceItem}}">
               电话联系
             </view>
           </view>
         </view>
       </block>
+
       <block wx:if="{{page === 'companyList'}}">
         <view class="header">
           <view class="title">行情列表</view>
@@ -219,13 +180,12 @@
 
         <view class="body">
           <view class="brief-infomation">
-            {{companyModel.companyName}}
+            {{companyName}}
           </view>
           <scroll-view scroll-y="true" style="height: 400rpx">
-            <block wx:if="{{companyModel.supplierModels.length}}">
+            <block wx:if="{{supplierModels.length}}">
               <view class="contact-list">
-                <view wx:for="{{companyModel.supplierModels}}" wx:key="supplierId" class="contact-cell" data-supplier="{{item}}"
-                  bindtap="{{handlerContactClick}}">
+                <view wx:for="{{supplierModels}}" wx:key="supplierId" class="contact-cell" data-supplier="{{item}}" bindtap="{{handlerContactClick}}">
                   <view wx:if="{{item.callCount}}" class="left active">{{item.supplierName}}({{item.callCount}})</view>
                   <view wx:else class="left active">{{item.supplierName}}</view>
                   <view class="right">

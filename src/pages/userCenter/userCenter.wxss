@@ -1,7 +1,16 @@
+page {
+  background: #fff;
+}
 .users-topbar {
   width: 100%;
-  padding: 40rpx 0;
-  background: #ECF0F7;
+  height: 270rpx;
+  padding: 25rpx 40rpx;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  border-bottom: 20rpx solid #EFEFEF;
 }
 
 .users-head {
@@ -9,22 +18,28 @@
   height: 88rpx;
   overflow: hidden;
   border-radius: 50%;
-  margin: 0 auto;
 }
 
 .users-head image {
   width: 88rpx;
   height: 88rpx;
 }
-
+.user-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 50%;
+}
+.users-info {
+  margin-left: 30rpx;
+}
 .users-name,
 .users-login {
   font-family: "PingFangSC-Regular";
   font-size: 34rpx;
   color: #333333;
   line-height: 36rpx;
-  text-align: center;
-  margin-top: 24rpx;
+  max-width: 300rpx;
 }
 
 .users-phone {
@@ -37,16 +52,17 @@
 }
 
 .users-label {
-  padding: 0 30rpx;
+  box-sizing: border-box;
+  height: 100%;
+  max-width: 50%;
   display: flex;
   justify-content: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  margin-top: 12rpx;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .users-label .label {
+  box-sizing: border-box;
   padding: 10rpx 30rpx;
   font-family: "PingFangSC-Regular";
   font-size: 22rpx;
@@ -54,11 +70,18 @@
   line-height: 22rpx;
   background: #475593;
   border-radius: 100rpx;
-  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+  max-width: 100%;
+  white-space:nowrap;
 }
 
 .users-cells {
-  margin-top: 20rpx;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  background: #FFFFFF;
 }
 
 .users-cells:after {
@@ -77,13 +100,35 @@
   color: #232323;
   margin-left: 30rpx;
 }
-
+.users-cell {
+  padding: 53rpx 0;
+  width: 33.333%;
+}
+.users-cell__hd {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 100%;
+  background: rgba(241,124,124,.1);
+  margin: 0 auto ;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-items: center;
+  -webkit-align-items: center;
+}
+.users-cell__bd {
+  text-align: center;
+  margin-top: 20rpx;
+}
+.users-cell__hd image {
+  display: block;
+  width: 44rpx;
+  height: 44rpx;
+  margin: 0 auto;
+}
 .users-logout {
-  position: fixed;
-  bottom: 30rpx;
-  left: 0;
-  right: 0;
-  margin: auto;
+  margin: 30rpx auto;
   width: 92%;
   height: 88rpx;
   line-height: 88rpx;
@@ -96,13 +141,21 @@
 }
 
 .version {
+  margin: 30rpx auto;
+}
+.version .text {
   font-size: 20rpx;
   color: #999999;
   text-align: center;
   width: 100%;
   margin-top: 10rpx;
 }
-
+.version image {
+  display: block;
+  width: 110rpx;
+  height: 56rpx;
+  margin: 0 auto;
+}
 .users-logout_active {
   background-color: rgba(237, 65, 73, .7);
 }

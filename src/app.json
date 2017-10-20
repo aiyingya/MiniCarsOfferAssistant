@@ -19,7 +19,8 @@
     "pages/bargain/bargain",
     "pages/potential/potential",
     "pages/amap/amap",
-    "pages/carSourceNotes/carSourceNotes"
+    "pages/carSourceNotes/carSourceNotes",
+    "pages/carSourcesMore/carSourcesMore"
   ],
   "window": {
     "backgroundTextStyle": "dark",

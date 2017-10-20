@@ -1,5 +1,5 @@
 //index.js
-import util from '../../utils/util'
+import utils from '../../utils/util'
 import { system, container } from '../../landrover/business/index'
 
 Page({
@@ -118,7 +118,7 @@ Page({
     })
   },
   handlerToCarsModels(e) {
-    const carsInfoKeyValueString = util.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
+    const carsInfoKeyValueString = utils.urlEncodeValueForKey('carsInfo', e.currentTarget.dataset.carsinfo)
     if (container.userService.isLogin()) {
       wx.navigateTo({
         url: '../carModels/carModels?' + carsInfoKeyValueString

@@ -1,0 +1,108 @@
+<import src="../../common/price/settingPriceView.wxml" />
+
+
+<template name="settingRemarkLabelDialog">
+  <view class="settingRemarkLabelDialog">
+    <view class="weui-mask {{ animateCss }}" wx:if="{{ visible }}" catchtouchmove="{{ onTouchMoveWithCatch }} " bindtap="{{ close }}">
+    </view>
+    <view class="weui-dialog {{ animateCss }}" wx:if="{{ visible }}">
+
+      <form bindsubmit="{{ confirm }}" >
+        <!--实际价格、货源地、公里数、特殊条件、备注-->
+        <view class="setting-content">
+          <view style="height: 800rpx; overflow:auto">
+            <view class="line-content">
+              <view class="left">实际价格</view>
+              <view class="right price">
+
+                <!--<template is="settingPriceView" data="{{ ...settingPriceInfo}}"/>-->
+                <view class="settingprice">
+                  <view class="settingprice-direction" style="flex:1" bindtap="{{changePush}}">
+                    <view class="settingprice-direction_text">{{settingPriceInfo.isPlusPrice? '上':'下'}}</view>
+                    <image class="settingprice-direction__icon_change" src="/images/icons/icon_change.png"></image>
+                  </view>
+
+                  <image class="settingprice-direction__icon_minus" src="/images/icons/icon_minus.png"
+                         bindtap="{{ buttonMinus }}" bindlongtap="{{ buttonLargeMinus }}" bindtouchcancel="{{buttonLargeCancel}}" bindtouchend="{{buttonLargeEnd}}"></image>
+
+                  <input type="number" name="differenceValue" placeholder="0" placeholder-class=""
+                         bindinput="{{ handlerinput }}"
+                         value="{{ settingPriceInfo.differenceValue }}"  maxlength="{{ settingPriceInfo.inputNumberMaxLength }}"/>
+
+                  <image class="settingprice-direction__icon_plus" src="/images/icons/icon_plus.png"
+                         bindtap="{{buttonPlus}}" bindlongtap="{{buttonLargePlus}}" bindtouchcancel="{{buttonLargeCancel}}" bindtouchend="{{buttonLargeEnd}}"></image>
+
+                  <text class="settingprice-type__text" wx:if="{{settingPriceInfo.isPoint}}">点</text>
+                  <text class="settingprice-type__text" wx:else >元</text>
+                </view>
+
+                <!--<span class="down" bindtap="{{handleDown}}">-</span>-->
+                <!--<view class="box">-->
+                  <!--<span class="yen">￥</span>-->
+                  <!--<input name="price" type="number" value="{{currentTag.price ? currentTag.price : 0}}" bindchange="{{handlePriceChange}}"></input>-->
+                <!--</view>-->
+                <!--<span class="up" bindtap="{{handleUp}}">+</span>-->
+              </view>
+            </view>
+            <!--分割线-->
+            <view class="weui-dialog__line" style="width:100%;"></view>
+
+            <view wx:if="{{currentTag.sourceArea}}" class="line-content">
+                <view class="left">货源地</view>
+                <view class="right">
+                  <radio-group class="radio-group" bindchange="{{handlerSourceAreaTagChange}}">
+                    <label class="radio" wx:for="{{currentTag.sourceArea}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}">
+                      <radio value="{{item.name}}" checked="{{item.selected}}"/>{{item.name}}
+                    </label>
+                  </radio-group>
+                </view>
+            </view>
+            <!--分割线-->
+            <view class="weui-dialog__line" style="width:100%;"></view>
+
+            <view wx:if="{{currentTag.mileage}}" class="line-content">
+              <view class="left">公里数</view>
+              <view class="right">
+                <radio-group class="radio-group" bindchange="{{handlerMileageTagChange}}">
+                  <label class="radio" wx:for="{{currentTag.mileage}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}">
+                    <radio value="{{item.name}}" checked="{{item.selected}}"/>{{item.name}}
+                  </label>
+                </radio-group>
+              </view>
+            </view>
+            <!--分割线-->
+            <view class="weui-dialog__line" style="margin-top:15px; width:100%;"></view>
+            <view wx:if="{{currentTag.condition}}" class="line-content">
+              <view class="left">特殊条件<view class="grey">（多选）</view></view>
+              <view class="right">
+                <checkbox-group bindchange="{{handlerConditionTagChange}}" >
+                  <label wx:for="{{currentTag.condition}}" wx:key="{{item.id}}" class="checkbox {{item.selected ? 'selected' :''}}" >
+                    <checkbox value="{{item.name}}" checked="{{item.selected}}" style="display:none"/>{{item.name}}
+                  </label>
+                </checkbox-group>
+              </view>
+            </view>
+
+            <!--<view class="weui-dialog__line" style="margin-top:15px; width:100%;"></view>-->
+            <!--<view class="line-content">-->
+              <!--<view class="left">备注</view>-->
+              <!--<view class="right">-->
+                <!--<textarea name="comment" value="{{ currentTag.content }}" class="textarea" cursor-spacing="40px" placeholder-class="textarea-placeholder"/>-->
+              <!--</view>-->
+            <!--</view>-->
+
+          </view>
+        </view>
+
+        <!--按钮-->
+        <view class="weui-dialog__ft">
+          <button class="weui-dialog__btn weui-dialog__btn_default"  bindtap="{{ cancel }}" >{{ cancelText }}
+          </button>
+          <button class="weui-dialog__btn weui-dialog__btn_primary" formType="submit" disabled="{{ confirmDisabled }}">{{ confirmText }}
+          </button>
+        </view>
+      </form>
+
+    </view>
+  </view>
+</template>

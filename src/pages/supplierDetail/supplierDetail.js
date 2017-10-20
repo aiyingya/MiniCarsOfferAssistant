@@ -7,25 +7,59 @@ import {
 } from '../../landrover/business/index'
 
 import {
-  $wuxToast
+  $wuxToast,
+  $wuxTrack
 } from "../../components/wux"
 
 import * as wxapi from 'fmt-wxapp-promise'
 import SAASService from '../../services/saas.service'
 import UserService from '../../services/user.service'
 import utils from '../../utils/util'
+import CarSourceManager from '../../components/carSource/carSource.manager'
 
 const saasService: SAASService = container.saasService
 const userService: UserService = container.userService
-let paginationList: PaginationList<UserComment> | null = null
+// let userCommentPaginationList: PaginationList<UserComment> | null = null
 
 Page({
+  userCommentPaginationList: {},
+  carSourcePaginationList: {},
+  spuPaginationList: {},
   data: {
-    filters: null,
-    filtersSelectedIndexes: null,
-
+    // 行情信息
     company: null,
+    carSources: [],
+    spuForCarSources: null,
+    carSourcesEmptyStatus: {
+      iconPath: '/images/icons/icon_evaluate_empty.png',
+      title: '该供应商暂无车辆行情',
+      description: ''
+    },
+    isDefaultRecommend: true,
+    isSearching: false,
+    searchResults: [],
+    searchViewModel: {
+      searchBarValue: '',
+      disabled: false,
+      searchBarPlaceholder: '🔍 输入品牌/车系/指导价'
+    },
+
+    // 联系方式
+    contactRecords: [],
+    contactRecordsEmptyStatus: {
+      iconPath: '/images/icons/icon_evaluate_empty.png',
+      title: '该供应商暂无联系方式',
+      description: ''
+    },
+
+    // 评价内容
     comments: [],
+    commentsEmptyStatus: {
+      iconPath: '/images/icons/icon_evaluate_empty.png',
+      title: '该供应商暂无评论信息',
+      description: '如果您与供应商有过成交或沟通， 请尽快评价哦'
+    },
+
     submitTags: [
       {
         id: 0,
@@ -48,22 +82,38 @@ Page({
     submitTextareaValue: '',
     submitButtonValid: false,
     submitButtonTagValid: false,
-    emptyStatus: {
-      iconPath: '/images/icons/icon_evaluate_empty.png',
-      title: '该供应商暂无评论信息',
-      description: '如果您与供应商有过成交或沟通， 请尽快评价哦'
-    },
-    firstWindowHeight: 0 // 记录第一次进入页面的window的高度
+
+    filters: null,
+    filtersSelectedIndexes: null,
+
+    activeIndex: 0
   },
   onLoad(options) {
     const system = wxapi.getSystemInfoSync()
-    const company = utils.urlDecodeValueForKeyFromOptions('company', options)
+    const company: Company = utils.urlDecodeValueForKeyFromOptions('company', options)
 
     // 以下数值通通为页面元素的高度  scrollViewHeight：为获取滚动元素的高度数值
+    let carSourceExistHeight = 100 /* 车辆描述高度 */ + 88 /* tab 高度 */ + 122 /* 默认推荐高度 */
+    if (company.mainBrand && company.mainBrand.length > 0) {
+      carSourceExistHeight += 80
+      if (company.mainBrand.length < 4) {
+        carSourceExistHeight += 90
+      } else {
+        carSourceExistHeight += 160
+      }
+      carSourceExistHeight += 10
+    }
+
+    if (company.mainSeries && company.mainSeries.length > 0) {
+      carSourceExistHeight += 160
+      carSourceExistHeight += 10
+    }
+
     this.setData({
-      firstWindowHeight: system.windowHeight,
       company,
-      scrollViewHeight: system.windowHeight - util.px(100 + 20 + 96 + 210 + 218 + 10 + 200 + 10)
+      scrollViewHeight: system.windowHeight - util.px(100 /* 车辆描述高度 */ + 88 /* tab 高度 */ + 96 /* 过滤高度 */ + 210 /* 评论输入板高度 */),
+      linkmanViewHeight: system.windowHeight - util.px(100 /* 车辆描述高度 */ + 88 /* tab 高度 */),
+      carSourceViewHeight: system.windowHeight - util.px(carSourceExistHeight)
     })
 
     wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
@@ -72,59 +122,74 @@ Page({
           .then(res => {
             return this.refresh(company.companyId)
           })
-          .then((res: PaginationList<UserComment>) => {
-            this.setData({
-              comments: res.list
-            })
-          })
       })
       .then(() => { wxapi.hideToast() })
       .catch(() => { wxapi.hideToast() })
   },
   onShow() {
-
   },
-  onScrollToLower() {
-    this.commentsLoadMore()
+  onScrollToLower(e) {
+    const tabIndex = e.currentTarget.dataset.tabIndex
+
+    if (tabIndex == 0) {
+      if (this.data.isSearching === true) {
+        this.spuLoadMore()
+          .then(res => {
+            this.setData({ searchResults: res.list })
+          })
+      } else {
+        this.carSourcesLoadMore()
+          .then((res) => {
+            this.setData({ carSources: res.list })
+          })
+      }
+    } else if (tabIndex == 1) {
+      // do nothing
+    } else if (tabIndex == 2) {
+      this.commentsLoadMore()
+        .then((res: PaginationList<UserComment>) => {
+          this.setData({
+            comments: res.list
+          })
+        })
+    } else {
+      console.error('错误的 tab index')
+    }
+  },
+  refresh(companyId: number) {
+    // 更新公司数据
+    saasService.retrieveSupplyCompany(companyId)
+      .then((res: Company) => {
+        this.setData({
+          company: res
+        })
+      })
+
+    const promise1 = this.commentsRefresh()
       .then((res: PaginationList<UserComment>) => {
         this.setData({
           comments: res.list
         })
       })
-  },
-  refresh(companyId: number): Promise<PaginationList<UserComment>> {
-    // 更新公司数据
-    saasService.retrieveSupplyCompany(companyId)
-      .then((res: Company) => {
-        // 218 + 10 + 200 + 10：为主营品牌和优势车系的高度和margin
-        // 这里需要根据主营品牌的数量判断 <=3个判断心的高度为 218 - 60
-        // 这里需要根据优势车系的数量判断 <=3个判断心的高度为 200 - 58
-        // 主营品牌和优势车系为空时 高度为0
-        let companyH = 0
 
-        if (res.mainBrand && res.mainBrand.length > 0) {
-          if (res.mainBrand.length <= 3) {
-            companyH += 218 - 60 + 15
-          } else {
-            companyH += 218 + 10
-          }
-        }
-
-        if (res.mainSeries && res.mainSeries.length > 0) {
-          if (res.mainSeries.length <= 3) {
-            companyH += 200 - 58 + 15
-          } else {
-            companyH += 200 + 15
-          }
-        }
-
+    const promise2 = this.contactRecordsList()
+      .then((res: Array<ContactRecord>) => {
         this.setData({
-          company: res,
-          scrollViewHeight: this.data.firstWindowHeight - util.px(100 + 20 + 96 + 210 + companyH)
+          contactRecords: res
+        })
+      })
+    const promise3 = this.carSourcesRefresh()
+      .then((res: PaginationList<{
+        spuSummary: SpuSummary,
+        itemDetail: CarSource
+      }>) => {
+        this.setData({
+          carSources: res.list
         })
       })
 
-    return this.commentsRefresh()
+    const promise = Promise.race([promise1, promise2, promise3])
+    return promise
   },
   filters(): Promise<void> {
     return saasService.retrieveFiltersOfCompanyUserComments()
@@ -151,29 +216,122 @@ Page({
     const selectedIndex = this.data.filtersSelectedIndexes[0]
     return filters[0].items[selectedIndex]
   },
+  /**
+   * 获取联系记录列表
+   *
+   * @returns {Promise<Array<ContactRecord>>}
+   */
+  contactRecordsList(): Promise<Array<ContactRecord>> {
+    const companyId = this.data.company.companyId
+    return saasService.getAllContactsByCompany(companyId)
+  },
+  carSourcesRefresh(): Promise<PaginationList<{
+    spuSummary: SpuSummary,
+    itemDetail: CarSource
+  }>> {
+    const companyId = this.data.company.companyId
+    const spuId = this.data.spuForCarSources
+    return saasService.getCarSourceItemsByCompanyForSPU(companyId, spuId)
+      .then((res: Pagination<{
+        spuSummary: SpuSummary,
+        itemDetail: CarSource
+      }>) => {
+        for (let carSourceWithSPU of res.content) {
+          this.processCarSourceWithSPU(carSourceWithSPU)
+        }
+        this.carSourcePaginationList = { list: res.content, pagination: res, loadingMore: false }
+        return this.carSourcePaginationList
+      })
+  },
+  carSourcesLoadMore(): Promise<PaginationList<{
+    spuSummary: SpuSummary,
+    itemDetail: CarSource
+  }>> {
+    if (this.carSourcePaginationList == null) {
+      return Promise.reject(new Error('缺少第一页'))
+    }
+
+    const pagination = this.carSourcePaginationList.pagination
+    if (pagination == null) {
+      return Promise.reject(new Error('没有分页对象'))
+    }
+
+    if (this.carSourcePaginationList.loadingMore === true) {
+      return Promise.reject(new Error('正在获取更多数据'))
+    }
+
+    if (pagination.last) {
+      return Promise.reject(new Error('已经最后一页了'))
+    }
+
+    let pageIndex = pagination.number
+    if (pagination.hasNext) {
+      pageIndex = pageIndex + 1
+    }
+
+    const companyId = this.data.company.companyId
+    const spuId = this.data.spuForCarSources
+
+    this.carSourcePaginationList.loadingMore = true
+    return saasService.getCarSourceItemsByCompanyForSPU(companyId, spuId, pageIndex)
+      .then((res: Pagination<{
+        spuSummary: SpuSummary,
+        itemDetail: CarSource
+      }>) => {
+        if (this.carSourcePaginationList == null) {
+          return Promise.reject(new Error('缺少第一页'))
+        }
+        this.carSourcePaginationList.loadingMore = false
+
+        const pagination = this.carSourcePaginationList.pagination
+        if (pagination == null) {
+          return Promise.reject(new Error('没有分页对象'))
+        }
+
+        if (res.numberOfElements === 0) {
+          // 返回没数据
+        } else {
+          this.carSourcePaginationList.pagination = res
+          if (this.carSourcePaginationList.list != null) {
+            for (let carSourceWithSPU of res.content) {
+              this.processCarSourceWithSPU(carSourceWithSPU)
+            }
+            this.carSourcePaginationList.list = this.carSourcePaginationList.list.concat(res.content)
+          } else {
+            this.carSourcePaginationList.list = res.content
+          }
+        }
+
+        return this.carSourcePaginationList
+      })
+      .catch(err => {
+        this.carSourcePaginationList.loadingMore = false
+        return Promise.reject(err)
+      })
+  },
   commentsRefresh(): Promise<PaginationList<UserComment>> {
-    paginationList = null
+    this.userCommentPaginationList = null
 
     const companyId = this.data.company.companyId
     const item = this.getCurrentFilterItem()
 
     return saasService.retrieveUserComments(companyId, item.value)
       .then((res: Pagination<UserComment>) => {
-        paginationList = { list: res.content, pagination: res, loadingMore: false }
-        return paginationList
+        this.userCommentPaginationList = { list: res.content, pagination: res, loadingMore: false }
+        return this.userCommentPaginationList
       })
   },
   commentsLoadMore(): Promise<PaginationList<UserComment>> {
-    if (paginationList == null) {
+    if (this.userCommentPaginationList == null) {
       return Promise.reject(new Error('缺少第一页'))
     }
 
-    const pagination = paginationList.pagination
+    const pagination = this.userCommentPaginationList.pagination
     if (pagination == null) {
       return Promise.reject(new Error('没有分页对象'))
     }
 
-    if (paginationList.loadingMore === true) {
+    if (this.userCommentPaginationList.loadingMore === true) {
       return Promise.reject(new Error('正在获取更多数据'))
     }
 
@@ -189,15 +347,15 @@ Page({
     const companyId = this.data.company.companyId
     const item = this.getCurrentFilterItem()
 
-    paginationList.loadingMore = true
+    this.userCommentPaginationList.loadingMore = true
     return saasService.retrieveUserComments(companyId, item.value, pageIndex)
       .then((res: Pagination<UserComment>) => {
-        if (paginationList == null) {
+        if (this.userCommentPaginationList == null) {
           return Promise.reject(new Error('缺少第一页'))
         }
-        paginationList.loadingMore = false
+        this.userCommentPaginationList.loadingMore = false
 
-        const pagination = paginationList.pagination
+        const pagination = this.userCommentPaginationList.pagination
         if (pagination == null) {
           return Promise.reject(new Error('没有分页对象'))
         }
@@ -205,18 +363,83 @@ Page({
         if (res.numberOfElements === 0) {
           // 返回没数据
         } else {
-          paginationList.pagination = res
-          if (paginationList.list != null) {
-            paginationList.list = paginationList.list.concat(res.content)
+          this.userCommentPaginationList.pagination = res
+          if (this.userCommentPaginationList.list != null) {
+            this.userCommentPaginationList.list = this.userCommentPaginationList.list.concat(res.content)
           } else {
-            paginationList.list = res.content
+            this.userCommentPaginationList.list = res.content
           }
         }
 
-        return paginationList
+        return this.userCommentPaginationList
       })
       .catch(err => {
-        paginationList.loadingMore = false
+        this.userCommentPaginationList.loadingMore = false
+        return Promise.reject(err)
+      })
+  },
+  spuRefresh(): Promise<PaginationList<CarSpuContent>> {
+    this.spuPaginationList = null
+    const text = this.data.searchViewModel.searchBarValue
+    return saasService.requestSearchCarSpu(text)
+      .then((res: Pagination<CarSpuContent>) => {
+        this.spuPaginationList = { list: res.content, pagination: res, loadingMore: false }
+        return this.spuPaginationList
+      })
+  },
+  spuLoadMore(): Promise<PaginationList<CarSpuContent>> {
+    if (this.spuPaginationList == null) {
+      return Promise.reject(new Error('缺少第一页'))
+    }
+
+    const pagination = this.spuPaginationList.pagination
+    if (pagination == null) {
+      return Promise.reject(new Error('没有分页对象'))
+    }
+
+    if (this.spuPaginationList.loadingMore === true) {
+      return Promise.reject(new Error('正在获取更多数据'))
+    }
+
+    if (pagination.last) {
+      return Promise.reject(new Error('已经最后一页了'))
+    }
+
+    let pageIndex = pagination.number
+    if (pagination.hasNext) {
+      pageIndex = pageIndex + 1
+    }
+
+    const text = this.data.searchViewModel.searchBarValue
+
+    this.spuPaginationList.loadingMore = true
+    return saasService.requestSearchCarSpu(text, pageIndex)
+      .then((res: Pagination<UserComment>) => {
+        if (this.spuPaginationList == null) {
+          return Promise.reject(new Error('缺少第一页'))
+        }
+        this.spuPaginationList.loadingMore = false
+
+        const pagination = this.spuPaginationList.pagination
+        if (pagination == null) {
+          return Promise.reject(new Error('没有分页对象'))
+        }
+
+        if (res.numberOfElements === 0) {
+          // 返回没数据
+        } else {
+          this.spuPaginationList.pagination = res
+          if (this.spuPaginationList.list != null) {
+            this.spuPaginationList.list = this.spuPaginationList.list.concat(res.content)
+          } else {
+            this.spuPaginationList.list = res.content
+          }
+        }
+
+        return this.spuPaginationList
+      })
+      .catch(err => {
+        this.spuPaginationList.loadingMore = false
         return Promise.reject(err)
       })
   },
@@ -296,7 +519,12 @@ Page({
               submitTextareaValue: ''
             })
 
-            return this.refresh(companyId)
+            return this.commentsRefresh()
+              .then((res: PaginationList<UserComment>) => {
+                this.setData({
+                  comments: res.list
+                })
+              })
           })
           .then(res => {
             this.setData({ comments: res.list })
@@ -322,24 +550,279 @@ Page({
       })
     }
   },
+  onCallButtonClickToMobile(e) {
+    const contactRecord = e.currentTarget.dataset.contactRecord
+    const phoneNumber = contactRecord.supplierPhone
+    wxapi.makePhoneCall({ phoneNumber: phoneNumber })
+      .then(res => {
+        const supplierId = contactRecord.supplierId
+        return saasService.pushCallRecord(supplierId, phoneNumber, null)
+      })
+      .then(res => {
+        return this.contactRecordsList()
+      })
+      .then((res: Array<ContactRecord>) => {
+        this.setData({
+          contactRecords: res
+        })
+      })
+      .catch(err => {
+        if (err.message === 'makePhoneCall:fail cancel') {
+          return Promise.reject(err)
+        }
+        // 如果拨打电话出错， 则统一将电话号码写入黏贴板
+        if (phoneNumber && phoneNumber.length) {
+          if (wx.canIUse('setClipboardData')) {
+            wxapi.setClipboardData({ data: phoneNumber })
+              .then(() => {
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 3000,
+                  color: '#fff',
+                  text: '号码已复制， 可粘贴拨打'
+                })
+              })
+              .catch(err => {
+                console.error(err)
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 2000,
+                  color: '#fff',
+                  text: '号码复制失败， 请重试'
+                })
+              })
+          } else {
+            $wuxToast.show({
+              type: 'text',
+              timer: 2000,
+              color: '#fff',
+              text: '你的微信客户端版本太低， 请尝试更新'
+            })
+            return Promise.reject(err)
+          }
+        }
+      })
+  },
   onCallButtonClick(e) {
     const company = e.currentTarget.dataset.company
-    this.actionContact(company.companyId, company.companyName)
+    this.actionContact(null, null, null, company.companyId, company.companyName)
   },
-  actionContact(companyId, companyName, completeHandler) {
-    $wuxCarSourceDetailDialog.contactList({
-      companyId: companyId,
-      companyName: companyName,
-      contact: (makePhonePromise, supplier) => {
-        makePhonePromise
-          .then(res => {
-            console.log('拨打电话' + supplier.supplierPhone + '成功')
-            typeof completeHandler === 'function' && completeHandler(supplier)
+  processCarSourceWithSPU(carSourceWithSPU: {
+    spuSummary: SpuSummary,
+    itemDetail: CarSource
+  }) {
+    const carModelsInfo = carSourceWithSPU.spuSummary
+    const isShowDownPrice = !(carModelsInfo.carModelName.includes('宝马') || carModelsInfo.carModelName.includes('奥迪') || carModelsInfo.carModelName.toLowerCase().includes('mini'))
+    const quotedMethod: QuotedMethod = isShowDownPrice ? 'PRICE' : 'POINTS'
+    const carSourceManger = new CarSourceManager(carModelsInfo.officialPrice, quotedMethod)
+
+    carSourceManger.processCarSourceItem(carSourceWithSPU.itemDetail)
+  },
+  // event handler
+  handlerTabClick(e) {
+    this.setData({
+      activeIndex: e.currentTarget.id
+    })
+  },
+  // 搜索处理逻辑
+  onSearchInputEdit(e) {
+    this.searchTextWithEventHandler(e)
+  },
+  onSearchInputFocus(e) {
+    this.searchTextWithEventHandler(e)
+  },
+  onSearchInputConfirm(e) {
+    const searchText = e.detail.value
+    if (searchText != null && searchText.length > 0) {
+      this.data.searchViewModel.searchBarValue = searchText
+      this.spuRefresh()
+    }
+  },
+  onSearchInputBlur(e) {
+    this.searchTextWithEventHandler(e)
+  },
+  searchTextWithEventHandler(e) {
+    const searchText = e.detail.value
+
+    if (searchText != null && searchText.length > 0) {
+      if (searchText !== this.data.searchViewModel.searchBarValue) {
+        // 将分页器移除
+        this.data.searchViewModel.searchBarValue = searchText
+        this.spuPaginationList = null
+        this.spuRefresh()
+          .then((res: PaginationList<CarSpuContent>) => {
+            this.setData({
+              isDefaultRecommend: false,
+              isSearching: true,
+              searchResults: res.list
+            })
           })
           .catch(err => {
-            console.error(err, '拨打电话' + supplier.supplierPhone + '失败')
+            this.setData({ isDefaultRecommend: true, isSearching: false })
           })
+      } else {
+        // do nothing
       }
-    });
-  }
+    } else {
+      // 将分页器移除， 回复默认情况
+      this.data.searchViewModel.searchBarValue = searchText
+      this.spuPaginationList = null
+      this.data.spuForCarSources = null
+      this.carSourcesRefresh()
+        .then((res: PaginationList<{
+          spuSummary: SpuSummary,
+          itemDetail: CarSource
+        }>) => {
+          this.setData({
+            isDefaultRecommend: true,
+            isSearching: false,
+            carSources: res.list
+          })
+        })
+        .catch(err => {
+          this.setData({ isDefaultRecommend: false, isSearching: true })
+        })
+    }
+  },
+  onSPUInfomationClick(e) {
+    const spuInformation: CarSpuContent = e.currentTarget.dataset.spuInformation
+    this.data.spuForCarSources = spuInformation.carModelId
+    this.carSourcesRefresh()
+      .then((res: PaginationList<{
+        spuSummary: SpuSummary,
+        itemDetail: CarSource
+      }>) => {
+        this.setData({
+          isSearching: false,
+          carSources: res.list
+        })
+      })
+      .catch(err => {
+        this.setData({ isSearching: true })
+      })
+  },
+  onCarSourceWithSPUCellClick(e) {
+    const carSourceWithSPU: { spuSummary: SpuSummary, itemDetail: CarSource } = e.currentTarget.dataset.carSourceWithSpu
+    const carModelsInfo = carSourceWithSPU.spuSummary
+    const carSourceItem = carSourceWithSPU.itemDetail
+
+    $wuxCarSourceDetailDialog.sourceDetail({
+      carModel: carModelsInfo,
+      carSourceItem: carSourceItem,
+      contact: () => {
+        this.actionContactWithCarSourceItem(carModelsInfo, carSourceItem, 'sourceDetail')
+      },
+      handlerCreateQuoted: (e) => {
+        const carSKU = {
+          showPrice: carSourceItem.viewModelQuoted.price,
+          skuId: null,
+          skuPic: null,
+          externalColorId: null,
+          externalColorName: carSourceItem.exteriorColor,
+          internalColorId: null,
+          internalColorName: carSourceItem.simpleInteriorColor,
+          price: null,
+          priceStr: null,
+          discount: null,
+          status: null,
+          remark: null,
+          metallicPaint: carSourceItem.metallicPaint,
+          metallicPaintAmount: carSourceItem.metallicPaintAmount
+        }
+        this.jumpToCreateQuotation(carSKU, carModelsInfo)
+      },
+      handlerGoMore(e) {
+        let _showCarModelName = '【' + carModelsInfo.officialPriceStr + '】' + carModelsInfo.carModelName
+        let _showColorName = carSourceItem.exteriorColor + ' / ' + carSourceItem.viewModelInternalColor
+        let _carSourceItemKeyValueString = utils.urlEncodeValueForKey('carSourceItem', carSourceItem)
+        let _carSourceId = carSourceItem.id
+        let _carModelsInfo = utils.urlEncodeValueForKey('carModelsInfo', carModelsInfo)
+
+        let url = `../carSourcesMore/carSourcesMore?${_carSourceItemKeyValueString}&${_carModelsInfo}&showCarModelName=${_showCarModelName}&showColorName=${_showColorName}&carSourceId=${_carSourceId}`
+        wx.navigateTo({ url })
+      },
+      close: () => {
+      },
+      reportError: (e) => {
+        console.log('report error')
+      }
+    })
+  },
+  onDefaultRecommendButtonClick(e) {
+    if (this.data.isSearching === true) {
+      this.data.spuForCarSources = null
+      this.carSourcesRefresh()
+        .then((res: PaginationList<{
+          spuSummary: SpuSummary,
+          itemDetail: CarSource
+        }>) => {
+          this.setData({
+            isSearching: false,
+            carSources: res.list
+          })
+        })
+        .catch(err => {
+          this.setData({ isSearching: true })
+        })
+    } else {
+      // do nothing
+    }
+  },
+  jumpToCreateQuotation(carSKU, carSPU) {
+    const carModelsInfoKeyValueString = utils.urlEncodeValueForKey('carModelsInfo', carSPU)
+    const carSkuInfoKeyValueString = utils.urlEncodeValueForKey('carSkuInfo', carSKU)
+    wx.navigateTo({
+      url: '/pages/quote/quotationCreate/quotationCreate?' + carModelsInfoKeyValueString + '&' + carSkuInfoKeyValueString
+    })
+  },
+  actionContactWithCarSourceItem(carModelsInfo, carSourceItem: CarSource, from) {
+    this.actionContact(
+      null,
+      null,
+      carSourceItem.id,
+      carSourceItem.companyId,
+      carSourceItem.companyName,
+      from,
+      (supplier) => {
+        /**
+         * 1.4.0 埋点 拨打供货方电话
+         * davidfu
+         */
+        this.data.pageParameters = {
+          productId: carModelsInfo.carModelId,
+          color: carSourceItem.exteriorColor,
+          parameters: {
+            carSourceId: carSourceItem.id,
+            supplierId: supplier.supplierId
+          }
+        }
+        const event = {
+          eventAction: 'click',
+          eventLabel: '拨打供货方电话'
+        }
+        $wuxTrack.push(event)
+      })
+  },
+  /**
+   * 包装的联系人接口
+   *
+   * @param {any} carSourceId
+   * @param {any} companyId
+   * @param {any} companyName
+   * @param {any} from
+   * @param {any} completeHandler
+   */
+  actionContact(spuId, quotedPrice, carSourceId, companyId, companyName, from, completeHandler) {
+    $wuxCarSourceDetailDialog.contactList({
+      spuId: spuId,
+      quotedPrice: quotedPrice,
+      carSourceId: carSourceId,
+      companyId: companyId,
+      companyName: companyName,
+      from: from,
+      contact: (supplier) => {
+        typeof completeHandler === 'function' && completeHandler(supplier)
+      }
+    })
+  },
 })

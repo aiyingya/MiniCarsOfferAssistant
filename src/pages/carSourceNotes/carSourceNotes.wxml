@@ -1,6 +1,9 @@
 <import src="../../components/dialog/carSourceDetail/carSourceDetail.wxml" />
 <template is="carSourceDetailDialog" data="{{ ...$wux.carSourceDetailDialog }}" />
 
+<import src="../../components/dialog/settingRemarkLabelDialog/settingRemarkLabelDialog.wxml" />
+<template is="settingRemarkLabelDialog" data="{{ ...$wux.settingRemarkLabelDialog }}" />
+
 <import src="../../components/carSourceNotes/carSourceNoteView.wxml" />
 
 <!-- 时间分区 -->
@@ -23,6 +26,7 @@
   <header>
   </header>
 
+
   <body class="body">
     <view class="rows">
       <block wx:if="{{ records && records.length > 0 }}">
@@ -30,14 +34,12 @@
           <view class="row">
             <template is="timeSection" data="{{ callDateStr: recordByTimeItem.callDateStr }}" />
             <block wx:for="{{ recordByTimeItem.callRecordBySpu }}" wx:key="{{ recordBySpuIndex }}" wx:for-index="recordBySpuIndex" wx:for-item="recordBySpuItem">
-              <template is="spuSection" data="{{ item: recordBySpuItem.spuSummary, index: recordByTimeIndex, subIndex: recordBySpuIndex, selectedIndex, selectedSubIndex }}"
-              />
+              <template is="spuSection" data="{{ item: recordBySpuItem.spuSummary, index: recordByTimeIndex, subIndex: recordBySpuIndex, selectedIndex, selectedSubIndex }}"/>
               <block wx:if="{{ recordByTimeIndex == selectedIndex && recordBySpuIndex == selectedSubIndex }}">
                 <view class="record-rows">
                   <block wx:for="{{ recordBySpuItem.callRecordList }}" wx:key="{{ index }}">
                     <view class="record-row">
-                      <template is="carSourceNoteView" data="{{ carSourceItem: item.carSource, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex }}"
-                      />
+                      <template is="carSourceNoteView" data="{{ carSourceItem: item.itemDetail, carSourceItemIndex: index, skuItemIndex: recordBySpuIndex, comment: item.comment}}"/>
                     </view>
                   </block>
                 </view>

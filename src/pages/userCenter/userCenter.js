@@ -25,7 +25,7 @@ Page({
         loginNeeded: true,
         roleNameNeeded: 'guest',
         managerNeeded: null,
-        iconPath: '/images/icons/tab_icon_price_off.png',
+        iconPath: '/images/icons/icon_price_record.png',
         route: 'quotationsList'
       },
       {
@@ -33,7 +33,7 @@ Page({
         loginNeeded: true,
         roleNameNeeded: 'guest',
         managerNeeded: null,
-        iconPath: '/images/icons/icon_collection.png',
+        iconPath: '/images/icons/icon_price_set.png',
         route: 'setCost'
       },
       {
@@ -57,7 +57,7 @@ Page({
         loginNeeded: true,
         roleNameNeeded: 'guest',
         managerNeeded: null,
-        iconPath: '/images/icons/icon_contact_note.png',
+        iconPath: '/images/icons/icon_quotes_memo.png',
         route: 'carSourceNotes'
       }
     ]

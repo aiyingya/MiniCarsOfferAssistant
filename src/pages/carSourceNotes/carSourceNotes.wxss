@@ -1,5 +1,6 @@
 @import '../../components/carSourceNotes/carSourceNoteView.wxss';
 @import '../../components/dialog/carSourceDetail/carSourceDetail.wxss';
+@import '../../components/dialog/settingRemarkLabelDialog/settingRemarkLabelDialog.wxss';
 .contact-records {}
 
 .contact-records .rows {}
@@ -16,7 +17,6 @@
 
 .contact-records .record-row {
   box-sizing: border-box;
-  height: 100rpx;
   margin-bottom: 10rpx;
 }
 

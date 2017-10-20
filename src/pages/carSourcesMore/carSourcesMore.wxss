@@ -1,0 +1,120 @@
+
+
+/* 供货详情.*/
+
+page {
+  height: 100%;
+  width: 100%;
+  background:#FFFFFF;
+}
+
+.container {
+  width:auto;
+  height: 100%;
+}
+.carSourcesMore-head{
+  height: auto;
+  padding:35rpx 30rpx;
+}
+.carSourcesMore-head__desc{
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 24rpx;
+  height: 32rpx;
+}
+.carSourcesMore-head__desc .discount-icon {
+  width: 20rpx;
+  height: 24rpx;
+  position: relative;
+}
+
+
+.carSourcesMore-head__title{
+  max-height:112rpx;
+  font-family:PingFangSC-Medium;
+  font-size:30rpx;
+  color:#333333;
+  letter-spacing:0;
+  line-height:42rpx;
+  margin-bottom: 14rpx;
+}
+
+.carSourcesMore-head__desc > .left{
+ float: left;
+}
+
+.carSourcesMore-head__desc > .right{
+  float: right;
+}
+
+.carSourcesMore-head__desc > .right em{
+  font-family: SFUIDisplay-Regular;
+  font-size: 32rpx;
+  color: #ED4149;
+  letter-spacing: 0;
+  line-height: 32rpx;
+}
+
+.carSourcesMore-container {
+  padding: 0 30rpx;
+}
+
+.carSourcesMore-container .carSourcesMore-head__list .top{
+  background: #EFEFEF;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-family: PingFangSC-Regular;
+  color: #888888;
+  padding: 0 30rpx;
+}
+.carSourcesMore-container .carSourcesMore-head__list .top .left{
+  float: left;
+}
+.carSourcesMore-container .carSourcesMore-head__list .top .right{
+  float: right;
+}
+
+.carSourcesMore-container .carSourcesMore-head__list{
+  margin-bottom: 20rpx;
+}
+
+.carSourcesMore-container .carSourcesMore-head__list .content{
+  margin: 10rpx 0;
+}
+.carSourcesMore-container .carSourcesMore-head__list .content span{
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #666666;
+  letter-spacing: 0;
+  line-height: 24rpx;
+}
+
+.carSourcesMore-container .carSourcesMore-head__list .content text{
+  font-family: PingFangSC-Regular;
+  font-size: 24rpx;
+  color: #333333;
+  letter-spacing: 0;
+  line-height: 24rpx;
+}
+
+.carSourcesMore-head__desc > .right .price-tips-small {
+  font-size: 26rpx;
+  font-family: "SFUIDisplay-Regular";
+  color: #ED4149;
+  letter-spacing: 0rpx;
+  line-height: 32rpx
+}
+
+.carSourcesMore-container .load-more,
+.carSourcesMore-container .no-more
+{
+  height: 42rpx;
+  font-family: "PingFangSC-Regular";
+  font-size: 24rpx;
+  text-align: center;
+}
+.carSourcesMore-container .no-more{
+  color:#999999;
+}

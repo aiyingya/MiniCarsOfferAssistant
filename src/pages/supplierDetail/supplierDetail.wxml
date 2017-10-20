@@ -1,4 +1,5 @@
 <import src="../../components/supplier/index.wxml" />
+<import src="../../components/supplierDetail/index.wxml" />
 <import src="../../components/common/empty/emptyStatusView.wxml" />
 
 <import src="../../components/toast/toast.wxml" />
@@ -15,28 +16,86 @@
 <view class="container supplier-detail">
   <!-- 搜索车型.-->
   <view class="header">
-    <template is="supplierSearchResultView" data="{{ index: 0, item: company }}" />
+    <view class="header-title">
+    <template is="supplierSearchResultView" data="{{ index: 0, item: company, isShowBranch:false }}" />
+    </view>
+    <view class="header-tab">
+      <view class="header-tab__item  {{activeIndex == 0 ? 'header-tab__item_on' : ''}}" bindtap="handlerTabClick" id="0">
+        行情信息
+      </view>
+      <view class="header-tab__item  {{activeIndex == 1 ? 'header-tab__item_on' : ''}}" bindtap="handlerTabClick" id="1">
+        联系方式
+      </view>
+      <view class="header-tab__item  {{activeIndex == 2 ? 'header-tab__item_on' : ''}}" bindtap="handlerTabClick" id="2">
+        评价内容
+      </view>
+    </view>
   </view>
   <view class="body">
-    <view class="branch-section">
-      <template is="branchView" data="{{ mainBrands:company.mainBrand, mainSeries:company.mainSeries }}" />
+
+    <!-- 行情信息 -->
+    <view wx:if="{{activeIndex == 0}}" class="branch-section">
+      <template is="branchView" data="{{ mainBrands: company.mainBrand, mainSeries: company.mainSeries }}" />
+      <template is="recommendSearchInputView" data="{{ isDefaultRecommend, ...searchViewModel }}" />
+      <scroll-view data-tab-index="0" scroll-y="true" class="rows" style="height: {{ carSourceViewHeight }}px;" bindscrolltolower="onScrollToLower">
+        <block wx:if="{{ isSearching }}">
+          <view class="rows">
+            <view class="row-2" wx:for="{{ searchResults }}" wx:key="{{ index }}">
+              <template is="spuInformationView" data="{{ item }}" />
+            </view>
+          </view>
+        </block>
+        <block wx:else>
+          <block wx:if="{{ carSources && carSources.length }}">
+            <view class="row" wx:for="{{ carSources }}" wx:key="id">
+              <template is="carSourceWithSPUView" data="{{ item }}" />
+            </view>
+          </block>
+          <block wx:else>
+            <template is="emptyStatusView" data="{{ ...carSourcesEmptyStatus }}" />
+          </block>
+        </block>
+      </scroll-view>
     </view>
-    <view class="filter-section">
-      <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />
+
+    <!-- 联系方式 -->
+    <view wx:if="{{activeIndex == 1}}" class="linkman">
+      <scroll-view data-tab-index="1" scroll-y="true" class="rows" style="height: {{ linkmanViewHeight }}px;" bindscrolltolower="onScrollToLower">
+        <block wx:if="{{ contactRecords && contactRecords.length }}">
+          <view class="linkman__title">— 全部联系人 —</view>
+          <view class="row" wx:for="{{ contactRecords }}" wx:key="supplierId">
+            <template is="contactRecordView" data="{{ item }}" />
+          </view>
+        </block>
+        <block wx:else>
+          <template is="emptyStatusView" data="{{ ...contactRecordsEmptyStatus }}" />
+        </block>
+      </scroll-view>
     </view>
-    <scroll-view scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
-      <block wx:if="{{ comments && comments.length }}">
-        <view class="row" wx:for="{{ comments }}" wx:key="commentId">
-          <template is="commentView" data="{{ item }}" />
-        </view>
-      </block>
-      <block wx:else>
-        <template is="emptyStatusView" data="{{ ...emptyStatus }}" />
-      </block>
-    </scroll-view>
+
+    <!-- 评价内容 -->
+    <view wx:if="{{activeIndex == 2}}">
+      <view class="filter-section">
+        <template is="filterBarView" data="{{ filters, filtersSelectedIndexes }}" />
+      </view>
+
+      <scroll-view data-tab-index="2" scroll-y="true" class="rows" style="height: {{scrollViewHeight}}px;" bindscrolltolower="onScrollToLower">
+        <block wx:if="{{ comments && comments.length }}">
+          <view class="row" wx:for="{{ comments }}" wx:key="commentId">
+            <template is="commentView" data="{{ item }}" />
+          </view>
+        </block>
+        <block wx:else>
+          <template is="emptyStatusView" data="{{ ...commentsEmptyStatus }}" />
+        </block>
+      </scroll-view>
+    </view>
+
   </view>
-  <view class="footer">
+
+  <view wx:if="{{activeIndex == 2}}" class="footer">
     <template is="commentBoardView" data="{{ submitTags, submitTextareaValue, submitSelectedTagIndex, submitButtonValid, submitButtonTagValid }}"
     />
   </view>
+
 </view>

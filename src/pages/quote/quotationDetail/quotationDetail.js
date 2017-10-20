@@ -5,7 +5,8 @@ import {
   $wuxTrack,
   $wuxToast
 } from "../../../components/wux"
-import util from '../../../utils/util'
+import utils from '../../../utils/util'
+import * as wxapi from 'fmt-wxapp-promise'
 import { container } from '../../../landrover/business/index'
 import Calculate from '../../../utils/calculate'
 const app = getApp()
@@ -72,15 +73,15 @@ Page({
   },
   onLoad(options) {
     let that = this;
-    let quotation = util.urlDecodeValueForKeyFromOptions('quotation', options)
+    let quotation = utils.urlDecodeValueForKeyFromOptions('quotation', options)
     let carPrice = quotation.quotationItems[0].sellingPrice
     let officialPrice = quotation.quotationItems[0].guidePrice
     console.log(quotation)
     /// 实时计算优惠点数
-    let downPrice = util.downPrice(carPrice, officialPrice)
-    let downPriceFlag = util.downPriceFlag(downPrice)
-    let downPriceString = util.priceStringWithUnit(downPrice)
-    let downPoint = util.downPoint(carPrice, officialPrice).toFixed(0)
+    let downPrice = utils.downPrice(carPrice, officialPrice)
+    let downPriceFlag = utils.downPriceFlag(downPrice)
+    let downPriceString = utils.priceStringWithUnit(downPrice)
+    let downPoint = utils.downPoint(carPrice, officialPrice).toFixed(0)
     let cutPriceCount, cutPriceCountStyle
     const isShow = that.isShowDownDot(quotation.quotationItems[0].itemName)
     /**
@@ -175,7 +176,7 @@ Page({
    */
   onShareAppMessage() {
     let quotation = this.data.quotation
-    let quotationInfoKeyValueString = util.urlEncodeValueForKey('quotation', quotation)
+    let quotationInfoKeyValueString = utils.urlEncodeValueForKey('quotation', quotation)
     return {
       title: '要卖车，更好用的卖车助手',
       path: `pages/quote/quotationDetail/quotationDetail?${quotationInfoKeyValueString}`,
@@ -209,7 +210,7 @@ Page({
   },
   handlerEditQuotation(e) {
     let that = this
-    const quotationKeyValueString = util.urlEncodeValueForKey('quotation', this.data.quotation)
+    const quotationKeyValueString = utils.urlEncodeValueForKey('quotation', this.data.quotation)
     wx.redirectTo({
       url: '/pages/quote/quotationCreate/quotationCreate?' + quotationKeyValueString,
       success: function (res) {
@@ -224,13 +225,46 @@ Page({
     })
   },
   handlerContactWithCustomer(e) {
-    let that = this;
-    wx.makePhoneCall({
-      phoneNumber: this.data.quotation.customerMobile,
-      success: (res) => {
-        console.log('拨打电话' + that.data.quotation.customerMobile + '成功');
-      }
-    })
+    const phoneNumber = this.data.quotation.customerMobile
+    wxapi.makePhoneCall({ phoneNumber: phoneNumber })
+      .catch(err => {
+        if (err.message === 'makePhoneCall:fail cancel') {
+          return Promise.reject(err)
+        }
+        // 如果拨打电话出错， 则统一将电话号码写入黏贴板
+        if (phoneNumber && phoneNumber.length) {
+          if (wx.canIUse('setClipboardData')) {
+            wxapi.setClipboardData({ data: phoneNumber })
+              .then(() => {
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 3000,
+                  color: '#fff',
+                  text: '号码已复制， 可粘贴拨打'
+                })
+              })
+              .catch(err => {
+                console.error(err)
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 2000,
+                  color: '#fff',
+                  text: '号码复制失败， 请重试'
+                })
+              })
+          } else {
+            $wuxToast.show({
+              type: 'text',
+              timer: 2000,
+              color: '#fff',
+              text: '你的微信客户端版本太低， 请尝试更新'
+            })
+            return Promise.reject(err)
+          }
+        }
+      })
+
+    // 这里打给客户 不需要上报手机
   },
   //
   handlerShareToCustomer(e) {
@@ -327,7 +361,7 @@ Page({
     if (!this.data.quotation.insuranceDetail.showDetail) {
       return
     }
-    let insuranceDetail = util.urlEncodeValueForKey('insuranceDetail', this.data.quotation.insuranceDetail)
+    let insuranceDetail = utils.urlEncodeValueForKey('insuranceDetail', this.data.quotation.insuranceDetail)
     wx.navigateTo({
       url: `../../insurance/insuranceDetail/insuranceDetail?${insuranceDetail}`
     })

@@ -1,0 +1,23 @@
+<!-- 这个页面暂时没有用到，因为事件不能使用在标签弹层页面 -->
+<!-- 价格涨幅修改展示 -->
+<template name="settingPriceView">
+  <view class="settingprice">
+    <view class="settingprice-direction" style="flex:1" bindtap="{{changePush}}">
+      <view class="settingprice-direction_text">{{isPlusPrice? '上':'下'}}</view>
+      <image class="settingprice-direction__icon_change" src="/images/icons/icon_change.png"></image>
+    </view>
+
+    <image class="settingprice-direction__icon_minus" src="/images/icons/icon_minus.png"
+           bindtap="{{ buttonMinus }}" bindlongtap="{{ buttonLargeMinus }}" bindtouchcancel="{{buttonLargeCancel}}" bindtouchend="{{buttonLargeEnd}}"></image>
+
+    <input type="number" name="differenceValue" placeholder="0" placeholder-class=""
+           bindinput="{{ handlerinput }}"
+           value="{{ differenceValue }}"  maxlength="{{ inputNumberMaxLength }}"/>
+
+    <image class="settingprice-direction__icon_plus" src="/images/icons/icon_plus.png"
+           bindtap="{{buttonPlus}}" bindlongtap="{{buttonLargePlus}}" bindtouchcancel="{{buttonLargeCancel}}" bindtouchend="{{buttonLargeEnd}}"></image>
+
+    <text class="settingprice-type__text" wx:if="{{isPoint}}">点</text>
+    <text class="settingprice-type__text" wx:else >元</text>
+  </view>
+</template>

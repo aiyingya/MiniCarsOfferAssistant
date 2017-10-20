@@ -14,11 +14,9 @@
 <import src="../../components/carSource/carSourceView.wxml" />
 <import src="../../components/carSource/carSourceSectionView.wxml" />
 
-<view class="fixed-filter-bar" hidden="{{ !hasOverLayDropdown }}">
-  <template is="dropDownView" data="{{ selectedExternalCarColorIndex, selectedExternalCarColorName, selectedInternalCarColorName, dropDownFiltersData, dropDownSubFiltersData, showRmendCarFacade, selectedFilterIndex}}"
-  />
-  <template is="filterScrollView" data="{{ scrollFilters, scrollFiltersSelectedIndexes }}" />
-</view>
+<import src="../../components/dialog/settingRemarkLabelDialog/settingRemarkLabelDialog.wxml" />
+<template is="settingRemarkLabelDialog" data="{{ ...$wux.settingRemarkLabelDialog }}" />
+
 
 <!-- 货源列表 -->
 <scroll-view class="car-sources container" scroll-y="true" bindscroll="handlerScroll" bindtouchmove="handlerTouchMove" scroll-into-view="x{{selectedSectionId}}"
@@ -43,15 +41,6 @@
   <block wx:if="{{nodata === 'init'}}">
   </block>
   <block wx:if="{{nodata === 'data'}}">
-    <view class="filter-bar" hidden="{{ hasOverLayDropdown }}">
-      <template is="dropDownView" data="{{selectedExternalCarColorName, selectedInternalCarColorName, dropDownFiltersData, dropDownSubFiltersData, showRmendCarFacade, selectedFilterIndex}}"
-      />
-      <template is="filterScrollView" data="{{ scrollFilters, scrollFiltersSelectedIndexes}}" />
-    </view>
-    <!--为了实现展开悬停到头部-->
-    <view class="black-magic" id="x0">
-    </view>
-
     <block wx:if="{{searchnodata === 'none'}}">
       <view class="nodata">
         无搜索结果
@@ -60,13 +49,11 @@
     <block wx:else>
       <!-- 货源列表 -->
       <view wx:for="{{carSourcesBySkuInSpuList}}" wx:for-item="skuItem" wx:for-index="skuItemIndex" wx:key="{{ skuItemIndex }}" class="car-source-section-row"
-        id="x{{skuItemIndex + 1}}">
-
+        id="x{{skuItemIndex}}">
         <template is="carSourceSectionView" data="{{ skuItem, skuItemIndex, selectedSectionIndex }}" />
-
         <view wx:if="{{skuItemIndex === selectedSectionIndex}}">
-          <view wx:if="{{skuItem.viewModelCarSourcesList.length > 0}}" class="car-source-rows">
-            <view wx:for="{{skuItem.viewModelCarSourcesList}}" wx:for-item="carSourceItem" wx:for-index="carSourceItemIndex" wx:key="id"
+          <view wx:if="{{skuItem.viewModelCarSourceItemList.length > 0}}" class="car-source-rows">
+            <view wx:for="{{skuItem.viewModelCarSourceItemList}}" wx:for-item="carSourceItem" wx:for-index="carSourceItemIndex" wx:key="id"
               class="car-source-row">
               <template is="carSourceView" data="{{ carSourceItem, carSourceItemIndex, skuItemIndex }}" />
             </view>

@@ -1,5 +1,6 @@
-import { $checkTimeDialog } from "../../components/wux"
-import util from '../../utils/util'
+import { $checkTimeDialog, $wuxToast } from "../../components/wux"
+import utils from '../../utils/util'
+import * as wxapi from 'fmt-wxapp-promise'
 import { container } from '../../landrover/business/index'
 
 let markersData = []
@@ -89,22 +90,22 @@ Page({
 
             if (res.quotationList.length > 0) {
               for (let qitem of res.quotationList) {
-                let totalPayment = util.priceStringWithUnit(qitem.totalPayment);
-                let sellingPrice = util.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
-                let guidePrice = util.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
+                let totalPayment = utils.priceStringWithUnit(qitem.totalPayment);
+                let sellingPrice = utils.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
+                let guidePrice = utils.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
 
                 /// 实时计算优惠点数
-                let downPrice = util.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
-                let downPriceFlag = util.downPriceFlag(downPrice);
+                let downPrice = utils.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
+                let downPriceFlag = utils.downPriceFlag(downPrice);
                 let downPriceString = ''
                 if (downPriceFlag !== 0) {
-                  downPriceString = util.priceStringWithUnit(downPrice)
+                  downPriceString = utils.priceStringWithUnit(downPrice)
                 }
 
                 /**
                  * 计算时间.
                  */
-                qitem.createdTime = util.getTimeDifferenceString(qitem.quotationTime)
+                qitem.createdTime = utils.getTimeDifferenceString(qitem.quotationTime)
                 qitem.viewModel = {
                   totalPayment: totalPayment,
                   sellingPrice: sellingPrice,
@@ -283,7 +284,7 @@ Page({
         if (res.length > 0) {
           for (let item of res) {
 
-            item.checkTime = util.getTimeDifferenceString(item.createDate)
+            item.checkTime = utils.getTimeDifferenceString(item.createDate)
             item.markers = [{
               address: item.placeName,
               height: 32,
@@ -319,7 +320,7 @@ Page({
    * 跳转订单详情.
    */
   handleToquotationDetail(e) {
-    let quotationKeyValueString = util.urlEncodeValueForKey('quotation', e.currentTarget.dataset.quotation)
+    let quotationKeyValueString = utils.urlEncodeValueForKey('quotation', e.currentTarget.dataset.quotation)
     wx.navigateTo({
       url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
       success: function (res) {
@@ -341,7 +342,7 @@ Page({
     let quotationsList = this.data.quotationsList
     let quotationCurrent = quotationsList[showCurrent]
 
-    const quotationKeyValueString = util.urlEncodeValueForKey('quotation', quotationCurrent)
+    const quotationKeyValueString = utils.urlEncodeValueForKey('quotation', quotationCurrent)
     wx.navigateTo({
       url: '/pages/quote/quotationDetail/quotationDetail?' + quotationKeyValueString,
       success: function (res) {
@@ -358,11 +359,46 @@ Page({
    * 联系客户.
    */
   handlePhoneCall(e) {
-    let phone = e.currentTarget.dataset.phone
+    const phoneNumber = e.currentTarget.dataset.phone
+    wxapi.makePhoneCall({ phoneNumber: phoneNumber })
+      .catch(err => {
+        if (err.message === 'makePhoneCall:fail cancel') {
+          return Promise.reject(err)
+        }
+        // 如果拨打电话出错， 则统一将电话号码写入黏贴板
+        if (phoneNumber && phoneNumber.length) {
+          if (wx.canIUse('setClipboardData')) {
+            wxapi.setClipboardData({ data: phoneNumber })
+              .then(() => {
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 3000,
+                  color: '#fff',
+                  text: '号码已复制， 可粘贴拨打'
+                })
+              })
+              .catch(err => {
+                console.error(err)
+                $wuxToast.show({
+                  type: 'text',
+                  timer: 2000,
+                  color: '#fff',
+                  text: '号码复制失败， 请重试'
+                })
+              })
+          } else {
+            $wuxToast.show({
+              type: 'text',
+              timer: 2000,
+              color: '#fff',
+              text: '你的微信客户端版本太低， 请尝试更新'
+            })
+            return Promise.reject(err)
+          }
+        }
+      })
+    // 这里打给客户 不需要上报手机
 
-    wx.makePhoneCall({
-      phoneNumber: phone
-    })
   },
   /**
    * 长按复制手机号.
