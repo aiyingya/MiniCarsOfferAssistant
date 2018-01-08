@@ -1,5 +1,6 @@
-<import src="../../components/toast/toast.wxml"/>
-<template is="toast" data="{{ ...$wux.toast }}"/>
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <view class="container login">
   <view class="login-wrap login-cells">
     <view class="login-cell">

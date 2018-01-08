@@ -1,5 +1,8 @@
 <import src="../../components/common/drawer/drawerView.wxml"/>
 
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <scroll-view scroll-y="true" style="height: {{windowHeight}}px" scroll-into-view="{{alpha}}" upper-threshold="70" bindscrolltoupper="handlePullDownRefresh"
   class="container">
   <!-- 搜索车型.-->

@@ -1,7 +1,10 @@
 <import src="../../components/dialog/bargainCancelDialog/bargainCancelDialog.wxml"/>
 <template is="bargainCancelDialog" data="{{ ...$wux.bargainCancelDialog }}"/>
-<import src="../../components/toast/toast.wxml"/>
-<template is="toast" data="{{ ...$wux.toast }}"/>
+
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
+
 <view class="container">
   <!-- tab 切换.-->
   <view class="tabmenu">

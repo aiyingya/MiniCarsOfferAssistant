@@ -1,3 +1,6 @@
+<import src="../../components/toast/toast.wxml" />
+<template is="toast" data="{{ ...$wux.toast }}" />
+
 <template name="entryView">
   <view class="users-cell" hover="true" hover-class="active" data-item="{{ item }}" bindtap="onEntryRowClick">
     <view class="users-cell__hd">
