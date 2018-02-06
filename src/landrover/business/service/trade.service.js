@@ -3,7 +3,6 @@ import Service from './base.service'
 import { config, storage, request, device, ui } from '../index'
 
 export default class TradeService extends Service {
-
   baseUrl = {
     dev: 'https://test.yaomaiche.com/tradedev/',
     gqc: 'https://test.yaomaiche.com/tradegqc/',
@@ -64,7 +63,6 @@ export default class TradeService extends Service {
     )
   }
 
-
   /**
    * 获取用户搜索记录
    *
@@ -121,7 +119,7 @@ export default class TradeService extends Service {
     showSaleCount: boolean = false,
     brandLevel: number = 1
   ): Promise<Array<CarBrand> | Array<CarGroup>> {
-    const code = categoryCode      // 分类Code, 0 车， 1 精品
+    const code = categoryCode // 分类Code, 0 车， 1 精品
     const deleted = showDeleted
     const group = resultGroupByFirstLetter
     const joinOnSaleCount = showSaleCount
@@ -173,5 +171,4 @@ export default class TradeService extends Service {
       }
     )
   }
-
 }

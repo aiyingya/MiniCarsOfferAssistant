@@ -1,7 +1,7 @@
 // @flow
 import {
   $wuxToast
-} from "../../components/wux"
+} from '../../components/wux'
 
 import { container } from '../../landrover/business/index'
 
@@ -156,20 +156,23 @@ Page({
     const code: string = this.data.userCodeValue
     const mobile: string = this.data.userPhoneValue
 
-    wx.showToast({ title: '登录中...', icon: 'loading', mask: true })
+    wx.showLoading({ title: '登录中...', icon: 'loading', mask: true })
     container.userService.loginForMiniProgram(mobile, code)
       .then(() => {
-        console.log("登录成功")
+        console.log('登录成功')
         return container.userService.boundAccountForWeixin()
       })
       .then(() => {
-        console.log("绑定成功")
-        wx.navigateBack()
+        console.log('绑定成功')
+        wx.reLaunch({
+          url: '../index/index'
+        })
       })
       .catch(err => {
       })
       .then(() => {
-        wx.hideToast()
+        console.log('绑定成功')
+        wx.hideLoading()
       })
   },
   boundSelectHandler(e) {

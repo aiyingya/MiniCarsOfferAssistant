@@ -375,9 +375,9 @@ export default class Calculate {
    */
   purchaseTax(officialPrice: number, capacity: number): number {
     const tax = Number(officialPrice / 1.17 * 0.1)
-    if (capacity) {
-      return (Number(capacity) > 1.6) ? tax : (tax * 0.75)
-    }
+    // if (capacity) {
+    //   return (Number(capacity) > 1.6) ? tax : (tax * 0.75)
+    // }
     return tax
   }
 }

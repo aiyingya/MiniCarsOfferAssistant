@@ -90,6 +90,11 @@ Page({
     }
   },
   onShow() {
+    if(container.userService.auth == null){
+      wx.reLaunch({
+        url:'../login/login'
+      })
+    }
     // 下拉刷新
     if (!this.data.firstLoadFlag) {
       this.reloadIndexData()

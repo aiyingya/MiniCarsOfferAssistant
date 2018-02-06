@@ -10,12 +10,13 @@
     "npm": ">3.0"
   },
   "scripts": {
-    "B_DEV": "export NODE_ENV=production && gulp build:clean --env dev",
-    "B_GQC": "export NODE_ENV=production && gulp build:clean --env gqc",
-    "B_PRD": "export NODE_ENV=production && gulp build:clean --env prd",
-    "R_DEV": "export NODE_ENV=production && gulp watch:clean --env dev",
-    "R_GQC": "export NODE_ENV=production && gulp watch:clean --env gqc",
-    "R_PRD": "export NODE_ENV=production && gulp watch:clean --env prd",
+    "B_DEV": "cross-env NODE_ENV=production && gulp build:clean --env dev",
+    "B_GQC": "cross-env NODE_ENV=production && gulp build:clean --env gqc",
+    "B_PRD": "cross-env NODE_ENV=production && gulp build:clean --env prd",
+    "R_DEV": "cross-env NODE_ENV=production && gulp watch:clean --env dev",
+    "R_GQC": "cross-env NODE_ENV=production && gulp watch:clean --env gqc",
+    "R_PRD": "cross-env NODE_ENV=production && gulp watch:clean --env prd",
+    "R_TEST": "cross-env NODE_ENV=production && gulp watch:clean --env test",
     "build": "gulp build:clean",
     "watch": "gulp watch:clean"
   },

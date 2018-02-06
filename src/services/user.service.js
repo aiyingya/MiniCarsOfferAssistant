@@ -17,7 +17,6 @@ import {
  * @extends {BaseUserService}
  */
 export default class UserService extends BaseUserService {
-
   /**
    * 微信登录相关信息
    *
@@ -344,8 +343,6 @@ export default class UserService extends BaseUserService {
     )
   }
 
-
-
   /**
    * 获取租户的用户信息
    *
@@ -576,7 +573,7 @@ export default class UserService extends BaseUserService {
     }
 
     return this.retrieveRoleInformation(this.weixin.sessionId, this.auth.userId)
-      .then((res: RoleEntity)=> {
+      .then((res: RoleEntity) => {
         this.role = res
 
         if (res.roleName === 'guest') {
@@ -620,7 +617,6 @@ export default class UserService extends BaseUserService {
 
     return request.getUserInfoForWeixin(withCredentials)
       .then(userInfoFromMiniProgram => {
-
         let data: UserInfoEntityForWeixin
         if (withCredentials) {
           const userInfo: UserInfoEncryptedEntityForWeixin = {
@@ -751,7 +747,7 @@ export default class UserService extends BaseUserService {
     super.loadUserInfo()
 
     const userInfoJSONString = storage.getItemSync('weixin_auth')
-    console.log("获得 weixin_auth" + userInfoJSONString)
+    console.log('获得 weixin_auth' + userInfoJSONString)
     if (userInfoJSONString != null && userInfoJSONString.length > 0) {
       const userInfo = JSON.parse(userInfoJSONString)
       const originalVersionCode = userInfo.versionCode
@@ -783,6 +779,4 @@ export default class UserService extends BaseUserService {
       console.error('同步删除 auth 出错')
     }
   }
-
 }
-

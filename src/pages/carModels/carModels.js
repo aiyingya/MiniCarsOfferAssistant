@@ -97,14 +97,10 @@ Page({
           title: carsInfo.name
         })
         this.setData({ carsInfo: carsInfo, options: options })
-
-        wxapi.showToast({ title: '加载中...', icon: 'loading', mask: true })
-          .then(() => {
-            return this.pagesloadRequest(carsInfo, true)
-          })
-          .then(() => { wxapi.hideToast() })
-          .catch(() => { wxapi.hideToast() })
-
+        wx.showLoading({ title: '加载中...', icon: 'loading', mask: true })
+        this.pagesloadRequest(carsInfo, true)
+          .then(() => { wx.hideLoading() })
+          .catch(() => { wx.hideLoading() })
         if (wx.showShareMenu) {
           wx.showShareMenu()
         }
@@ -242,7 +238,6 @@ Page({
     } else {
       for (let item of carModelsList) {
         if (item.yearStyle === selectItem.name) {
-
           newModelsList.push(item)
         }
       }
@@ -281,7 +276,6 @@ Page({
     } else {
       that.pagesloadRequest(carsInfo, true)
     }
-
   },
   handlerToCarSources(e) {
     let item = e.currentTarget.dataset.carmodelsinfo
@@ -369,7 +363,7 @@ Page({
           let config = item.chart.config
           let opts = item.chart.opts
           let context = item.chart.context
-          let changeData = item.chart.changeData;
+          let changeData = item.chart.changeData
           let callback = function (data) {
             console.log(data)
             if (data.y.length > 0) {
@@ -594,7 +588,6 @@ Page({
 
     for (let item of carModelsList) {
       if (item.carModelId === selectTimesId) {
-
         for (let times of hours) {
           if (times.value === selecttime) {
             times.selected = 'selected'
@@ -614,7 +607,6 @@ Page({
       selectTimesId: selectTimesId,
       selectTimes: selecttime
     })
-
   },
   handleChangeTimesItem(e) {
     let that = this
@@ -624,7 +616,6 @@ Page({
 
     for (let item of carModelsList) {
       if (item.carModelId === selectTimesId) {
-
         for (let times of item.hours) {
           if (times.value === selectitem) {
             times.selected = 'selected'
@@ -686,7 +677,6 @@ Page({
     for (let item of carModelsList) {
       if (item.carModelId === selectColorsId) {
         if (typeof selectItem === 'object' && selectItem.selected !== 'selected') {
-
           selectColors.push(selectItem)
         } else if (selectItem === '全部') {
           selectColors = []
@@ -729,7 +719,6 @@ Page({
     container.saasService.requestSearchSpuBySpuId(sid, requestData)
       .then(res => {
         if (res.content.length > 0) {
-
           for (let change of carModelsList) {
             if (change.carModelId === res.content[0].carModelId) {
               let requestItem = res.content[0]
@@ -834,7 +823,7 @@ Page({
       }
       let i = 0
       let min = Number.MAX_VALUE
-      let max = - Number.MAX_VALUE
+      let max = -Number.MAX_VALUE
       let flag = false
       for (let priceTrendItem of priceTrendList) {
         i = i + 1
@@ -875,7 +864,7 @@ Page({
 
     let { item, max, min } = chartItemGenerator(res.lowestPriceTrend, days)
     if (item != null) {
-      item.color = "#ED4149"
+      item.color = '#ED4149'
       item.name = ''
       item.topno = 1
       series.push(item)
@@ -951,10 +940,10 @@ Page({
   handleMarketTouch(e) {
     let that = this
     let index = this.data.popMarketCharts.getCurrentDataIndex(e)
-    console.log(index, this.data.popMarketCharts);
+    console.log(index, this.data.popMarketCharts)
     this.data.popMarketCharts.showToolTip(e, {
       background: '#333333'
-    });
+    })
   },
   handleMarketUpdateDataWithDays(e) {
     const id = e.currentTarget.dataset.id
@@ -995,10 +984,10 @@ Page({
       if (item.topno == topno) {
         if (item.switch) {
           item.switch = false
-          topnoData[index].style = "icon-nobg"
+          topnoData[index].style = 'icon-nobg'
         } else {
           item.switch = true
-          topnoData[index].style = ""
+          topnoData[index].style = ''
         }
       }
     }

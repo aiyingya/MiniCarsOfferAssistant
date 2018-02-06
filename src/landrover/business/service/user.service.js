@@ -7,6 +7,7 @@ export default class UserService extends Service {
     dev: 'https://test.yaomaiche.com/ucdev/',
     gqc: 'https://test.yaomaiche.com/ucgqc/',
     prd: 'https://uc.yaomaiche.com/uc/'
+    // prd: 'http://192.168.1.155:8080/uc/'
   };
 
   /**

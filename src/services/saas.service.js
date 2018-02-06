@@ -21,7 +21,6 @@ import {
  * @extends {Service}
  */
 export default class SAASService extends Service {
-
   userService: UserService
 
   responsePackFormat = 'old'
@@ -193,8 +192,8 @@ export default class SAASService extends Service {
       rateType: quotationDraft.rateType,
       marketPrice: quotationDraft.quotationItems[0].originalPrice,
       insuranceDetail: quotationDraft.insuranceDetail,
-      carCapacity: quotationDraft.carCapacity, //排量
-      electricCar: quotationDraft.electricCar, //是否纯电动
+      carCapacity: quotationDraft.carCapacity, // 排量
+      electricCar: quotationDraft.electricCar, // 是否纯电动
       snsId: snsId,
       loginChannel: this.userService.loginChannel
     }
@@ -266,13 +265,13 @@ export default class SAASService extends Service {
 
           if (item.quotationList.length > 0) {
             for (let qitem of item.quotationList) {
-              let totalPayment = utils.priceStringWithUnit(qitem.totalPayment);
-              let sellingPrice = utils.priceStringWithUnit(qitem.quotationItems[0].sellingPrice);
-              let guidePrice = utils.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice);
+              let totalPayment = utils.priceStringWithUnit(qitem.totalPayment)
+              let sellingPrice = utils.priceStringWithUnit(qitem.quotationItems[0].sellingPrice)
+              let guidePrice = utils.priceStringWithUnitNumber(qitem.quotationItems[0].guidePrice)
 
               /// 实时计算优惠点数
               let downPrice = utils.downPrice(qitem.quotationItems[0].sellingPrice, qitem.quotationItems[0].guidePrice)
-              let downPriceFlag = utils.downPriceFlag(downPrice);
+              let downPriceFlag = utils.downPriceFlag(downPrice)
               let downPriceString = ''
               if (downPriceFlag !== 0) {
                 downPriceString = utils.priceStringWithUnit(downPrice)
@@ -340,8 +339,8 @@ export default class SAASService extends Service {
       cid?: number,
       did?: number
     } = {
-        userId: this.userService.auth.userId
-      }
+      userId: this.userService.auth.userId
+    }
     const locations = this.userService.location
     if (locations && locations.length > 0) {
       const location = locations[0]
@@ -726,7 +725,7 @@ export default class SAASService extends Service {
   settingPreference(data: any) {
     const userId = this.userService.auth.userId
     return this.request(
-      "api/config/saveQuota",
+      'api/config/saveQuota',
       'POST', {
         userId,
         ...data

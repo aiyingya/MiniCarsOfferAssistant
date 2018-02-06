@@ -168,6 +168,7 @@ Page({
     })
   },
   handleUserLogout() {
+    wx.showLoading({ title: '退出登录...', icon: 'loading', mask: true })
     userService.logout()
       .then(res => {
         this.setData({
@@ -181,6 +182,9 @@ Page({
         })
       })
       .catch(err => {
+      }).then(() => {
+        console.log('成功退出')
+        wx.hideLoading()
       })
   },
   onEntryRowClick(e) {
